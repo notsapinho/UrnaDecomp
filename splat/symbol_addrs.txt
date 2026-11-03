@@ -8749,6 +8749,7 @@ _ZN4vota22CJustificativaEfetuada10StartStateEv = func:10594; // size:0x148 evide
 _ZNKSt3__220__shared_ptr_pointerIPN3api15IGenericFactoryINS1_8ISyncCtlEEENS_14default_deleteIS4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info = func:10596; // size:0x11 evidence:content-anchor
 _ZN4vota19CEleitorMenor16Anos12ProcessInputEv = func:10598; // size:0xc evidence:vtable
 _ZN4vota21CAnoInformadoInvalido12ProcessInputEv = func:10601; // size:0xc evidence:vtable
+_ZN4vota33CEleitorImpedidoJustificarVotoCPF12ProcessInputEv = func:10604; // size:0xe evidence:vtable
 _ZNSt3__26vectorIN3api18SPolySingletonInfoENS_9allocatorIS2_EEE12emplace_backIJRPKcRKSt9type_infoRKNS_10shared_ptrINS1_15IGenericFactoryINS1_8ISyncCtlEEEEEEEERS2_DpOT_ = func:10607; // size:0x10 evidence:table by:8911
 _ZNSt3__210shared_ptrIN3api15IGenericFactoryINS1_8ISyncCtlEEEEC2B8ne210108IS4_NS_14default_deleteIS4_EETnNS_9enable_ifIXaaaantsr19is_lvalue_referenceIT0_EE5valuesr17__compatible_withIT_S4_EE5valuesr14is_convertibleINS_10unique_ptrISB_SA_E7pointerEPS4_EE5valueEiE4typeELi0EEEOSD_ = func:10618; // size:0xe evidence:vptr-anchor
 votaTick = func:10619; // size:0x619 evidence:export

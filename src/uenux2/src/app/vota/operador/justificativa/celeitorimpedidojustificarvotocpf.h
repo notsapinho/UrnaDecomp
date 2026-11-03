@@ -18,7 +18,7 @@ namespace vota {
 // 1661, 218, 425, 10604, 425]): the operator's screen that says a justification cannot be made with the CPF. It
 // overrides the destructors (fns 244 and 387, as vota::CPedeAnoNascimento's header says), StartState (slot 2, fn 1070,
 // one body with the slot 2 of other states: it stays in the state, then shows the form at +12) and ProcessInput (slot
-// 7, fn 10604, pending: src/units/283-uenux2-app-vota-operador-justificativa-pending.cpp says what it waits for). A
+// 7, fn 10604: a thunk into binaryen's fn 2295 with api::INPUT_CORRIGE, which goes to CPedeIdentidade's state). A
 // singleton: vota::IConfirmaJustificativa::ProcessInput (fn 10588), its one caller, holds GetInst and the constructor
 // inlined, each behind a stack frame of its own; GetInst keeps the 20-byte object in a static std::unique_ptr
 // (@1905868) under a static std::mutex (@1905844), whose exit destructors are fns 10606 and 10605. The constructor

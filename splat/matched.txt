@@ -12078,7 +12078,6 @@
 10457 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp.o
 10458 _ZN4vota20CDigitalNaoCapturada12ProcessInputEv
 10461 _ZN4vota32CTentativaCapturaDigitalEsgotada12ProcessInputEv
-10604 _ZN4vota19CIdentidadeInvalida12ProcessInputEv
 10626 _ZN4vota17CValidaIdentidade12ProcessInputEv
 10628 _ZN4vota17CValidaIdentidadeD0Ev
 10629 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/leidentidade/cvalidaidentidade.cpp.o
@@ -12127,3 +12126,4 @@
 10661 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/leidentidade/celeitoroptouporvotaremtransito.cpp.o
 10662 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/leidentidade/celeitoroptouporvotaremtransito.cpp.o
 10666 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp.o
+10604 _ZN4vota33CEleitorImpedidoJustificarVotoCPF12ProcessInputEv

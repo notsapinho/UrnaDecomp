@@ -9,9 +9,8 @@
 #   byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv); vota::CPedeIdentidade::FinishState (10678) and the exit
 #   destructor of its static std::mutex (10681), its GetInst (652, below), ProcessInput (10677) and the exit destructor
 #   of its static std::unique_ptr (10682, a thunk into binaryen's 3886: src/units/221-uenux2-app-comum-constructors.mk);
-# - CIdentidadeInvalida::ProcessInput (10667), with 2295, the body binaryen forms from it and unit 278's 10461, and
-#   10604 under 10667's symbol (below); CVerificaDadoEleitor::GetInst (2735) and its statics' exit destructors (10446,
-#   10445);
+# - CIdentidadeInvalida::ProcessInput (10667), with 2295, the body binaryen forms from it, unit 278's 10461 and unit
+#   283's 10604 (below); CVerificaDadoEleitor::GetInst (2735) and its statics' exit destructors (10446, 10445);
 # - vota::CEleitorNaoEncontrado's slot 9 (10663) and its destructors (1907, 1689), over its new base
 #   vota::IEleitorImpedidoVotar; the two destructor lines name CEleitorOptouPorVotarEmTransito's byte-identical twins
 #   since that class's file (unit 104) links first (step 9 renamed them);
@@ -182,14 +181,13 @@
 #
 # CIdentidadeInvalida::ProcessInput (10667, slot 7) is written in cidentidadeinvalida.cpp: `f2295(p0, 5, <its Read()
 # record>)`, a thunk into the body binaryen merges from five states' slot 7 that go to CPedeIdentidade::GetInst's state
-# on one key (2295's callers 10461, 10604, 10667, 10709 and 10757: ledger/callgraph.tsv). Our link forms 2295 from 10667
-# and unit 278's 10461, both written as `if (m_form->Read() == <key>) m_pNextState = &CPedeIdentidade::GetInst();`
-# (wasm-objdump -d of the link: our 2295's two callers are those two), and 2295, 10667 and 10461 match. The scan also
-# lists 10604, vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput (slot 7 of the vtable @1589588 in
-# ledger/vtables.json, a class not in our link), under 10667's symbol: the census pairs 10604 with our 10667, the same
-# thunk over the same key and a record of the same content (`readings: address same-content`), and the build verifies
-# it. No symbol of our link is its own, so the line stays as step 9 wrote it, and it moves to that class's member when
-# a unit writes it.
+# on one key (2295's callers 10461, 10604, 10667, 10709 and 10757: ledger/callgraph.tsv). Our link forms 2295 from
+# 10667, unit 278's 10461 and unit 283's 10604 (vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput, slot 7 of the
+# vtable @1589588 in ledger/vtables.json), each written as `if (m_form->Read() == <key>) m_pNextState =
+# &CPedeIdentidade::GetInst();` (wasm-objdump -d of the link: our 2295's three callers are those three), and the four
+# match. Each thunk passes its own TU's record of Read() (`readings: address same-content`); the census pairs each
+# target slot with its own class's member, so 10604's line names that member: before unit 283's file held it, the
+# census paired 10604 with our 10667, the same thunk over the same key, and the line carried 10667's symbol.
 #
 # CVerificaDadoEleitor::GetInst (2735) is written in cverificadadoeleitor.cpp with the constructor and the statics:
 # s_inst @1909204 and s_mutex @1909180 (exit destructors 10446, `f389(p0, 1909204)`, and 10445), a new of 20 bytes,

@@ -7,7 +7,7 @@
 #   10588, slot 7 of the class and of its three derived classes, matched);
 # - app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.{h,cpp} (new), listed before it:
 #   vota::CEleitorImpedidoJustificarVotoCPF, whose GetInst and constructor 10588 holds inlined, and its statics' exit
-#   destructors (fns 10606 and 10605, matched); its ProcessInput (10604) is fragment 283's pending member.
+#   destructors (fns 10606 and 10605, matched), and its ProcessInput (10604, matched: fragment 283 has it).
 # Unit 119's slots 10 and 15 post to vota::CThreadEleitor's queue with Post; a helper this unit compiled for them
 # (ccontroladorregistramesariosvotamensagem.cpp) went: fn 6018 is binaryen's merge of the two slots, not a source
 # function (unit 119's fragment has the evidence and the measurement).

@@ -182,8 +182,8 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | `byte` | 1,332 | 1,332 | 0 | 0 | 0 |
 | `fingerprint` | 622 | 621 | 0 | 1 | 0 |
 | `addr` | 7,593 | 7,297 | 171 | 124 | 1 |
-| `shape` | 1,092 | 1,041 | 35 | 16 | 0 |
-| `none` | 3,704 | 1,834 | 210 | 347 | 1,313 |
+| `shape` | 1,093 | 1,042 | 35 | 16 | 0 |
+| `none` | 3,703 | 1,833 | 210 | 347 | 1,313 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

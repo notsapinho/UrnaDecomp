@@ -5,6 +5,7 @@
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -48,6 +49,13 @@ void CEleitorImpedidoJustificarVotoCPF::StartState()
 {
     m_pNextState = this;
     m_form->Slot2();
+}
+
+void CEleitorImpedidoJustificarVotoCPF::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CORRIGE) {
+        m_pNextState = &CPedeIdentidade::GetInst();
+    }
 }
 
 } // namespace vota

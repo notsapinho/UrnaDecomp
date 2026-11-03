@@ -14,12 +14,17 @@
 # - CEleitorMenor16Anos::ProcessInput (10598) and CAnoInformadoInvalido::ProcessInput (10601), thunks into 6014, the
 #   body binaryen merges from the two, which our link forms the same way (matched under
 #   byn$mgfn-shared$_ZN4vota21CAnoInformadoInvalido12ProcessInputEv): on CONFIRMA, back to CPedeAnoNascimento;
-# - CEleitorImpedidoJustificarVotoCPF's statics' exit destructors (10606, 10605: unit 174's object);
+# - CEleitorImpedidoJustificarVotoCPF's statics' exit destructors (10606, 10605: unit 174's object) and its ProcessInput
+#   (10604, slot 7, in celeitorimpedidojustificarvotocpf.cpp after StartState): `f2295(p0, 5, <its Read() record>)`, a
+#   thunk into the body binaryen merges from five states' slot 7, written as its siblings are,
+#   `if (m_form->Read() == api::INPUT_CORRIGE) m_pNextState = &CPedeIdentidade::GetInst();`
+#   (src/units/161-uenux2-app-vota-operador-identidade.mk has 2295's family); the census pairs 10604 with it, and the
+#   scan matches it under its own name;
 # - the four pair classes' statics' exit destructors (10615 and 10614, 10613 and 10612, 10611 and 10610, 10609 and
 #   10608) and 3885, binaryen's body of the three Confirma pointers' destructors (10615, 10611 and unit 243's 10622, a
 #   thunk into it, which matches with them).
 # Pending (283-uenux2-app-vota-operador-justificativa-pending.cpp says what each waits for):
-# CPedeAnoNascimento::ProcessInput (10590) and CEleitorImpedidoJustificarVotoCPF::ProcessInput (10604).
+# CPedeAnoNascimento::ProcessInput (10590).
 # CEleitorMenor16Anos's and CAnoInformadoInvalido's GetInst and constructors are written and unreferenced: in the target
 # only 10590 holds them, inlined, so they are compared with nothing, and their statics' exit destructors (10600 and
 # 10599, 10603 and 10602) wait for 10590's match to name the objects.
