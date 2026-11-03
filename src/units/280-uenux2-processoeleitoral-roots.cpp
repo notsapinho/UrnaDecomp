@@ -29,8 +29,9 @@ int w280_find_equal(void* arvore, void* dica, void** pai, void** vazio, const un
 
 namespace {
 
-// stands for fn 11869 (vota::CVerificaHorarioZeresima's slot 7) and fn 11911 (vota::CImpressaoEstadoUrna's slot 2), the
-// two callers of CRelatorioTesteImpressora's constructor (fn 5586); both read its returned this, as this one does
+// stands for fn 11869 (vota::CVerificaHorarioZeresima's slot 7), one of the two callers of CRelatorioTesteImpressora's
+// constructor (fn 5586), which read its returned this, as this one does; the other, fn 11911
+// (vota::CImpressaoEstadoUrna's slot 2), is in the link
 __attribute__((noinline)) bool w280_relatorio(void* primeiro, void* segundo, int vias)
 {
     const comum::CRelatorioTesteImpressora* a = ::new (primeiro) comum::CRelatorioTesteImpressora();

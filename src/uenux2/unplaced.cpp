@@ -64,9 +64,6 @@
 // f5599 · 1759 B · unmatched · placement: link order · name unknown
 // ? f5599(i32, i32) { ... }
 
-// f5591 · 8678 B · unmatched · placement: link order · name unknown
-// void f5591(i32, i32, i32) { ... }
-
 // link-order cluster 799 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
 
 // f5602 · 320 B · unmatched · placement: link order · name unknown

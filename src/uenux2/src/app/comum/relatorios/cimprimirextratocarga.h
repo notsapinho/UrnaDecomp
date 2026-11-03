@@ -25,7 +25,7 @@ namespace comum {
 //   it, the only function written there.
 // - Slots 0 and 1 of the derived class are fn 174 (returns this, nothing else) and fn 144 (a free of this): the
 //   destructor is inline and empty here, and the derived class's implicit (docs/how-to-decompile.md step 5).
-// - The slots' signatures come from their one caller, fn 5591 (8678 B, not reconstructed: it builds the report on an
+// - The slots' signatures come from their one caller, fn 5591 (Imprime, below: it builds the report on an
 //   api::CPaperFormBuilder and calls every slot from 2 to 25), and from the derived class's bodies: slot 6 returns a
 //   vector of strings (5591 walks it 12 bytes at a time and destroys each string), slot 9 a CDadoCorrespondencia by
 //   value (fn 11197 calls its copy constructor, fn 1249, on the result), slot 15 a vector of strings, 23 to 25 take the
@@ -39,6 +39,12 @@ namespace comum {
 class CImprimirExtratoCarga {
 public:
     inline virtual ~CImprimirExtratoCarga() = default;
+
+    // Target fn 5591: the load's report, built on an api::CPaperFormBuilder of its own from the slots below and shown
+    // with the title and the copy's text its caller passes (vota::CImpressaoEstadoUrna::StartState, fn 11911, passes
+    // "estado da urna" and "{}ª via"). Not virtual: no vtable slot holds it, and its callers call it directly. Its
+    // name, its parameters' names and its const are chosen.
+    void Imprime(const std::string& titulo, const std::string& via) const;
 
     virtual bool EhTreinamento() const = 0;
     virtual bool TemHorarioVerao() const = 0;

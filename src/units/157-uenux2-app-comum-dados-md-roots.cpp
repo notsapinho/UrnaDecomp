@@ -7,7 +7,7 @@
 //   172), and the stand-in stands for the other three. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
 //   its one target caller, calls it twice.
 // CEleitor::ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
-// comum::asn::CConversorLocal (vtable @1561988; fn 11451 and the pending 11452) is reached through its vtable only, whose
+// comum::asn::CConversorLocal (vtable @1561988; fns 11451 and 11452) is reached through its vtable only, whose
 // vptr fn 5740 stores (not written): this TU takes the vtable's address, which keeps both slots. The stand-ins
 // differ in their operators, so binaryen merges none of them. The target's wasm types keep every parameter of these
 // functions, so no argument is the same constant at both call sites of a stand-in, and dead-argument elimination folds

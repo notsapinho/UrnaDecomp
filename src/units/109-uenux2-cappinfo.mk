@@ -34,6 +34,8 @@
 # they are members, and go through a file-static helper, SalvaGeral, as the vota pair goes through SalvaVota; 3333
 # matches with them. Their names (after SalvaVotaInterno's), their being const, their order and lines, and the helper's
 # name and linkage are chosen.
+# CAppInfo::LeGeralInterno (2273, a chosen name), added for unit 296, whose fragment and roots have it: the general
+# state read anew from the internal flash, after SalvaGeralExterno.
 # CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
 # base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
 # members, the form before (both built at the tree's flags, before and after the change).

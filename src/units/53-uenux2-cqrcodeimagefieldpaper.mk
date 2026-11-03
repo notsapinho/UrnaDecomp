@@ -1,14 +1,13 @@
 # uenux2 api::CQRCodeImageFieldPaper's Draw (target fn 10963, vtable slot 2), which hands the paper the QR code's image,
-# side and scale (api::IPaper's slot 12), and its implicit destructors (10962 and 10961, slots 0 and 1), the
-# compiler's code for the class definition in src/uenux2/src/api/gui/cqrcodeimagefieldpaper.h: they free the
-# std::vector of bytes of the CQRCodeImagePaper::QrcodeData member at +24, then IFormFieldBase<IPaper>'s name. The
-# destructor is implicit: the deleting one holds the base-object body inlined. IFormFieldBase<IPaper>'s destructor
-# (fn 11013), which binaryen merges with the other media's into one body taking the vptr (fn 1566), as the target's
-# link did, is unit 39's, whose object links first. The unit also has the layout-only header of the member's type
-# (src/uenux2/src/api/gui/cqrcodeimagepaper.h). No record names either header or a member of the class: the class
-# header follows the class name beside the field classes of api/gui/ and the name of link-order cluster 376
-# (src/uenux2/unplaced.cpp), and QrcodeData goes beside cqrcodeimagepaper.cpp, whose records name it (MontaImagem's
-# return type).
+# side and scale (api::IPaper's slot 12), and its implicit destructors (10962 and 10961, slots 0 and 1), the compiler's
+# code for the class definition in src/uenux2/src/api/gui/cqrcodeimagefieldpaper.h: they free the std::vector of bytes
+# of the CQRCodeImagePaper::QrcodeData member at +24, then IFormFieldBase<IPaper>'s name. The destructor is implicit:
+# the deleting one holds the base-object body inlined. IFormFieldBase<IPaper>'s destructor (fn 11013), which binaryen
+# merges with the other media's into one body taking the vptr (fn 1566), as the target's link did, is unit 39's, whose
+# object links first. The unit also gave the header of the member's type (src/uenux2/src/api/gui/cqrcodeimagepaper.h),
+# whose class unit 296 writes. No record names either header or a member of the class: the class header follows the
+# class name beside the field classes of api/gui/ and the name of link-order cluster 376 (src/uenux2/unplaced.cpp), and
+# QrcodeData goes beside cqrcodeimagepaper.cpp, whose records name it (MontaImagem's return type).
 # Draw (fn 10963) is the class's only member of its own, the key function, so src/uenux2/src/api/gui/
 # cqrcodeimagefieldpaper.cpp (a file no record names; the name follows the class) emits the vtable and with it the
 # implicit destructors. The constructor is out of line there too, and binaryen inlines it into its one caller,

@@ -1,6 +1,6 @@
-// Reconstruction: comum::asn::CConversorLocal::DoConverte (target fn 11451); its records (lines 120, 124 and 128, column
-// 15) place its throws. DoDesconverte (fn 11452, record line 70) is pending: 157-uenux2-app-comum-dados-md-pending.cpp
-// says what it waits for.
+// Reconstruction: comum::asn::CConversorLocal's DoDesconverte (target fn 11452) and DoConverte (fn 11451); their
+// records (line 70, and lines 120, 124 and 128, column 15) place their throws. Where DoDesconverte begins is chosen;
+// src/units/296-uenux2-relatorios-impressao.mk says what its bytes decide.
 #include "app/comum/dados/asn/cconversorlocal.h"
 
 #include "app/comum/dados/asn/cconversorsecaoeleitoral.h"
@@ -10,7 +10,49 @@
 
 namespace comum::asn {
 
-// (original lines 13-83: content not recovered)
+// (original lines 13-33: content not recovered)
+#line 34
+md::CLocal CConversorLocal::DoDesconverte(const TEntidade& entidade) const
+{
+    const uedword idPE = entidade.get_idPE().getValue();
+    const std::string pais = entidade.get_pais();
+    const std::string siglaUF = entidade.get_uf().get_sigla();
+    const std::string nomeUF = entidade.get_uf().get_nome();
+
+    CConversorMunicipio conversorMunicipio;
+    const md::CMunicipio municipio = conversorMunicipio.Desconverte(entidade.get_municipio());
+    CConversorComplementoMunicipio conversorComplemento;
+    const md::CComplementoMunicipio complemento =
+        conversorComplemento.Desconverte(entidade.get_complementoMunicipio());
+    const bool comBiometria =
+        entidade.get_municipio().comBiometria_isPresent() && entidade.get_municipio().get_comBiometria();
+    md::CInfoMunicipio infoMunicipio(municipio.GetCodigo(), municipio.GetNome(), complemento.GetFusoHorario(),
+                                     comBiometria);
+    if (complemento.TemHorarioVerao()) {
+        infoMunicipio = md::CInfoMunicipio(municipio.GetCodigo(), municipio.GetNome(), complemento.GetFusoHorario(),
+                                           comBiometria, complemento.GetHorarioVerao());
+    }
+
+    switch (entidade.get_id().currentSelection()) {
+    case ModuloLocal::Local::id::value_type::secao0: {
+        CConversorSecaoEleitoral conversorSecao;
+        return md::CLocal(idPE, pais, siglaUF, nomeUF, infoMunicipio,
+                          conversorSecao.Desconverte(entidade.get_id().get_secao()));
+    }
+    case ModuloLocal::Local::id::value_type::contingencia1: {
+        const ModuloLocal::IdentificacaoUrnaContingencia& contingencia = entidade.get_id().get_contingencia();
+        const ModuloLocal::IdentificacaoUrnaContingencia::municipioZona::value_type& municipioZona =
+            contingencia.get_municipioZona();
+        return md::CLocal(idPE, pais, siglaUF, nomeUF, infoMunicipio,
+                          md::CIdentificacaoUrnaContingencia(eUrnaContingencia, municipioZona.get_municipio().getValue(),
+                                                             municipioZona.get_zona().getValue()));
+    }
+    default:
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7887, "CHOICE de id inválida.");
+    }
+}
+
+// (original lines 74-83: content not recovered)
 #line 84
 ModuloLocal::Local CConversorLocal::DoConverte(const TDado& dado) const
 {

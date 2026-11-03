@@ -101,7 +101,12 @@ void CAppInfo::SalvaGeralExterno() const
     SalvaGeral(FLASH_EXTERNA, m_geral);
 }
 
-// (original lines 139-452: content not recovered)
+md::estadoaplicacao::CEstadoGeral CAppInfo::LeGeralInterno() const
+{
+    return CServicoEstadoGeral(FLASH_INTERNA).Carrega();
+}
+
+// (original lines 144-452: content not recovered)
 #line 453
 bool CAppInfo::EhTreinamentoEleitor()
 {

@@ -1,5 +1,5 @@
-// api::CStringUtils: GetVersionNumber at its record's line (59). The reconstruction's own note; the blank lines stand
-// for text not recovered, the SetBit records' lines (71 and 83) among them.
+// api::CStringUtils: GetVersionNumber and the two SetBit at their records' lines (59, 71 and 83). The reconstruction's
+// own note; the blank lines stand for text not recovered.
 #include "api/util/cstringutils.h"
 
 #include <cctype>
@@ -30,26 +30,27 @@ std::string CStringUtils::GetVersionNumber(const std::string& versao)
     return versao.substr(0, fim);
 }
 
+// (original lines 64-67: content not recovered)
+#line 68
+void CStringUtils::SetBit(uebyte& byte, const uebyte bit, const bool valor)
+{
+    if (bit > 7) {
+        throw CUeUtilError(EUE_UTIL_BIT_FORA_DOS_LIMITES, std::format("Bit fora dos limites ({})", bit));
+    }
+    byte = (byte & ~(1 << bit)) | (valor << bit);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (original lines 76-78: content not recovered)
+#line 79
+void CStringUtils::SetBit(std::vector<uebyte>& bytes, const size_t bit, const bool valor)
+{
+    const size_t indice = bit / 8;
+    if (indice >= bytes.size()) {
+        throw CUeUtilError(EUE_UTIL_BIT_FORA_DOS_LIMITES_DO_VETOR,
+                           std::format("Bit fora dos limites ({}) do vetor ({})", bit, bytes.size()));
+    }
+    SetBit(bytes[indice], bit % 8, valor);
+}
 
 bool CStringUtils::CasaRegex(const std::string& padrao, const std::string& valor)
 {
