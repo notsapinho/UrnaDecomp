@@ -142,8 +142,8 @@
 # voter, and the scan refused main as `unresolved self-voted` without it.
 #
 # Not matched yet, each written:
-# - The push bodies 10090, 5384, 8758, 8911, 8986, 9233, 3882 (under 5395, 5398, 5407), 8834, 9039, 9135 and 7667 differ
-#   in one frame slot: depura's std::format_string ("sz[{}] ptr[{}]") is at +280 in the target, below the format buffer
+# - The push bodies 10090, 5384, 8758, 8911, 8986, 9233, 3882 (under 5395, 5398, 5407), 8834, 9039 and 9135 differ in
+#   one frame slot: depura's std::format_string ("sz[{}] ptr[{}]") is at +280 in the target, below the format buffer
 #   at +288, and at +584 in ours, above it, every slot between moved 8 (10090: 156 over 885 rows, all operand-only). None
 #   of the forms of push tried gives it. Measured on the TU's object (wasm-objdump -d, the slot of that string's store in each push):
 #   a scratch explicit instantiation of push<comum::IInterfaceSavd> above the TU's code, a line that only steers the
@@ -155,9 +155,9 @@
 #   slot follows whether a push's format calls are emitted before any other format body of the TU. Ours emits
 #   instance<ISound>'s first (SetAudioEnabled);
 #   the target's records of this TU run CVotaWebEngine::Init's (515:13), then 7667's push (set<ITextToSpeech>), then
-#   instance<ISound>'s, so they wait for Init (votaInit, 7840). 7667's copy is src/app/roots_texttospeech.cpp's now (at
-#   this TU's rule, unit 237's), +584 there too; in a variant of that root (not landed) whose set<api::ITextToSpeech>
-#   code is emitted before its other members', 7667 has +280 and matches (unit 237's fragment).
+#   instance<ISound>'s, so they wait for Init (votaInit, 7840). 7667's copy is src/app/roots_texttospeech.cpp's (at
+#   this TU's rule, unit 237's), which emits that set code before its builder's, in the order these records give: 7667
+#   has +280 there and matches; with the builder first it had +584 too (unit 237's fragment).
 # - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours reads 22
 #   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
 #   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store

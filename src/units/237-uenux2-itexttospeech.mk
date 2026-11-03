@@ -92,13 +92,14 @@
 # with what the copy instantiates and binaryen keeps it out of line beside 8302's call (the root's comment has the
 # evidence and the measurement without the sink). 8302's call reaches it, as the target's does: this object links ahead
 # of simulador.cpp.o.
-# Matches with it (3, none lost, against 34125a18 by index, how-to step 10): 4162, from the census's pair with our copy
-# (shape), and two thunks that CPolySingletonList::set<api::ITextToSpeech> (fn 7667) invokes, into binaryen's bodies
-# 1009 and 1010: 14423 (vector<SPolySingletonInfo>::emplace_back for shared_ptr<api::ITextToSpeech>, table slot 154) and
-# 14456 (shared_ptr<api::ITextToSpeech>'s constructor from unique_ptr, slot 153), named by step 8's `table` evidence by
-# 7667, which has its srcloc-anchor now (its push<api::ITextToSpeech> record, which this object loads). No match line
-# was renamed; each new match was read against its callers (4162: 8302 and the two slots of 7840; 14423 and 14456:
-# 7667).
+# Matches with it (4, none lost, against 34125a18 by index, how-to step 10): 4162, from the census's pair with our copy
+# (shape); CPolySingletonList::set<api::ITextToSpeech> (fn 7667, push<api::ITextToSpeech> inlined, slot 65 of 4162's
+# invoke_vii), the executable TU's copy, from this object (below: the root's order); and two thunks that 7667 invokes,
+# into binaryen's bodies 1009 and 1010: 14423 (vector<SPolySingletonInfo>::emplace_back for
+# shared_ptr<api::ITextToSpeech>, table slot 154) and 14456 (shared_ptr<api::ITextToSpeech>'s constructor from
+# unique_ptr, slot 153), named by step 8's `table` evidence by 7667, which has its srcloc-anchor now (its
+# push<api::ITextToSpeech> record, which this object loads). No match line was renamed; each new match was read against
+# its callers (4162: 8302 and the two slots of 7840; 7667: 4162; 14423 and 14456: 7667).
 # Two lines went with it, both taken out in one link, steps 7 to 9, that moves no scan row (its scan differs from the
 # link with them in two `ours` numbers of the detail column only, and the match list and symbol file are the same): the
 # root's explicit instantiation of has<api::ITextToSpeech> (3281), which set<api::ITextToSpeech> instantiates in the
@@ -106,13 +107,15 @@
 # with object numbers masked; only the object's order of functions differs), and the two calls of 388
 # (~shared_ptr<void>) in src/units/100-uenux2-cpolysingleton-roots.cpp, which stood for 7667 alone (that file's
 # comment).
-# Not matched: 7667 itself, `differs` on the frame slot of depura's std::format_string (`pnpm wasm score` 156 over 885
-# rows, all operand-only: +584 in ours where the target has +280, the slots between 8 off), as the executable TU's push
-# bodies do (unit 170's fragment). Measured on a variant link (not landed) with the sink and its comment moved above
-# urna_texttospeech_constroi, so that the object emits set<U>'s code first: step 9 matched 7667 there, and the splat
-# build gave the target's sha256 with 12190 matches. That corroborates the reading of unit 170's fragment (the slot
-# follows which format code a TU emits first); it is not landed, since src/units/README.md "Companion files" says the
-# order of a roots file's lines is free and a verdict that turns on it is no reason to tune it.
+# The root's order: its sink and the sink's struct come before urna_texttospeech_constroi, so that the object emits the
+# set code before the builder's, in the executable TU's order, which that TU's records give (the root's comment cites
+# them and the command: CVotaWebEngine::Init's 1526324, then 7667's push<api::ITextToSpeech> 1526348, then
+# instance<api::ISound>'s 1526584 and the rest of the TU's). Past that one order the root's lines are free
+# (src/units/README.md "Companion files"). Measured both ways, steps 6 to 9 and the splat build on each, the target's
+# sha256 both times: in this order 7667 matches, 12190 matches; with the builder first, as the root was first written,
+# 12189, and 7667 `differs` on the frame slot of depura's std::format_string (`pnpm wasm score` 156 over 885 rows, all
+# operand-only: +584 in ours where the target has +280, the slots between 8 off), as the executable TU's other push
+# bodies do (unit 170's fragment, whose reading this fits: the slot follows which format code a TU emits first).
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

@@ -24,11 +24,6 @@
 #include "uenux2/src/api/pattern/cpolysingleton.h"
 #include "uenux2/src/api/pattern/cpolysingletonlist.h"
 
-__attribute__((optnone)) std::unique_ptr<api::ITextToSpeech> urna_texttospeech_constroi()
-{
-    return std::make_unique<simulador::CWasmNullTextToSpeech>();
-}
-
 // api::CPolySingleton<api::ITextToSpeech>::set<simulador::CWasmNullTextToSpeech> (target fn 4162, 143 bytes with
 // landing pads) is the executable TU's copy too. votaInit (fn 7840, not written) passes it, through invoke_vii's table
 // slot 7, the implementer fn 13877 builds (its vptr store is simulador::CWasmNullTextToSpeech's), and through slot 46,
@@ -46,6 +41,17 @@ __attribute__((optnone)) std::unique_ptr<api::ITextToSpeech> urna_texttospeech_c
 // callers are fns 2079 (CPolySingleton<api::ITextToSpeech>::instance, cinstrucaovotacaoacessibilidade.cpp's copy) and
 // 7667, both in the link, and 14478 (__wasm_call_ctors), not written, for which
 // src/units/150-uenux2-eleitor-estados-roots.cpp's TemFala stands.
+//
+// The order of the sink and the builder below is the executable TU's, which its records give: a function's records
+// are created when its body is emitted, and the link keeps each object's order (docs/reference/facts/reading.md §R8).
+// From 1526300 on, the target's records run CVotaWebEngine::Init's own (1526324, vota_web_wasm.cpp 515:13), then
+// push<api::ITextToSpeech>'s (1526348, cpolysingletonlist.h 129:19, which fn 7667 loads), then instance<api::ISound>'s
+// (1526584, cpolysingleton.h 78:19) and the rest of that TU's:
+//   awk -F'\t' 'NR>1 && $1>=1526300 && $1<=1528000' ledger/source-locations.tsv | sort -n
+// So that TU emits the set code Init reaches, 7667's push in it, before the format code of its other functions with
+// records, and this object, which holds that set code, emits it first too: the sink and its struct come before
+// urna_texttospeech_constroi. What the builder brings (ITextToSpeech's members) has no records. The root's lines
+// otherwise order freely (src/units/README.md "Companion files").
 namespace {
 
 void (*volatile urna_texttospeech_set)(simulador::CWasmNullTextToSpeech*, api::TPolySingletonsInfo&);
@@ -58,3 +64,8 @@ struct STextToSpeechRoots {
 } urna_texttospeech_roots;
 
 } // namespace
+
+__attribute__((optnone)) std::unique_ptr<api::ITextToSpeech> urna_texttospeech_constroi()
+{
+    return std::make_unique<simulador::CWasmNullTextToSpeech>();
+}

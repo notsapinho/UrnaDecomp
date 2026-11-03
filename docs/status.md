@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**12,189 of 14,343 functions matched (84.98%), 3,542,440 of 5,883,903 code bytes (60.21%).**
+**12,190 of 14,343 functions matched (84.99%), 3,544,626 of 5,883,903 code bytes (60.24%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,798 / 3,285 | 85.18% | 967,706 / 2,168,476 | 44.63% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,799 / 3,285 | 85.21% | 969,892 / 2,168,476 | 44.73% |
 | upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,016 / 8,294 | 84.59% | 2,145,635 / 3,145,292 | 68.22% |
 | not attributed | `unknown`, `app` | 2,375 / 2,764 | 85.93% | 429,099 / 570,135 | 75.26% |
-| **total** | | **12,189 / 14,343** | **84.98%** | **3,542,440 / 5,883,903** | **60.21%** |
+| **total** | | **12,190 / 14,343** | **84.99%** | **3,544,626 / 5,883,903** | **60.24%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -51,7 +51,7 @@ come from getting the version, the flags and the link order right, not from writ
 | `simulador` | the web simulator's `CWasm*` devices | 134 / 144 | 93.06% | 22,311 / 58,157 | 38.36% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 10 / 11 | 90.91% | 2,648 / 2,808 | 94.30% |
 | **uenux2** | the five rows above | **1,691 / 2,050** | **82.49%** | **479,673 / 1,351,776** | **35.48%** |
-| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 680 / 799 | 85.11% | 401,941 / 721,680 | 55.70% |
+| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 681 / 799 | 85.23% | 404,127 / 721,680 | 56.00% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 53 / 59 | 89.83% | 34,724 / 41,909 | 82.86% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 374 / 377 | 99.20% | 51,368 / 53,111 | 96.72% |
 <!-- /status:tse -->
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 12,189 | 3,542,440 | matched |
-| `differs` | 419 | 154,611 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `match` | 12,190 | 3,544,626 | matched |
+| `differs` | 418 | 152,425 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 488 | 574,930 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 1,247 | 1,611,922 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 2,798 `match`, 69 `differs`, 43 `unresolved` and 375 `no-candidate`.
+For TSE code alone: 2,799 `match`, 68 `differs`, 43 `unresolved` and 375 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -179,10 +179,10 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,334 | 1,334 | 0 | 0 | 0 |
-| `fingerprint` | 621 | 620 | 0 | 1 | 0 |
+| `byte` | 1,333 | 1,333 | 0 | 0 | 0 |
+| `fingerprint` | 622 | 621 | 0 | 1 | 0 |
 | `addr` | 7,619 | 7,329 | 166 | 123 | 1 |
-| `shape` | 1,099 | 1,047 | 36 | 16 | 0 |
+| `shape` | 1,099 | 1,048 | 35 | 16 | 0 |
 | `none` | 3,670 | 1,859 | 217 | 348 | 1,246 |
 <!-- /status:tiers -->
 
