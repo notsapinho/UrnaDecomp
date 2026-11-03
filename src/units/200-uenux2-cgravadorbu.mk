@@ -44,7 +44,7 @@
 #   std::vector<md::CCargo> it calls in its reserve and its push_back (std::__uninitialized_allocator_relocate, fn 3816,
 #   from cgravadorbu.cpp's object): cgravadorbu.cpp's notes say what it does, why it reads as an external function
 #   there, and what is chosen. Its one target caller, 11629, calls it three times; the roots file's w200_filtra stands
-#   for it, and 3816's other target caller, 11371 (comum::asn::CConversorEleicaoPE::DoDesconverte, not written), needs
+#   for it, and 3816's other target caller, 11371 (comum::asn::CConversorEleicaoPE::DoDesconverte, written, fragment 299's), needs
 #   none: 3818 calls it twice. Measured in the whole link before step 8 (pnpm wasm score against the target): 3818 9
 #   over 312 rows and 3816 2 over 243, operand-only, every operand a call's. It is the first form written; std::copy_if
 #   with a lambda was not tried.

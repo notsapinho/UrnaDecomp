@@ -99,7 +99,8 @@
 # file's statics' destructors come first, then the texts, then the slots (10705, 10704, 10701 to 10699, 10698;
 # 10744, 10743, 10742, 10740), the order they are defined in, which names.tsv's ld_index gives our link too. The four
 # vtable sinks went with this unit's roots file:
-# 10689's constructors store the four vptrs. Their names, the texts' being free functions and the GetInst's form are
+# 10689's constructors store the four vptrs. Their names, the texts' being free functions, the texts' form (a local
+# set to "n.a." and overwritten when UrnaBiometrica holds; no other form was measured) and the GetInst's form are
 # chosen.
 # The four states' statics' exit destructors (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) wait for 10689's
 # match.

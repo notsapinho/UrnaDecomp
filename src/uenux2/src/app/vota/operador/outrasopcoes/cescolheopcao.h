@@ -83,8 +83,8 @@ private:
     CEscolheOpcao();
 
     // The CONFIRMA branch of ProcessInput: a function of its own that binaryen inlines into fn 10689, its one caller (a
-    // 32-byte frame of its own there). It reads m_form and m_opcoes, so it is a member; its name, its being private and
-    // its result type (the next state, or null to stay) are chosen.
+    // 32-byte frame of its own there). It reads m_form and m_opcoes; its being a member, its name, its being private
+    // and its result type (the next state, or null to stay) are chosen.
     comum::CAppState* ConfirmaOpcao();
 
     static std::unique_ptr<CEscolheOpcao> s_inst;

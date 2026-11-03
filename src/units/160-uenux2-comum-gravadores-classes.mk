@@ -27,14 +27,14 @@
 #   igravadorenvelope.cpp, which emits IGravadorEnvelope's vtable and implicit destructor now (fn 11625, under the same
 #   symbol; unit 136's pending object held the trap), with its builder MontaEnvelope (no index of its own: binaryen
 #   inlines it, the 400-byte frame inside 11626's 224-byte one; clang keeps it out of line, wasm-objdump -d of the
-#   object). The file's notes say what the body reads; igravadorenvelope.h why +56 is the urna's ETipoArquivo, the
-#   type the CUrna constructors take there (it was a chosen EUrnaTipo; 49 either way, the constructor's bytes the same).
-#   It reads the media's serial through comum::CarregaArquivoEcourna (fn 3735, unit 280) and a getter of
+#   object). The file's notes say what the body reads; igravadorenvelope.h why +56 is the urna's ETipoArquivo, the type
+#   the CUrna constructors take there (it was a chosen EUrnaTipo; 49 either way, the constructor's bytes the same). It
+#   reads the media's serial through comum::CarregaArquivoEcourna (fn 3735, unit 280) and a getter of
 #   ecourna::app::dados::CSerialMidia added for it (cserialmidia.hpp; its name chosen). With it ecourna's
 #   CInformacaoMidia's implicit destructor (fn 3815) comes from this object (its band place, among cgravadorbu.cpp's
-#   functions, reads as that object's copy in the target: a reading; the copies are the same code). Measured in this link before step 8 (pnpm wasm score against the target): 11626
-#   57 over 664 rows and 3815 8 over 137, operand-only, every operand a call's or a data address; it is the first form
-#   written, and no other was measured.
+#   functions, reads as that object's copy in the target: a reading; the copies are the same code). Measured in this
+#   link before step 8 (pnpm wasm score against the target): 11626 57 over 664 rows and 3815 8 over 137, operand-only,
+#   every operand a call's or a data address; it is the first form written, and no other was measured.
 # - comum::md::CVotosVotavel's two constructors (fns 2856, 5863) and the constructor of the identification it holds
 #   (fn 5864, class name chosen: comum::md::CIdentificacaoVotavel), in app/comum/gravadores/md/cvotosvotavel.{h,cpp}.
 # - comum::asn::CConversorCorrespResultado (gravadores/asn/cconversorcorrespresultado.{h,cpp}): DoConverte (fn 10289)
@@ -53,8 +53,9 @@
 #   md::CEnvelopeGenerico's GetUrna, GetLocal and GetSeguranca (unit 136's), which binaryen inlines into fn 10271.
 #   md::CEnvelopeGenerico's constructors take the local's std::optional by value: fn 10270 copies it into a slot of its
 #   own frame for each call (below); the constructors' bytes are the same either way, and their match lines (3821,
-#   5860, 5861) follow the new symbols. md::CUrna's implicit destructor (fn 1394) now comes from
-#   cconversorenvelopegenerico.cpp.o, whose DoDesconverte deletes one.
+#   5860, 5861) follow the new symbols. md::CUrna's implicit destructor (fn 1394) came from
+#   cconversorenvelopegenerico.cpp.o then, whose DoDesconverte deletes one; it comes from igravadorenvelope.cpp.o
+#   since (11626, below, destroys one, and that object links ahead).
 # - comum::asn::GravaArquivo for the envelope (fn 2724, a thunk into fn 6006), in cconversorenvelopegenerico.cpp after
 #   the static members (its line a choice): a converter on the stack, Converte and api::CFileASN::WriteToFile, which
 #   binaryen inlines. Its notes, and the merge 6006 it forms with the hashes' writer, are in its header and unit 293's

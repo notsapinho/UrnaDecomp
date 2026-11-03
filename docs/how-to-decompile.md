@@ -89,11 +89,13 @@ python3 -I -B tools/round/pick_pool.py --differs | awk -F'\t' '$2 ~ /^_ZNSt3__2/
 ```
 
 And a row whose symbol names another class than the target's vtable is a body the census paired from a sibling
-class, one vptr apart. At 182dc6c1, 10370 is listed as `api::IFormFieldBase<api::IPaper>`'s destructor, but it is slot
-0 of `api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>`'s vtable, with its stub in
-`src/uenux2/unplaced.cpp`: that function is unwritten. The vtable and slot that hold an index: `python3 -I -c "import
-json,sys; i=int(sys.argv[1]); [print(e['class'], n) for e in json.load(open('ledger/vtables.json')) for n, f in
-enumerate(e['functions']) if f == i]" 10370`.
+class, one vptr apart. At 182dc6c1, 10370 was listed as `api::IFormFieldBase<api::IPaper>`'s destructor, but it is
+slot 0 of `api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>`'s vtable, with its stub in
+`src/uenux2/unplaced.cpp`: that function was unwritten. It matches since, under that class's symbol, and at 87396a87 no
+row of the pool is such a pair: 10337, `comum::IGestorDadoMesario::StartState` in slot 2 of the vtables of
+`CGestorDadoMesarioInicial`, `CGestorDadoMesarioVotacao` and `CGestorDadoMesarioFinal`, is the base's member the three
+inherit. The vtable and slot that hold an index: `python3 -I -c "import json,sys; i=int(sys.argv[1]); [print(e['class'], n) for e in
+json.load(open('ledger/vtables.json')) for n, f in enumerate(e['functions']) if f == i]" 10370`.
 
 The other pool is the functions not written yet, which have a comment stub in their tree:
 

@@ -212,8 +212,8 @@ public:
     // with the message's end and begin as its two constants: 2502's "Operador selecionou: {}", called four times by
     // vota::CEscolheOpcao::ProcessInput (fn 10689) with GetInst's result and the text of the option chosen, and 3258's
     // "Mesário {} habilitou o eleitor", called three times by vota::CRegistraDigitalOperador's slot 8 (fn 10451, not
-    // written). Their names are chosen from their messages. Their places in clogvota.cpp follow their bands: 2502 before
-    // LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495) in band 4, 3258 after LogaQuantidade (fn 3268) in band 3.
+    // written). Their names are chosen from their messages. Their bands bound their places in clogvota.cpp, the line in
+    // them chosen: 2502 right before fn 2495 (band 4, after 2509), 3258 right after LogaQuantidade (fn 3268, band 3).
     void LogaOperadorSelecionou(const std::string& opcao);
     void LogaMesarioHabilitouEleitor(const std::string& titulo);
     // The shape of the members held inlined above, GetInst called before the member's own stack frame opens:

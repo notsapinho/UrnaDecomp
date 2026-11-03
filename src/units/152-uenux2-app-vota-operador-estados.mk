@@ -227,7 +227,8 @@
 #   10439 and CSuspensaoAutomaticaEleitor's into 10440, and the target links celeitordemorando's object before both
 #   (CEleitorDemorando's vtable, 1592784, before 1593192 and 1593264). With celeitordemorando.cpp linked after this list
 #   (in a fragment of its own, which sorts after this one), 10439 read 189 over 458 rows (inserted 5, deleted 6, local
-#   numbers); ahead of it, 43 over 453, operand-only. So it heads this list.
+#   numbers) and 10440 130 over 817 (local numbers too); ahead of it, 43 over 453 and 59 over 817, operand-only. So it
+#   heads this list.
 # - The directory, aguardaeleitor/, is a choice (docs/reference/facts/placing.md P5): CEleitorDemorando's vtable
 #   (@1592784) lies between CVerificaDadoEleitor's (@1592712, confirmaidentidade/, unrecorded) and
 #   CDesabilitaAudioEleitor's (@1592856, aguardaeleitor/, unrecorded), among unrecorded vtables from

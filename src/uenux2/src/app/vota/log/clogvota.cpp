@@ -4,7 +4,7 @@
 // Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's seven
 // after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's four after
 // LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's eight;
-// 119's 2502 and 3258 where their bands put them (clogvota.h says which).
+// 119's 2502 and 3258 inside the bounds their bands give, the lines chosen (clogvota.h says which).
 #include "app/vota/log/clogvota.h"
 #include <format>
 #include <memory>

@@ -10,7 +10,7 @@
 //   constructor is declared only: fn 6652 builds the source with a call of fn 5729, which stores its byte and returns
 //   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
 //   so the target holds one body for both and does not tell which source defines it.
-// - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
+// - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fn
 //   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link) and api::CInputMenuField
 //   (1579324, fn 3675). A dropped builder needs T's constructor declared, not defined.
 // And five stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo and of

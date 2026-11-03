@@ -12,10 +12,10 @@
 //   written);
 // - comum::md::CEntidadeHashes::ValidaCriacao (fn 5855): fn 11620 calls it twice;
 // - comum::md::CUrna's implicit destructor (fn 1394): fns 2725, 10270, 11587, 11626 and 11629; 10270, 11626 (unit
-//   160) and 11587 (unit 305) are written, the stand-in is for the others. It returns `this`, which 10270 frees (`f136(f1394(l7))`), so the stand-in
-//   deletes its two objects. Unit 160's cconversorenvelopegenerico.cpp.o emits that inline destructor ahead of this
-//   object, and the link keeps its copy; this object compiles with the tree's flags (UENUX2_CXXFLAGS, the fragment's
-//   rule) all the same.
+//   160) and 11587 (unit 305) are written, the stand-in is for the others. It returns `this`, which 10270 frees
+//   (`f136(f1394(l7))`), so the stand-in deletes its two objects. Unit 160's igravadorenvelope.cpp.o emits that inline
+//   destructor ahead of this object, and the link keeps its copy; this object compiles with the tree's flags
+//   (UENUX2_CXXFLAGS, the fragment's rule) all the same.
 // CCarga's copy constructor (fn 1557), CUrna::ValidaCriacao (fn 5862) and CEnvelopeGenerico::ValidaCriacao (fn 3822)
 // have their callers among these constructors. Fns 2801, 3821 and 5861 return `this` in the target, which a caller
 // reads, so the stand-ins read the result of the placement new, which clang takes from the constructor's returned

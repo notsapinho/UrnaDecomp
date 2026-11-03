@@ -148,7 +148,7 @@
 #   the header defines it in its class, and keeps the four calls when it is defined out of line, in another TU or in the
 #   caller's (docs/reference/facts/codegen.md C6).
 # - Placement, by how-to step 3's rule 2: in its use band (uses 4, ledger/ordinals.tsv) 2733 links after 2735,
-#   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (no name), and before
+#   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (CEleitorDemorando::GetInst, unit 152's), and before
 #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 (stretch 1080 of ledger/tu-clusters.tsv, labelled that file).
 #   In the data the one recorded file between those ends is this one (record @1593044), and the lower end is
 #   aguardaeleitor's too: so the directory is app/vota/operador/aguardaeleitor/, against the class's namespace. The file

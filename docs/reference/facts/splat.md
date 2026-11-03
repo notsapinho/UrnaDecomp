@@ -627,18 +627,19 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
 2. **The merged bodies and their thunks: 1565, 2777, 3681, 5516, 10362, 10369, 10374, 12317, 12564; 2899, 10888, 11205;
    6026, 10887, 11204; 2903, 10434, 10442, 10476.** Each group is one binaryen merge-similar-functions body and the
    thunks that call it. The match holds while our link merges functions whose differing operands give the shared body
-   the target's parameters
-   (`src/units/README.md` "Pending members", the merge-thunk bullet). A landing that adds a member with another
-   differing operand, or takes one away, can reshape the body and its thunks. The target's callers of each body, and
-   their verdicts:
+   the target's parameters (`src/units/README.md` "Pending members", the merge-thunk bullet). A landing that adds a
+   member with another differing operand, or takes one away, can reshape the body and its thunks. The target's callers
+   of each body, and their verdicts:
 
    ```sh
-   (cd asmlift-wasm && for b in 1565 2899 6026; do printf '%s ' $b; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $b 2>/dev/null | /usr/bin/grep -E '^;; callers'; done)
+   (cd asmlift-wasm && for b in 1565 2899 6026 2903; do printf '%s ' $b; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $b 2>/dev/null | /usr/bin/grep -E '^;; callers'; done)
    # 1565 ;; callers (8): 2777 3681 5516 10362 10369 10374 12317 12564
    # 2899 ;; callers (4): 3607 3740 10888 11205
    # 6026 ;; callers (2): 10887 11204
-   for i in 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204; do awk -F'\t' -v i=$i '$1==i {printf "%s %s\n", $1, $5}' splat/scan.tsv; done | awk '{v[$2] = v[$2] " " $1} END {for (k in v) print k ":" v[k]}' | sort
-   # match: 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204
+   # 2903 ;; callers (4): 10434 10442 10476 12033
+   for i in 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033; do awk -F'\t' -v i=$i '$1==i {printf "%s %s\n", $1, $5}' splat/scan.tsv; done | awk '{v[$2] = v[$2] " " $1} END {for (k in v) print k ":" v[k]}' | sort
+   # match: 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204 2903 10434 10442 10476
+   # no-candidate: 12033
    ```
 
    10362, 10369 and 10374, the D0 thunks of the three `api::CDataTextFmt<comum::(anonymous
@@ -648,23 +649,24 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
    address>)`), formed in our link from 10434, 10442 and 10476 once units 152 and 282 wrote vota::CEleitorDemorando's
    and CDigitalNaoReconhecida's statics; 12033 reads no-candidate, and the four match only while that set forms (`pnpm
    --silent wasm fn ../target/vota_web_wasm.wasm 2903` lists the callers). Our link's index of each body (`ours` in the
-   scan) and of its callers moves at every landing, so read the members by name: the scan's `ours` for the three, then
+   scan) and of its callers moves at every landing, so read the members by name: the scan's `ours` for the four, then
    their callers in our link (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each caller:
 
    ```sh
-   wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
-   # at ee4eefae: 1469 func[11035]: 1469 func[11042]: 1469 func[11048]: 1469 func[11719]: 1469 func[2675]: 1469 func[3608]: 1469 func[5562]: 1469 func[9963]: 2781 func[11352]: 2781 func[11359]: 2781 func[3697]: 2781 func[3905]: 6004 func[11351]: 6004 func[11358]:
+   wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 || $1==2903 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
+   # at 87396a87: 1471 func[11044]: 1471 func[11050]: 1471 func[11055]: 1471 func[11726]: 1471 func[2680]: 1471 func[3622]: 1471 func[5567]: 1471 func[9980]: 2793 func[11359]: 2793 func[11366]: 2793 func[3716]: 2793 func[3917]: 3790 func[11404]: 3790 func[11847]: 3790 func[12316]: 6006 func[11358]: 6006 func[11364]:
    ```
 
-   1565's body (1469 there) has eight members: the D0s of `CLedFieldMT`, `CLineField` and `api::CCutFieldPaper`, two
+   1565's body (1471 there) has eight members: the D0s of `CLedFieldMT`, `CLineField` and `api::CCutFieldPaper`, two
    `api::CDataTextFmt<…>` D0s, from `cformbuilder.cpp.o` and unit 79's roots object, and the three
    `CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>` D0s of the `cpedetitulomesario*.cpp` objects
-   (five members before those, at 182dc6c1). 2899's (2781) are the D2s of `api::CFormPart`, `comum::CParteEleitores` and
-   the two `comum::servico` classes, and 6026's (6004) the first two's D0s. When such a set changes, the bodies stop
-   verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin whose
-   name moved").
+   (five members before those, at 182dc6c1). 2899's (2793) are the D2s of `api::CFormPart`, `comum::CParteEleitores` and
+   the two `comum::servico` classes, 6026's (6006) the first two's D0s, and 2903's (3790) the exit destructors of
+   `celeitorvotounaovotou.cpp.o`, `cdigitalnaoreconhecida.cpp.o` and `celeitordemorando.cpp.o`. When such a set
+   changes, the bodies stop verifying, or the merged body takes another member's name and step 9 renames its line
+   (how-to step 10, "A twin whose name moved").
 
-   **1654, 2160 and 2469** are thunks of a fourth such body, 2924. Until unit 170 their matches rested on a hand edit
+   **1654, 2160 and 2469** are thunks of a fifth such body, 2924. Until unit 170 their matches rested on a hand edit
    that named our merged body `byn$mgfn-shared$<first member>`, since 2924 did not match. The executable TU's copies of
    `CPolySingletonList::find` keep 305 and 608 apart in our link too, 2924 matches, and its match line, which step 9
    renames when the first member moves, holds the three; the hand edit went when its removal moved no row (scan and

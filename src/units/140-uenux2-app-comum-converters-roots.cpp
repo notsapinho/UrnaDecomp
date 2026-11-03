@@ -8,11 +8,12 @@
 // converter's vptr, so its slots (11352, 11351) are kept the way the target keeps them.
 // w140_votos calls md::CVotos' constructor (fn 2794), standing for its target caller 7787 (not written); 11351 and
 // comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) are the other call sites.
-// w140_mapa destroys a std::map<md::TCargoID, md::CVotos>, standing for fns 5971 and 11514 (not written), which destroy
-// the map comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) return: its nodes are 32 bytes, the cargo's byte
-// at +16 and the CVotos at +20, and 5733 takes each key from an SCargoInfo's cargo. Its destroy is fn 2877. The key's
-// type is chosen. crdvvota.cpp fills the map and never destroys it, so this file's copy of the destroy is the one the
-// link keeps, and the file compiles at the tree's flags (the fragment's rule).
+// w140_mapa destroys a std::map<md::TCargoID, md::CVotos>, standing for fn 5971 (not written), which destroys the map
+// comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) return: its nodes are 32 bytes, the cargo's byte at +16
+// and the CVotos at +20, and 5733 takes each key from an SCargoInfo's cargo. Its destroy is fn 2877. The key's type is
+// chosen. 11514 (unit 98's comum::VerificaVotos, written) destroys it too, inlined into 2543 in our link, so the copy
+// of the destroy the link keeps is cintegridadereferencial.cpp.o's; crdvvota.cpp fills the map and never destroys it,
+// and this file compiles at the tree's flags (the fragment's rule) all the same.
 // Declared through asm labels where no header is needed.
 #include <map>
 

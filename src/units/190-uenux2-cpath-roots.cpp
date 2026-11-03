@@ -5,8 +5,8 @@
 // - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905; 1164 (unit
 //   95's), 3771 (unit 280's), 11905 (unit 176's), 1937 (unit 110's), 11587 (unit 305's) and 11626 (unit 160's) are in
 //   the link.
-// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11661 (1164, unit 95's, 11569, unit 206's, and
-//   10226, unit 116's, are in the link).
+// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11569, 11661 (1164, unit 95's, 11569, unit
+//   206's, and 10226, unit 116's, are in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
 //   this object emits the copy the link keeps, at the tree's flags (the rule in 190-uenux2-cpath.mk). 8302 is in the link
 //   (unit 188), but clang inlines GetPathLog there, where the target calls 5899 (unit 188's fragment), so both lines stay.

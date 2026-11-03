@@ -5,8 +5,9 @@
 #   curna.cpp.o's; md::CCorrespondenciaResultado's constructor (fn 2801, ValidaCriacao inlined by binaryen) in
 #   dados/md/correspondencia/ccorrespondenciaresultado.cpp.
 # - md::CUrna (gravadores/md/curna.{h,cpp}): both constructors (fns 2854, 2855), ValidaCriacao (fn 5862) and the implicit
-#   destructor (fn 1394), which unit 160's cconversorenvelopegenerico.cpp.o emits (its DoDesconverte deletes a CUrna),
-#   ahead of this unit's roots object; comum::ETipoArquivo is declared in curna.h.
+#   destructor (fn 1394), which unit 160's igravadorenvelope.cpp.o emits (11626 destroys a CUrna; before it, unit 160's
+#   cconversorenvelopegenerico.cpp.o, whose DoDesconverte deletes one), ahead of this unit's roots object;
+#   comum::ETipoArquivo is declared in curna.h.
 # - md::CEnvelopeGenerico (gravadores/md/cenvelopegenerico.{h,cpp}): the three constructors (fns 3821, 5860, 5861) and
 #   ValidaCriacao (fn 3822); the getters GetUrna, GetLocal and GetSeguranca (records :96, :106, :117), which binaryen
 #   inlines into their one caller, CConversorEnvelopeGenerico::DoConverte (fn 10271, unit 160), as the target's does.
@@ -86,7 +87,7 @@ UENUX2_SRCS += $(GRAVADORES_MD_SRCS) $(GRAVADORES_ASN_SRCS)
 $(foreach u,$(GRAVADORES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 136-uenux2-app-comum-gravadores-md-roots.cpp stands in for the others, two call
 # sites each; it compiles with the tree's flags, since it emits CUrna's inline destructor (fn 1394), TSE code (the link
-# keeps unit 160's copy, from cconversorenvelopegenerico.cpp.o, linked ahead of it)
+# keeps unit 160's copy, from igravadorenvelope.cpp.o, linked ahead of it)
 $(ROOT)/$(APP)/136-uenux2-app-comum-gravadores-md-roots.o: $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/136-uenux2-app-comum-gravadores-md-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/136-uenux2-app-comum-gravadores-md-roots.o

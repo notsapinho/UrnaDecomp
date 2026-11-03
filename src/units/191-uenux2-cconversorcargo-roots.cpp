@@ -2,9 +2,9 @@
 // second call site the target gives them, so binaryen keeps each out of line as the target does (it inlines a function
 // with one call site). Each stand-in calls its function once, beside fn 11373's call, and drops the result as the
 // target's callers do.
-// - comum::md::CDetalheCandidato's copy constructor (target fn 365, implicit): stands for 14 of its 16 other target
-//   callers, 1192, 1386, 2834, 3687, 3744, 3818, 5577, 5578, 5582, 5594, 5595, 6627, 11888 and 11892 (2289 and 3775
-//   are in the link, unit 88).
+// - comum::md::CDetalheCandidato's copy constructor (target fn 365, implicit): stands for 12 of its 16 other target
+//   callers, 1192, 1386, 3687, 3744, 5577, 5578, 5582, 5594, 5595, 6627, 11888 and 11892 (2289 and 3775, unit 88's,
+//   2834, GetMapaCargos (unit 98's row), and 3818, unit 200's FiltraCargos, are in the link).
 // - std::construct_at<comum::md::CSuplencia> (fn 2341, the element copy of that constructor's vector): stands for 5594
 //   (11375 is in the link, fragment 299).
 // - std::vector<comum::md::CRespostaConsulta>::__init_with_size (fn 3018, the vector copy inside

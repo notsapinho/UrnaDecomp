@@ -150,8 +150,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341; 1150, 5343, 10204, 10214 and 10676 are in the link) and of 301
-//                         (9 of its 49 target callers are not in the link: 10316, 10443, 10451, 10465, 10474, 10489,
-//                         10500, 10590 and 10689)
+//                         (8 of its 49 target callers are not in the link: 10316, 10443, 10451, 10465, 10474, 10489,
+//                         10500 and 10590)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
 //                12105 and 12110, not reconstructed (11256, 2890 and 12005 are in the link); it calls Build twice
@@ -189,9 +189,9 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
 }
 
 // The MT builder's input fields:
-//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (9 of its 39 target callers are not in the
-//                 link: 10316, 10443, 10451, 10465, 10474, 10489, 10500, 10590 and 10689): it calls it twice, or
-//                 binaryen would inline it
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (8 of its 39 target callers are not in the
+//                 link: 10316, 10443, 10451, 10465, 10474, 10489, 10500 and 10590): it calls it twice, or binaryen
+//                 would inline it
 // The stand-in for 5410, the third caller of 3674 (CMTFormBuilder::AddField) and of 3673 (IInputField<IScreenMT>'s
 // constructor), went: 5410 is in the link (vota::MontaTelaEleitorPodeVotar, unit 161, over AddInputControl(int)), with
 // 395 and 1151 (unit 121), the other two.

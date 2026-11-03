@@ -5,7 +5,7 @@
 // splat/symbol_addrs.txt); fn 652, which one of them calls, matches now:
 //
 // - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
-//   fns 781, 1823 and 2740 (and 1393, which matches: unit 110's celeitores.cpp).
+//   fns 781 and 1823 (and 1393 and 2740, which match: unit 110's celeitores.cpp and unit 282's cpededigital.cpp).
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396
 //   (CRegistraDigitalOperador::GetInst, unit 221), 4661, 2097 and 5665, which has no body here (a voter's year of
 //   birth, the first four characters of the string at +68 of the voter's record), and it holds

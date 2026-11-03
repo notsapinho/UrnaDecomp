@@ -255,10 +255,11 @@
 #   lines are a choice, after LocalizaEleitor. Being private is chosen. Its __func's slots (vtable @1559564: 11520,
 #   11519, 11517, 11516 and 11515, the clones, the call operator, target and target_type; the others are the shared
 #   174, 144, 218 and 355) come from this object: 2 over 8, 1 over 5, 1 over 11 and 1 over 3 rows, operand-only, data
-#   and calls. The lambda calls CarregaArquivo<asn::CConversorImpedido> (unit 280's carregaarquivo.cpp, the entity
-#   readers' object, where the target's data put this read's records), which binaryen inlines into the call operator,
-#   11517: unit 280's fragment has that evidence and the scores (with the read written in the lambda, 35 rows of local
-#   numbers differed: locals 5 and 6 swapped from the first Position() result of ReadFromFile(const CFile &) on).
+#   and calls. The lambda calls CarregaArquivo<asn::CConversorImpedido> (unit 280's carregaarquivo.cpp: the target's
+#   data put this read's records in the entity readers' run, which unit 280 reads as that file's object), which binaryen
+#   inlines into the call operator, 11517: unit 280's fragment has that evidence and the scores (with the read written
+#   in the lambda, 35 rows of local numbers differed: locals 5 and 6 swapped from the first Position() result of
+#   ReadFromFile(const CFile &) on).
 # - comum::MontaCaminhos (1936; name, namespace and external linkage are chosen): the directory prepended to each
 #   name, after a reserve. 6 over 181 rows, operand-only, calls and data. This file is a reading the data support, more
 #   than a choice: its target callers are 5772, 6734 and 7787, which holds CEleitores::StaticLoad's records 395 and

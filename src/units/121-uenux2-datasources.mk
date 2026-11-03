@@ -124,7 +124,8 @@
 # whose GetInst 10689 holds, and scored 373 over 1358 rows (15 inserted, 10 deleted, every inlined GetInst's locals off);
 # after them it scores as above. The target's data put it there too: CEscolheOpcao's vtable (@1587996) and the file's
 # records (@1588040 to @1588072) come after the four classes' vtables (unit 277's fragment has the run). The move leaves
-# every match and row of the scan as it was but census re-picks among exit destructors (steps 7 to 9 run both ways).
+# every match and row of the scan as it was but census re-picks among exit destructors and one 32-byte
+# std::__tree::destroy tie, 2223 (steps 7 to 9 run both ways).
 # From the target's body (pnpm wasm fn):
 # - the form's Read() (its source_location record @1588216, cinteractiveform.h:57) and a switch on the result:
 #   api::INPUT_CORRIGE (5) goes to vota::CPedeIdentidade (GetInst, fn 652), api::INPUT_CONFIRMA (9) to the state the
@@ -148,7 +149,8 @@
 #   it as well; not measured.
 # - What is left differs in binaryen's locals: our link keeps a zero-init of the inlined branch's result at the head of
 #   its block and drops the `= 0` the target sets after the text's copy, and the locals around it take other numbers
-#   (the rows inserted and deleted are those and an add's operands in that order). Measured on whole links, none of
+#   (the rows inserted and deleted are those and an add's operands in that order, and one inserted pair, `local.get 1;
+#   local.set 3`, in CIniciaFinalizacao's inlined GetInst after its s_mutex's unlock). Measured on whole links, none of
 #   these changes it: ConfirmaOpcao defined before ProcessInput (340 over 1350 after the four files, a scratch link of
 #   the plain link.cmd with that variant's object; 390 over 1354 at this unit's place), and at this unit's place the
 #   empty test after the digit test (373 over 1358) and the digit test as a range-for (376 over 1358). These give an object

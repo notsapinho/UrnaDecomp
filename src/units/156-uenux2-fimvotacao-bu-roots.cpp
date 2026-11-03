@@ -11,9 +11,9 @@
 // vota::CLogVota members of this unit (fns 1127, 4551, 4556, 2495, 4563 and 4557, in app/vota/log/clogvota.cpp) have
 // direct call sites in the target, two or more each (ledger/callgraph.tsv; 4557's two are both in fn 12081), so
 // binaryen keeps them out of line; 4551, 4556, 4563 and 4557 have them in the link from their written callers (12077,
-// 12078, 12081, 12027, 12082), and so has 2495 (10466, unit 192; 10473, 10477 and 10485, unit 282), and the stand-ins
-// below give the others theirs, each standing for the callers it
-// names, and go when those callers are in splat/matched.txt or written in the link. Declared through asm labels, so this TU needs no uenux2 header; compiled as app code.
+// 12078, 12081, 12027, 12082), and so has 2495 (10466, 10473, 10477 and 10485, unit 282), and the stand-ins below give
+// the others theirs, each standing for the callers it names, and go when those callers are in splat/matched.txt or
+// written in the link. Declared through asm labels, so this TU needs no uenux2 header; compiled as app code.
 extern "C" {
 int w156_logvota_getinst(void) __asm__("_ZN4vota8CLogVota7GetInstEv");
 void w156_loga_imprimindo_relatorio(int, int, unsigned char) __asm__(

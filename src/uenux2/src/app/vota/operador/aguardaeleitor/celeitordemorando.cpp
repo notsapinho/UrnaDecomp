@@ -1,6 +1,6 @@
 // vota::CEleitorDemorando (app/vota/operador/aguardaeleitor/celeitordemorando.cpp, the class name in lower case; the
-// directory from the data). This comment is the reconstruction's: no record names this file or its functions, so
-// every line is a choice, in the order of the use bands where they give one
+// directory a choice, as fragment 152 says). This comment is the reconstruction's: no record names this file or its
+// functions, so every line is a choice, in the order of the use bands where they give one
 // (src/units/152-uenux2-app-vota-operador-estados.mk).
 #include "app/vota/operador/aguardaeleitor/celeitordemorando.h"
 
