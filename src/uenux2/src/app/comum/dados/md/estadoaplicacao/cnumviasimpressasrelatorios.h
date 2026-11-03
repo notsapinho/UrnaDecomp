@@ -16,6 +16,9 @@ public:
     uebyte GetNumViasEleitores() const { return m_numViasEleitores; }
     uebyte GetNumViasVersoesDados() const { return m_numViasVersoesDados; }
     uebyte GetNumViasPU() const { return m_numViasPU; }
+    // Adds one to the count of the packages' versions report, as vota::CImpressaoVersaoPacotes::StartState (target fn
+    // 11905) does inline after printing it. The name and its being defined in the class are chosen.
+    void IncrementaNumViasVersoesDados() { ++m_numViasVersoesDados; }
 
 private:
     uebyte m_numViasEstadoUrna;

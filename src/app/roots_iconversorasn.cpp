@@ -58,7 +58,7 @@ extern "C" void urna_deconverte_foto(int, int, int) __asm__(
 // char*, ...) calls it. binaryen inlined that decode(const char*, ...) and BERDecoder's constructor into it, each with
 // one caller, which src/units/115-asn1-leftovers.mk takes out of the generated roots. Its target callers are
 // api::CFileASN's readers inlined into 1937, 2280, 3735, 3755, 3771, 3791, 5706, 5740, 5778, 5825, 7787, 11419, 11517
-// and 11905. 3791, comum::IServicoEstado's reader (unit 206), is in our link, and its object
+// and 11905. 3791, comum::IServicoEstado's reader (unit 206), and 11905 (unit 176's) are in our link, and 3791's object
 // (app/uenux2/src/app/comum/appinfo/servicos/cservicoestadogeralvota.cpp.o) gives the copy, so the explicit instance
 // this file held went: without it 679 matches from that object (steps 7 to 9). The others are not in our link:
 // urna_roots_iconversorasn stands in for them with two calls, each passing defered as false, the constant binaryen

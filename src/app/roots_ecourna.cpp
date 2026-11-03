@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "ecourna/api/security/base64.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
 #include "ecourna/app/dados/cfabricaidentificadoreleitor.hpp"
 #include "ecourna/app/dados/cnumerocpf.hpp"
@@ -16,15 +15,17 @@ namespace {
 
 using ecourna::api::util::CStringUtils;
 
+// ecourna::api::security::EncodeBase64's one caller in the target is comum::md::estadoaplicacao::CEstadoGeral::
+// GetResumoHashVersoesPacotes (fn 3703, unit 287), which holds it inlined. 3703's target callers not in our link: 3059
+// and 7787 (11222 is in the link). UsaBase64A and UsaBase64B stand for them, through its label, on an object whose +168
+// is the hash vector, as CEstadoGeral's is, so that this TU needs no uenux2 header.
 struct SComResumo {
     char preenchimento[168];
     std::vector<uebyte> dados;
 };
 
-__attribute__((noinline)) std::string ResumoBase64(const SComResumo& obj)
-{
-    return ecourna::api::security::EncodeBase64(obj.dados).substr(0, 8);
-}
+extern "C" void urna_resumo_hash(void* resultado, const SComResumo& geral) __asm__(
+    "_ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv");
 
 std::shared_ptr<ecourna::app::dados::IIdentificadorEleitor> CriaIdentificador(int tipo, const std::string& numero)
 {
@@ -98,9 +99,18 @@ __attribute__((noinline)) int UsaBusca(const std::string& s)
 }
 __attribute__((noinline)) std::string UsaSubstituiA(const std::string& s) { return CStringUtils::Replace(s, "a", "b") + "c"; }
 __attribute__((noinline)) std::string UsaSubstituiB(const std::string& s) { return "d" + CStringUtils::Replace(s, s, "e"); }
-__attribute__((noinline)) std::string UsaBase64A(const SComResumo& v) { return ResumoBase64(v) + "A"; }
-__attribute__((noinline)) std::string UsaBase64B(const SComResumo& v) { return "B" + ResumoBase64(v); }
-__attribute__((noinline)) std::string UsaBase64C(const SComResumo& v) { return ResumoBase64(v); }
+__attribute__((noinline)) int UsaBase64A(const SComResumo& v)
+{
+    int resumo[3];
+    urna_resumo_hash(resumo, v);
+    return resumo[0] + resumo[1];
+}
+__attribute__((noinline)) int UsaBase64B(const SComResumo& v)
+{
+    int resumo[3];
+    urna_resumo_hash(resumo, v);
+    return resumo[2];
+}
 
 __attribute__((noinline)) std::string UsaIdentificador(int tipo, const std::string& numero)
 {
@@ -116,9 +126,8 @@ int urna_roots_ecourna(int a)
     std::string s(static_cast<size_t>(a), '1');
     SComResumo v{};
     v.dados.assign(s.begin(), s.end());
-    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s);
-    std::string out = UsaBase64A(v) + UsaBase64B(v) + UsaBase64C(v);
-    out += UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
+    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s) + UsaBase64A(v) + UsaBase64B(v);
+    std::string out = UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
     out += UsaPreencheCopiaA(s) + UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasA(s) + UsaMaiusculasB(out) + UsaSubstituiA(s) + UsaSubstituiB(out);

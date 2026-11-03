@@ -33,6 +33,12 @@ public:
     // change it with CAjusteDataHora::AdicionaDeltaT (fn 3702) and store it back through this call. The name is chosen:
     // no record, slot or RTTI names it.
     void SetAjusteDataHora(const CAjusteDataHora& ajusteDataHora);
+    // Target fn 3703, out of line in cestadogeral.cpp: the first 8 characters of the packages' hash (+168) in base64,
+    // ecourna::api::security::EncodeBase64 held inlined by binaryen (its records base64.cpp:247 and :267). Its target
+    // callers are 3059, 7787 and 11222, which passes the state comum::CAppInfo::GetGeral returns and prints the result
+    // after "Dados:" in the packages' versions report. The name and its being a member are chosen: no record, slot or
+    // RTTI names it.
+    std::string GetResumoHashVersoesPacotes() const;
 
 private:
     EEstadoUrna m_estadoUrna;

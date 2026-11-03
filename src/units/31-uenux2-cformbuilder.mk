@@ -237,8 +237,8 @@
 # against the link: 11 over 229 rows, operand-only; matched by the scan's content pass, with the lambda's std::function
 # slots 10995, 10996, 10997, 10999 and 11000, which step 8 names by the lambda's vtable. Its declaration in
 # cpaperformbuilder.h takes the blank line between the header's two include groups, so that GetRenderForm keeps line
-# 51, record 1581300's. Show's callers are not written: fragment 246's roots stand in for them, passing true (fragment
-# 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the lambda's capture
+# 51, record 1581300's. Show's callers 5591 and 11902 are not written (5592, unit 287's, is in the link): fragment
+# 246's roots stand in for them, passing true (fragment 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the lambda's capture
 # spelled `[this]` (`[&]` captures the same by the language's rules, not compiled here); the header line the
 # declaration takes (any line above 51 would do); Show's place last in the file (it is the file's only function with 3
 # uses in ledger/ordinals.tsv, so no band neighbour orders it).
