@@ -10,11 +10,14 @@ namespace comum {
 // plain form, the character spelling of the values, the enumerators' names, the comum:: scope and this path are chosen.
 // The value 48, '0', is evidence too: comum::md::CDadosDisponiveisCarga's constructor (held inlined by target fn 11423)
 // rejects that one phase, code 8040 (record cdadosdisponiveiscarga.cpp:41); an enumerator for it and its name: chosen.
+// The value 52, '4', is evidence as well: comum::md::CIDPacote's constructors (held inlined by target fn 11437) reject
+// it and '0', code 8921 (record cidpacote.cpp:21); its enumerator's name is chosen.
 enum EUrnaFase {
     FASE_INDEFINIDA = '0',
     FASE_OFICIAL = '1',
     FASE_SIMULADO = '2',
     FASE_TREINAMENTO = '3',
+    FASE_INVALIDA = '4',
 };
 
 } // namespace comum

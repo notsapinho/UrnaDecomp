@@ -201,6 +201,10 @@ $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Make
 # not identified yet: last in APP_OBJS, after roots_rhvoice.o and roots_boost.o (src/app/roots_set.cpp)
 $(ROOT)/$(APP)/roots_set.o: $(ROOT)/src/app/roots_set.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_set.cpp -o $(R)
+# libc++'s destroy of two vectors of comum::md classes, at the flags of the vota object whose copies the target keeps
+# (src/app/roots_dadoscarga.cpp): uenux2 with strict aliasing, after roots_vector.o
+$(ROOT)/$(APP)/roots_dadoscarga.o: $(ROOT)/src/app/roots_dadoscarga.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoversaopacotes.cpp) -c src/app/roots_dadoscarga.cpp -o $(R)
 
 # The executable TU, /home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the TSE link line
 # (docs/reference/toolchain.md "Export order"), so wasm-ld keeps its copy of every linkonce function and vtable it emits.
@@ -261,7 +265,7 @@ APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_
 # CPriorityMessageQueue<SMessage>::Insert they replace; then the stand-ins, votaInit's first; roots_set.o last, after
 # roots_rhvoice.o, whose copy of __tree_balance_after_insert (152) the target's is; app before libraries; libraries
 # in this order) --------
-APP_OBJS := roots_coderenv.o roots_texttospeech.o roots_messagequeue.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o roots_set.o
+APP_OBJS := roots_coderenv.o roots_texttospeech.o roots_messagequeue.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o roots_dadoscarga.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o roots_set.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

@@ -646,7 +646,7 @@ const ModuloTiposEleitorais::Versao::InfoType ModuloTiposEleitorais::Versao::the
     ASN1::NumericString::theInfo.charSetUnalignedBits, ASN1::NumericString::theInfo.charSetAlignedBits
 };
 
-const char * ModuloTiposEleitorais::CabecalhoPacote::origem::value_type::nameList[] = {
+const char * ModuloTiposEleitorais::Sistema::nameList[] = {
     "<undefined>=0",
     "configurador",
     "intercad",
@@ -664,7 +664,7 @@ const char * ModuloTiposEleitorais::CabecalhoPacote::origem::value_type::nameLis
     "padaUE"
   };
 
-const ModuloTiposEleitorais::CabecalhoPacote::origem::value_type::InfoType ModuloTiposEleitorais::CabecalhoPacote::origem::value_type::theInfo = {
+const ModuloTiposEleitorais::Sistema::InfoType ModuloTiposEleitorais::Sistema::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
