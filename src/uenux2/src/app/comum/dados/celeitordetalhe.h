@@ -6,6 +6,7 @@
 #include "app/comum/dados/md/eleitor/celeitordecorator.h"
 #include "app/comum/dados/md/eleitor/celeitordinamico.h"
 #include "app/comum/dados/md/etipoimpedimento.h"
+#include "app/comum/eurnaturno.h"
 
 namespace comum {
 
@@ -36,6 +37,17 @@ public:
     // ccargods.cpp's and celeitores.cpp's in link order. Its callers count the voters who can vote (fn 2823 below,
     // CEleitores's slot 0 fn 2824, and fns 10635, 11233, 11616). The name, its being a member and its const are chosen.
     bool SemImpedimento() const;
+    // The impediment of the turn given. vota::CEleitorEncontrado::StartState (fn 10635) holds this code inlined twice
+    // (comum::CAppInfo::GetInst and its const GetGeral, fns 185 and 457, the turn's test, the load of +196 or +200)
+    // beside three calls of GetImpedimento (fn 3769), which reads the same members out of line; the target functions
+    // whose pieces hold the two offsets and a call of 457 are 2266, 3769, 7787 and 10635 (`/usr/bin/grep -rlE
+    // 'i32\.const 196' build/out/splat/pieces/asm | xargs /usr/bin/grep -lE 'i32\.const 200' | xargs /usr/bin/grep -lE
+    // 'call 457'`). So that code is a member a header defines, which reads the private members; this one, its name, its
+    // parameter and its being inline are chosen.
+    md::ETipoImpedimento GetImpedimentoTurno(EUrnaTurno turno) const
+    {
+        return turno == TURNO_2 ? m_impedimentoP2 : m_impedimentoP1;
+    }
 
 private:
     md::CEleitorDecorator m_eleitor;

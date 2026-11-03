@@ -3,7 +3,11 @@
 # - app/vota/eleitor/cmostratelacontinuavotacao.{h,cpp} (new): vota::CMostraTelaContinuaVotacao, its destructor and
 #   StartState (fn 7221, matched);
 # - app/vota/operador/justificativa/iconfirmajustificativa.{h,cpp} (the .cpp was a stub-only file): the destructor of
-#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched) and its constructor (fn 3625, matched).
+#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched), its constructor (fn 3625, matched) and ProcessInput (fn
+#   10588, slot 7 of the class and of its three derived classes, matched);
+# - app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.{h,cpp} (new), listed before it:
+#   vota::CEleitorImpedidoJustificarVotoCPF, whose GetInst and constructor 10588 holds inlined, and its statics' exit
+#   destructors (fns 10606 and 10605, matched); its ProcessInput (10604) is fragment 283's pending member.
 # Unit 119's slots 10 and 15 post to vota::CThreadEleitor's queue with Post; a helper this unit compiled for them
 # (ccontroladorregistramesariosvotamensagem.cpp) went: fn 6018 is binaryen's merge of the two slots, not a source
 # function (unit 119's fragment has the evidence and the measurement).
@@ -55,7 +59,7 @@
 # retornar" at {1, 4}, "CONFIRMA: justificar" at {40, 4} aligned right, AddInputControl, and assigns
 # GetInteractiveForm("", true) to +12 in the body (the target clears the member first, then moves the result in). Its
 # two callers: vota::CProcuraEleitor::StartState (10631, unit 104), through unit 243's CConfirmaJustificativa, and
-# CEleitorEncontrado::StartState (10635, pending), which unit 243's roots stand in for. `> 40` against `>= 41` is a
+# CEleitorEncontrado::StartState (10635, unit 104), through unit 283's two derived classes. `> 40` against `>= 41` is a
 # choice that gives the same compare. The three derived classes' slot 0, fn 3626 (`f1688(p0)`), matches from unit 243's
 # CConfirmaJustificativa, whose destructor is out of line.
 #
@@ -63,8 +67,24 @@
 # one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller
 # binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read `score 4 over 39 rows`
 # with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):
-# IConfirmaJustificativa's StartState and ProcessInput.
+# IConfirmaJustificativa's StartState.
+#
+# IConfirmaJustificativa::ProcessInput (fn 10588, 1112 B): through Read() (its TU's record of cinteractiveform.h:57) it
+# goes, on CONFIRMA, to CEleitorImpedidoJustificarVotoCPF::GetInst() when the identifier typed is a CPF
+# (GetTipoIdentidadeDigitada, 5416, is 2) and to vota::CPedeAnoNascimento::GetInst() (5418, fragment 283) otherwise,
+# and on CORRIGE to CPedeIdentidade::GetInst() (652); the CPF state's GetInst and constructor are inlined, each behind a
+# stack frame of its own. The CONFIRMA branch picks the state into a local and stores it once, the form carried into
+# the link, where 10588 matches; by object (wasm-objdump -d of try-tu compiles, 92 lines), a conditional operator in
+# the store gives the same code, and an `if`/`else` over a named Read() result or the `switch` with a store in each
+# branch another (90 lines), the CORRIGE case first a third.
+# celeitorimpedidojustificarvotocpf.cpp links before iconfirmajustificativa.cpp, so this unit lists it: in fragment
+# 283's list, after it, 10588 scored `195 over 484 rows (same 289, replaced 188 [187 operand-only], inserted 4, deleted
+# 3)`, and here `49 over 480 rows (same 431, replaced 49 [49 operand-only], inserted 0, deleted 0)`, a match (pnpm wasm
+# score on whole links, docs/reference/facts/codegen.md C4); its statics' exit destructors (10606, 10605) sit above
+# 10588 in use band 1, the target's order. CEleitorImpedidoJustificarVotoCPF's class, file and notes are fragment 283's
+# (the header says the rest). Chosen: the local's name and the `switch`.
 APP_VOTA_MENSAGENS_SRCS := src/app/vota/eleitor/cmostratelacontinuavotacao.cpp \
+    src/app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.cpp \
     src/app/vota/operador/justificativa/iconfirmajustificativa.cpp
 UENUX2_SRCS += $(APP_VOTA_MENSAGENS_SRCS)
 APP_VOTA_MENSAGENS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

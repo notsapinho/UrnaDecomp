@@ -25,8 +25,6 @@
 //   api/gui/cinteractiveform.h does not have.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
-// - vota::IEleitorImpedidoVotar::ProcessInput (target fn 10624, slot 7 of the same seven vtables): through Read()
-//   (record cinteractiveform.h:57 @1589236) it goes to fn 652's state.
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
 #include "app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.h"
 #include "app/vota/operador/confirmaidentidade/cverificadadoeleitor.h"
@@ -72,11 +70,6 @@ void CPedeIdentidade::ProcessTick(uebyte)
 }
 
 void IEleitorImpedidoVotar::StartState()
-{
-    __builtin_trap();
-}
-
-void IEleitorImpedidoVotar::ProcessInput()
 {
     __builtin_trap();
 }

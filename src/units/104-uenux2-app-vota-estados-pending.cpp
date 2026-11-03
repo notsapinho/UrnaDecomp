@@ -20,7 +20,6 @@
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
-#include "app/vota/operador/leidentidade/celeitorencontrado.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -131,16 +130,6 @@ void CReimprimindoResumoZeresima::StartState()
 
 // CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 unresolved (unit 161; 599 and 1687 are unit 50's).
 void CCancelaHabilitacaoEleitor::StartState()
-{
-    __builtin_trap();
-}
-
-// CEleitorEncontrado::StartState: fn 10635 (3870 B), record celeitorencontrado.cpp:102 (the throw of the vota error 9394
-// "Eleitor não posicionado"), whose line stays blank there. Every direct callee is named but 6733, a std::set<int> range
-// insert whose other caller is fn 7787; the body holds inlined the GetInst of the five other states derived from
-// vota::IEleitorImpedidoVotar and of the Temporario and Transito justification pairs, classes the tree lacks, and
-// vota::CLogVota::LogaEleitorImpedido (record clogvota.cpp:432).
-void CEleitorEncontrado::StartState()
 {
     __builtin_trap();
 }

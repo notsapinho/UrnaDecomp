@@ -70,13 +70,21 @@
 // function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
 // evidence. Its iinterfaceinit.h include (comum::FormataTamanho) is in this header, not in clogvota.cpp, so that
 // GetInst's record stays on line 37 of the .cpp: a choice made for that record's line.
+// LogaEleitorImpedido is the member its record names (clogvota.cpp:432, column 19: the throw of the vota error 9388,
+// "Tipo inválido"), held inlined by vota::CEleitorEncontrado::StartState (fn 10635) after a call of GetInst, in a stack
+// frame of its own: for comum::md::IMPEDIMENTO_SEM_IMPEDIMENTO it logs nothing, for the fourteen impediments it formats
+// "Eleitor impedido - {}" of a text and logs it through loga (fn 233), for IMPEDIMENTO_INVALIDO it throws, and for a
+// value past it it logs the empty text (the target's branch table). The euevotaerror.h include is in this header for
+// the same reason as iinterfaceinit.h's; the parameter's name, the local's and the switch's spelling are chosen.
 
 #include <cstdint>
 #include <string>
 #include <utility>
 
+#include "app/comum/dados/md/etipoimpedimento.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/log/ieventoslog.h"
+#include "app/vota/euevotaerror.h"
 
 namespace vota {
 
@@ -182,6 +190,8 @@ public:
     void LogaEspacoUtilizadoMV(uintmax_t espaco);
 
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
+
+    void LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento);
 
 private:
     CLogVota();

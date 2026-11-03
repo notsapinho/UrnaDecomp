@@ -26,8 +26,8 @@
 # anonymous namespace, the lines before the records.
 #
 # Pending (239-uenux2-cnomeeleitor-pending.cpp says what each waits for): StartState (10501) and ProcessInput (10500).
-# GetInst's two target callers, fns 10635 (vota::CEleitorEncontrado's StartState) and 10677 (CPedeIdentidade's
-# ProcessInput), are not written: the roots stand in for them.
+# GetInst's two target callers: fn 10635 (vota::CEleitorEncontrado's StartState) is in the link (unit 104), and the
+# roots stand in for 10677 (CPedeIdentidade's ProcessInput), not written.
 CNOMEELEITOR_SRCS := src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp
 UENUX2_SRCS += $(CNOMEELEITOR_SRCS)
 # StartState and ProcessInput are not reconstructed: 239-uenux2-cnomeeleitor-pending.cpp gives the vtable trapping

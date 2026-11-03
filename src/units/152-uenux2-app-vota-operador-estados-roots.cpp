@@ -9,10 +9,8 @@
 // - The GetInst of those two (fns 5393 and 5430), whose target callers are not in the link but 10430 (unit 71): fns
 //   10209 and 10430 call 5393, fns 10677 and 10689 call 5430. Each stand-in calls its GetInst twice, so that binaryen
 //   keeps it a function of its own; one subtracts the two results and the other adds them, so the two bodies differ.
-// - vota::IIniciaJustificativa's constructor (target fn 3624) has two direct callers in the target, fns 10631 and 10635,
-//   which build the derived states and use the `this` it returns. 10631 is in the link (unit 104, through
-//   vota::CIniciaJustificativa's constructor, unit 243); a noinline caller stands in for 10635 and uses that result,
-//   its body no target function's.
+// - vota::IIniciaJustificativa's constructor (target fn 3624) needs none: its two target callers, 10631 and 10635, are in
+//   the link (unit 104, through unit 243's and unit 283's constructors of the derived states).
 // - vota::CLogVota::LogaAudioDesativadoFimVotacao (fn 4529, callers 10435 and 10646): two call sites, so that binaryen
 //   keeps it out of line as the target does. Two noinline stand-ins call it for its two callers, one of them with an
 //   offset address. LogaSuspensaoAbortada (fn 4535) needs none: both its callers, 10407
@@ -26,7 +24,6 @@ extern const char cperguntaeleitorvotando_vt[] __asm__("_ZTVN4vota23CPerguntaEle
 extern const char cperguntafilaeleitorvazia_vt[] __asm__("_ZTVN4vota25CPerguntaFilaEleitorVaziaE");
 extern const char cinspecionaurna_vt[] __asm__("_ZTVN4vota15CInspecionaUrnaE");
 extern const char chabilitaaudioeleitor_vt[] __asm__("_ZTVN4vota21CHabilitaAudioEleitorE");
-int w3624_root_0(int, const void*) __asm__("_ZN4vota20IIniciaJustificativaC2EPNS_22IConfirmaJustificativaE");
 void w4529_root_0(void*) __asm__("_ZN4vota8CLogVota29LogaAudioDesativadoFimVotacaoEv");
 int w5393_root_0() __asm__("_ZN4vota23CDesabilitaAudioEleitor7GetInstEv");
 int w5430_root_0() __asm__("_ZN4vota23CHorarioVotacaoTerminou7GetInstEv");
@@ -44,12 +41,6 @@ __attribute__((noinline)) int DesabilitaAudio()
 __attribute__((noinline)) int HorarioTerminou()
 {
     return w5430_root_0() + w5430_root_0();
-}
-
-// Stands for fn 10635.
-__attribute__((noinline)) int ConstroiIniciaJustificativa(int estado, const void* confirma)
-{
-    return w3624_root_0(estado, confirma) + 4;
 }
 
 __attribute__((noinline)) void LogaFim(char* log)
@@ -72,7 +63,6 @@ struct SEstados152Roots {
         estados152_sink = cperguntafilaeleitorvazia_vt;
         estados152_sink = cinspecionaurna_vt;
         estados152_sink = chabilitaaudioeleitor_vt;
-        estados152_sink = reinterpret_cast<const void*>(&ConstroiIniciaJustificativa);
         estados152_sink = reinterpret_cast<const void*>(&LogaFim);
         estados152_sink = reinterpret_cast<const void*>(&LogaFimDeslocado);
         estados152_sink = reinterpret_cast<const void*>(&DesabilitaAudio);

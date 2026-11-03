@@ -24,14 +24,7 @@ CJustificador& CJustificador::GetInst()
 std::unique_ptr<CJustificador> CJustificador::s_inst;
 std::mutex CJustificador::s_mutex;
 
-// (original lines 27-51: content not recovered)
-#line 52
-// <stubs>
-// f10590 · 4305 B · unmatched · name unknown
-// void f10590(i32) { ... }
-// </stubs>
-
-// (original lines 57-99: content not recovered)
+// (original lines 27-99: content not recovered)
 #line 100
 std::string CJustificadorDadoTitulo::Text()
 {

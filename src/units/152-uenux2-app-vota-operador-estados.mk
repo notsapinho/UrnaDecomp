@@ -167,10 +167,10 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # compiled with the unit's flags
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-pending.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-pending.cpp -o $(R)
-# nothing reconstructed references five of the states' vtables, and IIniciaJustificativa's constructor,
-# CLogVota::LogaAudioDesativadoFimVotacao and two GetInst have callers not reconstructed:
-# 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in for those callers (for 3624,
-# 10635 alone now: 10631, unit 104, is in the link)
+# nothing reconstructed references five of the states' vtables, and CLogVota::LogaAudioDesativadoFimVotacao and two
+# GetInst have callers not reconstructed: 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses
+# and stands in for those callers (IIniciaJustificativa's constructor, 3624, needs none: 10631 and 10635, unit 104,
+# are in the link)
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-roots.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-pending.o $(APP)/152-uenux2-app-vota-operador-estados-roots.o

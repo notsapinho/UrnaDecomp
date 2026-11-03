@@ -98,12 +98,18 @@ enum EUeVotaError {
     // cpedeproporcional.cpp:84) throws; the name is chosen from its message, "O cargo atual nao esta posicionado", and the
     // class: no evidence names it
     EUE_VOTA_PEDE_PROPORCIONAL_ENTRADA_CARGO_NAO_POSICIONADO = 9387,
+    // the value is the code vota::CLogVota::LogaEleitorImpedido throws (record clogvota.cpp:432, inlined into target fn
+    // 10635); the name is chosen from its message, "Tipo inválido": no evidence names it
+    EUE_VOTA_TIPO_IMPEDIMENTO_INVALIDO = 9388,
     // the values are the codes vota::CThreadMonitor::VerificaErroCriticoFlash (record cthreadmonitor.cpp:156) and
     // VerificaErroCriticoKbdTE (cthreadmonitor.cpp:167), inlined into target fn 10226, throw; the names are chosen from
     // their messages, "Erro na Mídia Externa - Mídia não está presente" and "Erro no teclado do eleitor - dispositivo
     // desconectado": no evidence names them
     EUE_VOTA_MIDIA_EXTERNA_AUSENTE = 9390,
     EUE_VOTA_TECLADO_ELEITOR_DESCONECTADO = 9391,
+    // the value is the code vota::CEleitorEncontrado::StartState (target fn 10635, record celeitorencontrado.cpp:102)
+    // throws; the name is chosen from its message, "Eleitor não posicionado": no evidence names it
+    EUE_VOTA_ELEITOR_NAO_POSICIONADO = 9394,
     // the value is the code vota::IConfirmaJustificativa's constructor (target fn 3625, record
     // iconfirmajustificativa.cpp:34) throws; the name is chosen from its message, "Frase muito grande [<frase>]": no
     // evidence names it
