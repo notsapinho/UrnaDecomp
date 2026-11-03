@@ -43,8 +43,9 @@
 #   __cxx_global_array_dtor.5 to the link, so step 9 renamed 10760's match line to the one qualified by its object.
 # Chosen: the files' paths and names, the order of the definitions in each (cmesarioregistrado.cpp as unit 247's
 # cregistrarmesarios.cpp), the class's `final` and its destructor declared first and out of line (as
-# CRegistrarMesarios, over the same slots 0 and 1), the members' names, TelaMesarioRegistrado's name and external
-# linkage (CRegistrarMesarios's form measured why: unit 247), and the controller's slot names (its header's).
+# CRegistrarMesarios, over the same slots 0 and 1), the members' names, TelaMesarioRegistrado's name, and the
+# controller's slot names (its header's). TelaMesarioRegistrado's external linkage is evidence, not a choice: 10337
+# holds it behind a frame of its own, the sign unit 247's fragment measured for CRegistrarMesarios's form.
 #
 # Not written here: 1937 (unit 98's fragment has the measurement), and the rest of the class's file:
 # IGestorDadoMesario::StartState (10337) is a trap in unit 135's pending file.

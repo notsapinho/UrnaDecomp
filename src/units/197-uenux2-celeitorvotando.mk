@@ -95,8 +95,9 @@
 # - AdicionaVoto: with the append written as a free function beside it in cinformacaoeleitor.cpp, clang inlined it,
 #   one 48-byte frame where the target has AdicionaVoto's 16-byte frame and then binaryen's 32-byte one: 102 over 328
 #   rows (14 inserted, 23 deleted); with the append in ccedula.cpp it matches. With the constructor there too,
-#   our __wasm_call_ctors calls it on g_votosEleitor as the target's calls fn 203's body on 1833300. g_votosEleitor's
-#   line (`vote:5 by:13588`) has 4192, 7377, 6999, 4454 and 11683 among the target's other users of the address.
+#   our __wasm_call_ctors calls it on g_votosEleitor as the target's calls fn 203's body on 1833300. g_votosEleitor is
+#   named by a `vote` line (splat/symbol_addrs.txt; its count grows with the matches that use the address); 4192,
+#   7377, 6999, 4454 and 11683 are among the target's other users of it.
 # - The five loggers: clogvota.h says what they are. Their places in clogvota.cpp are a choice. Use band 2 puts
 #   4546, 4542, 4541 and 4537 after fns 4556 and 4551 and before 4535, 4529, 4522 and 4511, which that file's lines do
 #   not allow together (4556 and 4551 already come after 4535, 4529 and 4522): right after
@@ -205,7 +206,7 @@
 # whose slots are all written: the pending file went with ProcessKey.
 # 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem for GetInst's (fn 7481; 7428 and
 # 11754 are in the link, and Registra, which stood for 11754's RegistraVoto calls, went), Abrange for GetAbrangencia's
-# (fns 2824 and 5761), Imprime for OrdenaPorImpressao's (fns 5604, 12098 and 12110), Converte for 5681's (fn 11349) and
+# (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 5604, 12098 and 12110), Converte for 5681's (fn 11349) and
 # Procura for 3251's (fns 2386 and 3266). Precisa and Inicia, which stood for 7352 and 7377, went with them, and
 # Suspende, which stood for suspenderEleitor's (fn 4442) calls of AdicionaVoto, the five loggers and FinalizaEleitor,
 # with 4442. GetInst's constructor stores the vptr, the target's one reference to the vtable, so no root takes it.

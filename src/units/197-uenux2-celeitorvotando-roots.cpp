@@ -8,9 +8,9 @@
 //   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442), which makes RegistraVoto's calls;
 //   FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn 7352) and suspenderEleitor. All are in the link: no
 //   stand-in.
-// - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: CEleitores'
-//   slot 0 (fn 2824) and fn 5761, not written, and fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor
-//   inlined. Abrange stands for fns 2824 and 5761.
+// - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: fn 5761, not
+//   written, and fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor inlined, and CEleitores' slot 0 (fn
+//   2824, unit 110's), both in the link. Abrange stands for fn 5761.
 // - comum::CCargos::OrdenaPorImpressao (fn 3782) has three direct callers in the target, fns 5604, 12098 and 12110,
 //   none written: Imprime stands for them, two call sites.
 // - The std::map<SCargoInfo, CVotos> copy of comum::md::CVotosCargos::InsereCedula (held by fn 4454) calls
@@ -48,7 +48,7 @@ __attribute__((noinline)) int Obtem(int vezes)
     return primeiro[vezes] - segundo[3];
 }
 
-// stands for fns 2824 and 5761
+// stands for fn 5761
 __attribute__((noinline)) int Abrange(const char* registro, const char* eleitores)
 {
     return w197_abrangencia(registro + 32, eleitores + 32, eleitores[44] + 197u);

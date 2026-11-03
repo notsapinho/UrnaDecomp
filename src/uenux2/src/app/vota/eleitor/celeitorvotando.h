@@ -91,6 +91,7 @@ private:
     // queue, shows CTelasVota's +164 form (GetTelaDescartaVotos), goes to vota::CAguardaMensagem, finishes the post's
     // state, logs "Eleitor foi suspenso e não confirmou nenhum voto" (a CLogVota member binaryen inlines), and calls
     // IBeep's slot 5 (BeepDiscard) and ISound's slot 5 (Stop). Its two calls are suspenderEleitor's (fn 4442).
+    // Private: a choice.
     void DescartaVotos();
 
     // fn 4442, records :410 and :427 (the CUeVotaError 9312 and 9313 throws): ProcessKey's keys 2 and 3. It logs who

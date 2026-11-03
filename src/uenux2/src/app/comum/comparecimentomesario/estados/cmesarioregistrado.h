@@ -58,8 +58,8 @@ private:
 // The operator's form of CMesarioRegistrado: a buzz (51, 10), "Mesario registrado com sucesso." at {1, 1}, "Continuar
 // registrando mesarios?" at {1, 2}, "CORRIGE: Encerrar  CONFIRMA: Prosseguir" at {1, 4}, the input control, and the
 // interactive form with an empty name that clears the keyboard (fn 10337 holds it behind a frame of its own inside the
-// constructor's). Its name, its being a free function of comum with external linkage, as TelaIndagaRegistroMesarios's,
-// and its declaration here are chosen.
+// constructor's): that frame is the sign of external linkage, measured for TelaIndagaRegistroMesarios (unit 247's
+// fragment). Its name, its being a free function of comum and its declaration here are chosen.
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaMesarioRegistrado();
 
 } // namespace comum

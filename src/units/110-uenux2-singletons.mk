@@ -197,10 +197,11 @@
 #   the list's growth inline, unrolled for the first call. Its loop pushes each coverage from the one given and leaves
 #   after the federal one, the target's `i32.ne` with 2 after the push; written `tipo <= ABRANGENCIA_FEDERAL` with that
 #   break, 15 over 1236 rows, all operand-only, calls and data; `tipo != ABRANGENCIA_FEDERAL + 1` with no break, 315
-#   over 1284 (48 inserted, 51 deleted). Band 4 (ledger/ordinals.tsv) runs 2824, 2823, 2822 in link order, so it is
-#   defined above QuantidadeAptos; its lines are a choice. The target stores CEleitores's vptr in 7787 alone
-#   (`/usr/bin/grep -rlE 'i32\.const 1559120($|[^0-9])' build/out/splat/pieces/asm`), a constructor inlined there:
-#   the roots keep the vtable, and the slot's direct callers (5603, 11968, 12098) are not written either.
+#   over 1284 (48 inserted, 51 deleted), and the plainest form, `tipo <= ABRANGENCIA_FEDERAL` with no break, 313 over
+#   1284 (48 inserted, 51 deleted), each on a whole link. Band 4 (ledger/ordinals.tsv) runs 2824, 2823, 2822 in link
+#   order, so it is defined above QuantidadeAptos; its lines are a choice. The target stores CEleitores's vptr in 7787
+#   alone (`/usr/bin/grep -rlE 'i32\.const 1559120($|[^0-9])' build/out/splat/pieces/asm`), a constructor inlined
+#   there: the roots keep the vtable, and the slot's direct callers (5603, 11968, 12098) are not written either.
 # - GetEleitoresImpedidos (5767): its lambda's __func typeinfo (string 501161, a local `$_0` of
 #   `ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vector...`) names the member and its parameter, and the
 #   wasm has no `this` (the result and the list), so it is static. The lambda reads one file
@@ -219,10 +220,13 @@
 #   binaryen inlines them into it (none is in names.tsv); reading: the order binaryen inlines them in, which
 #   docs/reference/facts/codegen.md C4 measures, and which here only the TU's order of template instances could move.
 #   No source form was tried. It stays written (the lambda is 5767's), its row differs.
-# - comum::MontaCaminhos (1936; name, namespace, external linkage and this file are chosen: its target callers are
-#   5772, 6734 and 7787, which holds CEleitores::StaticLoad's records 395 and 407, all CEleitores code by a reading):
-#   the directory prepended to each name, after a reserve. 6 over 181 rows, operand-only, calls and data. No other
-#   function of this file is in its band (6), so its lines are a choice, above the impediments' reader.
+# - comum::MontaCaminhos (1936; name, namespace and external linkage are chosen): the directory prepended to each
+#   name, after a reserve. 6 over 181 rows, operand-only, calls and data. This file is a reading the data support, more
+#   than a choice: its target callers are 5772, 6734 and 7787, which holds CEleitores::StaticLoad's records 395 and
+#   407, all CEleitores code by a reading, and band 6 (ledger/ordinals.tsv) puts 1936 between 1937
+#   (celeitordetalhe.cpp:94) and 1934 (CFotos's map), next to 1938 (ccargos.cpp:68) and 1933 (CLocal::GetLocalID),
+#   celeitores.cpp's place in the name order of app/comum/dados/'s objects. No other function of this file is in that
+#   band, so its lines are a choice, above the impediments' reader.
 # The roots' LeImpedidos and MontaListas stand for 5767's callers (6734, 7787) and 1936's (5772, 6734, 7787), and
 # vt_CEleitores for 7787's vptr store.
 #

@@ -48,7 +48,9 @@
 # throw: no record fixes lines 34 to 38. The column reads as a body inside the class at TSE's 4-space indentation (a
 # member's throw inside an `if` is at 19, as iconversorasn.hpp's 66:19; a definition at namespace scope puts it at 15, as
 # cnumerocpf.cpp's 20:15): the definition below the class (next paragraph) keeps the in-class indentation, a choice that
-# keeps the record's column. The forms above were measured with the constructor defined in the class.
+# keeps the record's column. The forms above were measured with the constructor defined in the class. With it below,
+# the constructor's declaration sits on line 23 and Get, operator TYPE and m_valor on lines 25 to 29, above the record:
+# their lines are a choice.
 #
 # TTipoIdentificadorEleitor's constructor out of line, evidence. 2666's callers in the target call it with a constant:
 # 3939, binaryen's merge of CNumeroCPF's, CNumeroIdentificacaoLivre's and CNumeroInscricaoEleitoral's constructors (unit
@@ -56,17 +58,21 @@
 # (`f2666(p1 + 24, 2)`, `(p1 + 20, 3)` and `(p1 + 28, 1)`: `pnpm wasm fn ../target/vota_web_wasm.wasm 9116`). With a
 # constant the range test folds, and clang inlines the constructor where it has the body. The copy the target keeps is
 # tiposbasicos.cpp.o's: its record (1122400) follows the three constructors' (1121860, 1121944, 1122040), so none of their
-# objects defined one. So app/dados/tiposbasicos.hpp declares the instance `extern template` and tiposbasicos.cpp
+# objects defined one. Here app/dados/tiposbasicos.hpp declares the instance `extern template` and tiposbasicos.cpp
 # instantiates it, after CErroLeituraBiometria's constructor, where the record lies; the stand-in that made the copy
 # there (CriaTipoIdentificadorEleitor) went, and so did unit 07's two stand-in callers of 2666. Measured on
 # cnumerocpf.cpp's object at its flags (wasm-objdump -d): with the constructor defined in the class, the extern template
 # leaves the object byte-identical (clang instantiates an inline member of an extern template to inline it, and inlines
 # it); defined below the class, not inline, it stays a call (frame +76 and 2, then an i32.load of the value), the
-# target's rows. 3939 then matches at step 9 (33 over 375 rows, all operand-only, at step 6), and no match moved. 9116
-# calls 2666 three times with the target's constants now and reads `unresolved` on CIdentificadorEleitor::Cria (3497 of
-# our link, unit 00's cfabricaidentificadoreleitor.cpp), which ours calls and the target's 652-byte body holds inlined
-# (ours is 360 bytes). The explicit instantiation of the class, not of the constructor alone, is a choice: the object's
-# Get and operator TYPE copies leave the link.
+# target's rows. The line's place, in the header the four calling files include, is a choice, and so is its naming the
+# class: cnumerocpf.cpp's object is the same with the line in that file after its includes and none in the header, and
+# with the header's line naming the constructor alone; with the constructor below the class and no line, it is inlined
+# (each form a copy of the sources compiled at that object's compile line, compared with cmp). 3939 then matches at
+# step 9 (33 over 375 rows, all operand-only, at step 6), and no match moved. 9116 calls 2666 three times with the
+# target's constants now and reads `unresolved` on CIdentificadorEleitor::Cria (3497 of our link, unit 00's
+# cfabricaidentificadoreleitor.cpp), which ours calls and the target's 652-byte body holds inlined (ours is 360 bytes).
+# The explicit instantiation of the class, not of the constructor alone, is a choice: the object's Get and operator
+# TYPE copies leave the link.
 #
 # CStringUtils::Trim(std::string&), evidence, each measured on the whole TU (16 functions, same-length paths, numbers masked):
 #   - the first test is a select over both sizes, loaded before it. `!std::empty(valor)` is written, and `std::size(valor) >

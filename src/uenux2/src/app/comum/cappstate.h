@@ -43,9 +43,9 @@
 // name cappstate.cpp is the class-name convention, which that order fits but does not single out.
 // ProcessKey is out of line there too, empty, a choice for its one direct caller: vota::CAguardaInicio::ProcessKey (fn
 // 10217) passes it the keys it does not handle, and the target keeps the next-state store of each of that function's
-// cases apart, as clang does only when it cannot see that body; binaryen then inlines the empty call away and merges
-// the body with the other empty ones in slot 6 (fn 425). src/units/165-uenux2-app-vota-execucao.mk has the forms
-// measured.
+// cases apart, which, in the forms measured on that function, clang gives only when it cannot see that body; binaryen
+// then inlines the empty call away and merges the body with the other empty ones in slot 6 (fn 425).
+// src/units/165-uenux2-app-vota-execucao.mk has the forms measured.
 
 namespace comum {
 

@@ -27,7 +27,9 @@ public:
 // The election's part of a section's file name: the phase, the pleito and the state, at +0, +4 and +8, which fns 3745
 // and 5727 pass on to NomeArquivoSecao. Both callers of each (comum::CEleitorDetalhe::GetBiometria, fn 1937, and fn
 // 7787) pass comum::CConfiguracaoEleicao's +620 as the address, the municipality at +644 and the zone at +648 beside
-// it. The struct, its name, its members' names and its place here are chosen.
+// it. The struct, its name, its members' names and its place here are chosen. app/comum/dados/cconfiguracaoeleicao.h
+// reads the same bytes as the end of m_naoRecuperado3 (+616) and m_descricao (+628): both are readings, and whoever
+// writes 1937 or 7787 reconciles them, CConfiguracaoEleicao then holding one.
 struct SIdentificacaoArquivo {
     EUrnaFase fase;
     uedword pleito;
