@@ -47,7 +47,8 @@
 # controller's slot names (its header's). TelaMesarioRegistrado's external linkage is evidence, not a choice: 10337
 # holds it behind a frame of its own, the sign unit 247's fragment measured for CRegistrarMesarios's form.
 #
-# Not written here: 1937 (unit 98's fragment has the measurement), and the rest of the class's file:
+# Not written here: 1937, in celeitordetalhe.cpp (unit 110's list; unit 98's fragment has the measurement), and the
+# rest of the class's file:
 # IGestorDadoMesario::StartState (10337) is a trap in unit 135's pending file.
 NOMEARQUIVOELEITORES_MESARIOREGISTRADO_SRCS := src/app/comum/nomearquivo/cnomearquivoeleitores.cpp \
     src/app/comum/comparecimentomesario/estados/cmesarioregistrado.cpp

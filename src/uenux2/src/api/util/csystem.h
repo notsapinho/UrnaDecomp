@@ -85,9 +85,18 @@ std::string GetDirName(const std::string& caminho);
 // Target fn 2758: true when every name of the first list matches one of the second, neither list empty. A pattern and a
 // name match when either begins with "#regex#" (CStringUtils::CasaRegex over the rest), or when they have one length and
 // each pair of characters is equal or passes CStringUtils::CasaCaractere one way or the other. Its callers are
-// comum::impl::ValidaConteudo (fn 5572) and comum::impl::CValidaMidia's slot 8 (fn 11167). No record: its name, its being
-// a free function here and its place in csystem.cpp are chosen (src/units/179-uenux2-cvalidamidia.mk).
+// comum::impl::ValidaConteudo (fn 5572) and DiretorioContemApenas, below, twice (inlined into fn 11167). No record: its
+// name, its being a free function here and its place in csystem.cpp are chosen (src/units/179-uenux2-cvalidamidia.mk).
 bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::string>& padroes);
+
+// True when a directory holds files only, at least as many as the patterns, each file matching one of the patterns and
+// each pattern one of the files (CasamTodos both ways); false for no pattern, a directory that is missing or empty, or
+// one that holds a directory other than "." and "..". No record and no target index: binaryen inlines it into its one
+// caller, fn 11167 (comum::impl::CValidaMidia's slot 8), where it keeps its own 128-byte frame and holds
+// CSystem::ExistDir's code inlined (the file-static api::ExistResource, fn 1690, called from there), which only
+// csystem.cpp's own functions can do, so it is here, as CreateDir is. Its name, its being a free function, its
+// namespace and its place after CasamTodos are chosen (src/units/179-uenux2-cvalidamidia.mk).
+bool DiretorioContemApenas(const std::string& diretorio, const std::vector<std::string>& padroes);
 
 // Creates each missing directory of a path held in a std::string, from its first component on, with the mode 0755;
 // false when a mkdir fails. It has no record and no target index: binaryen inlines it into its one caller, fn 5821

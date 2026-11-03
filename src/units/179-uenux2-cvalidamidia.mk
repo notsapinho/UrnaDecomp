@@ -1,15 +1,17 @@
-# uenux2 comum::impl::CValidaMidia (src/app/comum/validamidia/cvalidamidia.cpp): every slot but 8 (target fns 11173 to
-# 11168 and 11166: EhValida, Valida, ContemApenasArquivosPermitidos, ContemResultado, ContemArquivosResultado,
-# ContemArquivo, LimpaMidia), EhValida the class's key function, with the head of the class (cvalidamidia.h, a chosen
-# path), the slots its interface comum::impl::IValidaMidia (ivalidamidia.h, unit 100's head) declares pure, and
+# uenux2 comum::impl::CValidaMidia (src/app/comum/validamidia/cvalidamidia.cpp): every slot (target fns 11173 to
+# 11166: EhValida, Valida, ContemApenasArquivosPermitidos, ContemResultado, ContemArquivosResultado, ContemArquivo,
+# ContemApenasArquivosResultado, LimpaMidia), EhValida the class's key function, with the head of the class
+# (cvalidamidia.h, a chosen path), the slots its interface comum::impl::IValidaMidia (ivalidamidia.h, unit 100's head)
+# declares pure, and
 # comum::EAplicativosDeUrna (app/comum/eaplicativosdeurna.h, a chosen path) with chosen enumerators and a formatter;
 # IValidaMidia::GetInst (fn 5575); the checks the slots call, in
 # app/comum/validamidia/cfabricaconteudomidiastart.cpp (its record names it): comum::CFabricaConteudoMidiaStart::
 # ConteudoIncializacao (no index of its own), comum::impl's ValidaConteudo (5572), ConteudoValido (2784) and
 # RemoveArquivosDeSistema (5571) with its map's tree destroy (3685), and the error enum comum::EUeComumValidaMidiaError
-# (validamidia/euecomumvalidamidiaerror.h, a chosen path); and three members of landed files the checks call:
-# api::CasamTodos (2758, api/util/csystem.cpp, unit 32), api::CStringUtils's CasaRegex and CasaCaractere (5465, 5464,
-# api/util/cstringutils.cpp, unit 196) and ecourna's CStringUtils::FindRegexPosition (no index,
+# (validamidia/euecomumvalidamidiaerror.h, a chosen path); and members of landed files the checks call:
+# api::CasamTodos (2758) and api::DiretorioContemApenas (no index) in api/util/csystem.cpp, unit 32,
+# api::CStringUtils's CasaRegex and CasaCaractere (5465, 5464, api/util/cstringutils.cpp, unit 196) and ecourna's
+# CStringUtils::FindRegexPosition (no index,
 # ecourna/api/util/cstringutils.cpp, unit 00). Those units' fragments point here; the notes are here. With them what
 # cvalidamidia.cpp's object emits: has<IValidaMidia> (3686) and the control block's __get_deleter (11164), matched, and
 # GetInst's mutex's exit destructor (11165).
@@ -36,8 +38,11 @@
 #     "#regex#{}{:05}{}{:05}{:04}{:04}-[a-z]+\\.[a-z]+" over its last argument (a char) and the others in order
 #     (argument types 2, 6, 13, 6, 6, 6: char, unsigned, a string, unsigned three times) into a one-name list, then
 #     ConteudoValido; slot 6 (11169): the same over "#regex#[ost][0-9]{5}[a-z]{2}[0-9]{13}-[a-z]+\\.[a-z]+"; slot 7
-#     (11168): over a list of its one argument, a std::string; slot 9 (11166): RemoveArquivosDeSistema over the path.
-#     Slots 6 and 7 build the list before the path (a named local), slot 4 after it (a temporary).
+#     (11168): over a list of its one argument, a std::string; slot 8 (11167): slot 6's one-name list, then
+#     api::DiretorioContemApenas over the path's string (its code inlined, binaryen's work: a second stack frame of 128
+#     bytes, csystem.cpp's, as it calls the file-static api::ExistResource, fn 1690, itself); slot 9 (11166):
+#     RemoveArquivosDeSistema over the path. Slots 6, 7 and 8 build the list before the path (a named local), slot 4
+#     after it (a temporary).
 #   ConteudoValido (2784): ValidaConteudo's byte at +0. ValidaConteudo (5572): RemoveArquivosDeSistema, then 1 or 6 when
 #     the directory is missing or empty (CSystem::ExistDir 5459, IsEmptyDir 2762) for an empty or a non-empty list, else
 #     CDirReader over it, skipping "." and "..": 7 on a directory, files collected; then 8 when more names are expected
@@ -77,25 +82,53 @@
 #   function clang leaves out of line and binaryen inlines gives; a static one, inlined by clang, reads the frame.
 # - 5464: '?' as isalnum (musl's, which the target holds inlined); written as the two ranges it reads as 8-bit
 #   compares. ConteudoIncializacao's test through a switch in a helper (IndependeDoTurno) compiles to the target's
-#   bit mask 1341440; Valida's as 7 to 10, 16, 17 and then 15, of the orders tried the nearest the target's three tests.
+#   bit mask 1341440.
+# - 11172: written with the turn tested first, `turno != TURNO_1 && turno != TURNO_2 && (aplicativo == eAplicativo07
+#   || ... || aplicativo == eAplicativo15)`, clang's code (the object, wasm-objdump -d, before binaryen) tests 16 and
+#   17, then 7 to 10, then 15 apart, the target's three tests; with the applications first (this fragment's earlier
+#   form) it folds 15 in with the others, and a switch over the seven cases gives a bit mask (231296). In
+#   ConteudoIncializacao, an early return of the empty list, then the list and the switch, gives the target's blocks
+#   (the empty list's stores first, where the if-block around the switch put them last), and the cases in the order
+#   16, 17, 15 give the target's br_table [6 6 6 6 0 0 0 0 3 1 2 0 5 4]: in the order 15, 16, 17 clang lays the blocks
+#   out in that order ([... 1 2 3 ...]). Measured in the whole link (pnpm wasm score after tools/round/link-map.sh):
+#   146 over 1040 rows (21 inserted, 21 deleted) before, 106 over 1023 (4 inserted and 4 deleted, all in Valida's own
+#   test) with the early return, 116 over 1019 (0 inserted, 0 deleted) with the turn test and the case order as well.
 #
 # Matched: GetInst (5575), now that slot 5's std::format is defined above it (the variant measurement this fragment
 # held: a TU emits the format code first) and it matches by its record (srcloc-anchor); its mutex's exit destructor
 # (11165), matched by the scan's content pass, its operand the mutex GetInst's match names; slots 4, 5, 6, 7 and 9
 # (11171, 11170, 11169, 11168, 11166, named by vtable, 11171 by pair-addr); ConteudoValido (2784) and ValidaConteudo
-# (5572), named by their callers' calls (5572's call of CasamTodos, fn 2758, names 2758 by 5572's own alignment alone:
-# 2758's other target caller, slot 8, is a trap, and 2758's own body scores 101 over 278, below; the name holds
-# through that one vote until a second caller lands); the map's tree destroy (3685, pair-addr); CasaRegex (5465), with
-# FindRegexPosition inlined, matched by the content pass (its one target caller is 2758, ours CasamTodos).
+# (5572), named by their callers' calls (5572's call of CasamTodos, fn 2758, names 2758, and slot 8, 11167, now calls
+# it too, twice, at aligned sites: 2758's own body scores 101 over 278, below); the map's tree destroy (3685,
+# pair-addr); CasaRegex (5465), with FindRegexPosition inlined, matched by the content pass (its one target caller is
+# 2758, ours CasamTodos); slot 8 (11167, named by vtable), with DiretorioContemApenas inlined: 43 over 609 rows, every
+# one operand-only and none outside calls and data addresses, before step 8, and splat-remap --no-kinds printed
+# IDENTICAL.
 # Not matched, written, and what each waits for (pnpm wasm score after link-map):
-# - Valida (11172), `146 over 1040 rows (104 replaced, 103 operand-only, 21 inserted, 21 deleted)`:
-#   ConteudoIncializacao's early test and Valida's own application test have the target's operations in another
-#   order (the forms tried are above); not explained.
-# - RemoveArquivosDeSistema (5571), `394 over 992 rows (311 operand-only, 42 inserted, 39 deleted)`: the frame, the
-#   names' order and the order their buffers are freed are the target's (allocation 13 down to 1 on both sides); the
-#   scan's first difference is the frame pointer's local, 2 where the target has 1 (docs/reference/facts/reading.md
-#   R10, "Locals alone"): not explained. Its callers match all the same, as its name comes from their calls (5572 and
-#   slot 9, both matched).
+# - Valida (11172), differs, `116 over 1019 rows (116 operand-only, 0 inserted, 0 deleted)`: the forms above; its
+#   rows that are no call or data address are the std::format string's packed address (an i64, twice), two small
+#   constants read as table slots (__cxa_throw's destructor and a function pointer the format code stores: a reading),
+#   and 19 local numbers after ConteudoIncializacao's code (in the debug loop the target keeps the iterator in local 2
+#   and the end in local 0, ours in 0 and 1; in the list's destruction locals 0 and 2 swap): not explained. Tried with
+#   no change of score: the
+#   result and the list not const, the reason copied to a local, `if (resultado.m_motivo < 4) return resultado;` first,
+#   ConteudoIncializacao's condition written out without IndependeDoTurno, and this unit's two objects in the other
+#   order (docs/reference/facts/codegen.md C4); worse, a const_iterator loop (117 over 1020) and an index loop (151 over
+#   1044). Step 8 names it by srcloc-anchor now, and its call names 5574 (below).
+# - RemoveArquivosDeSistema (5571) matches, with this file built with strict aliasing (src/Makefile's UENUX2_TBAA_DIRS
+#   lists it; docs/reference/facts/app-flags.md F6). Without it, `394 over 992 rows (311 operand-only, 42 inserted, 39
+#   deleted)`: the frame, the names' order and the order their buffers are freed are the target's (allocation 13 down
+#   to 1 on both sides); the scan's first difference is the frame pointer's local, 2 where the target has 1. Besides
+#   local numbers, our map constructor's code (binaryen's inlining) loads a word again after the tree's stores where the
+#   target keeps it in a local, what -fno-strict-aliasing gives. Measured first on a scratch link with
+#   cfabricaconteudomidiastart.cpp built with strict aliasing (its object removed, then make -C src link with
+#   UENUX2_TBAA_DIRS given the file on the command line): 93 over 950 rows, every one operand-only and none outside
+#   calls and data addresses (pnpm wasm score); ValidaConteudo (5572) 106 over 924 and ConteudoValido (2784) 1 over
+#   19 stay operand-only, Valida (11172) is unchanged; through steps 7 to 9 and make -C src splat on that link (the same
+#   override on each), 5571 matches and no other row of the scan moves (12188 matches against 12187, the target's
+#   sha256), then in place on the whole tree with the file in the list: 5571 matches, no other row moves, none is
+#   lost (12251 to 12252). Its callers match all the same, as its name comes from their calls (5572 and slot 9, both
+#   matched).
 # - CasamTodos (2758), `101 over 278 rows (56 operand-only, 21 inserted, 14 deleted)` with CasaPadrao over two
 #   std::string_view (its first form, an index loop over the strings, `144 over 325`; std::equal, `129 over 300`):
 #   its row reads unresolved on CasaCaractere, which has no target function name.
@@ -105,14 +138,16 @@
 #   two call sites in our link and one in the target. 5464 waits, a prediction not measured, for that tree root not to
 #   keep the separator; the
 #   alpha-or-digit test written by hand would copy the library's arithmetic (how-to step 3).
-# - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h).
+# - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h): named now by
+#   Valida's call vote (`call by:11172`), and the word (.data, -1) still has no target name.
 #
 # Chosen: every name but the records' (ConteudoIncializacao, CFabricaConteudoMidiaStart, GetInst, the classes RTTI
 # names): the slots' (EhValida, Valida, ContemApenasArquivosPermitidos, ContemResultado, ContemArquivosResultado,
-# ContemArquivo, Slot8, LimpaMidia), the helpers' (ValidaConteudo, ConteudoValido, RemoveArquivosDeSistema,
-# ArquivosPermitidos, ArquivosDeSistema, IndependeDoTurno, CasamTodos, CasaPadrao, CCasaNome, CasaRegex,
-# CasaCaractere, FindRegexPosition), SResultadoValidacao and its members, EAplicativosDeUrna's enumerators,
-# EUeComumValidaMidiaError's enumerator; the slots' types beyond their wasm widths (bool for the words slots 4 to 7
+# ContemArquivo, ContemApenasArquivosResultado, LimpaMidia: slot 8's from its body), the helpers' (ValidaConteudo,
+# ConteudoValido, RemoveArquivosDeSistema, ArquivosPermitidos, ArquivosDeSistema, IndependeDoTurno, CasamTodos,
+# CasaPadrao, CCasaNome, DiretorioContemApenas, CasaRegex, CasaCaractere, FindRegexPosition), SResultadoValidacao and
+# its members, EAplicativosDeUrna's enumerators,
+# EUeComumValidaMidiaError's enumerator; the slots' types beyond their wasm widths (bool for the words slots 4 to 8
 # return, unsigned and char for slot 5's, read from its format's argument types); that the slots are pure in
 # IValidaMidia (src/units/README.md "Pending members") and non-const; the paths of cvalidamidia.h,
 # cfabricaconteudomidiastart.h, euecomumvalidamidiaerror.h and eaplicativosdeurna.h and EAplicativosDeUrna's scope;
@@ -121,18 +156,21 @@
 # DepuraInfo, among the objects between api/gui/capplication.cpp's and comum/relatorios/csubstituidortitulo.cpp's, and
 # 2784, which clang would inline into slots of its own file, out of cvalidamidia.cpp: a reading), the linkage of each
 # (ArquivosPermitidos and CasaPadrao external, as measured above; ArquivosDeSistema and IndependeDoTurno static),
-# CasamTodos and CasaPadrao in csystem.cpp, CasaRegex and CasaCaractere as static members of uenux2's api::CStringUtils,
+# CasamTodos, CasaPadrao and DiretorioContemApenas in csystem.cpp (DiretorioContemApenas free, after CasamTodos, its
+# parameters' order), CasaRegex and CasaCaractere as static members of uenux2's api::CStringUtils,
 # FindRegexPosition as one of ecourna's CStringUtils (the uses-2 band puts 5465 and 5464 between cgenerictags.cpp's
 # functions and csystem.cpp's, and 2758 after csystem.cpp's uses-4 run; api/util's objects link in name order there,
 # and cstringutils.cpp sorts between: a reading; 5465 holds FindRegexPosition behind a frame of its own, so that is
 # another object's, a choice of which); the lines of everything without a record, the order of ConteudoIncializacao's
-# cases, and IndependeDoTurno's being declared above ConteudoIncializacao and defined after it (the record leaves no
-# room above).
+# cases but 15, 16 and 17 (above), and IndependeDoTurno's being declared above ConteudoIncializacao and defined after
+# it (the record leaves no room above). Not a choice: ConteudoIncializacao's case labels indented a level, which the
+# throw's record, 62:19, needs with the early return: the thrown error's construction starts at column 19 with the
+# case bodies at twelve spaces, and at 15 with the labels at the switch's level (IndependeDoTurno's style).
 #
-# Pending (179-uenux2-cvalidamidia-pending.cpp): slot 8 (11167), the one trap left; that file's header says what its
-# body shows. Its trap merges with traps of its wasm type, so its row stays no-candidate. The six traps that went
-# shared wasm types with other units' traps: unit 13's CRdvVota::Confere trap (11486) is a function of its own now,
-# named by vtable evidence, and its row reads differs on the pending object (how-to step 9).
+# Pending: nothing; the -pending.cpp went with slot 8's trap, the last, and no other row of the scan moved with it
+# (step 9's join against the base: 11167 and 11172 only). An earlier trap of this unit shared a wasm type with unit 13's
+# CRdvVota::Confere trap (11486), which is a function of its own since slot 7 was written, named by vtable evidence,
+# its row differs on the pending object (how-to step 9).
 #
 # libc++'s std::filesystem members 5571 reaches, which unit 261's roots kept in the link with a stand-in for 5571 until
 # 5571 was written (that unit is gone with its stand-in): 5571 holds __remove_all inlined (its ErrorHandler<uintmax_t>
@@ -148,10 +186,8 @@
 # The roots (179-uenux2-cvalidamidia-roots.cpp) stand for GetInst's one target caller, 12134, not written.
 CVALIDAMIDIA_SRCS := src/app/comum/validamidia/cvalidamidia.cpp src/app/comum/validamidia/cfabricaconteudomidiastart.cpp
 UENUX2_SRCS += $(CVALIDAMIDIA_SRCS)
-$(ROOT)/$(APP)/179-uenux2-cvalidamidia-pending.o: $(ROOT)/src/units/179-uenux2-cvalidamidia-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/179-uenux2-cvalidamidia.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/validamidia/*.h) $(wildcard $(ROOT)/src/uenux2/src/app/comum/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/179-uenux2-cvalidamidia-pending.cpp -o $(R)
 # GetInst (fn 5575) has no caller in the link yet: 179-uenux2-cvalidamidia-roots.cpp stands for fn 12134, which calls it
 # twice; it declares GetInst through its mangled name and includes nothing
 $(ROOT)/$(APP)/179-uenux2-cvalidamidia-roots.o: $(ROOT)/src/units/179-uenux2-cvalidamidia-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/179-uenux2-cvalidamidia.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/179-uenux2-cvalidamidia-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/179-uenux2-cvalidamidia-pending.o $(APP)/179-uenux2-cvalidamidia-roots.o
+override EXTRA_OBJS += $(APP)/179-uenux2-cvalidamidia-roots.o

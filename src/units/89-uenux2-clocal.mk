@@ -113,7 +113,8 @@
 #   too, out of line by choice: comum::asn::CIndexadorFotos::DoDesconverte (11441), which
 #   124-uenux2-app-comum-dados-asn.mk matches, holds it inlined and shows neither tell (that fragment says so).
 # - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
-#   GetImpedimentoP2, held inlined by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
+#   GetImpedimentoP2, which fn 5764, CEleitores::LoadEleitorDetalhe, holds behind a frame of its own: it is written there
+#   for unit 110, out of line, its throw on line 46, its other lines chosen). The class is read from 11410, CConversorImpedido's DoDesconverte,
 #   their only caller, which unit 98 writes: it calls each twice (emplace_back's two paths), so the roots' stand-ins for
 #   them went with it. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
 #
@@ -235,6 +236,11 @@
 #   separator a variable or `i == 0 ? "" : " "`; with a size_t index, 43 over 784, all operand-only, as written (the
 #   target keeps the loop's entry test on the count after GetAgregadas, which the uebyte index folds). The separator
 #   variable is a choice among those two. It matches.
+# - comum::CLocal::TemSecao (5739, 10 B, a name chosen from md::CLocal::TemSecao, which it returns): the byte at +120
+#   of the data (the section optional's flag) read with no VerificaLido, the target's two loads. No record names it;
+#   in use band 2 it sits between VerificaEhSecao (5742) and FormataAgregadas (5738), the place it has in the file.
+#   Its callers, 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's notes) and 4161, are not written: the roots'
+#   TemSecoes stands for both. It matches (`pnpm wasm score` BYTE-EXACT against the whole link).
 # The roots of unit 280 stand in for 4160 and 11242 (3752) and for 1543 (5738), so binaryen keeps both out of line.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \

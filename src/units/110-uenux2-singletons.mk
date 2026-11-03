@@ -1,7 +1,8 @@
 # uenux2 singletons over binaryen's body 1406: the nine GetInst (target fns 187, 273, 326, 407, 555, 1073, 1926, 2812,
 # 2817), their mutexes' and pointers' exit destructors, and the classes' own destructors. Sources here are the files of
-# CEleitores, CHV, CPE, CRespostas, CValidadorIdentidade and CTelasVota; ccargos.cpp and cconfiguracaoeleicao.cpp are unit
-# 88's and crdvvota.cpp unit 13's, and their GetInst are described here. The macro is
+# CEleitores, CHV, CPE, CRespostas, CValidadorIdentidade and CTelasVota, and CEleitorDetalhe's, ahead of CEleitores's
+# (moved from unit 98's list: LoadEleitorDetalhe, below, measures the order); ccargos.cpp and cconfiguracaoeleicao.cpp
+# are unit 88's and crdvvota.cpp unit 13's, and their GetInst are described here. The macro is
 # src/ecourna/api/pattern/singleton.hpp.
 #
 # What the target shows:
@@ -132,6 +133,13 @@
 #   link, and src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waited for. Its line
 #   is a choice, after the destructor.
 #
+# md::CEleitorDecorator derives from md::CEleitor (celeitordecorator.h says why). It adds no member with a destructor, so
+# clang emits no D2 of its own: the roots' d379 names CEleitor's (`_ZN5comum2md8CEleitorD2Ev`), and step 9 renamed fn
+# 379's match line to it, a twin of the same bytes, from this object. Measured alone on a whole link of the base: three
+# objects differ (this unit's roots, celeitores.cpp.o's weak D2 symbol, cpededigitalmesario.cpp.o, below) and steps 7 to
+# 9 move no verdict. In cpededigitalmesario.cpp.o (unit 135) CNomeMesariosUrnaDS::Text's copy of the decorator calls
+# CEleitor's copy constructor now (fn 946); its row stays differs (unit 135's fragment).
+#
 # CEleitores's members in celeitores.cpp, each throw on its record's line; every other line is blank, and where each member
 # starts is chosen:
 # - ValidaIdentidadesEleitor (target fn 5765, line 738), matched. It looks for the type at +100 of CEleitores among the
@@ -148,11 +156,11 @@
 #   - the four Text hold GetInst inlined (record 44 lists them), which -O2 keeps out of line: `try-tu.sh --symbols --flags
 #     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the -O2 link they scored 41
 #     over 93, 41 over 251 (twice) and 43 over 371, each with GetInst's 23 rows deleted.
-#   - 2825 holds CEleitorDetalhe::MarcaHabilitado (unit 98) inlined by binaryen, and that holds the mesario's member of
-#     CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
+#   - 2825 holds CEleitorDetalhe::MarcaHabilitado (celeitordetalhe.cpp's) inlined by binaryen, and that holds the
+#     mesario's member of CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
 #     std::optional<CEleitorIdentidade>::operator= out of line inside it (`cost=235, threshold=225`); at -O3 it inlines
-#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scored 101 over
-#     446 rows in the -O2 link.
+#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scored 101
+#     over 446 rows in the -O2 link.
 #   With this object and celeitordetalhe.cpp.o compiled at -O3 in a copy of the link (each make compile line with -O2
 #   turned to -O3), the four Text score 24 over 93, 26 over 251 (twice) and 28 over 371, and 2825 41 over 440, all
 #   operand-only; splat-remap prints IDENTICAL for the four Text and stops on 2825 only at the call of 1271, which has no
@@ -165,26 +173,54 @@
 #   std::make_format_args takes lvalues.
 # - MarcaVotou (records 456 and 460, column 15) has no target function of its own: binaryen inlines it into its one
 #   caller, vota::CSincronismoOperador::StartState (10210, unit 104's, whose fragment has the measurement), and it holds
-#   CEleitorDetalhe::MarcaVotou (unit 98's) inlined the same way. Its throws and their codes (7845, 7846) and messages are
-#   the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as 2825's 7843 reads
-#   it); the counter it increments at +104 is m_qtdVotaram, its name chosen, unsigned as 10569 reads it (celeitores.h).
-# - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its
-#   copy: it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2
-#   (cimpedido.cpp:46) and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6
-#   inserted and 6 deleted rows all local numbers. Moving cimpedido.cpp.o, celeitordetalhe.cpp.o or both after this
-#   object, -O3 on this object and celeitordetalhe.cpp.o, and twelve source forms (of the impediments, the returns, the
-#   constructors and CEleitorDinamico's copy) left them or made more, so it stays unwritten (docs/how-to-decompile.md
-#   step 5); it has no stub, since the scan groups it under libc++, and stubs.py writes none there. MarcaVotou (lines
-#   456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which
-#   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734) and
-#   DynamicCreate (5761) are not written; GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is (below).
-#   CompleteLoad, LoadEleitorDetalhe and the static voters' reader (5772, whose lambda's typeinfo names
-#   CEleitores::GetEleitoresEstaticos, with 5771, 5770 and the lambda's slots 11521 to 11525) copy an md::CEleitor
-#   through fn 946 (`pnpm --silent wasm disasm ../target/vota_web_wasm.wasm <fn> | /usr/bin/grep -cE 'call +946( |$)'`
-#   prints 1, 2 and 1), which md::CEleitorDecorator, no CEleitor here (celeitordecorator.h), cannot give: they wait
-#   for a decorator that derives from md::CEleitor. DynamicCreate waits for md::CEleitorDinamico's third constructor
-#   (fn 2800: two identities and the state, the rest defaulted) and the equality and order it sorts and compares by,
-#   which no header holds.
+#   CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp's) inlined the same way. Its throws and their codes (7845, 7846)
+#   and messages are the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as
+#   2825's 7843 reads it); the counter it increments at +104 is m_qtdVotaram, its name chosen, unsigned as 10569 reads
+#   it (celeitores.h).
+# - LoadEleitorDetalhe (5764; record line 719, code 7851, which gives the signature), matched. When the voter's identity
+#   at its principal type (GetIdentidadePorTipo, fn 708) equals the identity of the sorted impediments' entry at the
+#   index, it moves the index on and takes the entry's impediments, the second through CImpedido::GetImpedimentoP2
+#   (record cimpedido.cpp:46, unit 89's file) only when the entry's flag is set, which the target tests before the call;
+#   when the voter's identity is beyond the entry's it throws 7851 with std::format over five arguments (the two
+#   identities' texts and types, the entry's text again; the format string names the function). Then it returns the
+#   record built with or without the dynamic data: CEleitorDetalhe's two constructors (celeitordetalhe.cpp; the one
+#   with the data has the record line 49, code 7829, and its header says what each does). 5764 holds GetImpedimentoP2
+#   and the constructor with the data behind frames of their own (out of line in their objects, binaryen inlined them)
+#   and calls CEleitor's copy constructor (fn 946), which matches with it, from celeitordetalhe.cpp.o, now that the
+#   decorator derives from md::CEleitor (celeitordecorator.h). Its wasm has no `this`, which binaryen dropped: the
+#   member reads none. Measured in the whole link (pnpm wasm score, before steps 7 to 9): the message built inside the
+#   throw expression allocates the exception before formatting, 126 over 837 rows (9 inserted, 23 deleted); a named
+#   local before the throw gives the target's order, 92 over 834 (6 inserted, 6 deleted, locals 7 and 8 swapped) with
+#   this object ahead of celeitordetalhe.cpp.o (then unit 98's), and 46 over 828, all operand-only, with
+#   celeitordetalhe.cpp.o just before this object (scratch links of the plain link.cmd with one object moved;
+#   docs/reference/facts/codegen.md C4). cimpedido.cpp.o's place changed nothing. So celeitordetalhe.cpp heads this
+#   unit's list, which is the target's data order too: celeitordetalhe.cpp's four records lie at 1558832 to 1558880,
+#   ahead of celeitordinamicodao.cpp's (1558940) and celeitores.cpp's (from 1559096; ledger/source-locations.tsv), and
+#   band 3 runs 3770 and 3769 (celeitordetalhe.cpp's) before the DAO's 3768 and 3766 (ledger/ordinals.tsv). A scan of
+#   the link in the old order, with the committed symbol file, moves only 5764's verdict (to differs) and 946's object
+#   (it matches from cpededigitalmesario.cpp.o's copy): the other 32 of the 34 match rows celeitores.cpp.o,
+#   celeitordetalhe.cpp.o and cimpedido.cpp.o then held stay (1393 and 1937 joined them later), while this object moved
+#   after celeitordetalhe.cpp.o instead (46 over 828 as well) took 1703's twin name to another object. The target's
+#   band 2 has
+#   5764 after ValidaIdentidadesEleitor (5765) in link order and our object has it before: CompleteLoad, not written,
+#   calls 5765 first (a reading, docs/reference/facts/reading.md R9). Chosen: its being private, its lines but the
+#   throw's, the locals' names, the message's being const (its being a named local is measured: built inside the throw
+#   it scores 126 over 837 in the old order and 80 over 831 in this one), and CImpedido's three accessors (cimpedido.h).
+#   CEleitorIdentidade's destructor, which 5764 calls for its two identity temporaries, is now emitted here, and it is
+#   byte-identical to std::string's, so step 9 renamed fn 149's match line to it (docs/reference/facts/splat.md S6). The
+#   roots' CarregaDetalhes stands for 5764's callers, 6734 and 7787, one call with dynamic data and one without.
+#   MarcaVotou (lines 456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending
+#   member), which also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
+#   GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is written (below).
+# - Not written. CompleteLoad (6734, records 205, 219, 238) and the static voters' reader (5772, whose lambda's typeinfo
+#   names CEleitores::GetEleitoresEstaticos, with 5771, 5770, 5768, 5769 and the lambda's slots 11521 to 11525) copy an
+#   md::CEleitor through fn 946, which the decorator now gives; they wait for other code. 5772's lambda (its call
+#   operator, 11523) holds comum::asn::IConversorParcialASN::Desconverte (iconversorparcialasn.h:52) and
+#   api::CPartialFileASN's ReadFromFile and DecodeObjectFunction (cpartialfileasn.h:182, 277, 285), none reconstructed,
+#   and calls comum::asn::CConversorEntidadeEleitores's slot 2 (11411, not written) through its vtable. 6734 calls 5772,
+#   2543 (over 2834 and 11514, not written) and 1551, 1692, 2826, 3763, 3765, 5723, 5725, 5763 and 5766, none written.
+#   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
+#   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
 #
 # CEleitores's slot 0, its impediments' reader and the path list both readers build (celeitores.cpp; scores are pnpm
 # wasm score of the target's index against ours in build/out/wasm/vota_web/vota_web_wasm.wasm, before steps 7 to 9):
@@ -240,12 +276,12 @@
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
 # - 2823, CEleitores::QuantidadeAptos (celeitores.cpp, the lines just above 2822's, a choice; band 4 runs 2824, 2823,
 #   2822): it walks the same map and, for each record whose detail has no impediment (CEleitorDetalhe::SemImpedimento,
-#   fn 2266, unit 98's), adds one to the first of two 16-bit counts it returns through the result's address when the
-#   voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the false test
-#   first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted eqz);
-#   written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its members'
-#   names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are not
-#   written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
+#   fn 2266, celeitordetalhe.cpp's), adds one to the first of two 16-bit counts it returns through the result's address
+#   when the voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the
+#   false test first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted
+#   eqz); written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its
+#   members' names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are
+#   not written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,
@@ -278,9 +314,14 @@
 # - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721, all in the link) is the same search with false for no rule
 #   and the rule's EhValida (fn 3723) else. It matches; unit 178's stand-ins for 10721 went once 10721 (unit 277) was in
 #   the link.
+# - TiposValidos has no index of its own: vota::CValidaIdentidade::StartState (fn 10627, unit 278's, written and not
+#   matched) holds it inlined by binaryen behind a 16-byte frame, after its call of GetInst (fn 1926): the types of the
+#   rules whose EhValida (fn 3723) accepts the number, pushed in the rules' order through push_back(&&) (fn 543). Written
+#   with std::views::filter, after EhValida, a chosen line: unit 278's fragment has the loop forms measured. Its name, its
+#   result type and its being a member (it reads the rules) are chosen.
 # Chosen: EhValida's name, the search written as a lambda in each member (a shared helper was not tried), Valida's line
-# but its throw's and EhValida's after it, and the three include lines it adds with a blank one, which take four of the
-# blank lines above the statics (lines 11 to 22 stay unknown).
+# but its throw's and EhValida's after it, and the four include lines it adds with a blank one, which take five of the
+# blank lines above the statics (lines 12 to 22 stay unknown; <ranges> came with TiposValidos, below).
 #
 # CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
 # and 10790, 5385 and 10631 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it,
@@ -388,7 +429,7 @@
 #   matched (7, 4, 2 and 0 rows, all operand-only).
 #   Unit 280's roots read 1281's result for its callers that read it (1543, 5967, 7787, 11902) and give 3869 a second
 #   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
-SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
+SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)

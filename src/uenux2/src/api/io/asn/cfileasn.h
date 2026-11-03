@@ -11,12 +11,18 @@
 // the entity with CodeObjectFunction under the name "WriteToFile de " + the file's name and writes the buffer. Their
 // name is read from that literal, as ReadFromFile's "ReadFromFile de " is its record's; their lines, between the
 // readers and DecodeObjectFunction, are chosen (src/units/206-uenux2-app-comum-appinfo-servicos.mk has the evidence).
+// DecodeObject(const std::vector<char> &) has no record either: it decodes under the name "DecodeObject de " + the
+// entity's typeid name, the string fn 5825 (its instance for ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, two
+// callers) builds before the code of DecodeObjectFunction, which sits behind a frame of its own there; fn 1937 holds
+// the instance for ModuloEleitores::BiometriaEleitorCifrada so. Its name is read from that literal too, and its line is
+// chosen.
 // Chosen: that CFileASN is a class, the lines of every statement but the throws, and the names of the locals.
 #pragma once
 
 #include <format>
 #include <sstream>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 #include "api/io/cfile.h"
@@ -29,7 +35,7 @@ namespace api {
 class CFileASN {
 public:
 
-    // (original lines 32-43: content not recovered)
+    // (original lines 38-43: content not recovered)
 #line 44
     template <typename T>
     static T ReadFromFile(const CFile& arquivo)
@@ -88,7 +94,15 @@ public:
         WriteToFile(arquivo, objeto);
     }
 
-    // (original lines 110-125: content not recovered)
+    // (original lines 110-117: content not recovered)
+#line 118
+    template <typename T>
+    static T DecodeObject(const std::vector<char>& buffer)
+    {
+        return DecodeObjectFunction<T>(buffer, std::string("DecodeObject de ") + typeid(T).name());
+    }
+
+    // (original lines 124-125: content not recovered)
 #line 126
     template <typename T>
     static T DecodeObjectFunction(const std::vector<char>& buffer, const std::string& nome)

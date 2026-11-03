@@ -105,17 +105,19 @@
 #   and {20, 3} are the two words the target stores (65556, 196628). Unit 142's 1150 clears its builder in place too.
 # - vota::CSincronismoOperador::StartState (fn 10210, in csincronismooperador.cpp, after the statics, a chosen line) is
 #   written and differs, in local numbers only. It holds comum::CEleitores::MarcaVotou (records celeitores.cpp:456 and
-#   460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou (unit 98's file) inlined the
-#   same way (a second stack-pointer prologue each); before them, the test of comum::CAppInfo::EhTreinamentoEleitor
+#   460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp's) inlined
+#   the same way (a second stack-pointer prologue each); before them, the test of comum::CAppInfo::EhTreinamentoEleitor
 #   written in place (the target calls GetInst twice and keeps no call of 697, that function's own body), a choice of
 #   spelling; after them, the eleitor's queue's Post(5) (its inline member builds the message), then m_pNextState.
 #   Measured with pnpm wasm score: `40 over 150 rows (same 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`,
 #   the moved row a local number: the target keeps the frame in local 3 and the voter's record (CEleitorDetalhe*), then
-#   the queue, in local 2; ours keeps the frame in 2, the record in 3 and the queue in 1. In scratch links of the same objects reordered (build/out link command, one object moved), the order
-#   celeitordetalhe.cpp.o, celeitores.cpp.o, csincronismooperador.cpp.o reads `28 over 149 rows`, every row an operand
-#   of a call or of the throws' destructor slot; this object moved after both others with celeitores.cpp.o first, or
-#   celeitordetalhe.cpp.o moved right after this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of
-#   unit 110's and unit 98's, which only renumbering landed units would change, so the row waits for that order.
+#   the queue, in local 2; ours keeps the frame in 2, the record in 3 and the queue in 1. In scratch links of the same
+#   objects reordered (build/out link command, one object moved), the order celeitordetalhe.cpp.o, celeitores.cpp.o,
+#   csincronismooperador.cpp.o reads `28 over 149 rows`, every row an operand of a call or of the throws' destructor
+#   slot; this object moved after both others with celeitores.cpp.o first, or celeitordetalhe.cpp.o moved right after
+#   this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of unit
+#   110's (celeitordetalhe.cpp.o and celeitores.cpp.o), which only renumbering landed units would change, so the row
+#   waits for that order.
 # - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line) is
 #   written and differs. When vota::RegistraMesarios() (fn 2520) says so the next state is
 #   comum::CRegistrarMesarios::GetInst() (fn 3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst,
@@ -301,21 +303,22 @@
 # CEleitorEncontrado's members and statics. Not measured, and they may give the same bytes: EstadoAposProcura in
 # another file, or a static member in its place.
 #
-# vota::CEleitorEncontrado::StartState (fn 10635, slot 2, 3870 B) is written and `unresolved self-voted`: every row is
-# an operand, and the name of its callee 6733, the set's range insert (below), has no voter but 10635, since 6733 does
-# not match; 10635 waits for it. It is written in celeitorencontrado.cpp, its throw of the
-# vota error 9394 ("Eleitor não posicionado", EUE_VOTA_ELEITOR_NAO_POSICIONADO added to euevotaerror.h, its name chosen
-# from the message) on the record's line 102, column 15, and GetInst, the constructor and the statics after it (a choice
-# that leaves that line free; GetInst stays above the constructor). It creates six states no other target function
-# creates, which this unit lists ahead of it, each in a file of its own named after its class (RTTI; how-to step 3's
-# rule 4) in leidentidade/, where their vtables (@1588508 to @1588876) lie, between cpedeidentidade.cpp's records and
-# celeitorencontrado.cpp's (@1588980): vota::CEleitorOptouPorVotarEmTransito, CEleitorImpedidoJustificar,
-# CEleitorNaoTemIdadeMinima, CEleitorNaoPossuiCargosParaVotar and CEleitorImpedidoJustificarVotoTransito, new, over
-# unit 161's IEleitorImpedidoVotar, and CEleitorJaVotou, unit 161's file, moved here, its GetInst, constructor and
-# statics now written. Matched with them: the six classes' statics' exit destructors (10662 and 10661, 10659 and 10658,
-# 10656 and 10655, 10651 and 10650, 10640 and 10639, 10645 and 10644), 1959 (binaryen's body of the six pointers'
-# destructors, named after its first member in link order), the line texts 10660, 10657, 10654, 10653, 10649, 10638 and
-# 5422 (one body for two classes' "está impedido de votar ou justificar."), and unit 161's 10666, a thunk into 1959.
+# vota::CEleitorEncontrado::StartState (fn 10635, slot 2, 3870 B) matches with its callee 6733, the set's range
+# insert (below), since celeitorencontrado.cpp is built without strict aliasing (src/Makefile's UENUX2_NOTBAA_FILES):
+# before, every row was an operand and 10635 read `unresolved self-voted` on 6733's name, which had no voter but
+# 10635. It is written in celeitorencontrado.cpp, its throw of the vota error 9394 ("Eleitor não posicionado",
+# EUE_VOTA_ELEITOR_NAO_POSICIONADO added to euevotaerror.h, its name chosen from the message) on the record's line 102,
+# column 15, and GetInst, the constructor and the statics after it (a choice that leaves that line free; GetInst stays
+# above the constructor). It creates six states no other target function creates, which this unit lists ahead of it,
+# each in a file of its own named after its class (RTTI; how-to step 3's rule 4) in leidentidade/, where their vtables
+# (@1588508 to @1588876) lie, between cpedeidentidade.cpp's records and celeitorencontrado.cpp's (@1588980):
+# vota::CEleitorOptouPorVotarEmTransito, CEleitorImpedidoJustificar, CEleitorNaoTemIdadeMinima,
+# CEleitorNaoPossuiCargosParaVotar and CEleitorImpedidoJustificarVotoTransito, new, over unit 161's
+# IEleitorImpedidoVotar, and CEleitorJaVotou, unit 161's file, moved here, its GetInst, constructor and statics now
+# written. Matched with them: the six classes' statics' exit destructors (10662 and 10661, 10659 and 10658, 10656 and
+# 10655, 10651 and 10650, 10640 and 10639, 10645 and 10644), 1959 (binaryen's body of the six pointers' destructors,
+# named after its first member in link order), the line texts 10660, 10657, 10654, 10653, 10649, 10638 and 5422 (one
+# body for two classes' "está impedido de votar ou justificar."), and unit 161's 10666, a thunk into 1959.
 # Evidence (pnpm wasm fn ../target/vota_web_wasm.wasm 10635; each class's header has its RTTI, vtable and statics):
 # - The order is the target's: the voter at comum::CEleitores's cursor (GetCurrent, 656), else the throw; with an
 #   impediment (CEleitorDetalhe::SemImpedimento, 2266, false), CLogVota::GetInst (184) and LogaEleitorImpedido (inlined:
@@ -346,13 +349,14 @@
 #   band 1 the target links them so too: 10662 to 10638 above 10635, in reverse link order.
 # - The set's range insert (fn 6733, libc++'s std::set<ecourna::app::dados::ETipoIdentificadorEleitor>::insert over two
 #   const_iterator) has a second target caller, 7787 (not written), for which unit 283's roots stand in: while 10635 was
-#   its one caller, binaryen inlined it there. 6733 reads `differs`, in its locals (7 against 6): our copy is this
-#   object's, built with strict aliasing; with this object alone built without it (a scratch UENUX2_NOTBAA_FILES line),
-#   6733 scored `1 over 181 rows (same 180, replaced 1 [1 operand-only], inserted 0, deleted 0)`, 10635 did not
-#   change, and steps 7 to 9 on that link matched 6733 and 10635, 11924 match rows against 11922, no other row moved.
-#   That flag is the user's to decide; by its band, 6733 lies next to 6734, a function
-#   of celeitores.cpp's records, so the target's copy may as well be another uenux2 object's built without strict
-#   aliasing (a reading).
+#   its one caller, binaryen inlined it there. Our copy is this object's, built without strict aliasing
+#   (docs/reference/facts/app-flags.md F6): with strict aliasing 6733 read `differs`, in its locals (7 against 6); with
+#   this object alone built without it (a scratch UENUX2_NOTBAA_FILES line), 6733 scored `1 over 181 rows (same 180,
+#   replaced 1 [1 operand-only], inserted 0, deleted 0)`, 10635 did not change, and steps 7 to 9 on that link matched
+#   6733 and 10635, no other row moved; with the file in src/Makefile's list, steps 7 to 9 on the whole link do the
+#   same. That the target's copy is this object's is a reading: by its band, 6733 lies next to 6734, a function of
+#   celeitores.cpp's records (which does not call it), and the TU of its other caller 7787, a body that loads records of
+#   27 files, celeitores.cpp's StaticLoad (395 and 407) among them, after its call of 6733, could hold it too.
 # Chosen: the helpers' names and their being functions of the file's anonymous namespace (they read no state of the
 # class, and clang inlines them all), the predicate's 0 written against the set's element type (the target's compare;
 # the type is cconfiguracaoeleicao.h's choice, whose enumerators start at 1), the order of the definitions, the lines

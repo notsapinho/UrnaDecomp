@@ -69,9 +69,10 @@
 # - the executable TU's push bodies 10090, 5384, 8758, 8911, 8986 and 9233 read `differs` now on a frame offset, 288
 #   against 280 (10090: 156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower), read as a
 #   form of CPolySingletonList::push (unit 100's header); 7667 and 8834 on their first call, a has<T> thunk (target
-#   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp's instance, and 7667
-#   still reads so: its census pair is 8758's body (set<IGenericFactory<ISemaphore>>), since no body of ours is the
-#   executable TU's set<api::ITextToSpeech>, for which unit 150's roots stand.
+#   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp, where
+#   set<api::ITextToSpeech> instantiates it (the root's explicit instance went, below), and 7667 read so while no body
+#   of ours was the executable TU's set<api::ITextToSpeech> (its census pair was 8758's body); the root holds that copy
+#   now (below).
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
 #   Since then 9372 matches (fragment 241), and 9650, 9831, 9897, 10307 and 640 with unit 170's has<T> roots and unit
@@ -84,6 +85,46 @@
 #   root emits that copy.
 # - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 matches from unit 229's root, and 1928's line names
 #   that root's pair<string, shared_ptr<IAbstractVisitor>> copy now, the same body, which links ahead of this one's.
+#
+# CPolySingleton<api::ITextToSpeech>::set<simulador::CWasmNullTextToSpeech>, target fn 4162 (143 bytes, landing pads),
+# added after the rest: the executable TU's copy, which votaInit (fn 7840, not written) reaches through invoke_vii's
+# table slots 7 and 46 (elem[7] and elem[46] of the target's table) and fn 8302 (unit 188) calls directly. The root
+# takes its address in a static constructor's sink, which stands for votaInit's two slots, so that it emits the copy
+# with what the copy instantiates and binaryen keeps it out of line beside 8302's call (the root's comment has the
+# evidence and the measurement without the sink). 8302's call reaches it, as the target's does: this object links ahead
+# of simulador.cpp.o.
+# Matches with it (4, none lost, against 34125a18 by index, how-to step 10): 4162, from the census's pair with our copy
+# (shape); CPolySingletonList::set<api::ITextToSpeech> (fn 7667, push<api::ITextToSpeech> inlined, slot 65 of 4162's
+# invoke_vii), the executable TU's copy, from this object (below: the root's order); and two thunks that 7667 invokes,
+# into binaryen's bodies 1009 and 1010: 14423 (vector<SPolySingletonInfo>::emplace_back for
+# shared_ptr<api::ITextToSpeech>, table slot 154) and 14456 (shared_ptr<api::ITextToSpeech>'s constructor from
+# unique_ptr, slot 153), named by step 8's `table` evidence by 7667, which has its srcloc-anchor now (its
+# push<api::ITextToSpeech> record, which this object loads). No match line was renamed; each new match was read against
+# its callers (4162: 8302 and the two slots of 7840; 7667: 4162; 14423 and 14456: 7667).
+# Two lines went with it, both taken out in one link, steps 7 to 9, that moves no scan row (its scan differs from the
+# link with them in two `ours` numbers of the detail column only, and the match list and symbol file are the same): the
+# root's explicit instantiation of has<api::ITextToSpeech> (3281), which set<api::ITextToSpeech> instantiates in the
+# same object (with and without the line, 3281's, 7667's and 4162's bodies in the object are the same, wasm-objdump -d
+# with object numbers masked; only the object's order of functions differs), and the two calls of 388
+# (~shared_ptr<void>) in src/units/100-uenux2-cpolysingleton-roots.cpp, which stood for 7667 alone (that file's
+# comment).
+# The root's order: its sink and the sink's struct come before urna_texttospeech_constroi, so that the object emits the
+# set code before the builder's, in the executable TU's order. That TU's records (CVotaWebEngine::Init's 1526324,
+# 7667's push<api::ITextToSpeech> 1526348, instance<api::ISound>'s 1526584) do not give it, since the builder's code
+# has none. The evidence is the TU's data between them, which the root's comment lists with the commands:
+# ITextToSpeech's typeinfo (1526340) and push's record (1526348), then the typeinfo of the error push throws and its
+# base's, std::format_error's typeinfo and vtable and the format bool strings (1526364 to 1526428), the errors' vtables
+# and the vtable and typeinfo of the __shared_ptr_pointer 7667 makes (1526440 to 1526508), and only then ITextToSpeech's
+# vtable (1526520). The step from that run to the TU's code order is the root's reading: the TU's typeinfos and vtables
+# lie in the order its code first refers to them, and an ITextToSpeech constructor's vptr store, the builder's, is what
+# refers to that vtable first, so the builder came after push and push's format code. In the root's order the object
+# emits those 13 .data.rel.ro objects as the target lies them out; with the builder first it emits ITextToSpeech's
+# vtable and std::format_error's typeinfo and vtable ahead of push's record (wasm-objdump -x, the object's data
+# segments). Past that one order the root's lines are free (src/units/README.md "Companion files"). Measured both ways,
+# steps 6 to 9 and the splat build on each, the target's sha256 both times: in this order 7667 matches, 12190 matches;
+# with the builder first, as the root was first written, 12189, and 7667 `differs` on the frame slot of depura's
+# std::format_string (+584 in ours where the target has +280, the slots between 8 off), as the executable TU's other
+# push bodies do (unit 170's fragment, whose reading this fits: the slot follows which format code a TU emits first).
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

@@ -22,7 +22,8 @@
 # cconversorcargo.cpp.o emits the vtable and the default 11372 with it; and CConversorDetalheConsulta's: fragment 225
 # writes its slot 3 (11377), and cconversordetalheconsulta.cpp.o emits the vtable and the default 11376 with it. The
 # roots keep no vtable of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment 191's) stores
-# both vptrs, the converters it builds on its stack.
+# both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367 (unit 293's
+# comum::asn::GravaArquivo) stores.
 #
 # Evidence. Records name each default, its class template and its throw's line and column: iconversorasn.h 89 and 98,
 # iconversorbiometriaasn.h 81, column 15 (a throw in a body in the class). Each thunk passes its instance's record, code

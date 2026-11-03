@@ -91,12 +91,25 @@ public:
     unsigned int GetComparecimento() const { return m_qtdVotaram; }
     // Record celeitores.cpp:497 (7847); slot 2 of vota::CEleitorVotando (fn 7377) holds it behind a 32-byte prologue.
     md::ETipoAbrangencia GetCurrentAbrangenciaEleitor() const;
+    // fn 1393: the current record's CEleitorDetalhe::GetBiometria (fn 1937), returned through the result's address. Its
+    // six callers (fns 10425, 10465, 10474, 10478, 10500, 10512, vota's identification states) call it on
+    // CEleitores::GetInst()'s result (10500: `f1393(frame, f326())`), so it takes the singleton as `this`: a member, a
+    // reading. No record, slot or RTTI names it: its name, after GetCurrentAbrangenciaEleitor's, and its const are
+    // chosen; its file is a reading (src/units/291-uenux2-biometria-eleitor.mk).
+    md::CBiometriaEleitor GetCurrentBiometriaEleitor() const;
 
 private:
     // fn 5767: the impediments read from each file of a list, through a std::function over a lambda (RTTI of its
     // __func, vtable @1559564, names this member and its parameter), appended in the files' order. No `this`: the
     // target passes the list alone. Its being private is chosen.
     static std::vector<md::CImpedido> GetEleitoresImpedidos(const std::vector<std::string>& arquivos);
+
+    // fn 5764, record celeitores.cpp:719, which gives the signature: the voter's record, with the impediments of the
+    // entry of the sorted list at the index when its identity is the voter's (the index then moves on), none when it
+    // is beyond the voter's, and code 7851 when the voter's is beyond it; with the voter's dynamic data when given. The
+    // wasm has no `this`: binaryen dropped the one it never reads. Its being private is chosen.
+    CEleitorDetalhe LoadEleitorDetalhe(const md::CEleitorDecorator& eleitor, const std::vector<md::CImpedido>& impedidos,
+        size_t& indice, const md::CEleitorDinamico* dinamico) const;
 
     // GetCurrentAbrangenciaEleitor passes the string at +32 and the word at +44 to
     // md::CEleitorDecorator::GetAbrangencia (fn 3721), which compares them with the voter's temporary transfer's

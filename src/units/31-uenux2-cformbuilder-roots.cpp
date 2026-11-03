@@ -147,7 +147,7 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
-//   FormMTA, FormMTB      callers of 1694 (4633, 5341, 10676; 1150, 5343, 10204 and 10214 are in the link) and of 301
+//   FormMTA, FormMTB      callers of 1694 (4633, 5341; 1150, 5343, 10204, 10214 and 10676 are in the link) and of 301
 //                         (2734 and the other 32; 652, 1901, 1905, 2735, 2747, 2753, 2880, 3610, 3625, 5386, 5389,
 //                         5393, 5396, 5401, 5430 and 10313 are in the link)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891

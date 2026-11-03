@@ -21,11 +21,6 @@
 // f10486 · 919 B · unmatched · placement: link order · name unknown
 // void f10486(i32) { ... }
 
-// link-order cluster 307 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caguardainspecao.cpp
-
-// f10530 · 701 B · unmatched · placement: link order · name unknown
-// void f10530(i32, i32) { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -53,11 +48,6 @@
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown
 // void f5408(i32) { ... }
-
-// link-order cluster 757 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
-
-// f5420 · 788 B · unmatched · placement: link order · name unknown
-// void f5420(i32, i32) { ... }
 
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 
@@ -274,11 +264,6 @@
 // f1591 · 658 B · unmatched · placement: link order · name unknown
 // void f1591(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1248 · uses=9 · neighbours' file uenux2/src/app/comum/gravadores/iresultado.cpp
-
-// f1393 · 15 B · unmatched · placement: link order · name unknown
-// void f1393(i32, i32) { ... }
-
 // link-order cluster 1271 · uses=12
 
 // f1047 · 635 B · unmatched · placement: link order · name unknown
@@ -328,11 +313,6 @@
 
 // f5464 · 110 B · unmatched · placement: link order · name unknown
 // ? f5464(i32, i32) { ... }
-
-// link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
-
-// f5574 · 16 B · unmatched · placement: link order · name unknown
-// void f5574(i32, i32) { ... }
 
 // link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
 
@@ -664,11 +644,6 @@
 // ? f1896(i32, i32) { ... }
 
 // component simulador
-
-// link-order cluster 1050 · uses=3
-
-// f4162 · 143 B · unmatched · placement: link order · name unknown
-// void f4162(i32, i32) { ... }
 
 // link-order cluster 1063 · uses=4
 

@@ -19,6 +19,8 @@
 // - GetEntradas: vota::CMostraQRCodeBU::ProcessInput and CMostraQRCodeCertificado::ProcessInput (fns 12051, 12038) read
 //   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name, its const reference
 //   result and its lines (original 112-115) are chosen.
+// - GetEntradaAtual: vota::CPedeIdentidade::ProcessTick (fn 10676) reads the text of the field with the focus,
+//   std::vector::at with the index at +84. Its name, its pointer result and its lines (original 117-120) are chosen.
 
 #include <algorithm>
 #include <cstddef>
@@ -45,7 +47,7 @@ public:
         }
     }
 
-    // (original lines 48-54: content not recovered)
+    // (original lines 50-54: content not recovered)
 #line 55
     EInputResult Read()
     {
@@ -107,7 +109,12 @@ public:
         return m_entradas;
     }
 
-    // (original lines 117-144: content not recovered)
+    IInputField<MEDIA>* GetEntradaAtual() const
+    {
+        return m_entradas.at(m_atual);
+    }
+
+    // (original lines 122-144: content not recovered)
 #line 145
     void ClearKeyboardInput()
     {

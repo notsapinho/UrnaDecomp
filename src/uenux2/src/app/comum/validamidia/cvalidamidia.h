@@ -10,8 +10,8 @@
 // .cpp (the units' pending object needs it). Slot 2 calls slot 3 through the vtable, which reads as a class that is not
 // final (clang calls a final class's own member directly).
 // Out of line in cvalidamidia.cpp: EhValida (fn 11173), the key function, with which the vtable and the typeinfos
-// (@1577072, then IValidaMidia's @1577084) are emitted, and every other slot but 8, which
-// src/units/179-uenux2-cvalidamidia-pending.cpp traps.
+// (@1577072, then IValidaMidia's @1577084) are emitted, and every other slot (fns 11172 to 11166, in their order in
+// the vtable).
 
 namespace comum::impl {
 
@@ -24,7 +24,7 @@ public:
                          unsigned int numero, char fase) override;
     bool ContemArquivosResultado() override;
     bool ContemArquivo(const std::string& arquivo) override;
-    int Slot8() override;
+    bool ContemApenasArquivosResultado() override;
     void LimpaMidia() override;
 };
 

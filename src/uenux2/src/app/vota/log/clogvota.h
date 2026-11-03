@@ -165,6 +165,11 @@ public:
     // LogaAguardandoHorarioZeresima (CLoga::loga, fn 433, with +4 and severity 1). The name is chosen from its message,
     // and its place here and in clogvota.cpp, after LogaAguardandoHorarioZeresima, is chosen: it has no index to order.
     void LogaAguardandoIdentificadorEleitor();
+    // Held inlined by vota::CPedeIdentidade::ProcessTick (fn 10676), its one caller, which calls GetInst before the
+    // member's own stack frame opens; it logs "Votacao foi bloqueada por horario" through logaAlerta (fn 1398), a
+    // literal only fn 10676 loads. The name is chosen from its message, and its place here and in clogvota.cpp, after
+    // LogaIdentificadorDigitadoMesario, is chosen: it has no index to order.
+    void LogaVotacaoBloqueadaPorHorario();
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();

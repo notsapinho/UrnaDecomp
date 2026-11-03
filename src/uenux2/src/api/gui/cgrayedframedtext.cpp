@@ -25,7 +25,7 @@ void CGrayedFramedText::MaskText(IScreen& screen, const std::string& text) const
 
     for (size_t i = 0; i < text.size(); ++i) {
         FillCell(i, static_cast<TColor>(1), screen);
-        DrawChar(i, text[i], screen);
+        DrawChar(i, text[i], static_cast<TColor>(2), screen);
         DrawFrame(i, static_cast<TColor>(3), screen);
     }
     for (size_t i = text.size(); i < m_length; ++i) {

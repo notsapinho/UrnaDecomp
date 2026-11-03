@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp` and `eleitor/cconferevotoemcargo.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp` and `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` and `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -459,9 +459,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   11349 (`comum::asn::CConversorEleicoesVota::DoDesconverte`, not written), in `dados/asn/rdv/`, which builds without
   it. 5681 waits for 11349.
 
-  Four files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
-  `uenux2_cxxflags` leaves them out of the strict-aliasing test. Each is read from code that only its own functions
-  reach. In `eleitor/comum/ctelasvota.cpp`, the initializer-list constructor of `GetKeyboardLayout`'s
+  Five files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
+  `uenux2_cxxflags` leaves them out of the strict-aliasing test. The first four are each read from code that only their
+  own functions reach. In `eleitor/comum/ctelasvota.cpp`, the initializer-list constructor of `GetKeyboardLayout`'s
   `std::map<std::string, SLayoutTecla>` (6579), which only that anonymous-namespace function calls (record
   `ctelasvota.cpp:1301`; binaryen inlines it into 11805, 6579's one caller in `ledger/callgraph.tsv`), reloads the
   tree's begin after a new node's stores ([reading.md](reading.md) §R21's sign): 74 over 308 rows with strict aliasing,
@@ -474,13 +474,22 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   one (1083); it was listed later than the other two (below). In `eleitor/cconferevotoemcargo.cpp`, the eight `__clone`
   slots of the four lambdas of `IConfereVotoEmCargo` that capture `this` alone (`StartStateAudio`'s `$_0` and `$_1`,
   `ProcessTickAudio`'s `$_0` and `ExecutarAposAudioAtual`'s `$_1`; 11770, 11771, 11778, 11779, 11782, 11783, 11787,
-  11788) store the vptr first too: 11782 and 11787 score 6 over 12 rows with strict aliasing (3 inserted, 3 deleted)
-  and 1 over 9, operand-only, without it, and the four `__clone()` slots 2 over 5, operand-only, both ways; it was
-  listed last (below). At b7c2e8a5 (11619 matches) each file of the table was
-  built in place, its object compiled with `make -C src <object> UENUX2_TBAA_DIRS=` (the compile line gains
-  `-fno-strict-aliasing` and nothing else), then how-to steps 7 to 9 and
-  `make -C src splat`, the rows against b7c2e8a5's `splat/scan.tsv`; between two variants the tracked files went back to
-  b7c2e8a5's and the objects were compiled again, and the link came back byte-identical each time:
+  11788) store the vptr first too: 11782 and 11787 score 6 over 12 rows with strict aliasing (3 inserted, 3 deleted) and
+  1 over 9, operand-only, without it, and the four `__clone()` slots 2 over 5, operand-only, both ways; it was listed
+  fourth (below). In `operador/leidentidade/celeitorencontrado.cpp` (unit 104), the copy of
+  `std::set<ETipoIdentificadorEleitor>`'s range insert over two `const_iterator`s (6733) that
+  `CEleitorEncontrado::StartState` (10635) calls has the target's six locals only without TBAA: in variant links
+  ([workflow.md](workflow.md) §W13) it scores 49 over 186 rows with strict aliasing (7 locals) and 1 over 181,
+  operand-only, without it, and 10635, every row an operand, reads `unresolved self-voted` on 6733's name until 6733
+  matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
+  of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
+  neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
+  object's is a reading: the file was listed last, on the user's decision (below). At b7c2e8a5 (11619 matches) each file
+  of the table was built in place,
+  its object compiled with `make -C src <object> UENUX2_TBAA_DIRS=` (the compile line gains `-fno-strict-aliasing` and
+  nothing else), then how-to steps 7 to 9 and `make -C src splat`, the rows against b7c2e8a5's `splat/scan.tsv`; between
+  two variants the tracked files went back to b7c2e8a5's and the objects were compiled again, and the link came back
+  byte-identical each time:
 
   | built without strict aliasing | `make -C src splat` | rows that turn `match` | rows that leave `match` |
   | --- | --- | --- | --- |
@@ -525,13 +534,21 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `match` and no row leaves it (11956 and 11957, census pairs with `IInputField`'s lambdas' `__clone`, go from
   `no-candidate` to `differs`).
 
+  `celeitorencontrado.cpp` (unit 104) was measured first in a variant link too, its object alone built without strict
+  aliasing (a scratch `UENUX2_NOTBAA_FILES` line): 6733 and 10635 turn `match` and no other row moves. It is listed
+  since b283f0e0 (12238 matches), measured there in place: with it in the list the compile lines `make -n -C src link
+  APP=<a new directory>` prints (907) differ in its object's alone, by `-fno-strict-aliasing`; the edit recompiled 859
+  objects, and of the 907 the link compiles, rebuilt from nothing, 906 are `cmp`-equal to b283f0e0's and the other is
+  that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with 12240 matches, 6733 and 10635
+  turn `match`, no other row moves and the symbol file is unchanged.
+
   So the target's copies of the token iterator (4307, whose callers are 5492 and 6999 only) and of the `const char*`
   parser (2062: 2416, 5782, 6833, 6999) have no TBAA while `cinputmenufield.cpp` has it. Whose copies they are, no row
   says: `cvotacaostateaudio.cpp`'s in a link order with it ahead of `cinputmenufield.cpp` (not measured), or another
   TU's; the tree root stands for them either way (unit 97's fragment). Whether the original build gave
-  `-fno-strict-aliasing` to `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp` and `cconferevotoemcargo.cpp`
-  alone or to more of `app/vota/`, the rows do not say beyond these measurements: listing the four files is the reading
-  that keeps every match.
+  `-fno-strict-aliasing` to `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`
+  and `celeitorencontrado.cpp` alone or to more of `app/vota/`, the rows do not say beyond these measurements: listing
+  the five files is the reading that keeps every match.
 
   One file of `gravadores/` has it: `cgeracaoversoescontratos.cpp` (unit 268), whose `ObtemDependencias` (5869) copies
   a `std::set<std::string>` and inserts into one. The target's copy calls libc++'s
@@ -564,6 +581,25 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   12098 lies under `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified,
   and its comment says when it goes. The file's flag is a reading of the original build's settings like the rest of
   the split.
+
+  One file of `validamidia/` has it: `cfabricaconteudomidiastart.cpp` (unit 179), whose
+  `comum::impl::RemoveArquivosDeSistema` (5571) holds the initializer-list constructor of a `std::map` inlined
+  (binaryen's inlining of the object's linkonce copy). Without TBAA that constructor loads a word again after the
+  tree's stores where the target keeps it in a local, the sign above, and 5571 differs (394 over 992 rows, its local
+  numbers besides); with it every row left is an operand row and 5571 matches (unit 179's fragment). Measured in place
+  on the merged tree at 6df50018 (12251 matches): the compile lines `make -n -C src link APP=<a new directory>` prints
+  (906) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 858 objects that depend on
+  `src/Makefile`, and of the 906 the link compiles, rebuilt from nothing, 905 are `cmp`-equal to 6df50018's, the other
+  the file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
+  tier alone, `none` to `shape`, its row staying `match`; step 8 adds a `call` name for 4679, already matched, and
+  moves `__THREW__`'s voter), and `make -C src splat` gives the target's sha256. With strict aliasing the object's
+  code changes in 26 functions, the map's constructor, `__tree_balance_after_insert` and 24 libc++ `std::format`
+  internals, all linkonce (`wasm-objdump -d` of the two objects, function by function), and the link takes none of
+  them from this object: `build/out/wasm-map/vota_web/names.tsv`'s object column names four functions of it,
+  ConteudoValido, the map's tree destroy, RemoveArquivosDeSistema and ValidaConteudo, whose code does not change.
+  The directory's other file, `cvalidamidia.cpp`, was not measured with the flag, so whether TSE's build gave it to
+  the file or to `validamidia/` no row says: listing the file is a choice, and its flag a reading of the original
+  build's settings like the rest of the split.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

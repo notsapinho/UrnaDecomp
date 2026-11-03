@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 
+#include "app/comum/dados/md/eleitor/cbiometriaeleitor.h"
 #include "app/comum/dados/md/eleitor/celeitordecorator.h"
 #include "app/comum/dados/md/eleitor/celeitordinamico.h"
 #include "app/comum/dados/md/etipoimpedimento.h"
@@ -21,9 +22,19 @@ class CEleitorDadosHabilitacao;
 // written. MarcaVotou passes its own name to ConfereDadosDinamicos (the literal "MarcaVotou" in target fn 10210, which
 // holds it inlined), as GetDinamico and MarcaHabilitado pass theirs: the name is read from that literal.
 // Chosen: the members' names, the two accessors, GetDinamico's const and const& result, GetImpedimento's name,
-// MarcaHabilitado's parameter type. Nothing builds it.
+// MarcaHabilitado's parameter type.
+// The constructors: CEleitores::LoadEleitorDetalhe (fn 5764) builds the record one of two ways, with the voter's
+// dynamic data (the record's constructor, line 49, which throws code 7829 when the data's voter is not the decorator's
+// identity, held behind a frame of its own in 5764: out of line here, binaryen inlined it) or without it (the optional
+// left empty, no frame). For the one without the data, its being out of line beside the other, its parameters and its
+// line are chosen (not measured against an inline form).
 class CEleitorDetalhe {
 public:
+    CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::ETipoImpedimento impedimentoP1,
+        const md::ETipoImpedimento impedimentoP2);
+    CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::CEleitorDinamico& dinamico,
+        const md::ETipoImpedimento impedimentoP1, const md::ETipoImpedimento impedimentoP2);
+
     void ConfereDadosDinamicos(const std::string& funcao) const;
 
     const md::CEleitorDecorator& GetEleitor() const { return m_eleitor; }
@@ -37,6 +48,10 @@ public:
     // ccargods.cpp's and celeitores.cpp's in link order. Its callers count the voters who can vote (fn 2823 below,
     // CEleitores's slot 0 fn 2824, and fns 10635, 11233, 11616). The name, its being a member and its const are chosen.
     bool SemImpedimento() const;
+    // fn 1937, records celeitordetalhe.cpp:94 and :101: the voter's biometry, read from the section's file of voters
+    // ("el") or of voters temporarily transferred to it ("tte") at the voter's CIndexer and converted under an
+    // md::CParametro of the voter's identity of its own type, its byte vector and that CIndexer.
+    md::CBiometriaEleitor GetBiometria() const;
     // The impediment of the turn given. vota::CEleitorEncontrado::StartState (fn 10635) holds this code inlined twice
     // (comum::CAppInfo::GetInst and its const GetGeral, fns 185 and 457, the turn's test, the load of +196 or +200)
     // beside three calls of GetImpedimento (fn 3769), which reads the same members out of line; the target functions
@@ -50,6 +65,10 @@ public:
     }
 
 private:
+    // The path of that file: fn 1937 holds it behind a 64-byte frame of its own (binaryen's inlining,
+    // docs/reference/facts/reading.md R10), after a br_table on the voter's transfer kind that sends 0 and 4 to "el" and
+    // the rest to "tte". Its name and its being a const member are chosen (src/units/98-uenux2-app-comum-dados.mk).
+    std::string GetArquivoBiometria() const;
     md::CEleitorDecorator m_eleitor;
     std::optional<md::CEleitorDinamico> m_dinamico;
     md::ETipoImpedimento m_impedimentoP1;

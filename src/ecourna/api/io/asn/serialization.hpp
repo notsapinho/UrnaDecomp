@@ -24,9 +24,12 @@ void DeserializeFromBuffer(ClasseASN1& entidade, const std::vector<char>& buffer
     }
 }
 
-// Reads the whole file through CFile and decodes it.
-template <typename ClasseASN1>
-void DeserializeFromFile(ClasseASN1& entidade, const std::string& nome)
+// Reads the whole file through CFile into the buffer the caller gets back. The reconstruction's: DeserializeFromFile's
+// one instance in the target (fn 2280) destroys the CFile before the decode and builds the buffer in the stack slot
+// of the mode string, which died before it; that the read is a function of its own that clang inlines is a reading.
+// Its name and linkage are chosen (internal, though a template calls it: an ODR violation once a second TU includes
+// the header); `static inline` or a namespace { } give the same object, `inline` not (unit 293's fragment, for both).
+static std::vector<char> ReadWholeFile(const std::string& nome)
 {
     CFile arquivo(nome, "rb");
     arquivo.Seek(0, SEEK_END);
@@ -36,7 +39,14 @@ void DeserializeFromFile(ClasseASN1& entidade, const std::string& nome)
     uedword lidos = arquivo.RawRead(buffer.data(), buffer.size());
     arquivo.Close();
     buffer.resize(lidos);
-    DeserializeFromBuffer(entidade, buffer);
+    return buffer;
+}
+
+// Reads the whole file and decodes it.
+template <typename ClasseASN1>
+void DeserializeFromFile(ClasseASN1& entidade, const std::string& nome)
+{
+    DeserializeFromBuffer(entidade, ReadWholeFile(nome));
 }
 
 } // namespace ecourna::api::io

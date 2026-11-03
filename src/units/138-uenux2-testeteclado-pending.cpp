@@ -8,7 +8,6 @@
 //   private in api/util/cdatetime.h.
 // vota::testeteclado::CRetomada, in cretomada.cpp:
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
-// - GetEstadoPassouNoTeste 11830 (slot 11): fn 491, with no name until unit 205 named it.
 // vota::CVerificaHorarioZeresima, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp:
 // - ProcessInput 11869 (slot 7), 861 B: fns 5591 and 6595, with no name (and 491, named now: unit 205; 5586, matched:
 //   unit 123), 455 and 5880 (IEventosLog's).
@@ -36,11 +35,6 @@ CFormInterativoTelaVota CPreZeresima::GetTela()
 }
 
 CFormInterativoTelaVota CRetomada::GetTela()
-{
-    __builtin_trap();
-}
-
-comum::CAppState* CRetomada::GetEstadoPassouNoTeste()
 {
     __builtin_trap();
 }

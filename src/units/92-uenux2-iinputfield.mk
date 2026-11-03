@@ -9,7 +9,7 @@
 #   CInputField<CFramedText>'s Rect 12405 and Move 12402, and the three Draws that call a mask's MaskText directly
 #   (CInputField<CFramedText>'s 12438, CMaskedTextField<CFramedText>'s 12593 and <CGrayedFramedText>'s 12708);
 #   CFramedText's MaskText 2780 (record cframedtext.cpp 66:15, the key function, so this object emits the vtable, with the
-#   4917 enumerator of EUeGuiError), FillCell 5536, Rect 3677, Move 3676 and DrawFrame 2779, and its
+#   4917 enumerator of EUeGuiError), FillCell 5536, DrawChar 5537, Rect 3677, Move 3676 and DrawFrame 2779, and its
 #   constructor 1385, whose record (cframedtext.cpp 28:24) is the default argument of CPolySingleton<IScreen>::instance():
 #   the local `IScreen& monitor` gives that column, and its name, the constructor's other lines and the vertical gap
 #   written in place (Espaco's form over size / 10) are chosen. The roots give 1385 two callers for its eight in the target.
@@ -34,17 +34,26 @@
 #   6319, 11024 IInputField's Read: both load IInput::GetKey's record, which the target holds four times (1538968,
 #         1547328, 1580692, 1593104), and both match: the scan offers each copy of such a record and the target body
 #         picks one (docs/reference/facts/splat.md S12).
-# Written, and not matched:
-#   5537  CFramedText::DrawChar, under its generated `call` name (its callers 2780 and 5534 match): 31 over 273 rows in
-#         the plain link, 19 of them operand-only. One store and one load are in another place: the target stores the
-#         CFixedText's alignment (2 at its +4) after its vptr, where ours stores it before the string's first bytes; and
-#         the target loads the cell's right edge before its left, ours left first. The point's coordinates read before
-#         its two stores, as the target does, come from the half width in a local: written in the brace (`left + (right -
-#         left) / 2`) the y store came first, 38 rows, and so it does in the object for an SPoint temporary in the call,
-#         x and y assigned in turn, and `(right - left) / 2 + left`. A local for each edge, read right first, gives the
-#         same 31 rows as the int half width; std::string{caractere}, std::string(&caractere, 1) and a CFixedText that takes its string
-#         by value and moves it keep the alignment's store where ours has it (the function's stores in the object). Not
-#         explained. Top and Bottom, unit 108's, are inlined into it.
+#   5537  CFramedText::DrawChar, its name chosen, with Top and Bottom, unit 108's, inlined into it. What the bytes fix,
+#         each measured in the link before steps 7 to 9 (pnpm wasm score against our fn):
+#         - The text's colour is a parameter, which both callers (2780, 5534) pass as 2: binaryen's dead-argument
+#           elimination folds it into the body, and our DrawChar's wasm type is the target's (i32 i32 i32 i32)->().
+#           With the 2 written in the body the target stores the CFixedText's alignment (2 at its +4) after its vptr and
+#           ours before the string's first bytes: 25 over 270 rows, 3 inserted and 3 deleted, the rest operand-only.
+#           With the parameter: 19 over 267, all operand-only, and it matches. In the object (a compile with the
+#           unit's flags), the background colour alone as a parameter leaves that store where the body constant has it;
+#           a reading of why, from the object's -print-after=finalize-isel dump: there one constant 2 serves the store,
+#           the half width's division and DrawText's colour. Both colours as parameters give the same plain link as the
+#           one (sha256 1db885ded05acf8a33e4880351db1153c861ac4262859c3bcd57d7fa1d2d4e11 both); one colour, as
+#           DrawFrame and FillCell take, is the choice, and so are its name and its place before the screen.
+#         - The cell's centre is two TPosition locals, x then y, passed as SPoint{x, y}: the target loads the right edge
+#           before the left, which the int half width in a local does not (31 over 273 rows with it, the colour in the
+#           body; 25 over 270 with x and y). In the object, the left edge read into a local first, `const int metade =
+#           (rect.right - esquerda) / 2`, and y before x give the same DrawChar; the brace (`left + (right - left) / 2`)
+#           and x and y assigned in turn to an SPoint store y before the loads, and a local for each edge (right first),
+#           `metade + rect.left` and the half width as a TPosition load the left edge first. std::string{caractere},
+#           std::string(&caractere, 1), a named string, -O2, -Os, -O1 and -fno-strict-aliasing leave the alignment's
+#           store where the body constant has it.
 # MaskText (2780) and the cell members, measured: MaskText reads the character once, into a local; read at each use it is
 #   loaded twice, as load8_u for the test and load8_s for DrawChar (15 over 392 rows, 3 not operand-only). The space test
 #   is `== ' '`: the target lays the space branch first, as that gives (2780 matches), and `!= ' '` lays the other branch

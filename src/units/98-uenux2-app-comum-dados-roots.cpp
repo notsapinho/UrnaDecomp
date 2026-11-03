@@ -19,6 +19,7 @@ extern const char impedido_vt[] __asm__("_ZTVN5comum3asn18CConversorImpedidoE");
 void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
+void w1937_root(void*, int) __asm__("_ZNK5comum15CEleitorDetalhe12GetBiometriaEv");
 }
 
 namespace {
@@ -45,6 +46,17 @@ __attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
     return w2266_root(detalhe + 208) * 5;
 }
 
+// Stands for three target callers of CEleitorDetalhe::GetBiometria (fn 1937): fns 3614, 3616 and 10316, none in the
+// link; the fourth, fn 1393 (CEleitores::GetCurrentBiometriaEleitor, unit 110's celeitores.cpp), is. The two 40-byte
+// results are md::CBiometriaEleitor's, left undestroyed: nothing calls this.
+__attribute__((noinline)) int BiometriasDosDois(int a, int b)
+{
+    int biometrias[20];
+    w1937_root(biometrias, a);
+    w1937_root(biometrias + 10, b + 112);
+    return biometrias[9] + biometrias[19];
+}
+
 const void* volatile comum_dados_sink;
 
 struct SComumDadosRoots {
@@ -55,6 +67,7 @@ struct SComumDadosRoots {
         comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);
+        comum_dados_sink = reinterpret_cast<const void*>(&BiometriasDosDois);
     }
 } comum_dados_roots;
 

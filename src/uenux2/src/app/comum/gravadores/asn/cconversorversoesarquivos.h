@@ -21,7 +21,9 @@ protected:
 // (@1557240), as the records the target's writes of the hashes' and the envelope's entities pass (fns 5367 and 2724,
 // thunks into binaryen's merge of the two, fn 6006: @1599208, @1598908) lie after those converters' vtables
 // (@1599084, @1598820). Chosen: its name, its being a free function (it reads no converter's state), its parameter
-// names and its place, after DoDesconverte.
+// names, its place, after DoDesconverte, and its taking the CFile by a non-const reference and building a non-const
+// converter (the hashes' and the envelope's writers take `const api::CFile&` and build const ones: a choice on each
+// side; the callers' records give GravaResultado(api::CFile &) const).
 void GravaArquivo(api::CFile& arquivo, const md::CVersoesArquivos& versoes);
 
 } // namespace comum::asn

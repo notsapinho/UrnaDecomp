@@ -92,10 +92,10 @@ __attribute__((noinline)) unsigned w121_codigo(comum::CCalculaCV& calcula)
     return calcula.CalculaCodigo().size() + 121;
 }
 
-// Stands for four target callers of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753, 652, 2735, 3631 and 5418
-// (units 121, 161, 277 and 283): fns 10388, 10415, 10500 and 10627. They pass the length and the flag as 1 and 0, 4 and
-// 1 or 12 and 1, so these pass 12 and false, which keeps both parameters through binaryen's dead-argument elimination,
-// as fn 2753's 1 and true alone would not.
+// Stands for three target callers of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753, 652, 2735, 3631, 5418
+// and 10627 (units 121, 161, 277, 283 and 278): fns 10388, 10415 and 10500. Those three and 10627 pass the length and
+// the flag as 1 and 0, 4 and 1 or 12 and 1, so these pass 12 and false, which keeps both parameters through binaryen's
+// dead-argument elimination, as fn 2753's 1 and true alone would not.
 __attribute__((noinline)) bool w121_campo(api::CMTFormBuilder& builder, const api::SPoint& posicao)
 {
     return vota::AdicionaCampoNumerico(builder, 12, false, posicao) != nullptr;

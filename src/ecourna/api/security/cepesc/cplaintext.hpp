@@ -15,6 +15,13 @@ public:
     CPlainText(const uebyte tipoArquivo, const uebyte idCriptografia, const ueword identificadorUE, const ueword versao,
                std::vector<uebyte> tabelaCriptografiaUE, std::vector<uebyte> numeroAleatorioUE, std::vector<uebyte> chave,
                std::vector<uebyte> conteudo, const CInfoSalt& infoSalt);
+    // Target fn 5168, no record: the 9-argument constructor (fn 9465, through invoke_*) with the file type 0, the
+    // cipher id 1 and no salt, the four vectors moved into its by-value parameters, which a landing pad destroys. Its
+    // callers, fn 2725 (comum::CControlaArmazenamentoDeImagens' cipher of a WSQ, which passes CLocal's zone and
+    // section) and fn 11629 (comum::CGravadorBU), are not written. That it is a delegating constructor of this class
+    // (it returns 9465's `this`), its parameters' names and types and its line in cplaintext.cpp are chosen.
+    CPlainText(const ueword identificadorUE, const ueword versao, std::vector<uebyte> tabelaCriptografiaUE,
+               std::vector<uebyte> numeroAleatorioUE, std::vector<uebyte> chave, std::vector<uebyte> conteudo);
 
     uebyte GetTipoArquivo() const { return m_tipoArquivo; }
     uebyte GetIdCriptografia() const { return m_idCriptografia; }

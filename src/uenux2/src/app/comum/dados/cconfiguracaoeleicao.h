@@ -10,6 +10,7 @@
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/md/processoeleitoral/eorigemconfiguracao.h"
 #include "app/comum/dados/md/processoeleitoral/cpleito.h"
+#include "app/comum/nomearquivo/cnomearquivo.h"
 #include "ecourna/app/dados/parametrizacaourna/cparametrosurna.hpp"
 #include "ecourna/app/dados/processoeleitoral/cconfiguracaomunicipio.hpp"
 
@@ -100,6 +101,14 @@ public:
     // record names it: its name, the parameters' names, its being a member and the comparator's name and linkage are
     // chosen.
     std::vector<md::CCargo> GetCargos(const TEleicaoID eleicao, const bool ordenados) const;
+
+    // +620 to +651: the election's part of a section's file name at +620 (SIdentificacaoArquivo, cnomearquivo.h, whose
+    // string is the one at +628 the destructor frees), and the municipality at +644 and the 16-bit zone at +648, which
+    // comum::CEleitorDetalhe::GetBiometria (fn 1937) and fn 7787 pass with it to fns 3745 and 5727. The members'
+    // types are those widths and their names and the accessors' are chosen.
+    const SIdentificacaoArquivo& GetIdentificacaoArquivo() const { return m_identificacaoArquivo; }
+    uedword GetMunicipioSecao() const { return m_municipioSecao; }
+    ueword GetZonaSecao() const { return m_zonaSecao; }
     // A copy of the set at +604. vota::CEleitorEncontrado::StartState (fn 10635) and fn 7787 each build an empty set in
     // their frame and fill it with fn 6733, std::set's range insert, from +604's begin and end: the copy constructor's
     // code. 10635 then looks for an element that is not 0 and destroys the copy with fn 1594, the destroy
@@ -122,9 +131,10 @@ private:
     api::CDateTime m_dataHoraFimEleicao;
     std::set<TCargoID> m_cargos;
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;
-    unsigned m_naoRecuperado3[3];
-    std::string m_descricao;
-    unsigned m_naoRecuperado4[3];
+    unsigned m_naoRecuperado3;
+    SIdentificacaoArquivo m_identificacaoArquivo;
+    uedword m_municipioSecao;
+    ueword m_zonaSecao;
     std::vector<int> m_lista1;
     unsigned char m_naoRecuperado5;
     bool m_habilitaBiometria;

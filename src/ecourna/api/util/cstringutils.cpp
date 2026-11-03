@@ -327,13 +327,11 @@ std::pair<size_t, size_t> CStringUtils::FindRegex(const std::string& expressao, 
     try {
         const boost::regex regex(expressao);
         boost::smatch resultado;
-        size_t inicio = naoEncontrada;
-        size_t fim = naoEncontrada;
-        if (boost::regex_search(valor, resultado, regex)) {
-            inicio = resultado.position();
-            fim = inicio + resultado.length();
+        if (!boost::regex_search(valor, resultado, regex)) {
+            return {naoEncontrada, naoEncontrada};
         }
-        return {inicio, fim};
+        const size_t inicio = resultado.position();
+        return {inicio, inicio + resultado.length()};
     } catch (...) {
         return {naoEncontrada, naoEncontrada};
     }

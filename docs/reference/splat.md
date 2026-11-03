@@ -531,7 +531,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   with each out-of-line callee it calls in place, and allow for what the link removes (an empty base destructor, a
   sized `operator delete` that is `free`). When the target caller is written and does not match, the body is compared
   through the caller's `score` instead, and the fragment gives that score and says whether the rows that differ lie
-  in the inlined body (`SRect::Top` and `Bottom` in 5537: operands only);
+  in the inlined body (`CBmpConversor::CreateBitmapHeader` in 10967: its stores of the file header's type and size,
+  unit 79's fragment);
 - a body from a companion object. Read the `object` column of each new match in `splat/scan.tsv`. A body compiled in a
   `-roots.o`, a `-pending.o` or a tree root `app/roots_*.o` must be code a landed header defines (an implicit or inline
   member, a template instance such as `__shared_ptr_emplace<T>`'s destructors), never a stand-in's own body, and the

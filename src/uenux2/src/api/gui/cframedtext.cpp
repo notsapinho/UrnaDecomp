@@ -42,7 +42,7 @@ CFramedText::CFramedText(size_t length, const SPoint& position, const SFont& fon
     }
 }
 
-void CFramedText::DrawChar(size_t index, char caractere, IScreen& screen) const
+void CFramedText::DrawChar(size_t index, char caractere, TColor color, IScreen& screen) const
 {
     const CFixedText texto(std::string(1, caractere), ALINHAMENTO_CENTRO);
     SRect rect = CellRect(index);
@@ -50,9 +50,9 @@ void CFramedText::DrawChar(size_t index, char caractere, IScreen& screen) const
     rect.Right(rect.right - Espaco());
     rect.Top(rect.top + EspacoVertical());
     rect.Bottom(rect.bottom - EspacoVertical());
-    const int metade = (rect.right - rect.left) / 2;
-    const SPoint centro{static_cast<TPosition>(rect.left + metade), static_cast<TPosition>(rect.top + 1)};
-    screen.DrawText(centro, texto, m_font, static_cast<TColor>(2), static_cast<TColor>(1));
+    const TPosition x = rect.left + (rect.right - rect.left) / 2;
+    const TPosition y = rect.top + 1;
+    screen.DrawText(SPoint{x, y}, texto, m_font, color, static_cast<TColor>(1));
 }
 
 void CFramedText::MaskText(IScreen& screen, const std::string& text) const
@@ -70,7 +70,7 @@ void CFramedText::MaskText(IScreen& screen, const std::string& text) const
             FillCell(i, static_cast<TColor>(1), screen);
             DrawFrame(i, static_cast<TColor>(2), screen);
         } else {
-            DrawChar(i, caractere, screen);
+            DrawChar(i, caractere, static_cast<TColor>(2), screen);
             DrawFrame(i, static_cast<TColor>(3), screen);
         }
     }

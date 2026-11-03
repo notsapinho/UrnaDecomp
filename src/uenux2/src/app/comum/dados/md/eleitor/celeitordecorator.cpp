@@ -24,10 +24,10 @@ CEleitorIdentidade CEleitorDecorator::GetIdentidadePorTipo(ecourna::app::dados::
 
 ETipoAbrangencia CEleitorDecorator::GetAbrangencia(const std::string& uf, const uedword municipio) const
 {
-    if (!IsTTE() || m_municipioTransferencia == municipio) {
+    if (!IsTTE() || m_transferencia.GetMunicipio() == municipio) {
         return ABRANGENCIA_MUNICIPAL;
     }
-    return m_ufTransferencia == uf ? ABRANGENCIA_ESTADUAL : ABRANGENCIA_FEDERAL;
+    return m_transferencia.GetUF() == uf ? ABRANGENCIA_ESTADUAL : ABRANGENCIA_FEDERAL;
 }
 
 } // namespace comum::md

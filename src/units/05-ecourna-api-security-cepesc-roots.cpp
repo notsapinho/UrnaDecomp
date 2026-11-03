@@ -13,6 +13,7 @@ int cepesc_cipheredout_ctor3(int, int, int, int) __asm__("_ZN7ecourna3api6cepesc
 int cepesc_plaintext_ctor(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_NS3_10shared_ptrINS1_9CInfoSaltEEE");
 int cepesc_plaintext_ctor_salt(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_RKNS1_9CInfoSaltE");
 int cepesc_cipheredin_ctor(int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc11CCipheredInC2EhhhRKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_RKNS1_9CInfoSaltE");
+int cepesc_plaintext_ctor_wsq(int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_");
 void keyloader_decipher(int, int, int) __asm__("_ZN7ecourna3api8security10CKeyLoader19DecipherKeyIfNeededIN19ModuloEnvelopeChave13EntidadeChaveEEENSt3__26vectorIhNS6_9allocatorIhEEEERKT_");
 }
 
@@ -41,8 +42,20 @@ int UsaInfoSalt(int a)
     return UsaInfoSalt1(a, a + 24, a + 48) + UsaInfoSalt2(a + 1, a + 25, a + 49);
 }
 
+// Stands for fn 5168's callers 2725 and 11629, neither in the link: CPlainText's constructor over two words and four
+// vectors has those two direct callers, and 2725 reads its result.
+__attribute__((noinline)) int TextosPlanos(int a, int b, int zona, int secao, int v)
+{
+    return cepesc_plaintext_ctor_wsq(a, zona, secao, v, v + 12, v + 24, v + 36) -
+        cepesc_plaintext_ctor_wsq(b, secao, zona, v + 48, v + 60, v + 72, v + 84);
+}
+
 struct SCepescCallers {
-    SCepescCallers() { cepesc_sink = reinterpret_cast<void*>(&UsaInfoSalt); }
+    SCepescCallers()
+    {
+        cepesc_sink = reinterpret_cast<void*>(&UsaInfoSalt);
+        cepesc_sink = reinterpret_cast<void*>(&TextosPlanos);
+    }
 } cepesc_callers;
 
 } // namespace
