@@ -14,7 +14,7 @@
 // 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and 11858
 // are in the link); 1280: 11869, 11881, 11902, 11905, 11908,
 // 11911, 11927 (11834, 11838 and 11848 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is
-// in the link); 5943: 11855 (11834 is in the link); 5428: 10217, 10734; 1536: 10473, 10477, 10485, 10489, 10500
+// in the link); 5943: 11855 (11834 is in the link); 5428: 10217 (10734 is in the link); 1536: 10473, 10477, 10485, 10489, 10500
 // (6015, 10466 and 10593 are in the link); 5421: 10626, 10627; 2729: 6011, which still waits (2895, 10317 and 10383 are in the
 // link); 5383: 10316 (10313 is in the link); 1897: 10404, 10419, 10425. The pairs for 5942 and 5941 went: their target
 // callers, 11848 with 11852 and with 11845, are in the link; so did 5342's, whose callers 10737 and 10791 are.

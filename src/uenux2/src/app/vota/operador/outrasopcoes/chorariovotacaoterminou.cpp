@@ -3,6 +3,7 @@
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -37,6 +38,13 @@ void CHorarioVotacaoTerminou::StartState()
     CLogVota::GetInst().LogaHorarioVotacaoTerminou();
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CHorarioVotacaoTerminou::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CORRIGE) {
+        m_pNextState = &CPedeIdentidade::GetInst();
+    }
 }
 
 } // namespace vota

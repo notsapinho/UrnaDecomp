@@ -35,7 +35,8 @@
 # const, the file and the lines. Whole link, before step 8: 10877 `score 0 over 7 rows`; step 8 names it by
 # pair-fingerprint. Their callers are fragment 227's sources, so the roots below need no stand-in for them.
 #
-# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160, 7306 and 10710 for 3705, 5480 (twice) for 5484.
+# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160 and 7306 for 3705 (10710, unit 277's, is in the
+# link), 5480 (twice) for 5484.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
 UENUX2_SRCS += $(LEFTOVERS_UENUX2_SRCS)

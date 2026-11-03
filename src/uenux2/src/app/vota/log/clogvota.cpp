@@ -1,9 +1,9 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's
-// four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two.
+// Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's seven
+// after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's four after
+// LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's eight.
 #include "app/vota/log/clogvota.h"
 #include <format>
 #include <memory>
@@ -357,6 +357,52 @@ void CLogVota::LogaEspacoUtilizadoMV(uintmax_t espaco)
 void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
 {
     loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+}
+
+void CLogVota::LogaEncerramentoAntesDoHorario(const api::CDateTime& dataHora)
+{
+    const std::string mensagem =
+        std::format("Encerramento só pode ser solicitado após as {} horas", dataHora.GetHora().Format("hh:mm:ss"));
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaTodosEleitoresVotaram(bool votaram)
+{
+    const std::string mensagem = std::format("Todas as pessoas presentes já votaram? {}", votaram ? "SIM" : "NÃO");
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaTituloDigitadoEncerramento(const std::string& titulo)
+{
+    const std::string mensagem = std::format("Título digitado para encerramento: {}", titulo);
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaEncerramentoCancelado()
+{
+    loga("Operador cancelou o encerramento da votação");
+}
+
+void CLogVota::LogaEncerramentoAbortado()
+{
+    const std::string mensagem = "Procedimento de encerramento abortado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaEncerramentoConfirmado()
+{
+    const std::string mensagem = "Procedimento de encerramento confirmado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaAudioAtivadoPeloMesario()
+{
+    loga("Áudio ativado pelo mesário");
+}
+
+void CLogVota::LogaAudioDesativadoPeloMesario()
+{
+    loga("Áudio desativado pelo mesário");
 }
 
 } // namespace vota

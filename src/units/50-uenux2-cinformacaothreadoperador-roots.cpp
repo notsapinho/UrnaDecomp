@@ -4,18 +4,19 @@
 // and instantiates nothing; a function that returns a class takes the result's address first, as the target's do.
 // - vota::impl::IInformacaoThreadOperador::GetInst (target fn 599): the 16 vota:: functions over it and
 //   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its callers not written yet,
-//   fns 3616, 10425, 10451, 10481, 10523, 10646 and 10676 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10680, unit
-//   161's, is in the link). GetInst
+//   fns 3616, 10425, 10451, 10481, 10646 and 10676 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10680, unit
+//   161's, and 10523, unit 152's, are in the link). GetInst
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10646, 10689, 10695, 10742, 10751; 10539 is in the link),
-//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
-//   10527, 10676; 652 is in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
+//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10646, 10689, 10742; 10539, 10695 and 10751 are in the
+//   link), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
+//   10527, 10676; 652 is in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689; 10680 and 10706 are in the link), SetIdentidadeDigitada (5414;
 //   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
 //   GetTipoIdentidadeDigitada (5416; 10588; 10664, unit 161's, is in the link), GetIdentidadeEleitor (1535; 3616,
 //   10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
+//   SetAudioAtivadoMesario (5415) has its two target callers in the link (10523, unit 152; 10751, unit 277): no stand-in.
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652, the one target function
 //   that passes their table slots (4054 and 4053), is in the link, so no stand-in takes their addresses. The sink takes
 //   GetTextoIdentidadeDigitada's (10586), whose slot 3907 fns 2735, 5418, 10439, 10500, 10588 and 10635 pass (1150,
@@ -25,7 +26,6 @@ int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThread
 
 int vota_IsAudioAtivado() __asm__("_ZN4vota14IsAudioAtivadoEv");
 int vota_IsAudioAtivadoMesario() __asm__("_ZN4vota21IsAudioAtivadoMesarioEv");
-void vota_SetAudioAtivadoMesario(bool ativado) __asm__("_ZN4vota22SetAudioAtivadoMesarioEb");
 void vota_LimpaBiometria() __asm__("_ZN4vota14LimpaBiometriaEv");
 void vota_AgendaInspecao() __asm__("_ZN4vota14AgendaInspecaoEv");
 int vota_IsVotacaoBloqueadaPorHorario() __asm__("_ZN4vota28IsVotacaoBloqueadaPorHorarioEv");
@@ -56,8 +56,6 @@ __attribute__((noinline)) int w50_fachada(int salto, void* resultado, const void
     int soma = salto;
     soma += vota_IsAudioAtivado() + 2 * vota_IsAudioAtivado();
     soma += vota_IsAudioAtivadoMesario() + 3 * vota_IsAudioAtivadoMesario();
-    vota_SetAudioAtivadoMesario(soma > 4);
-    vota_SetAudioAtivadoMesario(soma > 9);
     vota_LimpaBiometria();
     vota_LimpaBiometria();
     vota_AgendaInspecao();

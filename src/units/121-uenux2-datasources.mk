@@ -94,8 +94,9 @@
 # - The new names (step 8): 2753 and 1151 by vptr-anchor (CEscolheOpcao's and CInputFieldMT's vptrs), 2751 and 2750 by
 #   pair-fingerprint, the texts by 2753's table slots (table), s_inst by the votes of 2753 and 10697 and s_mutex by
 #   2753's (vote:1; its static destructor 10696 matches through it).
-# The roots stand for GetInst's four target callers (fns 10677, 10698, 10740, 10754) and for 1151's other eight
-# (12 and false, so that dead-argument elimination keeps the length and the flag); the vtable sinks of CEscolheOpcao and
+# The roots stand for GetInst's target caller 10677 (10698, 10740 and 10754 are in the link: unit 277) and for 1151's
+# other callers but 3631 (unit 277's, in the link) (12 and false, so that dead-argument elimination keeps the length and
+# the flag); the vtable sinks of CEscolheOpcao and
 # of CDataText<COpcaoDS> went, since 2753 stores both vptrs, and so did the builder of CDataText<COpcaoDS>.
 # cescolheopcao.cpp.o now links ahead of unit 31's cmtformbuilder.cpp.o and gives the copies of what both instantiate:
 # IInputField<IScreenMT>'s constructor (3673), its destructor and Read, and the vector's emplace_back (1400, renamed by

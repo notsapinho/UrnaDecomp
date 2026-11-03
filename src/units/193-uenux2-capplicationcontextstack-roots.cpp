@@ -13,7 +13,7 @@
 //   code and GetContexto (fn 1695, unit 171), are in the link.
 // - CApplicationContext's copy constructor (fn 1841) has fn 676's code (the guard's constructor, inlined) among its
 //   callers in our link, unit 197's StartState (7377), GetContexto (1695, unit 171) and 491 (unit 205's
-//   SincronizaEstadoGeralVota); w193_copia stands for the other two, fns 3333 and 10468.
+//   SincronizaEstadoGeralVota) and 3333 (unit 205's SincronizaEstadoGeral); w193_copia stands for the other, fn 10468.
 extern "C" {
 extern char w193_contextos[] __asm__("_ZN3api12CApplication11s_contextosE");
 int w193_desempilha_c(void* pilha, const void* contexto) __asm__(

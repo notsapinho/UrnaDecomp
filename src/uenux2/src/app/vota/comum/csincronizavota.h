@@ -30,6 +30,11 @@ public:
     // Target fn 491 (no record): saves the voting application's state to both flashes under two contexts. Its name is
     // chosen from the context's text ("Gravando o estado da urna", "... sincronização do estado geral do VOTA.").
     static void SincronizaEstadoGeralVota();
+    // Target fn 3333 (no record): saves the urna's general state (comum::CAppInfo's, through comum::CServicoEstadoGeral)
+    // to the internal flash, signs file 25 and syncs, then to the external one and copies package 120 to 121, under two
+    // contexts, after the check of VerificaUrnaDesligando. Its name is chosen from the context's texts ("Gravando o
+    // estado geral da urna na MI", "... na MV"); its place after SincronizaEstadoGeralVota is chosen.
+    static void SincronizaEstadoGeral();
     // No target index: binaryen inlined it into SincronizaRelatorios (fn 1836), its one caller, behind a stack frame of
     // its own. Name chosen from what it does.
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);
