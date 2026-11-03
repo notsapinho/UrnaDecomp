@@ -25,8 +25,8 @@ namespace vota {
 // The destructor is out of line: the deleting one (fn 11984) is `f2879(p0); drop; f136(p0)`, the 13-B shape of
 // docs/reference/facts/reading.md R5, and fn 2879 releases +40 and stores no vptr, as a final class's (R4). A
 // singleton: fn 11931 keeps the object in a static std::unique_ptr (@1834156, destroyed at exit by fn 11986) under a
-// static std::mutex (@1834132, by fn 11985). Not recovered: the constructor and GetInst (fn 11931 holds them inlined;
-// the constructor reads a private member of vota::CTelasVota, whose head has no accessor for it) and the statics.
+// static std::mutex (@1834132, by fn 11985); fn 11931 holds GetInst and the constructor inlined, which copies the form
+// through ctelasvota.h's GetTelaInformacaoZeresimaTardia.
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CInformacaoZeresimaTardia final : public comum::CAppState {
 public:
@@ -40,6 +40,9 @@ public:
 
 private:
     CInformacaoZeresimaTardia();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CInformacaoZeresimaTardia> s_inst;
 
     api::CWait m_espera;
     std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;

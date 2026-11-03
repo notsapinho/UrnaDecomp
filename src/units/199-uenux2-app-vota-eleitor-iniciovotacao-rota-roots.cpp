@@ -9,9 +9,9 @@
 //
 // vota::CInicioVotacao::GetInst (fn 2880) has four direct callers in the target, fns 7306, 11848, 11858 and 11920
 // (vota::CIniciodeCiclo::StartState, CQuerReimprimirZeresima::ProcessInput, CDefineRotaPosReinicio::NeedChangeState,
-// CQuerImprimirZeresima::ProcessInput): the noinline stand-in calls it twice for 7306 and 11920, still pending
-// (11858 and 11848, unit 104's, are in the link), and subtracts the results, so its body is no target function's. It
-// goes when they are in the link.
+// CQuerImprimirZeresima::ProcessInput): the noinline stand-in calls it once for 7306, still pending (11858 and 11848,
+// unit 104's, and 11920, unit 169's, are in the link), and adds 3 to the result, so its body is no target function's.
+// It goes when 7306 is in the link.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -24,7 +24,7 @@ namespace {
 
 __attribute__((noinline)) int ChamaInicioVotacao()
 {
-    return w2880_getinst() - w2880_getinst();
+    return w2880_getinst() + 3;
 }
 
 const void* volatile iniciovotacao_rota_sink;

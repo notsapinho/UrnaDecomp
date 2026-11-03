@@ -6,10 +6,10 @@
 // CreateInst too. CVoto::operator<=> is not rooted: its only caller is Posicao, which wasm-opt inlines it into.
 // The stand-ins below give the md members their target callers' call sites, none of which is written:
 // - w13_comparecimento calls comum::CRdvVota::Comparecimento() (target fn 1269), standing for its target callers
-//   1956, 5972, 10797, 12098 and 12110 (none written); vota::impl::CInformacaoThreadOperador's slot 16 (fn 10569,
-//   unit 50), vota::CQuerReimprimirZeresima::StartState (fn 11849, unit 104) and vota::CReinicioVotacao::StartState
-//   (fn 11835, unit 138) are the other call sites. md::CVotosEleicoesVota::Comparecimento (fn 5639) needs no stand-in
-//   now: its target callers, 1269 and CRdvVota's slot 2 (fn 11492), are both in the link.
+//   1956, 10797, 12098 and 12110 (none written); vota::impl::CInformacaoThreadOperador's slot 16 (fn 10569,
+//   unit 50), vota::CQuerReimprimirZeresima::StartState (fn 11849, unit 104), vota::CReinicioVotacao::StartState
+//   (fn 11835, unit 138) and fn 5972 (unit 199) are the other call sites. md::CVotosEleicoesVota::Comparecimento
+//   (fn 5639) needs no stand-in now: its target callers, 1269 and CRdvVota's slot 2 (fn 11492), are both in the link.
 // - w13_cria and w13_desconverte call md::CVotosCargos' and md::CVotosEleicoesVota's constructors (fns 5643, 5640),
 //   standing for their two target callers, 7787 (CreateInst) and 11349 (CConversorEleicoesVota::DoDesconverte, trapped
 //   in fragment 140's -pending.cpp).

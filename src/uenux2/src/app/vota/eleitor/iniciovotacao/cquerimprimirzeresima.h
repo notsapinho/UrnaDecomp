@@ -25,7 +25,9 @@ namespace vota {
 // at exit by fn 11923) under a static std::mutex (@1834300, by fn 11922); the constructor, inlined there, stores the
 // vptr on the base constructor's result. StartState logs through comum::IEventosLog's
 // LogaMesarioIndagadoImprimirZeresima (fn 5882) on CLogVota::GetInst()'s result (fn 184), calls the form's slot 2 and
-// stays in this state. Not recovered: ProcessInput (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// stays in this state. ProcessInput (fn 11920) reads the form: on api::INPUT_CORRIGE it sets the vote's state to
+// EAVVOTAR (56), saves it (vota::CSincronizaVota::SincronizaEstadoGeralVota, fn 491) and goes to
+// vota::CInicioVotacao (fn 2880); on INPUT_CONFIRMA to vota::CConfirmaImpressaoZeresima (fn 5959).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CQuerImprimirZeresima final : public comum::CAppState {
 public:

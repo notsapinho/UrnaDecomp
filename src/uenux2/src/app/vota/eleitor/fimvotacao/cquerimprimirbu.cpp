@@ -4,7 +4,10 @@
 #include "api/util/eueasserterror.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/eleitor/fimvotacao/caplicacaoencerrada.h"
+#include "app/vota/eleitor/fimvotacao/cimprimindobu.h"
 
 using namespace comum;
 
@@ -29,8 +32,7 @@ CQuerImprimirBU& CQuerImprimirBU::GetInst()
 std::unique_ptr<CQuerImprimirBU> CQuerImprimirBU::s_inst;
 std::mutex CQuerImprimirBU::s_mutex;
 
-// (original lines 32-35: content not recovered)
-#line 36
+
 void CQuerImprimirBU::StartState()
 {
     CAppInfo& poInfo = CAppInfo::GetInst();
@@ -40,6 +42,22 @@ void CQuerImprimirBU::StartState()
 
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CQuerImprimirBU::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CORRIGE:
+        CAppInfo::GetInst().GetVota().SetEstadoVota(EAVENCERRADA);
+        CSincronizaVota::SincronizaEstadoGeralVota();
+        m_pNextState = &CAplicacaoEncerrada::GetInst();
+        break;
+    case api::INPUT_CONFIRMA:
+        m_pNextState = &CImprimindoBU::GetInst();
+        break;
+    default:
+        break;
+    }
 }
 
 } // namespace vota

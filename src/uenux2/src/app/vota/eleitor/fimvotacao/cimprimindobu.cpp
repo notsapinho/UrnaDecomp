@@ -13,8 +13,14 @@
 #include "app/comum/cpath.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/relatorios/csigverifier.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/comum/votadefs.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
+#include "app/vota/eleitor/fimvotacao/cgravaresultado.h"
+#include "app/vota/log/clogvota.h"
+
+using namespace comum;
 
 namespace vota {
 
@@ -40,7 +46,63 @@ std::mutex CImprimindoBU::s_mutex;
 
 const char TITULO_BOLETIM[] = "boletim de urna";
 
-// (original lines 43-108: content not recovered)
+void CImprimindoBU::ImprimePrimeiraVia()
+{
+    if (CSincronizaVota::s_urnaDesligando) {
+        return;
+    }
+    CLogVota::GetInst().LogaImprimindoRelatorio(comum::RELATORIO_BU, 1);
+    ImprimeBU(1, PRINT_WITH_MESSAGE);
+    CLogVota::GetInst().LogaMesarioIndagadoQualidadeBU();
+    if (CSincronizaVota::s_urnaDesligando) {
+        return;
+    }
+    m_form->Slot2();
+}
+
+// (original lines 63-65: content not recovered)
+#line 66
+void CImprimindoBU::StartState()
+{
+    comum::md::estadoaplicacao::CEstadoGeralVota& vota = comum::CAppInfo::GetInst().GetVota();
+
+    ASSERT(vota.GetEstadoVota() == EAVIMPRIMIRBU, api::EUA_IMPRIMINDOBU_ESTADOINVALIDO);
+    ASSERT(vota.GetQtdBU() == 0, api::EUA_IMPRIMINDOBU_QTDBU_NAO_ZERO);
+
+    ImprimePrimeiraVia();
+    m_pNextState = this;
+}
+
+void CImprimindoBU::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CORRIGE:
+        CLogVota::GetInst().LogaMesarioIndicouReimprimirBU();
+        ImprimePrimeiraVia();
+        m_pNextState = this;
+        break;
+    case api::INPUT_CONFIRMA: {
+        CLogVota::GetInst().LogaMesarioIndicouQualidadeBU();
+        comum::md::estadoaplicacao::CEstadoGeralVota& vota = comum::CAppInfo::GetInst().GetVota();
+        vota.IncrementaQtdBU();
+        if (comum::CAppInfo::EhTreinamentoEleitor()) {
+            vota.SetEstadoVota(EAVENCERRADA);
+            vota.SetEstadoEncerramento(EAEFIMDOSTRABALHOS);
+            CSincronizaVota::SincronizaEstadoGeralVota();
+            m_pNextState = &CEmitirMaisBU::GetInst();
+        } else {
+            vota.SetEstadoVota(EAVGRAVARRESULTADOS);
+            CSincronizaVota::SincronizaEstadoGeralVota();
+            m_pNextState = &CGravaResultado::GetInst();
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+// (original lines 106-108: content not recovered)
 #line 109
 void CImprimindoBU::ImprimeBU(uebyte numVia, PrintMessageMode modo)
 {

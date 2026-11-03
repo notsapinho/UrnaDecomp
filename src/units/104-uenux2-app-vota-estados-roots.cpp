@@ -9,20 +9,21 @@
 // line goes when every target caller it stands for is in the link, and stays while some still wait, the callers already
 // in the link in parentheses (src/units/README.md "Companion files"). The target callers each pair stands for:
 //
-// 1337: 11987, 11988 (11794, 11994, 7221, 6058, 7198 and 4449 are in the link); 4433: 7481 (11994 is in the link);
-// 6037: 7160, 12077; 3879: 12023, 12077 (12030 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160,
-// 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and 11858
-// are in the link); 1280: 11869, 11881, 11902, 11905, 11908,
-// 11911, 11927 (11834, 11838 and 11848 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is
+// 4433: 7481 (11994 is in the link); 6037: 7160 (12077 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983:
+// 7160, 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and
+// 11858 are in the link); 1280: 11869, 11881, 11902, 11905, 11908,
+// 11911 (11834, 11838, 11848 and 11927 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is
 // in the link); 5943: 11855 (11834 is in the link); 5428: 10734 (10217 is in the link); 1536: 10473, 10477, 10485, 10489, 10500
 // (6015, 10466 and 10593 are in the link); 5421: 10626, 10627; 5383: 10316 (10313 is in the link); 1897: 10404, 10419,
 // 10425. The pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and with 11845, are in the link; so
-// did 5342's, whose callers 10737 and 10791 are, and 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of
-// comum::CRegistrarMesarios's and CMesarioRegistrado's ProcessInput, units 247 and 279) are.
+// did 5342's, whose callers 10737 and 10791 are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of
+// comum::CRegistrarMesarios's and CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers
+// 12023, 12030 and 12077 are, and 1337's, whose callers 4449, 6058, 7198, 7221, 11794, 11987, 11988 and 11994 are.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.
-// vota::CAguardaMensagem::GetInst (fn 1337) is also in the target's table (slot 125), so its address is taken as well.
+// vota::CAguardaMensagem::GetInst (fn 1337) is in the target's table (slot 125), so its address is taken; its call
+// pair went with its callers.
 //
 // Declared through asm labels with the wasm-level signatures, so this TU needs no uenux2 header and instantiates
 // nothing; compiled with APP_CXXFLAGS.
@@ -30,7 +31,6 @@ extern "C" {
 int w1337_getinst(void) __asm__("_ZN4vota16CAguardaMensagem7GetInstEv");
 int w4433_getinst(void) __asm__("_ZN4vota14CIniciodeCiclo7GetInstEv");
 int w6037_getinst(void) __asm__("_ZN4vota15CGravaResultado7GetInstEv");
-int w3879_getinst(void) __asm__("_ZN4vota13CEmitirMaisBU7GetInstEv");
 int w5985_getinst(void) __asm__("_ZN4vota14CImprimindoBim7GetInstEv");
 int w5984_getinst(void) __asm__("_ZN4vota29CImprimirBUOutrasObrigatorias7GetInstEv");
 int w5983_getinst(void) __asm__("_ZN4vota9CInicioBU7GetInstEv");
@@ -53,10 +53,8 @@ namespace {
 __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
 {
     int total = 0;
-    total += w1337_getinst() + w1337_getinst();
     total += w4433_getinst() + w4433_getinst();
     total += w6037_getinst() + w6037_getinst();
-    total += w3879_getinst() + w3879_getinst();
     total += w5985_getinst() + w5985_getinst();
     total += w5984_getinst() + w5984_getinst();
     total += w5983_getinst() + w5983_getinst();

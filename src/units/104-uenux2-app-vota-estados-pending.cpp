@@ -8,12 +8,10 @@
 #include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/ciniciodeciclo.h"
 #include "app/vota/eleitor/fimvotacao/cgravaresultado.h"
-#include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
-#include "app/vota/eleitor/iniciovotacao/ciniciozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
@@ -49,14 +47,6 @@ void CGravaResultado::StartState()
     __builtin_trap();
 }
 
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: none since 491 is named (unit 205); the others
-// have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, 2888 and 3701, units 37's and 93's, 4582, unit
-// 168's, and 2890, unit 156's).
-void CEmitirMaisBU::ProcessInput()
-{
-    __builtin_trap();
-}
-
 // CImprimindoBim::StartState: fn 12071 (1074 B), records cimprimindobim.cpp:50, cimprimindobim.cpp:51,
 // cimprimindobim.cpp:66, callees with no name: 185, 187, 261, 401, 463, 1127, 2291 (1487 and 1488 are unit 168's).
 void CImprimindoBim::StartState()
@@ -76,12 +66,6 @@ void CImprimirBUOutrasObrigatorias::StartState()
 // callees with no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's; 2882
 // is unit 246's).
 void CImprimindoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 697 (491 is named now, unit 205; unit 169's: 5957, 5959).
-void CInicioZeresima::StartState()
 {
     __builtin_trap();
 }

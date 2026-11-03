@@ -151,6 +151,16 @@ public:
         return *m_dhEmissao;
     }
 
+    // The two words at +0 and +4 that the vota states store into GetVota()'s result before
+    // vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491) saves it (fns 11924, 11940, 12031, 12034, 12077 among
+    // others). Out of line in cestadogeralvota.cpp, measured: 12077 and 12134 store 64 at +0 and a closing state at +4
+    // as two i32.store, where clang, seeing both stores in one TU, merges them into one i64.store (written in the
+    // class, 12077 scored 44 over 243 rows, 3 deleted, at the stores). binaryen inlines each one-instruction body into
+    // every caller, so neither has a target index. No record or text names them: the names and their being setters are
+    // chosen.
+    void SetEstadoVota(EEstadoVota estadoVota);
+    void SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento);
+
 private:
     EEstadoVota m_estadoVota;
     EEstadoEncerramento m_estadoEncerramento;

@@ -175,7 +175,7 @@
 # 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
 # at step 9.
 # app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
-# inlined, is in unit 116's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
+# inlined, heads unit 104's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
 # has the measurement. Its notes stay here and in clogvota.h. After LogaEspacoUtilizadoMV, five members their one
 # callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit 281's 10527), three that
 # vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto (DescartaVotos, 4449; unit 197).

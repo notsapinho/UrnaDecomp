@@ -69,6 +69,9 @@ enum EUeVotaError {
     // "Tecla não encontrada: <tecla>": no evidence names them
     EUE_VOTA_TESTE_TECLADO_SEM_TECLAS = 9359,
     EUE_VOTA_TESTE_TECLADO_TECLA_NAO_ENCONTRADA = 9360,
+    // the value is the code vota::CEmitirMaisBU::ProcessInput (target fn 12081, record cemitirmaisbu.cpp:64) throws;
+    // the name is chosen from its message, "Era esperado pelo menos um input": no evidence names it
+    EUE_VOTA_EMITIR_MAIS_BU_SEM_INPUT = 9371,
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,

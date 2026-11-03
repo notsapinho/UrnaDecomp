@@ -152,6 +152,25 @@ public:
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaApresentadaTelaReinicioVotacao();
     void LogaMesarioIndagadoHorarioUrna();
+    // The shape of LogaMesarioIndagadoHorarioUrna, GetInst called before the member's own stack frame opens, each
+    // calling loga (fn 233): held inlined by vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931), the first on
+    // CORRIGE, the second on CONFIRMA. Their names, and their place here and in clogvota.cpp, after
+    // LogaMesarioIndagadoHorarioUrna, are chosen from their messages: they have no index to order.
+    void LogaMesarioConfirmaHorarioUrnaErrado();
+    void LogaMesarioConfirmaHorarioUrnaCorreto();
+    // The same shape, calling loga (fn 233): held inlined by vota::CImprimindoBU::ProcessInput (fn 12077), the first on
+    // CORRIGE, the second on CONFIRMA. Names and place chosen as above.
+    void LogaMesarioIndicouReimprimirBU();
+    void LogaMesarioIndicouQualidadeBU();
+    // The same shape, calling api::CLoga::loga (fn 433) with +4 and severity 1: held inlined by
+    // vota::CRetirarMR::StartState (fn 12031), before and after its wait for the removal of the results medium. Names
+    // and place chosen as above.
+    void LogaSolicitadaRetiradaMR();
+    void LogaMRRetirada();
+    // The same shape, calling loga (fn 233) with the count formatted as unsigned (argument code 6) and "via adicional"
+    // or "vias adicionais" appended, the latter the tail of LogaMesarioIndagadoQtdViasAdicionais's text: held inlined
+    // by vota::CEmitirMaisBU::ProcessInput (fn 12081). Name, parameter type and place chosen as above.
+    void LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade);
     void LogaTempoLimiteBateriaInterna();
     void LogaErroIdentificacaoTipoCargo();
     void LogaEleitorVoltouADigitar();

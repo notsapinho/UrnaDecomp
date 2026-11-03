@@ -8,27 +8,12 @@
 //   other callees are named (vota::CEstadoAudio::GetInst, fn 509, an api::EUeAssertError throw, and
 //   CVerificaHorarioZeresima::GetInst, fn 5947, unit 138).
 //
-// vota::CInicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/ciniciovotacao.cpp:
-// - StartState 11988 (slot 2) and ProcessTick 11987 (slot 8): each calls fn 5972, not written, which calls fn 491
-//   (named now: unit 205) and fn 1269 (comum::CRdvVota::Comparecimento(), unit 13).
-//
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.h"
-#include "app/vota/eleitor/iniciovotacao/ciniciovotacao.h"
 
 namespace vota {
 
 void CGeraDadosDinamicos::StartState()
-{
-    __builtin_trap();
-}
-
-void CInicioVotacao::StartState()
-{
-    __builtin_trap();
-}
-
-void CInicioVotacao::ProcessTick(uebyte)
 {
     __builtin_trap();
 }
