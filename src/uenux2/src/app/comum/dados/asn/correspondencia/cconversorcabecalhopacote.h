@@ -9,10 +9,9 @@
 
 namespace comum::asn {
 
-// Recovered: the class head only. RTTI names the class and its base (typeinfo 1562760, vtable @1562736, whose slots 2
-// and 3 are target fns 11438 and 11437, DoConverte and DoDesconverte). Neither member is written: fragment 245's
-// -pending.cpp traps both, so that the vtable a local of this class needs is in the link, and says what they hold. No
-// record names the class's file. In the use band its two members lie right after the candidatura converters' and right
+// Recovered: the class head. RTTI names the class and its base (typeinfo 1562760, vtable @1562736, whose slots 2 and 3
+// are target fns 11438 and 11437, DoConverte and DoDesconverte, defined in cconversorcabecalhopacote.cpp). No record
+// names the class's file. In the use band its two members lie right after the candidatura converters' and right
 // before CConversorDadosDisponiveisCarga's; in the data its vtable follows CConversorFotoCandidato's and the records
 // of md/ccabecalhopacote.cpp (1562656 to 1562688). This header's path, beside the other converter's, is chosen.
 class CConversorCabecalhoPacote

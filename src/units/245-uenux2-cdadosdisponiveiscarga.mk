@@ -10,24 +10,28 @@
 # holds ConvertePacotes, IConversorASN<CabecalhoPacote, CCabecalhoPacote>::Converte (record iconversorasn.h:56) and three
 # SEQUENCE_OF assignments, inlined by binaryen. 11423 and 11424 are named by srcloc-anchor, 5669 by pair-addr and 2807 by
 # 11423's call (it matched by its body first).
-# Written and not matched: 3863 (vector<md::CCabecalhoPacote>'s __destroy_vector) and 5956
-# (vector<md::CMunicipioDisponivel>'s), which this unit's converter object emits. The target's copies are ones compiled
-# with strict aliasing, and app/comum/dados/asn has none: as linked, 3863 is 20 over 108 rows and 5956 45 over 127 (pnpm
-# wasm score); in a private link with src/app/comum/dados/asn/correspondencia/% added to UENUX2_TBAA_DIRS on the make
-# command line (the converter object recompiled, measured before DoConverte was written), 4 over 104 and 4 over 118,
-# call operands only, and pnpm wasm splat-remap reads both bodies identical to the target's, with 11423 unchanged (11424,
-# written since, differs so). They wait for a strict-aliasing object that emits them ahead of this
-# unit's: their other target callers, 11905 (vota::CImpressaoVersaoPacotes's slot 2, which calls 679, CoderEnv::decode)
-# and 3691 (comum::CGeradorRelVersaoPacoteDados's slot 0), are not written. Two hand lines in splat/symbol_addrs.txt name
-# them for 11423, whose own call is otherwise their only voter (without them 11423 reads unresolved self-voted, measured);
-# the lines say what each body shows.
-# Pending (the -pending.cpp traps them): 11438 and 11437, CConversorCabecalhoPacote's DoConverte and DoDesconverte.
+# Matched since: 3863 (vector<md::CCabecalhoPacote>'s __destroy_vector) and 5956 (vector<md::CMunicipioDisponivel>'s),
+# from the tree root src/app/roots_dadoscarga.cpp. The target's copies are ones compiled with strict aliasing, and
+# app/comum/dados/asn has none: as this unit's converter object emits them, 3863 is 20 over 108 rows and 5956 45 over
+# 127 (pnpm wasm score); in a private link with src/app/comum/dados/asn/correspondencia/% added to UENUX2_TBAA_DIRS on the
+# make command line (the converter object recompiled, measured before DoConverte was written), 4 over 104 and 4 over 118,
+# call operands only, with 11423 unchanged (11424, written since, differs so). Their other target callers are 11905
+# (vota::CImpressaoVersaoPacotes::StartState, unit 176's pending member, in src/app/vota/, a strict-aliasing directory)
+# and 3691 (comum::CGeradorRelVersaoPacoteDados's slot 0), not written; the root, at the flags of 11905's file, stands for
+# 11905's object (it says so) and gives both bodies, 4 over 104 and 4 over 118 again. The census pairs them now (pair-addr
+# lines in splat/symbol_addrs.txt), and the two callers+content hand lines that named them for 11423 went: on copies of
+# the symbol file without them, two scans beside a control left the same 11723 match rows, and splat-build on the copies
+# gave the target's sha256.
+# Matched since as well: CConversorCabecalhoPacote's DoConverte (11438) and DoDesconverte (11437), in
+# cconversorcabecalhopacote.cpp; unit 96 says what they hold of util.cpp and fragment 273 what of the md classes.
+# This unit's three sources are in unit 96's list now, after util.cpp, in the order this list had (unit 96 has the
+# measurement).
 #
 # Evidence. RTTI names both converters and their bases; their vtables are read from the data
 # (docs/reference/facts/reading.md R20; ledger/vtables.json has no row for either), so step 8 gives their slots no vtable
 # name. CDadosDisponiveisCarga's layout and its constructor's tests and throws are 11423's (the constructor is the code
 # behind its second stack-pointer prologue, of 112 bytes); CMunicipioDisponivel's layout is what 11423 builds and copies;
-# CIDPacote's and CIDEleitoral's layouts are fn 11437's (md/ccabecalhopacote.h and md/cideleitoral.h say how). The order
+# CIDPacote's and CIDEleitoral's layouts are fn 11437's (md/cidpacote.h and md/cideleitoral.h say how). The order
 # in which DoDesconverte reads the entity is the target's: fase (a call), then idPE and idPleito, then pais's copy before
 # serialFlashCarga's and the UF's sigla and nome (the frame: the first local takes the highest offset, +240, +224, +208
 # and +192), the zone before the three converters' vptr stores, and the converters before the municipalities' vector
@@ -41,7 +45,7 @@
 #   over 2930 rows (the sections' vector lived in locals, where the target keeps it in the frame at +60; a reading: its
 #   address goes to a constructor clang cannot inline); out of line, 420 over 2749. Which TU, cdadosdisponiveiscarga.cpp,
 #   is chosen.
-# - The link order: the converter's objects before cdadosdisponiveiscarga.cpp's (this list's order). With that file first,
+# - The link order: the converter's objects before cdadosdisponiveiscarga.cpp's (the order unit 96's list keeps). With that file first,
 #   11423 was 403 over 2741, its slow path and the constructor's copy loading begin and end in the other order; with it
 #   last, 171 over 2706 (docs/reference/facts/codegen.md C4).
 # - DoDesconverte's sections: std::transform over a back_inserter. A range-for (push_back and emplace_back give one
@@ -81,19 +85,10 @@
 # reading for ConvertePacotes, cconversorcabecalhopacote.cpp says why), and the lines of
 # the functions with no record (the constructors' first lines in cdadosdisponiveiscarga.cpp, every line of the asn files).
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
-DADOS_DISP245_SRCS := src/app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.cpp \
-  src/app/comum/dados/asn/correspondencia/cconversordadosdisponiveiscarga.cpp \
-  src/app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.cpp
-UENUX2_SRCS += $(DADOS_DISP245_SRCS)
-# the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
-$(foreach u,$(DADOS_DISP245_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CConversorCabecalhoPacote's two slots are not written: 245-uenux2-cdadosdisponiveiscarga-pending.cpp traps them,
-# compiled with the flags of their directory, app/comum/dados/asn/, which keeps -fno-strict-aliasing
-$(ROOT)/$(APP)/245-uenux2-cdadosdisponiveiscarga-pending.o: $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/245-uenux2-cdadosdisponiveiscarga-pending.cpp -o $(R)
+# The sources (cconversorcabecalhopacote.cpp, cconversordadosdisponiveiscarga.cpp, cdadosdisponiveiscarga.cpp) are
+# compiled through 96-uenux2-app-comum-asn.mk's list.
 # the converter's user and the libc++ instances' other callers are not reconstructed yet:
 # 245-uenux2-cdadosdisponiveiscarga-roots.cpp keeps the vtable and gives each instance the call sites the target gives it
 $(ROOT)/$(APP)/245-uenux2-cdadosdisponiveiscarga-roots.o: $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/245-uenux2-cdadosdisponiveiscarga-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/245-uenux2-cdadosdisponiveiscarga-pending.o $(APP)/245-uenux2-cdadosdisponiveiscarga-roots.o
+override EXTRA_OBJS += $(APP)/245-uenux2-cdadosdisponiveiscarga-roots.o

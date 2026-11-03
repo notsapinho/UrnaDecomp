@@ -1886,6 +1886,95 @@ public:
 }; // end class Versao
 
 //
+// ModuloTiposEleitorais::Sistema   // name from the target's RTTI (typeinfo name 497739, vptr 1556532, which
+//   comum::asn::Utils::ConverteIdSistema's record spells as its result, util.cpp:419); the field 'origem'
+//   of CabecalhoPacote has this type, where the generator had nested an anonymous value_type in it
+//
+
+class Sistema : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    Sistema(const void* info) : Inherited(info) {}
+public:
+    Sistema() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        configurador = 1,
+        intercad,
+        candidaturas,
+        gedai = 6,
+        urnaEletronica,
+        simulador,
+        parametrizador,
+        geradorDeBases,
+        sistot,
+        seweb,
+        simon,
+        padaUE
+    };
+
+    bool is_configurador() const { return value == configurador; }
+    void set_configurador() { value = configurador; }
+
+    bool is_intercad() const { return value == intercad; }
+    void set_intercad() { value = intercad; }
+
+    bool is_candidaturas() const { return value == candidaturas; }
+    void set_candidaturas() { value = candidaturas; }
+
+    bool is_gedai() const { return value == gedai; }
+    void set_gedai() { value = gedai; }
+
+    bool is_urnaEletronica() const { return value == urnaEletronica; }
+    void set_urnaEletronica() { value = urnaEletronica; }
+
+    bool is_simulador() const { return value == simulador; }
+    void set_simulador() { value = simulador; }
+
+    bool is_parametrizador() const { return value == parametrizador; }
+    void set_parametrizador() { value = parametrizador; }
+
+    bool is_geradorDeBases() const { return value == geradorDeBases; }
+    void set_geradorDeBases() { value = geradorDeBases; }
+
+    bool is_sistot() const { return value == sistot; }
+    void set_sistot() { value = sistot; }
+
+    bool is_seweb() const { return value == seweb; }
+    void set_seweb() { value = seweb; }
+
+    bool is_simon() const { return value == simon; }
+    void set_simon() { value = simon; }
+
+    bool is_padaUE() const { return value == padaUE; }
+    void set_padaUE() { value = padaUE; }
+
+    Sistema(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    Sistema & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const Sistema &rhs) const { return value == rhs.value; }
+    bool operator != (const Sistema &rhs) const { return value != rhs.value; }
+
+    void swap (Sistema & that) { Inherited::swap(that); }
+    Sistema * clone() const
+    { return static_cast<Sistema*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class Sistema
+
+//
 // ModuloTiposEleitorais::CabecalhoPacote
 //
 
@@ -1919,6 +2008,8 @@ public:
     tipoPacote::const_reference get_tipoPacote () const { return *static_cast<tipoPacote::const_pointer>(fields[0]); }
     tipoPacote::reference ref_tipoPacote () { return *static_cast<tipoPacote::pointer>(fields[0]); }
     tipoPacote::reference set_tipoPacote () { return *static_cast<tipoPacote::pointer>(fields[0]); }
+    tipoPacote::reference set_tipoPacote (tipoPacote::const_reference v)
+    { return *static_cast<tipoPacote::pointer>(fields[0]) = v; }
     tipoPacote::reference set_tipoPacote (ModuloTiposPacotes::TipoPacote::NamedNumber v)
     { return *static_cast<tipoPacote::pointer>(fields[0]) = v; }
 
@@ -1935,6 +2026,8 @@ public:
     idPacote::const_reference get_idPacote () const { return *static_cast<idPacote::const_pointer>(fields[1]); }
     idPacote::reference ref_idPacote () { return *static_cast<idPacote::pointer>(fields[1]); }
     idPacote::reference set_idPacote () { return *static_cast<idPacote::pointer>(fields[1]); }
+    idPacote::reference set_idPacote (idPacote::const_reference v)
+    { return *static_cast<idPacote::pointer>(fields[1]) = v; }
 
     class nomepacote
     {
@@ -1999,93 +2092,7 @@ public:
     class origem
     {
     public:
-        //
-        // ModuloTiposEleitorais::CabecalhoPacote::origem::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                configurador = 1,
-                intercad,
-                candidaturas,
-                gedai = 6,
-                urnaEletronica,
-                simulador,
-                parametrizador,
-                geradorDeBases,
-                sistot,
-                seweb,
-                simon,
-                padaUE
-            };
-
-            bool is_configurador() const { return value == configurador; }
-            void set_configurador() { value = configurador; }
-
-            bool is_intercad() const { return value == intercad; }
-            void set_intercad() { value = intercad; }
-
-            bool is_candidaturas() const { return value == candidaturas; }
-            void set_candidaturas() { value = candidaturas; }
-
-            bool is_gedai() const { return value == gedai; }
-            void set_gedai() { value = gedai; }
-
-            bool is_urnaEletronica() const { return value == urnaEletronica; }
-            void set_urnaEletronica() { value = urnaEletronica; }
-
-            bool is_simulador() const { return value == simulador; }
-            void set_simulador() { value = simulador; }
-
-            bool is_parametrizador() const { return value == parametrizador; }
-            void set_parametrizador() { value = parametrizador; }
-
-            bool is_geradorDeBases() const { return value == geradorDeBases; }
-            void set_geradorDeBases() { value = geradorDeBases; }
-
-            bool is_sistot() const { return value == sistot; }
-            void set_sistot() { value = sistot; }
-
-            bool is_seweb() const { return value == seweb; }
-            void set_seweb() { value = seweb; }
-
-            bool is_simon() const { return value == simon; }
-            void set_simon() { value = simon; }
-
-            bool is_padaUE() const { return value == padaUE; }
-            void set_padaUE() { value = padaUE; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
-
+        typedef ModuloTiposEleitorais::Sistema value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

@@ -3,6 +3,7 @@
 // comum::asn::Utils: the conversions between the ASN.1 modules' types and comum's that the converters share. The
 // records name the class and show every member static; the path is util.cpp's, whose records name it. No record names
 // this header, so its path is chosen.
+// DesconverteIdPacote has no record: its name, its being a member and its place in util.cpp are chosen (fragment 96).
 //
 // The enumerators of md::ETipoAbrangencia are chosen: only their values are evidence (the range DesconverteAbrangencia
 // accepts), and so is where it is declared. The records print ETipoLocalVotacao unqualified and ETipoAbrangencia as
@@ -16,9 +17,13 @@
 #include "app/comum/etipolocalvotacao.h"
 #include "app/comum/eurnafase.h"
 #include "app/comum/eurnaturno.h"
+#include "app/comum/md/ccabecalhopacote.h"
+#include "app/comum/md/cideleitoral.h"
+#include "app/comum/md/cidpacote.h"
 #include "asn1/modules/ModuloCandidatos.h"
 #include "asn1/modules/ModuloTiposCadastro.h"
 #include "asn1/modules/ModuloTiposEleitorais.h"
+#include "asn1/modules/ModuloTiposPacotes.h"
 
 namespace comum {
 
@@ -41,8 +46,15 @@ public:
     static api::CTime DesconverteHoraJE(const ModuloTiposEleitorais::HoraJE& hora);
     static ModuloTiposEleitorais::DataJE ConverteDataJE(const api::CDate& data);
     static ModuloTiposEleitorais::DataHoraJE ConverteDataHoraJE(const api::CDateTime& dataHora);
+    static md::CIDEleitoral DesconverteIdEleitoral(const ModuloTiposEleitorais::IDEleitoral& id);
     static ModuloTiposEleitorais::Fase ConverteFase(const EUrnaFase& fase);
     static EUrnaFase DesconverteFase(const ModuloTiposEleitorais::Fase& fase);
+    static ModuloTiposPacotes::TipoPacote ConverteTipoPacote(const md::ETipoPacote& tipo);
+    static md::ETipoPacote DesconverteTipoPacote(const ModuloTiposPacotes::TipoPacote& tipo);
+    static ModuloTiposEleitorais::IDPacote ConverteIdPacote(const md::CIDPacote& idPacote);
+    static md::CIDPacote DesconverteIdPacote(const ModuloTiposEleitorais::IDPacote& idPacote);
+    static ModuloTiposEleitorais::Sistema ConverteIdSistema(const ESistemaJE& sistema);
+    static ESistemaJE DesconverteIdSistema(const ModuloTiposEleitorais::Sistema& sistema);
     static md::ETipoAbrangencia DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia);
     static ModuloTiposEleitorais::TipoAbrangencia::NamedNumber ConverteAbrangencia(md::ETipoAbrangencia abrangencia);
     static md::CSexo::ESexo DesconverteSexo(ModuloTiposEleitorais::CodigoSexo::NamedNumber sexo);

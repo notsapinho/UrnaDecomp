@@ -1,7 +1,9 @@
 # uenux2 comum::asn::Utils in src/app/comum/asn/util.cpp, the records' file: ConverteFase, DesconverteFase,
 # ConverteTipoLocalVotacao and DesconverteTipoLocalVotacao (target fns 1712, 2843, 3801, 3800), and DesconverteAbrangencia
 # (5827), and DesconverteSexo, which binaryen inlines into CConversorDadosCandidato::DoDesconverte (11450, below);
-# CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header
+# CConversorDadoCarga (below); the IDEleitoral, TipoPacote, IDPacote and Sistema conversions, which binaryen inlines into
+# comum::asn::CConversorCabecalhoPacote's two slots (11437, 11438, below), with that converter's file and unit 245's two
+# others, moved into this list. The class header app/comum/asn/util.h, the error header
 # euecomumasnerror.h and the enum EUrnaFase (app/comum/eurnafase.h, which unit 60's cgravadorwsq.h includes in place of
 # its opaque `: int`
 # declaration: the target formats EUrnaFase through fn 536, formatter<unsigned int>).
@@ -66,9 +68,22 @@
 #   tree still verifies, sha256 the target's. Both are written in their headers since, at the tree's -O3, and match:
 #   fragment 159 says what they rest on. CConversorDadosCandidato's slot 2 is that default (11449), emitted here with
 #   the vtable.
-# - 11437 and 11438 hold other members of this file inlined, with members of app/comum/md/'s CIDEleitoral, CIDPacote
-#   and CCabecalhoPacote (their records), which are not written: comum::asn::CConversorCabecalhoPacote's two slots
-#   (140-uenux2-app-comum-converters.mk says what they hold).
+# - DesconverteIdEleitoral, ConverteTipoPacote, DesconverteTipoPacote, ConverteIdPacote, ConverteIdSistema and
+#   DesconverteIdSistema (records util.cpp:89, 231, 329, 344, 419, 451) and DesconverteIdPacote (no record: its name, its
+#   being a Utils member and its place after ConverteIdPacote are chosen) are matched inside the two slots of
+#   comum::asn::CConversorCabecalhoPacote that hold them, DoDesconverte (11437) and DoConverte (11438), each behind a
+#   stack-pointer prologue of its own; the md members they call are fragment 273's. The tables the four Tipo and Sistema
+#   switches compile to give md::ETipoPacote's and ESistemaJE's values (app/comum/md/ccabecalhopacote.h). ConverteIdPacote's
+#   throw is at column 15, one block deep, so the CIDEleitoral kinds are an if chain whose else throws (a switch's
+#   default would put it at 19); the three selections are one setSelection(kind - 1) in the target's body and in ours.
+#   DesconverteIdEleitoral keeps a frame of its own inside DesconverteIdPacote's in the target, and clang leaves it out
+#   of line in this TU too (-Rpass-missed=inline: cost 330 over a threshold of 250), so binaryen inlines both. The Tipo
+#   and Sistema throws format the md enums through fn 536 (table slots 2286, 2287) and the entities' values as int (code 3), the
+#   `asInt()` of the other Desconverte members. The switches' spelling (a default only in DesconverteTipoPacote and
+#   DesconverteIdEleitoral, and the case order) is chosen, not compared with other forms. ModuloTiposEleitorais::Sistema
+#   is the target's RTTI's class (typeinfo name @497739), now a type of its own in src/asn1/modules/ModuloTiposEleitorais.h,
+#   and CabecalhoPacote's tipoPacote and idPacote setters take const_reference (11438 builds a temporary of each field's
+#   type, docs/reference/facts/asn1.md A3); origem keeps the generated setter of a NamedNumber (11438 stores its value).
 #
 # ConverteAbrangencia (inlined by binaryen into 11462), ConverteTurno and DesconverteTurno (into 11401 and 11402) are
 # here too, at their records' lines; their callers are in fragment 107 and in cconversordadocarga.cpp. No default in the
@@ -102,9 +117,24 @@
 # its throw comes after a `default: break;`, as in DesconverteAbrangencia (column 11). Its parameter's type is the
 # record's spelling, ModuloTiposEleitorais::CodigoSexo (src/asn1/modules/ModuloCandidatos.h).
 #
+# app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.cpp, cconversordadosdisponiveiscarga.cpp beside it and
+# app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.cpp came here from unit 245's list, in that list's order,
+# after util.cpp, and that order is measured (pnpm wasm score on the whole link; docs/reference/facts/codegen.md C4).
+# Ahead of util.cpp in unit 245's list, 11437 is 444 over 1330 rows (54 inserted, 51 deleted) and 11438 161 over 934 (11
+# and 15; a reading of the rows: the arguments of the inlined Utils calls sit in other locals). With the converter's file
+# after util.cpp and cconversordadosdisponiveiscarga.cpp left ahead of it, 11437 is 112 over 1276 and 11438 80 over 923,
+# all operand-only, and 11423 is 835 over 2739 and 11424 242 over 1520 (fragment 245 measured that order of its two
+# converters). With the three after util.cpp, 11437 and 11438 as
+# above, and 11423 (145 over 2696) and 11424 (109 over 1513) as in unit 245's list, all operand-only. The target's data
+# show the same order: util.cpp's records (@1555908 to @1556148) lie before CConversorCabecalhoPacote's vtable
+# (@1562736), which lies before CConversorDadosDisponiveisCarga's (@1565788).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 COMUM_ASN_SRCS := src/app/comum/asn/util.cpp src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp \
-  src/app/comum/dados/asn/candidatura/cconversordadoscandidato.cpp
+  src/app/comum/dados/asn/candidatura/cconversordadoscandidato.cpp \
+  src/app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.cpp \
+  src/app/comum/dados/asn/correspondencia/cconversordadosdisponiveiscarga.cpp \
+  src/app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.cpp
 UENUX2_SRCS += $(COMUM_ASN_SRCS)
 # the converters that call these members are not reconstructed yet: 96-uenux2-app-comum-asn-roots.cpp gives each its
 # second call site, the way the target reaches them

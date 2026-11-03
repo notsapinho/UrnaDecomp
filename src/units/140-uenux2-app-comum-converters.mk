@@ -61,12 +61,10 @@
 # unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte over the entity's elections, an instance
 # binaryen inlines (its 640-byte frame opens in the frameless 11482), and that instance's slot 3 through the vtable.
 #
-# Not written: 11437 and 11438, the DoDesconverte and DoConverte of comum::asn::CConversorCabecalhoPacote (RTTI at the
-# typeinfo 1562760; vtable @1562736, slots 3 and 2, table slots 2546 and 2545). They hold, inlined, util.cpp's
-# DesconverteIdEleitoral, DesconverteTipoPacote and DesconverteIdSistema (records util.cpp:89, 329, 451) and
-# ConverteTipoPacote, ConverteIdPacote and ConverteIdSistema (231, 344, 419), and the md::CIDEleitoral, CIDPacote and
-# CCabecalhoPacote members of cideleitoral.cpp:21, 29, 37, cidpacote.cpp:21, 67, 75, 83 and ccabecalhopacote.cpp:33,
-# 36, 39. Every function they call is named.
+# 11437 and 11438, the DoDesconverte and DoConverte of comum::asn::CConversorCabecalhoPacote (RTTI at the typeinfo
+# 1562760; vtable @1562736, slots 3 and 2, table slots 2546 and 2545), match since: unit 245's file, which unit 96 lists,
+# with util.cpp's members they hold (unit 96) and the md::CIDEleitoral, CIDPacote and CCabecalhoPacote members
+# (fragment 273).
 #
 # Where no record names a file (docs/how-to-decompile.md step 3): cconversorpleito.* by rule 3, the directory of
 # md::CPleitoDTO's, and its vtable lies between cconversororigemconfiguracao.cpp's objects (@1570224 to @1570320) and

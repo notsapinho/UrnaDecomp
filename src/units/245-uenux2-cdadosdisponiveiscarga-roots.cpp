@@ -2,8 +2,9 @@
 // comum::asn::CConversorDadosDisponiveisCarga (vtable @1565788; fns 11424 and 11423) is reached through its vtable only,
 // whose vptr fn 11905 stores (vota::CImpressaoVersaoPacotes's slot 2, not written): this TU takes the vtable's address,
 // which keeps both slots.
-// Three libc++ instances the unit's objects emit have more than one caller in the target, and in our link only the one
-// call 11423's code makes, so binaryen would inline each there: the copy of a range of md::CCabecalhoPacote (fn 5669,
+// Three libc++ instances the unit's code calls have more than one caller in the target, and in our link only the one
+// call 11423's code makes, so binaryen would inline each there (3863's and 5956's copies are the tree root
+// src/app/roots_dadoscarga.cpp's, which stands for 11905's object; 5669's is cdadosdisponiveiscarga.cpp's): the copy of a range of md::CCabecalhoPacote (fn 5669,
 // callers 11423 and 11905), the destroy of a vector<md::CCabecalhoPacote> (fn 3863, callers 11423, 11905 and 3691,
 // comum::CGeradorRelVersaoPacoteDados's slot 0) and of a vector<md::CMunicipioDisponivel> (fn 5956, callers 11423 and
 // 11905). VersaoPacotes stands for fn 11905, which calls all three, and goes when 11905 is in the link; 3691 is not
