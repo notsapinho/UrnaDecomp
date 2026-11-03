@@ -46,7 +46,7 @@ inline void CVotacaoStateAudio::PararTicks()
     }
 }
 
-inline void CVotacaoStateAudio::FalaMensagem()
+void CVotacaoStateAudio::FalaMensagem()
 {
     if (m_bAudioHabilitado) {
         const std::string mensagem = FormataMensagem(GetMensagem());

@@ -24,9 +24,9 @@ namespace vota {
 // once the state changes and one that resets +32 and runs the function when the audio ended and the state stayed: the
 // six lambdas' __func typeinfos name them $_0 and $_1 of StartStateAudio(), $_0 of ProcessTickAudio(unsigned char) and
 // $_0 to $_2 of ExecutarAposAudioAtual, in the order this file writes them (target fns 11758 to 11788 but 11769, and
-// 5934, the operator() binaryen keeps once for the two lambdas that set the next state). The speaking lambda holds
-// CVotacaoStateAudio::FalaMensagem's statements and reads the audio flag (+11), which cvotacaostateaudio.h makes
-// protected for it: a form chosen while FalaMensagem stays inline (unit 97's fragment has the measured alternative). fn 1717, the D2, cancels the +32 wait as slot 11 does, then releases it and calls
+// 5934, the operator() binaryen keeps once for the two lambdas that set the next state). The speaking lambda calls
+// CVotacaoStateAudio::FalaMensagem (fn 11786 holds it behind a stack frame of its own, inlined by binaryen; unit 97's
+// fragment has the rows). fn 1717, the D2, cancels the +32 wait as slot 11 does, then releases it and calls
 // CVotacaoStateAudio's D2. The destructor is out of line: fn 1278, the D0 of every CConfereVotoEmCargo instance, calls fn
 // 1717 and frees what it returns, a destructor not out of line in a class that adds no member over an out-of-line base D2
 // (docs/reference/facts/reading.md R5); defined in the class, the destructor is inlined there at the tree's -O3 (measured

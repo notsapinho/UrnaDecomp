@@ -51,12 +51,7 @@ void IConfereVotoEmCargo::StartStateAudio()
     if (m_tickConfere) {
         CThreadEleitor::GetInst().StartTick(*m_tickConfere);
         CTelasVota::GetInst().GetTelaCargo(GetCargoID(), m_tela)->Slot2();
-        ExecutarAposAudioAtual([this] {
-            if (m_bAudioHabilitado) {
-                const std::string mensagem = FormataMensagem(GetMensagem());
-                PlayInterruptibleMessage(mensagem);
-            }
-        });
+        ExecutarAposAudioAtual([this] { FalaMensagem(); });
     } else {
         ExecutarAposAudioAtual([this] { m_pNextState = GetProximoEstado(); });
     }
@@ -67,7 +62,7 @@ void IConfereVotoEmCargo::FinishStateAudio()
     CancelaEsperaConfere();
 }
 
-// (original lines 70-77: content not recovered)
+// (original lines 65-77: content not recovered)
 #line 78
 void IConfereVotoEmCargo::ProcessInputAudio()
 {

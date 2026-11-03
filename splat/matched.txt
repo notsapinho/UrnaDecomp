@@ -11739,3 +11739,4 @@
 11791 _ZN4vota19IConfereVotoEmCargo17ProcessInputAudioEv
 11793 _ZN4vota19IConfereVotoEmCargo15StartStateAudioEv
 13574 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp.o
+11786 _ZNSt3__210__function6__funcIZN4vota19IConfereVotoEmCargo15StartStateAudioEvE3$_0FvvEEclEv

@@ -277,9 +277,9 @@
 #   (CancelaEsperaFimAudio) and stops both ticks (PararTicks, inline in the .cpp: the test and the two StopTick calls
 #   FinishState, 7029 and 7010 hold with no frame of their own); ProcessInput then calls ISound's slot 5 and PararTicks
 #   again, then slot 9, and restarts the echo tick (+12) when slot 4 returns this state; ProcessTick, on one of its two
-#   ticks and unless ISound's slot 7 returns 1, speaks slot 15's message through slot 14 (FalaMensagem, inline) and
-#   starts the wait (IniciarEsperaFimAudio, record :388, which 7010 holds in a stack frame of its own: out of line,
-#   inlined by binaryen into its one caller here too), else it calls slot 12. IniciarEsperaFimAudio stores
+#   ticks and unless ISound's slot 7 returns 1, speaks slot 15's message through slot 14 (FalaMensagem, which clang
+#   inlines here) and starts the wait (IniciarEsperaFimAudio, record :388, held by 7010 in a stack frame of its own:
+#   out of line, inlined by binaryen into its one caller here too), else it calls slot 12. IniciarEsperaFimAudio stores
 #   ISound::WaitAsync's result over `[] { return false; }` and a lambda that restarts the echo tick when the audio
 #   ended: the lambdas' __func typeinfos name them $_0 and $_1 of that function, and their slots 13703, 13712, 13721,
 #   13750, 13761, 13769 and 13778 match from this object.
@@ -291,8 +291,8 @@
 #   :226; clang inlines it), which, when CEstadoAudio is active, copies the path and passes it to ISound's slot 1.
 #   EmiteEcoComInputField (3139): the form's one input field (else the throw), its text before and after Read, the
 #   field's last key echoed through PlayKey unless Read returns 5 or 13 with the text unchanged (0 then), and the pair
-#   of Read's result and the text after it. The access of PlayKey, PlayFile, IniciarEsperaFimAudio and the two inline
-#   helpers is chosen (the header says so).
+#   of Read's result and the text after it. The access of PlayKey, PlayFile, IniciarEsperaFimAudio, PararTicks and
+#   FalaMensagem is chosen (the header says so).
 # - The instances: 1091 (instance<ISound>, with landing pads) is the executable TU's copy (its record @1526584 in that
 #   TU's data) and matches from vota_web_wasm.cpp.o, now that its target callers here keep it out of line; so does unit
 #   170's votaSetAudioEnabled (10240), whose body held it inlined in our link. 2079 (instance<ITextToSpeech>) is
@@ -313,9 +313,9 @@
 # Readings, not measured as forms: PlayFile's copy of the path before instance() is called (a by-value argument would be
 # built after instance(): a test TU at -O3 calls the object first, wasm-objdump -d), and FalaMensagem's local (the
 # target frees slot 15's string before PlayInterruptibleMessage, where the temporaries of one full expression live until
-# its end). That PararTicks and FalaMensagem are functions is a choice: the lines of ProcessTick's record (:120) and
-# PlayKey's (:136) leave their statements no room in ProcessTick. FinishState uses PararTicks too, and 7022 still
-# matches. Other forms of PlayKey's switch and of the echo's test are not measured.
+# its end). That PararTicks is a function is a choice: the lines of ProcessTick's record (:120) and PlayKey's (:136)
+# leave its statements no room in ProcessTick; FinishState uses it too, and 7022 still matches. That FalaMensagem is
+# one is evidence (11786, below). Other forms of PlayKey's switch and of the echo's test are not measured.
 # Not matched: $_1's two __clone slots (13732 and 13740, `differs`) store the vptr before they copy the capture, as only
 # code without strict aliasing does (fn 786, the merge 13740 calls, has that order; ours joins the merge with the other
 # order, the target's 1083). In a variant link with cvotacaostateaudio.cpp.o compiled with -fno-strict-aliasing (the
@@ -341,11 +341,12 @@
 #   name them $_0 and $_1 of StartStateAudio(), $_0 of ProcessTickAudio(unsigned char) and $_0 to $_2 of
 #   ExecutarAposAudioAtual, so they are written in that order, each in place in its call. Measured, pnpm wasm score in the
 #   whole link before step 8: 3851 8 over 367 rows, 11790 4 over 63, 11791 4 over 30, 11793 17 over 150, all
-#   operand-only; matched at step 9, with 22 of the 31 __func members the lambdas have of their own. Chosen: the locals' names (their lengths put the
-#   instance() calls at their records' columns, :80:20 and :95:18), ExecutarAposAudioAtual's access and parameter name,
-#   the early return after the function runs at once, and `reset()` for clearing +32 in the lambda. The two __func
-#   destructors of $_2 (11765, 11764) are thunks into binaryen's merges 6053 and 6052 with api::CDataText<COpcaoDS>'s
-#   (10688, 10686, unit 121), which our link now forms: all six match.
+#   operand-only; matched at step 9, with 23 of the 31 __func members the lambdas have of their own (11786 below).
+#   Chosen: the locals' names (their lengths put the instance() calls at their records' columns, :80:20 and :95:18),
+#   ExecutarAposAudioAtual's access and parameter name, the early return after the function runs at once, and
+#   `reset()` for clearing +32 in the lambda. The two __func destructors of $_2 (11765, 11764) are thunks into
+#   binaryen's merges 6053 and 6052 with api::CDataText<COpcaoDS>'s (10688, 10686, unit 121), which our link now
+#   forms: all six match.
 # - Not matched among those slots: the eight __clone slots of the four lambdas that capture `this` alone (11770, 11771,
 #   11778, 11779, 11782, 11783, 11787, 11788, `differs`) store the vptr before they copy the capture, as only code
 #   without strict aliasing does (CVotacaoStateAudio's $_1, 13732 and 13740, waits the same way). In a variant link
@@ -353,12 +354,16 @@
 #   docs/reference/facts/workflow.md W13, scanned with the committed symbol file and match list) the eight turn `match`
 #   and no other row enters or leaves `match`; its control, the object compiled from the same line, gives the plain
 #   link's sha256. That file's carve-out from strict aliasing is the user's decision and not on this branch.
-# - Not matched: 11786, the operator() of StartStateAudio's $_0 (`differs`, 24 over 68 rows, 2 inserted, 3 deleted),
-#   which in the target reads its capture before a stack frame opens: it calls a function binaryen inlined, which
-#   CVotacaoStateAudio::FalaMensagem out of line (protected, not `inline`, in cvotacaostateaudio.cpp) gives. Measured in a
-#   variant link with cvotacaostateaudio.cpp.o and cconferevotoemcargo.cpp.o compiled so: 11786 turns `match`, no other
-#   row moves (7010 stays matched). Here the lambda holds FalaMensagem's statements and reads CVotacaoStateAudio's audio
-#   flag, made protected for it, and FalaMensagem's definition stays inline, which keeps 11786 `differs`.
+# - The operator() of StartStateAudio's $_0 (11786) calls CVotacaoStateAudio::FalaMensagem, out of line (protected,
+#   not `inline`, in cvotacaostateaudio.cpp). That the target keeps FalaMensagem as a function of its own is
+#   evidence: its 11786 reads the capture first (+0x3 local.get 0, +0x5 i32.load offset=4, +0x8 local.set 1) and
+#   opens its one stack frame after that (+0xa global.get 0, i32.const 32, i32.sub), a frameless caller's statements
+#   ahead of the only prologue, the sign of a callee binaryen inlined (how-to step 3); the frame holds that callee's
+#   two strings, slot 15's result at +8 and slot 14's at +20. With the statements written in the lambda (the audio
+#   flag made protected for it), ours opened the frame first: `differs` at +0x3, 24 over 68 rows (2 inserted, 3
+#   deleted). Out of line, clang still inlines FalaMensagem into ProcessTick, and 7010 keeps its match. Measured
+#   first in a variant link with both objects swapped (docs/reference/facts/workflow.md W13): 11786 the one row to
+#   enter or leave `match`; then in this tree's whole link, matched at step 9.
 # - CConfirmaVotoEmCargo::ProcessInputAudio (11754, cconfirmavotoemcargo.cpp, inherited by twelve derived classes'
 #   slot 9) over CVotacaoStateAudio::EmiteEcoCorrigeConfirma, written in cvotacaostateaudio.cpp at its record :209 (code
 #   9319) and held inlined by binaryen: Read, then the field count's test, then the field's last key echoed when it is
