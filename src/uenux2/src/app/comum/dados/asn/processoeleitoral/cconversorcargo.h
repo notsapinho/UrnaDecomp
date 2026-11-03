@@ -10,9 +10,9 @@ namespace comum::asn {
 // IConversorASN's, target fn 11372). RTTI names the class and its base (vtable @1569964); records put DoDesconverte (fn
 // 11373) in cconversorcargo.cpp, and this header beside it is a chosen path. DoDesconverte stores the word at +4 of the
 // converter as the office's abrangencia (+8 of md::CCargo), so the class holds it; its name is chosen.
-// DesconverteTipoCargo is a record's (cconversorcargo.cpp:83), static. The constructor is what fn 11371
-// (CConversorEleicaoPE::DoDesconverte) holds: the vptr and the abrangencia stored on its frame; that it is inline and
-// explicit is chosen.
+// DesconverteTipoCargo is a record's (cconversorcargo.cpp:83), static. The constructor is out of line in
+// cconversorcargo.cpp, as measured (fragments 191 and 299: inline, fn 11371 scores 91 over 1512; out of line, 84 over
+// 1509); binaryen inlines it into 11371, which stores the vptr and the abrangencia on its frame; explicit is chosen.
 class CConversorCargo : public IConversorASN<ModuloEleicao::CargoPergunta, md::CCargo> {
 public:
     explicit CConversorCargo(md::ETipoAbrangencia abrangencia);

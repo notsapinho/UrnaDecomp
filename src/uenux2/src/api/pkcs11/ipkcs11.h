@@ -2,12 +2,15 @@
 
 // api::pkcs11::IPkcs11. Reconstruction notes, not TSE's text. The class's name is its typeinfo name's
 // (N3api6pkcs117IPkcs11E, ledger/strings.tsv 517073) and the records of CPolySingleton<api::pkcs11::IPkcs11>::instance
-// (target fn 3704); the target has no vtable of the class or of an implementer, so every member is chosen: the one body
-// that uses it, comum::CGeradorBUQRCode::RetornaBlocoAssinado (inlined into fn 5604), calls slot 23 (+92) on the
-// instance, slot 6 (+24) with a std::vector<uebyte> by reference, which returns an object of at least 20 bytes whose
-// vector at +8 the caller copies, and slot 24 (+96). The members are declared up to slot 24 with pure bodies; slot 6 is
-// named from its role (the caller prints what it returns as the boletim's " ASSI:{}" field), the others after their
-// slots. The destructor in slots 0 and 1, the result's type and every name are chosen, and so is this path.
+// (target fn 3704); the target has no vtable of the class or of an implementer, so every member is chosen. Three target
+// bodies use the instance: comum::CGeradorBUQRCode::RetornaBlocoAssinado (inlined into fn 5604) calls slot 23 (+92),
+// slot 6 (+24) with a std::vector<uebyte> by reference, which returns an object of at least 20 bytes whose vector at +8
+// the caller copies, and slot 24 (+96); fn 10273, which holds comum::asn::CAssinaVotavelBu::Assinar (record 1597332),
+// calls slots 23, 6 and 24 the same way; CEstadoGeral::RecuperarCertificado (fn 5635, record 1574772) calls slot 23
+// and then slot 10 (+40). The members are declared up to slot 24 with pure bodies; slot 6 is named from its role (5604
+// prints what it returns as the boletim's " ASSI:{}" field, and Assinar's name agrees), the others after their slots
+// (slot 10's role in 5635 is not followed). The destructor in slots 0 and 1, the result's type and every name are
+// chosen, and so is this path.
 
 #include <vector>
 

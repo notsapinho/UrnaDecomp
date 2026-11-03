@@ -10,14 +10,14 @@
 # without it. Paths relative to src/uenux2. This fragment compiles the two new files; the others extend their units,
 # whose fragments point here, and this unit's roots keep its stand-ins.
 #
-# Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596, 11911
-# and 11452 (vtable). Scores before steps 7 to 9 (pnpm wasm score against this link's names.tsv), all operand-only: 1156
-# 3 over 56 rows, 2252 31 over 1130, 2792 7 over 248, 5596 37 over 356, 11911 22 over 243, 5591 262 over 3779, 11261 23
-# over 320, 11452 39 over 721, 2273 2 over 18. 11261 (LinhaPartido) is written for its literal as much as for itself:
-# its one user, fn 12110 (vota::CGeraBU's slot 2, not written), passes its address (table slot 2921), and the target
-# holds 5591's "{}\n" as the tail of 11261's "{}: {} - {}\n" (@445555). While that literal was not in the link, 5591
-# stayed `no-candidate` (splat-remap: `+1559 i32.const 370742: an address of ours: string tail occurs 4098 times`) and
-# 11911 `unresolved` on 5591's name.
+# Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596 and 11911
+# (vtable) and 11452 (srcloc-anchor, record cconversorlocal.cpp:70). Scores before steps 7 to 9 (pnpm wasm score against
+# this link's names.tsv), all operand-only: 1156 3 over 56 rows, 2252 31 over 1130, 2792 7 over 248, 5596 37 over 356,
+# 11911 22 over 243, 5591 262 over 3779, 11261 23 over 320, 11452 39 over 721, 2273 2 over 18. 11261 (LinhaPartido) is
+# written for its literal as much as for itself: its one user, fn 12110 (vota::CGeraBU's slot 2, not written), passes
+# its address (table slot 2921), and the target holds 5591's "{}\n" as the tail of 11261's "{}: {} - {}\n" (@445555).
+# While that literal was not in the link, 5591 stayed `no-candidate` (splat-remap: `+1559 i32.const 370742: an address
+# of ours: string tail occurs 4098 times`) and 11911 `unresolved` on 5591's name.
 #
 # Written, not matched:
 # - 2772, the constructor, `differs` in local numbers alone: 97 over 696 rows, 7 inserted and 7 deleted, every one a
@@ -80,12 +80,18 @@
 # - 11261 formats the party's number as an int (packed types 13421: a string, an int, a string); a ueword local gives
 #   13517 (unsigned).
 #
-# Chosen, no evidence names them: Imprime's name, parameters and const; the names, the file and the free-function form
+# Chosen, no evidence names them: Imprime's name, parameters and const, and its being a member (a free function over a
+# const CImprimirExtratoCarga& gives the same bytes: it reads only the object's vptr); the names, the file and the
+# free-function form
 # of auxiliaresrelatorio.cpp's six functions (the directory by the use bands: 2792 in band 4 links right before
 # ccabecalhoqrcodebuilder.cpp's 2791 and after md/rdv/cvotos.cpp's 2794, 2252 in band 5 between cdadocarga.cpp's 2253
 # and cgeradorbuqrcode.cpp's 2251, 1156 in band 11 between ccargo.cpp's 1157 and isystemdatetime.cpp's 1155, a reading;
-# the file's name sorts first in app/comum/relatorios/); CQRCodeImagePaper's constructor's parameter, its GetDados and
-# m_dados, MontaImagem's being private; LinhaPartido's name and its place in the class; CPleito::GetNome (the string at
+# the file's name sorts ahead of every app/comum/relatorios/ file but unit 287's adicionaparametro.cpp, itself a
+# chosen name); CQRCodeImagePaper's constructor's parameter, its GetDados and
+# m_dados, MontaImagem's being private; LinhaPartido's name and its place in the class (its instance,
+# CDataSourcesRelatorio<CRdvVota, CEleitores>, is the evidence's: all six records of cdatasourcesrelatorio.h name it,
+# 11261 calls CRdvVota::GetInst, fn 555, and band 1 runs 11259, 11260 and 11261, 11260 being that instance's recorded
+# TrailerProporcionalPartido); CPleito::GetNome (the string at
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
 # Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 5591's caller 11869 (11911 is in the link) and for 2792's

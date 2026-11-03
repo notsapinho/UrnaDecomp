@@ -40,7 +40,9 @@
 # 5604, so each is a function binaryen inlined into its one caller. The target's body holds 10253 instructions and ours
 # 10255, with the same direct calls and format strings in the same order but for one free (read from `pnpm wasm fn`'s
 # folded readouts of both). pnpm wasm score: 3113 over 10484 rows (230 inserted, 228 deleted, 2590 of 2655 replaced rows
-# operand-only); a diff of the two disassemblies with locals renamed by first use has 758 hunks: 584 differ in local
+# operand-only); a diff of the two disassemblies (`pnpm wasm disasm` bodies) with locals renamed by first use and call
+# targets, data addresses and wide constants masked, counted as difflib opcodes, has 758 hunks (the same diff unmasked,
+# `diff -U0`, has 1465): 584 differ in local
 # numbers, call targets or data addresses alone, 94 only in local.get, local.set and local.tee rows, 20 only in one
 # table slot operand (the target's 148, our 43), and 60 in more. What differs beyond locals, measured and not explained:
 # GetCorpo's post loops reload the post's id and digit count where the target holds them in locals before the loop;

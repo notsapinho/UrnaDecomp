@@ -12,8 +12,10 @@
 // its fourth (the last). The bytes are two stores of 0 in the reverse of their offsets, unmerged, which clang gives for
 // two parameters and not for two constants (a constant pair it stores as one 16-bit word, measured in this object); its
 // two callers, fns 1956 and 12110, pass the same 0s, so binaryen's dead-argument elimination folded them into the body,
-// and the wasm type keeps four words. So the constructor takes two flags, and its callers pass false; 11242 (Slot2, not
-// reconstructed) tests the byte at +418 for "RED" against "VOTA". The third argument is
+// and the wasm type keeps four words. The constructor takes two flags, and its callers pass false: the number is a
+// choice, since one bool stored into both bytes gives the same two stores (a probe object of both forms), and with
+// one flag 5603's symbol would mangle one bool. 11242 (Slot2, not reconstructed) tests the byte at +418 for "RED"
+// against "VOTA". The third argument is
 // comum::CRdvVota::Comparecimento()'s result in fn 1956. The names and the types beyond those widths are chosen;
 // api::CDateTime is a 12-byte value that the slot-2 overrider's fields "DTEM:{} " and "HREM:{} " could print, and fn
 // 1956 passes CEstadoGeralVota::GetDtHrEmissaoBU()'s copy. The destructor is out of line: the D0 (fn 11243) calls the

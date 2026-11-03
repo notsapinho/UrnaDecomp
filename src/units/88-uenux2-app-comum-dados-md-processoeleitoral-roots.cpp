@@ -3,9 +3,9 @@
 // are reconstructed, and only
 // 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
 // call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
-//   1708  CCargos::Next               5604 11209 12098 12110 (7352 and 4442, unit 197's, are in the link)
+//   1708  CCargos::Next               11209 12098 12110 (7352, 4442, unit 197's, and 5604, unit 155's, are in the link)
 //   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
-//   2835  GetCurrentEleicaoID         5604 11209 13550
+//   2835  GetCurrentEleicaoID         11209 13550 (5604, unit 155's, is in the link)
 //   1267  CProcessoEleitoral::GetPleito2  1543 7787 11223 11902 (2787, 5586 and 11191 are in the link)
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888 12272, and 5747, written (3715 holds it inlined)
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written

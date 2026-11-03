@@ -88,9 +88,9 @@
 #   the if (sha256 compared). The form of ValidaNome's test (empty or longer than 38) and the three ValidaOrdem calls'
 #   order follow the target's code. Without the roots' stand-in for fn 3818, 3816 has one caller and binaryen inlines
 #   it: 742 over 1806 (297 inserted, 55 deleted, with the range-for loops).
-# - Chosen: cconversoreleicaope.cpp's path, both functions' lines but the records', the lambdas, the locals' names, and
-#   the constructors' parameters and their being inline (CDetalheCandidato's) or not (CEleicaoPE's, CConversorCargo's,
-#   as the inlining above shows).
+# - Chosen: cconversoreleicaope.cpp's path, both functions' lines but the records', the lambdas, the locals' names, the
+#   constructors' parameters, and CDetalheCandidato's constructor being inline. CEleicaoPE's and CConversorCargo's
+#   being out of line is not chosen: the measurements above decide it.
 #
 # Roots (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp): stand-ins for target callers not in our link, each going
 # when they are: QRCodeTela for fn 3059 (the constructor, so 1300 keeps two call sites, and SetOrigem); ConteudoQRCode

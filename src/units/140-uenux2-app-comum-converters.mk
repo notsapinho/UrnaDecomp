@@ -32,7 +32,8 @@
 #   that form puts the second right after the loop), both `pnpm wasm score` in the whole link at fragment 299's base. An
 #   earlier link of this unit had std::transform with a back_inserter among the forms that kept the second throw after
 #   the loop; which lambda it held is not recorded here. The form is the one fragment 299's CConversorEleicaoPE
-#   (11371) showed, from the frame its inlined lambda gives.
+#   (11371) showed, from the frame its inlined lambda gives. The lambda's own form (the converter captured by name and
+#   by reference, a `const auto&` parameter) is chosen.
 #
 # Written and not matched, and what each waits for:
 # - 11352 and 11351, CConversorVotosCargo::DoConverte and DoDesconverte, and 11350, CConversorEleicoesVota::DoConverte,

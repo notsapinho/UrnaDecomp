@@ -1,6 +1,7 @@
 // Roots: api::CStringUtils::GetVersionNumber (target fn 1539) has six direct callers in the target, fns 5579, 5596,
-// 5604, 11908, 12105 and 12110, none of them in our link. binaryen inlines a function with one call site, so these two
-// stand for them, with bodies that differ from each other's and from every target function. Declared through an asm
+// 5604, 11908, 12105 and 12110; 5596 (unit 296) and 5604 (unit 155's written Gera) are in our link. binaryen inlines a
+// function with one call site, so these two stand for the other four, with bodies that differ from each other's and
+// from every target function. Declared through an asm
 // label with the object's signature, so this TU needs no header and instantiates nothing.
 extern "C" void w1539_root(void*, int) __asm__(
     "_ZN3api12CStringUtils16GetVersionNumberERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");

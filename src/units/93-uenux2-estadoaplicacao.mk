@@ -37,7 +37,8 @@
 # braced lists, whose long labels the target allocates first and copies (as a vector built from an initializer_list
 # does); the labels are the target's strings. ccabecalhoqrcodebuilder.h says which forms the ORLC frames and TURN's load
 # decided. The lambda's layout puts its throw on the record's column 31: a wrapped parameter list, a choice. The names
-# of the setters, of build() and preBuild()'s local, and their lines, are chosen.
+# of the setters, of build() and preBuild()'s local, and their lines, are chosen, and so is preBuild()'s const (its
+# record prints the name of a const member the same way).
 #
 # Written and not matched:
 # - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`; its caller in the link, fn 1956 (unit 37), is

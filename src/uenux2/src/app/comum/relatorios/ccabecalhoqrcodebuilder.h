@@ -11,7 +11,8 @@
 namespace comum {
 
 // The header of the boletim de urna's QR code. The class and its file come from the record of fn 2791, the lambda of
-// preBuild() in ccabecalhoqrcodebuilder.cpp, line 284. 2791's only caller is fn 5604, which passes it the fields of this
+// preBuild() in ccabecalhoqrcodebuilder.cpp, line 284 (preBuild's const is chosen: clang's record prints a const
+// member's name the same way). 2791's only caller is fn 5604, which passes it the fields of this
 // object: comum::CGeradorBUQRCodeVota's constructor (fn 5603, by the vptrs it stores) copies the object to its +4 with fn
 // 5608, and fns 1956 and 12110 fill it through fns 5618, 5620, 5621, 5623 and 5622 first.
 //
@@ -55,6 +56,7 @@ public:
     std::string build() const;
 
 private:
+    // const chosen (the class's header note).
     void preBuild() const;
 
     std::string m_origem;

@@ -49,13 +49,20 @@
 # named local and the temporary sit where the target's frame has them (+20 and +8). It is defined between EhTreinamento
 # and GetHorarioVerao, the order of target indices below. The -pending.cpp, which held its trap, went with it.
 #
+# comum::CImprimirExtratoCarga::Imprime (target fn 5591) is written in cimprimirextratocarga.cpp and matches:
+# src/units/296-uenux2-relatorios-impressao.mk has it, and its roots keep its stand-ins.
+#
+# comum::CImprimirExtratoCarga::Imprime (target fn 5591) is written in cimprimirextratocarga.cpp and matches:
+# src/units/296-uenux2-relatorios-impressao.mk has it, and its roots keep its stand-ins.
+#
 # The constructor (target fn 5586, no record; at the file's top, a chosen line: it is in use band 2, apart from the
 # slots' band): the general state's urna type for its turn (GetTipoUrna, inline) against eUrnaContingencia; then, when
 # CPE::Existe (2788) says no instance, CPE::CreateInst(geral, FLASH_INTERNA) (2787, unit 110); then, when CPE's processo
 # holds a second pleito, that pleito's date against a default api::CDate, today (1382): operator== inline, then <
 # through operator<=> (1261, unit 125). The flag is stored false first. The byte at +4 is stored 0 before the vptr, the
 # base's member (cimprimirextratocarga.h), and +5 is the flag. CPleito::GetData (cpleito.h) is added for it. Its two
-# target callers, 11869 and 11911 (not written), read its returned this: unit 280's roots stand in for both. It
+# target callers, 11869 (not written) and 11911 (unit 296's, in the link), read its returned this: unit 280's roots
+# stand in for 11869. It
 # matches: 9 over 99 rows, all operand-only, before step 8 (11 over 99, the result's row deleted, with no reader).
 #
 # GetDadosLocal (slot 15, target fn 11188): the lines of the section's data, in a vector of strings. For a voting urna
@@ -138,10 +145,11 @@
 #   8 bytes higher in the frame (198 over 1144 rows, 3 not operand-only); as written, 40 over 1144, all operand-only, the one operand that is
 #   no call and no data address being the thrown object's destructor's table slot (69, fn 4636). Measured with
 #   `pnpm wasm score` against our plain link.
-# - IncluiAvisoModoDemonstracao (fn 5583, no record) reads as a CRelUtil member: its callers are IncluiCabecalhoEleicoesMZS
-#   (fn 1543, record crelutil.cpp:307) and fn 5591, and it tests CInformacaoEleicao::EhModoDemonstracao as
-#   GetSeparadorFase does. It adds the demonstration-mode line, centred in style 1, and two blank lines: 10 over 69,
-#   all operand-only. Its name, its lines and its being a static member are chosen.
+# - IncluiAvisoModoDemonstracao (fn 5583, no record) reads as a CRelUtil member: its callers are
+#   IncluiCabecalhoEleicoesMZS (fn 1543, record crelutil.cpp:307) and fn 5591 (comum::CImprimirExtratoCarga::Imprime,
+#   unit 296's), and it tests CInformacaoEleicao::EhModoDemonstracao as GetSeparadorFase does. It adds the
+#   demonstration-mode line, centred in style 1, and two blank lines: 10 over 69, all operand-only. Its name, its lines
+#   and its being a static member are chosen.
 # - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
 #   5581`), builds std::format's result for "-------------- {:02} / {:02} ---------------" (the 44-byte literal at
 #   378206, which no other target function loads: `/usr/bin/grep -rlE 'i32\.const 378206($|[^0-9])'
@@ -187,8 +195,9 @@
 #   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
 #   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
 #   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
-# IncluiAvisoModoDemonstracao's callers (1543, 5591) are not reconstructed, nor three of GetIDCargaFormatado's four
-# (5579, 12105, 12110; 11256 is in the link). w123_idcarga stands for those three and w123_demonstracao for 5583's two:
+# IncluiAvisoModoDemonstracao's caller 1543 is not reconstructed (5591 is, unit 296's), nor three of
+# GetIDCargaFormatado's four (5579, 12105, 12110; 11256 is in the link). w123_idcarga stands for those three and
+# w123_demonstracao for 1543:
 # each calls its function twice, as the target's several callers do; each goes when every caller it stands for is in the
 # link.
 #

@@ -43,7 +43,9 @@ public:
     // Target fn 5591: the load's report, built on an api::CPaperFormBuilder of its own from the slots below and shown
     // with the title and the copy's text its caller passes (vota::CImpressaoEstadoUrna::StartState, fn 11911, passes
     // "estado da urna" and "{}ª via"). Not virtual: no vtable slot holds it, and its callers call it directly. Its
-    // name, its parameters' names and its const are chosen.
+    // name, its parameters' names, its const and its being a member are chosen: it reads only its object's vptr (slots
+    // 2 to 25), and a free function over a const CImprimirExtratoCarga& gives the same bytes; as a member it is the
+    // class's non-virtual driver of its hooks.
     void Imprime(const std::string& titulo, const std::string& via) const;
 
     virtual bool EhTreinamento() const = 0;

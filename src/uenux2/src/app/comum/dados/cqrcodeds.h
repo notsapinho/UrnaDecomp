@@ -21,8 +21,8 @@ class CPleito;
 // binaryen inlines into its callers: defined in the class instead, clang inlines the vector's copy into 11200, where
 // the target calls 1300 (wasm-objdump -d of crelatoriotesteimpressora.cpp.o). Chosen: every name but the class's and
 // operator()'s (SetOrigem from the tag, the enumerators from its two letters, MontaConteudo from what it returns), the
-// alias, explicit, that MontaConteudo is a private member and takes the pleito, and that no enumerator is declared for
-// 2.
+// alias, explicit, the const of operator() and of MontaConteudo, that MontaConteudo is a private member and takes the
+// pleito, and that no enumerator is declared for 2.
 class CQRCodeDS {
 public:
     enum EOrigem {

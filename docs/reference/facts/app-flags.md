@@ -545,7 +545,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   So the target's copies of the token iterator (4307, whose callers are 5492 and 6999 only) and of the `const char*`
   parser (2062: 2416, 5782, 6833, 6999) have no TBAA while `cinputmenufield.cpp` has it. Whose copies they are, no row
   says: `cvotacaostateaudio.cpp`'s in a link order with it ahead of `cinputmenufield.cpp` (not measured), or another
-  TU's; the tree root stands for them either way (unit 97's fragment). Whether the original build gave
+  TU's; the tree root stands for the token iterator's either way (unit 97's fragment), and the parser's come from
+  `app/comum/dados/cqrcodeds.cpp` (5782, built without strict aliasing, ahead of `cinputmenufield.cpp`), whose object
+  replaced the tree root's stand-in for them with no row moving. Whether the original build gave
   `-fno-strict-aliasing` to `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`
   and `celeitorencontrado.cpp` alone or to more of `app/vota/`, the rows do not say beyond these measurements: listing
   the five files is the reading that keeps every match.

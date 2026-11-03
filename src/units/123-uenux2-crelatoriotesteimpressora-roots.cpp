@@ -1,6 +1,6 @@
 // Roots: keep comum::CRelatorioTesteImpressora's callees in the skeleton link the way the target keeps them. The class's
 // vtable is kept by its constructor (fn 5586, crelatoriotesteimpressora.cpp), which stores the vptr and which unit 280's
-// roots reach for its callers 11869 and 11911.
+// roots reach for its caller 11869 (11911, unit 296's, is in the link).
 // - GetCorrespondencia (slot 9, fn 11197) calls CDadoCorrespondencia's copy constructor, fn 1249, which has six callers
 //   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 (unit 160)
 //   and 11395 (comum::asn::CConversorEstadoGeralGap::DoDesconverte, unit 93, three call sites) are in the link, and
@@ -27,8 +27,8 @@
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
 //   5579, 11256, 12105, 12110): 11256 is in the link, and w123_idcarga stands for the other three and calls it twice.
-// - CRelUtil::IncluiAvisoModoDemonstracao, fn 5583, has two (awk -F'\t' '$2==5583' ledger/callgraph.tsv: 1543, 5591),
-//   neither reconstructed: w123_demonstracao stands for both and calls it twice.
+// - CRelUtil::IncluiAvisoModoDemonstracao, fn 5583, has two (awk -F'\t' '$2==5583' ledger/callgraph.tsv: 1543, 5591):
+//   5591 (unit 296's) is in the link, and w123_demonstracao stands for 1543 and calls it twice.
 // - CRelUtil::FormTituloPartido, which the target holds inlined by binaryen in fn 11946 (vota::CGeraZeresimaBase's slot
 //   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
 //   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181

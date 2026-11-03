@@ -33,8 +33,9 @@
 #   StartState (10337, unit 135), which holds them inlined: the 28-byte object, CAppState's constructor with 2
 #   (EVENTO_ENTRADA), the vptr, both forms assigned (fn 1255's at +20, then the builder's at +12, a frame of its own),
 #   the builder's buzz (51, 10), the texts @364807, @335481 and @86376 at {1, 1}, {1, 2} and {1, 4}, AddInputControl
-#   and GetInteractiveForm("", true). 10337 is written and calls GetInst: it differs in binaryen's local numbers only
-#   (unit 135's fragment has its score), and the rows of the inlined GetInst, constructor and form are among those.
+#   and GetInteractiveForm("", true). 10337 is written and calls GetInst: it differs, mostly in binaryen's local
+#   numbers, not explained (unit 135's fragment has its score: 289 over 761 rows, 25 of them not operand-only), and the
+#   rows of the inlined GetInst, constructor and form are among those.
 # - The statics, @1909736 (s_inst, which 10337 loads and stores) and @1909712 (s_mutex, whose address 10337 passes to
 #   the mutex's call): their exit destructors are 10341 and 10340. 10337 is named by vtable, which casts no vote, so no
 #   generated line names either object; each takes a hand line in splat/symbol_addrs.txt led by its two readers (10337,

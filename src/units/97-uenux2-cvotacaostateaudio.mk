@@ -308,7 +308,9 @@
 # So the target's copies over const char* and of the token iterator are uenux2's without strict aliasing and without
 # landing pads, though cinputmenufield.cpp, one of their users here, builds with strict aliasing, and the other,
 # cvotacaostateaudio.cpp, which builds without it (below), links after it; that flag is not changed here, and listing
-# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows.
+# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows. Since fragment 299's cqrcodeds.cpp, built
+# without strict aliasing, links ahead of cinputmenufield.cpp and gives the const char* parser's copies, the tree root
+# holds the token iterator's and std::regex_replace's alone (its comment).
 #
 # CVotacaoStateAudio's slots 7, 8 and 13 and its static helpers, written since (target fns 7029, 7010, 3139, 1455, 3143
 # and 1204), with the copies of api::CPolySingleton<T>::instance they call (1091, 2079) and has<ITextToSpeech> (3281).

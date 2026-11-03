@@ -205,7 +205,7 @@
 #   __insertion_sort_incomplete over the pair with a function-pointer comparator, ccargos.cpp's instances (scores 0).
 #   Chosen: the three members' and the comparators' names, the comparators' being free functions of an anonymous
 #   namespace (they read nothing of the class), their lines, and calling Reset; unit 197's roots keep 3782 for its
-#   callers 5604, 12098 and 12110.
+#   callers 12098 and 12110 (5604, unit 155's written Gera, is in the link).
 # - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
 #   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
 #   times, none written (those with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).

@@ -7,7 +7,8 @@
 //                       ~CProcessoEleitoral 2830: 7787 (2787 and 5598 are in the link);
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
-//                       5604, 11209, 12098, 12110 (7377, unit 197's StartState, is in the link)
+//                       11209, 12098, 12110 (7377, unit 197's StartState, and 5604, unit 155's written Gera, are in
+//                       the link)
 //   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
 //                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
 //                       stand-in reads it (R18)
