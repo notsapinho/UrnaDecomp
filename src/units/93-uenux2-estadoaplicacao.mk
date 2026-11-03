@@ -1,6 +1,6 @@
 # uenux2 comum::md::estadoaplicacao and its converters, in src/app/comum/dados/md/estadoaplicacao/ and
-# src/app/comum/dados/asn/estadoaplicacao/, and five setters and two tests of comum::CCabecalhoQRCodeBuilder, in
-# src/app/comum/relatorios/.
+# src/app/comum/dados/asn/estadoaplicacao/, and comum::CCabecalhoQRCodeBuilder's setters, tests, preBuild() and build(),
+# in src/app/comum/relatorios/.
 #
 # Matched. Data classes: CLocalidadeEleitoral's constructor (target fn 5631), CDadoCarga's constructor and GetFaseChar
 # (5633, 2253), CAjusteDataHora::AdicionaDeltaT (3702) and its constructor (a twin of the two-word constructors, fn 1081),
@@ -28,12 +28,27 @@
 # calling each, compiled at this directory's flags (try-tu.sh --symbols, then check_srcloc.py), prints the target's
 # text, line and column for all four.
 #
+# CCabecalhoQRCodeBuilder for comum::CGeradorBUQRCode::Gera (fn 5604, unit 155's, written and not matched), each with
+# one caller there and inlined by binaryen: the setters of the ORLC field (two, "COM" and "LEG"), PROC, DTPL, PLEI,
+# TURN, FASE, UNFE and VERS, each a frame of its own in 5604; build(), which calls preBuild() and appends the fields
+# (+132 only when it is not empty; the SA and RED origins' tails, as the target's appends show); and preBuild(), whose
+# lambda (fn 2791, record line 284, column 31) matches: it throws CUeComumRelatoriosError 9050, "Campo ({}) não
+# informado.", for the first empty field of the table it is given. The four tables are std::vector temporaries from
+# braced lists, whose long labels the target allocates first and copies (as a vector built from an initializer_list
+# does); the labels are the target's strings. ccabecalhoqrcodebuilder.h says which forms the ORLC frames and TURN's load
+# decided. The lambda's layout puts its throw on the record's column 31: a wrapped parameter list, a choice. The names
+# of the setters, of build() and preBuild()'s local, and their lines, are chosen, and so is preBuild()'s const (its
+# record prints the name of a const member the same way).
+#
 # Written and not matched:
-# - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At -O2 clang inlines
-#   std::string::append(const char*, size_t) into the loop and the target has `call 160`, so ours was 1108 B against 942.
-#   With this one object at -O3 in a private link (docs/reference/facts/workflow.md "One variant object in the whole
-#   link") ours was 942 B with the call, and differed from the target only in 5 rows inserted and 5 deleted, all
-#   `local.get`. At the tree's -O3 it scores 89 over 431 rows (5 inserted, 5 deleted), so the row stays.
+# - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`; its caller in the link, fn 1956 (unit 37), is
+#   `unresolved`. At -O2 clang inlines std::string::append(const char*, size_t) into the loop and the target has `call
+#   160`, so ours was 1108 B against 942. With this one object at -O3 in a private link
+#   (docs/reference/facts/workflow.md "One variant object in the whole link") ours was 942 B with the call, and differed
+#   from the target only in 5 rows inserted and 5 deleted, all `local.get`. At the tree's -O3 it scores 89 over 431 rows
+#   (5 inserted, 5 deleted), so the row stays: the same instructions, its locals numbered otherwise. Linked alone
+#   (try-tu.sh --single) the written form scores 94 over 431, and three others 94 over 431 (a size_t index stepped
+#   before the format), 102 over 443 (an indexed loop) and 346 over 598 (a local string assigned at the end).
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #

@@ -237,7 +237,8 @@
 #   1284 (48 inserted, 51 deleted), each on a whole link. Band 4 (ledger/ordinals.tsv) runs 2824, 2823, 2822 in link
 #   order, so it is defined above QuantidadeAptos; its lines are a choice. The target stores CEleitores's vptr in 7787
 #   alone (`/usr/bin/grep -rlE 'i32\.const 1559120($|[^0-9])' build/out/splat/pieces/asm`), a constructor inlined
-#   there: the roots keep the vtable, and the slot's direct callers (5603, 11968, 12098) are not written either.
+#   there: the roots keep the vtable, and the slot's direct callers 11968 and 12098 are not written either (5603, unit
+#   155's, matches).
 # - GetEleitoresImpedidos (5767): its lambda's __func typeinfo (string 501161, a local `$_0` of
 #   `ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vector...`) names the member and its parameter, and the
 #   wasm has no `this` (the result and the list), so it is static. The lambda reads one file

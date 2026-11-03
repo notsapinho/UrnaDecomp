@@ -9,9 +9,9 @@
 // here; CEsperaRetestar's GetInst (fn 5936), written in cesperaretestar.cpp (138-uenux2-testeteclado.mk has its note).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
-// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots; 12034 is in the link, unit 156, and 12051 and 12055 are
-// pending in unit 37). The noinline stand-in calls it twice for 12051 and 12055 and adds the results, so its body is no
-// target function's. It goes when they are in the link.
+// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots; 12034 and 12051 are in the link, units 156 and 37, and
+// 12055 is pending in unit 37). The noinline stand-in calls it twice for 12055 and adds the results, so its body is no
+// target function's. It goes when 12055 is in the link.
 //
 // vota::testeteclado::CBase's constructor (fn 5948) has two direct callers in the target, 11914 and 7160, which hold
 // CPreZeresima's and CRetomada's constructors inlined (each stores its class's vptr after the call). 11914 is in the

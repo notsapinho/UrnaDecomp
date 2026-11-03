@@ -2,11 +2,10 @@
 # relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
 # md::CLocal's two constructors are written in md/clocal.cpp, above GetSecao, and have no index of their own: the
-# target inlines each into its one caller, comum::asn::CConversorLocal::DoDesconverte (fn 11452, not written), which
+# target inlines each into its one caller, comum::asn::CConversorLocal::DoDesconverte (fn 11452, unit 157's), which
 # copies the id, the three strings and the municipality, then the section or the contingency urn, and calls
-# ValidaCriacao once in each path. Read from 11452 (md/clocal.h has the forms); unrooted, so our link drops them until
-# 11452 lands, and nothing is measured on them but the object (each makes the four string copies and calls
-# ValidaCriacao out of line, as 11452 does).
+# ValidaCriacao once in each path. Read from 11452 (md/clocal.h has the forms); 11452 is in the link and matches with
+# both inlined by binaryen, as in the target (unit 296's fragment).
 #
 # Names and files from records: md::CLocal::GetSecao (target fn 943) and ValidaCriacao (5673); comum::CLocal::VerificaLido
 # (782), GetSecaoID (1078) and VerificaEhSecao (5742); md::CInfoMunicipio::GetHorarioVerao (3725) and ValidaCriacao (5675);

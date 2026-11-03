@@ -55,13 +55,14 @@
 # (docs/reference/splat.md "Reviewing a match"; celeitor.cpp's header says which of its lines are chosen).
 #
 # Not written, or pending, in this family, and what each waits for:
-# - 11452, CConversorLocal::DoDesconverte: this unit's -pending.cpp.
+# - 11452, CConversorLocal::DoDesconverte, is written in cconversorlocal.cpp (record line 70) for unit 296, whose
+#   fragment has its measurements; the -pending.cpp that trapped it went.
 # - 11398, CConversorEstadoGeral::DoDesconverte, and 5637, CEstadoGeral's constructor (md/estadoaplicacao/cestadogeral.cpp),
 #   which 11398 calls: 5637 calls fn 1249 on its +60, the correspondence (read as CDadoCorrespondencia's copy
 #   constructor from the members it copies), whose target body has landing pads of its own (invoke_iii three times,
 #   __cxa_find_matching_catch_2, __resumeException): read as an -fexceptions TU's copy, which no uenux2 object gives. No
 #   name reaches 1249; its callers are 5637, 5740, 5856, 11197, 11395 and 12098.
-# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fn 3704 has no name; 1681
+# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fn 3704 matches now (unit 155); 1681
 #   (vector<uebyte>::__assign_with_size over uebyte*) matches from src/app/roots_vector.cpp (unit 11).
 # - 11390, 11391, 11399 and 11400 (CConversorEstadoGeralVota's and CConversorDadoCorrespondencia's slots) and fn 1080
 #   (comum::asn::Utils::ConverteDataHoraJE) are matched now: fragments 172 and 96.
@@ -82,12 +83,8 @@ DADOS_MD157_SRCS := src/app/comum/md/ccabecalhoentidade.cpp \
 UENUX2_SRCS += $(DADOS_MD157_SRCS)
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(DADOS_MD157_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CConversorLocal's DoDesconverte is not written: 157-uenux2-app-comum-dados-md-pending.cpp traps it, compiled with the
-# tree's flags
-$(ROOT)/$(APP)/157-uenux2-app-comum-dados-md-pending.o: $(ROOT)/src/units/157-uenux2-app-comum-dados-md-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/157-uenux2-app-comum-dados-md.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/157-uenux2-app-comum-dados-md-pending.cpp -o $(R)
 # the classes' users are not reconstructed yet: 157-uenux2-app-comum-dados-md-roots.cpp gives each function the call
 # sites the target gives it
 $(ROOT)/$(APP)/157-uenux2-app-comum-dados-md-roots.o: $(ROOT)/src/units/157-uenux2-app-comum-dados-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/157-uenux2-app-comum-dados-md.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/157-uenux2-app-comum-dados-md-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/157-uenux2-app-comum-dados-md-pending.o $(APP)/157-uenux2-app-comum-dados-md-roots.o
+override EXTRA_OBJS += $(APP)/157-uenux2-app-comum-dados-md-roots.o

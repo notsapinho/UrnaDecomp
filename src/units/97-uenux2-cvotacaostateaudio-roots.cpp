@@ -1,10 +1,10 @@
 // Roots: keep unit 97's classes in the skeleton link the way the target keeps them.
 //
-// The three comum::CPedeTituloMesario* states' D0 (3609) and vota::testeteclado::CErroTesteTecladoFim's StartState and
-// destructors (3857, 785, 1560) are reached only through their vtables, each referenced in the target by a constructor
-// inlined into a builder not reconstructed (fn 10388 for the CPedeTituloMesario* states). Taking the vtables' address
-// keeps every slot. None of those direct callers of the destructors is stood in for: the destructors are in the table,
-// so binaryen keeps them out of line. The ten confirmation states' vtables are referenced by their constructors, inlined
+// vota::testeteclado::CErroTesteTecladoFim's StartState and destructors (3857, 785, 1560) are reached only through its
+// vtable, referenced in the target by a constructor inlined into a builder not reconstructed. Taking the vtable's
+// address keeps every slot. None of the direct callers of the destructors is stood in for: the destructors are in the
+// table, so binaryen keeps them out of line. The three comum::CPedeTituloMesario* states' vtables, with their D0 (3609),
+// are stored by their constructors, which fn 10388 (CPedeTituloMesario::StartState, written) holds inlined. The ten confirmation states' vtables are referenced by their constructors, inlined
 // into their GetInst, which slot 16 of the CConfereVotoEmCargo instances calls, and vota::CPedeNulo's and CPedeNominal's
 // by theirs, inlined into their GetInst, inlined into fn 11711 (written).
 //
@@ -29,8 +29,8 @@
 // the two GetInst (fns 3849 and 5921, thunks into fn 6051) have their slot 16 callers (fns 11751 and 11699), fn 4459 and
 // CPedeProporcional's fn 11756, all written. Of
 // CEstadoComDesligamentoAutomatico's (fn 1285) ten callers
-// 2888, 3855, 3877, 5936, 5947 and 5948 are in the link: DoisDesligamentos stands for the other four (11804, 11809,
-// 11812, 12051) with two calls. Each stand-in passes what the target's callers vary (the events, the two stored
+// 2888, 3855, 3877, 5936, 5947, 5948 and 12051 are in the link: DoisDesligamentos stands for the other three (11804,
+// 11809, 11812) with two calls. Each stand-in passes what the target's callers vary (the events, the two stored
 // arguments) as a variable, so binaryen folds none of them, and adds a constant somewhere, so no two are alike.
 //
 // vota::LegendaValida (target fn 5922) has two callers in the target: fn 11711, written, and fn 5500, the executable
@@ -39,14 +39,11 @@
 //
 // comum::md::CCargo::GetDetalheConsulta (target fn 1923, a thunk into binaryen's merge 6029, whose other member is
 // comum::md::CLocal::GetContingencia, fn 3724) has six direct callers in the target: fns 3074, 3819, 5604, 6999, 7787 and
-// 11253. 6999 is written; unit 232's roots stand for the other five (DetalhesConsulta, two calls).
+// 11253. 6999 and 5604 are written; unit 232's roots stand for the other four (DetalhesConsulta, two calls).
 //
 // Everything is declared through asm labels (a constructor returns `this` before binaryen runs), so this TU includes no
 // header and instantiates nothing.
 extern "C" {
-extern const char cpedetitulomesarioinicial_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioInicialE");
-extern const char cpedetitulomesariofinal_vt[] __asm__("_ZTVN5comum23CPedeTituloMesarioFinalE");
-extern const char cpedetitulomesariovotacao_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioVotacaoE");
 extern const char cerrotestetecladofim_vt[] __asm__("_ZTVN4vota12testeteclado20CErroTesteTecladoFimE");
 int w97_desligamento(void*, int) __asm__("_ZN4vota32CEstadoComDesligamentoAutomaticoC2Ei");
 int w97_legenda_valida(int, int) __asm__("_ZN4vota13LegendaValidaEht");
@@ -65,9 +62,6 @@ __attribute__((noinline)) int DoisDesligamentos(void* estado, void* outro, int e
 struct SCVotacaoStateAudioRoots {
     SCVotacaoStateAudioRoots()
     {
-        cvotacaostateaudio_sink = cpedetitulomesarioinicial_vt;
-        cvotacaostateaudio_sink = cpedetitulomesariofinal_vt;
-        cvotacaostateaudio_sink = cpedetitulomesariovotacao_vt;
         cvotacaostateaudio_sink = cerrotestetecladofim_vt;
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisDesligamentos);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&w97_legenda_valida);

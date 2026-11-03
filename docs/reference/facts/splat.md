@@ -601,7 +601,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -615,7 +615,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    o=$(awk -F'\t' '$1==9517 {print $7}' ledger/functions.tsv); awk -F'\t' '$1==9517 {print $1, $6, $8}' ledger/functions.tsv
    # 9517 skeleton addr
    (cd asmlift-wasm && for w in ../build/out/wasm/vota_web/vota_web_wasm.wasm ../target/vota_web_wasm.wasm; do pnpm --silent wasm fn $w $([ $w = ../target/vota_web_wasm.wasm ] && echo 9517 || echo $o) 2>/dev/null | /usr/bin/grep -E '^000055  i32' | cut -c1-24; done)
-   # 000055  i32.const 1421
+   # 000055  i32.const 4375     (ours, at ee4eefae: the slot moves as our table grows)
    # 000055  i32.const 6160
    /usr/bin/grep -E 'func:(9517|2056);' splat/symbol_addrs.txt | sed -E 's/^[^ ]* = (func:[0-9]+);.*(evidence:[a-z-]+).*/\1 \2/'
    # func:2056 evidence:table
@@ -624,9 +624,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
 
    Our table grows as units take functions' addresses, so landings keep the slot there. A change that drops
    address-taken functions before it would take the names, and the splat build would fail on both.
-2. **The merged bodies and their thunks: 1565, 2777, 3681, 5516, 12317, 12564; 2899, 10888, 11205; 6026, 10887,
-   11204.** Each group is one binaryen merge-similar-functions body and the thunks that call it. The match holds while
-   our link merges functions whose differing operands give the shared body the target's parameters
+2. **The merged bodies and their thunks: 1565, 2777, 3681, 5516, 10362, 10369, 10374, 12317, 12564; 2899, 10888, 11205;
+   6026, 10887, 11204.** Each group is one binaryen merge-similar-functions body and the thunks that call it. The match
+   holds while our link merges functions whose differing operands give the shared body the target's parameters
    (`src/units/README.md` "Pending members", the merge-thunk bullet). A landing that adds a member with another
    differing operand, or takes one away, can reshape the body and its thunks. The target's callers of each body, and
    their verdicts:
@@ -637,26 +637,26 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    # 2899 ;; callers (4): 3607 3740 10888 11205
    # 6026 ;; callers (2): 10887 11204
    for i in 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204; do awk -F'\t' -v i=$i '$1==i {printf "%s %s\n", $1, $5}' splat/scan.tsv; done | awk '{v[$2] = v[$2] " " $1} END {for (k in v) print k ":" v[k]}' | sort
-   # differs: 10362 10369
-   # match: 1565 2777 3681 5516 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204
-   # unresolved: 10374
+   # match: 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204
    ```
 
-   A unit that matches 10362, 10369 or 10374 adds a member to 1565's body; 3607 and 3740 matched with unit 163 and gave
-   2899's body the target's four callers. Our link's index of each body (`ours` in the scan) and of its callers moves at
-   every landing, so read the members by name: the scan's `ours` for the three, then their callers in our link
-   (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each caller:
+   10362, 10369 and 10374, the D0 thunks of the three `api::CDataTextFmt<comum::(anonymous
+   namespace)::CComparecimentoMesariosDS>` (unit 97), matched with fn 10388 and added three members to 1565's body; 3607
+   and 3740 matched with unit 163 and gave 2899's body the target's four callers. Our link's index of each body (`ours`
+   in the scan) and of its callers moves at every landing, so read the members by name: the scan's `ours` for the
+   three, then their callers in our link (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each
+   caller:
 
    ```sh
    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
-   # at 182dc6c1: 2171 func[11683]: 2171 func[2659]: 2171 func[3577]: 2171 func[5560]: 2171 func[9933]: 2752 func[11317]: 2752 func[11323]: 2752 func[3660]: 2752 func[3790]: 5984 func[11315]: 5984 func[11322]:
+   # at ee4eefae: 1469 func[11035]: 1469 func[11042]: 1469 func[11048]: 1469 func[11719]: 1469 func[2675]: 1469 func[3608]: 1469 func[5562]: 1469 func[9963]: 2781 func[11352]: 2781 func[11359]: 2781 func[3697]: 2781 func[3905]: 6004 func[11351]: 6004 func[11358]:
    ```
 
-   1565's body (2171 there) has five members: the D0s of `CLedFieldMT`, `CLineField` and `api::CCutFieldPaper`, and two
-   `api::CDataTextFmt<…>` D0s, from `cformbuilder.cpp.o` and unit 79's roots object; the three
+   1565's body (1469 there) has eight members: the D0s of `CLedFieldMT`, `CLineField` and `api::CCutFieldPaper`, two
+   `api::CDataTextFmt<…>` D0s, from `cformbuilder.cpp.o` and unit 79's roots object, and the three
    `CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>` D0s of the `cpedetitulomesario*.cpp` objects
-   make it eight once they land. 2899's (2752) are the D2s of `api::CFormPart`, `comum::CParteEleitores` and the two
-   `comum::servico` classes, and 6026's (5984) the first two's D0s. When such a set changes, the bodies stop
+   (five members before those, at 182dc6c1). 2899's (2781) are the D2s of `api::CFormPart`, `comum::CParteEleitores` and
+   the two `comum::servico` classes, and 6026's (6004) the first two's D0s. When such a set changes, the bodies stop
    verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin whose
    name moved").
 
@@ -742,8 +742,10 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     twice, since binaryen inlines a function called once ([tool-traps.md](tool-traps.md) §X1). The rows that call 306
     (5161, 9052, 9504 and the others that stopped at `call 306 | call 2671`) leave `match` with it. 2671's line names
     `vector<int>`'s guard, the first of that body's twins in link order, since the root's guard is another body.
-    `src/app/roots_coderenv.cpp` (unit 229), first in `APP_OBJS`, holds `vector<char>`'s copies of `~vector` and
-    `__destroy_vector`, the same code, so 520's and 4967's match lines carry `vector<char>`'s names.
+    The link's copies of the three are unit 253's `mock/app/comum/cappinfobuilder.cpp.o`'s now, the same code at the
+    executable TU's rule, linked ahead of this root and of `src/app/roots_coderenv.cpp` (unit 229, whose `vector<char>`
+    twins of 520 and 4967 named their match lines before), so the lines carry `vector<unsigned char>`'s names
+    (`awk -F'\t' '$1==306 || $1==520 || $1==4967 {print $1, $11}' splat/scan.tsv`; the root's head comment).
 17. **5294, 1698, 5532 and 9873, by `src/app/roots_vector.cpp`, and 3792, 6043, 11585, 11621 and 11622, by two of
     them.** The first four are the executable TU's copies of
     `vector<comum::md::estadoaplicacao::CDadoCorrespondencia>`'s guard destructor, `~vector`,
@@ -820,7 +822,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     unmatched body's call: a landing that takes 5492 out, or makes 2416 another function's callee, takes 9258 out.
     Since unit 97 wrote fn 6999 and std::regex's `const char*` copies in `src/app/roots_cbasetype.cpp`, 2416 and 5492
     match, both from `cinputmenufield.cpp.o` (`splat/scan.tsv`'s object column), and 2416's line reads
-    `evidence:call` with no voter list: 9258 rests on a matched callee now.
+    `evidence:call` with no voter list: 9258 rests on a matched callee now. The parser's copies (2062 among them) come
+    from unit 299's `cqrcodeds.cpp.o` since, which replaced the tree root's stand-in for them with no row moving.
 24. **178, 194, 358, 857, 1249, 1399, 1553, 2240, 2250, 4669, 4727, 5906, 8084, 9872, 10145, 11257 and 11401, by the
     place of `mock/app/comum/cappinfobuilder.cpp`'s object; 536, 1558, 1699, 1711, 3923 and 9868, by two data lines
     as well.** Unit 253 compiles that file at the executable TU's rule and links its object second, in `VOTA_WEB_OBJS`,

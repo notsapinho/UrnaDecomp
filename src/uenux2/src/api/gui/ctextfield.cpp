@@ -74,4 +74,20 @@ void CTextField::Move(const SPoint& posicao)
     }
 }
 
+// Target fn 940, one body binaryen shares with CTextBox::SetStatus; vota::CMostraQRCodeBU::AjustaTela (fn 5982) calls
+// it seven times. Its line, below Move, is a choice (no record).
+void CTextField::SetCorTexto(TColor cor)
+{
+    if (cor == m_corTexto) {
+        return;
+    }
+
+    m_corTexto = cor;
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
+}
+
 } // namespace api

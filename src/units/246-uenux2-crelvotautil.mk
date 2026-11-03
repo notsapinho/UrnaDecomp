@@ -51,7 +51,8 @@
 # Not written: CriaCabecalho (fn 5977) and its lambda's slots (2881, 12000 to 12002).
 #
 # Roots: 246-uenux2-crelvotautil-roots.cpp holds the caller stand-in of unit 31's api::CPaperFormBuilder::Show (fn
-# 3671), whose target callers 5591 and 11902 are not written (5592, unit 287's, is in the link); unit 31's fragment has
+# 3671), whose target caller 11902 is not written (5592, unit 287's, and 5591, unit 123's, are in the link); unit 31's
+# fragment has
 # Show's paragraph and
 # says why the stand-in is here (src/units/README.md "Landing a unit" item 2).
 #

@@ -74,9 +74,9 @@
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 is written and matched since too, in unit 156;
-# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
-#   unit 156): callees with no name (455 has one since unit 237, 576 since unit 165, 502 since unit 220); CTesteTeclado
-#   is unit 217's;
+# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12040; 12038, ProcessInput, matches since in unit
+#   156, and 12051, ProcessInput, in unit 37): callees with no name (455 has one since unit 237, 576 since unit 165, 502
+#   since unit 220); CTesteTeclado is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
@@ -92,7 +92,7 @@
 #   CMostraQRCodeCertificado's and this one's here), and 1564,
 #   2888 (unit 37's), 12057, 12059 and 12060 match with 3877. The constructor copies CTelasVota's +36 through
 #   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. The roots stand in for its
-#   target callers 12051 and 12055 (12034, the third, is in the link since, unit 156), and its vtable has no sink:
+#   target caller 12055 (12034 and 12051 are in the link since, units 156 and 37), and its vtable has no sink:
 #   GetInst stores it.
 # - CReinicioVotacao::ProcessInput (fn 11834): Read(), then CONFIRMA logs and goes to CDefineRotaPosReinicio, BRANCO
 #   logs and goes to CMaisInformacoes with this state; each log a vota::CLogVota member binaryen inlines (GetInst, fn 184,

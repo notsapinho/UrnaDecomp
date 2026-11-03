@@ -101,8 +101,14 @@ void CPedeDigitalMesario::ProcessInput()
     }
 }
 
-// (original lines 122-301: content not recovered)
-#line 302
+// (original lines 122-295: content not recovered)
+#line 296
+void CPedeDigitalMesario::FinishState()
+{
+    api::CPolySingleton<api::IFingerScanner>::instance().Slot7(0);
+    api::CPolySingleton<api::IFingerScanner>::instance().Slot6();
+}
+
 const IControladorRegistraMesarios& CPedeDigitalMesario::GetControlador()
 {
     return api::CPolySingleton<IControladorRegistraMesarios>::instance();

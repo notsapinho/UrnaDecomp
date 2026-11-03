@@ -16,7 +16,11 @@
 # (CDefineRotaPosReinicio::ProcessInput) and fn 10327 (comum::CGestorDadoMesario::StartState, which builds unit 135's
 # three comum::IGestorDadoMesario states through their GetInst, inlined: that unit's fragment has the evidence; its
 # record, cgestordadomesario.cpp:35 column 32, is the controller's instance() bound to a reference, a chosen spelling of
-# that length). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for.
+# that length), and fn 10388 (comum::CPedeTituloMesario::StartState, the same switch on the controller's slot 6, its
+# cases 1, 2 and 3 over the GetInst of unit 97's CPedeTituloMesarioInicial, Votacao and Final, inlined, in the target's
+# block order: that unit's fragment has their evidence; its record, cpedetitulomesario.cpp:33 column 32, takes the same
+# spelling; 186 over 2061 rows before step 9, all operand-only, the statics' addresses, then a match).
+# 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for.
 # vota::CQuerReimprimirZeresima landed its head, destructor and statics first, and its GetInst since (below). The
 # heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119

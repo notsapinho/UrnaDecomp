@@ -1,21 +1,20 @@
 # uenux2 comum dados callers: the stand-ins of comum members whose files landed units compile, in
 # 232-uenux2-app-comum-dados-callers-roots.cpp. No source of its own: each member is written in its file, and that file's
 # fragment has a paragraph on it (src/units/README.md "Landing a unit" item 2): md/processoeleitoral/ccargo.cpp and
-# cconfiguracaoeleicao.cpp (unit 88: 1923, 3775 and the copy constructor of std::vector<md::CCargo>, 2289) and
+# cconfiguracaoeleicao.cpp (unit 88: 1923 and 3775) and
 # md/candidatura/ccandidatura.cpp (unit 89: std::vector<md::CDadosCandidato>::__init_with_size, 2870). The roots declare
 # their callees through asm labels and include no header, so they emit no TSE code: no match comes from this object.
 #
 # The stand-ins, each for the target callers its comment names, none of them written; each goes when they are in the
 # link:
-# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 3819, 5604, 7787 and 11253 (6999, the
-#   sixth caller, is in the link and calls it once). ccargo.cpp's own calls are inlined by clang, so without these the
-#   link drops 1923's body. With it in the link, binaryen merges it with md::CLocal::GetContingencia (3724, unit 89)
-#   into one body as the target's 6029 does, and 1923, 3724 and 6029 match (fragments 88 and 89).
+# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 3819, 7787 and 11253 (6999 and 5604,
+#   unit 155's written Gera, are in the link and call it once each). ccargo.cpp's own calls are inlined by clang, so
+#   without these the link drops 1923's body. With it in the link, binaryen merges it with md::CLocal::GetContingencia
+#   (3724, unit 89) into one body as the target's 6029 does, and 1923, 3724 and 6029 match (fragments 88 and 89).
 # - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false, and 11629,
 #   which passes true; the stand-in passes both.
-# - CopiaCargos: one call of std::vector<md::CCargo>'s copy constructor (2289), for 11371 (1953 and 5777, the other
-#   callers it stood for, are in the link with unit 280); GetCargos is another caller. Without it binaryen inlines 2289
-#   into GetCargos, which then differs (fragment 88).
+# CopiaCargos, one call of std::vector<md::CCargo>'s copy constructor (2289), went: the last caller it stood for,
+# 11371, is in the link (fragment 299, through md::CEleicaoPE's constructor), as 1953 and 5777 are (unit 280).
 # - Suplentes: one call of std::vector<md::CDadosCandidato>::__init_with_size (2870), for 5808, 5952 and 7787;
 #   md::CCandidatura's constructor (5660) is the other caller. Without it binaryen inlines 2870 into 5660, which then
 #   differs (fragment 89).

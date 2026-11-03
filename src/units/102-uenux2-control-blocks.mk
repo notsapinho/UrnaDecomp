@@ -132,7 +132,8 @@
 #   unit 31).
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
-#   another TU's anonymous namespace, so they land with fns 6627 and 10388.
+#   another TU's anonymous namespace, so they come with fns 6627 and 10388. 10388 is written (unit 104) and its three
+#   blocks are in the link; their __get_deleter rows still differ (unit 97's fragment).
 # 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
 # in the builder, match since from unit 121's roots, which name the one cinputmenufield.h declares now.
 # Paths relative to src/uenux2. citensmenuvota.cpp holds the out-of-line destructor the block of the fifth item needs.

@@ -8,9 +8,10 @@
 // 212). fn 3872 hands DetalheCandidato's or DetalheCandidatoZE's address (table slots 1636 and 1635) to
 // api::CPaperFormBuilder::AddTextField (fn 604), which makes a report line's text field of it.
 //
-// Written: DetalheCandidatoZE (fn 11973) and DetalheCandidato (fn 11972, no record of its own). The other members are not
-// reconstructed: their lines stay blank, past the end of this file. src/units/183-uenux2-relatorios.mk
-// lists what the bytes decide and what is chosen.
+// Written: DetalheCandidatoZE (fn 11973), DetalheCandidato (fn 11972, no record of its own) and LinhaPartido (fn 11261,
+// no record: src/units/296-uenux2-relatorios-impressao.mk has it). The other members are not reconstructed: their lines
+// stay blank, past the end of this file. src/units/183-uenux2-relatorios.mk lists what the bytes decide and what is
+// chosen.
 //
 // Chosen: DetalheCandidato's name and its lines (11972 is DetalheCandidatoZE's body with the vote count printed and no
 // assert), where the class is closed, the members' access and that they are defined in the class.
@@ -20,7 +21,10 @@
 
 #include "api/util/eueasserterror.h"
 #include "app/comum/dados/ccandidaturas.h"
+#include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/ccargos.h"
+#include "app/comum/dados/cpartidos.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
@@ -29,7 +33,7 @@ template <typename RDV, typename DSAptos>
 class CDataSourcesRelatorio {
 public:
 
-    // (original lines 32-105: content not recovered)
+    // (original lines 36-105: content not recovered)
 #line 106
     static std::string DetalheCandidato()
     {
@@ -80,6 +84,21 @@ public:
         ASSERT(qtd == 0u, api::EUA_DATASOURCESRELATORIO_DETALHECANDIDATOZE_VOTO);
         return std::format("  {}{}{:0{}}", nome, std::string(5 - cargo.GetNumeroDigitos(), ' '), numero,
                            cargo.GetNumeroDigitos());
+    }
+
+    static std::string LinhaPartido()
+    {
+        const md::TCargoID idCargo = CCargos::GetInst().GetCurrent().GetID();
+        const md::CPartido* partido = CPartidos::GetInst().GetCurrent();
+        const int numero = partido->GetNumero();
+        std::string texto =
+            std::format("{}: {} - {}\n", md::CTradutorFrase::Traduz("<PLSN>"), numero, partido->GetSigla());
+        const RDV& rdv = RDV::GetInst();
+        if (rdv.Legenda(idCargo, numero) != rdv.Partido(idCargo, numero)) {
+            texto += CCargoDSLabelRelatorio::HeaderDetalhe();
+            texto += "\n";
+        }
+        return texto;
     }
 };
 

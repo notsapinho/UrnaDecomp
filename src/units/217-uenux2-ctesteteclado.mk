@@ -133,7 +133,7 @@
 # api/gui/cinteractiveform.h moved into ctesteteclado.h, whose members name both, to keep StartState's record lines.
 # Other lines chosen.
 # The roots give fns 940 and 3854 the second call site the target gives them (ProcessInput, 11804, calls both; fn 5982,
-# not written, calls 940): binaryen would inline each into StartState, its one caller in our link.
+# unit 37's, in the link now, calls 940): binaryen would inline each into StartState, its one caller in our link.
 CTESTETECLADO_SRCS := src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp
 UENUX2_SRCS += $(CTESTETECLADO_SRCS)
 # The member not reconstructed: 217-uenux2-ctesteteclado-pending.cpp gives the vtable its trapping body, compiled at

@@ -45,7 +45,7 @@ void IPedeTituloMesario::StartState()
     m_form->Slot2();
 }
 
-std::shared_ptr<api::IForm<api::IScreen>> IPedeTituloMesario::GetTelaEleitor()
+std::shared_ptr<api::IForm<api::IScreen>> TelaEleitorRegistroMesarios(int /*periodo*/)
 {
     api::CFormBuilder builder;
     builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_MODO |

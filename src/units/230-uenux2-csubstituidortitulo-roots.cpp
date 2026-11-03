@@ -4,7 +4,8 @@
 // labels with the object's signatures, so the rule needs no header.
 // - w230_titulos stands for fns 1543 and 5579, which call CRelUtil::ImprimeTitulos with the UF (fn 3689); its third
 //   caller, fn 5584, is written (crelutil.cpp).
-// - w230_titulos_local stands for fns 5591 and 12110, which call the overload without the UF (fn 5584).
+// - w230_titulos_local stands for fn 12110, which calls the overload without the UF (fn 5584); its other caller,
+//   fn 5591, is in the link.
 // - w230_abertura stands for fns 12105 and 12110, which call CRelUtil::ImprimeAberturaFechamento (fn 3688).
 // Each calls twice, with arguments the target's callers do not fold.
 extern "C" {

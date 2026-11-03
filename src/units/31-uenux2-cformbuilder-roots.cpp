@@ -23,9 +23,9 @@
 //                     key's name): its second call site, beside 2243's. It leaves the colours at their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
-//   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264, and of 2775 (5591 and 12110). Its
-//                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours. The
-//                     EStyle and alignments vary as theirs do
+//   RelatorioA        5579, 5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, which calls
+//                     them too, is in the link, unit 296's). Its form is a parameter: their callers zero the vector
+//                     in line, and it takes no constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
 #include <functional>

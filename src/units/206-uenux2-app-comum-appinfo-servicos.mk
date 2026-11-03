@@ -107,7 +107,7 @@
 #   theirs, whose records are
 #   cfileasn.h's reader lines, which hold code now (docs/reference/facts/placing.md P1).
 #
-# Not written: Carrega's other callers, 2273 and 11572, and 1941's builders 10243 and 10212 (unit 253's, written and not
+# Not written: Carrega's other caller 11572 (2273 is written, unit 296) and 1941's builders 10243 and 10212 (unit 253's, written and not
 # in the link; 1941's caller 3333 is written, unit 205): the roots stand in for them.
 #
 # Chosen, no evidence names them: m_origem and m_turno, that each class, not the template, holds the origin, the
@@ -118,7 +118,7 @@
 # the throws, the order of CServicoEstadoGeral's three members and of the template's two, and WriteToFile's lines.
 #
 # Roots (206-uenux2-app-comum-appinfo-servicos-roots.cpp): two stand-ins give 1941 three call sites that read its
-# result, for three of its target callers (2273, 10243, 11572; 3897 and 3333 are in the link); the three derived classes'
+# result, for two of its target callers (10243, 11572; 3897, 3333 and 2273 are in the link); the three derived classes'
 # constructors (table slots 438, 431 and 434) and the four saves (slots 422, 440, 433 and 436) have their addresses
 # taken, for 10243's and 10212's slots, which keeps each out of line whatever its direct callers (6039, in the link,
 # calls 3787 and 5329). The constructors store their classes' vptrs, so the vtables' sinks went. The roots declare

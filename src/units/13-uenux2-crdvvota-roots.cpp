@@ -6,7 +6,7 @@
 // CreateInst too. CVoto::operator<=> is not rooted: its only caller is Posicao, which wasm-opt inlines it into.
 // The stand-ins below give the md members their target callers' call sites, none of which is written:
 // - w13_comparecimento calls comum::CRdvVota::Comparecimento() (target fn 1269), standing for its target callers
-//   1956, 12098 and 12110 (none written); vota::impl::CInformacaoThreadOperador's slot 16 (fn 10569,
+//   12098 and 12110 (neither written; 1956, unit 37's, is); vota::impl::CInformacaoThreadOperador's slot 16 (fn 10569,
 //   unit 50), vota::CQuerReimprimirZeresima::StartState (fn 11849, unit 104), vota::CReinicioVotacao::StartState
 //   (fn 11835, unit 138), fn 5972 (unit 199) and vota::CControladorRegistraMesariosVota's slot 5 (fn 10797, unit 119)
 //   are the other call sites. md::CVotosEleicoesVota::Comparecimento

@@ -17,7 +17,6 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
-#include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
 
@@ -112,18 +111,6 @@ void CReimprimindoResumoZeresima::StartState()
 }
 
 } // namespace vota
-
-namespace comum {
-
-// CPedeTituloMesario::StartState: fn 10388 (4789 B), records cpedetitulomesario.cpp:33,
-// cpedetitulomesariofinal.cpp:45, cpedetitulomesarioinicial.cpp:44, cpedetitulomesariovotacao.cpp:44, callees with no
-// name: 180, 203, 301 and 728 match now, and 1151 (unit 121's); 10388 is not read further.
-void CPedeTituloMesario::StartState()
-{
-    __builtin_trap();
-}
-
-} // namespace comum
 
 namespace vota {
 

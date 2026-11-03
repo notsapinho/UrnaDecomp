@@ -49,8 +49,19 @@
 # there is no hand line). Chosen: the name, its being a member (it reads the class's +168, private in cestadogeral.h),
 # the file (the class's own) and its line.
 #
+# comum::md::estadoaplicacao::CEstadoGeral::GetDadosQRCode (target fn 5636, 3903 B), matched, in cestadogeral.cpp: the
+# state as key and value pairs for comum::CQRCodeDS (fragment 299, which has the class's evidence), each pushed with
+# push_back(std::make_pair(tag, value)): a value that is a string member is copied into the make_pair temporary, whose
+# tag the target then reloads after the copy's out-of-line call and measures with strlen, while a computed value's tag
+# is folded (cestadogeral.h lists the tags and their conditions). Evidence for the place: in use band 2 it links between
+# 5637 (the constructor, not written) and 5635 (RecuperarCertificado, record line 147, not written), stretch 804 of
+# ledger/tu-clusters.tsv (label cestadogeral.cpp), so it is defined before line 147; its lines there are a choice. idPE
+# is formatted with std::to_string(unsigned int) (fn 327), so cestadogeral.h's idPE is uedword now; every other object
+# compiles to the same bytes with the header edits (cmp of each object before and after). Whole link, before steps 7
+# to 9: 104 over 1771 rows, all operand-only. Chosen: the name, its being a member (it reads the members), the locals.
+#
 # 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160 and 7306 for 3705 (10710, unit 277's, is in the
-# link), 5480 (twice) for 5484.
+# link), 5480 (twice) for 5484, 3059 for 5636 (11200, unit 123's, is in the link).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
 UENUX2_SRCS += $(LEFTOVERS_UENUX2_SRCS)

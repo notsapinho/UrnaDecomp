@@ -10,12 +10,12 @@
 // The callers each instance stands for:
 //   3730: 11411 (10270 is written). 3726, 3727 and 3736 need none: their callers 11390 and 11394, 11391 and 11395, and
 //   11424 and 11451, are written.
-//   3737: 11452 (11381 and 11423 are written). 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
-//   2275: 10266, 10273, 11587 (10271, 11458). 5688: 11375 (11359 is written).
+//   3737 needs none: its callers 11381, 11423 and 11452 are written. 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
+//   2275: 10266, 10273, 11587 (10271, 11458). 5688 needs none: its callers 11359 and 11375 are written.
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
-//   5715, 5716: 11452 (11423 is written).
+//   5715 and 5716 need none: their callers 11423 and 11452 are written.
 //   5828: 11445 (11373 is written).
 // w107_dados gives a constructor its second call site, each stands for: 5672 5741, 3823 2725 and 11629. 3712 needs none:
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
@@ -35,7 +35,6 @@
 #include "app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.h"
 #include "app/comum/dados/md/municipiozona/ccomplementomunicipio.h"
 #include "app/comum/dados/md/municipiozona/cmunicipio.h"
-#include "app/comum/dados/md/processoeleitoral/cnomescargo.h"
 #include "app/comum/md/ccabecalhoentidade.h"
 #include "app/comum/md/ccabecalhopacote.h"
 #include "app/comum/md/cseguranca.h"
@@ -93,14 +92,10 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
 {
     using namespace comum::md;
     using namespace comum::md::estadoaplicacao;
-    d = w107_desconverte<ModuloComplementosMunicipios::ComplementoMunicipio, CComplementoMunicipio>(d, e);
-    d = w107_desconverte<ModuloEleicao::NomesCargo, CNomesCargo>(d, e);
     d = w107_desconverte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
     d = w107_desconverte<ModuloCandidatos::DadosCandidato, CDadosCandidato>(d, e);
-    d = w107_desconverte<ModuloLocal::SecaoEleitoral, CSecaoEleitoral>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::Seguranca, CSeguranca>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
-    d = w107_desconverte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_converte<ModuloTiposResultadosEcoUrna::Urna, CUrna>(d, e);

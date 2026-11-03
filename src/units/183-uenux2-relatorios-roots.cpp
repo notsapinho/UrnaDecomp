@@ -5,6 +5,10 @@
 //   and 11972): their one user, fn 3872 (callers 11946 and 12110), passes their addresses, table slots 1635 and 1636, to
 //   api::CPaperFormBuilder::AddTextField (fn 604); nothing calls them directly. Taking each address here instantiates
 //   them in this object and puts them in the table.
+// - The same instance's LinhaPartido (fn 11261; the instance by its call of CRdvVota::GetInst, fn 555, and by band 1,
+//   where it follows 11260, that instance's recorded TrailerProporcionalPartido): its one user, fn 12110
+//   (vota::CGeraBU's slot 2, not written), passes its address, table slot 2921; nothing calls it directly. Taken here
+//   the same way; it goes when 12110 lands.
 // - comum::CGeradorRelPU::AdicionaParametro (fn 677) has one caller in the target, fn 11902 (vota::CImpressaoPU's slot
 //   2), which calls it 22 times (awk -F'\t' '$2==677' ledger/callgraph.tsv). w183_parametros stands for it and calls it
 //   twice, so binaryen keeps it out of line.
@@ -49,6 +53,7 @@ struct SW183Roots {
     {
         w183_sink_fonte = &DataSources::DetalheCandidatoZE;
         w183_sink_fonte = &DataSources::DetalheCandidato;
+        w183_sink_fonte = &DataSources::LinhaPartido;
         w183_sink_parametros = w183_parametros;
         w183_sink_vtable = w183_relpu_vt;
     }

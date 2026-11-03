@@ -26,7 +26,8 @@
 #   IAjusteInicial>); step 9 renames the match line when a landing moves the first member.
 # - has<T> 1954 (comum::CCalculaCV) and 2886 (vota::IQRCodeBUDS) are 19-B thunks of another merged body, 6057, for
 #   20-character type names. The three match since the roots' w100_tem_qrcode calls has<vota::IQRCodeBUDS> twice, for its
-#   two unwritten target callers (1956, GetQRDSInst in cmostraqrcodebu.cpp, and 14478): with no copy of it in the link,
+#   two target callers (1956, GetQRDSInst in cmostraqrcodebu.cpp, written since, unit 37's, and 14478, not written):
+#   with no copy of it in the link,
 #   crelutil.cpp.o's has<CCalculaCV> stayed a whole body (`differs` against the thunk 1954). Its copy is the roots
 #   object's, at APP_CXXFLAGS (no tree object instantiates it); compiled at src/app/vota's flags (-O3 -std=c++23, strict
 #   aliasing), the roots object gives that function the same code (wasm-objdump -d, calls and constants masked).

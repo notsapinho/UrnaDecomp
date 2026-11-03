@@ -1,6 +1,7 @@
 #include "app/comum/dados/asn/processoeleitoral/cconversorprocessoeleitoral.h"
 
 #include <algorithm>
+#include <iterator>
 #include <format>
 
 #include "app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.h"
@@ -10,7 +11,7 @@
 
 namespace comum::asn {
 
-// (original lines 13-26: content not recovered)
+// (original lines 14-26: content not recovered)
 #line 27
 md::CProcessoEleitoralDTO CConversorProcessoEleitoral::DoDesconverte(const TEntidade& entidade) const
 {
@@ -28,12 +29,12 @@ md::CProcessoEleitoralDTO CConversorProcessoEleitoral::DoDesconverte(const TEnti
     const ecourna::app::dados::ETipoIdentificadorEleitor identificadorPrincipal =
         conversorTipoIdentificador.Desconverte(entidade.get_tipoIdentificadorPrincipalEleitor());
     std::vector<ecourna::app::dados::ETipoIdentificadorEleitor> identificadores;
-    for (const auto& tipo : entidade.get_tiposIdentificadoresPermitidos()) {
-        identificadores.emplace_back(conversorTipoIdentificador.Desconverte(tipo));
-    }
+    std::transform(entidade.get_tiposIdentificadoresPermitidos().begin(),
+                   entidade.get_tiposIdentificadoresPermitidos().end(), std::back_inserter(identificadores),
+                   [&conversorTipoIdentificador](const auto& tipo) {
+                       return conversorTipoIdentificador.Desconverte(tipo);
+                   });
 
-    // (original lines 47-48: content not recovered)
-#line 49
     if (std::find(identificadores.begin(), identificadores.end(), identificadorPrincipal) == identificadores.end()) {
         throw CUeComumDadosError(EUE_COMUM_DADOS_8185,
             std::format("Identidade principal ({}) ausente na lista de identidades", static_cast<int>(identificadorPrincipal)));

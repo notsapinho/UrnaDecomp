@@ -1,6 +1,6 @@
 // Reconstruction: comum::asn::CConversorCargo::DoDesconverte (target fn 11373) and DesconverteTipoCargo, which binaryen
-// inlines into it (its frame opens inside 11373's). Their throws sit on their records' lines (69 and 83); where each
-// function starts is a choice, and so are the blank lines above them. 191-uenux2-cconversorcargo.mk has the rest.
+// inlines into it (its frame opens inside 11373's), and the constructor. The throws sit on their records' lines (69 and
+// 83); where each function starts is a choice, and so are the blank lines. 191-uenux2-cconversorcargo.mk has the rest.
 #include "app/comum/dados/asn/processoeleitoral/cconversorcargo.h"
 
 #include <format>
@@ -12,8 +12,12 @@
 
 namespace comum::asn {
 
-// (original lines 15-44: content not recovered)
-#line 45
+// (original lines 15-40: content not recovered)
+#line 41
+CConversorCargo::CConversorCargo(md::ETipoAbrangencia abrangencia) : m_abrangencia(abrangencia)
+{
+}
+
 md::CCargo CConversorCargo::DoDesconverte(const TEntidade& entidade) const
 {
     const CConversorCodigoCargoConsulta conversorCodigo;

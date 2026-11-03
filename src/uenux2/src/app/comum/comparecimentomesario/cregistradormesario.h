@@ -34,6 +34,11 @@ public:
     std::size_t QuantidadeMesariosInicio() const;
     std::size_t QuantidadeMesariosFim() const;
 
+    // Hands the current record to the servico, after a test that the map holds one: its record (cregistradormesario.cpp:85,
+    // the throw's) names it, and fn 10337 (IGestorDadoMesario::StartState) holds it inlined by binaryen, a 16-byte frame of
+    // its own. Its being public, called with no wrapper, is chosen.
+    void SaveCurrentInternal();
+
 private:
     CRegistradorMesario() : CDataMap("CRegistradorMesario") {}
 

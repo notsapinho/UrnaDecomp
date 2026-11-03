@@ -52,6 +52,11 @@ const md::estadoaplicacao::CEstadoGeralVota& CAppInfo::GetVota(EUrnaTurno turno)
     return GetEstado("GetVota", m_vota[IndiceTurno("GetVota", turno)]);
 }
 
+md::estadoaplicacao::CEstadoGeralGap& CAppInfo::GetGap(EUrnaTurno turno)
+{
+    return GetEstado("GetGap", m_gap[IndiceTurno("GetGap", turno)]);
+}
+
 const md::estadoaplicacao::CEstadoGeralGap& CAppInfo::GetGap(EUrnaTurno turno) const
 {
     return GetEstado("GetGap", m_gap[IndiceTurno("GetGap", turno)]);
@@ -101,7 +106,12 @@ void CAppInfo::SalvaGeralExterno() const
     SalvaGeral(FLASH_EXTERNA, m_geral);
 }
 
-// (original lines 139-452: content not recovered)
+md::estadoaplicacao::CEstadoGeral CAppInfo::LeGeralInterno() const
+{
+    return CServicoEstadoGeral(FLASH_INTERNA).Carrega();
+}
+
+// (original lines 149-452: content not recovered)
 #line 453
 bool CAppInfo::EhTreinamentoEleitor()
 {

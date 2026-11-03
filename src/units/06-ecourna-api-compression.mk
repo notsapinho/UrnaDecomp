@@ -88,9 +88,10 @@
 # 9518 has a name by `table`; it is `unresolved` on its callee 3526 (__parse_basic_reg_exp), which has none: 9518 is
 # 3526's one target caller (ledger/callgraph.tsv), so only 9518's own call would name it, and 5189, 2689 and 2688
 # below them wait the same way. No vptr anchors 9518 either: the target's const char* and __wrap_iter parsers
-# (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with
-# src/app/roots_cbasetype.cpp's copy matching 2062 each forms a same-shape pair with ours (pnpm wasm fingerprint
-# --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
+# (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with our copy matching 2062
+# (src/app/roots_cbasetype.cpp's when this was measured, app/comum/dados/cqrcodeds.cpp's object's now) each forms a
+# same-shape pair with ours (pnpm wasm fingerprint --depth 0), so the vptr anchors nothing (docs/reference/splat.md,
+# `vptr-anchor`).
 # DoAdd (9538) is written and does not match: 582 rows over 2643, the 561 replaced all
 # operand-only, 7 inserted and 14 deleted, measured after unit 206 gave CFile's destructor the catch DoAdd holds
 # inlined. Its callees in the target 891 and 1053 pair with libc++'s system_category

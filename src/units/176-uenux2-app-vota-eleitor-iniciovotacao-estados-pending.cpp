@@ -1,26 +1,16 @@
 // Pending members of the iniciovotacao states of src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk, each
 // reached only through its vtable. The classes' vtables need every slot defined; these bodies are NOT the target's, they
 // trap. Move each into its class's .cpp when it is reconstructed, and delete this file with the last. StartState is the
-// key function of three of the vota::CImpressao* states, so this object emits their vtables and typeinfos;
-// vota::CImpressaoVersaoPacotes's StartState (fn 11905) is written, in its class's .cpp.
+// key function of two of the vota::CImpressao* states, so this object emits their vtables and typeinfos;
+// vota::CImpressaoVersaoPacotes's StartState (fn 11905) and vota::CImpressaoEstadoUrna's (fn 11911) are written, in
+// their classes' .cpp.
 //
-// - vota::CImpressaoEstadoUrna::StartState (target fn 11911, slot 2, 565 B): it builds a
-//   comum::CRelatorioTesteImpressora (fn 5586, written: src/units/123-uenux2-crelatoriotesteimpressora.mk), logs through
-//   CLogVota, formats "{}ª via" over GetVota()'s copies of this report plus one, hands the report "estado da urna"
-//   and that text to fn 5591 (8678 B, comum::CImprimirExtratoCarga's printing, not written), adds one to the count,
-//   calls fn 491 and goes to vota::CMaisInformacoes (fn 1280). It waits for 5591, which no route names.
 // - vota::CImpressaoListaEleitores::StartState (fn 11908, 4670 B) and vota::CImpressaoPU::StartState (fn 11902, 6548 B),
 //   not read for this unit.
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoestadourna.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaolistaeleitores.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaopu.h"
 
 namespace vota {
-
-void CImpressaoEstadoUrna::StartState()
-{
-    __builtin_trap();
-}
 
 void CImpressaoListaEleitores::StartState()
 {

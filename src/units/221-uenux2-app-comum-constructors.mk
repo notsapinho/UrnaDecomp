@@ -13,7 +13,7 @@
 #   optional's null byte and flag: std::optional<int>'s two constructors. The parameters' order is each wasm
 #   signature's.
 # - Out of line, and 2738 in another TU than 2730 and 2731. The target keeps their calls: 2730 and 2731 from 10401 and
-#   10402 (unit 91's DAO), and 10337 (not written), 2738 from 2730, 2731, 3614 and 10313. Defined in its class, each is
+#   10402 (unit 91's DAO), and 10337 (unit 135, written), 2738 from 2730, 2731, 3614 and 10313. Defined in its class, each is
 #   inlined where the target calls it: compiled alone at the tree's flags, the DAO's TU against a header that defines
 #   all three in their classes calls none of them, and ccomparecimentomesario.cpp against one that defines only the
 #   key's constructor there calls __init_copy_ctor_external twice where the target's 2730 and 2731 call 2738. Out of
@@ -101,8 +101,10 @@
 # its place in clogvota.cpp; the `if` spellings; the lines but the records' (the destructor, the statics, the builders,
 # the constructor and GetInst above StartState, ProcessInput between FinishState's records and ProcessTick's, the band's
 # order).
-# Pending (221-uenux2-app-comum-constructors-pending.cpp says what each waits for): FinishState (10453: written with
-# comum::CPedeDigitalMesario::FinishState, 10315, it forms 6012) and ProcessTick (10451);
+# FinishState (10453) is written at its records' lines (104 and 105, column 5: instance<api::IFingerScanner>() with slot 7
+# given 0, then slot 6); with comum::CPedeDigitalMesario::FinishState (10315, unit 135) it forms binaryen's 6012, as in
+# the target, and the three match.
+# Pending (221-uenux2-app-comum-constructors-pending.cpp says what it waits for): ProcessTick (10451);
 # BiometriaMesarioPresenteNosEleitores (3614) is declared and not written. The stand-in for 5396's other caller (10443)
 # and the vtable sinks of the two states 10451 holds inlined are in unit 278's roots, beside those states' classes.
 #

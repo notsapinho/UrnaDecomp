@@ -5,7 +5,8 @@
 # (target fns 11748, 11735, 11731, 11704, 11701), each `return "<literal>";`, with their destructors, fns 884 and 883;
 # vota::CVotacaoStateAudio's destructor (1035) and the heads of its derived classes CConfirmaVotoEmCargo and
 # CConfirmaProporcional, all abstract. comum::CPedeTituloMesarioInicial, Final and Votacao: their D0 (3609), slot 9 and
-# the D2 they share with comum::IPedeTituloMesario (1378, unit 71's). vota::testeteclado::CErroTesteTecladoFim:
+# the D2 they share with comum::IPedeTituloMesario (1378, unit 71's), and since their GetInst, constructors, forms and
+# statics (below, "Written since"). vota::testeteclado::CErroTesteTecladoFim:
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
@@ -151,12 +152,52 @@
 # settle it: cconfirmavotoemcargo.cpp of eleitor/ lies among those records. The file names are the class-name
 # convention. Headers beside their sources are chosen. cerrotestetecladofim.cpp is the same rule in testeteclado/, where
 # the records of ctesteteclado.cpp and cprezeresima.cpp lie. The destructors' lines in
-# cvotacaostateaudio.cpp and the states' files are a choice, since no record gives one; the constructors' record lines
-# stay blank (:44 and :45 of the three cpedetitulomesario*.cpp). CPosixRWMutex's six throws sit on their records' lines.
+# cvotacaostateaudio.cpp and the states' files are a choice, since no record gives one; the constructors' records (:44
+# and :45 of the three cpedetitulomesario*.cpp) hold their lines (below). CPosixRWMutex's six throws sit on their
+# records' lines.
 # Which throw holds which literal is chosen from the messages: the code that loaded them is gone, and they stay in the
 # target's data. The six enumerators' values are chosen too (eueipcerror.h).
 #
 # Written since:
+# - comum::CPedeTituloMesarioInicial, CPedeTituloMesarioVotacao and CPedeTituloMesarioFinal: GetInst, the constructor
+#   and the operator's form of each, which unit 104's CPedeTituloMesario::StartState (fn 10388) holds inlined, one case
+#   of its switch each. Evidence, from 10388 (pnpm wasm fn): the test of s_inst (@1909540, @1909596, @1909568), new of
+#   28 bytes, a 96-byte frame of the constructor's own after it (binaryen inlined it), the old object deleted by a
+#   direct call of the D2 1378 and free (final, as unit 104's singletons), the unlock of s_mutex (@1909516, @1909572,
+#   @1909544) through fn 150. In that frame: the form's builder (fn 203 at +84), "Informe o título do mesário: " at {1,
+#   1}, AddClock (fn 728) at {33, 1}, "Quantidade de mesários registrados:" at {1, 3}, then a 24-byte api::CDataTextFmt
+#   over the file's anonymous CComparecimentoMesariosDS (RTTI: three typeinfo names of that text, one per file; vptrs
+#   1594036, 1594340, 1594188) with the format "{:02}" stored in place, a CTextFieldMT over it at {39, 3} (fn 1262)
+#   pushed with vector::push_back in place, vota::AdicionaCampoNumerico (fn 1151) with 12, 1 and {1, 2}, "CORRIGE:
+#   Encerrar  CONFIRMA: Prosseguir" at {1, 4} and GetInteractiveForm("", true) (fn 301); then fn 1255 (the voter's
+#   screen), comum::IPedeTituloMesario's constructor (fn 3608) with both, the vptr store, and the controller's slot 20,
+#   21 or 22 (LogaRegistrandoMesariosAntesVotacao, DuranteVotacao, AposVotacao, the header's names) through instance()
+#   at the record's line, column 5. The builder's code is in the constructor's frame, so clang inlined it:
+#   TelaPedeTituloMesario is in each file's anonymous namespace (a name of that file each). The data source's slot 2,
+#   GetText, holds its operator() inlined: CRegistradorMesario::GetInst (fn 815) and QuantidadeMesariosInicio (fn 3606,
+#   Inicial and Votacao: one body, fn 5387) or QuantidadeMesariosFim (fn 2727, Final: fn 10368), formatted as an
+#   unsigned argument (type code 6) with std::vformat. The adder over CDataTextFmt is a member template of
+#   api::CMTFormBuilder (cmtformbuilder.h says what is chosen). The voter's screen is
+#   comum::TelaEleitorRegistroMesarios, the second copy of fn 1255, with a parameter its body does not read:
+#   ipedetitulomesario.h has the three forms measured against it. Measured in the whole link (pnpm wasm score of 10388):
+#   186 over 2061 rows, all operand-only (the six statics' addresses), then a match at step 9; the statics are named by
+#   10388's votes, and their exit destructors match with them: 10379, 10378 (Inicial), 10372, 10371 (Final), 10366,
+#   10364 (Votacao), the pointers' through fn 3881, binaryen's shared body of the three, which our link forms too. The
+#   data sources' slot 2 (5387, 10368) and D2/D0 (10377, 10374; 10370, 10369; 10363, 10362: thunks into fns 1566 and
+#   1565) match; their control blocks' __get_deleter (10373, 10367, 10361) do not: the census pairs them with
+#   comum::CGravador*'s blocks (scan detail), and each compares the deleter's typeinfo name, whose text the three files
+#   share, which reads as why no name singles ours out (a reading, not traced). Band (ld_index in names.tsv): in each
+#   object the statics' destructors, then the D2, the D0 and slot 2, as the target's indices run. Chosen: the builder's
+#   and the data source's names and their being in the anonymous namespace, the data source being a class with a const
+#   operator() (CDataTextFmt's T is the class itself, by RTTI, and nothing of it is stored), std::size_t for the count,
+#   the destructor and slot 9 after GetInst, and every line but the records' (Final's record is one line lower: its gap
+#   above the constructor is a line longer). Not chosen: the statics are defined below GetInst, which names s_mutex
+#   first, so each object puts the mutex 24 bytes below the pointer, the target's .bss order (@1909516 and @1909540 for
+#   Inicial); defined above the constructor, the pointer came first. Measured on the whole link: no scan row moves
+#   either way, the statics' exit destructors keep their place in each object's function order, and step 9 renamed
+#   their `.2` lines to `.3`. The constructor keeps its record's line behind a gap. The three content-found D2/D0 match
+#   lines were first written crosswise (bodies alike but for the vtable constant) and are corrected by the vtables that
+#   hold their slots (@1594028, @1594180, @1594332).
 # - vota::CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061, slot 8), in cestadocomdesligamentoautomatico.cpp, its
 #   lambda's record at :44:45 the CPolySingleton<api::IPower>::instance() call of api::IPower::UsandoBateriaInterna
 #   (api/hwil/ipower.h). For another tick's id it calls slot 9, ProcessTickNaoDesligamento. With a time limit set and
@@ -267,7 +308,9 @@
 # So the target's copies over const char* and of the token iterator are uenux2's without strict aliasing and without
 # landing pads, though cinputmenufield.cpp, one of their users here, builds with strict aliasing, and the other,
 # cvotacaostateaudio.cpp, which builds without it (below), links after it; that flag is not changed here, and listing
-# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows.
+# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows. Since fragment 299's cqrcodeds.cpp, built
+# without strict aliasing, links ahead of cinputmenufield.cpp and gives the const char* parser's copies, the tree root
+# holds the token iterator's and std::regex_replace's alone (its comment).
 #
 # CVotacaoStateAudio's slots 7, 8 and 13 and its static helpers, written since (target fns 7029, 7010, 3139, 1455, 3143
 # and 1204), with the copies of api::CPolySingleton<T>::instance they call (1091, 2079) and has<ITextToSpeech> (3281).

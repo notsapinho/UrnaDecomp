@@ -35,6 +35,9 @@ public:
     const md::estadoaplicacao::CEstadoGeral& GetGeral() const;
     md::estadoaplicacao::CEstadoGeralVota& GetVota(EUrnaTurno turno = TURNO_ATUAL);
     const md::estadoaplicacao::CEstadoGeralVota& GetVota(EUrnaTurno turno = TURNO_ATUAL) const;
+    // The non-const overload: vota::IQRCodeBUDS::GeraPartes (inlined into target fn 1956) holds GetEstado's non-const
+    // instance for CEstadoGeralGap (record cappinfo.cpp:42) inlined, through this one. Out of line here, a choice.
+    md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno);
     const md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno) const;
     std::vector<std::string> GetCodigosCarga(EUrnaTurno turno) const;
     bool TemVota(EUrnaTurno turno) const;
@@ -49,6 +52,12 @@ public:
     // const are chosen.
     void SalvaGeralInterno() const;
     void SalvaGeralExterno() const;
+    // Target fn 2273: the general state read anew from the internal flash, a comum::CServicoEstadoGeral of origin 0 (fn
+    // 1941) and its Carrega (fn 3791). It reads nothing of the object, and binaryen drops the unused this; that it is a
+    // member is read from a caller: comum::CRelUtil::IncluiCabecalhoEleicoesMZS (fn 1543) calls CAppInfo::GetInst (fn
+    // 185) and discards its result right before the call. Its name, after SalvaGeralInterno's, its const and its place
+    // in cappinfo.cpp are chosen.
+    md::estadoaplicacao::CEstadoGeral LeGeralInterno() const;
 
     static bool EhTreinamentoEleitor();
 

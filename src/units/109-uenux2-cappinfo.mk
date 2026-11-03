@@ -7,6 +7,9 @@
 # (2841, below), IndiceTurno (1553, below), and CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
 # static destructors (11512, 11513, 11502, 11503), the constructors (3756, 3751), the destructors (2818, 2815) and their
 # __tree::destroy (1934, 1932). 376, vector<string>::push_back(&&), comes with GetCodigosCarga.
+# GetGap's non-const overload has no index of its own: vota::IQRCodeBUDS::GeraPartes (inlined into fn 1956, unit 37's)
+# holds it, and with it GetEstado's non-const instance for CEstadoGeralGap (record line 42), inlined by binaryen with
+# GetGap's frame. Its place beside the const overload is a choice.
 # cestadogeralgap.cpp also holds md::estadoaplicacao::CEstadoGeralGap's constructor (fn 5626), which unit 93's fragment
 # describes with its converter.
 #
@@ -34,6 +37,8 @@
 # they are members, and go through a file-static helper, SalvaGeral, as the vota pair goes through SalvaVota; 3333
 # matches with them. Their names (after SalvaVotaInterno's), their being const, their order and lines, and the helper's
 # name and linkage are chosen.
+# CAppInfo::LeGeralInterno (2273, a chosen name), added for unit 296, whose fragment and roots have it: the general
+# state read anew from the internal flash, after SalvaGeralExterno.
 # CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
 # base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
 # members, the form before (both built at the tree's flags, before and after the change).

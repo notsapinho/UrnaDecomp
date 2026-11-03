@@ -8,19 +8,21 @@
 //   the link and 7787 is not, so its sink stays.
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
-//   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota
-//   stands for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), CEstadoGeralVota::IncrementaQtdBU
-//   (fn 3701, 12065, 12077 and 12081: estadoaplicacao_use_qtdbu stands for 12065; 12077 and 12081 are in the link,
-//   units 156 and 104), GetFaseChar
-//   (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's DefineHistoricoCarga
-//   and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and CCabecalhoQRCodeBuilder's constructor (fn 5624,
-//   1956 and 12110: estadoaplicacao_build_qrcode) have none, so one stand-in that calls each twice.
-//   CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their two call
-//   sites each in their one target caller, DoConverte or DoDesconverte (fns 11394, 11395), which are written. The same for CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (fns 5621, 5620, 5618, 1956
-//   and 12110 each: estadoaplicacao_use_local, which varies every argument so binaryen folds none) and IsOrigemSA and
-//   IsOrigemRED (fns 5617, 5616, which fn 5604 calls twice each: estadoaplicacao_use_origem). With two callers each the
-//   two tests stay out of line, and binaryen merges them into one shared body, as the target's fn 6028. CDadoCarga's constructor has one real caller now, its converter's DoDesconverte (11402), and the stand-in
-//   stands for 10167.
+//   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota stands
+//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), CEstadoGeralVota::IncrementaQtdBU (fn 3701,
+//   12065, 12077 and 12081: estadoaplicacao_use_qtdbu stands for 12065; 12077 and 12081 are in the link, units 156 and
+//   104), GetFaseChar (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's
+//   DefineHistoricoCarga and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and CCabecalhoQRCodeBuilder's
+//   constructor (fn 5624, 1956 and 12110: estadoaplicacao_build_qrcode) have none, so one stand-in that calls each
+//   twice. CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their
+//   two call sites each in their one target caller, DoConverte or DoDesconverte (fns 11394, 11395), which are written.
+//   The same for CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (fns 5621, 5620, 5618, 1956 and
+//   12110 each: estadoaplicacao_use_local, which varies every argument so binaryen folds none). Fn 1956 is in the link
+//   now (unit 37), so these stand-ins and estadoaplicacao_use_historico, estadoaplicacao_use_idcarga and
+//   estadoaplicacao_build_qrcode stand for fn 12110 alone. IsOrigemSA and IsOrigemRED (fns 5617, 5616) have their
+//   target call sites in the link, two each in fn 5604 (unit 155), so they stay out of line, and binaryen merges them
+//   into one shared body, as the target's fn 6028. CDadoCarga's constructor has one real caller now, its converter's
+//   DoDesconverte (11402), and the stand-in stands for 10167.
 // - CDadoCorrespondencia's constructor (fn 5630) has one direct caller in the target (11400, written, fragment 172's)
 //   and a table slot (450), so its address. The same for CEstadoGeralGap's constructor (fn 5626: its direct caller is
 //   11395, written, and fn 10123 calls it through table slot 453 with invoke_iiiiiiiiiiii) and for
@@ -44,8 +46,6 @@ void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQ
 void estadoaplicacao_idurna(void*, unsigned) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder12DefineIdUrnaEj");
 void estadoaplicacao_secao(void*, unsigned short) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder11DefineSecaoEt");
 void estadoaplicacao_zona(void*, unsigned short) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder10DefineZonaEt");
-bool estadoaplicacao_origemsa(const void*) __asm__("_ZNK5comum23CCabecalhoQRCodeBuilder10IsOrigemSAEv");
-bool estadoaplicacao_origemred(const void*) __asm__("_ZNK5comum23CCabecalhoQRCodeBuilder11IsOrigemREDEv");
 void estadoaplicacao_qtdbu(void*) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVota15IncrementaQtdBUEv");
 void* estadoaplicacao_vota(void*, int, int, int, void*, void*, void*, int, int, void*, int, void*, void*, int) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVotaC1ENS_11EEstadoVotaENS_19EEstadoEncerramentoEhNSt3__28optionalIjEENS6_IN3api9CDateTimeEEESA_ttSA_bNS1_27CNumViasImpressasRelatoriosESA_b");
 void* estadoaplicacao_corresp(void*, int, void*, void*, void*, void*, void*, void*) __asm__("_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC1EjNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEN3api9CDateTimeES9_NS1_20CLocalidadeEleitoralENS3_6vectorIhNS7_IhEEEEN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
@@ -107,12 +107,6 @@ __attribute__((noinline)) void estadoaplicacao_use_local(void* a, void* b, unsig
     estadoaplicacao_zona(b, secao);
 }
 
-__attribute__((noinline)) int estadoaplicacao_use_origem(const void* a, const void* b)
-{
-    return estadoaplicacao_origemsa(a) + 2 * estadoaplicacao_origemred(a) + 4 * estadoaplicacao_origemsa(b) +
-           8 * estadoaplicacao_origemred(b);
-}
-
 __attribute__((noinline)) void* estadoaplicacao_build_qrcode(char* a, char* b)
 {
     estadoaplicacao_qrcode(a);
@@ -145,7 +139,6 @@ struct SEstadoAplicacaoRoots {
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_historico);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_idcarga);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_local);
-        estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_origem);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_vota);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_qtdbu);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_qrcode);

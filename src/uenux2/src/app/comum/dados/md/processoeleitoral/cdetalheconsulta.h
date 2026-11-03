@@ -23,6 +23,9 @@ public:
     // is empty. The accessors' names are chosen, as the members' are.
     const std::string& GetPergunta() const { return m_pergunta; }
     const std::string& GetTextoFonetico() const { return m_textoFonetico; }
+    // The name is chosen: comum::CGeradorBUQRCode's consulta fields (inlined into target fn 5604) copy the vector at
+    // +24 from CCargo::GetDetalheConsulta's result.
+    const TVectorRespostaConsulta& GetRespostas() const { return m_respostas; }
 
 private:
     std::string m_nome;

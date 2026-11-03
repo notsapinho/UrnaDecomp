@@ -4,20 +4,13 @@
 // with the last.
 //
 // - ImprimeTituloJE (target fn 11223, slot 3, 2163 B): it calls comum::CRelUtil::IncluiCabecalhoEleicoesMZS (fn 1543)
-//   and fns 1541, 1921, 1922, 2785, 2273, 2787 and 2788, none named here, and builds the std::function of its lambda
+//   and fns 1541, 1921, 1922, 2785, 2787 and 2788, none named here, and 2273 (CAppInfo::LeGeralInterno, unit 296's), and builds the std::function of its lambda
 //   (vtable @1576316, slots 11221, 11219, 11218 and 11217, which come with it).
-// - ImprimeRodape (target fn 5596, slot 5, 826 B): it calls fns 1156 and 2252, not named here; vota::CImpressaoPU's
-//   StartState (fn 11902, not written) calls it directly too.
 #include "app/comum/relatorios/cgeradorrelversaopacotedados.h"
 
 namespace comum {
 
 void CGeradorRelVersaoPacoteDados::ImprimeTituloJE()
-{
-    __builtin_trap();
-}
-
-void CGeradorRelVersaoPacoteDados::ImprimeRodape()
 {
     __builtin_trap();
 }

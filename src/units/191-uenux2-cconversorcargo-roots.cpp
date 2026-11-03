@@ -6,7 +6,7 @@
 //   callers, 1192, 1386, 2834, 3687, 3744, 3818, 5577, 5578, 5582, 5594, 5595, 6627, 11888 and 11892 (2289 and 3775
 //   are in the link, unit 88).
 // - std::construct_at<comum::md::CSuplencia> (fn 2341, the element copy of that constructor's vector): stands for 5594
-//   and 11375.
+//   (11375 is in the link, fragment 299).
 // - std::vector<comum::md::CRespostaConsulta>::__init_with_size (fn 3018, the vector copy inside
 //   comum::md::CDetalheConsulta's copy): stands for 6627 (374 and 11377 are in the link, unit 88 and fragment 225).
 // Declared through asm labels with the objects' signatures (a constructor returns `this`), so this TU instantiates
