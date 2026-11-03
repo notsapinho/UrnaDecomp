@@ -3,14 +3,14 @@
 //   CImprimindoBU::ImprimeBU (fn 2890, written) and two CLogVota members (fns 1127 and 4551,
 //   app/vota/log/clogvota.cpp), and reads a .bss flag that no written function reads, which has no name; the records'
 //   lines 70 and 71 stay blank in cimprimindobu.cpp.
-// - vota::CImprimindoBU::ProcessInput (slot 7, fn 12077): it calls fn 491, which has no body here, and 3701 (unit 93).
+// - vota::CImprimindoBU::ProcessInput (slot 7, fn 12077): it calls fn 491 (unit 205's, in the link now) and 3701 (unit 93).
 // - vota::CMostraQRCodeCertificado::StartState (slot 2, fn 12040, 1932 B): it builds the screen through fns 502, 576,
 //   653 and 2782, of which 653 has no body here.
-// - vota::CQuerImprimirBU::ProcessInput (slot 7, fn 12034): it calls fn 491, which has no body here, and
+// - vota::CQuerImprimirBU::ProcessInput (slot 7, fn 12034): it calls fn 491 (unit 205's, in the link now) and
 //   CAplicacaoEncerrada's GetInst (fn 3877), which matches (unit 138; its constructor copies CTelasVota's +36 through
 //   ctelasvota.h's GetTelaAplicacaoEncerrada).
-// - vota::CRetirarMR::StartState (slot 2, fn 12031, records cretirarmr.cpp:54 to 56): it calls fn 491, which has no
-//   body here, and holds CRetirarMR::AguardaRetiradaMR (record cretirarmr.cpp:96) inlined.
+// - vota::CRetirarMR::StartState (slot 2, fn 12031, records cretirarmr.cpp:54 to 56): it calls fn 491 (unit 205's, in
+//   the link now), and holds CRetirarMR::AguardaRetiradaMR (record cretirarmr.cpp:96) inlined.
 #include "app/vota/eleitor/fimvotacao/cimprimindobu.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodecertificado.h"
 #include "app/vota/eleitor/fimvotacao/cquerimprimirbu.h"

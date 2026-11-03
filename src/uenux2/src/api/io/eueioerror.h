@@ -5,6 +5,13 @@
 namespace api {
 
 enum EUeIoError {
+    // the codes api::CFileASN's readers throw (ReadFromFile, records cfileasn.h 48, 60 and 78, and
+    // DecodeObjectFunction, 135 and 143, all held by target fn 3791); chosen from the messages
+    EUE_IO_ARQUIVO_NAO_ABERTO = 5950,
+    EUE_IO_ARQUIVO_MUITO_GRANDE = 5951,
+    EUE_IO_ARQUIVO_NAO_EXISTE = 5952,
+    EUE_IO_CONTEUDO_NAO_DECODIFICADO = 5953,
+    EUE_IO_CONTEUDO_INVALIDO = 5954,
     // the codes api::CFileASN::CodeObjectFunction throws (target fn 2927, records cfileasn.h 161 and 171); chosen from
     // the messages
     EUE_IO_OBJETO_INVALIDO = 5955,

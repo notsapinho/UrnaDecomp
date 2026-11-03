@@ -70,7 +70,9 @@ describe('report', () => {
           expect(norm[p.a - m.importedFuncCount].rows).toEqual(sNorm[p.b - sm.importedFuncCount].rows);
         }
       }
-      expect(differing).toBeGreaterThan(50);
+      // How many such pairs there are follows the order of the two type sections, which a landing moves (more than 50
+      // before units 206, 109 and 205 landed, 11 after); the rule is that some exist and each pairs by its rows.
+      expect(differing).toBeGreaterThan(0);
     },
     // a census of both whole modules
     60_000,

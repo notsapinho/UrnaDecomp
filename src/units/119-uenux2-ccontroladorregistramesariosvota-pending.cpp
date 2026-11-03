@@ -3,7 +3,7 @@
 // for (the target's bodies, read with pnpm wasm fn):
 // - slot 5, fn 10797: reads comum::CAppInfo::GetInst().GetVota().GetEstadoVota() and writes 55 for 54 and 58 for 57;
 //   for 56 it writes 55 when fn 1269 on fn 555's result is false, +8 of fn 1391's result is 0 and +48 of
-//   CAppInfo::GetGeral()'s (fn 291) is not 51; after a write it calls fn 491; waits for fn 491 (1269 is
+//   CAppInfo::GetGeral()'s (fn 291) is not 51; after a write it calls fn 491, which unit 205 writes now (1269 is
 //   comum::CRdvVota::Comparecimento(), unit 13, and 1391 comum::CJustificador::GetInst, unit 113);
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
 //   1832936 is 1, and else calls fn 4657 (1048 B); no callee waits now (4662 is vota::CSincronizaVota's

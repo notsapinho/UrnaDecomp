@@ -19,12 +19,19 @@ class CFile {
 public:
     // The constructor is out of line in cfile.cpp: its target body (fn 517) has the landing pad of an -fexceptions
     // object, and uenux2 callers such as api::CEncryptedFile::Save (2767) call it where an inline one would be inlined.
-    // The destructor is inline: every caller holds it as `if (m_file) Close();`.
+    // The destructor is inline: every uenux2 caller holds it as `if (m_file) Close();`, the catch gone in a TU without
+    // -fexceptions. In -fexceptions code the target keeps the catch: CZip::DoAdd (9538) holds it inlined, and fn 3564,
+    // the out-of-line copy fns 2892 and 9538 call, catches what Close throws and drops it (__cxa_begin_catch, then
+    // __cxa_end_catch through invoke_v), so the try and the empty catch (...) are evidence. That the test sits inside
+    // the try is chosen (src/units/206-uenux2-app-comum-appinfo-servicos.mk; the test ahead of the try was not tried).
     CFile(const std::string& nome, const std::string& modo, FileMode fileMode = FM_NORMAL);
     ~CFile()
     {
-        if (m_file != nullptr) {
-            Close();
+        try {
+            if (m_file != nullptr) {
+                Close();
+            }
+        } catch (...) {
         }
     }
 

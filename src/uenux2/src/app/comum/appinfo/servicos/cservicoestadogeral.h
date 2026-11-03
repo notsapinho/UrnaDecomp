@@ -1,19 +1,9 @@
 #pragma once
 
 #include "app/comum/appinfo/servicos/iservicoestado.h"
+#include "app/comum/dados/asn/estadoaplicacao/cconversorestadogeral.h"
+#include "app/comum/dados/md/estadoaplicacao/cestadogeral.h"
 #include "app/comum/eflashorigem.h"
-
-namespace comum::md::estadoaplicacao {
-
-class CEstadoGeral;
-
-} // namespace comum::md::estadoaplicacao
-
-namespace comum::asn {
-
-class CConversorEstadoGeral;
-
-} // namespace comum::asn
 
 namespace comum {
 
@@ -22,10 +12,16 @@ namespace comum {
 // reading for the constructor from the target keeping it as a function of its own that five functions call (2273, 3333,
 // 3897, 10243, 11572). The parameter's and the data member's type are chosen as the origin GetPathDinamico takes, and
 // so are the member's name and this header's and the source's paths (src/units/206-uenux2-app-comum-appinfo-servicos.mk
-// says why).
+// says why). The destructor is declared and defined out of line, empty: measured on fn 3897, the derived constructors'
+// merge, which ends in the target's nested ifs with it out of line and in one block left by two br_if with the implicit
+// one (a reading: binaryen removes the call of the empty D1 after clang's CFG kept the frees apart). Its D2 is
+// binaryen's shared empty body 174 in the target, and the D0 (144) only frees, as an inline destructor's would: the
+// vtable does not tell the two forms apart. The headers of the estado and the converter are included for the template's
+// members, which need them complete wherever they are instantiated.
 class CServicoEstadoGeral : public IServicoEstado<md::estadoaplicacao::CEstadoGeral, asn::CConversorEstadoGeral> {
 public:
     explicit CServicoEstadoGeral(EFlashOrigem origem);
+    ~CServicoEstadoGeral() override;
 
     std::filesystem::path GetPathArquivo() override;
 

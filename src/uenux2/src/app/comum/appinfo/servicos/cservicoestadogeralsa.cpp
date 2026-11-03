@@ -1,19 +1,23 @@
-// Reconstruction: comum::CServicoEstadoGeralSA::GetPathArquivo (target fn 11565, a thunk of binaryen's merge 3896 of
-// the three classes' GetPathArquivo; the record at line 32). The constructor (thunk 11566 of fn 3897) is not written
-// (src/units/206-uenux2-app-comum-appinfo-servicos.mk). Where the function starts is a choice.
+// Reconstruction: comum::CServicoEstadoGeralSA's constructor (thunk 11566 of target fn 3897, binaryen's merge of
+// the three classes' constructors) and GetPathArquivo (fn 11565, a thunk of the merge 3896; the record at line 32).
+// Where each function starts is a choice (src/units/206-uenux2-app-comum-appinfo-servicos.mk).
 #include "app/comum/appinfo/servicos/cservicoestadogeralsa.h"
 
 #include "app/comum/appinfo/euecomumappinfoerror.h"
+#include "app/comum/appinfo/servicos/cservicoestadogeral.h"
 #include "app/comum/cpath.h"
 
 namespace comum {
 
-// <stubs>
-// f11566 · 16 B · unmatched · placement: link order · name unknown
-// ? f11566(i32, i32, i32) { ... }
-// </stubs>
+CServicoEstadoGeralSA::CServicoEstadoGeralSA(EFlashOrigem origem, EUrnaTurno turno) : m_origem(origem), m_turno(turno)
+{
+    if (m_turno == TURNO_ATUAL) {
+        CServicoEstadoGeral servicoEstadoGeral(origem);
+        m_turno = servicoEstadoGeral.Carrega().GetDadoCarga().GetTurno();
+    }
+}
 
-// (original lines 16-28: content not recovered)
+// (original lines 20-28: content not recovered)
 #line 29
 std::filesystem::path CServicoEstadoGeralSA::GetPathArquivo()
 {

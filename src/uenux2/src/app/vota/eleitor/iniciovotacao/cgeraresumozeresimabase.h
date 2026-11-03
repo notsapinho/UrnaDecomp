@@ -24,7 +24,7 @@ namespace vota {
 // of line, in another object than the derived classes': their destructors (fns 5964 and 5963) call fn 1952, which
 // stores this class's vptr and releases +12 (through binaryen's fn 2902). The constructor reads the member through a
 // getter chosen for it (ctelasvota.h). Not recovered: StartState (it calls fns 183 and 436, which have names, and 491,
-// which has none; src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// named now by unit 205; src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CGeraResumoZeresimaBase : public comum::CAppState {
 public:
