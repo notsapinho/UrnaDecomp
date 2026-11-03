@@ -104,7 +104,35 @@ TLocalID CLocal::GetLocalID() const
     return m_local->GetSecao().GetIdentificacao().GetLocal();
 }
 
-// (original lines 133-341: content not recovered)
+uebyte CLocal::GetQtdAgregadas() const
+{
+    if (EhSecao("GetQtdAgregadas")) {
+        return m_local->GetSecao().GetAgregadas().size();
+    }
+    return 0;
+}
+
+std::vector<ueword> CLocal::GetAgregadas() const
+{
+    const bool ehSecao = EhSecao("GetAgregadas");
+    std::vector<ueword> numeros;
+    if (ehSecao) {
+        const md::CSecaoEleitoral& secao = m_local->GetSecao();
+        const md::TVectorIdentificacaoAgregada& agregadas = m_local->GetSecao().GetAgregadas();
+        for (const md::CIdentificacaoAgregada& agregada : m_local->GetSecao().GetAgregadas()) {
+            numeros.insert(numeros.end(), 1, agregada.GetNumero());
+        }
+    }
+    return numeros;
+}
+
+ETipoLocalVotacao CLocal::GetTipoLocalVotacao() const
+{
+    VerificaEhSecao("GetTipoLocalVotacao");
+    return m_local->GetSecao().GetTipo();
+}
+
+// (original lines 161-341: content not recovered)
 #line 342
 void CLocal::VerificaLido(const std::string& funcao) const
 {
@@ -120,6 +148,22 @@ void CLocal::VerificaEhSecao(const std::string& funcao) const
     if (!m_local->TemSecao()) {
         throw CUeComumDadosError(EUE_COMUM_DADOS_7875, std::format("{}: o local não era de seção", funcao));
     }
+}
+
+std::string FormataAgregadas(const std::string& formato)
+{
+    const CLocal& local = CLocal::GetInst();
+    const uebyte quantidade = local.GetQtdAgregadas();
+    std::string agregadas;
+    if (quantidade > 0) {
+        const std::vector<ueword> numeros = local.GetAgregadas();
+        const char* separador = "";
+        for (size_t i = 0; i < quantidade; ++i) {
+            agregadas += std::format("{}{:04}", separador, numeros[i]);
+            separador = " ";
+        }
+    }
+    return std::vformat(formato, std::make_format_args(agregadas));
 }
 
 } // namespace comum

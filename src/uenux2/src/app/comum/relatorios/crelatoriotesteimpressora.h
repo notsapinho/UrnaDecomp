@@ -10,9 +10,10 @@ namespace comum {
 // call on an object in their frames, the next local 8 bytes on), and its overrides, one per slot of the base that the
 // vtable does not fill with a shared body (slots 2, 3, 5, 7 to 22). The destructor is implicit: slot 1 (fn 144) frees
 // this and nothing else. No record names a member: the names are the base's (cimprimirextratocarga.h), and the data
-// members' names and types are chosen. +4 is a byte the constructor stores 0 into before the vptr, and no slot reads it;
-// +5 is the flag the constructor computes and slot 14 (fn 11191) tests: set when the urna's type for its turn is
-// eUrnaContingencia, comum::CPE holds a second pleito and a date test on it (fns 1382, 1261) passes.
+// members' names and types are chosen. +4 is a byte the constructor stores 0 into before the vptr, the base's member
+// (cimprimirextratocarga.h), and no slot reads it; +5 is the flag the constructor computes and slot 14 (fn 11191)
+// tests: set when the urna's type for its turn is eUrnaContingencia, comum::CPE holds a second pleito and that pleito's
+// date is today or earlier (CDate's operator== inline, then operator<=>, fn 1261, against the default CDate, fn 1382).
 class CRelatorioTesteImpressora : public CImprimirExtratoCarga {
 public:
     CRelatorioTesteImpressora();
@@ -38,7 +39,6 @@ public:
     virtual bool EhModoDemonstracao() const override;
 
 private:
-    bool m_naoRecuperado;
     bool m_usaPleito2;
 };
 

@@ -204,6 +204,34 @@
 # caller, fn 5922, holds its loop inlined by binaryen, its result a block's tested again, and unit 97's fragment has the
 # measurement (inline in ccandidaturas.h, clang's early return, the row that differed). Its name, its being a member and
 # its line are chosen.
+#
+# comum::CLocal's aggregated sections, for comum::CRelatorioTesteImpressora::GetDadosLocal (fn 11188, unit 123), in
+# clocal.cpp after GetLocalID, in the blank run above VerificaLido's record (no record moves; their lines are chosen):
+# - GetQtdAgregadas (target fn 2816; callers 1543, 4160, 11188) and GetAgregadas (3752; callers 4160, 5738, 11242), named
+#   by their literals as the members above are: each is EhSecao(literal) and the section's vector at +24 of
+#   md::CSecaoEleitoral (8-byte elements), the count as a byte (the target masks it with 255) and the 16-bit numbers in
+#   a std::vector<ueword> (the element type is chosen; its width is the target's). In the use bands they sit beside this
+#   file's functions: 2816 between chv.cpp's 2817 and cpartidos.cpp's 2815 (uses 4), 3752 right after GetUFMinuscula
+#   (3753, uses 3). GetAgregadas adds each number with insert(end(), 1, x): the target's body holds that overload's
+#   aliasing test of x and its fill loops, which clang leaves out of line (cost 510 against 250, -Rpass-missed=inline
+#   on try-tu.sh --symbols) and binaryen inlines, its one caller in the link. The target tests the section, frees the
+#   literal and only then zeroes the result, and calls md::CLocal::GetSecao three times before the loop, using only
+#   the third result: written as EhSecao into a local before the vector and two unused references before the range-for,
+#   a form chosen for those calls; what the original held there is not known. With the result zeroed first and one
+#   call, 3752 scored 30 over 441 rows (6 inserted, 14 deleted); as written, 12 over 435, all operand-only (`pnpm wasm
+#   score` against the whole link). 2816 scored 6 over 68, all operand-only. Both match.
+# - GetTipoLocalVotacao (no index): VerificaEhSecao("GetTipoLocalVotacao") and the section's type, which 11188 holds
+#   behind a stack frame of its own (binaryen's inlining of its one caller, from another TU). Its name is the literal's.
+# - comum::FormataAgregadas (5738; callers 1543, 11188), a free function (its name and parameter chosen): CLocal::GetInst
+#   and GetQtdAgregadas inlined, which clang gives only in their own TU, so it is this file's; in use band 2 it follows
+#   VerificaEhSecao (5742). It joins the numbers, each "{}{:04}" after "" for the first and " " for the next, and puts
+#   the
+#   result into the format it is given (std::vformat). Measured as above: the string declared before the count, 207 over
+#   812 rows (28 inserted, 56 deleted); after it, with an uebyte index, 63 over 789 (5 and 9), the same with the
+#   separator a variable or `i == 0 ? "" : " "`; with a size_t index, 43 over 784, all operand-only, as written (the
+#   target keeps the loop's entry test on the count after GetAgregadas, which the uebyte index folds). The separator
+#   variable is a choice among those two. It matches.
+# The roots of unit 280 stand in for 4160 and 11242 (3752) and for 1543 (5738), so binaryen keeps both out of line.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

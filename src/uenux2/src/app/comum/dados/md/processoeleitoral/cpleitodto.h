@@ -18,6 +18,11 @@ class CPleitoDTO {
 public:
     CPleitoDTO(TPleitoID id, const std::string& nome, const api::CDate& data);
 
+    // The getters' names are chosen: comum's pleito load (target fn 5778) reads the three fields inline.
+    TPleitoID GetID() const { return m_id; }
+    const std::string& GetNome() const { return m_nome; }
+    const api::CDate& GetData() const { return m_data; }
+
 private:
     TPleitoID m_id;
     std::string m_nome;

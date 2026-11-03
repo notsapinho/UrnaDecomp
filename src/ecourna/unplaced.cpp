@@ -158,11 +158,6 @@
 // f2234 · 493 B · unmatched · placement: link order · name unknown
 // ? f2234(i32, i32) { ... }
 
-// link-order cluster 1191 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresimabase.cpp
-
-// f1953 · 243 B · unmatched · placement: link order · name unknown
-// ? f1953(i32, i32, i32) { ... }
-
 // link-order cluster 1245 · uses=9 · neighbours' file uenux2/src/api/gui/cframedtext.cpp
 
 // f1386 · 6360 B · unmatched · placement: link order · name unknown

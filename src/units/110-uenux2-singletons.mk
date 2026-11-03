@@ -126,7 +126,8 @@
 #   link, binaryen inlined 1135 into it, and 242 differed at both levels (at the tree's -O3 96 over 152 rows, 86
 #   inserted; 79 over 134 at -O2).
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
-#   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
+#   "Pending members"). CreateInst of each class but CPE is inlined into 7787 and is not written; CPE's is fn 2787
+#   (record cpe.cpp:26), written (below).
 # - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
 #   CDataText<CRespostasDSNumero>::GetText, holds this file's record 28): it matches since fn 11973's literal is in the
 #   link, and src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waited for. Its line
@@ -315,6 +316,26 @@
 # linked from here). The key names, TelaTesteTeclado and
 # SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
 # 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
+#
+# comum::CPE's members beside GetInst, in cpe.cpp (the file's records: GetInst's macro at line 21, CreateInst's throw at
+# 26:15, EUE_COMUM_DADOS_7876 "Instância já criada"):
+# - Existe (target fn 2788, no record: its name and its line before GetInst are chosen): a lock of s_mutex and the test
+#   of s_instancia, CSubstituidorTitulo::Existe's shape; a member, since it reads the class's statics. In use band 4 it
+#   precedes 2787, as here. Callers 1543, 5586 (unit 123), 11223 and 11902; unit 280's roots stand in for the three.
+# - CreateInst (2787): the throw when the instance exists (no lock: the target's body takes none), comum's processo
+#   eleitoral load (3771, unit 280), then a new CPE (204 bytes) with the constructor inlined, which copies the processo
+#   (CPleito's copy constructor, 1281, for each pleito), stores the load's turn at +176 and builds CPleitoAtual at +180
+#   (5726, unit 280) over the pleito of that turn (GetPleito1 inline for TURNO_1, else GetPleito2, 1267), then the reset,
+#   which destroys the old instance (5598), and the loaded processo's destruction (2830). The constructor, its
+#   parameters and its line are chosen. 2787 scored 23 over 241 rows, all operand-only, once unit 280's roots read
+#   1281's and 5726's results (26 over 241, 3 rows deleted, before), and it matches by a `callers+content` hand line
+#   that names its callee 3771 from the records 3771 alone loads (unit 280's fragment): without the line 2787 is
+#   `unresolved self-voted`, since 3771, written and differing, has no other voter.
+# - The libc++ copies cpe.cpp.o brings with it: CPleito's implicit copy constructor (1281), the CEleicaoPE vector's
+#   __uninitialized_allocator_copy (1953), the version map's hinted insert (3870) and its __find_equal (3869), all four
+#   matched (7, 4, 2 and 0 rows, all operand-only).
+#   Unit 280's roots read 1281's result for its callers that read it (1543, 5967, 7787, 11902) and give 3869 a second
+#   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

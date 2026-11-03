@@ -3,6 +3,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 #include "app/comum/dados/md/clocal.h"
 
@@ -29,6 +30,15 @@ public:
     TSecaoID GetSecaoID() const;
     bool UrnaBiometrica() const;
     TLocalID GetLocalID() const;
+    // GetQtdAgregadas (fn 2816) and GetAgregadas (fn 3752) check the data through VerificaLido with those literals and
+    // read the section's aggregated sections (CSecaoEleitoral's vector at +24, 8-byte elements): their count as a byte
+    // (the target masks it with 255) and their numbers (the 16-bit word at +4 of each). GetTipoLocalVotacao is the
+    // section's type behind VerificaEhSecao("GetTipoLocalVotacao"): comum::CRelatorioTesteImpressora::GetDadosLocal (fn
+    // 11188) holds it in a stack frame of its own (binaryen's inlining of its one caller), so it has no target index.
+    // The three names are chosen from the literals, as the members above are; the vector's element type is chosen.
+    uebyte GetQtdAgregadas() const;
+    std::vector<ueword> GetAgregadas() const;
+    ETipoLocalVotacao GetTipoLocalVotacao() const;
 
     void VerificaEhSecao(const std::string& funcao) const;
 
@@ -45,5 +55,11 @@ private:
 
     std::unique_ptr<md::CLocal> m_local;
 };
+
+// The aggregated sections' numbers, each as 4 digits after "" for the first and " " for the next ones, put into the
+// format it is given at its one "{}" (fn 5738; callers comum::CRelUtil's 1543 and GetDadosLocal, 11188). It holds
+// CLocal::GetInst and GetQtdAgregadas inlined, which clang does only in their own TU, so it is clocal.cpp's code. Its
+// name, its parameter and its being a free function of comum are chosen.
+std::string FormataAgregadas(const std::string& formato);
 
 } // namespace comum

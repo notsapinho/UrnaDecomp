@@ -226,7 +226,7 @@
 # 2763 does in its band; GetDirName after GetMemInfo, at the end of the file, which keeps 5463 ahead of it as band 2 does
 # and, like GetMemInfo, takes it after ExistDir where the band has it before (a choice, the same one GetMemInfo's place
 # makes). 1501 (vota::CAssinadorVota's constructor, comum::CAssinador's inlined) calls each once: PartesDoCaminho in the
-# roots stands for 12098, 5360 and 5461, so binaryen keeps both out of line as the target does.
+# roots stands for 12098 and 5360 (5461 is in the link), so binaryen keeps both out of line as the target does.
 # GetMemTotal and GetMemFree (no target index, chosen names, free functions after GetMemInfo, a choice): 10226 calls
 # GetMemInfo twice, each time after a 16-B stack frame of its own that builds the field's name, "MemTotal" or
 # "MemFree", as a std::string, so each call sits in a function binaryen inlined into its one caller; clang would inline
@@ -234,6 +234,19 @@
 # reading). 10226 widens their results as signed numbers (i64.extend_i32_s), so they return long, a choice of a signed
 # 32-bit type. They give GetMemInfo its two call sites in our link, where the roots' MedeEspaco stood for 10226 until
 # 10226 was written (unit 116); with it in the link, MedeEspaco and its calls of 5454, 5453 and 5463 went.
+# api::TrocaExtensao (target fn 5461; no record: its name, its being a free function and its namespace are chosen, as
+# GetFileName's are), the last function of csystem.cpp: a path with the extension after its last '.' replaced, called
+# by unit 280's comum::CarregaPleito (5778) with "pid" and by 7787 (not written; unit 280's roots stand in for it). It
+# holds GetDirName's code inline twice, the target's two copies of the part before the last '/' (the first only compared
+# with the path), and calls GetFileName (2763): clang inlines GetDirName only in its own TU, so 5461 is this file's. In
+# use band 2 it lies right after GetDirName (5462) and before 5460 and ExistDir (5459): after GetDirName at the file's
+# end, it takes the place after ExistDir that GetDirName's takes (a choice, as above). Matched; what the rows decided,
+# each step measured with `pnpm wasm score` against the whole link: the prefix a temporary of the return (the target
+# appends the name's head to it and moves the result; a named prefix, 146 over 701 rows, 33 inserted and 34 deleted,
+# against 127 over 700); the empty directory and prefix "" (the target stores only a short string's size and
+# terminator, where std::string() zeroes all twelve bytes: 89 over 700); each conditional's "" arm second (the target
+# lays it out last: 45 over 683); and "/" where '/' gave another block order inside operator+ (13 over 668, all
+# operand-only, as written).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)

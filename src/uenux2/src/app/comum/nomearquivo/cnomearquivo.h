@@ -7,6 +7,12 @@
 
 namespace comum {
 
+// The phase's letter, a 5-digit number, "-" and the type, "." and the extension, with no UF: fn 3771 (comum's
+// processo eleitoral load) holds it behind a stack frame of its own, calling FormataFase (fn 2828) and FormataNumero
+// (fn 1161) directly, so it is this file's code, which binaryen inlined into its one caller (reading.md R8, R10). It
+// has no target index. Its name and its being a free function of comum are chosen: no record, slot or RTTI names it.
+std::string NomeArquivoPE(EUrnaFase fase, uedword idPE, const std::string& tipo, const std::string& extensao);
+
 // Recovered: two of the file's name builders, target fns 1705 and 3772. Each calls the anonymous-namespace helpers of
 // cnomearquivo.cpp (records :38, :48 and :73) in its own stack frame, so its code is that file's
 // (docs/reference/facts/reading.md R8); the file's records name only its anonymous-namespace functions. No record, slot
@@ -15,7 +21,7 @@ namespace comum {
 // number's width: the phase's letter, a 5-digit number and the UF, for NomeArquivoSecao a 5-digit and two 4-digit
 // numbers more, then "-" and the type, "." and the extension. Fns 3744, 3771 and 5740 call those helpers inside a second
 // stack frame, which reads as three more builders of this file that binaryen inlined into their only caller
-// (reading.md R10); they are not reconstructed, so not declared. That the class has no other member is not known.
+// (reading.md R10); 3771's is NomeArquivoPE above, and 3744's and 5740's are not reconstructed, so not declared. That the class has no other member is not known.
 class CNomeArquivo {
 public:
     static std::string NomeArquivoUF(EUrnaFase fase, uedword pleito, const std::string& uf, const std::string& tipo,

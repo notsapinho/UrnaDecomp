@@ -10,7 +10,8 @@
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
 // - GetEstadoPassouNoTeste 11830 (slot 11): fn 491, with no name until unit 205 named it.
 // vota::CVerificaHorarioZeresima, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp:
-// - ProcessInput 11869 (slot 7), 861 B: fns 5586, 5591 and 6595, with no name (and 491, named now: unit 205), 455 and 5880 (IEventosLog's).
+// - ProcessInput 11869 (slot 7), 861 B: fns 5591 and 6595, with no name (and 491, named now: unit 205; 5586, matched:
+//   unit 123), 455 and 5880 (IEventosLog's).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"
