@@ -156,11 +156,11 @@
 #   - the four Text hold GetInst inlined (record 44 lists them), which -O2 keeps out of line: `try-tu.sh --symbols --flags
 #     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the -O2 link they scored 41
 #     over 93, 41 over 251 (twice) and 43 over 371, each with GetInst's 23 rows deleted.
-#   - 2825 holds CEleitorDetalhe::MarcaHabilitado (unit 98) inlined by binaryen, and that holds the mesario's member of
-#     CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
+#   - 2825 holds CEleitorDetalhe::MarcaHabilitado (celeitordetalhe.cpp's) inlined by binaryen, and that holds the
+#     mesario's member of CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
 #     std::optional<CEleitorIdentidade>::operator= out of line inside it (`cost=235, threshold=225`); at -O3 it inlines
-#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scored 101 over
-#     446 rows in the -O2 link.
+#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scored 101
+#     over 446 rows in the -O2 link.
 #   With this object and celeitordetalhe.cpp.o compiled at -O3 in a copy of the link (each make compile line with -O2
 #   turned to -O3), the four Text score 24 over 93, 26 over 251 (twice) and 28 over 371, and 2825 41 over 440, all
 #   operand-only; splat-remap prints IDENTICAL for the four Text and stops on 2825 only at the call of 1271, which has no
@@ -173,9 +173,10 @@
 #   std::make_format_args takes lvalues.
 # - MarcaVotou (records 456 and 460, column 15) has no target function of its own: binaryen inlines it into its one
 #   caller, vota::CSincronismoOperador::StartState (10210, unit 104's, whose fragment has the measurement), and it holds
-#   CEleitorDetalhe::MarcaVotou (unit 98's) inlined the same way. Its throws and their codes (7845, 7846) and messages are
-#   the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as 2825's 7843 reads
-#   it); the counter it increments at +104 is m_qtdVotaram, its name chosen, unsigned as 10569 reads it (celeitores.h).
+#   CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp's) inlined the same way. Its throws and their codes (7845, 7846)
+#   and messages are the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as
+#   2825's 7843 reads it); the counter it increments at +104 is m_qtdVotaram, its name chosen, unsigned as 10569 reads
+#   it (celeitores.h).
 # - LoadEleitorDetalhe (5764; record line 719, code 7851, which gives the signature), matched. When the voter's identity
 #   at its principal type (GetIdentidadePorTipo, fn 708) equals the identity of the sorted impediments' entry at the
 #   index, it moves the index on and takes the entry's impediments, the second through CImpedido::GetImpedimentoP2
@@ -193,18 +194,22 @@
 #   this object ahead of celeitordetalhe.cpp.o (then unit 98's), and 46 over 828, all operand-only, with
 #   celeitordetalhe.cpp.o just before this object (scratch links of the plain link.cmd with one object moved;
 #   docs/reference/facts/codegen.md C4). cimpedido.cpp.o's place changed nothing. So celeitordetalhe.cpp heads this
-#   unit's list: in that link the 29 matches of celeitores.cpp.o, celeitordetalhe.cpp.o and cimpedido.cpp.o scored as
-#   in today's order, while this object moved after celeitordetalhe.cpp.o instead (46 over 828 as well) took 1703's
-#   twin name to another object. The target's band 2 has 5764 after ValidaIdentidadesEleitor (5765) in link order and
-#   our object has it before: CompleteLoad, not written, calls 5765 first (a reading, docs/reference/facts/reading.md
-#   R9). Chosen: its being private, its lines but the throw's, the locals' names, the message's being a const named
-#   local, and CImpedido's three accessors (cimpedido.h). CEleitorIdentidade's destructor, which 5764 calls for its two
-#   identity temporaries, is now emitted here, and it is byte-identical to std::string's, so step 9 renamed fn 149's
-#   match line to it (docs/reference/facts/splat.md S6). The roots' CarregaDetalhes stands for 5764's callers, 6734 and
-#   7787, one call with dynamic data and one without. MarcaVotou (lines 456, 460) is held inlined by fn 10210,
-#   vota::CSincronismoOperador::StartState (unit 104's pending member), which also calls fn 501,
-#   api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). GetCurrentAbrangenciaEleitor, which 7377 holds
-#   inlined, is written (below).
+#   unit's list, which is the target's data order too: celeitordetalhe.cpp's four records lie at 1558832 to 1558880,
+#   ahead of celeitordinamicodao.cpp's (1558940) and celeitores.cpp's (from 1559096; ledger/source-locations.tsv), and
+#   band 3 runs 3770 and 3769 (celeitordetalhe.cpp's) before the DAO's 3768 and 3766 (ledger/ordinals.tsv). A scan of
+#   the link in the old order, with the committed symbol file, moves only 5764 (to differs): the other 32 matches of
+#   celeitores.cpp.o, celeitordetalhe.cpp.o and cimpedido.cpp.o stay, while this object moved after
+#   celeitordetalhe.cpp.o instead (46 over 828 as well) took 1703's twin name to another object. The target's band 2 has
+#   5764 after ValidaIdentidadesEleitor (5765) in link order and our object has it before: CompleteLoad, not written,
+#   calls 5765 first (a reading, docs/reference/facts/reading.md R9). Chosen: its being private, its lines but the
+#   throw's, the locals' names, the message's being const (its being a named local is measured: built inside the throw
+#   it scores 126 over 837 in the old order and 80 over 831 in this one), and CImpedido's three accessors (cimpedido.h).
+#   CEleitorIdentidade's destructor, which 5764 calls for its two identity temporaries, is now emitted here, and it is
+#   byte-identical to std::string's, so step 9 renamed fn 149's match line to it (docs/reference/facts/splat.md S6). The
+#   roots' CarregaDetalhes stands for 5764's callers, 6734 and 7787, one call with dynamic data and one without.
+#   MarcaVotou (lines 456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending
+#   member), which also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
+#   GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is written (below).
 # - Not written. CompleteLoad (6734, records 205, 219, 238) and the static voters' reader (5772, whose lambda's typeinfo
 #   names CEleitores::GetEleitoresEstaticos, with 5771, 5770, 5768, 5769 and the lambda's slots 11521 to 11525) copy an
 #   md::CEleitor through fn 946, which the decorator now gives; they wait for other code. 5772's lambda (its call
@@ -269,12 +274,12 @@
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
 # - 2823, CEleitores::QuantidadeAptos (celeitores.cpp, the lines just above 2822's, a choice; band 4 runs 2824, 2823,
 #   2822): it walks the same map and, for each record whose detail has no impediment (CEleitorDetalhe::SemImpedimento,
-#   fn 2266, unit 98's), adds one to the first of two 16-bit counts it returns through the result's address when the
-#   voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the false test
-#   first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted eqz);
-#   written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its members'
-#   names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are not
-#   written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
+#   fn 2266, celeitordetalhe.cpp's), adds one to the first of two 16-bit counts it returns through the result's address
+#   when the voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the
+#   false test first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted
+#   eqz); written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its
+#   members' names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are
+#   not written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,

@@ -32,7 +32,8 @@ private:
 // code is a reading of the data: its records (@1598908 to @1598940) follow this converter's vtable (@1598820), its
 // typeinfos and the records its slots hold (fns 10271, 10270), in the run of that object's data
 // (docs/reference/facts/placing.md P4). Its name, its being a free function of comum::asn and its line are chosen: no
-// record, slot or RTTI names it.
+// record, slot or RTTI names it. So are its `const api::CFile&` and its const converter (cconversorversoesarquivos.h's
+// writer takes `api::CFile&`: a choice on each side).
 void GravaArquivo(const api::CFile& arquivo, const md::CEnvelopeGenerico& envelope);
 
 } // namespace comum::asn

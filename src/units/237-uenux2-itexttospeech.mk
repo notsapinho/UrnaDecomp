@@ -69,9 +69,10 @@
 # - the executable TU's push bodies 10090, 5384, 8758, 8911, 8986 and 9233 read `differs` now on a frame offset, 288
 #   against 280 (10090: 156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower), read as a
 #   form of CPolySingletonList::push (unit 100's header); 7667 and 8834 on their first call, a has<T> thunk (target
-#   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp's instance, and 7667
-#   read so while no body of ours was the executable TU's set<api::ITextToSpeech> (its census pair was 8758's body);
-#   the root holds that copy now (below).
+#   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp, where
+#   set<api::ITextToSpeech> instantiates it (the root's explicit instance went, below), and 7667 read so while no body
+#   of ours was the executable TU's set<api::ITextToSpeech> (its census pair was 8758's body); the root holds that copy
+#   now (below).
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
 #   Since then 9372 matches (fragment 241), and 9650, 9831, 9897, 10307 and 640 with unit 170's has<T> roots and unit
@@ -122,9 +123,8 @@
 # segments). Past that one order the root's lines are free (src/units/README.md "Companion files"). Measured both ways,
 # steps 6 to 9 and the splat build on each, the target's sha256 both times: in this order 7667 matches, 12190 matches;
 # with the builder first, as the root was first written, 12189, and 7667 `differs` on the frame slot of depura's
-# std::format_string (`pnpm wasm score` 156 over 885 rows, all operand-only: +584 in ours where the target has +280, the
-# slots between 8 off), as the executable TU's other push bodies do (unit 170's fragment, whose reading this fits: the
-# slot follows which format code a TU emits first).
+# std::format_string (+584 in ours where the target has +280, the slots between 8 off), as the executable TU's other
+# push bodies do (unit 170's fragment, whose reading this fits: the slot follows which format code a TU emits first).
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

@@ -26,9 +26,9 @@ void DeserializeFromBuffer(ClasseASN1& entidade, const std::vector<char>& buffer
 
 // Reads the whole file through CFile into the buffer the caller gets back. The reconstruction's: DeserializeFromFile's
 // one instance in the target (fn 2280) destroys the CFile before the decode and builds the buffer in the stack slot
-// of the mode string, which died before it, so the read is a function of its own that clang inlines; with internal
-// linkage and one call it does, where an inline function or a lambda stayed out of line (unit 293's fragment has the
-// measurements). Its name and its linkage are chosen: no record names it.
+// of the mode string, which died before it; that the read is a function of its own that clang inlines is a reading.
+// Its name and linkage are chosen (internal, though DeserializeFromFile is a template: an ODR hazard once two TUs
+// instantiate it); `static inline` or a namespace { } give the same object, `inline` not (unit 293's fragment).
 static std::vector<char> ReadWholeFile(const std::string& nome)
 {
     CFile arquivo(nome, "rb");

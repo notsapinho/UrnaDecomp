@@ -1,5 +1,7 @@
 # ecourna api/io (CFile + CIoError/EFileOperation), api/util (CBitArray, CSynchronizer); header-only units that go
-# with them: api/pattern/cbasetype.hpp, api/asn/iconversorasn.hpp, api/io/asn/serialization.hpp.
+# with them: api/pattern/cbasetype.hpp, api/asn/iconversorasn.hpp, api/io/asn/serialization.hpp. serialization.hpp's
+# DeserializeFromFile reads the file through a helper of its own, ReadWholeFile, for fn 2280: unit 293's fragment has
+# the measurements, and its roots are the one TU that includes the header.
 # cbitarray.cpp includes <boost/dynamic_bitset.hpp>, which ECOURNA_CXXFLAGS alone does not find.
 # CBitArray's D2 and D0 (11417, 11414) are code cbitarray.hpp defines, and match from the roots object, compiled with
 # Boost's path too (its header says how): at UENUX2_CXXFLAGS both compare equal, by function with the object-local

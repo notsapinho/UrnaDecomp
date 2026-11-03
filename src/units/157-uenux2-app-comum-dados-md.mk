@@ -48,9 +48,11 @@
 # and md::CInfoMunicipio::GetFusoHorario and TemHorarioVerao, cconversorlocal.h's path, CCarga::ValidaCriacao's being
 # private, the find_first_not_of tests of CCarga::ValidaCriacao (the form of CUrna::ValidaCriacao, curna.cpp; the target's
 # hex test calls memchr per character and the digit test is a bit mask, which this form gives: 48 over 529 rows, all
-# operand-only), and the lines of every function with no record (CEleitor's constructors above line 79, which stays
-# blank for GetOffsetBiometria's record; the first lines of CCarga::ValidaCriacao, the constructor of
-# CCabecalhoEntidade and DoConverte).
+# operand-only), and the lines of every function with no record (CEleitor's constructors, above GetOffsetBiometria at
+# line 76; the first lines of CCarga::ValidaCriacao, the constructor of CCabecalhoEntidade and DoConverte).
+# GetOffsetBiometria (celeitor.cpp:76-82, its throw on its record's line 79) is written for fn 1937, which holds it
+# behind a frame of its own and is not written: with no caller in this link it is compared with nothing
+# (docs/reference/splat.md "Reviewing a match"; celeitor.cpp's header says which of its lines are chosen).
 #
 # Not written, or pending, in this family, and what each waits for:
 # - 11452, CConversorLocal::DoDesconverte: this unit's -pending.cpp.

@@ -2,7 +2,7 @@
 # its record at line 49 col 11, message "Eleitor não habilitado manualmente", code 8067), with the class heads it and its
 # caller need: CEleitorDadosHabilitacaoBiometrica (md/eleitor/celeitordadoshabilitacaobiometrica.h) and
 # comum::CEleitorDadosHabilitacao (app/comum/dados/celeitordadoshabilitacao.h). The function is written for
-# CEleitorDetalhe::MarcaHabilitado (unit 98's celeitordetalhe.cpp), which CEleitores::MarcaEleitorFoiHabilitado (target
+# CEleitorDetalhe::MarcaHabilitado (unit 110's celeitordetalhe.cpp), which CEleitores::MarcaEleitorFoiHabilitado (target
 # fn 2825, unit 110's celeitores.cpp) holds inlined, and it holds this function inlined in turn (a second stack-pointer
 # prologue at +0x1ae of 2825, the throw's record 1572476). It has no target index of its own, so this unit matches nothing
 # by itself: 2825 matches at the tree's -O3, and fragment 110 has its -O2 measurement. Before the tree took -O3, with

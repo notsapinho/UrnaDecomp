@@ -56,10 +56,10 @@
 # either call alone makes roots_boost.o define disconnect: wasm-objdump -x -j linking); without dec_slot_refcount's
 # line, 9572 9575; without erase's, 9579; without the tracked pointers' reserve_impl, 9560 9561 9562 9563; without the
 # garbage's, 9572; without dispose's, 9519. No variant loses a row of 34125a18. Not landed:
-# throw_exception<bad_function_call> (9571) declared extern as well, measured with these lines but sp_counted_impl_p
-# declared extern as a whole class, adds 5197 5198 5199 5200 9566 9567 9569 and takes 9537, 9583 and 9585 out of match
-# (9571 then reads no-candidate, and 2223 and 9378 unresolved); 9577 (slot_call_iterator_t's dereference) stays
-# unresolved self-voted on 9571, whose only name is 9577's table operand.
+# throw_exception<bad_function_call> (9571) declared extern as well adds 5197 5198 5199 5200 9566 9567 9569 and takes
+# 9537, 9583 and 9585 out of match (9571 then reads no-candidate, 2223 and 9378 unresolved, and 9334 differs where it
+# read no-candidate); 9577 (slot_call_iterator_t's dereference) stays unresolved self-voted on 9571, whose only name
+# is 9577's table operand.
 # The rtti-vptr hand line that named 5192 for 5193's call (the only target function that holds ICompressor's vtable
 # address point) went: with 5192 matched, a generated `call` line names it, and without the hand line steps 8 to 10 move
 # no scan row and build the target's sha256 with every match.

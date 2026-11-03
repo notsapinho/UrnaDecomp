@@ -13,7 +13,7 @@
 //   second call site binaryen inlined __futimesat into it, where the target calls 6236. Neither target caller reads
 //   the result, so w293_tempos does not either: a stand-in that read it kept the result binaryen drops in the target.
 // This TU is the first to instantiate the two templates, so the link keeps its copies; it compiles with the tree's
-// flags, as cgravadorbu.cpp's object, whose copies the target keeps (their records lie in its run of the data), does.
+// flags, as cgravadorbu.cpp's object does, whose copies the target keeps by a reading (their records lie in its run).
 #include <source_location>
 #include <string>
 
