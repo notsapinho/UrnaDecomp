@@ -7,7 +7,9 @@
 # - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
 # - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it three members no
 #   record names, GetImpedimento (3769), SemImpedimento (2266), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's
-#   members" below);
+#   members" below). celeitordetalhe.cpp is compiled by unit 110 now, first in its list, ahead of celeitores.cpp: its
+#   constructors, which CEleitores::LoadEleitorDetalhe (5764) holds, give 5764's locals only in that order
+#   (src/units/110-uenux2-singletons.mk has the measurement), and its members here scored the same in both;
 # - comum::asn::CConversorTipoIdentificadorEleitor::DoConverte and DoDesconverte (11357 and 11356, slots 2 and 3 of the
 #   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
 #   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
@@ -159,7 +161,6 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
   src/app/comum/dados/cintegridadereferencial.cpp \
-  src/app/comum/dados/celeitordetalhe.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp \
   src/app/comum/dados/asn/eleitor/cconversorimpedido.cpp
 UENUX2_SRCS += $(COMUM_DADOS_SRCS)

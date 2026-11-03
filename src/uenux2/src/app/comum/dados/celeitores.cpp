@@ -206,7 +206,33 @@ ueword CEleitores::QuantidadeHabilitacaoSemBiometria() const
     });
 }
 
-// (original lines 649-733: content not recovered)
+// (original lines 649-703: content not recovered)
+#line 704
+CEleitorDetalhe CEleitores::LoadEleitorDetalhe(const md::CEleitorDecorator& eleitor, const std::vector<md::CImpedido>& impedidos,
+    size_t& indice, const md::CEleitorDinamico* dinamico) const
+{
+    md::ETipoImpedimento impedimentoP1 = md::IMPEDIMENTO_SEM_IMPEDIMENTO;
+    md::ETipoImpedimento impedimentoP2 = md::IMPEDIMENTO_SEM_IMPEDIMENTO;
+    if (indice < impedidos.size()) {
+        const md::CImpedido& impedido = impedidos[indice];
+        if (eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()) == impedido.GetEleitor()) {
+            ++indice;
+            impedimentoP1 = impedido.GetImpedimentoP1();
+            if (impedido.TemImpedimentoP2()) {
+                impedimentoP2 = impedido.GetImpedimentoP2();
+            }
+        } else if (eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()) > impedido.GetEleitor()) {
+            const std::string mensagem = std::format("CEleitores::LoadEleitorDetalhe - ({}-{} > {}-{}). {} com marcação de impedido não encontrado nas listas de eleitores e de tte", eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()).GetIdentificador(), eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()).GetTipo(), impedido.GetEleitor().GetIdentificador(), impedido.GetEleitor().GetTipo(), impedido.GetEleitor().GetIdentificador());
+            throw CUeComumDadosError(EUE_COMUM_DADOS_7851, mensagem);
+        }
+    }
+    if (dinamico == nullptr) {
+        return CEleitorDetalhe(eleitor, impedimentoP1, impedimentoP2);
+    }
+    return CEleitorDetalhe(eleitor, *dinamico, impedimentoP1, impedimentoP2);
+}
+
+// (original lines 728-733: content not recovered)
 #line 734
 void CEleitores::ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const
 {

@@ -8,7 +8,9 @@
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
 //                       5604, 11209, 12098, 12110 (7377, unit 197's StartState, is in the link)
-//   DestroiDecoradores  ~CEleitorDecorator 379: 15 callers, some read its result, so this stand-in reads it (R18)
+//   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
+//                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
+//                       stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
@@ -23,6 +25,8 @@
 //                       it): its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
 //   MontaListas         comum::MontaCaminhos 1936: fns 5772, 6734 and 7787
+//   CarregaDetalhes     CEleitores::LoadEleitorDetalhe 5764: fns 6734 and 7787, one call without dynamic data and one
+//                       with
 //   vt_CEleitores       comum::CEleitores's vtable (@1559112), whose one slot is QuantidadeAptosPorAbrangencia (fn 2824):
 //                       the target stores its vptr in fn 7787 alone (a constructor inlined there), which is not
 //                       written; the sink goes when 7787 lands
@@ -44,7 +48,7 @@ int d267(int) __asm__("_ZN5comum2md16CDetalheConsultaD2Ev");
 int d242(int) __asm__("_ZN5comum2md17CDetalheCandidatoD2Ev");
 int d2267(int) __asm__("_ZN7ecourna3app5dados15CParametrosUrnaD2Ev");
 
-int d379(int) __asm__("_ZN5comum2md17CEleitorDecoratorD2Ev");
+int d379(int) __asm__("_ZN5comum2md8CEleitorD2Ev");
 void w2269(int) __asm__("_ZN5comum7CCargos5ResetEv");
 int w332(int) __asm__("_ZNK5comum7CCargos10GetCurrentEv");
 int w2836(int) __asm__("_ZNK5comum7CCargos17GetCurrentEleicaoEv");
@@ -68,6 +72,7 @@ int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3_
 void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
+void w5764(int, int, int, int, int, int) __asm__("_ZNK5comum10CEleitores18LoadEleitorDetalheERKNS_2md17CEleitorDecoratorERKNSt3__26vectorINS1_9CImpedidoENS5_9allocatorIS7_EEEERmPKNS1_16CEleitorDinamicoE");
 extern const char vt_CEleitores[] __asm__("_ZTVN5comum10CEleitoresE");
 }
 
@@ -151,6 +156,12 @@ __attribute__((noinline)) void MontaListas(int resultado, int diretorio, int nom
     w1936(resultado + 12, diretorio, nomes + 12);
 }
 
+__attribute__((noinline)) void CarregaDetalhes(int resultado, int eleitores, int eleitor, int impedidos, int indice)
+{
+    w5764(resultado, eleitores, eleitor, impedidos, indice, 0);
+    w5764(resultado + 204, eleitores, eleitor + 108, impedidos, indice, eleitor + 216);
+}
+
 const void* volatile singletons_sink;
 
 struct SSingletonsRoots {
@@ -172,6 +183,7 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&s11478);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);
+        singletons_sink = reinterpret_cast<const void*>(&CarregaDetalhes);
         singletons_sink = vt_CEleitores;
     }
 } singletons_roots;

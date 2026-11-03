@@ -113,7 +113,8 @@
 #   too, out of line by choice: comum::asn::CIndexadorFotos::DoDesconverte (11441), which
 #   124-uenux2-app-comum-dados-asn.mk matches, holds it inlined and shows neither tell (that fragment says so).
 # - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
-#   GetImpedimentoP2, held inlined by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
+#   GetImpedimentoP2, which fn 5764, CEleitores::LoadEleitorDetalhe, holds behind a frame of its own: it is written there
+#   for unit 110, out of line, its throw on line 46, its other lines chosen). The class is read from 11410, CConversorImpedido's DoDesconverte,
 #   their only caller, which unit 98 writes: it calls each twice (emplace_back's two paths), so the roots' stand-ins for
 #   them went with it. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
 #
