@@ -2,10 +2,10 @@
 // 10896, 10925 and 10929 are reconstructed, and UneRetangulos stands for the other two, 1693 and 7787; its body is no
 // target function's.
 // SRect::Left and Right (fns 5488 and 5487) have two direct callers each in the target, fns 5537 and 10977, and
-// SRect::Adjust (fn 2768) four, fns 2770, 5545, 7787 and 10977, none reconstructed. Each needs two call sites in our
-// link, or binaryen inlines it into its one caller. AjustaBordas stands for 5537 and 10977, calling each setter twice,
-// and for Adjust's four, calling it twice; its body is no target function's. Compiled with APP_CXXFLAGS, like the other
-// stand-ins.
+// SRect::Adjust (fn 2768) four, fns 2770, 5545, 7787 and 10977, none reconstructed but 5537 (unit 92's DrawChar). Each
+// needs two call sites in our link, or binaryen inlines it into its one caller. AjustaBordas stands for 10977, calling
+// each setter twice, and for Adjust's four, calling it twice; its body is no target function's. Compiled with
+// APP_CXXFLAGS, like the other stand-ins.
 #include "api/gui/primitives.h"
 
 namespace {

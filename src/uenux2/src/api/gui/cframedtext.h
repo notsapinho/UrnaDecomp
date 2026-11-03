@@ -21,6 +21,9 @@
 //   (`std::max(size, 8) >> 3`) compile to other code. The TPosition is SetLength's: fn 12387 holds an extend16 of the result, which `int` drops.
 // - CellRect and Rect read locals and build the SRect as CLineField::Rect does. Reading m_position in place gives the
 //   same functions, and `std::minmax` does not. CellRect with `inline` gives the same, as does Largura returning int.
+// - DrawChar takes the text's colour, which both callers pass as 2 and binaryen's dead-argument elimination folds into
+//   its body: with the 2 written in the body the alignment's store comes out ahead of the string's, which the target
+//   stores first (src/units/92-uenux2-iinputfield.mk has the measurement). The parameter's name and place are chosen.
 
 #include <algorithm>
 #include <cstddef>
@@ -51,7 +54,7 @@ public:
 
     void DrawFrame(size_t index, TColor color, IScreen& screen) const;
 
-    void DrawChar(size_t index, char caractere, IScreen& screen) const;
+    void DrawChar(size_t index, char caractere, TColor color, IScreen& screen) const;
 
     void FillCell(size_t index, TColor color, IScreen& screen) const;
 

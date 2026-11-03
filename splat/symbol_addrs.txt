@@ -4625,7 +4625,7 @@ _ZNSt3__26vectorIN5comum2md15estadoaplicacao20CDadoCorrespondenciaENS_9allocator
 _ZN3api11CImageField8SetImageENSt3__210shared_ptrINS_6IImageEEE = func:5533; // size:0xc9 evidence:pair-addr
 _ZNK3api17CGrayedFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:5534; // size:0x10d evidence:srcloc-anchor
 _ZNK3api11CFramedText8FillCellEmNS_6TColorERNS_7IScreenE = func:5536; // size:0xa4 evidence:pair-fingerprint
-_ZNK3api11CFramedText8DrawCharEmcRNS_7IScreenE = func:5537; // size:0x223 evidence:call by:2780,5534
+_ZNK3api11CFramedText8DrawCharEmcNS_6TColorERNS_7IScreenE = func:5537; // size:0x223 evidence:srcloc-anchor
 _ZN3api5IFormINS_7IScreenEE5Slot7Ev = func:5539; // size:0xc3 evidence:pair-addr
 _ZN3api12CFormBuilder16GetLabeledKeyPosERKNS_5SRectENS_14ETextAlignmentEs = func:5544; // size:0x22f evidence:srcloc-anchor
 _ZN3api5IFormINS_7IScreenEEC2ERKNSt3__26vectorINS3_10shared_ptrINS_10IFormFieldIS1_EEEENS3_9allocatorIS8_EEEERKNS5_INS_8IPreShowIS1_EEEE = func:5548; // size:0x10 evidence:call by:554,5550

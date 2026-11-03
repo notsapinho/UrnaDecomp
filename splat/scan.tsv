@@ -2643,7 +2643,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2777	_ZN3api11CLedFieldMTD0Ev	2659	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/cledfieldmt.cpp.o
 2778	_ZN3api13CDSImageFieldD2Ev	2660	symbol	match	readings: address symbol	368	addr	api	1	app/uenux2/src/api/gui/cdsimagefield.cpp.o
 2779	_ZNK3api11CFramedText9DrawFrameEmNS_6TColorERNS_7IScreenE	2630	symbol	match	-	166	byte	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
-2780	_ZNK3api11CFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	2631	symbol	match	readings: address string,address srcloc,address symbol,table slot	766	none	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
+2780	_ZNK3api11CFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	2631	symbol	match	readings: address string,address srcloc,address symbol,table slot	766	shape	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
 2781	_ZN3api5IFormINS_7IScreenEED2Ev	2733	symbol	match	readings: address symbol	355	shape	api	1	app/uenux2/src/api/gui/cinteractiveformbuilder.cpp.o
 2782	_ZN3api12CFormBuilder21AddTextFieldMultiLineERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_5SRectERKNS_5SFontENS_14ETextAlignmentE	5636	symbol	match	readings: address symbol	343	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 2783	_ZN3api19CTextFieldMultiLine4MoveERKNS_6SPointE	2707	symbol	match	-	97	addr	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
@@ -5397,10 +5397,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5531	_ZN3api17CImageFieldUpdateD2Ev	5593	symbol	match	readings: address symbol	175	addr	api	1	app/uenux2/src/api/gui/cimagefieldupdate.cpp.o
 5532	_ZNSt3__26vectorIN5comum2md15estadoaplicacao20CDadoCorrespondenciaENS_9allocatorIS4_EEE16__destroy_vectorclB8ne210108Ev	5575	symbol	match	-	81	addr	libc++	1	app/uenux2/mock/app/comum/cappinfobuilder.cpp.o
 5533	_ZN3api11CImageField8SetImageENSt3__210shared_ptrINS_6IImageEEE	5648	symbol	match	-	201	addr	api	1	app/uenux2/src/api/gui/cimagefield.cpp.o
-5534	_ZNK3api17CGrayedFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	5738	symbol	match	readings: address string,address srcloc,address symbol,table slot	269	none	api	1	app/uenux2/src/api/gui/cgrayedframedtext.cpp.o
+5534	_ZNK3api17CGrayedFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	5738	symbol	match	readings: address string,address srcloc,address symbol,table slot	269	shape	api	1	app/uenux2/src/api/gui/cgrayedframedtext.cpp.o
 5535	-	-	-	no-candidate	no symbol and no ledger pair	25	none	api	0	-
 5536	_ZNK3api11CFramedText8FillCellEmNS_6TColorERNS_7IScreenE	5490	symbol	match	-	164	byte	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
-5537	_ZNK3api11CFramedText8DrawCharEmcRNS_7IScreenE	5491	symbol	differs	+0x18 target +0x18 local.get 2 | ours +0x18 i32.const 2	547	none	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
+5537	_ZNK3api11CFramedText8DrawCharEmcNS_6TColorERNS_7IScreenE	5491	symbol	match	readings: address symbol,address string,address srcloc,table slot	547	shape	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
 5538	-	-	-	no-candidate	no symbol and no ledger pair	42	none	app	0	-
 5539	_ZN3api5IFormINS_7IScreenEE5Slot7Ev	5934	symbol	match	-	195	addr	api	1	app/uenux2/src/api/gui/cinteractiveformbuilder.cpp.o
 5540	_ZN3api10CFormStackINS_7IScreenEE7EmpilhaEPNS_5IFormIS1_EE	5936	symbol	match	readings: address symbol	289	shape	api	1	app/uenux2/src/api/gui/cinteractiveformbuilder.cpp.o
@@ -12301,7 +12301,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12435	dropColumnFunc	9072	symbol	match	readings: address string,address symbol	1010	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12436	renameTableTest	9073	symbol	match	readings: address symbol,address string	1193	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12437	renameTableExprCb	9074	symbol	match	-	163	byte	unknown	1	sqlite/O3pic2/sqlite3.o
-12438	_ZNK3api11CInputFieldINS_11CFramedTextEE4DrawERNS_7IScreenE	11454	symbol	match	-	83	none	api	1	app/uenux2/src/app/comum/informacao/cmenubase.cpp.o
+12438	_ZNK3api11CInputFieldINS_11CFramedTextEE4DrawERNS_7IScreenE	11454	symbol	match	-	83	shape	api	1	app/uenux2/src/app/comum/informacao/cmenubase.cpp.o
 12439	renameTableSelectCb	9075	symbol	match	-	235	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12440	renameTableFunc	9076	symbol	match	readings: table slot,address symbol,address same-content,address string	2444	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12441	renameColumnExprCb	9078	symbol	match	-	279	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -12456,7 +12456,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12590	sqlite3SelectWalkFail	9215	symbol	match	-	11	byte	libc++	1	sqlite/O3pic2/sqlite3.o
 12591	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED0Ev	11708	ledger	differs	+0x4 target +0x3 i32.const 1538008 | ours +0x3 i32.const 1537680 [ours 1516988 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEEE → 0x177690]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12592	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED2Ev	11706	ledger	differs	+0x4 target +0x3 i32.const 1538008 | ours +0x3 i32.const 1578184 [ours 1517028 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEEE → 0x1814c8]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-12593	_ZNK3api16CMaskedTextFieldINS_11CFramedTextEE4DrawERNS_7IScreenE	9835	symbol	match	-	82	none	api	1	app/92-uenux2-iinputfield-roots.o
+12593	_ZNK3api16CMaskedTextFieldINS_11CFramedTextEE4DrawERNS_7IScreenE	9835	symbol	match	-	82	shape	api	1	app/92-uenux2-iinputfield-roots.o
 12594	pragmaVtabRowid	9221	symbol	match	-	14	byte	unknown	1	sqlite/O3pic2/sqlite3.o
 12595	_ZN3api16CMaskedTextFieldINS_11CFramedTextEED0Ev	9836	symbol	match	readings: address symbol	12	addr	api	2	app/92-uenux2-iinputfield-roots.o
 12596	pragmaVtabColumn	9222	symbol	match	readings: address symbol	275	addr	unknown	1	sqlite/O3pic2/sqlite3.o
@@ -12571,7 +12571,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12705	sqlite3_filename_journal	4993	symbol	match	-	145	fingerprint	sqlite	1	sqlite/O3pic2/sqlite3.o
 12706	sqlite3_filename_database	4994	symbol	match	-	62	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12707	sqlite3_uri_int64	4995	symbol	match	-	58	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12708	_ZNK3api16CMaskedTextFieldINS_17CGrayedFramedTextEE4DrawERNS_7IScreenE	9833	symbol	match	-	82	none	api	1	app/92-uenux2-iinputfield-roots.o
+12708	_ZNK3api16CMaskedTextFieldINS_17CGrayedFramedTextEE4DrawERNS_7IScreenE	9833	symbol	match	-	82	shape	api	1	app/92-uenux2-iinputfield-roots.o
 12709	sqlite3_uri_key	4996	symbol	match	-	181	fingerprint	app	1	sqlite/O3pic2/sqlite3.o
 12710	sqlite3_free_filename	4997	symbol	match	readings: address symbol	204	addr	app	1	sqlite/O3pic2/sqlite3.o
 12711	sqlite3_create_filename	4998	symbol	match	-	337	addr	app	1	sqlite/O3pic2/sqlite3.o
