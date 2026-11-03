@@ -48,9 +48,13 @@ public:
     virtual void ProcessInput() override;
 
     static void AvancaTentativa();
+    static void AvancaVerificacao();
     static bool AtingiuLimiteTentativas();
     static bool AtingiuLimiteVerificacoes();
     static bool PrimeiraTentativa();
+    // The attempt number, read by vota::CPedeDigital::StartState (fn 10468) for its log: the low byte of the first
+    // static (`i32.load8_u[1590924]`). Its name and its being an inline member here are chosen.
+    static int GetTentativa() { return s_tentativa; }
 
 private:
     CControlaReconhecimento();

@@ -118,10 +118,9 @@
 #
 # Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
 # CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
-# CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
-# 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
-# waits for. Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState), 10443, 10447 and
-# 10625 (pending), 10676 (written, below).
+# CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465, pending), whose line stays blank;
+# the slots the -pending.cpp traps, with what each waits for. Rows of these classes left for later: 10512
+# (CControlaReconhecimento's StartState), 10443 and 10625 (pending), 10676 (written, below).
 #
 # Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
@@ -260,7 +259,7 @@
 # (cverificadadoeleitor.cpp.o has no function of its own for it), the shape of unit 239's CNomeEleitor form; the same
 # code written in the constructor's body is not measured. Chosen: the builder's name and namespace, the statics' names,
 # the lock_guard's spelling, and GetInst's and the statics' lines after the destructor. Its four target callers (10447,
-# 10473, 10477, 10485) are not written: unit 278's roots stand for them.
+# this unit's, and 10473, 10477 and 10485, unit 282's) are in the link, and unit 278's stand-in for them went.
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit
@@ -286,12 +285,23 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
+# Matched since: vota::CDadoEleitorNaoConfere::ProcessInput (10447, srcloc-anchor on the record it holds,
+# ccontrolareconhecimento.cpp:176). On CONFIRMA, when CControlaReconhecimento::AtingiuLimiteVerificacoes (5404) says
+# the verifications reached their limit, CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097) and
+# CPedeIdentidade::GetInst (652) as the next state; else CControlaReconhecimento::AvancaVerificacao, which binaryen
+# inlines (a frame of its own), and CVerificaDadoEleitor::GetInst (2735). AvancaVerificacao is written at its record,
+# line 176, column 15: the second counter (@1590928) compared with the parameters' numTentativasVerificacao byte (+140
+# of CConfiguracaoEleicao, the compare in place: clang inlines AtingiuLimiteVerificacoes there), incremented, or else
+# EUeVotaError 9398 thrown with "Limite de verificações de dado do eleitor atingido." (the enumerator's name chosen).
+# Before steps 7 to 9, 19 over 109 rows, all operand-only (pnpm wasm score). CControlaReconhecimento::GetTentativa, an
+# inline accessor of the first counter that vota::CPedeDigital::StartState (unit 282) reads, is chosen.
+#
 # Roots: three classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
 # CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735; CEleitorJaVotou's went:
 # its constructor is in the link, inlined into its GetInst, which 10635 holds; CIdentidadeInvalida's went: its
 # constructor is in the link, inlined into its GetInst, which unit 278's 10627 holds), and stand-ins for the target
-# callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link). 2735's
-# callers' stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
+# callers of 5403, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link); those of 5404 to
+# 5406 went, their callers 10447, 10448, 10473 and 10485 being in the link. ccontrolareconhecimento.cpp reaches Boost
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #

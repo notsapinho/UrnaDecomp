@@ -63,15 +63,15 @@ void CControlaReconhecimento::AvancaTentativa()
     }
 }
 
-
-
-
-
-
-
-
-
-
+void CControlaReconhecimento::AvancaVerificacao()
+{
+    if (!AtingiuLimiteVerificacoes()) {
+        ++s_verificacao;
+    } else {
+        throw CUeVotaError(EUE_VOTA_LIMITE_VERIFICACOES_ATINGIDO,
+                           "Limite de verificações de dado do eleitor atingido.");
+    }
+}
 
 
 

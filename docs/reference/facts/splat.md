@@ -601,7 +601,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -625,8 +625,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
    Our table grows as units take functions' addresses, so landings keep the slot there. A change that drops
    address-taken functions before it would take the names, and the splat build would fail on both.
 2. **The merged bodies and their thunks: 1565, 2777, 3681, 5516, 10362, 10369, 10374, 12317, 12564; 2899, 10888, 11205;
-   6026, 10887, 11204.** Each group is one binaryen merge-similar-functions body and the thunks that call it. The match
-   holds while our link merges functions whose differing operands give the shared body the target's parameters
+   6026, 10887, 11204; 2903, 10434, 10442, 10476.** Each group is one binaryen merge-similar-functions body and the
+   thunks that call it. The match holds while our link merges functions whose differing operands give the shared body
+   the target's parameters
    (`src/units/README.md` "Pending members", the merge-thunk bullet). A landing that adds a member with another
    differing operand, or takes one away, can reshape the body and its thunks. The target's callers of each body, and
    their verdicts:
@@ -642,10 +643,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
 
    10362, 10369 and 10374, the D0 thunks of the three `api::CDataTextFmt<comum::(anonymous
    namespace)::CComparecimentoMesariosDS>` (unit 97), matched with fn 10388 and added three members to 1565's body; 3607
-   and 3740 matched with unit 163 and gave 2899's body the target's four callers. Our link's index of each body (`ours`
-   in the scan) and of its callers moves at every landing, so read the members by name: the scan's `ours` for the
-   three, then their callers in our link (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each
-   caller:
+   and 3740 matched with unit 163 and gave 2899's body the target's four callers. 2903, the body of four classes'
+   `unique_ptr` exit destructors (target callers 10434, 10442, 10476 and 12033, each `f2903(p0, <the pointer's
+   address>)`), formed in our link from 10434, 10442 and 10476 once units 152 and 282 wrote vota::CEleitorDemorando's
+   and CDigitalNaoReconhecida's statics; 12033 reads no-candidate, and the four match only while that set forms (`pnpm
+   --silent wasm fn ../target/vota_web_wasm.wasm 2903` lists the callers). Our link's index of each body (`ours` in the
+   scan) and of its callers moves at every landing, so read the members by name: the scan's `ours` for the three, then
+   their callers in our link (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each caller:
 
    ```sh
    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo

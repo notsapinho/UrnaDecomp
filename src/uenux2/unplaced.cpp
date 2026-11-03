@@ -6,21 +6,6 @@
 // <stubs>
 // component vota
 
-// link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
-
-// f10440 · 1876 B · unmatched · placement: link order · name unknown
-// void f10440(i32) { ... }
-
-// link-order cluster 295 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdigitalnaoreconhecidadecbiometria.cpp
-
-// f10478 · 633 B · unmatched · placement: link order · name unknown
-// void f10478(i32) { ... }
-
-// link-order cluster 297 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdigitalnaoreconhecidaportempo.cpp
-
-// f10486 · 919 B · unmatched · placement: link order · name unknown
-// void f10486(i32) { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -192,11 +177,6 @@
 
 // f2502 · 15 B · unmatched · placement: link order · name unknown
 // void f2502(i32, i32) { ... }
-
-// link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
-
-// f2734 · 1228 B · unmatched · placement: link order · name unknown
-// ? f2734() { ... }
 
 // link-order cluster 1099 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp
 

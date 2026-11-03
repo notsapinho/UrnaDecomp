@@ -6,8 +6,8 @@
 //   the target's fns 12098 and 10226 call them, on GetInst's result, which they drop (10226, vota::CThreadMonitor::Run,
 //   unit 116's, is in the link, written and not matched: it calls LogaNivelBateria twice);
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
-// - comum::IEventosLog::logaAlerta (fn 1398): the target's fns 10415 and 10512 (6115, binaryen's merge, matched, 10774,
-//   unit 119's slot 28, 10416, unit 152's, 10642 and 10676, unit 161's, and 10420, unit 142's, are in the link);
+// - comum::IEventosLog::logaAlerta (fn 1398): the target's fn 10512 (6115, binaryen's merge, matched, 10774, unit 119's
+//   slot 28, 10415 and 10416, unit 152's, 10642 and 10676, unit 161's, and 10420, unit 142's, are in the link);
 // - comum::IEventosLog::logaErro (fn 2282): the target's fn 10478 (4459, unit 197's, 3279 and 4550, unit 119's, and
 //   11849, unit 104's, are in the link);
 // - comum::IEventosLog's members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
@@ -51,7 +51,7 @@ __attribute__((noinline)) int w111_relatorio(comum::IEventosLog& log, comum::ERe
     return static_cast<int>(log.ConverteERelatoriosUE(relatorio).size() + log.ConverteERelatoriosUE(outro).size());
 }
 
-// stands for fns 10415 and 10512 (6115, 10416, 10420, 10642, 10676 and 10774 are in the link)
+// stands for fn 10512 (6115, 10415, 10416, 10420, 10642, 10676 and 10774 are in the link)
 __attribute__((noinline)) int w111_alerta(comum::IEventosLog& log, const std::string& mensagem, const std::string& outra)
 {
     log.logaAlerta(mensagem);

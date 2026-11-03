@@ -11,14 +11,14 @@
 // vota::CLogVota members of this unit (fns 1127, 4551, 4556, 2495, 4563 and 4557, in app/vota/log/clogvota.cpp) have
 // direct call sites in the target, two or more each (ledger/callgraph.tsv; 4557's two are both in fn 12081), so
 // binaryen keeps them out of line; 4551, 4556, 4563 and 4557 have them in the link from their written callers (12077,
-// 12078, 12081, 12027, 12082), and the stand-ins below give the others theirs, each standing for the callers it
+// 12078, 12081, 12027, 12082), and so has 2495 (10466, unit 192; 10473, 10477 and 10485, unit 282), and the stand-ins
+// below give the others theirs, each standing for the callers it
 // names, and go when those callers are in splat/matched.txt or written in the link. Declared through asm labels, so this TU needs no uenux2 header; compiled as app code.
 extern "C" {
 int w156_logvota_getinst(void) __asm__("_ZN4vota8CLogVota7GetInstEv");
 void w156_loga_imprimindo_relatorio(int, int, unsigned char) __asm__(
     "_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEh");
 void w156_imprime_bu(unsigned char, int) __asm__("_ZN4vota13CImprimindoBU9ImprimeBUEhNS_16PrintMessageModeE");
-void w156_loga_biometrico(int) __asm__("_ZN4vota8CLogVota48LogaHabilitacaoCanceladaReconhecimentoBiometricoEv");
 extern const char w156_vt_cretirarmr[] __asm__("_ZTVN4vota10CRetirarMRE");
 extern const char w156_vt_comum_estadourna[] __asm__("_ZTVN5comum22CItemImprimeEstadoUrnaE");
 extern const char w156_vt_comum_listaeleitores[] __asm__("_ZTVN5comum26CItemImprimeListaEleitoresE");
@@ -53,20 +53,10 @@ __attribute__((noinline)) int ImprimeBUs(int n)
     return n * 7 + 97;
 }
 
-// Stands for the operador slots that call LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495: 10473, 10477 and
-// 10485; 10466, CPedeDigital::ProcessInput, is in the link).
-__attribute__((noinline)) int AlertaVias(int n)
-{
-    w156_loga_biometrico(w156_logvota_getinst());
-    w156_loga_biometrico(w156_logvota_getinst());
-    return n * 3 + 83;
-}
-
 struct SW156Roots {
     SW156Roots()
     {
         w156_n = ImprimeRelatorios(w156_n);
-        w156_n = AlertaVias(w156_n);
         w156_n = ImprimeBUs(w156_n);
         w156_sink = w156_vt_cretirarmr;
         w156_sink = w156_vt_comum_estadourna;
