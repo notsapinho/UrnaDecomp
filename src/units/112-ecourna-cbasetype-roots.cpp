@@ -11,9 +11,8 @@
 // It calls each one twice, so each has two call sites here; 9066, 9127, 9130, 9142, 9221, 9228, 11469 and 11470 are
 // written, the rest are not. Its body is no target function's: two constructions and a difference.
 //
-// w112_apara stands for the callers of the copying Trim (1374) not written: 5604 (2256, 5343, 5896 and 11377 are in the
-// link). Two calls, for the same reason. Without a second copying function 1879 stays a whole body: with this one
-// binaryen forms the target's merge 3942.
+// The copying Trim (1374) needs no stand-in: its target callers 2256, 3712, 5343, 5604, 5667, 5896 and 11377 are in the
+// link (5604 is unit 155's written Gera).
 //
 // w112_apaga stands for the other caller of std::string::__erase_external_with_move (1136) not in the link: 5892.
 // Trim alone is one call site, and binaryen then inlines the erase into Trim, 85 rows more than the target's 9406. Six
@@ -43,19 +42,12 @@ __attribute__((noinline)) int w112_apaga(std::string& s, size_t n)
     return static_cast<int>(s.size());
 }
 
-__attribute__((noinline)) int w112_apara(const std::string& s)
-{
-    const std::string a = ecourna::api::util::CStringUtils::Trim(s);
-    const std::string b = ecourna::api::util::CStringUtils::Trim(a + s);
-    return static_cast<int>(a.size() * 3 + b.size());
-}
-
 __attribute__((noinline)) int w112_todos(int v)
 {
     using W = unsigned short;
     using D = unsigned int;
     std::string texto(static_cast<size_t>(v), 'k');
-    v += w112_apaga(texto, static_cast<size_t>(v)) + w112_apara(texto);
+    v += w112_apaga(texto, static_cast<size_t>(v));
     return w112_usa<TQtdEleitor, W>(static_cast<W>(v)) + w112_usa<TAno, W>(static_cast<W>(v + 1)) +
            w112_usa<TScoreHabilitacao, W>(static_cast<W>(v + 2)) + w112_usa<TSecaoID, W>(static_cast<W>(v + 3)) +
            w112_usa<TZonaID, W>(static_cast<W>(v + 4)) + w112_usa<TMunicipioID, D>(static_cast<D>(v + 5)) +

@@ -1,9 +1,9 @@
-// Roots: keep the vtables of vota::CMostraQRCodeCertificado (@1542480), vota::CRetirarMR (@1542676) and comum's four
-// menu items (@1550780 to @1550888) in the skeleton link the way the target reaches their slots: only through the
-// vtable, which the classes' constructors store. The states' constructors are inlined into their GetInst, and neither
-// of those two GetInst has a caller here: CMostraQRCodeCertificado's only caller is CMostraQRCodeBU::ProcessInput (fn
-// 12051), pending, and CRetirarMR's (fn 2291) is not reconstructed. vota::CQuerImprimirBU's vtable needs no line: its
-// GetInst is inlined into CInicioBU::StartState (fn 12062, unit 104), which stores its vptr.
+// Roots: keep the vtables of vota::CRetirarMR (@1542676) and comum's four menu items (@1550780 to @1550888) in the
+// skeleton link the way the target reaches their slots: only through the vtable, which the classes' constructors store.
+// CRetirarMR's constructor is inlined into its GetInst, whose caller (fn 2291) is not reconstructed.
+// vota::CMostraQRCodeCertificado's vtable (@1542480) needs no line: its GetInst is inlined into
+// CMostraQRCodeBU::ProcessInput (fn 12051, unit 37), which stores its vptr. vota::CQuerImprimirBU's vtable needs no
+// line: its GetInst is inlined into CInicioBU::StartState (fn 12062, unit 104), which stores its vptr.
 // vota::CLimiteCopiasBUAtingido's vtable needs no line: its GetInst is inlined into
 // CVerificaQtdBUsAdicionais::StartState (fn 12023, unit 185), which stores its vptr. Comum's items are built by fn
 // 6599, which stores each comum vptr and then the vota item's (unit 102's roots keep the vota items' vtables). Taking
@@ -19,7 +19,6 @@ void w156_loga_imprimindo_relatorio(int, int, unsigned char) __asm__(
     "_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEh");
 void w156_imprime_bu(unsigned char, int) __asm__("_ZN4vota13CImprimindoBU9ImprimeBUEhNS_16PrintMessageModeE");
 void w156_loga_biometrico(int) __asm__("_ZN4vota8CLogVota48LogaHabilitacaoCanceladaReconhecimentoBiometricoEv");
-extern const char w156_vt_cmostraqrcodecertificado[] __asm__("_ZTVN4vota24CMostraQRCodeCertificadoE");
 extern const char w156_vt_cretirarmr[] __asm__("_ZTVN4vota10CRetirarMRE");
 extern const char w156_vt_comum_estadourna[] __asm__("_ZTVN5comum22CItemImprimeEstadoUrnaE");
 extern const char w156_vt_comum_listaeleitores[] __asm__("_ZTVN5comum26CItemImprimeListaEleitoresE");
@@ -69,7 +68,6 @@ struct SW156Roots {
         w156_n = ImprimeRelatorios(w156_n);
         w156_n = AlertaVias(w156_n);
         w156_n = ImprimeBUs(w156_n);
-        w156_sink = w156_vt_cmostraqrcodecertificado;
         w156_sink = w156_vt_cretirarmr;
         w156_sink = w156_vt_comum_estadourna;
         w156_sink = w156_vt_comum_listaeleitores;

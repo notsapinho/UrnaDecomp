@@ -3,7 +3,7 @@
 #   shared fns 244, 387), and GetInst (inlined into fn 12023, unit 185's), the constructor and the statics (exit-time
 #   destructors fns 12028, 12029);
 # - vota::CMostraQRCodeCertificado: ProcessInput (fn 12038), the destructor (fns 785, 1560), GetInst (inlined into fn
-#   12051, so dropped from our link), the constructor and the statics (exit-time destructors fns 12041, 12042);
+#   12051, unit 37's), the constructor and the statics (exit-time destructors fns 12041, 12042);
 # - vota::CQuerImprimirBU: StartState (fn 12035), the destructor (fns 244, 387), and GetInst (inlined into fn 12062,
 #   unit 104's), the constructor and the statics (exit-time destructors fns 12036, 12037), written since (below);
 # - vota::CRetirarMR: ProcessInput (fn 12030) and the destructor (fns 1284, 2884);
@@ -186,10 +186,10 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/informacao/citemmenu.cpp.o: UENUX2_CXXFLAGS 
 # the unit's flags
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
-# nothing reconstructed builds CMostraQRCodeCertificado, CRetirarMR or comum's items yet:
-# 156-uenux2-fimvotacao-bu-roots.cpp keeps their vtables, the way the target reaches their slots, and stands for the
-# callers of ImprimeBU and of two CLogVota members that still wait (CLimiteCopiasBUAtingido's vptr is stored by unit
-# 185's 12023, CQuerImprimirBU's by unit 104's 12062)
+# nothing reconstructed builds CRetirarMR or comum's items yet: 156-uenux2-fimvotacao-bu-roots.cpp keeps their
+# vtables, the way the target reaches their slots, and stands for the callers of ImprimeBU and of two CLogVota members
+# that still wait (CLimiteCopiasBUAtingido's vptr is stored by unit 185's 12023, CQuerImprimirBU's by unit 104's 12062,
+# CMostraQRCodeCertificado's by unit 37's 12051)
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-roots.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/156-uenux2-fimvotacao-bu-pending.o $(APP)/156-uenux2-fimvotacao-bu-roots.o

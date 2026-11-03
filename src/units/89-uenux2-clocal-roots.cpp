@@ -42,7 +42,6 @@ int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");
 int w2271(int, int) __asm__("_ZNK5comum13CCandidaturas15ExisteCandidatoEh");
-void w2840(int, int, int) __asm__("_ZNK5comum13CCandidaturas13GetCandidatosEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
 int w5809(int, int, int) __asm__("_ZNK5comum13CCandidaturas24ExisteCandidatoFederacaoEhRKN7ecourna3app5dados10CFederacaoE");
@@ -132,16 +131,16 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
-// Stands for the callers of four CCandidaturas members that are not in our link, beside units 77's and 139's:
-// GetCandidatosPartido (2272: 3819, 5604 and 11976, beside 11213 and 11255), ExisteCandidato (2271: 3819, beside 11215,
-// 11254, 11255 and unit 197's 4442), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604 and 11891, beside
+// Stands for the callers of three CCandidaturas members that are not in our link, beside units 77's and 139's and
+// unit 155's written Gera (5604): GetCandidatosPartido (2272: 3819 and 11976, beside 5604, 11213 and 11255),
+// ExisteCandidato (2271: 3819, beside 11215, 11254, 11255 and unit 197's 4442) and Busca (1273: 11891, beside 5604,
 // 11214, 11255, 11724, 11744, 11683 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
-// body, as one of 11683's two calls does).
+// body, as one of 11683's two calls does). GetCandidatos (2840) needs none: its callers 4459, 5604 and 11214 are in the
+// link.
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
     w2272(r, c, cargo, partido);
     w2272(s, c, cargo + 1, partido);
-    w2840(r, c, cargo);
     return w2271(c, cargo) + w1273(c, cargo, candidato);
 }
 // Stands for fn 5807's caller 6076 (its other, 12649, CDataText<CCandidaturasDSNome>::GetText, matches).

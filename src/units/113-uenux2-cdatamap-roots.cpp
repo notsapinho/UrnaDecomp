@@ -6,11 +6,12 @@
 // 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
 // 3697 and 5611 come from cgeradorbu.cpp's object, which instantiates them for unit 139's 11254 and 11255 and links
 // first, and 3741 from iiniciajustificativa.cpp's (unit 152), whose StartState, 10587, holds Find inlined. Each function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
-// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268, 2838, 6999, 11254, 11972 and 11973 are in the
-//   link, 5604 waits), 1283 (9: 11213 and 11255 are in the link), 3125 (4, all in the link). All four in the link are
+// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7, all in the link: 2268, 2838, 5604, 6999, 11254, 11972
+//   and 11973), 1283 (9: 5604, 11213 and 11255 are in the link), 3125 (4, all in the link). All four in the link are
 //   what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
-// - Next, three: 3697 (5604; 11213 and 11255 are in the link), 5601 (12105; 11206 is in the link), 5611 (5604; 11254 is
-//   in the link), which form 3892.
+// - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105; 11206 is in the link), 5611 (5604 and
+//   11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
+//   written Gera) in the link; those over the parties' map stay for 1283's callers.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590; 10587 is in the link), through Find, and the copy of the
 //   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
@@ -35,7 +36,6 @@
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
 #include "app/comum/dados/celeitordetalhe.h"
-#include "app/comum/dados/md/candidatura/ccandidatura.h"
 #include "app/comum/dados/md/cpartido.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "app/comum/justificativa/cjustificador.h"
@@ -43,7 +43,6 @@
 #include "ecourna/app/dados/cnumeroinscricaoeleitoral.hpp"
 
 using TMapaEleitores = api::CDataMap<comum::md::CEleitorIdentidade, comum::CEleitorDetalhe>;
-using TMapaCandidaturas = api::CDataMap<unsigned int, comum::md::CCandidatura>;
 using TMapaPartidos = api::CDataMap<unsigned short, comum::md::CPartido>;
 using TMapaJustificados = api::CDataMap<ecourna::app::dados::CNumeroInscricaoEleitoral, comum::CJustificadorDetalhe>;
 using TComparecimento = comum::md::CComparecimentoMesario;
@@ -132,8 +131,6 @@ struct SW113Roots {
     {
         w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaEleitores>);
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaEleitores>);
-        w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaCandidaturas>);
-        w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaCandidaturas>);
         w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&CarregaUm);
