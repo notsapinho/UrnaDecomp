@@ -11,8 +11,8 @@
 // - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: fn 5761, not
 //   written, and fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor inlined, and CEleitores' slot 0 (fn
 //   2824, unit 110's), both in the link. Abrange stands for fn 5761.
-// - comum::CCargos::OrdenaPorImpressao (fn 3782) has three direct callers in the target, fns 5604, 12098 and 12110,
-//   none written: Imprime stands for them, two call sites.
+// - comum::CCargos::OrdenaPorImpressao (fn 3782) has three direct callers in the target, fns 5604, 12098 and 12110;
+//   5604 (unit 155's) is in the link: Imprime stands for the other two, two call sites.
 // - The std::map<SCargoInfo, CVotos> copy of comum::md::CVotosCargos::InsereCedula (held by fn 4454) calls
 //   __emplace_hint_unique_key_args (fn 5681), which calls __find_equal (fn 3251). 5681's other target caller is
 //   fn 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte), 3251's are fns 2386 (vota::CTelasCargo's
@@ -54,7 +54,7 @@ __attribute__((noinline)) int Abrange(const char* registro, const char* eleitore
     return w197_abrangencia(registro + 32, eleitores + 32, eleitores[44] + 197u);
 }
 
-// stands for fns 5604, 12098 and 12110
+// stands for fns 12098 and 12110 (5604, unit 155's, is in the link)
 __attribute__((noinline)) void Imprime(char* cargos, int vezes)
 {
     w197_ordena_impressao(cargos);

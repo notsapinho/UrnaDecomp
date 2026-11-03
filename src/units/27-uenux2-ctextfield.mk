@@ -1,6 +1,11 @@
 # uenux2 api::CTextField ctor (target fn 1918), Draw (10952), GetTypeName (10947) and its implicit destructors (10950,
 # 10948, emitted with the vtable) in src/uenux2/src/api/gui/ctextfield.cpp, with the class header ctextfield.h and the
 # 4964 enumerator of eueguierror.h; paths relative to src/uenux2.
+# SetCorTexto (target fn 940, a chosen name) stores the text's colour (+44, the constructor's corTexto) when it differs
+# and refreshes the form: vota::CMostraQRCodeBU::AjustaTela (fn 5982, unit 37's) calls it seven times on the fields
+# IForm<IScreen>::FindFieldAs<CTextField> returns, and fn 940 is the one body binaryen keeps for it and
+# CTextBox::SetStatus (unit 217's), whose code is the same at the same offsets. Our link keeps this one, first in link
+# order, so the match line of 940 names it (a twin rename). Its line, below Move, is a choice.
 # Draw sits above Rect's line 55, in the band's order (uses 1, 10947-10952: Draw, Rect, the destructors, GetTypeName, which alone sits out of that order, above Draw); no
 # record falls in it, so its lines are a choice. Same object code, by the function's disassembly with the object-local
 # numbers masked: `m_apagar == true`, and m_apagar as an unsigned char compared with 1 (no loop tells a bool from a byte,

@@ -43,6 +43,7 @@ public:
     comum::TCargoID GetCurrentCargoID() const;
     const md::CEleicaoPE& GetCurrentEleicao() const;
     comum::TEleicaoID GetCurrentEleicaoID() const;
+    std::string GetCurrentEleicaoVersaoPacote() const;
     comum::TEleicaoID GetUltimaEleicaoID() const { return m_cargos.back().first; }
     // The posts kept: vota::CVotacaoStateAudio::FormataMensagem (fn 6999) walks the vector at +16 and reads each pair's
     // post id (+4). The accessor and its name are chosen.

@@ -62,7 +62,7 @@
 #   constructor from the members it copies), whose target body has landing pads of its own (invoke_iii three times,
 #   __cxa_find_matching_catch_2, __resumeException): read as an -fexceptions TU's copy, which no uenux2 object gives. No
 #   name reaches 1249; its callers are 5637, 5740, 5856, 11197, 11395 and 12098.
-# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fn 3704 has no name; 1681
+# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fn 3704 matches now (unit 155); 1681
 #   (vector<uebyte>::__assign_with_size over uebyte*) matches from src/app/roots_vector.cpp (unit 11).
 # - 11390, 11391, 11399 and 11400 (CConversorEstadoGeralVota's and CConversorDadoCorrespondencia's slots) and fn 1080
 #   (comum::asn::Utils::ConverteDataHoraJE) are matched now: fragments 172 and 96.

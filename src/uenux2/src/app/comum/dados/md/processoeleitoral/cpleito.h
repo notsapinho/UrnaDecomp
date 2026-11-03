@@ -38,6 +38,7 @@ public:
     // TU, the reading how-to step 3 gives), and it has no target index of its own. No record names it: its name, its
     // being a member (it reads m_eleicoes), its file and its form are chosen.
     bool ExisteEleicao(const TEleicaoID id) const;
+    const std::string& GetVersaoPacoteEleicao(const TEleicaoID id) const;
     const CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID id) const;
 
 private:

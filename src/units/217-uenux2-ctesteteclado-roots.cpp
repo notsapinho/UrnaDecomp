@@ -13,8 +13,8 @@ void w217_status(void* caixa, int status) __asm__("_ZN3api8CTextBox9SetStatusENS
 
 namespace {
 
-// Stands for vota::testeteclado::CTesteTeclado::ProcessInput (fn 11804, pending in this unit) and fn 5982 (not
-// written), the other callers of api::CTextBox::SetStatus (fn 940).
+// Stands for vota::testeteclado::CTesteTeclado::ProcessInput (fn 11804, pending in this unit), a caller of
+// api::CTextBox::SetStatus (fn 940; its other caller, fn 5982, unit 37's, is in the link).
 __attribute__((noinline)) void MudaStatus(void* caixa, int status)
 {
     w217_status(caixa, status + 2);

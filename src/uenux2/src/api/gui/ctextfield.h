@@ -25,6 +25,11 @@ public:
 
     void Move(const SPoint& posicao) override;
 
+    // The text's colour (+44, the constructor's corTexto): vota::CMostraQRCodeBU::AjustaTela (target fn 5982) calls fn
+    // 940 on the fields FindFieldAs<CTextField> gives it, the body of CTextBox::SetStatus, which stores +44 when it
+    // differs and refreshes the form. The member, its name and its being out of line beside Move are chosen.
+    void SetCorTexto(TColor cor);
+
 private:
     SPoint m_posicao;
     SharedIText m_text;

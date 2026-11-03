@@ -95,6 +95,10 @@ enum EUeGuiError {
     // the value is the code api::CTextSource's constructor throws (record ctextsource.h 37:19, inlined into fn 10740);
     // the name is chosen from its message, "Texto nulo": no evidence names it
     EUE_GUI_TEXTSOURCE_TEXTO_NULO = 4977,
+    // the value is the code api::IForm<IScreen>::FindFieldAs<CTextField> (target fn 1721, record iform.h 142:23)
+    // throws; the name is chosen from its message, "Campo encontrado, mas não é do tipo solicitado: ": no evidence
+    // names it
+    EUE_GUI_FINDFIELDAS_TIPO_INVALIDO = 4978,
     // the value is the code api::IScreen::GetFontMetrics (target fn 8938) throws; the name is chosen from its message,
     // "Método não implementado": no evidence names it
     EUE_GUI_METODO_NAO_IMPLEMENTADO = 4982,

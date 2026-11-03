@@ -35,6 +35,9 @@ public:
     const md::estadoaplicacao::CEstadoGeral& GetGeral() const;
     md::estadoaplicacao::CEstadoGeralVota& GetVota(EUrnaTurno turno = TURNO_ATUAL);
     const md::estadoaplicacao::CEstadoGeralVota& GetVota(EUrnaTurno turno = TURNO_ATUAL) const;
+    // The non-const overload: vota::IQRCodeBUDS::GeraPartes (inlined into target fn 1956) holds GetEstado's non-const
+    // instance for CEstadoGeralGap (record cappinfo.cpp:42) inlined, through this one. Out of line here, a choice.
+    md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno);
     const md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno) const;
     std::vector<std::string> GetCodigosCarga(EUrnaTurno turno) const;
     bool TemVota(EUrnaTurno turno) const;

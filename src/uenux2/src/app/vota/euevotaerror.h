@@ -75,6 +75,12 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the value is the code vota::CMostraQRCodeBU::ProcessInput (target fn 12051, record cmostraqrcodebu.cpp:85)
+    // throws; the name is chosen from its message, "Número de inputs inválido": no evidence names it
+    EUE_VOTA_QRCODE_BU_NUMERO_INPUTS_INVALIDO = 9373,
+    // the value is the code vota::CMostraQRCodeBU::AjustaTela (target fn 5982, record cmostraqrcodebu.cpp:195) throws;
+    // the name is chosen from its message, "Campo não encontrado no formulário": no evidence names it
+    EUE_VOTA_QRCODE_BU_CAMPO_NAO_ENCONTRADO = 9374,
     // the value is the code vota::CQuerReimprimirZeresima::StartState (target fn 11849, record
     // cquerreimprimirzeresima.cpp:45) throws; the name is chosen from its message, "Erro na verificação do
     // comparecimento": no evidence names it
