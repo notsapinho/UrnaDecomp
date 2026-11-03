@@ -9,8 +9,8 @@
 //   and 10631 (in the link, unit 104); the stand-ins stay for 3616.
 // - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50), 10420 (unit 142's validatitulosuspensao.cpp,
 //   binaryen-inlined there), 10313 (unit 71) and 10721 (unit 277), all in the link: its stand-ins went.
-// - IRegraIdentidade::EhValida (fn 3723): callers 2803, in the link, and 10627, vota::CValidaIdentidade's slot 2, which
-//   one stand-in stands for.
+// - IRegraIdentidade::EhValida (fn 3723): callers 2803 and 10627 (vota::CValidaIdentidade's slot 2, unit 278's, which
+//   holds CValidadorIdentidade::TiposValidos inlined), both in the link: its stand-in went.
 // - FormataIdentificador (fn 1924): callers 10586, in the link (unit 50), 11233 (comum::(anonymous
 //   namespace)::SituacaoEleitor, record cgeradorrellistaeleitores.cpp:100) and 12105 (records of
 //   vota::CGeraRelatorios::StartState and comum::CGeradorBUJ::GeraBUJ), which DuasFormatacoesIdentificador stands for.
@@ -21,7 +21,6 @@
 extern "C" {
 int r178_identidade(int, int, int) __asm__("_ZN5comum2md18CEleitorIdentidadeC1ENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r178_formata(int, int, int) __asm__("_ZN5comum2md17FormataIdentidadeENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
-int r178_regra_eh_valida(int, int) __asm__("_ZNK5comum2md16IRegraIdentidade8EhValidaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void r178_formata_identificador(int, int) __asm__("_ZN5comum2md20FormataIdentificadorERKNS0_18CEleitorIdentidadeE");
 }
 
@@ -38,11 +37,6 @@ __attribute__((noinline)) void DuasFormatacoes(int destino, int identificador, i
     r178_formata(destino + 12, identificador + 12, tipo);
 }
 
-__attribute__((noinline)) int ValidaRegra(int regra, int numero)
-{
-    return r178_regra_eh_valida(regra, numero + 8) + 3;
-}
-
 __attribute__((noinline)) void DuasFormatacoesIdentificador(int destino, int identidade)
 {
     r178_formata_identificador(destino, identidade);
@@ -56,7 +50,6 @@ struct SRoots178 {
     {
         r178_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoes);
-        r178_sink = reinterpret_cast<const void*>(&ValidaRegra);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoesIdentificador);
     }
 } roots178;

@@ -426,6 +426,11 @@ void CLogVota::LogaIdentificadorDigitadoMesario()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
+void CLogVota::LogaVotacaoBloqueadaPorHorario()
+{
+    logaAlerta("Votacao foi bloqueada por horario");
+}
+
 void CLogVota::LogaMesarioConfirmaHorarioUrnaErrado()
 {
     loga("Mesário confirma que o horário da urna está errado");

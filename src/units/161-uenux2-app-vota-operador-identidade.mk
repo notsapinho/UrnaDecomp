@@ -10,7 +10,8 @@
 #   destructor of its static std::mutex (10681), its GetInst (652, below), ProcessInput (10677) and the exit destructor
 #   of its static std::unique_ptr (10682, a thunk into binaryen's 3886: src/units/221-uenux2-app-comum-constructors.mk);
 # - CIdentidadeInvalida::ProcessInput (10667), with 2295, the body binaryen forms from it, unit 278's 10461 and unit
-#   283's 10604 (below); CVerificaDadoEleitor::GetInst (2735) and its statics' exit destructors (10446, 10445);
+#   283's 10604 (below), and vota::TextoIdentidadeInvalida (10670, below); CVerificaDadoEleitor::GetInst (2735) and its
+#   statics' exit destructors (10446, 10445);
 # - vota::CEleitorNaoEncontrado's slot 9 (10663) and its destructors (1907, 1689), over its new base
 #   vota::IEleitorImpedidoVotar; the two destructor lines name CEleitorOptouPorVotarEmTransito's byte-identical twins
 #   since that class's file (unit 104) links first (step 9 renamed them);
@@ -115,12 +116,12 @@
 # celeitornaoencontrado.cpp includes cconfiguracaoeleicao.h, so it takes the Boost include path, as
 # ccontrolareconhecimento.cpp does.
 #
-# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's and
-# CEleitorJaVotou's (each header names the function that holds them inlined);
+# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
+# CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
-# waits for. Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState), 10443, 10447, 10676
-# and 10625 (pending).
+# waits for. Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState), 10443, 10447 and
+# 10625 (pending), 10676 (written, below).
 #
 # Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
@@ -180,7 +181,30 @@
 # comum::CAppInfo::EhTreinamentoEleitor() (697). It scored 29 over 149 rows, all operand-only (pnpm wasm score, before
 # steps 7 to 9). Chosen: the log member's name and its place in clogvota.cpp (binaryen inlined it: no index orders it),
 # `>= 2020`, the slot called directly on GetInst's result rather than through a vota:: function over it, and the two
-# `if`s' spelling. ProcessTick (10676) stays pending: the pending file says what it waits for.
+# `if`s' spelling.
+#
+# CPedeIdentidade::ProcessTick (10676, slot 8) is written in cpedeidentidade.cpp, after ProcessInput, a chosen line, and
+# does not match. In the target's order: on the tick at +11, when IsVotacaoBloqueadaPorHorario (fn 2226) holds,
+# CThreadOperador's StopTick (fn 422) of it and CLogVota::GetInst, then a 16-byte frame binaryen inlined: the member
+# LogaVotacaoBloqueadaPorHorario, added to clogvota.cpp, logaAlerta (fn 1398) of "Votacao foi bloqueada por horario"
+# (a literal only 10676 loads); on the tick at +12, when api::CDateTime::Now() (fn 479) is not before
+# IInformacaoThreadOperador's slot 18 (GetDataHoraInspecao, called on fn 599's result; operator<=>, fn 759),
+# vota::AgendaInspecao (fn 3620), Post(12) on CThreadEleitor's queue (fns 316 and 501) and vota::CAguardaInspecao's
+# state, whose GetInst and constructor it holds inlined (unit 281's caguardainspecao.cpp; the one store of that vptr,
+# 1590732); on the tick at +13, *m_aviso becomes "CORRIGE: outras opções" (string::__assign_external, fn 276) when the
+# text of the field with the form's focus is empty, else " " (a one-character store in place); the field is read with
+# std::vector::at at CInteractiveForm's +84, the index of the focus, through GetEntradaAtual, added to
+# api/gui/cinteractiveform.h (its out_of_range call is fn 234). Measured with pnpm wasm score in the whole link, before
+# steps 7 to 9: `96 over 510 rows (same 414, replaced 81 [80 operand-only], inserted 3, deleted 12)`, and every row
+# that is no operand is in the inlined CAguardaInspecao constructor's form: the target clears the builder's 12 bytes in
+# place (`i32.store[l2+44] = 0; i64.store[l2+36] = 0`) and uses the frame's address, ours calls
+# api::CMTFormBuilder's constructor (fn 203's body) and keeps its result in a local, which shifts the locals after it.
+# That is the remainder units 02, 104, 142 and 165 record for 4633, 10214, 1150 and 5343, GetForm's callers (fn 1694):
+# not explained. The slot keeps it written (docs/how-to-decompile.md step 5); its trap went. Its row reads `unresolved`
+# on CAguardaInspecao::s_inst's .bss address, which no target name holds while 10676 does not match (step 8 names the
+# function by its vtable slot, which casts no vote). Chosen: the log member's name and its place in clogvota.cpp,
+# GetEntradaAtual's name and result (a field pointer; an index getter with at() in ProcessTick is not measured), `>=` on
+# the two times, the slot called on GetInst's result directly, the literal 12, and the `if` and `else if` spelling.
 #
 # CPedeIdentidade::ProcessInput (10677, slot 7) is written in cpedeidentidade.cpp, after the constructor, a chosen
 # line. Read() of the form at +24; on CORRIGE (5) the next state is CEscolheOpcao::GetInst's (fn 2753); on CONFIRMA (9),
@@ -198,6 +222,18 @@
 # 10677's). It matches. Chosen: the two helpers' names and their result type, ProximoEstadoIdentidadeDigitada's being
 # a member (it reads the form at +24) and ProximoEstadoTreinamento's a free function of vota with external linkage (it
 # reads nothing of the class), the log member's name and its place in clogvota.cpp, and the switch's spelling.
+#
+# CIdentidadeInvalida::GetInst and its constructor have no target index: vota::CValidaIdentidade::StartState (10627,
+# unit 278's, written and not matched) holds them inlined, the one store of the vptr (1588384). They are written in
+# cidentidadeinvalida.cpp with the statics (s_inst @1905364, s_mutex @1905340) and the form's text function,
+# vota::TextoIdentidadeInvalida (10670, `f3623(p0)`: the identifier typed, passed by its table slot 3860): the form is
+# AddBeep(2), "Identidade:" at {1, 1}, 10670's text at {13, 1}, "Número errado" at {1, 2}, "CORRIGE: retornar" at
+# {1, 4}, AddInputControl and GetInteractiveForm("", true), built in the member list by a helper (fn 301 writes into the
+# member). In band 1, 10672 and 10671 (the statics' exit destructors, the pointer's first) lie above 10670 and 10670
+# above StartState (10669): the statics are defined, the pointer first, before 10670, and 10670 before StartState,
+# external, since clang defers an internal function to the end of the TU. 10670 matches (its census pair, `shape`); the
+# exit destructors wait for 10627's match (unit 278's fragment). Chosen: the names, 10670's being a free function of
+# vota, the helper's name and its anonymous namespace, and the constructor's and GetInst's lines above the statics.
 #
 # CIdentidadeInvalida::ProcessInput (10667, slot 7) is written in cidentidadeinvalida.cpp: `f2295(p0, 5, <its Read()
 # record>)`, a thunk into the body binaryen merges from five states' slot 7 that go to CPedeIdentidade::GetInst's state
@@ -250,11 +286,12 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
-# Roots: four classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
+# Roots: three classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
 # CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735; CEleitorJaVotou's went:
-# its constructor is in the link, inlined into its GetInst, which 10635 holds), and stand-ins for the target callers of
-# 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link). 2735's callers'
-# stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
+# its constructor is in the link, inlined into its GetInst, which 10635 holds; CIdentidadeInvalida's went: its
+# constructor is in the link, inlined into its GetInst, which unit 278's 10627 holds), and stand-ins for the target
+# callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link). 2735's
+# callers' stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #

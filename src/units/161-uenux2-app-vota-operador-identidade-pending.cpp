@@ -14,18 +14,11 @@
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's
 //   (CVerificaDadoEleitor::GetInst); both match now, and AvancaVerificacao is not written.
-// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): every direct callee has a name, but it waits for two
-//   things this tree lacks. On the tick at +12 it holds vota::CAguardaInspecao's GetInst and constructor inlined (the
-//   one store of that class's vptr, 1590732; its statics at 1908552 and 1908528), a class with no header here, whose
-//   slot 6 (fn 10530) calls fn 395, matched since unit 31. On the tick at +13 it reads the text of the input field that
-//   has the form's focus, std::vector::at with CInteractiveForm's index at +84, a member that
-//   api/gui/cinteractiveform.h does not have.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
 #include "app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.h"
 #include "app/vota/operador/confirmaidentidade/cverificadadoeleitor.h"
-#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 #include "app/vota/operador/leidentidade/ieleitorimpedidovotar.h"
 
 namespace vota {
@@ -41,11 +34,6 @@ void CVerificaDadoEleitor::ProcessInput()
 }
 
 void CDadoEleitorNaoConfere::ProcessInput()
-{
-    __builtin_trap();
-}
-
-void CPedeIdentidade::ProcessTick(uebyte)
 {
     __builtin_trap();
 }

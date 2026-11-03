@@ -21,11 +21,6 @@
 // f10486 · 919 B · unmatched · placement: link order · name unknown
 // void f10486(i32) { ... }
 
-// link-order cluster 307 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caguardainspecao.cpp
-
-// f10530 · 701 B · unmatched · placement: link order · name unknown
-// void f10530(i32, i32) { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -53,11 +48,6 @@
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown
 // void f5408(i32) { ... }
-
-// link-order cluster 757 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
-
-// f5420 · 788 B · unmatched · placement: link order · name unknown
-// void f5420(i32, i32) { ... }
 
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 

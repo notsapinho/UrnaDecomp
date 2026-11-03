@@ -11,9 +11,11 @@
 #include "app/comum/cinfomtlcd.h"
 #include "app/comum/dados/celeitores.h"
 #include "app/vota/comum/votadefs.h"
+#include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/comum/telasoperador.h"
+#include "app/vota/operador/confirmaidentidade/caguardainspecao.h"
 #include "app/vota/operador/confirmaidentidade/cnomeeleitor.h"
 #include "app/vota/operador/cthreadoperador.h"
 #include "app/vota/operador/leidentidade/cvalidaidentidade.h"
@@ -28,7 +30,7 @@ CPedeIdentidade::~CPedeIdentidade() = default;
 std::unique_ptr<CPedeIdentidade> CPedeIdentidade::s_inst;
 std::mutex CPedeIdentidade::s_mutex;
 
-// (original lines 31-55: content not recovered)
+// (original lines 33-55: content not recovered)
 #line 56
 void CPedeIdentidade::StartState()
 {
@@ -91,6 +93,28 @@ void CPedeIdentidade::ProcessInput()
         break;
     default:
         break;
+    }
+}
+
+void CPedeIdentidade::ProcessTick(uebyte id)
+{
+    if (id == m_tickIdentidade) {
+        if (IsVotacaoBloqueadaPorHorario()) {
+            CThreadOperador::GetInst().StopTick(m_tickIdentidade);
+            CLogVota::GetInst().LogaVotacaoBloqueadaPorHorario();
+        }
+    } else if (id == m_tickEspera) {
+        if (api::CDateTime::Now() >= impl::IInformacaoThreadOperador::GetInst().GetDataHoraInspecao()) {
+            AgendaInspecao();
+            CThreadEleitor::GetInst().GetMensagens().Post(12);
+            m_pNextState = &CAguardaInspecao::GetInst();
+        }
+    } else if (id == m_tickAviso) {
+        if (m_form->GetEntradaAtual()->GetTexto().empty()) {
+            *m_aviso = "CORRIGE: outras opções";
+        } else {
+            *m_aviso = " ";
+        }
     }
 }
 
