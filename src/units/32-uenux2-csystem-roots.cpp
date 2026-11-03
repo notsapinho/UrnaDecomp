@@ -4,12 +4,12 @@
 // shape. Of GetFileSize's callers, 11623 (CGravadorEnvelopeArquivo::LeConteudo, unit 160) and 3653
 // (api::CEncryptedFile::Load, unit 128) are reconstructed; the noinline caller below, MesmoTamanho, stands for the
 // other, 12134, so binaryen keeps it out of line as the target does.
-// They also keep CSystem::ExistFile, ExistDir and ZeroFill (target fns 412, 5459 and 2761), whose callers are not
+// They also keep CSystem::ExistFile and ZeroFill (target fns 412 and 2761), whose callers are not
 // reconstructed but for 3653, 2760 and 1487: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and
-// others) and its address is in the table (slot 3567), so it is address-taken here and called from two stand-ins;
-// ExistDir is called once each by 5572 and 5821: 5821 is in the link (unit 122's CompactaWsq), and ArquivoNoDiretorio's
-// call stands for 5572. IsEmptyDir (target fn 2762) is called once each by 5572, 5821, 11167 and 12134: DiretorioVazio
-// stands for the three not written, so binaryen keeps it out of line as the target does. ZeroFill is called by 2760
+// others) and its address is in the table (slot 3567), so it is address-taken here and called twice from a stand-in;
+// ExistDir is called once each by 5572 and 5821, both in the link (unit 122's CompactaWsq, unit 179's ValidaConteudo).
+// IsEmptyDir (target fn 2762) is called once each by 5572, 5821, 11167 and 12134: DiretorioVazio stands for the two not
+// written, 11167 and 12134. ZeroFill is called by 2760
 // (RemoveFile) and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
 // RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice: RemoveDois gives it two call
 // sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
@@ -45,7 +45,6 @@
 extern "C" {
 int w2759_root_0(int) __asm__("_ZN3api7CSystem11GetFileSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w412_root_0(int) __asm__("_ZN3api7CSystem9ExistFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-int w5459_root_0(int) __asm__("_ZN3api7CSystem8ExistDirERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w2760_root_0(int) __asm__("_ZN3api7CSystem10RemoveFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w378_root_0(int, int, int, int) __asm__("_ZN3api7CSystem8CopyFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_bb");
 void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
@@ -60,11 +59,6 @@ namespace {
 __attribute__((noinline)) int MesmoTamanho(int arquivoA, int arquivoB)
 {
     return w2759_root_0(arquivoA) == w2759_root_0(arquivoB);
-}
-
-__attribute__((noinline)) int ArquivoNoDiretorio(int arquivo, int diretorio)
-{
-    return w412_root_0(arquivo) && w5459_root_0(diretorio);
 }
 
 __attribute__((noinline)) int ContaRecursos(int arquivo, int diretorio, int outro)
@@ -128,7 +122,6 @@ struct SW2759Roots {
     SW2759Roots()
     {
         w2759_sink = reinterpret_cast<void*>(&MesmoTamanho);
-        w2759_sink = reinterpret_cast<void*>(&ArquivoNoDiretorio);
         w2759_sink = reinterpret_cast<void*>(&ContaRecursos);
         w2759_sink = reinterpret_cast<void*>(&RemoveDois);
         w2759_sink = reinterpret_cast<void*>(&w412_root_0);

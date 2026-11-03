@@ -33,6 +33,8 @@
 // - FormataTamanho (fn 1947): no record names it. A free function defined in iinterfaceinit.cpp whose callers are in
 //   other files too (vota::CThreadMonitor's slot 2, vota::CLogVota::LogaQuantidade), so it is declared in a header,
 //   this one by choice; the unit's fragment has its evidence and what is chosen.
+// - TamanhoMR: no record and no target index; MontarMRSemHabilitar (fn 5896) holds its code. A free function of
+//   iinterfaceinit.cpp declared here, its name and its int result are chosen (the unit's fragment).
 
 #include <memory>
 #include <string>
@@ -43,6 +45,7 @@
 namespace comum {
 
 std::string FormataTamanho(size_t tamanho);
+int TamanhoMR(int dispositivo);
 
 enum EBootDeviceId : int {
     BOOT_DEVICE_DESCONHECIDO = 0,

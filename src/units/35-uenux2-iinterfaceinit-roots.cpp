@@ -3,8 +3,8 @@
 // deleting destructor (fn 9388), which unit 127 writes: they keep it (body intact, `this` result kept as a table entry
 // keeps it) with the vtable its vptr store names, and with it CurrentBootDevice (fn 11646, slot 2), so it takes nothing
 // here. The others are called directly in the target, by functions not reconstructed
-// yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 12031 12134, 5897 and 3832 from 7160 and 12134,
-// 729 from 17 functions): two noinline callers with different bodies give each two call sites, so binaryen keeps it out
+// yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 12031 12134, 5897, 3832 and 5896 from 7160 and
+// 12134, 729 from 17 functions): two noinline callers with different bodies give each two call sites, so binaryen keeps it out
 // of line. DesabilitarMR has one call site, the one binaryen inlines it into in the target (7160). DesligarUrna (fn
 // 5894) takes nothing here: both its target callers, 11982 (unit 169) and 12017 (unit 61), are in the link.
 // Declared through asm labels with the object's signatures (a destructor returns `this`); compiled with APP_CXXFLAGS,
@@ -15,6 +15,7 @@ void wDesabilitarMR_root_0(int) __asm__("_ZN5comum14IInterfaceInit13DesabilitarM
 int w2862_root_0(int) __asm__("_ZN5comum14IInterfaceInit24IsMRPresenteSemHabilitarEv");
 int w5897_root_0(int) __asm__("_ZN5comum14IInterfaceInit23IsMRMontadoSemHabilitarEv");
 void w3832_root_0(int) __asm__("_ZN5comum14IInterfaceInit25DesmontarMRSemDesabilitarEv");
+void w5896_root_0(int) __asm__("_ZN5comum14IInterfaceInit20MontarMRSemHabilitarEv");
 int w729_root_0(int) __asm__("_ZN5comum14IInterfaceInit11GetDemoModeEv");
 }
 
@@ -30,6 +31,7 @@ __attribute__((noinline)) int PreparaMR(int init)
         w3832_root_0(init);
         wDesabilitarMR_root_0(init);
     }
+    w5896_root_0(init);
     return w729_root_0(init);
 }
 
@@ -40,6 +42,8 @@ __attribute__((noinline)) int VerificaMR(int init, int vezes)
     w2863_root_0(init);
     if (w2862_root_0(init) && w5897_root_0(init))
         w3832_root_0(init);
+    else
+        w5896_root_0(init);
     return vezes + 1;
 }
 

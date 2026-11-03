@@ -3,13 +3,18 @@
 
 #include "app/comum/iinterfaceinit.h"
 
+#include <algorithm>
+#include <filesystem>
 #include <format>
 
+#include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 #include "api/util/uedebug.h"
 #include "app/comum/euecomumerror.h"
 #include "app/comum/log/ieventoslog.h"
+#include "ecourna/api/io/cfile.hpp"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
 
@@ -17,7 +22,7 @@ IInterfaceInit::IInterfaceInit() = default;
 
 IInterfaceInit::~IInterfaceInit() = default;
 
-// (original lines 20-42: content not recovered)
+// (original lines 25-42: content not recovered)
 #line 43
 EBootDeviceId IInterfaceInit::CurrentBootDevice()
 {
@@ -89,15 +94,33 @@ bool IInterfaceInit::IsMRMontadoSemHabilitar()
     return resposta[0] == 0;
 }
 
-// (original lines 153-155: content not recovered)
-#line 156
-// <stubs>
-// f5896 · 5233 B · unmatched · name unknown
-// void f5896(i32) { ... }
-// </stubs>
+// (original lines 153-154: content not recovered)
+#line 155
+void IInterfaceInit::MontarMRSemHabilitar()
+{
+    const std::vector<int> resposta = EnviarMensagem(34);
+    if (resposta.empty()) {
+        throw CUeComumError(EUE_COMUM_MONTAR_MR_RESPOSTA_NULA, "Resposta nula");
+    }
 
-// (original lines 161-179: content not recovered)
-#line 180
+    if (resposta[0] != 0) {
+        throw CUeComumError(EUE_COMUM_MONTAR_MR_FALHA, std::format("Falha ao montar mídia de resultado ({})", resposta[0]));
+    }
+
+    const int dispositivo = DispositivoMR();
+    const std::string serial = GetSerialNumberMR(dispositivo);
+
+    if (m_serialMR != serial) {
+        const std::string tamanho = FormataTamanho(TamanhoMR(dispositivo));
+
+        auto& logs = api::CPolySingleton<IEventosLog>::instance();
+        logs.loga(std::format("Tamanho da MR: {}", tamanho));
+        DepuraInfo("Serial da MR: %s", serial.c_str());
+
+        m_serialMR = serial;
+    }
+}
+
 void IInterfaceInit::DesmontarMRSemDesabilitar()
 {
     const std::vector<int> resposta = EnviarMensagem(58);
@@ -140,7 +163,23 @@ void IInterfaceInit::DesligarUrna()
     }
 }
 
-// (original lines 535-726: content not recovered)
+// (original lines 535-626: content not recovered)
+#line 627
+int IInterfaceInit::DispositivoMR()
+{
+    HabilitarMR();
+    const std::vector<int> resposta = EnviarMensagem(12);
+    if (resposta.empty()) {
+        throw CUeComumError(EUE_COMUM_DISPOSITIVO_MR_RESPOSTA_NULA, "Resposta nula");
+    }
+
+    if (resposta[0] == -1) {
+        throw CUeComumError(EUE_COMUM_DISPOSITIVO_MR_FALHA, std::format("Falha ao obter dispositivo da MR: {}", resposta[0]));
+    }
+    return resposta[0];
+}
+
+// (original lines 641-726: content not recovered)
 #line 727
 inline void IInterfaceInit::EnviarMensagemThrowVoid(ueint32 mensagem, const std::string& descricao)
 {
@@ -175,6 +214,60 @@ bool IInterfaceInit::GetDemoMode()
     const bool demoMode = resposta[0] != 0;
     m_demoMode = std::shared_ptr<bool>(new bool(demoMode));
     return demoMode;
+}
+
+// (original lines 764-847: content not recovered)
+#line 848
+std::string IInterfaceInit::GetSerialNumberMR(int dispositivo)
+{
+    std::string serial;
+    if (dispositivo > 0) {
+        const std::string nome = std::format("sd{:c}", 'a' + dispositivo - 1);
+        std::vector<std::string> caminhos;
+
+        const auto modeloUrna = api::CPolySingleton<api::IUrna>::instance().Modelo();
+        switch (modeloUrna) {
+        case 2009:
+        case 2010:
+        case 2011:
+        case 2013:
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:1d.8/usb1/1-0/serial");
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:1d.8/usb1/1-8/serial");
+            break;
+        case 2015:
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-0/serial");
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-7/serial");
+            break;
+        case 2020:
+        case 2022:
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:15.0/usb1/1-3/serial");
+            caminhos.push_back("/sys/devices/pci0000:00/0000:00:15.0/usb2/2-3/serial");
+            break;
+        default:
+            break;
+        }
+
+        const auto caminho = std::find_if(caminhos.begin(), caminhos.end(),
+                                          [](const std::string& c) { return std::filesystem::exists(c); });
+        if (caminho != caminhos.end()) {
+            serial = ecourna::api::util::CStringUtils::Trim(ecourna::api::io::CFile::ReadFileContent(*caminho));
+        }
+    }
+    return serial;
+}
+
+int TamanhoMR(int dispositivo)
+{
+    if (dispositivo <= 0) {
+        return 0;
+    }
+
+    const std::string nome = std::format("sd{:c}", 'a' + dispositivo - 1);
+    const int setores = ecourna::api::util::CStringUtils::ToInt32(
+        ecourna::api::io::CFile::ReadFileContent(std::format("/sys/block/{}/size", nome)));
+    const int tamanhoSetor = ecourna::api::util::CStringUtils::ToInt32(
+        ecourna::api::io::CFile::ReadFileContent(std::format("/sys/block/{}/queue/logical_block_size", nome)));
+    return setores * tamanhoSetor;
 }
 
 } // namespace comum

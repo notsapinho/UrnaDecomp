@@ -339,4 +339,9 @@ std::pair<size_t, size_t> CStringUtils::FindRegex(const std::string& expressao, 
     }
 }
 
+size_t CStringUtils::FindRegexPosition(const std::string& expressao, const std::string& valor)
+{
+    return FindRegex(expressao, valor).first;
+}
+
 } // namespace ecourna::api::util

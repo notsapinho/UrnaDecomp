@@ -78,13 +78,16 @@
 #   the target's one store of the result for a match and for none; returning from inside the if gave the case of no
 #   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
 #   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
-#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and 1539 match. It waits for Boost.Regex's
+#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and 1539 match, and so does 5465 (api::CStringUtils::CasaRegex, unit 179's), through FindRegexPosition. It waits for Boost.Regex's
 #   -fexceptions copies: its callees do_assign (9401) and regex_search (9400), both with landing pads in the target, read
 #   as this file's instantiations (their band, above), and our link takes do_assign from src/app/roots_boost.o (APP_CXXFLAGS, no -fexceptions),
 #   which links first: `ours +0x5f i32.const 2875: a table slot of ours: ...do_assign... has no target function`
 #   (splat/scan.tsv). The same copies keep match_results<const char*>'s destructor (5153) inlined in our link: its other
 #   target caller, 5121, reads as the -fexceptions perl_matcher's push of a saved state with a copy of the results, which
 #   our link does not hold.
+# - FindRegexPosition (no target index: binaryen inlines it into its one caller, 5465), added for unit 179: FindRegex's
+#   start, behind a stack frame of its own in 5465; its name, its being a member and this file are chosen
+#   (src/units/179-uenux2-cvalidamidia.mk).
 # The members by band in this object (target index/ld_index in build/out/wasm-map/vota_web/names.tsv) follow the target's
 # order but where a linkonce copy is involved, and 9407 lies, as Trim (9406) already did, after CBaseError<EUtilError>'s
 # constructor (9410), which uses 1 puts before both.
