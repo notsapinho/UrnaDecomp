@@ -43,7 +43,11 @@
 # 11196's body did not change. The list handed straight to the setter keeps the constructor out of line at -O3 too, in
 # a probe object; it was not linked.
 #
-# Pending, in the -pending.cpp, whose header says what it waits for: GetConteudoQRCode (11200).
+# GetConteudoQRCode (slot 5, target fn 11200) matches: a comum::CQRCodeDS of CAppInfo's general state's
+# GetDadosQRCode (5636), SetOrigem(eOrigemImpressora) (5783, the 1 the target passes) and its call operator (5782), all
+# fragment 299's, which has the evidence for the class; 12 over 168 rows before steps 7 to 9, all operand-only. The
+# named local and the temporary sit where the target's frame has them (+20 and +8). It is defined between EhTreinamento
+# and GetHorarioVerao, the order of target indices below. The -pending.cpp, which held its trap, went with it.
 #
 # The constructor (target fn 5586, no record; at the file's top, a chosen line: it is in use band 2, apart from the
 # slots' band): the general state's urna type for its turn (GetTipoUrna, inline) against eUrnaContingencia; then, when
@@ -231,10 +235,8 @@ CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpres
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)
 # cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (unit 88 adds the path the same way)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(CRELATORIOTESTEIMPRESSORA_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# the pending and roots objects include the class header, which reaches ecourna and uenux2 headers alike
+# the roots object includes the class header, which reaches ecourna and uenux2 headers alike
 W123_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/123-uenux2-crelatoriotesteimpressora-pending.o: $(ROOT)/src/units/123-uenux2-crelatoriotesteimpressora-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/123-uenux2-crelatoriotesteimpressora.mk $(W123_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/123-uenux2-crelatoriotesteimpressora-pending.cpp -o $(R)
 $(ROOT)/$(APP)/123-uenux2-crelatoriotesteimpressora-roots.o: $(ROOT)/src/units/123-uenux2-crelatoriotesteimpressora-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/123-uenux2-crelatoriotesteimpressora.mk $(W123_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/123-uenux2-crelatoriotesteimpressora-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/123-uenux2-crelatoriotesteimpressora-pending.o $(APP)/123-uenux2-crelatoriotesteimpressora-roots.o
+override EXTRA_OBJS += $(APP)/123-uenux2-crelatoriotesteimpressora-roots.o

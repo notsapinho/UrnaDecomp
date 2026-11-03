@@ -8,8 +8,6 @@ extern "C" {
 int w232_1923(int) __asm__("_ZNK5comum2md6CCargo18GetDetalheConsultaEv");
 int w232_187() __asm__("_ZN5comum20CConfiguracaoEleicao7GetInstEv");
 void w232_3775(int, int, unsigned, bool) __asm__("_ZNK5comum20CConfiguracaoEleicao9GetCargosEjb");
-// std::vector<md::CCargo>'s copy constructor, which cconfiguracaoeleicao.cpp.o emits out of line.
-int w232_2289(int, int) __asm__("_ZNSt3__26vectorIN5comum2md6CCargoENS_9allocatorIS3_EEEC2B8ne210108ERKS6_");
 // std::vector<md::CDadosCandidato>::__init_with_size, which md/candidatura/ccandidatura.cpp.o emits out of line.
 void w232_2870(int, int, int, int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__init_with_sizeB8ne210108IPS3_S8_EEvT_T0_m");
 }
@@ -34,13 +32,6 @@ __attribute__((noinline)) void CargosEleicao(int destino, unsigned eleicao)
     w232_3775(destino + 12, w232_187(), eleicao + 1, true);
 }
 
-// Stands for fn 11371, which copies a std::vector<md::CCargo> with fn 2289 (1953 and 5777 do too and are in the link,
-// unit 280's chain); CConfiguracaoEleicao::GetCargos (3775) is another caller.
-__attribute__((noinline)) int CopiaCargos(int destino, int origem)
-{
-    return w232_2289(destino + 24, origem) - origem;
-}
-
 // Stands for fns 5808, 5952 and 7787, which copy a std::vector<md::CDadosCandidato> (52-byte elements) with fn 2870;
 // md::CCandidatura's constructor (5660, unit 89) is the other caller.
 __attribute__((noinline)) void Suplentes(int destino, int primeiro, int ultimo)
@@ -53,7 +44,6 @@ struct S232Roots {
     {
         w232_sink = reinterpret_cast<const void*>(&DetalhesConsulta);
         w232_sink = reinterpret_cast<const void*>(&CargosEleicao);
-        w232_sink = reinterpret_cast<const void*>(&CopiaCargos);
         w232_sink = reinterpret_cast<const void*>(&Suplentes);
     }
 } w232_roots;

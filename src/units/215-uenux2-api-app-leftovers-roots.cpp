@@ -40,6 +40,21 @@ __attribute__((noinline)) int LinhasContinuam(const char* linha, const char* pro
     return w5484_termina(linha) * 2 + w5484_termina(proxima + 12);
 }
 
+} // namespace
+
+// comum::md::estadoaplicacao::CEstadoGeral::GetDadosQRCode (target fn 5636) has two direct callers in the target, fns
+// 11200 (unit 123, in our link) and 3059, which builds the screen's QR code. This stands for 3059.
+extern "C" void w5636_dados(void*, const void*) __asm__(
+    "_ZNK5comum2md15estadoaplicacao12CEstadoGeral14GetDadosQRCodeEv");
+
+namespace {
+
+__attribute__((noinline)) int DadosDaTela(char* dados, const char* geral)
+{
+    w5636_dados(dados + 12, geral);
+    return dados[16];
+}
+
 const void* volatile leftovers_sink;
 
 struct SLeftoversRoots {
@@ -48,6 +63,7 @@ struct SLeftoversRoots {
         leftovers_sink = reinterpret_cast<const void*>(&AjustaGeral);
         leftovers_sink = reinterpret_cast<const void*>(&AjustaDuasVezes);
         leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
+        leftovers_sink = reinterpret_cast<const void*>(&DadosDaTela);
     }
 } leftovers_roots;
 

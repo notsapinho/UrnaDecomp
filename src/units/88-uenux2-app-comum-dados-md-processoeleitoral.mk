@@ -71,7 +71,9 @@
 # - CEleicaoPE::ValidaOrdem (fn 3714) matches since comum's data classes build with strict aliasing (src/Makefile
 #   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md §F6). With -fno-strict-aliasing its one difference is three rows:
 #   the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a named result all
-#   keep it, and so does -O3. The caller is the constructor fn 11371 inlines.
+#   keep it, and so does -O3. Its caller is md::CEleicaoPE::ValidaCargos, which calls it three times, in the
+#   constructor fn 11371 holds (fragment 299, which writes both in celeicaope.cpp); the roots' stand-in that stood
+#   for those calls went with it.
 # The later members, what the target fixes (no record names any of them, so every name and line here is chosen):
 # - 5655 compares the bytes at +0 of its two arguments and gives -1, 0 or 1; its one caller, fn 11888
 #   (vota::CMenuFiltrarCandidatosPorCargo's slot 2), calls it twice to place a copy of CConfiguracaoEleicao::GetCargo's
@@ -127,9 +129,10 @@
 #   5651, then CEleicaoPE::GetCargos, 2257), empty when the pleito has none, and when its bool is set a copy of that copy
 #   (std::vector<md::CCargo>'s copy constructor, fn 2289, out of line) sorted by std::sort with a function passed by table
 #   slot 2363 (fn 11547: CCargo's byte at +16 compared unsigned, ccargo.h's GetOrdemImpressao). Its callers, 5735 and 7787
-#   (false) and 11629 (true), on GetInst()'s result, are not written: fragment 232's roots stand in for them, and for
-#   2289's other callers. The sort brings libc++'s instances over md::CCargo with that comparator, and each matches from
-#   this object: __introsort (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),
+#   (false) and 11629 (true), on GetInst()'s result, are not written: fragment 232's roots stand in for them; 2289's
+#   other callers (1953, 5777, and 11371 through md::CEleicaoPE's constructor, fragment 299) are in the link. The sort
+#   brings libc++'s instances over md::CCargo with that comparator, and each matches from this object: __introsort
+#   (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),
 #   CDetalheCandidato's move assignment (761), the move assignments of std::optional<CDetalheConsulta> (783) and of
 #   std::vector<CRespostaConsulta> (5784), and CDetalheConsulta's copy (374, a std::construct_at, which matches from
 #   cpe.cpp.o's copy since unit 280 links that object's instance first). 5789 and 761 also call

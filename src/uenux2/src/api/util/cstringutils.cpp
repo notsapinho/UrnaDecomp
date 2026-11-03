@@ -4,6 +4,7 @@
 
 #include <cctype>
 #include <format>
+#include <numeric>
 
 #include "api/util/eueutilerror.h"
 #include "ecourna/api/util/cstringutils.hpp"
@@ -17,7 +18,7 @@ constexpr auto EUE_UTIL_7025 = static_cast<EUeUtilError>(7025);
 
 } // namespace
 
-// (original lines 20-53: content not recovered)
+// (original lines 21-53: content not recovered)
 #line 54
 std::string CStringUtils::GetVersionNumber(const std::string& versao)
 {
@@ -67,6 +68,19 @@ bool CStringUtils::CasaCaractere(char mascara, char caractere)
     default:
         return false;
     }
+}
+
+std::string CStringUtils::JuntaTags(const std::vector<std::pair<std::string, std::string>>& tags)
+{
+    std::string texto =
+        std::accumulate(tags.begin(), tags.end(), std::string(),
+                        [](const std::string& acumulado, const std::pair<std::string, std::string>& tag) {
+                            return acumulado + tag.first + ":" + tag.second + " ";
+                        });
+    if (!texto.empty()) {
+        texto.pop_back();
+    }
+    return texto;
 }
 
 } // namespace api

@@ -30,12 +30,15 @@
 # the throw one level inside the function's body; no other form was measured), where each function starts and the blank
 # lines above them, Valida called in the constructors' bodies rather than after them in DoDesconverte (the target's order
 # fits both; the other was not measured), the constructors' parameters, m_abrangencia's name, the local names. The
-# converter's constructor is not written: its builders are not reconstructed.
+# converter's constructor, which stores the vptr and +4, is written out of line here, for fragment 299's 11371, its one
+# caller, which binaryen inlines it into: built inline there, our 11371 keeps the entity's fields pointer across the
+# converter's stores where the target reloads it (fragment 299 has the measurement). Its line, before DoDesconverte, is
+# a choice.
 #
 # Roots (191-uenux2-cconversorcargo-roots.cpp): one stand-in caller each for 365 (14 of its 16 other target callers;
-# 2289 and 3775 are in the link, unit 88), 2341 (5594, 11375) and 3018 (6627; 374 and 11377 are in the link, unit 88
-# and fragment 225), through asm labels; each goes when the
-# callers it names are in the link.
+# 2289 and 3775 are in the link, unit 88), 2341 (5594; 11375 is in the link, fragment 299) and 3018 (6627; 374 and
+# 11377 are in the link, unit 88 and fragment 225), through asm labels; each goes when the callers it names are in the
+# link.
 CCONVERSORCARGO_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorcargo.cpp
 UENUX2_SRCS += $(CCONVERSORCARGO_SRCS)
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on

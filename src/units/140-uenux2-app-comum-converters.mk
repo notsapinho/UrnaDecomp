@@ -23,17 +23,18 @@
 # - Copies of library and ecourna template code this unit's objects bring first: 858, 1074 and 1075 (the error path of
 #   ecourna's IConversorASN, basic_stringstream and CBaseError<EApiAsnError>) from cconversorvotoscargo.cpp.o.
 #
-# Written and not matched, and what each waits for:
+# Matched with fragment 299 (its unit list does not change):
 # - 11363, CConversorProcessoEleitoral::DoDesconverte, in cconversorprocessoeleitoral.{h,cpp} (record line 50), with
-#   md::CProcessoEleitoralDTO's two constructors out of line in cprocessoeleitoraldto.{h,cpp}: `differs`, 84 over 1088
-#   rows (67 operand-only, 10 inserted, 7 deleted). The target ends the function with the identifiers vector's
-#   __throw_length_error and then __throw_bad_array_new_length; every form measured puts the second right after the
-#   loop, in the object before binaryen too: push_back at -O2 and at -O3, emplace_back, an index loop, an iterator loop,
-#   std::transform with a back_inserter, the vector declared first, the principal identifier after the loop, std::find
-#   into a local, std::ranges::find, and the constructors defined in the class. What is written, emplace_back, is inlined
-#   by clang at -O2 (cost 225 against the hint's threshold 325) as the target's is; push_back is inlined only at -O3 (225
-#   against 250, and 225 against 225 at -O2, where the call merges with vector<long>::push_back); the object of
-#   emplace_back at -O2 and push_back at -O3 is the same, masked.
+#   md::CProcessoEleitoralDTO's two constructors out of line in cprocessoeleitoraldto.{h,cpp}. The identifiers are
+#   converted by std::transform into a std::back_inserter, the lambda capturing the converter by reference: 59 over 1078
+#   rows, all operand-only, against the range-for with emplace_back written before, 80 over 1088 (10 inserted, 7
+#   deleted: the target ends the function with the vector's __throw_length_error and then __throw_bad_array_new_length,
+#   that form puts the second right after the loop), both `pnpm wasm score` in the whole link at fragment 299's base. An
+#   earlier link of this unit had std::transform with a back_inserter among the forms that kept the second throw after
+#   the loop; which lambda it held is not recorded here. The form is the one fragment 299's CConversorEleicaoPE
+#   (11371) showed, from the frame its inlined lambda gives.
+#
+# Written and not matched, and what each waits for:
 # - 11352 and 11351, CConversorVotosCargo::DoConverte and DoDesconverte, and 11350, CConversorEleicoesVota::DoConverte,
 #   waited for uenux2 at -O3; at the tree's -O3 11352 matches, and 11351 and 11350 differ by the scores the private
 #   -O3 link below gave, which the plain link gave too at -std=c++20 (pnpm wasm score): what is left is not explained.

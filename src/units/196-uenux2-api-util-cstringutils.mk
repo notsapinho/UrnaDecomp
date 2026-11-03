@@ -11,6 +11,15 @@
 #              over ecourna's CStringUtils::FindRegexPosition (unit 00's file), which binaryen inlines into it.
 #   written    5464 CasaCaractere, added with it, `no-candidate`: it waits, a prediction, for isalnum to keep one
 #              call site (unit 179).
+#   matched    3646 JuntaTags: "chave:valor" of each pair of a std::vector<std::pair<std::string, std::string>>, joined
+#              by spaces, the last space dropped (pop_back), for comum::CQRCodeDS (fragment 299) and vota::CGeraBU's
+#              slot 2 (12110) and 12039. The target builds the text in a local and moves it into the result before
+#              pop_back (its rows), the shape of std::accumulate, whose init it returns by value; a plain loop was not
+#              linked, and that it is std::accumulate is a reading. No record names it; in use band 3 it links between
+#              cgenerictags.cpp's 3647 and csystem.cpp's 3645, a run of api/util/ in name order (cdate, cgenerictags,
+#              csystem, ctickmanager, ctime), so its file is one of cgenerictags.cpp, cstringutils.cpp and
+#              csynchronizer.cpp: this one, a choice, with its name, its being a static member and the lambda's form.
+#              Whole link, before steps 7 to 9: 8 over 320 rows, all operand-only. The roots stand for 12039 and 12110.
 # Chosen: the parameter's and the locals' names; 7025's local constant in the .cpp, as
 # app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp names a code the shared header lacks
 # (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line within

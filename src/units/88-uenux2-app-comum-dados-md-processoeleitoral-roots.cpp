@@ -12,7 +12,6 @@
 //   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
-//   3714  CEleicaoPE::ValidaOrdem     11371, three call sites; it reads nothing of this, and binaryen drops the parameter
 //   3715  GetNomeSuplente             5803 12272
 //   2796  GetNome                     5803 6569 11892
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
@@ -46,8 +45,6 @@ int w1388(int) __asm__("_ZNK5comum2md6CCargo19GetDetalheCandidatoEv");
 int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
 void w1547(int, int) __asm__("_ZNK5comum2md6CCargo13GetNomeNeutroEv");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
-void w3714(int, int, int, int) __asm__(
-    "_ZNK5comum2md10CEleicaoPE11ValidaOrdemERNSt3__23setIhNS2_4lessIhEENS2_9allocatorIhEEEEhRKNS2_12basic_stringIcNS2_11char_traitsIcEENS6_IcEEEE");
 void w3715(int, int, int, int) __asm__("_ZNK5comum2md6CCargo15GetNomeSuplenteEmNS0_5CSexo5ESexoE");
 void w2796(int, int, int) __asm__("_ZNK5comum2md6CCargo7GetNomeENS0_5CSexo5ESexoE");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
@@ -105,12 +102,6 @@ __attribute__((noinline)) void NomesNeutros(int saida, int a, int b)
 __attribute__((noinline)) int XorCargos(int a, int b)
 {
     return w2257(a) ^ w2257(b);
-}
-
-__attribute__((noinline)) void ValidaDuasOrdens(int eleicao, int ordens, int a, int b, int nome)
-{
-    w3714(eleicao, ordens, a, nome);
-    w3714(eleicao, ordens, b, nome + 12);
 }
 
 __attribute__((noinline)) void NomesSuplentes(int saida, int cargo, int suplente, int sexo)
@@ -192,7 +183,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesNeutros);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&ValidaDuasOrdens);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesPorSexo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
