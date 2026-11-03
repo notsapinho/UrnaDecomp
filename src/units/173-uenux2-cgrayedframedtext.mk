@@ -1,6 +1,7 @@
 # uenux2 api/gui: api::CGrayedFramedText::MaskText (target fn 5534, record cgrayedframedtext.cpp 29:15), in the file its
 # record names, with the 4918 enumerator of EUeGuiError. It calls CFramedText's DrawChar (5537), FillCell (5536) and
-# DrawFrame (2779), unit 92's (api/gui/cframedtext.cpp). Its lines but the throw's are a choice. Evidence: the second loop
+# DrawFrame (2779), unit 92's (api/gui/cframedtext.cpp), passing DrawChar the text's colour 2 (unit 92's fragment says
+# why that is a parameter). Its lines but the throw's are a choice. Evidence: the second loop
 # starts from the text's size, read again after the first loop, with an index of its own; one index shared by both loops
 # gave 75 over 157 rows (the throw after the loops, a second epilogue), the two loops 10 over 131, all operand rows until
 # DrawChar had its name (`pnpm wasm score` in the plain link).

@@ -2643,7 +2643,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2777	12	0	app	api	skeleton	2662	addr	2	api::CLedFieldMT::~CLedFieldMT()
 2778	368	3	app	api	skeleton	2663	addr	7	api::CDSImageField::~CDSImageField()
 2779	166	4	app	api	skeleton	2634	byte	0	api::CFramedText::DrawFrame(unsigned long, api::TColor, api::IScreen&) const
-2780	766	3	app	api	-	-	none	-	
+2780	766	3	app	api	skeleton	2635	shape	12	api::CFramedText::MaskText(api::IScreen&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
 2781	355	3	app	api	skeleton	2736	shape	7	api::IForm<api::IScreen>::~IForm()
 2782	343	4	app	libc++	-	-	none	-	
 2783	97	0	app	api	skeleton	2710	addr	1	api::CTextFieldMultiLine::Move(api::SPoint const&)
@@ -5397,10 +5397,10 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5531	175	1	app	api	skeleton	5587	addr	4	api::CImageFieldUpdate::~CImageFieldUpdate()
 5532	81	2	app	libc++	skeleton	5568	addr	1	std::__2::vector<comum::md::estadoaplicacao::CDadoCorrespondencia, std::__2::allocator<comum::md::estadoaplicacao::CDadoCorrespondencia>>::__destroy_vector::operator()[abi:ne210108]()
 5533	201	2	app	api	skeleton	5641	addr	1	api::CImageField::SetImage(std::__2::shared_ptr<api::IImage>)
-5534	269	1	app	api	-	-	none	-	
+5534	269	1	app	api	skeleton	5731	shape	10	api::CGrayedFramedText::MaskText(api::IScreen&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
 5535	25	2	app	api	-	-	none	-	
 5536	164	2	app	api	skeleton	5486	byte	0	api::CFramedText::FillCell(unsigned long, api::TColor, api::IScreen&) const
-5537	547	2	app	api	-	-	none	-	
+5537	547	2	app	api	skeleton	5487	shape	19	api::CFramedText::DrawChar(unsigned long, char, api::TColor, api::IScreen&) const
 5538	42	0	app	-	-	-	none	-	
 5539	195	1	app	api	skeleton	5926	addr	1	api::IForm<api::IScreen>::Slot7()
 5540	289	2	app	api	skeleton	5929	shape	14	api::CFormStack<api::IScreen>::Empilha(api::IForm<api::IScreen>*)
@@ -12301,7 +12301,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12435	1010	0	sqlite	-	skeleton	9075	addr	29	dropColumnFunc
 12436	1193	0	-	-	skeleton	9077	addr	12	renameTableTest
 12437	163	0	-	-	skeleton	9078	byte	0	renameTableExprCb
-12438	83	0	app	api	-	-	none	-	
+12438	83	0	app	api	skeleton	11441	shape	1	api::CInputField<api::CFramedText>::Draw(api::IScreen&) const
 12439	235	0	-	-	skeleton	9079	addr	2	renameTableSelectCb
 12440	2444	0	sqlite	-	skeleton	9080	addr	30	renameTableFunc
 12441	279	0	sqlite	-	skeleton	9081	byte	0	renameColumnExprCb
@@ -12456,7 +12456,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12590	11	0	libcxx	-	skeleton	9219	byte	0	sqlite3SelectWalkFail
 12591	17	0	libcxx	libc++	skeleton	11696	addr	2	std::__2::__shared_ptr_emplace<api::CTextField, std::__2::allocator<api::CTextField>>::~__shared_ptr_emplace()_5589
 12592	14	0	libcxx	libc++	skeleton	11695	addr	1	std::__2::__shared_ptr_emplace<api::CRectField, std::__2::allocator<api::CRectField>>::~__shared_ptr_emplace()
-12593	82	0	-	api	-	-	none	-	
+12593	82	0	-	api	skeleton	9838	shape	2	api::CMaskedTextField<api::CFramedText>::Draw(api::IScreen&) const
 12594	14	0	-	-	skeleton	9226	byte	0	pragmaVtabRowid
 12595	12	0	-	api	skeleton	9837	addr	2	api::CMaskedTextField<api::CGrayedFramedText>::~CMaskedTextField()_9643
 12596	275	0	-	-	skeleton	9227	addr	11	pragmaVtabColumn
@@ -12571,7 +12571,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12705	145	0	sqlite	-	skeleton	4999	fingerprint	0	sqlite3_filename_journal
 12706	62	0	sqlite	-	skeleton	5000	byte	0	sqlite3_filename_database
 12707	58	0	sqlite	-	skeleton	5001	addr	1	sqlite3_uri_int64
-12708	82	0	app	api	-	-	none	-	
+12708	82	0	app	api	skeleton	9836	shape	2	api::CMaskedTextField<api::CGrayedFramedText>::Draw(api::IScreen&) const
 12709	181	0	app	-	skeleton	5002	fingerprint	0	sqlite3_uri_key
 12710	204	0	app	-	skeleton	5003	addr	12	sqlite3_free_filename
 12711	337	0	app	-	skeleton	5004	addr	2	sqlite3_create_filename
