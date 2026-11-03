@@ -26,9 +26,31 @@ both callers once a second one links ([codegen.md §C3](codegen.md)). When the t
 two functions, clang inlined it in at least one TU (an `inline`-specified definition is inlined in each), and a form
 that only binaryen inlines matches until the other caller is written: link with both before choosing.
 
-The count is the one when the Inlining pass runs. merge-similar-functions and duplicate-function-elimination run after
-it, so a function can end with one caller and keep its body: a `byn$mgfn-shared$` body or a surviving twin that its
-callers became. 9256, `IIdentificadorEleitor`'s constructor, has one caller, 3939, the shared body of three derived
+The count is the one when the Inlining pass runs, and `wasm-opt -Oz` runs duplicate-function-elimination before it as
+well as after. On a module of two identical functions and a `main` that calls both (`build/out/<handle>/twin.wasm`,
+from `emcc -O0`), with the passes logged:
+
+```sh
+TMPDIR=/tmp build/docker-build.sh env BINARYEN_PASS_DEBUG=1 /emsdk/upstream/bin/wasm-opt -Oz --all-features build/out/<handle>/twin.wasm -o build/out/<handle>/twin-oz.wasm 2>&1 | /usr/bin/grep -oE 'running pass: (duplicate-function-elimination|dae-optimizing|inlining-optimizing|merge-similar-functions)'
+# running pass: duplicate-function-elimination
+# running pass: dae-optimizing
+# running pass: inlining-optimizing
+# running pass: duplicate-function-elimination
+# running pass: merge-similar-functions
+```
+
+So two functions identical in type and body in the objects are already one, with both's callers, when the count is
+taken: a helper both call has one caller, and binaryen inlines it (unit 165's `CThreadVota::GetEstado` into the two
+identical `GetEstadoEleitor` slots, 4705 and 4713). A function the target holds out of line under two identical
+callers, or inlined in one caller and out of line for others with the same body, was two different functions in the
+objects: another parameter type or order, or a parameter dead-argument elimination drops later, an unused `this` among
+them (1255's second copy, `IPedeTituloMesario::GetTelaEleitor`, a member whose body never reads `this`, keeps
+11140 out of line).
+A new call of a member binaryen inlines into its one caller keeps it out of line everywhere, so another unit's slots
+that hold it inlined leave `match`: read `names.tsv` for the member after the link. merge-similar-functions and the
+second duplicate-function-elimination run after the count, so a function can end with one caller and keep its body:
+a `byn$mgfn-shared$` body or a surviving twin that its callers became. 9256, `IIdentificadorEleitor`'s constructor,
+has one caller, 3939, the shared body of three derived
 constructors (from `asmlift-wasm/`):
 
 ```sh
@@ -195,6 +217,11 @@ the conan package's installed headers (23 records in `ledger/source-locations.ts
 spelling as its third map, for any object compiled with uenux2's flags or `APP_CXXFLAGS`: the headers come through `-Isrc`
 as `src/ecourna/…`. `src/app/roots_cbasetype.cpp` holds the first such records ([app-flags.md](app-flags.md) §F6).
 
+The check reads the link's map only when the map is newer than the link. After a relink that follows `make -C src
+link-map` (a comment-only rebuild of two companions and `make -C src link`, the plain link's sha256 unchanged), it
+printed `12 that matched functions load are not` and failed, and after `make -C src link-map` again `0 … are not`:
+run `link-map` after the last `link`, then the check.
+
 ## X8. `try-tu.sh --flags "-I<dir>"` loses to a tracked header of the same name
 
 try-tu appends `--flags` after the tree's own `-Isrc -Isrc/uenux2/src -Isrc/asn1`, so a variant of a tracked header
@@ -281,3 +308,33 @@ wasm-objdump -x -j Linking $O | /usr/bin/grep -E 'CCargosD[12]Ev'
 
 Symbol 22 is D1, so the object calls D1. The link map lists both names on the one function, the kept one first
 (`/usr/bin/grep -n '_ZN5comum7CCargosD[12]Ev' build/out/wasm-map/vota_web/vota_web_wasm.map`).
+
+## X12. Comparing two objects function by function
+
+A comparison of two relocatable objects by `wasm-objdump -d` text (to show that an `extern template` line or a probe
+edit left the rest of an object alone) reads three things that change with no code change:
+
+- `call_indirect 0 <env.__indirect_function_table> (type N)`: N indexes the object's own type section, which
+  renumbers when a function leaves the object;
+- a callee that became undefined prints `call <env._ZN…>` where it printed `call <_ZN…>` while the object defined it;
+- a destructor can be in an object under its D1 name only, so a cut by the D2 name gets nothing from both objects and
+  a `diff` prints 0 lines: count the lines cut before reading a 0. `names.tsv` can still name the same body `…D2Ev`.
+
+```sh
+wasm-objdump -d build/out/app/uenux2/src/api/gui/capplicationcontextstack.cpp.o | /usr/bin/grep -o 'func\[[0-9]*\] <[^>]*Guard[^>]*>'
+# func[20] <_ZN3api24CApplicationContextGuardC1ERNS_24CApplicationContextStackENS_19CApplicationContextE>
+# func[30] <_ZN3api24CApplicationContextGuardD1Ev>
+```
+
+With offsets, call indices, ` (type N)` and `env.` stripped and call targets compared by name, `roots_boost.o` before
+and after two `extern template` lines and one probe call taken out (b020932b) gave `same 764, differ 1`: the probe
+function changed on purpose.
+
+## X13. `sed -i` on a Latin-1 source
+
+On macOS (BSD sed, UTF-8 locale), `sed -i ''` on an ISO-8859 file stops with `sed: RE error: illegal byte sequence`,
+leaves the file as it was, and leaves an untracked partial copy beside it, `.!<pid>!<file>`, which `git status
+--short` lists as `??` and `check_encoding.py`, which reads tracked files only, does not see. The Edit tool refuses
+such a file outright (`File is not valid UTF-8`). Edit a Latin-1 source with a script that reads and writes
+`latin-1` (exact replacements, each old text once), check that `file <path>` still says ISO-8859 or ASCII, look for
+`.!` files in `git status --short` before `git add`, and remove a stray copy by its full name.

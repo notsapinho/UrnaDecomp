@@ -360,6 +360,28 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     #   confirmaidentidade/cpededigital.cpp confirmaidentidade/cregistradigitaloperador.cpp aguardaeleitor/cmostraeleitorvotando.cpp
     #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp cthreadoperador.cpp
     ```
+    Inside one object the data lie in the order the TU's code first refers to them, so a member's place in its file
+    moves its object's data, and the target's run can then place it. `CLeitorASN::LeBiometriaEleitor` (1937), whose
+    records are those of `legravaentidade.h`'s `LeEntidadeBiometria`, gives the same code at the head of
+    `carregaarquivo.cpp`, between its `EleicaoPE` and `CabecalhoPacote` instances, and at its end, and only "between"
+    puts `BiometriaEleitorCifrada`'s typeinfo, records
+    and vtable after `EntidadeEleicao`'s vtable and before `CabecalhoPacote`'s records, as the target's run has them:
+
+    ```sh
+    python3 -I -c "
+    import csv, json
+    want = {1563820, 1564660, 1564736, 1565368}
+    d = [(e['address'], 'vtable ' + e['class']) for e in json.load(open('ledger/vtables.json')) if e['address'] in want]
+    d += [(int(r[0]), 'record ' + r[4][:64]) for r in csv.reader(open('ledger/source-locations.tsv', encoding='latin-1'), delimiter='\t') if r[0].isdigit() and int(r[0]) in want]
+    [print(a, t) for a, t in sorted(d)]"
+    # 1563820 vtable ModuloEleicao::EntidadeEleicao
+    # 1564660 record typename CONVERSOR::TDado (anonymous namespace)::LeEntidadeBiome
+    # 1564736 vtable ModuloEleitores::BiometriaEleitorCifrada
+    # 1565368 record static T api::CFileASN::ReadFromFile(const std::string &) [T = M
+    ```
+
+    That place is a reading of the data order, measured through the three objects' data; the records exist once each
+    and lie in the run of the `CarregaArquivo` instances' records, which is evidence of the TU.
 16. **A function that calls an EM_JS import can be placed by the glue.** The glue lists the EM_JS functions in link order
     of the `em_js` sections (`/usr/bin/grep -oE 'function (js|wasm)_[a-z0-9_]+\(' target/vota_web_wasm.js`). The run
     `js_thread_log`, `js_emit_event`, `js_push_key`, `js_console_error`, `js_wasm_web_sound_play_wav` puts the wrappers of

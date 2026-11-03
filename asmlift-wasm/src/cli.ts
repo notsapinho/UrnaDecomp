@@ -104,7 +104,8 @@ function usage(): never {
                                              the module from the pieces alone, each substitute's body in place of
                                              its function's piece
   splat-symbols <target.wasm> <plain.wasm> [-o <symbol_addrs.txt>]   the target's symbol file from our link's maps
-  splat-maps <target.wasm> <plain.wasm> (--fn <ours> | --data <addr> | --target-fn <n> | --summary)
+  splat-maps <target.wasm> <plain.wasm> (--fn <ours> | --data <our addr> | --target-fn <n> | --summary)
+                                             one entry of the maps; --data re-points an address of our link
   splat-remap <target.wasm> <plain.wasm> <ours> [--against <target fn>] [--symbols <f>] [--ledger <dir>]
               [--kinds <kinds.json> | --no-kinds]
                                              one body re-pointed into the target
