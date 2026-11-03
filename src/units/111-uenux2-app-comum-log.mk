@@ -23,6 +23,12 @@
 #   constructor takes the ecourna::app::dados::CParametrosUrna that CConfiguracaoEleicao holds at +88 (the offsets the
 #   members read are that class's fields; cinformacaoeleicao.h). AceitaJustificativa (5918, a chosen name) reads the
 #   byte at +394 with no test of the demonstration mode; the class header says where its callers and band put it.
+#   GetFormaSuspensaoComVoto (657, a chosen name, out of line after GetNumViasPU, its place chosen) and
+#   GetFormaSuspensaoSemVoto (in the class) read the urna's two suspension forms for unit 197's
+#   vota::CEleitorVotando::suspenderEleitor (4442); the class header says why one is out of line. 657 is one body
+#   with OpenSSL's EC_GROUP_get_field_type, the name its match line had, and 20 target functions call it (`awk -F'\t'
+#   '$2==657' ledger/callgraph.tsv`); our link keeps this getter's name for the merged body (names.tsv), so step 9
+#   renamed 657's line to it.
 # - comum::IEventosLog, added after the unit landed: logaErro (2282, severity 3) and the five members that log one fixed
 #   text, LogaMidiaResultadoAusente, LogaMidiaResultadoInvalida, LogaMesarioIndagadoImprimirZeresima,
 #   LogaErroEstadoAplicativo and LogaImprimindoRelatorioEstadoUrna (5885, 5883, 5882, 5881, 5880; every name chosen,

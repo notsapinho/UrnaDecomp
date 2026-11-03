@@ -5,9 +5,9 @@
 // - RegistraVoto (fn 4471) has two direct callers in the target, fns 7428 and 11754, each calling it right after
 //   GetInst, both reconstructed (units 150 and 97): no stand-in.
 // - AdicionaVoto (fn 4192) and the five CLogVota::LogaVoto* members (fns 3272, 4546, 4542, 4541 and 4537) have two
-//   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442, records celeitorvotando.cpp:410 and
-//   :427, not written), which makes RegistraVoto's calls; FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn
-//   7352, in the link) and suspenderEleitor. Suspende stands for fn 4442, one call of each.
+//   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442), which makes RegistraVoto's calls;
+//   FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn 7352) and suspenderEleitor. All are in the link: no
+//   stand-in.
 // - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: CEleitores'
 //   slot 0 (fn 2824) and fn 5761, not written, and fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor
 //   inlined. Abrange stands for fns 2824 and 5761.
@@ -21,15 +21,6 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 char* w197_inst() __asm__("_ZN4vota15CEleitorVotando7GetInstEv");
-void w197_adiciona(unsigned char cargo, const void* voto) __asm__("_ZN4vota12AdicionaVotoEhRKN5comum2md5CVotoE");
-void* w197_log() __asm__("_ZN4vota8CLogVota7GetInstEv");
-void w197_loga_cssp(void* log, unsigned char cargo) __asm__(
-    "_ZN4vota8CLogVota37LogaVotoCargoSemCandidatoPorSuspensaoEh");
-void w197_loga_bps(void* log, unsigned char cargo) __asm__("_ZN4vota8CLogVota26LogaVotoBrancoPorSuspensaoEh");
-void w197_loga_csc(void* log, unsigned char cargo) __asm__("_ZN4vota8CLogVota25LogaVotoCargoSemCandidatoEh");
-void w197_loga_nps(void* log, unsigned char cargo) __asm__("_ZN4vota8CLogVota24LogaVotoNuloPorSuspensaoEh");
-void w197_loga_vc(void* log, unsigned char cargo) __asm__("_ZN4vota8CLogVota18LogaVotoConfirmadoEh");
-void w197_finaliza(void* eleitor) __asm__("_ZN4vota15CEleitorVotando15FinalizaEleitorEv");
 int w197_abrangencia(const void* eleitor, const void* uf, unsigned int municipio) __asm__(
     "_ZNK5comum2md17CEleitorDecorator14GetAbrangenciaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEj");
 void w197_ordena_impressao(void* cargos) __asm__("_ZN5comum7CCargos18OrdenaPorImpressaoEv");
@@ -55,19 +46,6 @@ __attribute__((noinline)) int Obtem(int vezes)
     const char* primeiro = w197_inst();
     const char* segundo = w197_inst();
     return primeiro[vezes] - segundo[3];
-}
-
-// stands for fn 4442
-__attribute__((noinline)) void Suspende(void* eleitor, const unsigned char* cargos, const char* votos)
-{
-    w197_adiciona(cargos[0], votos + 16);
-    void* log = w197_log();
-    w197_loga_cssp(log, cargos[1]);
-    w197_loga_bps(log, cargos[2]);
-    w197_loga_csc(log, cargos[3]);
-    w197_loga_nps(log, cargos[4]);
-    w197_loga_vc(log, cargos[5]);
-    w197_finaliza(eleitor);
 }
 
 // stands for fns 2824 and 5761
@@ -105,7 +83,6 @@ struct SCEleitorVotandoRoots {
     SCEleitorVotandoRoots()
     {
         celeitorvotando_sink = reinterpret_cast<const void*>(&Obtem);
-        celeitorvotando_sink = reinterpret_cast<const void*>(&Suspende);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Abrange);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Imprime);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Converte);

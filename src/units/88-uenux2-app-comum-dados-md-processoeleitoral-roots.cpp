@@ -2,7 +2,7 @@
 // target callers only 2268 and 5803 (unit 129), 11191 (unit 123) and those a comment names are reconstructed, and only
 // 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
 // call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
-//   1708  CCargos::Next               4442 5604 11209 12098 12110 (7352, unit 197's NeedChangeState, is in the link)
+//   1708  CCargos::Next               5604 11209 12098 12110 (7352 and 4442, unit 197's, are in the link)
 //   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
 //   2835  GetCurrentEleicaoID         5604 11209 13550
 //   1267  CProcessoEleitoral::GetPleito2  1543 2787 5586 7787 11191 11223 11902

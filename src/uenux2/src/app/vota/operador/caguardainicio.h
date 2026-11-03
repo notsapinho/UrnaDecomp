@@ -15,7 +15,7 @@ namespace vota {
 
 // vota::CAguardaInicio (RTTI: si_class of comum::CAppState; vtable @1601032 [244, 387, 10220, 7480, 1661, 10219, 10217,
 // 218, 10218]): the operador's screen before the voting starts. It overrides the destructors, StartState (slot 2, fn
-// 10220), FinishState (slot 5, fn 10219), ProcessKey (slot 6, fn 10217, pending) and ProcessTick (slot 8, fn 10218). A
+// 10220), FinishState (slot 5, fn 10219), ProcessKey (slot 6, fn 10217) and ProcessTick (slot 8, fn 10218). A
 // singleton: GetInst (fn 5343, written, src/units/165-uenux2-app-vota-execucao.mk says why it differs) creates the
 // 24-byte object on first use, with the constructor inlined, and keeps it in a static std::unique_ptr (@1911624),
 // releasing @1911600 at the end (fn 150) as the landed

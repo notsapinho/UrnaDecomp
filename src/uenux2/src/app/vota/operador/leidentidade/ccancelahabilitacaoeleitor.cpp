@@ -1,5 +1,9 @@
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 
+#include "app/vota/log/clogvota.h"
+#include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
+
 namespace vota {
 
 CCancelaHabilitacaoEleitor::CCancelaHabilitacaoEleitor()
@@ -18,5 +22,14 @@ CCancelaHabilitacaoEleitor& CCancelaHabilitacaoEleitor::GetInst()
 
 std::unique_ptr<CCancelaHabilitacaoEleitor> CCancelaHabilitacaoEleitor::s_inst;
 std::mutex CCancelaHabilitacaoEleitor::s_mutex;
+
+void CCancelaHabilitacaoEleitor::StartState()
+{
+    if (IsAudioAtivadoMesario()) {
+        CLogVota::GetInst().LogaAudioDesativadoFimVotacao();
+    }
+    impl::IInformacaoThreadOperador::GetInst().CancelaHabilitacao();
+    m_pNextState = &CPedeIdentidade::GetInst();
+}
 
 } // namespace vota

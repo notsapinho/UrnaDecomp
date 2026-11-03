@@ -1,11 +1,13 @@
-// Reconstruction's note, not TSE's text: vota::CEleitorVotando's members but ProcessKey, DescartaVotos and
-// suspenderEleitor, and the free MostraCargoNoOperador, are written; 253, 254, 410 and 427 are records of members not
+// Reconstruction's note, not TSE's text: vota::CEleitorVotando's members and the free MostraCargoNoOperador are
 // written; the lines of the members with no record are chosen (src/units/197-uenux2-celeitorvotando.mk).
+
 #include "app/vota/eleitor/celeitorvotando.h"
 
 #include <string>
 
+#include "api/audio/isound.h"
 #include "api/gui/capplication.h"
+#include "api/gui/cinteractiveform.h"
 #include "api/gui/iscreen.h"
 #include "api/hwil/ibeep.h"
 #include "api/hwil/iinput.h"
@@ -13,15 +15,18 @@
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
-#include "app/comum/dados/celeitores.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/celeitores.h"
 #include "app/comum/dados/crdvvota.h"
+#include "app/comum/informacao/cinformacaoeleicao.h"
+#include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/cconfirmavotosemcandidato.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/cinstrucaovotacaoacessibilidade.h"
+#include "app/vota/eleitor/comum/cinformacaoeleitor.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/csincronismoeleitor.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
-#include "app/vota/eleitor/comum/cinformacaoeleitor.h"
 #include "app/vota/eleitor/votamajoritario/cpedemajoritario.h"
 #include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
 #include "app/vota/euevotaerror.h"
@@ -83,7 +88,7 @@ void CEleitorVotando::RegistraVoto(const comum::md::TCargoID cargo, const comum:
     }
 }
 
-// (original lines 86-115: content not recovered)
+// (original lines 91-115: content not recovered)
 #line 116
 void CEleitorVotando::StartState()
 {
@@ -171,13 +176,16 @@ void MostraCargoNoOperador(const comum::md::CCargo& cargo)
     operador.GetMensagens().Post(9);
 }
 
-// <stubs>
-// f5500 · 6871 B · unmatched · placement: link order · name unknown
-// void f5500(i32, i32) { ... }
-// </stubs>
+void CEleitorVotando::FinalizaEleitor()
+{
+    CThreadEleitor::GetInst().StopTick(m_tick);
+    comum::CRdvVota::GetInst().RecebeCedula(g_votosEleitor);
+    comum::CAppInfo::GetInst().GetVota().MarcaUltimoVoto();
+    m_pNextState = &CSincronismoEleitor::GetInst();
+    TerminaEstado();
+}
 
-// (original lines 208-212: content not recovered)
-#line 213
+
 void CEleitorVotando::ChamaEstadoProximoCargo()
 {
     const auto& cargos = comum::CCargos::GetInst();
@@ -207,21 +215,20 @@ void CEleitorVotando::ChamaEstadoProximoCargo()
     }
 }
 
-void CEleitorVotando::FinalizaEleitor()
+// (original lines 242-245: content not recovered)
+#line 246
+void CEleitorVotando::DescartaVotos()
 {
-    CThreadEleitor::GetInst().StopTick(m_tick);
-    comum::CRdvVota::GetInst().RecebeCedula(g_votosEleitor);
-    comum::CAppInfo::GetInst().GetVota().MarcaUltimoVoto();
-    m_pNextState = &CSincronismoEleitor::GetInst();
+    CThreadOperador::GetInst().GetMensagens().Post(2);
+    CTelasVota::GetInst().GetTelaDescartaVotos()->Slot2();
+    m_pNextState = &CAguardaMensagem::GetInst();
     TerminaEstado();
+    CLogVota::GetInst().LogaEleitorSuspensoSemVoto();
+    api::CPolySingleton<api::IBeep>::instance().BeepDiscard();
+    api::CPolySingleton<api::ISound>::instance().Stop();
 }
 
-// <stubs>
-// f4449 · 352 B · unmatched · name unknown
-// void f4449(i32) { ... }
-// </stubs>
-
-// (original lines 256-261: content not recovered)
+// (original lines 257-261: content not recovered)
 #line 262
 bool CEleitorVotando::NeedChangeState()
 {
@@ -297,10 +304,101 @@ void CEleitorVotando::ProcessInput()
     }
 }
 
+void CEleitorVotando::ProcessKey(uebyte tecla)
+{
+    switch (tecla) {
+    case 2:
+        suspenderEleitor(SUSPENSAO_PELO_MESARIO);
+        break;
+    case 3:
+        suspenderEleitor(SUSPENSAO_AUTOMATICA_TREINAMENTO);
+        break;
+    case 4:
+        CThreadEleitor::GetInst().StopTick(m_tick);
+        CThreadEleitor::GetInst().StartTick(m_tick);
+        m_emSuspensao = false;
+        break;
+    default:
+        if (m_pEstado != nullptr) {
+            m_pEstado->ProcessKey(tecla);
+        }
+        break;
+    }
+}
+
+void CEleitorVotando::RegistraVotosSuspensao(const comum::md::CVoto::ETipo tipo)
+{
+    auto& cargos = comum::CCargos::GetInst();
+    const auto& candidaturas = comum::CCandidaturas::GetInst();
+    while (!cargos.IsFim()) {
+        const auto& cargo = cargos.GetCurrent();
+        const bool temCandidato = candidaturas.ExisteCandidato(cargo.GetID()) || cargo.IsConsulta();
+        for (comum::md::TQtdEscolha escolha = g_escolhaAtual; escolha <= cargo.GetQtdeEscolhas(); ++escolha) {
+            if (temCandidato) {
+                RegistraVoto(cargo.GetID(), tipo, "");
+            } else {
+                RegistraVoto(cargo.GetID(), comum::md::CVoto::NULO_APOS_SUSPENSAO_CARGO_SEM_CANDIDATO, "");
+            }
+        }
+        g_escolhaAtual = 1;
+        cargos.Next();
+    }
+}
+
+// (original lines 377-387: content not recovered)
+#line 388
+void CEleitorVotando::suspenderEleitor(const EOrigemSuspensao origem)
+{
+    const auto& cargos = comum::CCargos::GetInst();
+    if (origem == SUSPENSAO_AUTOMATICA_TREINAMENTO) {
+        CLogVota::GetInst().LogaEleitorSuspensoTreinamento();
+    } else {
+        CLogVota::GetInst().LogaEleitorSuspensoPeloMesario();
+    }
+    comum::md::CVoto::ETipo tipo;
+    if (cargos.IsPrimeiro() && g_escolhaAtual == 1) {
+        const comum::CInformacaoEleicao informacao(comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna());
+        switch (informacao.GetFormaSuspensaoSemVoto()) {
+            case ecourna::app::dados::CParametrosUrna::EFSSV_TORNA_NAO_VOTOU:
+                DescartaVotos();
+                return;
+            case ecourna::app::dados::CParametrosUrna::EFSSV_TORNA_TODOS_BRANCO:
+                tipo = comum::md::CVoto::BRANCO_APOS_SUSPENSAO;
+                break;
+            case ecourna::app::dados::CParametrosUrna::EFSSV_TORNA_TODOS_NULO:
+                tipo = comum::md::CVoto::NULO_APOS_SUSPENSAO;
+                break;
+            default:
+                throw CUeVotaError(EUE_VOTA_FORMA_SUSPENSAO_SEM_VOTO_INVALIDA,
+                                   "Forma suspensao sem voto invalida");
+        }
+    } else {
+        const comum::CInformacaoEleicao informacao(comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna());
+        switch (informacao.GetFormaSuspensaoComVoto()) {
+            case ecourna::app::dados::CParametrosUrna::EFSCV_TORNA_OUTROS_BRANCO:
+                tipo = comum::md::CVoto::BRANCO_APOS_SUSPENSAO;
+                break;
+            case ecourna::app::dados::CParametrosUrna::EFSCV_TORNA_OUTROS_NULO:
+                tipo = comum::md::CVoto::NULO_APOS_SUSPENSAO;
+                break;
+            case ecourna::app::dados::CParametrosUrna::EFSCV_TORNA_NAO_VOTOU_PARCIAL:
+                DescartaVotos();
+                return;
+
+            default:
+                throw CUeVotaError(EUE_VOTA_FORMA_SUSPENSAO_COM_VOTO_INVALIDA,
+                                   "Forma suspensao com voto invalida");
+        }
+    }
+    RegistraVotosSuspensao(tipo);
+    CLogVota::GetInst().LogaEleitorVotouParcialmenteSuspenso();
+    FinalizaEleitor();
+}
+
 } // namespace vota
 
 
 // <stubs>
-// f4442 · 1183 B · unmatched · name unknown
-// void f4442(i32, i32) { ... }
+// f5500 · 6871 B · unmatched · placement: link order · name unknown
+// void f5500(i32, i32) { ... }
 // </stubs>

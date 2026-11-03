@@ -42,8 +42,8 @@ __attribute__((noinline)) int ConstroiPedeTituloEstados(int n)
     return n * 7 + 9;
 }
 
-// Stands for the target's other callers of comum::CRegistrarMesarios::GetInst (fn 3610): vota::CAguardaInicio's slot 6
-// (fn 10217) and vota::CEscolheOpcao::ProcessInput (fn 10689).
+// Stands for the target's other caller of comum::CRegistrarMesarios::GetInst (fn 3610) not in the link,
+// vota::CEscolheOpcao::ProcessInput (fn 10689); vota::CAguardaInicio's slot 6 (fn 10217, unit 165's) is in the link.
 __attribute__((noinline)) int ChamaRegistrarMesarios(int n)
 {
     return w247_registrar() + n * 11;

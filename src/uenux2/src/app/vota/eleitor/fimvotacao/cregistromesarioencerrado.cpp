@@ -1,9 +1,10 @@
 // vota::CRegistroMesarioEncerrado: no record names this file or any of its members. The reconstruction's notes are in
-// unit 119's fragment, and the members it leaves pending are in that unit's -pending.cpp.
+// unit 119's fragment.
 
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -28,6 +29,13 @@ void CRegistroMesarioEncerrado::StartState()
 {
     m_pNextState = this;
     CThreadEleitor::GetInst().GetMensagens().Post(14);
+}
+
+void CRegistroMesarioEncerrado::ProcessKey(uebyte tecla)
+{
+    if (tecla == 12) {
+        m_pNextState = &CPedeIdentidade::GetInst();
+    }
 }
 
 } // namespace vota

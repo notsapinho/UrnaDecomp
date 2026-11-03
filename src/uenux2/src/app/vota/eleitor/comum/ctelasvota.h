@@ -83,6 +83,9 @@ public:
     // +156, whose slot 2 vota::CFimVotoEleitor::StartState (fn 7198) calls with no copy; the getter's name, and that it
     // is one, are chosen, as for the others
     const CFormInterativoTelaVota& GetTelaFimVoto() const { return m_tela19; }
+    // +164, whose slot 2 vota::CEleitorVotando::DescartaVotos (fn 4449) calls with no copy; the getter's name, and that
+    // it is one, are chosen, as for the others
+    const CFormInterativoTelaVota& GetTelaDescartaVotos() const { return m_tela20; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
