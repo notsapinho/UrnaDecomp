@@ -8,8 +8,7 @@
 #   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27),
 #   6018 (slots 10 and 15);
 # - CRegistroMesarioEncerrado's two exit-time destructors, 10765 (the pointer's) and 10764 (the mutex's).
-# Matched: 184, 3887, 3888, 6017, 6018, 10763 to 10779, 10781 to 10785, 10787 to 10793, 10795, 10796 and 10798 to
-# 10800.
+# Matched: 184, 3887, 3888, 6017, 6018, 10763 to 10779, 10781 to 10785, 10787 to 10793 and 10795 to 10800.
 # Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
 # slot 3 reaches, and names CTickManager::AddTick (3644), which slot 2 (10800) calls, by a `callers+content` hand line.
 #
@@ -96,6 +95,29 @@
 # - Slot 30 takes the four scores as a const std::vector<int>& (chosen: it loads a data pointer and four ints, each of
 #   type code 3). Slot 12 returns CFinalizaOperador::GetInst() (fn 5342) as comum::CAppState&, a chosen type. Slot 9
 #   (10794) returns CAguardaInicio::GetInst() (fn 5343, unit 165) the same way; it matches.
+# - Slot 5 (10797) reads the vote state as slot 6 does, and CEstadoGeral's phase (+48, its CDadoCarga's GetFase()), then
+#   moves the state to the mesarios' registration: 54 (EAVZERESIMAIMPRESSA) to 55 (EAVREGISTROMESARIOINICIAL), 57
+#   (EAVFIMAQUISICAOVOTOS) to 58 (EAVREGISTROMESARIOFINAL), and 56 (EAVVOTAR) to 55 only when
+#   comum::CRdvVota::Comparecimento() (fn 1269) and CJustificador::QuantidadeJustificados() (its +8) are 0 and the phase
+#   is not FASE_TREINAMENTO (51); after a write it calls CSincronizaVota::SincronizaEstadoGeralVota (fn 491). The
+#   enumerators are the chosen names of cestadogeralvota.h and eurnafase.h; Slot5 stays the slot's name. The target
+#   loads the phase at the start of case 56, before the two GetInst calls, and tests it last, after the count. What
+#   gives that order is the three-part `&&` computed into a bool value before the branch, with the phase read before the
+#   switch: Slot5 holds it in a named `const bool`, and a lambda returning the chain gives the same Slot5 with either
+#   capture (`[&]` or `[=]`: its object byte for byte; the named bool's object differs from the lambda's only in the
+#   numbering of two local data segments' names, and the whole link is the same wasm byte for byte), as does a function
+#   in the anonymous namespace that takes `const comum::EUrnaFase&`. Measured on this object's Slot5 (wasm-objdump -d
+#   after a compile of each form at its rule's line), these test the phase before the count: the same chain as the if's
+#   condition, negated or positive; three early returns; an `||` chain; an `&&` chain with the phase between
+#   Comparecimento and the count; an if chain on the state; QuantidadeJustificados out of line; the phase's test read
+#   into a bool before the calls; the function taking the phase by value. The named bool with the phase read at the
+#   case's start keeps the target's test order with other locals, and the phase read inside the condition tests it last
+#   with its load after the calls. For the if chain and for the phase as a bool, clang's IR (-mllvm -print-after-all)
+#   shows the count's and the phase's tests joined into an `or` (by SimplifyCFG, or by InstCombine from SimplifyCFG's
+#   select), which Reassociate reorders, the phase first; why a bool value computed before the branch keeps the order is
+#   not established (no IR was dumped for it). A raw load of the phase gives the target's rows too (an experiment, not a
+#   form that lands). Chosen: the bool's name and its being a named local rather than a lambda's result. `pnpm wasm
+#   score` against the link: 8 over 47 rows, all operand-only (the calls); matched at step 9, named by its vtable slot.
 # - Slot 6 (10796) reads the first word of comum::CAppInfo::GetInst().GetVota() (fns 185, 261 with 51), the vote state,
 #   and returns 1, 2, 0 and 3 for 55, 56, 57 and 58 (a table at 534720), else 0. The getter's name, GetEstadoVota, is the
 #   target's Assert texts' (cestadogeralvota.h says which). No text or record names EEstadoVota's 52 to 58 (the Assert
@@ -166,8 +188,8 @@
 #   splat-remap --against 10774` prints IDENTICAL, operand kinds verified, with logaAlerta's name for 1398 added to a
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
-# Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5 and 16 (fns 10797, 10786).
+# Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names it and what it waits for): the controller's
+# slot 16 (fn 10786).
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762, slot 6, in cregistromesarioencerrado.cpp after StartState, a chosen
 # line): for key 12 the next state is CPedeIdentidade::GetInst() (fn 652, unit 161). 1 over 10 rows, an operand row,
 # before step 8; matched at step 9, named by its vtable slot.

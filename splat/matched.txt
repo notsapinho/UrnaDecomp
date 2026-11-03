@@ -12219,3 +12219,5 @@
 6006 byn$mgfn-shared$_ZN5comum3asn12GravaArquivoERKN7ecourna3api2io5CFileERKNS_2md17CEnvelopeGenericoE
 6236 __futimesat
 12674 dotlockLock
+10797 _ZNK4vota32CControladorRegistraMesariosVota5Slot5Ev
+11830 _ZN4vota12testeteclado9CRetomada22GetEstadoPassouNoTesteEv

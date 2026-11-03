@@ -162,6 +162,10 @@ public:
     // neither has a target index. No record or text names them: the names and their being setters are chosen.
     void SetEstadoVota(EEstadoVota estadoVota);
     void SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento);
+    // vota::testeteclado::CRetomada's slot 11 (target fn 11830) reads the byte at +96 and stores 1 there before
+    // vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491). No record or text names a setter: its name, its
+    // parameter and its being defined in the class are chosen.
+    void SetTecladoTestadoPosConversao(bool testado) { m_tecladoTestadoPosConversao = testado; }
 
 private:
     EEstadoVota m_estadoVota;
