@@ -1,6 +1,9 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
+
+#include "api/io/asn/cfileasn.h"
 
 namespace comum {
 
@@ -13,12 +16,30 @@ namespace comum {
 // GetPathArquivo being pure here: no vtable of the template is in the target's data, and every instance's class
 // overrides it. This path and the template's parameter names are chosen: no record names the header.
 //
-// Not written: the template's members the target holds as binaryen merges of the four instances, each with landing
-// pads. Target fn 2894 (thunks 3592, 5329, 10089, 10112, which pass the converter's vptr and two table slots) saves an
-// ESTADO: it takes GetPathArquivo's path and a copy of its string, builds the CONVERSOR on its stack, converts the
-// ESTADO (IConversorASN::Converte, merged as fn 2893) and passes the string and the entity to a CFileASN writer (merged
-// as fn 2892). Fn 3791 reads CServicoEstadoGeral's file back, with CFileASN's reading inlined: a reading of its callers
-// and strings. src/units/206-uenux2-app-comum-appinfo-servicos.mk says what each waits for.
+// Salva is target fn 2894, binaryen's merge of the four instances (thunks 3592, 5329, 10112, 10089, which pass the
+// converter's vptr and two table slots), an -Oz -fexceptions TU's copies (our link's are cappinfobuilder.cpp's; that
+// the target's are that TU's is a reading): it takes GetPathArquivo's path and a copy of its string, builds the
+// CONVERSOR on its stack, converts the ESTADO (IConversorASN::Converte, merged as fn 2893) and passes the string and
+// the entity to CFileASN::WriteToFile (merged as fn 2892). Carrega is fn 3791, CServicoEstadoGeral's instance at
+// uenux2's flags, with CFileASN::ReadFromFile, its DecodeObjectFunction and IConversorASN::Desconverte inlined by
+// binaryen. No record names either: both names are chosen. Salva's parameter is a reference: fn 6039 (comum::CAppInfo's
+// saves) passes the state its singleton holds, with no copy. Each goes through a file-static helper that clang inlines;
+// the helpers' names and their being free functions are chosen, the internal linkage measured
+// (src/units/206-uenux2-app-comum-appinfo-servicos.mk).
+template <typename CONVERSOR>
+static typename CONVERSOR::TDado CarregaArquivo(const std::string& arquivo)
+{
+    CONVERSOR conversor;
+    return conversor.Desconverte(api::CFileASN::ReadFromFile<typename CONVERSOR::TEntidade>(arquivo));
+}
+
+template <typename CONVERSOR>
+static void SalvaArquivo(const std::string& arquivo, const typename CONVERSOR::TDado& dado)
+{
+    CONVERSOR conversor;
+    api::CFileASN::WriteToFile(arquivo, conversor.Converte(dado));
+}
+
 template <typename ESTADO, typename CONVERSOR>
 class IServicoEstado {
 public:
@@ -26,10 +47,21 @@ public:
 
     virtual std::filesystem::path GetPathArquivo() = 0;
 
-    // The save above (fn 2894), declared for its callers and not written. mock/app/comum/cappinfobuilder.cpp's members
-    // (fns 10243 and 10212) call its thunks with a copy of the state they hold, made before the call and destroyed after
-    // it, so the state by value is evidence; the name is chosen.
-    void Salva(ESTADO estado);
+    void Salva(const ESTADO& estado);
+
+    ESTADO Carrega();
 };
+
+template <typename ESTADO, typename CONVERSOR>
+void IServicoEstado<ESTADO, CONVERSOR>::Salva(const ESTADO& estado)
+{
+    SalvaArquivo<CONVERSOR>(GetPathArquivo(), estado);
+}
+
+template <typename ESTADO, typename CONVERSOR>
+ESTADO IServicoEstado<ESTADO, CONVERSOR>::Carrega()
+{
+    return CarregaArquivo<CONVERSOR>(GetPathArquivo());
+}
 
 } // namespace comum

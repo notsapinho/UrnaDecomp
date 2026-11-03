@@ -61,7 +61,7 @@ CAppInfoBuilder& CAppInfoBuilder::SalvaGeral(bool assina, std::vector<EMidia> mi
         if (assina) {
             GravaArquivo(CPath::GetPathDinamico(origem) / "eg.vsu", "assinatura EG");
         }
-        CServicoEstadoGeral(origem).Salva(m_geral);
+        CServicoEstadoGeral(origem).Salva(md::estadoaplicacao::CEstadoGeral(m_geral));
     }
     return *this;
 }
@@ -89,19 +89,19 @@ CAppInfoBuilder& CAppInfoBuilder::SalvaApp(bool assina, EFlashOrigem origem, EUr
         if (assina) {
             GravaArquivo(pathTrab / "gap.vsu", "assinatura EG Gap");
         }
-        CServicoEstadoGeralGap(origem, turno).Salva(m_gap[idx]);
+        CServicoEstadoGeralGap(origem, turno).Salva(md::estadoaplicacao::CEstadoGeralGap(m_gap[idx]));
         break;
     case EApp::SA:
         if (assina) {
             GravaArquivo(pathTrab / "sa.vsu", "assinatura EG SA");
         }
-        CServicoEstadoGeralSA(origem, turno).Salva(m_sa[idx]);
+        CServicoEstadoGeralSA(origem, turno).Salva(md::estadoaplicacao::CEstadoGeralSA(m_sa[idx]));
         break;
     case EApp::VOTA:
         if (assina) {
             GravaArquivo(pathTrab / "vota.vsu", "assinatura EG Vota");
         }
-        CServicoEstadoGeralVota(origem, turno).Salva(m_vota[idx]);
+        CServicoEstadoGeralVota(origem, turno).Salva(md::estadoaplicacao::CEstadoGeralVota(m_vota[idx]));
         break;
     }
     return *this;

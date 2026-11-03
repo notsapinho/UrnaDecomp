@@ -3,6 +3,12 @@
 # src/app/roots_coderenv.cpp, with the fork's encode in src/asn1/asn1.h. The fragment holds no source: the root is in
 # APP_OBJS (its rule is in src/Makefile, beside the executable TU's, at that TU's VOTA_WEB_CXXFLAGS), and this file
 # holds the evidence. Matches, 13 target functions from the encode side (and 11 from CFileASN's writer, at the end):
+#   Since unit 206 those copies come from mock/app/comum/cappinfobuilder.cpp's object (unit 253, at the same rule and
+#   ahead of this root on the link line), which instantiates encode and CodeObjectFunction through IServicoEstado's
+#   save; the root's instances of the two and its stand-in for CodeObjectFunction's slots went, and steps 7 to 9 on the
+#   link without them moved no row. The evidence below is the same code's; the root keeps the encodeBER call below and
+#   std::vector<std::string>'s instance (5585). What is said below of "the root's copies" was measured while it held
+#   them.
 #   - 9770, CoderEnv::encode<back_insert_iterator<vector<char>>>, with encodePER and encodeAVN inlined, and 1532, its
 #     encodeBER.
 #   - 3559, ~AVNEncoder (the D2), which encodeAVN calls on both of its paths.
@@ -109,20 +115,14 @@
 #   same function; move-assigning the vector, or declaring it before the CoderEnv (its clearing then comes first,
 #   where 2927 clears the CoderEnv first), give other rows. The four instances' ld_index runs Urna, Gap, SA, Vota
 #   (652, 663, 664, 665), as the thunks' target indices run downwards.
-# - Stand-ins: urna_roots_cfileasn takes the four instances' addresses, for 2891's thunks (9820, 9703, 9701, 9684),
-#   not written, which pass their table slots (478, 488, 489, 490). Two stand-ins went, whose callers are in the link
+# - Stand-ins: urna_roots_cfileasn took the four instances' addresses, for 2891's thunks (9820, 9703, 9701, 9684),
+#   which pass their table slots (478, 488, 489, 490); it went with unit 206, which writes those thunks. Two stand-ins went, whose callers are in the link
 #   now: urna_roots_coderenv's address of 9770 (for 2927's slot) and unit 237's w237_par (for 3552, the reader of
 #   1928's result); a link without both moves no row (steps 7 to 9).
 # - The hand lines of 2650 and 3552 (unit 115's, callers+content) went: both have generated lines now, and with the
 #   two out two scans give 11479 match rows beside the control and splat-build verifies 11479.
 # - Not written: 5366, 5367 and 2724, other entities' CodeObjectFunction held by uenux2's code (no landing pad; 5367
 #   and 2724 are thunks of a merge, 6006), lost their stubs to cfileasn.h's lines 161 and 171
-#   (docs/reference/facts/placing.md P1). ReadFromFile and DecodeObjectFunction are not written: their records'
-#   lines (48, 60, 78, 135, 143) are blank in cfileasn.h, and 3791, which holds them inlined, stays a stub there.
+#   (docs/reference/facts/placing.md P1). ReadFromFile and DecodeObjectFunction are unit 206's (3791 holds them).
 # - Chosen: the codes' enumerator names (api/io/eueioerror.h), that CFileASN is a class, the lines of every statement
-#   in cfileasn.h but the two throws, the locals' names, the stand-in's name, and the order of the instances in the
-#   root.
-#
-# The root includes uenux2's api/io/asn/cfileasn.h and four ASN.1 modules' headers, so it rebuilds with them too.
-$(ROOT)/$(APP)/roots_coderenv.o: $(wildcard $(ROOT)/src/uenux2/src/api/io/*.h $(ROOT)/src/uenux2/src/api/io/asn/*.h \
-                                            $(ROOT)/src/asn1/modules/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
+#   in cfileasn.h but the two throws, and the locals' names.

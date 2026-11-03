@@ -6,7 +6,7 @@
 // - vota::CImpressaoEstadoUrna::StartState (target fn 11911, slot 2, 565 B), vota::CImpressaoListaEleitores::StartState
 //   (fn 11908, 4670 B), vota::CImpressaoVersaoPacotes::StartState (fn 11905, 5098 B) and vota::CImpressaoPU::StartState
 //   (fn 11902, 6548 B): not read for this unit.
-// - vota::CImpressaoZeresimaTardia::ProcessInput (target fn 11931, slot 7): it calls fn 491, which has no name, and holds
+// - vota::CImpressaoZeresimaTardia::ProcessInput (target fn 11931, slot 7): it calls fn 491, named now (unit 205), and holds
 //   vota::CInformacaoZeresimaTardia's GetInst inlined, whose constructor copies vota::CTelasVota::GetInst()'s +68, which
 //   app/vota/eleitor/comum/ctelasvota.h has no accessor for.
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoestadourna.h"

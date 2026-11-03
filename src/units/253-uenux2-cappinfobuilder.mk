@@ -63,16 +63,21 @@
 # Written, and not in the link: nothing reaches these, so wasm-ld drops them (their rows are no-candidate) and only
 # their linkonce copies above link.
 # - SalvaGeral (10243, table slot 414, passed by 10256) and SalvaApps (10212, slot 419, passed by 6004), with SalvaApp
-#   and Converte(EUrnaTurno) inlined into it by binaryen. Both wait for IServicoEstado's save (2894 and its thunks 3592,
-#   10112, 10089, 5329), declared in iservicoestado.h, whose body waits for cfileasn.h's writer (2892, and 2891 over
-#   CFileASN::CodeObjectFunction's merge); 10212 waits for the derived services' constructors too (thunks 5812, 11566
-#   and 3787 of 3897, over CFileASN::ReadFromFile, 3791). A root taking their addresses, as the target's 10256 and 6004
-#   do, would need those bodies. The estado copies they pass (10205, 10123, 10101, 10067) and ~CEstadoGeral (2793) come
-#   with them. The writer's chain ends in a keystone of its own: CodeObjectFunction's four members (9801, 9702, 9695,
-#   9673, the thunks 2891's thunks pass by slot) call the merge 2927 (1275 B), which calls ~CoderEnv (518) and 9790: all
-#   of them match since unit 229, from src/app/roots_coderenv.cpp's instances; 2891 and 2892 are not written. And 2894
-#   is binaryen's merge of the four saves, so its shape needs the four in the link, three of them 10212's (pnpm wasm fn
-#   on each).
+#   and Converte(EUrnaTurno) inlined into it by binaryen. The save they call, the services' constructors and
+#   CFileASN's writer are written now (unit 206), and a root taking the two addresses, as the target's 10256 and 6004
+#   do, is what is left; 10212 is the target's one holder of the constructors' and the saves' table slots (unit 206's
+#   roots stand for it). Each call passes a copy of the state: IServicoEstado::Salva takes a reference (fn 6039, unit
+#   109, passes its state with no copy), and the target's 10243 and 10212 copy before each save (10205, 10123, 10101,
+#   10067) and destroy the copy after it, so the copy is the builder's own, written as a temporary at the call
+#   (`Salva(CEstadoGeral(m_geral))`), which keeps the target's order, the service first (a reading: the object
+#   expression is evaluated before the argument); that spelling is chosen. This
+#   object's linkonce copies give the link, ahead of every other object: the four saves and their merge 2894 (thunks
+#   3592, 5329, 10112, 10089), IConversorASN::Converte's four (merge 2893, thunks 10170, 9997, 10051, 10019, with the
+#   format-argument store 9843 and CBaseError<EUeComumAsnError>'s constructor 255), CFileASN::WriteToFile's eight
+#   (merges 2892 and 2891, thunks 10168, 9985, 10040, 10008 and 9820, 9684, 9703, 9701), CodeObjectFunction's four
+#   (2927 and its thunks, from src/app/roots_coderenv.cpp before), ~CoderEnv (518), 9790, 3552, 1928 and 210 (the same,
+#   from that root before), and CFile's destructor (3564): all match. The estado copies the two members make and
+#   ~CEstadoGeral (2793) come with them.
 # - Converte(EMidia) (5344): its callers are those two. With them, its handle (9935) and format<int> (5924) come too.
 # - The file writer (10293, table slot 420, called by both).
 #

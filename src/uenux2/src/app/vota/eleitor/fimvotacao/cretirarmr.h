@@ -16,8 +16,8 @@ class CInteractiveForm;
 namespace vota {
 
 // vota::CRetirarMR (RTTI: si_class of comum::CAppState; vtable @1542676 [1284, 2884, 12031, 7480, 1661, 218, 425,
-// 12030, 425]): it overrides StartState (slot 2, fn 12031, records lines 54 to 56, pending: it calls fn 491, which has
-// no body here) and ProcessInput (slot 7, fn 12030, record line 78), which reads the form of the demo mode or the other
+// 12030, 425]): it overrides StartState (slot 2, fn 12031, records lines 54 to 56, pending: it calls fn 491, unit
+// 205's now) and ProcessInput (slot 7, fn 12030, record line 78), which reads the form of the demo mode or the other
 // one and goes to CEmitirMaisBU on CONFIRMA. The destructors are vota::CEleitorVotouNaoVotou's bodies (fns 1284 and
 // 2884): the D2 releases three std::shared_ptr, at +12, +20 and +28, and stores no vptr, so the class is final, and the
 // D0 calls it and frees `this`, so the destructor is out of line (docs/reference/facts/reading.md R4, R5). +12 is the

@@ -17,6 +17,8 @@ int w697() __asm__("_ZN5comum8CAppInfo20EhTreinamentoEleitorEv");
 void w1942(int) __asm__("_ZN5comum20GetIdentificacaoUrnaEv");
 void w3788(int, int, int) __asm__("_ZNK5comum8CAppInfo15GetCodigosCargaENS_10EUrnaTurnoE");
 int w2841(int, int) __asm__("_ZNK5comum8CAppInfo7TemVotaENS_10EUrnaTurnoE");
+void w3790(int) __asm__("_ZNK5comum8CAppInfo16SalvaVotaInternoEv");
+void w3789(int) __asm__("_ZNK5comum8CAppInfo16SalvaVotaExternoEv");
 int w819() __asm__("_ZN5comum9CPartidos7GetInstEv");
 int w2819() __asm__("_ZN5comum6CFotos7GetInstEv");
 int w3751(int) __asm__("_ZN5comum9CPartidosC1Ev");
@@ -28,8 +30,8 @@ namespace {
 const void* volatile cappinfo_sink;
 
 // Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898 and unit 98's 2266
-// are linked): 491, 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105, 12110,
-// 12134.
+// are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105,
+// 12110, 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
 // Stands for fn 903's callers 7160, 10710, 12081, 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566
 // and unit 104's 12082 are linked).
@@ -56,6 +58,10 @@ __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }
 // is a second caller of the constructor, and none is written.
 __attribute__((noinline)) void ConstroiPartidos(int a) { w3751(a + 4); }
 __attribute__((noinline)) void ConstroiFotos(int a) { w3756(a + 8); }
+// Stands for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) callers 7174 and 10590, which call both, as
+// 491 (in the link) does: a second call site of each, which binaryen needs to keep them out of line (6039 is their
+// merge).
+__attribute__((noinline)) void SalvaVotas(int a) { w3790(a); w3789(a + 16); }
 
 struct SCAppInfoRoots {
     SCAppInfoRoots()
@@ -73,6 +79,7 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&Fotos);
         cappinfo_sink = reinterpret_cast<const void*>(&ConstroiPartidos);
         cappinfo_sink = reinterpret_cast<const void*>(&ConstroiFotos);
+        cappinfo_sink = reinterpret_cast<const void*>(&SalvaVotas);
     }
 } cappinfo_roots;
 

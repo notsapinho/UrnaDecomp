@@ -179,8 +179,3 @@ ModuloEstadoGeralGap::UrnaAplicativo CConversorEstadoGeralGap::ConverteUrnaAplic
 }
 
 } // namespace comum::asn
-
-// <stubs>
-// f10112 · 20 B · unmatched · placement: link order · name unknown
-// void f10112(i32, i32) { ... }
-// </stubs>

@@ -6,7 +6,9 @@
 #include "app/vota/comum/csincronizavota.h"
 
 #include <filesystem>
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "api/gui/capplication.h"
 #include "api/hwil/euedesligandoerror.h"
@@ -27,7 +29,7 @@ void CSincronizaVota::MarcaUrnaDesligando()
     s_urnaDesligando = true;
 }
 
-// (original lines 30-43: content not recovered)
+// (original lines 32-43: content not recovered)
 #line 44
 void CSincronizaVota::VerificaUrnaDesligando()
 {
@@ -99,7 +101,40 @@ void CSincronizaVota::GravaBancoDadosMI()
     api::CSynchronizer::GetInst().Sync();
 }
 
-// (original lines 114-369: content not recovered)
+namespace {
+
+void AssinaArquivo(comum::ESavdArquivoUE arquivo)
+{
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    const CAssinadorVota assinador(appInfo.GetGeral().GetDadoCarga().GetTurno() == comum::TURNO_1 ? comum::ESavdPacote(122) : comum::ESavdPacote(123));
+    assinador.Assina(arquivo);
+}
+
+} // namespace
+
+void CSincronizaVota::SincronizaEstadoGeralVota()
+{
+    const std::vector<api::CApplicationContext>& contextos = api::CApplication::s_contextos.m_contextos;
+    const std::optional<api::CApplicationContext> contexto =
+        contextos.empty() ? std::nullopt : std::optional<api::CApplicationContext>(contextos.back());
+    const std::string titulo = contexto ? contexto->m_titulo : "Erro de sincronização";
+    comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(2, titulo, "Gravando o estado da urna", "Ocorreu um erro durante a sincronização do estado geral do VOTA.");
+        VerificaUrnaDesligando();
+        appInfo.SalvaVotaInterno();
+        AssinaArquivo(comum::ESavdArquivoUE(31));
+        api::CSynchronizer::GetInst().Sync();
+    }
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(4, titulo, "Gravando o estado da urna", "Ocorreu um erro durante a sincronização do estado geral do VOTA.");
+        appInfo.SalvaVotaExterno();
+        SincronizaAssinaturaVota();
+        api::CSynchronizer::GetInst().Sync();
+    }
+}
+
+// (original lines 147-369: content not recovered)
 #line 370
 void CSincronizaVota::SincronizaRelatorios(const std::string& arquivo)
 {

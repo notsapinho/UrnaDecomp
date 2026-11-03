@@ -62,10 +62,11 @@
 # (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with
 # src/app/roots_cbasetype.cpp's copy matching 2062 each forms a same-shape pair with ours (pnpm wasm fingerprint
 # --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
-# DoAdd (9538) is written and unresolved on std::system_category: 752 rows over 2794, 557 of the 561 replaced
-# operand-only, 158 inserted and 33 deleted. Its callees in the target 891 and 1053 pair with libc++'s system_category
-# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564 has
-# no pair (3334, libc++'s posix_stat, matches), 4679 (ErrorHandler<unsigned long long>::report) matches since unit
+# DoAdd (9538) is written and unresolved on std::system_category: 582 rows over 2643, the 561 replaced all
+# operand-only, 7 inserted and 14 deleted, measured after unit 206 gave CFile's destructor the catch DoAdd holds
+# inlined. Its callees in the target 891 and 1053 pair with libc++'s system_category
+# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564
+# (CFile's destructor, out of line) matches since unit 206 (3334, libc++'s posix_stat, matches too), 4679 (ErrorHandler<unsigned long long>::report) matches since unit
 # 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
 # self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
 # 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular

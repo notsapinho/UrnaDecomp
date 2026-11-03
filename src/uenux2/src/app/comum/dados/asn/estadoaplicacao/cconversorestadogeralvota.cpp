@@ -233,8 +233,3 @@ EEstadoEncerramento CConversorEstadoGeralVota::DesconverteEstadoEncerramento(
 }
 
 } // namespace comum::asn
-
-// <stubs>
-// f5329 · 20 B · unmatched · placement: link order · name unknown
-// void f5329(i32, i32) { ... }
-// </stubs>

@@ -634,11 +634,6 @@
 // f3869 · 466 B · unmatched · placement: link order · name unknown
 // ? f3869(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1033 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
-
-// f3897 · 327 B · unmatched · placement: link order · name unknown
-// ? f3897(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1050 · uses=3
 
 // f4161 · 2019 B · unmatched · placement: link order · name unknown
@@ -668,11 +663,6 @@
 
 // f2839 · 57 B · unmatched · placement: link order · name unknown
 // void f2839(i32, i32) { ... }
-
-// link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
-
-// f2894 · 260 B · unmatched · placement: link order · name unknown
-// void f2894(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1142 · uses=5
 
@@ -854,11 +844,6 @@
 
 // f1896 · 294 B · unmatched · placement: link order · name unknown
 // ? f1896(i32, i32) { ... }
-
-// link-order cluster 1329 · uses=35
-
-// f491 · 1329 B · unmatched · placement: link order · name unknown
-// void f491() { ... }
 
 // component simulador
 

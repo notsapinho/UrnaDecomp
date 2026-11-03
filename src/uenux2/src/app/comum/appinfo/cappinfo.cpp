@@ -3,10 +3,11 @@
 #include <format>
 
 #include "app/comum/appinfo/euecomumappinfoerror.h"
+#include "app/comum/appinfo/servicos/cservicoestadogeralvota.h"
 
 namespace comum {
 
-// (original lines 9-37: content not recovered)
+// (original lines 10-37: content not recovered)
 #line 38
 template <typename ESTADO>
 static ESTADO& GetEstado(const std::string& nome, std::optional<ESTADO>& estado)
@@ -65,7 +66,24 @@ bool CAppInfo::TemVota(EUrnaTurno turno) const
     return m_vota[IndiceTurno("TemVota", turno)].has_value();
 }
 
-// (original lines 105-452: content not recovered)
+static void SalvaVota(EFlashOrigem origem, const std::optional<md::estadoaplicacao::CEstadoGeralVota>& vota)
+{
+    if (vota) {
+        CServicoEstadoGeralVota(origem, TURNO_ATUAL).Salva(*vota);
+    }
+}
+
+void CAppInfo::SalvaVotaInterno() const
+{
+    SalvaVota(FLASH_INTERNA, m_vota[IndiceTurno("SalvaVotaInterno", TURNO_ATUAL)]);
+}
+
+void CAppInfo::SalvaVotaExterno() const
+{
+    SalvaVota(FLASH_EXTERNA, m_vota[IndiceTurno("SalvaVotaExterno", TURNO_ATUAL)]);
+}
+
+// (original lines 122-452: content not recovered)
 #line 453
 bool CAppInfo::EhTreinamentoEleitor()
 {

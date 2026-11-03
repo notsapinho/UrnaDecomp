@@ -65,10 +65,23 @@
 # 1685's second call site comes through VerificaUrnaDesligando, so that every call passes the same record and binaryen
 # folds it as in the target. Its header lists the callers each stands for.
 #
+# 491, CSincronizaVota::SincronizaEstadoGeralVota (no record; its name is chosen from its context's texts, "Gravando o
+# estado da urna" and "... sincronização do estado geral do VOTA."), matched by the scan's content pass. It takes the
+# title of the context in force from the stack's last context (an std::optional<api::CApplicationContext> built in
+# place, at +152, its flag at +204) or "Erro de sincronização", then under CriaContexto(2, ...) checks the shutdown flag
+# (VerificaUrnaDesligando inlined), saves the internal flash's vota state (CAppInfo::SalvaVotaInterno, 3790, unit 109),
+# signs file 31 and syncs, and under CriaContexto(4, ...) saves the external one (3789), calls SincronizaAssinaturaVota
+# and syncs. The signing is a second file-local helper, AssinaArquivo (a chosen name), which clang inlines: its
+# CAssinadorVota is the frame's highest object (+208), above the function's own, as an inlined callee's are
+# (docs/reference/facts/codegen.md C5), and it is destroyed before the sync, where AssinaESincroniza (4657 holds it)
+# syncs first; with AssinaESincroniza 491 differed by those two rows (2 inserted, 2 deleted, the rest operand-only).
+# That the optional and the title are written in place, the two scopes, the helper's linkage and the member's line are
+# chosen. Its 31 target callers are not written: w205_estado stands for them.
+#
 # Not written here: SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (records 290 and 303, in the anonymous
-# namespace), which fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) holds inlined; 491, 3333 and 6737, which hold
-# VerificaUrnaDesligando inlined too: 491 calls 3789 and 3790, thunks over 6039, not written; 3333 calls 1941 and 3592;
-# 6737 calls 1551, 1701, 2826, 5736, 5737, 5761 and 5762, none of them matched. Fn 1164, CArquivosSavd::GetInst, which
+# namespace), which fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) holds inlined; 3333 and 6737, which hold
+# VerificaUrnaDesligando inlined too: 3333 calls 1941 and 3592 (matched since unit 206); 6737 calls 1551, 1701, 2826,
+# 5736, 5737, 5761 and 5762, none of them matched. Fn 1164, CArquivosSavd::GetInst, which
 # most members here call,
 # is unit 95's, matched with strict aliasing in its TU (that fragment has the measurement); its name comes
 # from the calls of 1501 and 1836 (step 8's `call by:1501,1836`).
