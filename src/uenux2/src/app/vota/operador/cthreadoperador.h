@@ -54,6 +54,13 @@ public:
     // Its reader: vota::CMostraEleitorVotando::StartState (fn 10427) copies the string at +108 into its own after
     // calling GetInst, with no call of a member of this class. The accessor and its name are chosen.
     const std::string& GetTextoEleitor() const { return m_texto3; }
+    // The string at +120, the title typed to close the voting: vota::CPedeTituloEncerramento::ProcessInput (fn 10721)
+    // assigns it the title read from its form after calling GetInst, with no call of a member of this class
+    // (string::operator='s two __assign_no_alias, fns 196 and 205, behind the self-assignment test), and the text
+    // function of vota::CTituloEncerramentoInvalido's form (fn 10728) formats it "{:<12s}". The accessors and their
+    // names are chosen.
+    const std::string& GetTituloEncerramento() const { return m_tituloEncerramento; }
+    void SetTituloEncerramento(const std::string& titulo) { m_tituloEncerramento = titulo; }
 
 protected:
     void Run() override;
@@ -66,7 +73,7 @@ private:
     std::string m_texto1;
     std::string m_tituloMesario;
     std::string m_texto3;
-    std::string m_texto4;
+    std::string m_tituloEncerramento;
 
     static std::unique_ptr<CThreadOperador> s_inst;
     static std::mutex s_mutex;

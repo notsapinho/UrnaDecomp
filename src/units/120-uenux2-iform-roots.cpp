@@ -11,8 +11,6 @@
 //   ControleTeclas    653, AddLabeledInputControl, not reconstructed, the other caller of 5565
 //                     (CInputFieldControlBase<IScreen>'s constructor): it builds the control field over the mask of its
 //                     keys with std::make_shared, as this does. With 5530 alone binaryen would inline 5565 into it
-//   SaiDoFormulario   12081, vota::CEmitirMaisBU::ProcessInput, the other direct caller of 5987,
-//                     api::CFormStack<api::IScreen>::Remove: with the destructor of IForm<IScreen> alone it would inline
 // api::CPolySingleton<api::IScreenMT>::instance (1714) needs no stand-in: every target caller the one here stood for,
 // 10680 and 10690, is in the link.
 #include <memory>
@@ -60,12 +58,6 @@ __attribute__((noinline)) int ControleTeclas(int teclas)
     return static_cast<int>(campo.use_count()) + teclas;
 }
 
-__attribute__((noinline)) int SaiDoFormulario(api::IForm<api::IScreen>* form, int codigo)
-{
-    api::CFormStack<api::IScreen>::Remove(form);
-    return codigo + 3;
-}
-
 void* volatile w120_sink;
 
 struct SW120Roots {
@@ -76,7 +68,6 @@ struct SW120Roots {
         w120_sink = reinterpret_cast<void*>(&CampoA);
         w120_sink = reinterpret_cast<void*>(&CampoB);
         w120_sink = reinterpret_cast<void*>(&ControleTeclas);
-        w120_sink = reinterpret_cast<void*>(&SaiDoFormulario);
     }
 } w120_roots;
 

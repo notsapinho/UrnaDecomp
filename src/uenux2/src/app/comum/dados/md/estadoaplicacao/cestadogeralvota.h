@@ -140,8 +140,10 @@ public:
     void MarcaInicioAquisicao();
     // Records cestadogeralvota.cpp:131 and :136 (8086, 8087); fn 4454 holds it behind a 48-byte prologue.
     void MarcaUltimoVoto();
+    // Records cestadogeralvota.cpp:108 and :113 (8084, 8085); fn 10734 holds it behind a 48-byte prologue.
+    void MarcaFimAquisicao();
 
-    // (original lines 147-155: content not recovered)
+    // (original lines 149-155: content not recovered)
 #line 156
     const api::CDateTime& GetDtHrEmissaoBU() const
     {
@@ -150,6 +152,16 @@ public:
         }
         return *m_dhEmissao;
     }
+
+    // The two words at +0 and +4 that the vota states store into GetVota()'s result before
+    // vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491) saves it (fns 11924, 11940, 12031, 12034, 12077 among
+    // others). Out of line in cestadogeralvota.cpp, measured: with SetEstadoVota alone in the class, 11920 and 12034
+    // leave `match` (9 over 76 rows become 11, local numbers), while 12077 matches either way; with both in the class,
+    // clang merges 12077's and 12134's two i32.store (64 at +0, a closing state at +4) into one i64.store (12077: 44
+    // over 243 rows, 3 deleted, at the stores). binaryen inlines each one-instruction body into every caller, so
+    // neither has a target index. No record or text names them: the names and their being setters are chosen.
+    void SetEstadoVota(EEstadoVota estadoVota);
+    void SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento);
 
 private:
     EEstadoVota m_estadoVota;

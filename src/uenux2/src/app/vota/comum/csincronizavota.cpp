@@ -134,7 +134,31 @@ void CSincronizaVota::SincronizaEstadoGeralVota()
     }
 }
 
-// (original lines 147-369: content not recovered)
+void CSincronizaVota::SincronizaEstadoGeral()
+{
+    VerificaUrnaDesligando();
+    const std::vector<api::CApplicationContext>& contextos = api::CApplication::s_contextos.m_contextos;
+    const std::optional<api::CApplicationContext> contexto =
+        contextos.empty() ? std::nullopt : std::optional<api::CApplicationContext>(contextos.back());
+    const std::string titulo = contexto ? contexto->m_titulo : "Erro de sincronização";
+    const comum::CArquivosSavd& arquivos = comum::CArquivosSavd::GetInst();
+    comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(2, "", "Gravando o estado geral da urna na MI", "Ocorreu um erro durante a sincronização do estado geral da urna na MI.");
+        const CAssinadorVota assinador(comum::ESavdPacote(120));
+        appInfo.SalvaGeralInterno();
+        assinador.Assina(comum::ESavdArquivoUE(25));
+        api::CSynchronizer::GetInst().Sync();
+    }
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(4, "", "Gravando o estado geral da urna na MV", "Ocorreu um erro durante a sincronização do estado geral da urna na MV.");
+        appInfo.SalvaGeralExterno();
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(120)], arquivos[comum::ESavdPacote(121)], false, true);
+        api::CSynchronizer::GetInst().Sync();
+    }
+}
+
+// (original lines 171-369: content not recovered)
 #line 370
 void CSincronizaVota::SincronizaRelatorios(const std::string& arquivo)
 {

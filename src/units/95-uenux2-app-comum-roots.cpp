@@ -4,7 +4,7 @@
 // 5901 (CPacoteArquivos::TrataErroPacote, written in cpacotearquivos.cpp: the stand-ins for 5900 stay for 4625), 5890
 // (comum::ValidarUE, written in iinterfacesavd.cpp: the stand-ins for 3830 stay for 4625 and 5892), 1164
 // (CArquivosSavd::GetInst: the stand-ins for 347 stay for 3798, 5876 and 6045) and 1501, 1836, 4657, 4682 and 4687
-// (units 165 and 205: the stand-ins for 275 and 680 stay for 3333, 6737, 7174 and 12098), and none through the table. TrataErroPacote (fn 5901) itself has one caller in the target, 4625, which calls it twice.
+// (units 165 and 205, and 205's 3333: the stand-ins for 275 and 680 stay for 6737, 7174 and 12098), and none through the table. TrataErroPacote (fn 5901) itself has one caller in the target, 4625, which calls it twice.
 // Two noinline callers with different bodies give each two call sites, so binaryen keeps its body out of line, and they
 // pass every argument through, so its dead-argument elimination folds none in. `this` of CArquivosResultado::operator[]
 // is passed too: the member does not read it, and binaryen drops the parameter as the target's (i32 i32)->() shows.

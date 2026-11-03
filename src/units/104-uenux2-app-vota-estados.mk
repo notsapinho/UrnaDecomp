@@ -162,7 +162,51 @@
 #   throws). StartState is the class's key function, so cemitirmaisbu.cpp's object emits CEmitirMaisBU's vtable now, no
 #   longer the pending object. Chosen: `using namespace comum;`, which lets the texts spell comum's EAVENCERRADA and
 #   EAEFIMDOSTRABALHOS unqualified, the local's name being the texts'; StartState's first line, 42, below the
-#   definitions written before it; ProcessInput's record line, 64, stays blank.
+#   definitions written before it.
+# - vota::CInicioZeresima::StartState (fn 11924, in ciniciozeresima.cpp after the statics, lines a choice): the vote's
+#   state EAVAGUARDAHORAZERESIMA (51) through comum::CAppInfo::GetInst().GetVota() (fns 185, 261) and
+#   CEstadoGeralVota::SetEstadoVota (unit 169's fragment) and vota::CSincronizaVota::SincronizaEstadoGeralVota (fn
+#   491), then CQuerImprimirZeresima::GetInst (fn 5957) in a voter training (comum::CAppInfo::EhTreinamentoEleitor,
+#   fn 697), else CConfirmaImpressaoZeresima::GetInst (fn 5959). 6 over 18 rows, operand-only. It is the class's key
+#   function now, so ciniciozeresima.cpp's object emits CInicioZeresima's vtable, no longer the pending object.
+# - vota::CEmitirMaisBU::ProcessInput (fn 12081, record cemitirmaisbu.cpp 64:23). It copies CTelasVota's +196 (the form
+#   GetTelaEmitirMaisBU returns by value) and reads it. On api::INPUT_CONFIRMA (9): GetQuantidadeMaximaBUsAdicionais (fn
+#   4582, unit 168); the form's input fields (GetEntradas), and vota::EUeVotaError 9371 "Era esperado pelo menos um
+#   input" (ledger/strings.tsv 19402, the name chosen, app/vota/euevotaerror.h) when there is none, at 64:23 (lines 61
+#   and 62 blank, a chosen layout that puts the throw there); a copy of the first field's text, and when it is empty
+#   LogaMesarioNaoSolicitouViasAdicionais (fn 4557) and no change of state; else
+#   ecourna::api::util::CStringUtils::ToByte (fn 1142) on a std::string built from its c_str(), a CLogVota member
+#   binaryen inlines (below), and over the maximum LogaQtdViasAdicionaisExcedeMaximo (fn 4556), slot 2 of a copy of
+#   CTelasVota's +204 (ctelasvota.h's GetTelaLimiteViasAdicionais, by value as GetTelaEmitirMaisBU, its name chosen),
+#   api::CSystem::Dorme(3000), LogaMesarioIndagadoQtdViasAdicionais (fn 4563) and the form's slot 2; within it
+#   api::CFormStack<api::IScreen>::Remove (fn 5987) on the form, then per copy, while
+#   vota::CSincronizaVota::s_urnaDesligando is clear (else it returns), the copy number GetQtdBU() + 1 of the const
+#   comum::CAppInfo's GetVota (fn 903, GetInst called once before the loop), LogaImprimindoRelatorio (fn 1127),
+#   CImprimindoBU::ImprimeBU (fn 2890, mode 0), IncrementaQtdBU (fn 3701) on the non-const GetVota (fn 261) and fn 491,
+#   and CMostraQRCodeBU::GetInst (fn 2888) as the next state. On INPUT_CORRIGE (5) fn 4557 and CMostraQRCodeBU. The
+#   inlined member, vota::CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte), formats "Solicitada a emissÃ£o de [{}] "
+#   (ledger/strings.tsv 443494) with the count (argument code 6, an unsigned) into a named const std::string, and passes
+#   it plus "via adicional" (156552) or "vias adicionais" (72051, the tail of 4563's text at 72014) to IEventosLog::loga
+#   (fn 233): operator+ on the named string builds a new one with both parts copied, as 12081 does inline. Its name, its
+#   parameter's type and its place in clogvota.cpp (below LogaEleitorImpedido, after the members units 119, 156 and 176
+#   add there) are chosen. The order of the objects decided the locals (docs/reference/facts/codegen.md C4): with
+#   cemitirmaisbu.cpp in this list and clogvota.cpp after it, first in unit 116's, 12081 scored 199 over 717 rows (13
+#   inserted, 13 deleted), the target's 703 instructions and 16 locals with the locals numbered otherwise (binaryen gave
+#   the count ToByte returns a local of its own); the CORRIGE case written first, there, 219 over 725 (21 inserted, 21
+#   deleted). Both moves C4 asks for were measured on whole links, and each gives 59 over 704 rows, operand-only (calls,
+#   data, a table slot of std::format's buffer, the exception's destructor slot and the flag's .bss address), with 11898
+#   matches and the target's sha256 from the splat build: cemitirmaisbu.cpp.o moved right after clogvota.cpp.o, at unit
+#   116's head, and clogvota.cpp.o moved ahead of this list's first object. The target's data order is the second:
+#   clogvota.cpp's records (@1532800) and CLogVota's vtable (0x176370) lie before CAguardaMensagem's (0x17641c;
+#   caguardamensagem.cpp is this list's first file), and cemitirmaisbu.cpp's records (@1541216 to @1541248) and vtable
+#   (0x178434) between cgravaresultado.cpp's (@1540672, 0x178214) and cimprimindobu.cpp's (@1541336, 0x1784ac). Of the
+#   31 objects with records that the first move put ahead of cemitirmaisbu.cpp.o, 30 lie after it in the data; the
+#   second leaves clogvota.cpp.o ahead of the 34 others with records from this list's head to
+#   cmonitoraalimentacao.cpp.o, none of which lies before it (first record per object, ledger/source-locations.tsv). So
+#   clogvota.cpp heads this list (src/units/README.md "Names"), still ahead of unit 116's cthreadmonitor.cpp, which that
+#   unit's Run needs (its fragment), and cemitirmaisbu.cpp keeps its place after cgravaresultado.cpp. Chosen: the
+#   locals' names (tela, maximo, entradas, texto, quantidade, appInfo, via), the uebyte loop counter, the case order and
+#   the empty default.
 # - vota::CQuerReimprimirZeresima::StartState (fn 11849, record cquerreimprimirzeresima.cpp:45:15): when
 #   comum::CRdvVota::GetInst().Comparecimento() (fns 555, 1269) is not 0 it logs "Erro na verificaÃ§Ã£o do comparecimento"
 #   (ledger/strings.tsv 125479, which only 11849 loads) through vota::CLogVota::LogaErroVerificacaoComparecimento, a
@@ -245,9 +289,8 @@
 #   243's two there, as in the target.
 # - CEleitorEncontrado: GetInst, the constructor (comum::CAppState's with EVENTO_NENHUM, the target's 0) and the statics
 #   (the pointer at 1905616, the mutex at 1905592), whose exit destructors 10637 and 10636 match. StartState (10635) is
-#   pending in 104-uenux2-app-vota-estados-pending.cpp as the key function; its record, line 102, lies past the lines
-#   written. celeitorencontrado.cpp links ahead of cprocuraeleitor.cpp, the order of the two classes' vtables in the
-#   target's data (@1588936, @1589008), so it is listed here, before it. In it, and in unit 243's two files, GetInst is
+#   written, the key function (below). celeitorencontrado.cpp links ahead of cprocuraeleitor.cpp, the order of the two
+#   classes' vtables in the target's data (@1588936, @1589008), so it is listed here, before it. In it, and in unit 243's two files, GetInst is
 #   defined above the constructor: with the constructor first, 10631 scored `69 over 276 rows (... inserted 2, deleted
 #   2)`, two pairs of binaryen's locals swapped in the inlined CIniciaJustificativa::GetInst and
 #   CEleitorEncontrado::GetInst (docs/reference/facts/codegen.md C4); with GetInst first, 48 over 274, all operand rows.
@@ -258,12 +301,71 @@
 # CEleitorEncontrado's members and statics. Not measured, and they may give the same bytes: EstadoAposProcura in
 # another file, or a static member in its place.
 #
+# vota::CEleitorEncontrado::StartState (fn 10635, slot 2, 3870 B) is written and `unresolved self-voted`: every row is
+# an operand, and the name of its callee 6733, the set's range insert (below), has no voter but 10635, since 6733 does
+# not match; 10635 waits for it. It is written in celeitorencontrado.cpp, its throw of the
+# vota error 9394 ("Eleitor não posicionado", EUE_VOTA_ELEITOR_NAO_POSICIONADO added to euevotaerror.h, its name chosen
+# from the message) on the record's line 102, column 15, and GetInst, the constructor and the statics after it (a choice
+# that leaves that line free; GetInst stays above the constructor). It creates six states no other target function
+# creates, which this unit lists ahead of it, each in a file of its own named after its class (RTTI; how-to step 3's
+# rule 4) in leidentidade/, where their vtables (@1588508 to @1588876) lie, between cpedeidentidade.cpp's records and
+# celeitorencontrado.cpp's (@1588980): vota::CEleitorOptouPorVotarEmTransito, CEleitorImpedidoJustificar,
+# CEleitorNaoTemIdadeMinima, CEleitorNaoPossuiCargosParaVotar and CEleitorImpedidoJustificarVotoTransito, new, over
+# unit 161's IEleitorImpedidoVotar, and CEleitorJaVotou, unit 161's file, moved here, its GetInst, constructor and
+# statics now written. Matched with them: the six classes' statics' exit destructors (10662 and 10661, 10659 and 10658,
+# 10656 and 10655, 10651 and 10650, 10640 and 10639, 10645 and 10644), 1959 (binaryen's body of the six pointers'
+# destructors, named after its first member in link order), the line texts 10660, 10657, 10654, 10653, 10649, 10638 and
+# 5422 (one body for two classes' "está impedido de votar ou justificar."), and unit 161's 10666, a thunk into 1959.
+# Evidence (pnpm wasm fn ../target/vota_web_wasm.wasm 10635; each class's header has its RTTI, vtable and statics):
+# - The order is the target's: the voter at comum::CEleitores's cursor (GetCurrent, 656), else the throw; with an
+#   impediment (CEleitorDetalhe::SemImpedimento, 2266, false), CLogVota::GetInst (184) and LogaEleitorImpedido (inlined:
+#   clogvota.h), then, when vota::NaoAceitaJustificativa (4578), CEleitorOptouPorVotarEmTransito for impediment 2
+#   (GetImpedimento, 3769) or CEleitorNaoEncontrado::GetInst (5424); else the turn's impediment (inline twice:
+#   celeitordetalhe.h) 4 to 6 gives CEleitorImpedidoJustificar and 7 CEleitorNaoTemIdadeMinima; then impediment 2 gives
+#   unit 283's CIniciaJustificativaTransito when comum::CConfiguracaoEleicao's set at +604 holds an element that is not
+#   0, else CEleitorImpedidoJustificarVotoTransito, and any other unit 283's CIniciaJustificativaTemporario; with none,
+#   the dynamic data's (GetDinamico, 1271) comparecimento 1 gives CEleitorNaoPossuiCargosParaVotar, 3 CEleitorJaVotou,
+#   else CNomeEleitor::GetInst (5401). 1 and 3 are literals, as in celeitores.cpp.
+# - Forms, read from the order of the calls in clang's object (wasm-objdump -d of compiles of the file): the set copied
+#   into a named local of the branch is destroyed once, after either GetInst; the target destroys it on both paths
+#   before them, tests the found iterator against end() again and puts the not-found arm after the throw. That is a
+#   helper whose set dies at its return, returning find_if's iterator compared with end(); std::ranges::any_of or
+#   std::any_of, in the condition, in a bool or in such a helper, keep no second test and put the found arm after the
+#   throw or the not-found arm before the found one. Same bytes: std::find_if over begin() and end(),
+#   std::ranges::find_if, and the caller's `if` either way round. The impediments 4 to 6: the target's `(x - 7) >= -3`
+#   (unsigned) is the fold of `x != 4 && x != 5 && x != 6` returned from a helper (or negated in place, same bytes);
+#   `==` three times, `>= && <=`, a switch, or the `!=` chain held in a bool fold to `(x - 4) <= 2`. The turn: read
+#   through a const comum::CAppInfo&, which calls the const GetGeral (457), the target's callee; GetInst().GetGeral()
+#   calls the other (291), the scan's first difference before the change.
+# - The objects' order (docs/reference/facts/codegen.md C4): with the five new files and celeitorjavotou.cpp after
+#   celeitorencontrado.cpp, 10635 scored `590 over 1714 rows (same 1124, replaced 525 [523 operand-only], inserted 33,
+#   deleted 32)`, binaryen's locals numbered otherwise in the inlined GetInst; with celeitorjavotou.cpp alone after it,
+#   `490 over 1704 rows (same 1214, replaced 445 [443 operand-only], inserted 23, deleted 22)`; with all six before it,
+#   `221 over 1681 rows (same 1460, replaced 221 [221
+#   operand-only], inserted 0, deleted 0)` (pnpm wasm score on whole links, the rest of the tree as committed). In use
+#   band 1 the target links them so too: 10662 to 10638 above 10635, in reverse link order.
+# - The set's range insert (fn 6733, libc++'s std::set<ecourna::app::dados::ETipoIdentificadorEleitor>::insert over two
+#   const_iterator) has a second target caller, 7787 (not written), for which unit 283's roots stand in: while 10635 was
+#   its one caller, binaryen inlined it there. 6733 reads `differs`, in its locals (7 against 6): our copy is this
+#   object's, built with strict aliasing; with this object alone built without it (a scratch UENUX2_NOTBAA_FILES line),
+#   6733 scored `1 over 181 rows (same 180, replaced 1 [1 operand-only], inserted 0, deleted 0)`, 10635 did not
+#   change, and steps 7 to 9 on that link matched 6733 and 10635, 11924 match rows against 11922, no other row moved.
+#   That flag is the user's to decide; by its band, 6733 lies next to 6734, a function
+#   of celeitores.cpp's records, so the target's copy may as well be another uenux2 object's built without strict
+#   aliasing (a reading).
+# Chosen: the helpers' names and their being functions of the file's anonymous namespace (they read no state of the
+# class, and clang inlines them all), the predicate's 0 written against the set's element type (the target's compare;
+# the type is cconfiguracaoeleicao.h's choice, whose enumerators start at 1), the order of the definitions, the lines
+# but 102, and the six files' names.
+#
 # Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
 # link (unit 138). The pairs for CReimprimindoZeresima::GetInst (5941) and CReimprimindoResumoZeresima::GetInst (5942)
 # went: their target callers, 11848 with 11845 and with 11852, are in the link.
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
+# app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).
+APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
+    src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
     src/app/vota/eleitor/fimvotacao/cgravaresultado.cpp \
     src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp \
@@ -281,7 +383,13 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cquerreimprimirzeresima.cpp \
     src/app/vota/operador/outrasopcoes/cfimaquisicaovotos.cpp \
+    src/app/vota/operador/leidentidade/celeitoroptouporvotaremtransito.cpp \
+    src/app/vota/operador/leidentidade/celeitorimpedidojustificar.cpp \
+    src/app/vota/operador/leidentidade/celeitornaotemidademinima.cpp \
+    src/app/vota/operador/leidentidade/celeitornaopossuicargosparavotar.cpp \
     src/app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.cpp \
+    src/app/vota/operador/leidentidade/celeitorjavotou.cpp \
+    src/app/vota/operador/leidentidade/celeitorimpedidojustificarvototransito.cpp \
     src/app/vota/operador/leidentidade/celeitorencontrado.cpp \
     src/app/vota/operador/leidentidade/cprocuraeleitor.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesario.cpp \
@@ -292,6 +400,8 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_SRCS)
 # creimprimindozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
 # CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# celeitorencontrado.cpp includes it too, for the set StartState copies (the same include path)
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitorencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

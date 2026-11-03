@@ -64,15 +64,15 @@ __attribute__((noinline)) std::string UsaPreenche2(const std::string& s) { retur
 __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { return "y" + CStringUtils::PreencheAEsquerda(s, '*', 5); }
 
 // CStringUtils::PreencheADireita's copying form (target fn 1881) has five callers in the target: fn 1542 pads two strings
-// to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. 1542 and 11478 are in the link;
-// these stand for the other three.
+// to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. 1542, 11188 and 11478 are in the
+// link; these stand for the other two.
 __attribute__((noinline)) std::string UsaPreencheCopiaA(const std::string& s) { return CStringUtils::PreencheADireita(s, ' ', 28) + "|"; }
 __attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { return "|" + CStringUtils::PreencheADireita(s, ' ', 34); }
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
 // our link that these stand for: ToUpper in place (fn 3509), 5604 (654 is in the link); its copying form (5156), 6592, and table slot 29,
 // which the executable TU's code takes; Split (1880), 2380 and 12065 (654, 3689, 5869 and 11377 are in the link);
-// FindRegex (2199), 5465 (654 and 1539 are in the link); the copying Replace (2677), 3651 and api::CProgressBar::Draw
+// the copying Replace (2677), 3651 and api::CProgressBar::Draw
 // (10977) (3689 is in the link). Split is called through its label, so that this object, ahead of
 // src/app/roots_vector.o on the link line, instantiates none of std::vector<std::string>'s destruction.
 extern "C" void urna_divide(void* partes, const std::string& valor, char separador) __asm__(
@@ -90,11 +90,6 @@ __attribute__((noinline)) int UsaDivideB(const std::string& s)
     int partes[3];
     urna_divide(partes, s + "|", ';');
     return partes[2];
-}
-__attribute__((noinline)) int UsaBusca(const std::string& s)
-{
-    const auto [inicio, fim] = CStringUtils::FindRegex("^[0-9]+", s + "0");
-    return static_cast<int>(fim - inicio);
 }
 __attribute__((noinline)) std::string UsaSubstituiA(const std::string& s) { return CStringUtils::Replace(s, "a", "b") + "c"; }
 __attribute__((noinline)) std::string UsaSubstituiB(const std::string& s) { return "d" + CStringUtils::Replace(s, s, "e"); }
@@ -122,7 +117,7 @@ int urna_roots_ecourna(int a)
     out += UsaPreencheCopiaA(s) + UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasA(s) + UsaMaiusculasB(out) + UsaSubstituiA(s) + UsaSubstituiB(out);
-    acc += UsaDivideA(s) + UsaDivideB(out) + UsaBusca(out);
+    acc += UsaDivideA(s) + UsaDivideB(out);
     std::string (*maiusculas)(const std::string&) = &CStringUtils::ToUpper;
     acc += reinterpret_cast<uintptr_t>(maiusculas);
     return static_cast<int>(acc) + static_cast<int>(out.size());

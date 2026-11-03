@@ -29,16 +29,16 @@ namespace {
 
 const void* volatile cappinfo_sink;
 
-// Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898 and unit 98's 2266
-// are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105,
-// 12110, 12134.
+// Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898, unit 98's 2266,
+// unit 104's 10635 and unit 277's 10710 are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451,
+// 10590, 11242, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
-// Stands for fn 903's callers 7160, 10710, 12081, 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566
-// and unit 104's 12082 are linked).
+// Stands for fn 903's callers 7160 and 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566, unit
+// 104's 12082 and 12081 and unit 277's 10710 are linked).
 __attribute__((noinline)) int VotasConst(int a, int b) { return w903(a, 51) * w903(b, 51); }
-// Stands for fn 697's callers: 6737, 7174, 10209, 10440, 10501, 10677, 10706,
-// 10722, 11924, 12077 (unit 199's 11994, unit 142's 1150, unit 50's 10569, unit 197's 3229, unit 138's 11835,
-// unit 161's 10680 and 652 and unit 121's 2753 are linked).
+// Stands for fn 697's callers: 6737, 7174, 10209, 10440, 10501 (unit 199's 11994, unit 142's 1150, unit 50's 10569,
+// unit 197's 3229, unit 138's 11835, unit 161's 10680, 652 and 10677, unit 121's 2753, unit 277's 10706 and 10722, and
+// unit 104's 11924 and unit 156's 12077 are linked).
 __attribute__((noinline)) int Treinamentos() { return w697() | (w697() << 1); }
 // Stands for fn 3788's callers: 7787, 12098, 12110.
 __attribute__((noinline)) void Codigos(int a, int b, int c)

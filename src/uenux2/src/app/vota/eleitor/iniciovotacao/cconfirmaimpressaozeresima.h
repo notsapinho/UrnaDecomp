@@ -26,8 +26,11 @@ namespace vota {
 // `f244(p0); f136(p0)`, the 13-B shape of docs/reference/facts/reading.md R5; fn 244 releases +12 and stores no vptr,
 // as a final class's (R4). A singleton: GetInst keeps the object in a static std::unique_ptr (@1834268, destroyed at
 // exit by fn 11930) under a static std::mutex (@1834244, by fn 11929); the constructor, inlined there, adds the 10800
-// seconds to its copy of the date and time in its body. Not recovered: ProcessInput
-// (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// seconds to its copy of the date and time in its body. ProcessInput (fn 11927) reads the form: on
+// api::INPUT_CONFIRMA, past that limit (api::CDateTime::Now(), fn 479, compared by fn 759) it goes to
+// vota::CImpressaoZeresimaTardia, whose GetInst it holds inlined, else it sets the vote's state to EAVGERARZE (52),
+// saves it (fn 491) and goes to vota::CGeraZeresima (fn 5962); on INPUT_BRANCO to vota::CMaisInformacoes::GetInst(this)
+// (fn 1280).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CConfirmaImpressaoZeresima final : public comum::CAppState {
 public:

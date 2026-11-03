@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -18,10 +19,12 @@ namespace vota {
 // vota::CLogVota and shows the form at +12, and ProcessInput (slot 7, fn 10641, a thunk into binaryen's fn 6015, the
 // body it shares with vota::CInformaAnoNascimentoErrado's), which goes to vota::CCancelaHabilitacaoEleitor on CONFIRMA.
 // The destructor is out of line, the body 49 final states share (fns 244 and 387): a std::shared_ptr at +12 is all it
-// releases. A singleton: fn 10635 (vota::CEleitorEncontrado::StartState) holds GetInst and the constructor inlined,
-// allocates 20 bytes and passes comum::CAppState::EVENTO_ENTRADA (2) to the base's constructor; neither is
-// reconstructed. src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is
-// chosen.
+// releases. A singleton: fn 10635 (vota::CEleitorEncontrado::StartState) holds GetInst and the constructor inlined:
+// GetInst keeps the 20-byte object in a static std::unique_ptr (@1905560) under a static std::mutex (@1905536), whose
+// exit destructors are fns 10645 and 10644, and the constructor passes comum::CAppState::EVENTO_ENTRADA (2) to the
+// base's and builds the form straight into +12 (src/units/104-uenux2-app-vota-estados.mk, which lists this file now,
+// says how they are measured). src/units/161-uenux2-app-vota-operador-identidade.mk says which of the rest is evidence
+// and which is chosen.
 class CEleitorJaVotou final : public comum::CAppState {
 public:
     virtual ~CEleitorJaVotou() override;
@@ -34,6 +37,9 @@ public:
 
 private:
     CEleitorJaVotou();
+
+    static std::unique_ptr<CEleitorJaVotou> s_inst;
+    static std::mutex s_mutex;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };

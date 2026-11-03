@@ -1,6 +1,6 @@
 // Reconstruction: CEstadoGeralVota's constructor (target fn 5628), IncrementaQtdBU (3701), MarcaInicioAquisicao (5627),
-// on chosen lines above MarcaFimAquisicao's records (108, 113; not written), and MarcaUltimoVoto, throws at its records
-// 131 and 136 (fn 4454 holds it); where it starts and its first message on two lines are chosen.
+// on chosen lines above MarcaFimAquisicao, throws at its records 108 and 113 (fn 10734 holds it), and MarcaUltimoVoto,
+// throws at its records 131 and 136 (fn 4454 holds it); where each starts and its first message on two lines are chosen.
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 
 namespace comum::md::estadoaplicacao {
@@ -42,12 +42,20 @@ void CEstadoGeralVota::MarcaInicioAquisicao()
 
 // (original lines 43-104: content not recovered)
 #line 105
-// <stubs>
-// f10734 · 648 B · unmatched · name unknown
-// void f10734(i32) { ... }
-// </stubs>
+void CEstadoGeralVota::MarcaFimAquisicao()
+{
+    if (m_dhFimAquisicao) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8084,
+                                 "O fim da aquisição já havia sido registrado");
+    }
 
-// (original lines 110-127: content not recovered)
+    if (!m_dhIniAquisicao) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8085, "O início da aquisição não havia sido registrado");
+    }
+    m_dhFimAquisicao = api::CDateTime::Now();
+}
+
+// (original lines 118-127: content not recovered)
 #line 128
 void CEstadoGeralVota::MarcaUltimoVoto()
 {
@@ -61,6 +69,16 @@ void CEstadoGeralVota::MarcaUltimoVoto()
     }
     m_dhUltimoVoto = api::CDateTime::Now();
     ++m_comparecimento;
+}
+
+void CEstadoGeralVota::SetEstadoVota(EEstadoVota estadoVota)
+{
+    m_estadoVota = estadoVota;
+}
+
+void CEstadoGeralVota::SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento)
+{
+    m_estadoEncerramento = estadoEncerramento;
 }
 
 } // namespace comum::md::estadoaplicacao

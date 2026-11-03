@@ -9,8 +9,9 @@
 // here; CEsperaRetestar's GetInst (fn 5936), written in cesperaretestar.cpp (138-uenux2-testeteclado.mk has its note).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
-// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots, pending in units 156 and 37). The noinline stand-in calls
-// it twice for them and adds the results, so its body is no target function's. It goes when they are in the link.
+// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots; 12034 is in the link, unit 156, and 12051 and 12055 are
+// pending in unit 37). The noinline stand-in calls it twice for 12051 and 12055 and adds the results, so its body is no
+// target function's. It goes when they are in the link.
 //
 // vota::CReinicioVotacao::GetInst (fn 5938) has two direct callers in the target (ledger/callgraph.tsv): 11829,
 // CRetomada's slot 12, in the link, and 11830, its slot 11, pending. The noinline stand-in calls it once for 11830, so it

@@ -42,6 +42,13 @@ public:
     // pass to IndiceTurno). Those literals are the evidence for the names; that they are const members is chosen.
     void SalvaVotaInterno() const;
     void SalvaVotaExterno() const;
+    // The general state's save to each flash: vota::CSincronizaVota::SincronizaEstadoGeral (fn 3333), their one caller,
+    // holds each inlined by binaryen behind a 16-byte stack frame of its own: when m_geral holds a value, a
+    // comum::CServicoEstadoGeral of that origin (fn 1941, 0 then 1) saves it (fn 3592). They read the private m_geral
+    // and its flag (+180) with no call, so they are members; their names, after SalvaVotaInterno's, and their being
+    // const are chosen.
+    void SalvaGeralInterno() const;
+    void SalvaGeralExterno() const;
 
     static bool EhTreinamentoEleitor();
 

@@ -19,7 +19,11 @@ namespace vota {
 
 // vota::CInicioVotacao (RTTI: si_class of comum::CAppState; vtable @1543592 [448, 765, 11988, 7480, 1661, 218, 425,
 // 218, 11987]): the wait for the time the voting starts. It overrides StartState (slot 2, fn 11988) and ProcessTick
-// (slot 8, fn 11987), both pending. The destructors are the bodies 19 states over two std::shared_ptr at +12 and +20
+// (slot 8, fn 11987): each goes to vota::CAguardaMensagem (fn 1337) once the start time has passed, and calls fn
+// 5972, a function of its own in the target (two callers), which marks the start of the acquisition when no voter
+// has voted yet (comum::CRdvVota::Comparecimento, fn 1269), shows one of two voter's forms and queues message 8 to
+// the operator's thread: the free function IniciaVotacao in ciniciovotacao.cpp, its name and its anonymous
+// namespace chosen. The destructors are the bodies 19 states over two std::shared_ptr at +12 and +20
 // share (fns 448 and 765): final, and out of line (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn
 // 2880) builds the 44-byte object and keeps it in a static std::unique_ptr (@1834128, destroyed at exit by fn 11990)
 // under a static std::mutex (@1834104, by fn 11989). The layout is what the constructor, inlined there, stores: the

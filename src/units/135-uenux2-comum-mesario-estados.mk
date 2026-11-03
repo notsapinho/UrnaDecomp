@@ -148,8 +148,9 @@
 # - The static pointer and mutex of CDigitalMesarioNaoReconhecida (10326 through fn 389, 10324): no reader is written,
 #   so their destructors' `.bss` names have no voter but themselves, and their .bss order is a choice, as unit 104 says
 #   of CQuerReimprimirZeresima's. CPedeDigitalMesario's pointer's destructor (10321) is a thunk into fn 3886, the reset
-#   binaryen keeps once for three classes' statics (10321, 10457, 10682) over the D2 1537: ours is a whole body and
-#   differs, so a hand line names the pointer for 10313.
+#   binaryen keeps once for three classes' statics (10321, 10457, 10682) over the D2 1537: with the three in the link
+#   (vota::CRegistraDigitalOperador's static came last: src/units/221-uenux2-app-comum-constructors.mk) ours is that
+#   thunk too, and it matches. It holds the pointer's name for 10313, and the hand line that named it went.
 #
 # Not reconstructed, and what each waits for:
 # - CDigitalMesarioNaoReconhecida's GetInst, inlined into fn 10316 (pending), with its file's anonymous

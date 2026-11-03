@@ -81,7 +81,8 @@
 #   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
 #   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
 #   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and
-#   1539 match. The match results are over std::string's iterators (boost::smatch): the target's regex_search (9400)
+#   1539 match, and so does 5465 (api::CStringUtils::CasaRegex, unit 179's), through FindRegexPosition. The match
+#   results are over std::string's iterators (boost::smatch): the target's regex_search (9400)
 #   zeroes the matcher's restart and search_base (an i64.store of 0 at offset 24), which the std::string::const_iterator
 #   instance does (libc++'s __wrap_iter value-initializes) and the const char* one does not: with boost::cmatch over
 #   valor.data() it scored 17 over 260 rows, the 3 deleted rows that store; with smatch it matches. The string overload
@@ -103,6 +104,9 @@
 #   landing pads apart that ours shares, the regex_search invoke's and that of logic_error's constructor in
 #   match_results::position()'s inlined raise_logic_error (a reading of both bodies, pnpm wasm fn); no other form was
 #   measured.
+# - FindRegexPosition (no target index: binaryen inlines it into its one caller, 5465), added for unit 179: FindRegex's
+#   start, behind a stack frame of its own in 5465; its name, its being a member and this file are chosen
+#   (src/units/179-uenux2-cvalidamidia.mk).
 # The members by band in this object (target index/ld_index in build/out/wasm-map/vota_web/names.tsv) follow the target's
 # order but where a linkonce copy is involved, and 9407 lies, as Trim (9406) already did, after CBaseError<EUtilError>'s
 # constructor (9410), which uses 1 puts before both.

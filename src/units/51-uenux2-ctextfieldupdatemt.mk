@@ -95,7 +95,8 @@
 # CTextFieldUpdateMT, a copy pushed into the builder's vector with emplace_back inlined (clang: cost 320, threshold
 # 325) and the field released.
 #
-# 652 itself is unit 161's row (unresolved, self-voted on CPedeIdentidade::s_inst: unit 161's fragment). The roots file
+# 652 itself is unit 161's row (matched since 10682, CPedeIdentidade::s_inst's exit destructor, is: unit 161's
+# fragment). The roots file
 # went: its vtable sink stood for the constructor, which is in the link now, inlined through unit 161's GetInst.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

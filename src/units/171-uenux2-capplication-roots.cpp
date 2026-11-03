@@ -11,8 +11,8 @@
 //   w171_empilha stands for the other, fn 10468.
 // - CriaContexto from a kind and three strings (fn 676) and api::CApplicationContextGuard's destructor (fn 675, unit
 //   193) have the same ten direct callers in the target (491 1277 3333 4657 4682 10590 12098 12105 12110 12134), of
-//   which 1277 (comum::CAssinador::Assina, unit 34), 491, 4657 and 4682 (unit 205) are reconstructed: w171_guarda and
-//   w171_guardas stand for the other six, three call sites of each. The other CriaContexto and
+//   which 1277 (comum::CAssinador::Assina, unit 34), 491, 3333, 4657 and 4682 (unit 205) are reconstructed: w171_guarda
+//   and w171_guardas stand for the other five, three call sites of each. The other CriaContexto and
 //   the guard's constructor have one caller each and are left unrooted, so binaryen inlines them as the target does.
 // - GetContexto (fn 1695) has seven direct calls in the target: GetExceptionLevel's (fn 5569, in the link) and three
 //   each in 7709 and 7710 (vota::CThreadVota's two TrataErro, traps in unit 116's pending file); w171_contexto stands

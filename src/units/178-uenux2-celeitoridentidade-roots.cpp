@@ -8,7 +8,7 @@
 // - FormataIdentidade (fn 2798): callers 3616, 10420 (in the link, unit 142, which passes the type as the constant 1)
 //   and 10631 (in the link, unit 104); the stand-ins stay for 3616.
 // - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50), 10420 (unit 142's validatitulosuspensao.cpp,
-//   binaryen-inlined there) and 10313 (unit 71), in the link, and 10721, which the stand-ins stay for.
+//   binaryen-inlined there), 10313 (unit 71) and 10721 (unit 277), all in the link: its stand-ins went.
 // - IRegraIdentidade::EhValida (fn 3723): callers 2803, in the link, and 10627, vota::CValidaIdentidade's slot 2, which
 //   one stand-in stands for.
 // - FormataIdentificador (fn 1924): callers 10586, in the link (unit 50), 11233 (comum::(anonymous
@@ -21,7 +21,6 @@
 extern "C" {
 int r178_identidade(int, int, int) __asm__("_ZN5comum2md18CEleitorIdentidadeC1ENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r178_formata(int, int, int) __asm__("_ZN5comum2md17FormataIdentidadeENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
-int r178_validador_eh_valida(int, int, int) __asm__("_ZNK5comum2md20CValidadorIdentidade8EhValidaEN7ecourna3app5dados25ETipoIdentificadorEleitorERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE");
 int r178_regra_eh_valida(int, int) __asm__("_ZNK5comum2md16IRegraIdentidade8EhValidaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void r178_formata_identificador(int, int) __asm__("_ZN5comum2md20FormataIdentificadorERKNS0_18CEleitorIdentidadeE");
 }
@@ -37,11 +36,6 @@ __attribute__((noinline)) void DuasFormatacoes(int destino, int identificador, i
 {
     r178_formata(destino, identificador, 1);
     r178_formata(destino + 12, identificador + 12, tipo);
-}
-
-__attribute__((noinline)) int DuasValidacoes(int validador, int tipo, int numero)
-{
-    return r178_validador_eh_valida(validador, tipo, numero) * 2 + r178_validador_eh_valida(validador, tipo + 1, numero + 12);
 }
 
 __attribute__((noinline)) int ValidaRegra(int regra, int numero)
@@ -62,7 +56,6 @@ struct SRoots178 {
     {
         r178_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoes);
-        r178_sink = reinterpret_cast<const void*>(&DuasValidacoes);
         r178_sink = reinterpret_cast<const void*>(&ValidaRegra);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoesIdentificador);
     }

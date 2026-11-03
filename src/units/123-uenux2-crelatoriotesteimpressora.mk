@@ -43,17 +43,45 @@
 # 11196's body did not change. The list handed straight to the setter keeps the constructor out of line at -O3 too, in
 # a probe object; it was not linked.
 #
-# Pending, in the -pending.cpp, whose header says what each waits for: GetConteudoQRCode (11200), GetDadosLocal (11188).
-# Not reconstructed: the constructor (5586, declared; its stub stays in crelatoriotesteimpressora.cpp): it calls
-# 1382 and 1261, which unit 125 matches as api::CDate's default constructor and operator<=> (the latter's name chosen
-# there), and 2787, 2788, which have no name. Slots 4, 23 and 24 are the base's defaults,
+# Pending, in the -pending.cpp, whose header says what it waits for: GetConteudoQRCode (11200).
+#
+# The constructor (target fn 5586, no record; at the file's top, a chosen line: it is in use band 2, apart from the
+# slots' band): the general state's urna type for its turn (GetTipoUrna, inline) against eUrnaContingencia; then, when
+# CPE::Existe (2788) says no instance, CPE::CreateInst(geral, FLASH_INTERNA) (2787, unit 110); then, when CPE's processo
+# holds a second pleito, that pleito's date against a default api::CDate, today (1382): operator== inline, then <
+# through operator<=> (1261, unit 125). The flag is stored false first. The byte at +4 is stored 0 before the vptr, the
+# base's member (cimprimirextratocarga.h), and +5 is the flag. CPleito::GetData (cpleito.h) is added for it. Its two
+# target callers, 11869 and 11911 (not written), read its returned this: unit 280's roots stand in for both. It
+# matches: 9 over 99 rows, all operand-only, before step 8 (11 over 99, the result's row deleted, with no reader).
+#
+# GetDadosLocal (slot 15, target fn 11188): the lines of the section's data, in a vector of strings. For a voting urna
+# (eUrnaVota, eUrnaContingenciaVota, eUrnaContingenciaVotaRecupera) it adds "Local ... {:04}" of CLocal::GetLocalID in
+# the official phase, calls the InicializaTradutorFrase slot (10), then the section's line, PreencheADireita of the
+# translated "<SCSN>" to 34 and "{}{:04}" of GetSecaoID, then, when the section has aggregated sections
+# (CLocal::GetQtdAgregadas, 2816, unit 89), their count's line "{:<33s} {:04}" and FormataAgregadas (5738, unit 89) of
+# the translated "<SCPN> agregad<S|os|os|as>: {}", then the place's type and "Local com biometria"; last, for every
+# urna, "Tipo de alimentação". Every literal, padding width and format is the target's; the strings the target
+# destroys only at the end of their block are named locals, and those destroyed right after the push_back are
+# temporaries (frame slots read off 11188's rows), as written. The three parameter lines are one inlined helper,
+# FormataParametro (the name's copy, then PreencheAEsquerda of the value to 38 less the name's size, the constants the
+# target passes: 25 and 19), cgeradorrelpu.cpp's AdicionaParametro's line; ConverteTipoLocal (CLocal::GetInst again,
+# CLocal::GetTipoLocalVotacao, its four types and "Inválido") is shaped after the record's ConverteTipoAlimentacao (line
+# 173, CPolySingleton<IPower>::instance()'s default std::source_location at column 20, `auto& ipower = ` before it, the
+# idiom of cthreadmonitor.cpp, then IPower::Fonte: 0 "R. Elétrica", 1 "B. Interna", 2 "B. Externa", else "Não
+# identificada", in the target's block order). Both helpers are in the anonymous namespace, their names chosen;
+# ConverteTipoAlimentacao's is the record's. It matches: 132 over 1413 rows, all operand-only, before step 8; with
+# ConverteTipoAlimentacao's cases 1 to 3 first and its default last, 175 over 1434 (21 inserted, 21 deleted), the
+# target laying out the "R. Elétrica" arm first.
+#
+# Slots 4, 23 and 24 are the base's defaults,
 # bodies binaryen shares (434, 425), matched under other classes' names; slots 0 and 1 are the implicit destructors,
 # 174 and 144, shared too.
 #
 # Where things are. crelatoriotesteimpressora.cpp's one record is line 173 (ConverteTipoAlimentacao, inlined into
-# GetDadosLocal, not written), and it stays blank. The members are defined in the order of their target indices, a higher
-# index first: inside the use-1 band that is the link order (docs/how-to-decompile.md step 3), 11202 to 11189 before 11188
-# and 11187 to 11183 after; their lines are chosen. cimprimirextratocarga.h's path and the base's slot names are chosen;
+# GetDadosLocal). The members are defined in the order of their target indices, a higher index first: inside the use-1
+# band that is the link order (docs/how-to-decompile.md step 3), 11202 to 11189 before 11188 and 11187 to 11183 after;
+# their lines are chosen (the includes, the helpers and the constructor are placed so that line 173 stays the record's).
+# cimprimirextratocarga.h's path and the base's slot names are chosen;
 # that header says what places the base in a file of its own (its typeinfo, and 11216 in the band), whose one function's
 # lines are chosen. crelutil.h, euecomumrelatorioserror.h and crelatoriotesteimpressora.h are chosen paths beside the
 # sources.
@@ -77,8 +105,9 @@
 # takes that class now: 603's match line follows the new symbol (a rename, splat-match), and the masked disassembly of
 # cinformacaoeleicao.cpp's object is the same before and after.
 #
-# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address, as the constructor stores it, and three
-# stand-ins for callers not reconstructed, each of a function with several callers in the target that binaryen would
+# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address went when the constructor (5586) was
+# written, since its vptr store keeps the vtable now; and three stand-ins for callers not reconstructed, each of a
+# function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
 # eight throwers not in the link (the roots file lists them; 942, 2786 and 11181 are in it) and goes with the last, and

@@ -3,8 +3,8 @@
 // instantiates nothing.
 
 // comum::md::estadoaplicacao::CEstadoGeral::SetAjusteDataHora (target fn 3705) has three direct callers in the target,
-// fns 7160, 7306 and 10710, none of them in our link. binaryen inlines a function with one call site, so these two
-// stand for them, with bodies that differ from each other's and from every target function.
+// fns 7160, 7306 and 10710, of which 10710 (unit 277) is in our link. binaryen inlines a function with one call site, so
+// these two stand for 7160 and 7306, with bodies that differ from each other's and from every target function.
 extern "C" void w3705_ajuste(void*, const void*) __asm__(
     "_ZN5comum2md15estadoaplicacao12CEstadoGeral17SetAjusteDataHoraERKNS1_15CAjusteDataHoraE");
 

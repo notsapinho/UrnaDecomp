@@ -1,0 +1,79 @@
+# uenux2 comum's load of the processo eleitoral: comum::CarregaProcessoEleitoral (target fn 3771) and CarregaPleito
+# (5778) in app/comum/dados/carregaprocessoeleitoral.{h,cpp}, the ASN.1 file reader they instantiate,
+# comum::CarregaArquivo<CONVERSOR> (app/comum/dados/carregaarquivo.{h,cpp}; its CConversorCabecalhoPacote instance is fn
+# 5706), and comum::SIdentificacaoArquivo's constructor (5726, app/comum/nomearquivo/sidentificacaoarquivo.cpp; the
+# struct is unit 279's, in cnomearquivo.h, one type for the object both units read). The members this load needs
+# in files landed units compile are those units' (their fragments say what each holds): CPE::Existe and CreateInst
+# (2788, 2787; unit 110), CPleito's constructor (5652; unit 88), CProcessoEleitoral's two constructors (unit 88),
+# CProcessoEleitoralDTO::GetPleito2 and its getters (unit 140), api::TrocaExtensao (5461; unit 32), and the name
+# builder NomeArquivoPE in app/comum/nomearquivo/cnomearquivo.cpp (unit 131's file; it has no index). Paths relative to
+# src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header, and these objects get Boost's
+# include path, which cfileasn.h's converters reach.
+#
+# What the target shows, and what is chosen:
+# - 3771's wasm type is (i32 i32)->(): the result and the general state; the origin is folded (below). It calls
+#   CPath::GetPathEstatico in a 16-byte frame, then holds the rest behind a 272-byte prologue of its own
+#   (LeProcessoEleitoral, binaryen's inlining of a function with one caller), which holds NomeArquivoPE behind a 96-byte
+#   one (the phase's letter and the 5-digit id from cnomearquivo.cpp's internal FormataFase and FormataNumero, fns 2828
+#   and 1161, which only that file's code can call: docs/reference/facts/placing.md P2), the
+#   reader of the "cp" file behind a 64-byte one (CarregaArquivo<CConversorProcessoEleitoral>), GetPleito2 behind a
+#   16-byte one (record cprocessoeleitoraldto.cpp:57), CarregaPleito's two calls (5778), the UF upper-cased byte by
+#   byte, and the two CProcessoEleitoral constructors of its two branches, whose moved-from identifiers vector it tests
+#   and frees (how-to step 3: the constructors are out of line in another TU).
+# - 5778 holds CarregaArquivo for the "ste" and "ce" files behind 64-byte prologues, calls 5706 for the ".pid" file,
+#   5461 for that file's name, vector<CEleicaoPE>::push_back (5777) and CPleito's constructor (5652). Its path from the
+#   ".pid" name is built from a named string: the target copies it into the path (basic_string's append of a range),
+#   where a temporary would be moved; 3771's "cp" name is built the same way.
+# - 5726 stores the phase at +0, the id at +4, CStringUtils::ToLower of the UF (fn 1879) at +8 and the pleito's address
+#   at +20, and returns this: 7787 builds one at CConfiguracaoEleicao+620 (and reads the result), 2787 at CPE+180.
+#   2787 keeps it a call, which clang would inline from its own TU: so another TU, a reading. The struct (unit 279's
+#   SIdentificacaoArquivo, whose header says what of it is evidence), its name, its members' names, the
+#   constructor's file and its place are chosen; in use band 2 it lies between fns 5727 and 5725, which have no record
+#   either.
+# - CarregaArquivo's form (a converter on the stack, CFileASN::ReadFromFile<TEntidade>, Desconverte), its name, its file,
+#   its being a template over the converter and the order of the explicit instantiations are chosen; the target holds
+#   the ReadFromFile instances it calls (records cfileasn.h:78) inline in each instance.
+# Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
+# functions' being free functions of comum (they read no class's state), their lines and these paths.
+#
+# Matched: 5706 (114 over 1366 rows before step 8, all operand-only: calls, the table slots of the format buffer and the
+# thrown object's destructor, the packed std::format strings), 5726 (1 over 17) and std::vector<CEleicaoPE>::push_back
+# (5777, 13 over 420, from carregaprocessoeleitoral.cpp.o). Written and not matched:
+# - 3771: 1126 over 3025 rows (1019 operand-only, 51 inserted, 56 deleted); the rows left are local numbers and the
+#   order of a few operands, the place of the general state's UF above all (ours computes it before the inner frame, the
+#   target where it reads it). Its scan row is `unresolved` on its call of 5778, which no route names. A
+#   `callers+content` hand line in splat/symbol_addrs.txt names it from the seven std::source_location records only it
+#   loads (cfileasn.h's ReadFromFile and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte,
+#   GetPleito2's), which ours loads too: with it CPE::CreateInst (2787, unit 110) matches, without it 2787 is
+#   `unresolved self-voted` on this call.
+# - 5778: 461 over 4649 rows (451 operand-only, 5 inserted, 4 deleted): in one inlined CarregaArquivo the target keeps
+#   the converter's address (+60 of the 64-byte frame) in a local from its vptr store on, ours computes it again where it
+#   passes it; not explained. It also waits for CPleito's constructor (5652, unit 88), which differs.
+# Measured forms (same command, each against the whole link with the other functions as written):
+# - The ".pid" and "cp" names as named strings: with each a temporary of the path's operator/ (moved into the path),
+#   5778 scored 728 over 4676 rows (32 inserted, 48 deleted) and 3771 1399 over 3105 (131 and 153).
+# - 3771's origin is folded: its wasm type has no such parameter, and it passes the constant 0, FLASH_INTERNA, to
+#   CPath::GetPathEstatico (dead-argument elimination over its callers, 2787 and 7787); ours, 2787 (through
+#   CRelatorioTesteImpressora's constructor) and the roots' stand-in, pass FLASH_INTERNA too, and ours folds it alike.
+#
+# Roots (280-uenux2-processoeleitoral-roots.cpp): stand-ins for the target callers not reconstructed, each named in its
+# comment, so that each function keeps the call sites the target gives it, and the constructors' results are read where
+# a target caller reads them: 2787 and 3771 drop the returned this of CPleito's copy constructor (1281) and 2787 that
+# of SIdentificacaoArquivo's (5726), while 1543, 5967, 7787 and 11902 read 1281's, 7787 reads 5726's, and 11869 and
+# 11911 read CRelatorioTesteImpressora's (5586). Without a reader binaryen drops the result: 1281 scored 9 over 215
+# rows, 5726 3 over 17 and 5586 11 over 99, each with the target's result row deleted; with the readers, 7, 1 and 9, all
+# operand-only. libc++'s vector<CEleicaoPE>::push_back and the version map's __find_equal are called through __asm__
+# labels with the objects' signatures (wasm-objdump -x), so this file instantiates neither: with one caller each,
+# binaryen inlined push_back into CarregaPleito (no body for 5777) and __find_equal into the hinted insert (3870 scored
+# 270 over 345, 244 inserted); with the stand-ins 3870 scores 2 over 101, 3869 0 over 246, 5777 13 over 420. The
+# stand-ins for 3752 and 5738 (unit 89) and the 5586 readers are here because this unit's chain needs them; unit 123's
+# vtable sink went when 5586 was written. A stand-in goes when every target caller its comment names is in the link.
+PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \
+  src/app/comum/nomearquivo/sidentificacaoarquivo.cpp \
+  src/app/comum/dados/carregaarquivo.cpp
+UENUX2_SRCS += $(PROCESSOELEITORAL_280_SRCS)
+$(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(PROCESSOELEITORAL_280_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+W280_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
+$(ROOT)/$(APP)/280-uenux2-processoeleitoral-roots.o: $(ROOT)/src/units/280-uenux2-processoeleitoral-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/280-uenux2-processoeleitoral.mk $(W280_HDRS) $(wildcard $(ROOT)/src/asn1/*.h)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/280-uenux2-processoeleitoral-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/280-uenux2-processoeleitoral-roots.o

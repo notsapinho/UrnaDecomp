@@ -1,9 +1,9 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
-//   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's
-// four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two.
+//   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (held inlined)
+// Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's seven
+// after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's four after
+// LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's eight.
 #include "app/vota/log/clogvota.h"
 #include <format>
 #include <memory>
@@ -354,6 +354,116 @@ void CLogVota::LogaEspacoUtilizadoMV(uintmax_t espaco)
     loga(std::format("Espaço utilizado na MV [{}]", comum::FormataTamanho(espaco)));
 }
 
+void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
+{
+    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+}
+
+// (original lines 362-382: content not recovered)
+#line 383
+void CLogVota::LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento)
+{
+    std::string descricao;
+    switch (impedimento) {
+        case comum::md::IMPEDIMENTO_SEM_IMPEDIMENTO:
+            return;
+        case comum::md::IMPEDIMENTO_VOTA_NA_SECAO_ORIGINAL:
+            descricao = "vota na seção original";
+            break;
+        case comum::md::IMPEDIMENTO_SOLICITOU_VOTO_EM_TRANSITO:
+            descricao = "solicitou voto em trânsito";
+            break;
+        case comum::md::IMPEDIMENTO_PRESO_PROVISORIO:
+            descricao = "preso provisório";
+            break;
+        case comum::md::IMPEDIMENTO_SUSPENSO:
+            descricao = "título suspenso";
+            break;
+        case comum::md::IMPEDIMENTO_CANCELADO:
+            descricao = "título cancelado";
+            break;
+        case comum::md::IMPEDIMENTO_NAO_LIBERADO:
+            descricao = "eleitor não está liberado para votar";
+            break;
+        case comum::md::IMPEDIMENTO_SEM_IDADE_MINIMA:
+            descricao = "eleitor não tem idade mínima para votar";
+            break;
+        case comum::md::IMPEDIMENTO_MILITAR_EM_SERVICO:
+            descricao = "eleitor é militar em serviço";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_ACESSIBILIDADE:
+            descricao = "eleitor pediu acessibilidade";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_ELEITOR_CONVOCADO:
+            descricao = "eleitor convocado pela Justiça Eleitoral";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_JUSTICA_ELEITORAL:
+            descricao = "eleitor é servidor da Justiça Eleitoral";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_OFICIO:
+            descricao = "eleitor transferido por ofício";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_INDIGENAS_QUILOMBOLAS:
+            descricao = "eleitor é um membro da comunidade indígena ou quilombola";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_SITUACAO_RUA:
+            descricao = "eleitor está em situação de rua";
+            break;
+        case comum::md::IMPEDIMENTO_INVALIDO:
+            throw CUeVotaError(EUE_VOTA_TIPO_IMPEDIMENTO_INVALIDO, "Tipo inválido");
+    }
+    loga(std::format("Eleitor impedido - {}", descricao));
+}
+
+void CLogVota::LogaSolicitaDigitalMesario()
+{
+    loga("Solicita digital do mesário");
+}
+
+void CLogVota::LogaIdentificadorDigitadoMesario()
+{
+    const std::string mensagem = "Identificador do eleitor digitado pelo mesário";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMesarioConfirmaHorarioUrnaErrado()
+{
+    loga("Mesário confirma que o horário da urna está errado");
+}
+
+void CLogVota::LogaMesarioConfirmaHorarioUrnaCorreto()
+{
+    loga("Mesário confirma que o horário da urna está correto");
+}
+
+void CLogVota::LogaMesarioIndicouReimprimirBU()
+{
+    loga("Mesário indicou reimprimir Boletim de Urna");
+}
+
+void CLogVota::LogaMesarioIndicouQualidadeBU()
+{
+    loga("Mesário indicou qualidade OK para Boletim de Urna");
+}
+
+void CLogVota::LogaSolicitadaRetiradaMR()
+{
+    const std::string mensagem = "Solicitada a retirada da mídia de resultado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMRRetirada()
+{
+    const std::string mensagem = "Mídia de resultado retirada";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade)
+{
+    const std::string mensagem = std::format("Solicitada a emissão de [{}] ", quantidade);
+    loga(mensagem + (quantidade == 1 ? "via adicional" : "vias adicionais"));
+}
+
 void CLogVota::LogaInspecaoTerminada()
 {
     loga("Inspeção da urna terminada");
@@ -379,9 +489,50 @@ void CLogVota::LogaEleitorSuspensoSemVoto()
     loga("Eleitor foi suspenso e não confirmou nenhum voto");
 }
 
-void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
+void CLogVota::LogaEncerramentoAntesDoHorario(const api::CDateTime& dataHora)
 {
-    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+    const std::string mensagem =
+        std::format("Encerramento só pode ser solicitado após as {} horas", dataHora.GetHora().Format("hh:mm:ss"));
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaTodosEleitoresVotaram(bool votaram)
+{
+    const std::string mensagem = std::format("Todas as pessoas presentes já votaram? {}", votaram ? "SIM" : "NÃO");
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaTituloDigitadoEncerramento(const std::string& titulo)
+{
+    const std::string mensagem = std::format("Título digitado para encerramento: {}", titulo);
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaEncerramentoCancelado()
+{
+    loga("Operador cancelou o encerramento da votação");
+}
+
+void CLogVota::LogaEncerramentoAbortado()
+{
+    const std::string mensagem = "Procedimento de encerramento abortado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaEncerramentoConfirmado()
+{
+    const std::string mensagem = "Procedimento de encerramento confirmado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaAudioAtivadoPeloMesario()
+{
+    loga("Áudio ativado pelo mesário");
+}
+
+void CLogVota::LogaAudioDesativadoPeloMesario()
+{
+    loga("Áudio desativado pelo mesário");
 }
 
 } // namespace vota

@@ -71,8 +71,8 @@
 #   Not measured, and they may give the same bytes: a lambda or a static member in Justificou's place.
 #
 # Chosen, no evidence names them: every data member's name and, where only a width shows, its type (bool for the bytes,
-# ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's
-# and CHorarioVotacaoTerminou's; the CLogVota members' names (from
+# ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's,
+# CHorarioVotacaoTerminou's and CPerguntaFilaEleitorVazia's; the CLogVota members' names (from
 # their messages) and their place after LogaTituloInvalidoRegistroMesario; the enumerator's name
 # (app/vota/euevotaerror.h); the headers' paths, beside their .cpp, and every new .cpp's file name (the class name in
 # lower case). The directories (how-to step 3, docs/reference/facts/placing.md P4, P5):
@@ -116,8 +116,14 @@
 #   GetInteractiveForm("", true). 35 over 412 rows, all operand-only, the statics.
 # The two forms are the target's: the member-list helper where 301 writes into the member, the assignment where the
 # member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. Their target callers are
-# not reconstructed (10209 for 5393, 10677 and 10689 for 5430; 5393's other, 10430, is: unit 71): the roots stand in
+# not reconstructed (10209 for 5393, 10689 for 5430; 5393's other, 10430, is: unit 71, and so is 5430's, 10677: unit
+# 161): the roots stand in
 # for them, and the vtable sinks for these two classes went.
+# - vota::CPerguntaFilaEleitorVazia::GetInst (5426; 10716 and 10717), written with unit 277's states: the form from a
+#   member-list helper (AddClock({33, 1}), "Todas as pessoas presentes já votaram?" at {1, 2}, "CORRIGE: não" at {1,
+#   4}, "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true)); named by vptr-anchor
+#   and matched, its statics by its votes. Its one caller, 10706 (unit 277's), calls it twice, so no stand-in and no
+#   vtable sink.
 # - the pending slots: the -pending.cpp header lists them.
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):
@@ -154,6 +160,13 @@
 # - Member order: in csuspensaoautomaticaeleitor.cpp InicializaTick comes before AtualizaMensagem, above the gap: the
 #   target's uses-3 band links 3613 (the map's destroy, which InicializaTick mentions first) ahead of 3612, and the
 #   object gives that order only so (ld_index in build/out/wasm-map/vota_web/names.tsv; the bytes are the same).
+# - With unit 277's states (that fragment has the evidence of the family): CPerguntaFilaEleitorVazia::ProcessInput
+#   (10713) goes to CPedeTituloEncerramento (3631) on CONFIRMA and to CAguardaEleitoresVotarem (its GetInst inlined) on
+#   CORRIGE, then logs the answer through a CLogVota member (unit 119's file); written, not matched: 52 over 611 rows
+#   (deleted 2), where the target's merged tail copies the inlined GetInst's result into a local of its own (`local.get
+#   6; local.set 1`) and ours keeps it in the GetInst's: binaryen's choice of locals, not explained.
+#   CHorarioVotacaoTerminou::ProcessInput (10757), the next state CPedeIdentidade's (652) on CORRIGE: written, and a
+#   match since our link forms 2295 from the same five slots as the target's merge (unit 277's fragment).
 # Chosen: InicializaTick's and AtualizaMensagem's names and lines, the enumeration's names, the local names, the queue
 # held in a local for the 8/9 choice in CHabilitaAudioEleitor (one GetInst, as the target calls it once there).
 #
@@ -171,10 +184,10 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # compiled with the unit's flags
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-pending.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-pending.cpp -o $(R)
-# nothing reconstructed references five of the states' vtables, and IIniciaJustificativa's constructor,
-# CLogVota::LogaAudioDesativadoFimVotacao and two GetInst have callers not reconstructed:
-# 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in for those callers (for 3624,
-# 10635 alone now: 10631, unit 104, is in the link)
+# nothing reconstructed references four of the states' vtables, and two GetInst have callers not reconstructed:
+# 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in for those callers
+# (IIniciaJustificativa's constructor, 3624, and CLogVota::LogaAudioDesativadoFimVotacao, 4529, need none: 10631 and
+# 10635, unit 104, and 10435 and unit 104's 10646 are in the link)
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-roots.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-pending.o $(APP)/152-uenux2-app-vota-operador-estados-roots.o

@@ -8,18 +8,15 @@
 #include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/ciniciodeciclo.h"
 #include "app/vota/eleitor/fimvotacao/cgravaresultado.h"
-#include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
-#include "app/vota/eleitor/iniciovotacao/ciniciozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
-#include "app/vota/operador/leidentidade/celeitorencontrado.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -32,8 +29,8 @@ void CAguardaMensagem::ProcessKey(uebyte)
     __builtin_trap();
 }
 
-// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callees with no
-// name: 1823, 3333 (491 is named now (unit 205)).
+// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callee with no
+// name: 1823 (491 and 3333 are named now, unit 205).
 void CIniciodeCiclo::StartState()
 {
     __builtin_trap();
@@ -45,14 +42,6 @@ void CIniciodeCiclo::StartState()
 // and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, fragment 227's 3825 and 3826, and
 // 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).
 void CGravaResultado::StartState()
-{
-    __builtin_trap();
-}
-
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: none since 491 is named (unit 205); the others
-// have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, 2888 and 3701, units 37's and 93's, 4582, unit
-// 168's, and 2890, unit 156's).
-void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();
 }
@@ -76,12 +65,6 @@ void CImprimirBUOutrasObrigatorias::StartState()
 // callees with no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's; 2882
 // is unit 246's).
 void CImprimindoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 697 (491 is named now, unit 205; unit 169's: 5957, 5959).
-void CInicioZeresima::StartState()
 {
     __builtin_trap();
 }
@@ -128,16 +111,6 @@ void CReimprimindoResumoZeresima::StartState()
     __builtin_trap();
 }
 
-// CEleitorEncontrado::StartState: fn 10635 (3870 B), record celeitorencontrado.cpp:102 (the throw of the vota error 9394
-// "Eleitor não posicionado"), whose line stays blank there. Every direct callee is named but 6733, a std::set<int> range
-// insert whose other caller is fn 7787; the body holds inlined the GetInst of the five other states derived from
-// vota::IEleitorImpedidoVotar and of the Temporario and Transito justification pairs, classes the tree lacks, and
-// vota::CLogVota::LogaEleitorImpedido (record clogvota.cpp:432).
-void CEleitorEncontrado::StartState()
-{
-    __builtin_trap();
-}
-
 } // namespace vota
 
 namespace comum {
@@ -157,7 +130,7 @@ namespace vota {
 // CSincronismoOperador::ProcessKey: fn 10209 (120 B), callee with no body: 5341 (a screen it shows with key 14 or 15,
 // which builds its api::CMTFormBuilder in place, its 12 bytes zeroed with no call of fn 203: the remainder this unit's
 // fragment records for 10214, not explained). 509, 697, 1901 (unit 71's) and 5393 (unit 152's) match; 652
-// (vota::CPedeIdentidade::GetInst, unit 161) is written and named by its vptr anchor.
+// (vota::CPedeIdentidade::GetInst, unit 161) matches now.
 void CSincronismoOperador::ProcessKey(uebyte)
 {
     __builtin_trap();

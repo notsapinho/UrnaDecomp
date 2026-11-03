@@ -14,7 +14,7 @@
 //   2275: 10266, 10273, 11587 (10271, 11458). 5688: 11375 (11359 is written).
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
-//   5705: 5706 (11423 is written). 5711: 11448. 5713 and 5714 need none: their callers 11424 and 11451 are written.
+//   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
 //   5715, 5716: 11452 (11423 is written).
 //   5828: 11445 (11373 is written).
 // w107_dados gives a constructor its second call site, each stands for: 5672 5741, 3823 2725 and 11629. 3712 needs none:
@@ -100,7 +100,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     d = w107_desconverte<ModuloLocal::SecaoEleitoral, CSecaoEleitoral>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::Seguranca, CSeguranca>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
-    d = w107_desconverte<ModuloTiposEleitorais::CabecalhoPacote, CCabecalhoPacote>(d, e);
     d = w107_desconverte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);

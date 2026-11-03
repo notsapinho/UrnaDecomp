@@ -15,8 +15,8 @@ namespace vota {
 // static std::mutex (@1833600, by fn 12083). The constructor passes 2 to the base's. StartState (fn 12082, records
 // cemitirmaisbu.cpp 46 and 47) asserts that the vote is EAVENCERRADA and the closing EAEFIMDOSTRABALHOS, logs, and shows
 // CTelasVota's +196; it is the class's key function, so cemitirmaisbu.cpp's object emits the vtable. ProcessInput (fn
-// 12081) is pending in unit 104's file. src/units/104-uenux2-app-vota-estados.mk says which of this is evidence and
-// which is chosen.
+// 12081) reads the number of extra copies the form's first input field holds and prints them.
+// src/units/104-uenux2-app-vota-estados.mk says which of this is evidence and which is chosen.
 class CEmitirMaisBU final : public comum::CAppState {
 public:
     static CEmitirMaisBU& GetInst();

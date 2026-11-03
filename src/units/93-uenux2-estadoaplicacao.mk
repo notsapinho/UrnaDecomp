@@ -39,8 +39,8 @@
 #
 # CEstadoGeralVota::IncrementaQtdBU (fn 3701, cestadogeralvota.cpp, a chosen name and line) matches byte for byte: one
 # more on the byte at +8, m_qtdBU, of the object fn 12065 gets from comum::CAppInfo::GetVota (fn 261); its callers
-# (vota states' slots 12065, 12077, 12081) are not written, and 93-uenux2-estadoaplicacao-roots.cpp gives it two call
-# sites. Fragment 172
+# (vota states' slots 12065, 12077, 12081) are not all written: 12077 and 12081 are in the link (units 156 and 104),
+# and 93-uenux2-estadoaplicacao-roots.cpp stands for 12065. Fragment 172
 # writes CConversorEstadoGeralVota (11390, 11391) and CConversorDadoCorrespondencia (11399, 11400) over this unit's
 # CEstadoGeralVota and CDadoCorrespondencia, and the converters' callers of 5628 and 5630.
 #
@@ -48,8 +48,18 @@
 # FinalizaEleitor (fn 4454, written and not matched) holds it behind a 48-byte prologue: it throws unless the
 # acquisition began and has not ended (`if (m_dhFimAquisicao)` reads as the flag compared with 1, reading.md R14),
 # sets m_dhUltimoVoto to api::CDateTime::Now() and adds one to m_comparecimento.
-# Not reconstructed: the slots of the other converters here, CEstadoGeral, CEstadoGeralVota's MarcaFimAquisicao
-# (records cestadogeralvota.cpp:108 and :113, inlined into vota's states), CCabecalhoQRCodeBuilder's other
+# CEstadoGeralVota::MarcaFimAquisicao (records cestadogeralvota.cpp:108 and :113, 8084 and 8085) is written with unit
+# 277, whose CConfirmaEncerramento::ProcessInput (fn 10734, written and not matched) holds it behind a 48-byte prologue:
+# it throws when the acquisition has ended (+48's flag), then when it has not begun (+32's), and sets m_dhFimAquisicao
+# to api::CDateTime::Now(). 10734 differs in this body only (pnpm wasm score: 49 over 273 rows, inserted 2, deleted
+# 2): after Now() the target stores the value's i64 (+36) and i32 (+44) and then reads the flag (+48); ours reads the
+# flag first and stores through `this + 36`, which clang computes in the entry block for the first test and reuses
+# (the TU's IR, em++ -S -emit-llvm). Measured on the object (wasm-objdump -d of this TU): the assignment as is or from a
+# local, the first test written `.has_value()`, `!= std::nullopt` or as an else-if chain, and the TU without strict
+# aliasing give ours; std::optional(...), std::make_optional and emplace store the flag with no test. Only the two tests
+# swapped gives the target's order there, against the records' order (108's throw is 8084's, the acquisition already
+# ended). Not explained.
+# Not reconstructed: the slots of the other converters here, CEstadoGeral, CCabecalhoQRCodeBuilder's other
 # setters (fn 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and
 # preBuild().
 #

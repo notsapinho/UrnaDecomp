@@ -71,6 +71,12 @@ public:
     // das ", the start of the voting by a reading. The names are chosen from those uses.
     const api::CDateTime& GetDataHoraZeresima() const { return m_dataHoraZeresima; }
     const api::CDateTime& GetDataHoraInicioVotacao() const { return m_dataHoraInicioVotacao; }
+    // A fourth api::CDateTime at +568: vota::CIniciaFinalizacao::StartState (fn 10706) lets the voting close only when
+    // the current time is not before it, else logs "Encerramento só pode ser solicitado após as {} horas" with its time;
+    // vota::CPedeTituloEncerramento::GetInst (fn 3631) copies it (`i64.load[+568]`, `i32.load[+576]`), and
+    // vota::CEncerramentoHorarioInvalido::StartState (fn 10710) builds a time 10 seconds before it (CTime's -, fn 3641,
+    // on +576). The earliest time to close the voting by a reading; the name is chosen from that.
+    const api::CDateTime& GetDataHoraEncerramento() const { return m_dataHoraEncerramento; }
 
     // A third api::CDateTime at +580: vota::CVerificaEleicaoPassou::StartState (fn 11914) copies it (`i64.load[+580]`,
     // `i32.load[+588]`) and, when the current time is not before it, logs "Data da eleição inválida", posts message 0
@@ -94,6 +100,12 @@ public:
     // record names it: its name, the parameters' names, its being a member and the comparator's name and linkage are
     // chosen.
     std::vector<md::CCargo> GetCargos(const TEleicaoID eleicao, const bool ordenados) const;
+    // A copy of the set at +604. vota::CEleitorEncontrado::StartState (fn 10635) and fn 7787 each build an empty set in
+    // their frame and fill it with fn 6733, std::set's range insert, from +604's begin and end: the copy constructor's
+    // code. 10635 then looks for an element that is not 0 and destroys the copy with fn 1594, the destroy
+    // splat/matched.txt names for this element type (the member's, chosen). The accessor, its name and its result by
+    // value are chosen.
+    std::set<ecourna::app::dados::ETipoIdentificadorEleitor> GetTipos() const { return m_tipos; }
 
 private:
     unsigned m_naoRecuperado1[2];
@@ -106,7 +118,7 @@ private:
     unsigned char m_naoRecuperado2[8];
     api::CDateTime m_dataHoraZeresima;
     api::CDateTime m_dataHoraInicioVotacao;
-    unsigned char m_naoRecuperado6[12];
+    api::CDateTime m_dataHoraEncerramento;
     api::CDateTime m_dataHoraFimEleicao;
     std::set<TCargoID> m_cargos;
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;

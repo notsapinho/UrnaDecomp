@@ -102,8 +102,8 @@
 #   count a TQtdImpresso, an int or bound to a const reference: 20 over 74 (2 inserted, 2 deleted: clang adds the extras
 #   first).
 # - The roots give each two call sites: 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) calls 3288 and 3290 three
-#   times each, 12081 and 12974 call 4582; none is written. votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h,
-#   which reaches Boost, hence the include path on its object.
+#   times each, 12081 and 12974 call 4582; 7174 and 12974 are not written (12081 is since, unit 104). votadefs.cpp
+#   includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost, hence the include path on its object.
 #
 # vota::CriaArquivoImprimindo (fn 1488, 405 B) and vota::RemoveArquivoImprimindo (fn 1487, 587 B), above EhTreinamento
 # in votadefs.cpp, with vota::ExisteArquivoImprimindo between them, which has no target index of its own. The marker
@@ -148,10 +148,9 @@
 # - 4578 (41 B, ()->(i32), no record), vota::NaoAceitaJustificativa: the negation of comum::CInformacaoEleicao's
 #   AceitaJustificativa (5918) on CConfiguracaoEleicao::GetInst().GetParametrosUrna() (fns 187 + 88, 603), the `xor 1`
 #   in the target's body. Its two callers keep the call: vota::CProcuraEleitor::StartState (10631, unit 104's
-#   cprocuraeleitor.cpp, through its helper) and vota::CEleitorEncontrado::StartState (10635, pending in unit 104,
-#   celeitorencontrado.cpp's), so it reads as in a TU of neither (a reading: clang inlining it into a caller of its own
-#   TU was not measured); 10631 is in the link and unit 243's roots stand in for
-#   10635. `pnpm wasm score` against the link: 1 over 21 rows, operand-only; matched (named by `call` from 10631). It
+#   cprocuraeleitor.cpp, through its helper) and vota::CEleitorEncontrado::StartState (10635, unit 104's
+#   celeitorencontrado.cpp), so it reads as in a TU of neither (a reading: clang inlining it into a caller of its own
+#   TU was not measured); both are in the link. `pnpm wasm score` against the link: 1 over 21 rows, operand-only; matched (named by `call` from 10631). It
 #   reads no state: a free function of vota. Chosen: the name (the field 5918 reads is the one cparametrosurna.hpp calls
 #   aceitarJustificativa), the file and the line, last.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp

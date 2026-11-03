@@ -1,5 +1,7 @@
 #include "app/comum/dados/md/processoeleitoral/cprocessoeleitoraldto.h"
 
+#include "app/comum/dados/euecomumdadoserror.h"
+
 namespace comum::md {
 
 CProcessoEleitoralDTO::CProcessoEleitoralDTO(uedword id, const std::string& nome, bool utilizaBiometria,
@@ -19,11 +21,14 @@ CProcessoEleitoralDTO::CProcessoEleitoralDTO(uedword id, const std::string& nome
 {
 }
 
-// (original lines 22-53: content not recovered)
+// (original lines 24-53: content not recovered)
 #line 54
-// <stubs>
-// f3771 · 6814 B · unmatched · name unknown
-// void f3771(i32, i32) { ... }
-// </stubs>
+const CPleitoDTO& CProcessoEleitoralDTO::GetPleito2() const
+{
+    if (!m_pleito2) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8166, "Não há pleito 2.");
+    }
+    return *m_pleito2;
+}
 
 } // namespace comum::md

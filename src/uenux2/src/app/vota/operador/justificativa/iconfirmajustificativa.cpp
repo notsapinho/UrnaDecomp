@@ -6,10 +6,13 @@
 #include "api/gui/cmtformbuilder.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.h"
+#include "app/vota/operador/justificativa/cpedeanonascimento.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
-// (original lines 12-29: content not recovered)
+// (original lines 15-29: content not recovered)
 #line 30
 IConfirmaJustificativa::IConfirmaJustificativa(const std::string& justificativa)
     : comum::CAppState(EVENTO_ENTRADA)
@@ -28,5 +31,26 @@ IConfirmaJustificativa::IConfirmaJustificativa(const std::string& justificativa)
 }
 
 IConfirmaJustificativa::~IConfirmaJustificativa() = default;
+
+void IConfirmaJustificativa::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA: {
+        comum::CAppState* proximo;
+        if (GetTipoIdentidadeDigitada() == ecourna::app::dados::TipoIDCPF) {
+            proximo = &CEleitorImpedidoJustificarVotoCPF::GetInst();
+        } else {
+            proximo = &CPedeAnoNascimento::GetInst();
+        }
+        m_pNextState = proximo;
+        break;
+    }
+    case api::INPUT_CORRIGE:
+        m_pNextState = &CPedeIdentidade::GetInst();
+        break;
+    default:
+        break;
+    }
+}
 
 } // namespace vota

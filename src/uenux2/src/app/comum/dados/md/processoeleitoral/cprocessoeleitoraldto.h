@@ -19,7 +19,8 @@ namespace comum::md {
 // move the vector they take by value. Out of line in cprocessoeleitoraldto.cpp, where the record of GetPleito2 is
 // (line 57, held by fn 3771), a reading of 11363's rows: it copies the name with a 4-byte alignment (i64.load
 // align=2), a reference's, after its own 8-byte-aligned copy into a local. The member names and the id's type are
-// chosen; GetPleito2 is declared for its record and not written.
+// chosen. GetPleito2 is out of line there too: fn 3771 holds its throw behind a 16-byte frame of its own (a second
+// prologue, docs/how-to-decompile.md step 3), binaryen's inlining of a function with one caller.
 class CProcessoEleitoralDTO {
 public:
     CProcessoEleitoralDTO(uedword id, const std::string& nome, bool utilizaBiometria, EOrigemConfiguracao origem,
@@ -30,7 +31,20 @@ public:
         ecourna::app::dados::ETipoIdentificadorEleitor identificadorPrincipal,
         std::vector<ecourna::app::dados::ETipoIdentificadorEleitor> identificadores);
 
+    // The getters' names are chosen: no record names them. comum's processo eleitoral load (target fn 3771) reads each
+    // field inline.
+    uedword GetID() const { return m_id; }
+    const std::string& GetNome() const { return m_nome; }
+    bool GetUtilizaBiometria() const { return m_utilizaBiometria; }
+    EOrigemConfiguracao GetOrigem() const { return m_origem; }
+    const CPleitoDTO& GetPleito1() const { return m_pleito1; }
+    bool TemPleito2() const { return m_pleito2.has_value(); }
     const CPleitoDTO& GetPleito2() const;
+    ecourna::app::dados::ETipoIdentificadorEleitor GetIdentificadorPrincipal() const { return m_identificadorPrincipal; }
+    const std::vector<ecourna::app::dados::ETipoIdentificadorEleitor>& GetIdentificadores() const
+    {
+        return m_identificadores;
+    }
 
 private:
     uedword m_id;

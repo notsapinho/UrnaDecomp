@@ -1,8 +1,13 @@
 #include "app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.h"
 
 #include "api/gui/cinteractiveform.h"
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
+#include "app/vota/eleitor/iniciovotacao/cgerazeresima.h"
+#include "app/vota/eleitor/iniciovotacao/cimpressaozeresimatardia.h"
 #include "app/vota/log/clogvota.h"
 
 namespace vota {
@@ -34,6 +39,26 @@ void CConfirmaImpressaoZeresima::StartState()
     CLogVota::GetInst().LogaAguardandoConfirmacaoZeresima();
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CConfirmaImpressaoZeresima::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA:
+        if (api::CDateTime::Now() > m_limite) {
+            m_pNextState = &CImpressaoZeresimaTardia::GetInst();
+        } else {
+            comum::CAppInfo::GetInst().GetVota().SetEstadoVota(comum::EAVGERARZE);
+            CSincronizaVota::SincronizaEstadoGeralVota();
+            m_pNextState = &CGeraZeresima::GetInst();
+        }
+        break;
+    case api::INPUT_BRANCO:
+        m_pNextState = &CMaisInformacoes::GetInst(this);
+        break;
+    default:
+        break;
+    }
 }
 
 } // namespace vota

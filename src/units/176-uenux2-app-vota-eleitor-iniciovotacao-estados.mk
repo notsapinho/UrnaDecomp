@@ -5,10 +5,8 @@
 # to, vota::CImpressaoEstadoUrna, CImpressaoListaEleitores, CImpressaoVersaoPacotes and CImpressaoPU: their GetInst and
 # constructors, which fn 11896 holds inlined, and their statics, whose exit-time destructors match (11913 and 11912,
 # 11910 and 11909, 11907 and 11906, 11904 and 11903, each pointer's first). The class heads say what each layout rests
-# on; 176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp names every slot left and what it waits for. Not
-# written: the constructor, GetInst and statics of CImpressaoZeresimaTardia (fn 11927 holds them inlined; the
-# constructor copies vota::CTelasVota::GetInst()'s +60, which app/vota/eleitor/comum/ctelasvota.h has no accessor for);
-# their statics' exit destructors (11934, 11933) wait with them.
+# on; 176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp names every slot left and what it waits for.
+# CImpressaoZeresimaTardia's constructor, GetInst, statics and ProcessInput are written since (below).
 # CConfirmaRegerarZeresima's constructor, GetInst and statics are written, unit 104's shape, and
 # vota::CReinicioVotacao::StartState (fn 11835, unit 138) holds GetInst inlined: the new of 20 bytes, the base's
 # constructor (fn 224) with 2, the vptr, the copy of CTelasVota's +84 and +88 (a getter added to ctelasvota.h, its name
@@ -31,8 +29,8 @@
 #   operand-only.
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
-# convention); the destructor declared first; the private constructors of CConfirmaRegerarZeresima and
-# CImpressaoZeresimaTardia, declared and not defined; StartState as the key function of the four CImpressao* states,
+# convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
+# defined; StartState as the key function of the four CImpressao* states,
 # so the pending object emits their vtables; LogaMesarioIndagadoHorarioUrna's name, from its message, and its place
 # last in clogvota.cpp. The paths, by how-to step 3's rules (no record names these classes' files), each header beside
 # its .cpp and named after the class (rule 4):
@@ -52,6 +50,28 @@
 #   builds them. The list below keeps the target's order (EstadoUrna, ListaEleitores, VersaoPacotes, PU), in which
 #   cimpressaopu.cpp does not sort by name: a choice against name order.
 #
+# Written since, measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv before
+# steps 7 to 9 matched it:
+# - vota::CImpressaoZeresimaTardia's constructor, GetInst and statics, in cimpressaozeresimatardia.cpp after the
+#   destructor and before StartState (lines a choice; the file has no record): unit 104's shape, the new of 20 bytes,
+#   the base's constructor with 2 and the copy of CTelasVota's +60 and +64 through ctelasvota.h's
+#   GetTelaImpressaoZeresimaTardia (a getter added after GetTelaFimVoto, its name chosen). Its one target caller,
+#   vota::CConfirmaImpressaoZeresima::ProcessInput (fn 11927, unit 169), holds GetInst inlined, and the statics' exit
+#   destructors match with it, by the scan's content pass: 11934 the pointer's (@1834240), 11933 the mutex's
+#   (@1834216). The mutex's name is `vote:1 by:11927` in splat/symbol_addrs.txt; its other reader is its exit
+#   destructor, 11933.
+# - vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931): Read() on the form (record cinteractiveform.h:57); on
+#   api::INPUT_CORRIGE (5) a CLogVota member and vota::CInformacaoZeresimaTardia::GetInst (unit 169's file, inlined
+#   here, its one caller) as the next state; on INPUT_CONFIRMA (9) the vote's state EAVGERARZE (52) through
+#   CEstadoGeralVota::SetEstadoVota (unit 169's fragment), vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491),
+#   another CLogVota member and vota::CGeraZeresima::GetInst (fn 5962). 42 over 264 rows, operand-only (calls, data,
+#   and the .bss addresses of CInformacaoZeresimaTardia's statics). Each log member is called on CLogVota::GetInst()'s
+#   result (fn 184), whose stack frame opens after that call (docs/reference/facts/reading.md R10), and builds its
+#   text for comum::IEventosLog::loga (fn 233): LogaMesarioConfirmaHorarioUrnaErrado and
+#   LogaMesarioConfirmaHorarioUrnaCorreto, from their texts ("Mesário confirma que o horário da urna está errado" and
+#   "... correto"), added to app/vota/log/clogvota.cpp below LogaEleitorImpedido; their names and that place are
+#   chosen. The order of the cases and the empty default are chosen (the other order was not measured).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/iniciovotacao/cimpressaozeresimatardia.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoestadourna.cpp \
@@ -64,8 +84,4 @@ UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS)
 # trapping bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o: $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp -o $(R)
-# nothing reconstructed stores CImpressaoZeresimaTardia's vptr yet:
-# 176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp takes its vtable's address
-$(ROOT)/$(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.o: $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.o
+override EXTRA_OBJS += $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o

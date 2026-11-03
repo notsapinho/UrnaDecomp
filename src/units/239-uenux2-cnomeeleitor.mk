@@ -26,15 +26,12 @@
 # anonymous namespace, the lines before the records.
 #
 # Pending (239-uenux2-cnomeeleitor-pending.cpp says what each waits for): StartState (10501) and ProcessInput (10500).
-# GetInst's two target callers, fns 10635 (vota::CEleitorEncontrado's StartState) and 10677 (CPedeIdentidade's
-# ProcessInput), are not written: the roots stand in for them.
+# GetInst's two target callers, fns 10635 (vota::CEleitorEncontrado's StartState, unit 104) and 10677 (CPedeIdentidade's
+# ProcessInput, unit 161), are in the link, so the roots file that stood in for them went.
 CNOMEELEITOR_SRCS := src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp
 UENUX2_SRCS += $(CNOMEELEITOR_SRCS)
 # StartState and ProcessInput are not reconstructed: 239-uenux2-cnomeeleitor-pending.cpp gives the vtable trapping
 # bodies, compiled with the unit's flags.
 $(ROOT)/$(APP)/239-uenux2-cnomeeleitor-pending.o: $(ROOT)/src/units/239-uenux2-cnomeeleitor-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/239-uenux2-cnomeeleitor.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/239-uenux2-cnomeeleitor-pending.cpp -o $(R)
-# GetInst's target callers are not reconstructed: 239-uenux2-cnomeeleitor-roots.cpp stands in for them.
-$(ROOT)/$(APP)/239-uenux2-cnomeeleitor-roots.o: $(ROOT)/src/units/239-uenux2-cnomeeleitor-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/239-uenux2-cnomeeleitor.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/239-uenux2-cnomeeleitor-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/239-uenux2-cnomeeleitor-pending.o $(APP)/239-uenux2-cnomeeleitor-roots.o
+override EXTRA_OBJS += $(APP)/239-uenux2-cnomeeleitor-pending.o

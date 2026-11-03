@@ -14,8 +14,8 @@
 # 785, 1560, shared with other states) and the statics, whose mutex's exit-time destructor (fn 12056) matches;
 # cmostraqrcodebu.h says what its layout rests on. Its StartState (fn 12055) and ProcessInput (fn 12051) are traps in
 # 37-uenux2-iqrcodebuds-pending.cpp, which names what they wait for, and AjustaTela (fn 5982) and GetQRDSInst (fn 1956)
-# keep their stubs. GetInst's two callers in the link are unit 156's ProcessInputs (fns 12026, 12038); the target has a
-# third, fn 12081.
+# keep their stubs. GetInst's three target callers are in the link: unit 156's ProcessInputs (fns 12026, 12038) and
+# unit 104's 12081, which calls it twice.
 # GetInst matches since unit 138's caplicacaoencerrada.cpp defines vota::CAplicacaoEncerrada's two statics (their
 # exit-time destructors are fns 12060 and 12059): its s_inst (@1833848) had no voter but GetInst (`unresolved
 # self-voted`) until the pointer's exit-time destructor (fn 12057) matched, and the target's 12057 is a thunk into fn

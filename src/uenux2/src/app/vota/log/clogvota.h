@@ -70,13 +70,25 @@
 // function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
 // evidence. Its iinterfaceinit.h include (comum::FormataTamanho) is in this header, not in clogvota.cpp, so that
 // GetInst's record stays on line 37 of the .cpp: a choice made for that record's line.
+// LogaEleitorImpedido is the member its record names (clogvota.cpp:432, column 19: the throw of the vota error 9388,
+// "Tipo inválido"), held inlined by vota::CEleitorEncontrado::StartState (fn 10635) after a call of GetInst, in a stack
+// frame of its own: for comum::md::IMPEDIMENTO_SEM_IMPEDIMENTO it logs nothing, for the fourteen impediments it formats
+// "Eleitor impedido - {}" of a text and logs it through loga (fn 233), for IMPEDIMENTO_INVALIDO it throws, and for a
+// value past it it logs the empty text (the target's branch table). The euevotaerror.h include is in this header for
+// the same reason as iinterfaceinit.h's; the parameter's name, the local's and the switch's spelling are chosen.
 
 #include <cstdint>
 #include <string>
 #include <utility>
 
+#include "app/comum/dados/md/etipoimpedimento.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/log/ieventoslog.h"
+#include "app/vota/euevotaerror.h"
+
+namespace api {
+class CDateTime;
+} // namespace api
 
 namespace vota {
 
@@ -89,6 +101,16 @@ public:
     void LogaSolicitacaoDadoPessoalEleitor();
     void LogaHabilitacaoCanceladaConfirmacaoDado();
     void LogaHabilitacaoCanceladaCapturaDigitalMesario();
+    // Held inlined by vota::CRegistraDigitalOperador::StartState (fn 10454), its one caller, which calls GetInst before
+    // the member's own stack frame opens and calls fn 233 with the message. The name is chosen from its message, and
+    // its place here, after LogaHabilitacaoCanceladaCapturaDigitalMesario, and in clogvota.cpp, right after
+    // LogaEleitorImpedido, is chosen: it has no index to order.
+    void LogaSolicitaDigitalMesario();
+    // Held inlined by vota::CPedeIdentidade::ProximoEstadoIdentidadeDigitada (inlined into fn 10677), its one caller,
+    // which calls GetInst before the member's own stack frame opens; it calls api::CLoga::loga (fn 433) with +4 and
+    // severity 1. The name is chosen from its message, and its place here and in clogvota.cpp is chosen: it has no
+    // index to order.
+    void LogaIdentificadorDigitadoMesario();
     // Out of line (fn 4550: logaErro, fn 2282), called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName
     // (fn 6954) and vota::CPedeMajoritario's fn 11683. Its name is chosen from its message.
     void LogaErroPartidoNaoEncontrado();
@@ -152,6 +174,26 @@ public:
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaApresentadaTelaReinicioVotacao();
     void LogaMesarioIndagadoHorarioUrna();
+    // The shape of LogaMesarioIndagadoHorarioUrna, GetInst called before the member's own stack frame opens, each
+    // calling loga (fn 233): held inlined by vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931), the first on
+    // CORRIGE, the second on CONFIRMA. Their names, from their messages, and their place here, after
+    // LogaMesarioIndagadoHorarioUrna, and in clogvota.cpp, below LogaEleitorImpedido, are chosen: they have no index to
+    // order.
+    void LogaMesarioConfirmaHorarioUrnaErrado();
+    void LogaMesarioConfirmaHorarioUrnaCorreto();
+    // The same shape, calling loga (fn 233): held inlined by vota::CImprimindoBU::ProcessInput (fn 12077), the first on
+    // CORRIGE, the second on CONFIRMA. Names and place chosen as above.
+    void LogaMesarioIndicouReimprimirBU();
+    void LogaMesarioIndicouQualidadeBU();
+    // The same shape, calling api::CLoga::loga (fn 433) with +4 and severity 1: held inlined by
+    // vota::CRetirarMR::StartState (fn 12031), before and after its wait for the removal of the results medium. Names
+    // and place chosen as above.
+    void LogaSolicitadaRetiradaMR();
+    void LogaMRRetirada();
+    // The same shape, calling loga (fn 233) with the count formatted as unsigned (argument code 6) and "via adicional"
+    // or "vias adicionais" appended, the latter the tail of LogaMesarioIndagadoQtdViasAdicionais's text: held inlined
+    // by vota::CEmitirMaisBU::ProcessInput (fn 12081). Name, parameter type and place chosen as above.
+    void LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade);
     void LogaTempoLimiteBateriaInterna();
     void LogaErroIdentificacaoTipoCargo();
     void LogaEleitorVoltouADigitar();
@@ -189,8 +231,8 @@ public:
     // vota::CEleitorVotando::suspenderEleitor (fn 4442), the first two after one call of GetInst; and
     // LogaEleitorSuspensoSemVoto ("Eleitor foi suspenso e não confirmou nenhum voto") by
     // vota::CEleitorVotando::DescartaVotos (fn 4449). Each literal is loaded by its caller alone. Their names are chosen
-    // from their messages, and their place here and in clogvota.cpp, before LogaQuantidade, is chosen: they have no
-    // index to order.
+    // from their messages, and their place here, before LogaQuantidade, and in clogvota.cpp, below LogaEleitorImpedido
+    // and ahead of unit 277's eight members, is chosen: they have no index to order.
     void LogaInspecaoTerminada();
     void LogaEleitorSuspensoTreinamento();
     void LogaEleitorSuspensoPeloMesario();
@@ -198,6 +240,31 @@ public:
     void LogaEleitorSuspensoSemVoto();
 
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
+
+    void LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento);
+
+    // The closing of the voting (app/vota/operador/outrasopcoes/): each held inlined by its one caller, which calls
+    // GetInst before the member's own stack frame opens. LogaEncerramentoAntesDoHorario by vota::CIniciaFinalizacao's
+    // StartState (fn 10706): "Encerramento só pode ser solicitado após as {} horas" with the time of its argument
+    // formatted "hh:mm:ss" (api::CTime::Format, fn 779), api::CLoga::loga (fn 433) with +4 and severity 2.
+    // LogaTodosEleitoresVotaram by vota::CPerguntaFilaEleitorVazia::ProcessInput (fn 10713): "Todas as pessoas presentes
+    // já votaram? {}" with "SIM" or "NÃO", a char array formatted as a string (its length found with memchr, fn 287, up
+    // to 4), fn 433 with severity 1. LogaTituloDigitadoEncerramento and LogaEncerramentoCancelado by
+    // vota::CPedeTituloEncerramento::ProcessInput (fn 10721): "Título digitado para encerramento: {}" with the title (fn
+    // 433, severity 1), and "Operador cancelou o encerramento da votação" through loga (fn 233).
+    // LogaEncerramentoAbortado and LogaEncerramentoConfirmado by vota::CConfirmaEncerramento::ProcessInput (fn 10734):
+    // "Procedimento de encerramento abortado" and "... confirmado", fn 433 with severity 2 and 1.
+    // LogaAudioAtivadoPeloMesario and LogaAudioDesativadoPeloMesario by vota::CHabilitaAudioManualmente::StartState (fn
+    // 10751): "Áudio ativado pelo mesário" and "Áudio desativado pelo mesário" through loga (fn 233). Their names, their
+    // parameters' types and their place here and in clogvota.cpp are chosen: they have no index to order.
+    void LogaEncerramentoAntesDoHorario(const api::CDateTime& dataHora);
+    void LogaTodosEleitoresVotaram(bool votaram);
+    void LogaTituloDigitadoEncerramento(const std::string& titulo);
+    void LogaEncerramentoCancelado();
+    void LogaEncerramentoAbortado();
+    void LogaEncerramentoConfirmado();
+    void LogaAudioAtivadoPeloMesario();
+    void LogaAudioDesativadoPeloMesario();
 
 private:
     CLogVota();

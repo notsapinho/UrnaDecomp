@@ -9,14 +9,14 @@ namespace comum {
 std::string NomeArquivoEleitores(const SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
     ueword secao)
 {
-    return CNomeArquivo::NomeArquivoSecao(identificacao.fase, identificacao.pleito, identificacao.uf, municipio, zona,
+    return CNomeArquivo::NomeArquivoSecao(identificacao.fase, identificacao.idPE, identificacao.uf, municipio, zona,
         secao, "el", "dat");
 }
 
 std::string NomeArquivoEleitoresTTE(const SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
     ueword secao)
 {
-    return CNomeArquivo::NomeArquivoSecao(identificacao.fase, identificacao.pleito, identificacao.uf, municipio, zona,
+    return CNomeArquivo::NomeArquivoSecao(identificacao.fase, identificacao.idPE, identificacao.uf, municipio, zona,
         secao, "tte", "dat");
 }
 

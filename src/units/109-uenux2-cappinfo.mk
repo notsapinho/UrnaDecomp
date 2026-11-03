@@ -27,6 +27,13 @@
 # callers 491 (unit 205), 7174 and 10590: the roots' SalvaVotas stands for the last two, a second call site of each
 # (a reading of docs/reference/facts/tool-traps.md X1: with 491 their one caller, binaryen would inline both into it
 # and form no merge; not linked without it).
+# CAppInfo::SalvaGeralInterno and SalvaGeralExterno, added with unit 277: SincronizaEstadoGeral (3333, unit 205), their
+# one caller, holds each behind a 16-byte frame of its own, binaryen's inlining of an out-of-line function
+# (docs/reference/facts/reading.md R10): when m_geral holds a value (its flag at +180, read with no call), a
+# comum::CServicoEstadoGeral of the origin (fn 1941, 0 then 1) saves it (fn 3592). They read the private m_geral, so
+# they are members, and go through a file-static helper, SalvaGeral, as the vota pair goes through SalvaVota; 3333
+# matches with them. Their names (after SalvaVotaInterno's), their being const, their order and lines, and the helper's
+# name and linkage are chosen.
 # CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
 # base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
 # members, the form before (both built at the tree's flags, before and after the change).

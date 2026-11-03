@@ -86,6 +86,18 @@ public:
     // +164, whose slot 2 vota::CEleitorVotando::DescartaVotos (fn 4449) calls with no copy; the getter's name, and that
     // it is one, are chosen, as for the others
     const CFormInterativoTelaVota& GetTelaDescartaVotos() const { return m_tela20; }
+    // +60 and +68, which the constructors of vota::CImpressaoZeresimaTardia and vota::CInformacaoZeresimaTardia copy
+    // (inlined with their GetInst into fns 11927 and 11931); the getters' names, and that they are getters, are chosen,
+    // as for the others
+    const CFormInterativoTelaVota& GetTelaImpressaoZeresimaTardia() const { return m_tela7; }
+    const CFormInterativoTelaVota& GetTelaInformacaoZeresimaTardia() const { return m_tela8; }
+    // +204, which vota::CEmitirMaisBU::ProcessInput (fn 12081) copies into a temporary and calls slot 2 of before the
+    // temporary is released, as fn 11914 does with +76: returned by value, the same choice; the name chosen
+    CFormInterativoTelaVota GetTelaLimiteViasAdicionais() const { return m_tela25; }
+    // +132 and +140, whose slot 2 fn 5972 (the function both of vota::CInicioVotacao's slots call) calls with no copy,
+    // the first when no voter has voted yet, the second otherwise; the names chosen, as for the others
+    const CFormInterativoTelaVota& GetTelaAguardaEleitor() const { return m_tela16; }
+    const CFormInterativoTelaVota& GetTelaAguardaProximoEleitor() const { return m_tela17; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

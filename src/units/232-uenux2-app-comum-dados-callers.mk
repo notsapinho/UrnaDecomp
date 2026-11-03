@@ -13,8 +13,9 @@
 #   into one body as the target's 6029 does, and 1923, 3724 and 6029 match (fragments 88 and 89).
 # - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false, and 11629,
 #   which passes true; the stand-in passes both.
-# - CopiaCargos: one call of std::vector<md::CCargo>'s copy constructor (2289), for 1953, 5777 and 11371; GetCargos is
-#   the other caller. Without it binaryen inlines 2289 into GetCargos, which then differs (fragment 88).
+# - CopiaCargos: one call of std::vector<md::CCargo>'s copy constructor (2289), for 11371 (1953 and 5777, the other
+#   callers it stood for, are in the link with unit 280); GetCargos is another caller. Without it binaryen inlines 2289
+#   into GetCargos, which then differs (fragment 88).
 # - Suplentes: one call of std::vector<md::CDadosCandidato>::__init_with_size (2870), for 5808, 5952 and 7787;
 #   md::CCandidatura's constructor (5660) is the other caller. Without it binaryen inlines 2870 into 5660, which then
 #   differs (fragment 89).

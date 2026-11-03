@@ -64,6 +64,12 @@ public:
     virtual void ImprimeComplementoCorrespondencia(api::CPaperFormBuilder& builder) const {}
     virtual void ImprimeComplementoTitulo(api::CPaperFormBuilder& builder) const {}
     virtual void ImprimeDataHoraEmissao(api::CPaperFormBuilder& builder) const;
+
+private:
+    // The byte at +4: the derived constructor (fn 5586) stores 0 into it before its vptr, which is the base's
+    // constructor's work, and the derived class's flag then sits at +5 in this class's tail padding. No slot reads it.
+    // Its name, its type and that it is set by a default member initializer are chosen.
+    bool m_naoRecuperado = false;
 };
 
 } // namespace comum

@@ -25,6 +25,12 @@
 #   call: passing the temporary to api::CLoga::loga reads +4 before the message is built, one row out of place (10779
 #   `score 13 over 70 rows (same 57, replaced 11 [11 operand-only], inserted 1, deleted 1)`, 6017 `13 over 211`). Their
 #   names, lines and order are chosen.
+# - Unit 277's eight, at the end of the file: LogaEncerramentoAntesDoHorario (held by 10706), LogaTodosEleitoresVotaram
+#   (10713), LogaTituloDigitadoEncerramento and LogaEncerramentoCancelado (10721), LogaEncerramentoAbortado and
+#   LogaEncerramentoConfirmado (10734), LogaAudioAtivadoPeloMesario and LogaAudioDesativadoPeloMesario (10751), each
+#   held by its one caller behind a frame of its own after the call of GetInst. LogaEncerramentoCancelado and the two
+#   audio ones call loga (fn 233); the others call api::CLoga::loga, naming the message first as the four above. clogvota.h says
+#   what each reads; unit 277's fragment has the one left differing in 10706. Names, lines and order chosen.
 # - LogaMesarioRegistrado and LogaMesarioJaRegistrado are above GetInst, measured: a std::format body emitted before push's
 #   moves push's frame slots (unit 100's fragment has the effect on 4879). With no such body above GetInst the link gave
 #   184 `score 158 over 947 rows (same 789, replaced 158 [153 operand-only], inserted 0, deleted 0)`, its first slot at
@@ -66,6 +72,11 @@
 # - One more after that: unit 217's LogaInicioTesteTeclado, loga of "Inicio do teste de Teclado do TE", held inlined by
 #   fn 11805 (CTesteTeclado::StartState, GetInst called before the member's own frame opens); its name and place are
 #   chosen.
+# - Two more, right after LogaEleitorImpedido: LogaSolicitaDigitalMesario, held inlined by
+#   vota::CRegistraDigitalOperador::StartState (fn 10454; src/units/221-uenux2-app-comum-constructors.mk has the
+#   evidence), and LogaIdentificadorDigitadoMesario, held inlined by CPedeIdentidade::ProcessInput (fn 10677;
+#   src/units/161-uenux2-app-vota-operador-identidade.mk). They have no target function of their own, and 184 still
+#   matches with them in the file.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses
@@ -175,10 +186,13 @@
 # 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
 # at step 9.
 # app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
-# inlined, is in unit 116's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
-# has the measurement. Its notes stay here and in clogvota.h. After LogaEspacoUtilizadoMV, five members their one
-# callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit 281's 10527), three that
-# vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto (DescartaVotos, 4449; unit 197).
+# inlined, heads unit 104's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
+# has the measurement. Its notes stay here and in clogvota.h. Below LogaEleitorImpedido and ahead of unit 277's eight,
+# five members their one callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit
+# 281's 10527), three that vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto
+# (DescartaVotos, 4449; unit 197). The members added after the file's line 361, which no record orders, sit below
+# LogaEleitorImpedido: its record is line 432, under the gap of lines 362 to 382, and lines added above that gap would
+# move it.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost

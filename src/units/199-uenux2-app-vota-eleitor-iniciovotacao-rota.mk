@@ -14,8 +14,9 @@
 #   binaryen inlines into CPreZeresima::GetEstadoPassouNoTeste (fn 5945, unit 138), and the statics' exit destructors
 #   (11867, 11866).
 # The class heads say what each layout rests on; 199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp names the
-# slots left (CGeraDadosDinamicos::StartState 11865, CInicioVotacao's StartState 11988 and ProcessTick 11987) and what
-# they wait for. Not written: CVerificaEleicaoPassou's GetInst and statics, inlined into fn 7160, not written.
+# slot left (CGeraDadosDinamicos::StartState 11865) and what it waits for; CInicioVotacao's StartState 11988 and
+# ProcessTick 11987 are written since (below). Not written: CVerificaEleicaoPassou's GetInst and statics, inlined
+# into fn 7160, not written.
 #
 # Evidence, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv before
 # steps 7 to 9 matched it:
@@ -44,8 +45,25 @@
 #   partir das " at {1, 2}, the hour with "h", or with "h", the minutes and "min" (147602, a literal of its own) when the
 #   minutes are not "00", at {22, 2}, "Hora atual: " at {1, 3}, the clock at {13, 3} (AddClock, fn 728), and moves
 #   GetInteractiveForm("", true) (fn 301) into +20. 60 over 910 rows, operand-only. Of its four target callers, 7306
-#   and 11920 are pending, and the roots stand in for them; 11858 and 11848 are in the link (unit 104).
+#   is pending, and the roots stand in for it; 11858 and 11848 (unit 104) and 11920 (unit 169) are in the link.
 # - 5945's and 11914's GetInst of other classes, and 3279 and 4511: unit 138's and 119's fragments.
+#
+# Written since, measured the same way:
+# - vota::CInicioVotacao::StartState (fn 11988) and ProcessTick (fn 11987), and fn 5972, which both call. StartState:
+#   while api::CDateTime::Now() (fn 479) is before the start at +28 (fn 759 compares) it starts the tick at +40 on
+#   vota::CThreadEleitor (fns 316, 700), shows the two forms (+12, +20, slot 2) and stays; else it goes to
+#   vota::CAguardaMensagem (fn 1337) and calls 5972. ProcessTick (its byte parameter the tick) does the same once the
+#   tick is +40's and the start lies before the current time. 5 over 54 and 3 over 36 rows, operand-only. 5972 is a
+#   function of its own in the target, kept by its two callers: when comum::CRdvVota::GetInst().Comparecimento() (fns
+#   555, 1269) is 0 it marks the start of the acquisition (CEstadoGeralVota::MarcaInicioAquisicao, fn 5627, on
+#   GetVota()) and saves it (fn 491) and shows CTelasVota's +132, else +140 (getters added to ctelasvota.h after
+#   GetTelaFimVoto, their names chosen); then it posts message 8 with priority 1 to vota::CThreadOperador's queue (fn
+#   501 on +36 of fn 270), written GetMensagens().Post(8) as 11994 posts 7; the queue bound to a local and
+#   Insert(api::SMessage{8, &fila}, 1) give the same wasm (sha256 of the whole link). 8 over 49 rows, operand-only. It
+#   reads no state of the class: a free function, IniciaVotacao in an anonymous namespace of ciniciovotacao.cpp above
+#   the two slots; its name, its linkage and its file (the callers') are chosen. Its stub sat in uenux2/unplaced.cpp
+#   under a link-order cluster whose neighbours' file is iniciovotacao/cgeradorresumozeresima.cpp, a hint, not the
+#   file (src/README.md "Stubs").
 #
 # Chosen, no evidence names them: the paths, by how-to step 3's rule 4 (the class name in lower case) where no record
 # names the file (cdefinerotaprevotacao.cpp, ciniciovotacao.cpp), each header beside its .cpp, and the directory:
@@ -79,8 +97,8 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificaeleicaopassou.
 INICIOVOTACAO_ROTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.o: $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota.mk $(INICIOVOTACAO_ROTA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp -o $(R)
-# nothing reconstructed stores two of the classes' vptrs or calls CInicioVotacao::GetInst yet:
-# 199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.cpp takes the vtables' addresses and stands in for the callers
+# nothing reconstructed stores two of the classes' vptrs, and one target caller of CInicioVotacao::GetInst waits:
+# 199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.cpp takes the vtables' addresses and stands in for that caller
 $(ROOT)/$(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.o: $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.o $(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-roots.o

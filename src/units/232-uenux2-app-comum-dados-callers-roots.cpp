@@ -34,8 +34,8 @@ __attribute__((noinline)) void CargosEleicao(int destino, unsigned eleicao)
     w232_3775(destino + 12, w232_187(), eleicao + 1, true);
 }
 
-// Stands for fns 1953, 5777 and 11371, which copy a std::vector<md::CCargo> with fn 2289; CConfiguracaoEleicao::GetCargos
-// (3775) is the other caller.
+// Stands for fn 11371, which copies a std::vector<md::CCargo> with fn 2289 (1953 and 5777 do too and are in the link,
+// unit 280's chain); CConfiguracaoEleicao::GetCargos (3775) is another caller.
 __attribute__((noinline)) int CopiaCargos(int destino, int origem)
 {
     return w232_2289(destino + 24, origem) - origem;

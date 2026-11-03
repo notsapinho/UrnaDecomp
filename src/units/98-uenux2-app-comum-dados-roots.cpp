@@ -1,9 +1,9 @@
 // Roots: keep this unit's functions in the skeleton link the way the target reaches them. Each has direct callers only:
 // CTradutorFrase::Traduz (654) fns 1543, 3689, 4160, 4161, 5591, 10631, 11181, 11188, 11260, 11261 and 11946 (11181,
-// 3689 and 10631 are in the link, the others not), Lanca (2263) fns 2543 and 7787, ConfereDadosDinamicos (3770) fns 1271,
-// 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). RecuperaLabel (5658) needs none: its two call
-// sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a function with one call site, so
-// each gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
+// 3689, 10631 and 11188 are in the link, the others not), Lanca (2263) fns 2543 and 7787, ConfereDadosDinamicos (3770)
+// fns 1271, 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). RecuperaLabel (5658) needs none: its
+// two call sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a function with one call site, so each
+// gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
 // 1271 (CEleitorDetalhe::GetDinamico), 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) and 10210 (which
 // holds CEleitorDetalhe::MarcaVotou inlined, unit 104's csincronismooperador.cpp) are all in the link: it has no
 // stand-in. The converter's
@@ -18,7 +18,6 @@ extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTip
 extern const char impedido_vt[] __asm__("_ZTVN5comum3asn18CConversorImpedidoE");
 void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
-int w3769_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14GetImpedimentoEv");
 int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
 }
 
@@ -38,17 +37,12 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
     w2263_root(segundo + 16);
 }
 
-// Stands for three target callers of CEleitorDetalhe::SemImpedimento (fn 2266): fns 10635, 11233 and 11616; the other
-// two, fns 2823 and 2824 (CEleitores's slot 0), unit 110's celeitores.cpp, are in the link.
+// Stands for two target callers of CEleitorDetalhe::SemImpedimento (fn 2266): fns 11233 and 11616; the other three,
+// fns 2823 and 2824 (CEleitores's slot 0), unit 110's celeitores.cpp, and 10635 (unit 104's celeitorencontrado.cpp),
+// are in the link.
 __attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
 {
     return w2266_root(detalhe + 208) * 5;
-}
-
-// Stands for fn 3769's one caller, 10635 (vota::CEleitorEncontrado's slot 2), which calls it three times.
-__attribute__((noinline)) int ImpedimentosDoTurno(int a, int b)
-{
-    return w3769_root(a) - 3 * w3769_root(b);
 }
 
 const void* volatile comum_dados_sink;
@@ -60,7 +54,6 @@ struct SComumDadosRoots {
         comum_dados_sink = impedido_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
-        comum_dados_sink = reinterpret_cast<const void*>(&ImpedimentosDoTurno);
         comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);
     }
 } comum_dados_roots;

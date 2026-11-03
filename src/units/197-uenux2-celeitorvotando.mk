@@ -2,7 +2,7 @@
 # head (celeitorvotando.h, which says what the layout rests on); the objects of the vota application that the voting
 # states share, in src/app/vota/eleitor/comum/cinformacaoeleitor.{h,cpp}, with the votes' class comum::md::CCedula in
 # src/app/comum/dados/md/rdv/ccedula.{h,cpp}; the five vota::CLogVota members the votes are logged with, in
-# app/vota/log/clogvota.cpp (unit 119's list, whose fragment gives clogvota.cpp.o the Boost include path); and unit
+# app/vota/log/clogvota.cpp (in unit 104's list; unit 119's fragment gives its object Boost's include path); and unit
 # 116's cthreadoperador.cpp, listed here (below).
 #
 # Matched, by object (target fns):

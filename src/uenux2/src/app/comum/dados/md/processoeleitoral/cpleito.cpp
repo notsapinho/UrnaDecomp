@@ -6,19 +6,35 @@
 
 #include <algorithm>
 #include <format>
+#include <set>
 
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum::md {
 
-// (original lines 14-60: content not recovered)
-#line 61
-// <stubs>
-// f5652 · 844 B · unmatched · name unknown
-// void f5652(i32, i32, i32, i32, i32, i32, i32) { ... }
-// </stubs>
+// (original lines 15-53: content not recovered)
+#line 54
+CPleito::CPleito(const TPleitoID id, const std::string& nome, const api::CDate& data, const TVectorEleicaoPE& eleicoes,
+                 const TMapVersaoPacoteEleicao& versoesPacote, const std::vector<CSituacoesEleicoes>& situacoes)
+    : m_id(id), m_nome(nome), m_data(data), m_eleicoes(eleicoes), m_versoesPacote(versoesPacote), m_situacoes(situacoes)
+{
+    std::set<TEleicaoID> ids;
+    for (const CEleicaoPE& eleicao : m_eleicoes) {
+        ids.insert(eleicao.GetID());
+    }
 
-// (original lines 66-131: content not recovered)
+    if (ids.size() != m_eleicoes.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8159, "Há eleições com identificadores repetidos.");
+    }
+    if (ids.size() > m_versoesPacote.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8160, "Há eleições sem versão de pacotes.");
+    }
+    if (ids.size() != m_situacoes.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8161, "Há eleições com situações inválidas.");
+    }
+}
+
+// (original lines 74-131: content not recovered)
 #line 132
 const CEleicaoPE& CPleito::GetEleicao(const TEleicaoID id) const
 {

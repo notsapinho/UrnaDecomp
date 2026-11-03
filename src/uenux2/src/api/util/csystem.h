@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <emscripten/emscripten.h>
 #include <string>
+#include <vector>
 
 #include "ecourna/api/uetypes.hpp"
 
@@ -81,11 +82,25 @@ long GetMemFree();
 std::string GetFileName(const std::string& caminho);
 std::string GetDirName(const std::string& caminho);
 
+// Target fn 2758: true when every name of the first list matches one of the second, neither list empty. A pattern and a
+// name match when either begins with "#regex#" (CStringUtils::CasaRegex over the rest), or when they have one length and
+// each pair of characters is equal or passes CStringUtils::CasaCaractere one way or the other. Its callers are
+// comum::impl::ValidaConteudo (fn 5572) and comum::impl::CValidaMidia's slot 8 (fn 11167). No record: its name, its being
+// a free function here and its place in csystem.cpp are chosen (src/units/179-uenux2-cvalidamidia.mk).
+bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::string>& padroes);
+
 // Creates each missing directory of a path held in a std::string, from its first component on, with the mode 0755;
 // false when a mkdir fails. It has no record and no target index: binaryen inlines it into its one caller, fn 5821
 // (comum::CGravadorWSQ::CompactaWsq), where it keeps its own stack frame and inlines CSystem::ExistDir, which only
 // csystem.cpp's own functions can inline (api::ExistResource is file-static). Its name, its result, its being a free
 // function and its namespace are chosen, as GetFileName's are.
 bool CreateDir(const std::string& diretorio);
+
+// Fn 5461 (no record): the path held in a std::string with the extension after its last '.' replaced, its directory
+// read with GetDirName's code twice (inlined: the target makes the two substr copies) and its name with GetFileName (a
+// call); the path as it is when the name holds no '.'. Its callers are comum's (5778, 7787), and 5778 passes "pid". In
+// use band 2 it lies next to GetDirName (5462), in csystem.cpp's run. Its name, its being a free function and its
+// namespace are chosen, as GetFileName's are.
+std::string TrocaExtensao(const std::string& arquivo, const std::string& extensao);
 
 } // namespace api

@@ -11,7 +11,8 @@
 # CEstadoAudio::GetInst()'s mode at +4 (fn 509) is not 2 (CEstadoAudio::Ativo), else vota::CPedeIdentidade::GetInst
 # (fn 652). Its line is after StartState's, as band 1 has them (10431 above 10430). It matches with 652 named by its
 # vptr anchor (652 is the one function that stores CPedeIdentidade's vptr, 1588240: grep over build/out/splat/pieces/asm),
-# while 652 itself is unresolved, self-voted on CPedeIdentidade::s_inst (unit 161's fragment). The if/else around the
+# while 652 itself was unresolved, self-voted on CPedeIdentidade::s_inst, until 10682 matched (unit 161's fragment). The
+# if/else around the
 # two GetInst is written as a choice; no other form was measured.
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
@@ -81,10 +82,11 @@
 # - CGestorDadoMesario's branch first: the other order, 211 over 2653 (3 inserted, 4 deleted).
 # Same bytes: MesarioJaRegistrado defined above ProcessInput (the whole wasm's sha256 is the same). Chosen:
 # MesarioJaRegistrado's name, its being a const member, the locals' names, and 12 and '0' written as literals.
-# IPedeTituloMesario's slot 7 rests on two hand lines of splat/symbol_addrs.txt, each weighed by removal (10313 alone
-# leaves match without it, `unresolved self-voted`): comum::CPedeDigitalMesario::s_inst, whose other reader, the exit
-# destructor 10321, is a thunk into 3886, a body binaryen keeps once for three classes' statics; and
-# CNomeMesariosUrnaDS::Text (10319), the source of that state's form, which only 10313 holds by table slot.
+# IPedeTituloMesario's slot 7 rests on a hand line of splat/symbol_addrs.txt, weighed by removal (10313 alone leaves
+# match without it, `unresolved self-voted`): CNomeMesariosUrnaDS::Text (10319), the source of that state's form, which
+# only 10313 holds by table slot. A second one, comum::CPedeDigitalMesario::s_inst, went once that name's other
+# reader, the exit destructor 10321, a thunk into 3886, matched (src/units/221-uenux2-app-comum-constructors.mk has
+# the measurement).
 #
 # IPedeTituloMesario::GetTelaEleitor, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
 # (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a

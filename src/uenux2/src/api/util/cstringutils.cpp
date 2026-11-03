@@ -2,6 +2,7 @@
 // for text not recovered, the SetBit records' lines (71 and 83) among them.
 #include "api/util/cstringutils.h"
 
+#include <cctype>
 #include <format>
 
 #include "api/util/eueutilerror.h"
@@ -16,7 +17,7 @@ constexpr auto EUE_UTIL_7025 = static_cast<EUeUtilError>(7025);
 
 } // namespace
 
-// (original lines 19-53: content not recovered)
+// (original lines 20-53: content not recovered)
 #line 54
 std::string CStringUtils::GetVersionNumber(const std::string& versao)
 {
@@ -48,5 +49,24 @@ std::string CStringUtils::GetVersionNumber(const std::string& versao)
 
 
 
+
+bool CStringUtils::CasaRegex(const std::string& padrao, const std::string& valor)
+{
+    return ecourna::api::util::CStringUtils::FindRegexPosition(padrao.substr(7), valor) != std::string::npos;
+}
+
+bool CStringUtils::CasaCaractere(char mascara, char caractere)
+{
+    switch (mascara) {
+    case '#':
+        return isdigit(caractere);
+    case '?':
+        return isalnum(caractere) || caractere == '-' || caractere == '_';
+    case '@':
+        return isalpha(caractere);
+    default:
+        return false;
+    }
+}
 
 } // namespace api
