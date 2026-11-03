@@ -663,9 +663,11 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
    binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
-8. **543, 2656 and 5066, by `roots_boost.o`'s body and a hand edit.** 543's match line names `vector<long>`,
+8. **543, 2656 and 5066, by a `push_back` body and a hand edit.** 543's match line named `vector<long>`,
    `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2 built at `-O2`; at
-   the tree's `-O3` both inline that one, and our link holds `roots_boost.o`'s body alone (§A5 of [asn1.md](asn1.md)).
+   the tree's `-O3` both inline that one, and our link held `roots_boost.o`'s body alone, until that root's
+   `extern template` line for Boost.Regex's `do_assign` left it none: the line names `crespostas.cpp.o`'s
+   `vector<unsigned>::push_back(&&)` now, the same bytes (§A5 of [asn1.md](asn1.md)).
    2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543. 3473,
    which calls 543 too, is item 19.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
@@ -743,10 +745,10 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
 19. **3473, `ASN1::OBJECT_IDENTIFIER::decodeCommon`, by the link order of a `push_back`.** Its callee 543 is a 4-byte
     `push_back(&&)` no body of the ASN.1 runtime equals ([asn1.md](asn1.md) §A5), and the match holds while the first
     definition of `vector<unsigned>::push_back(&&)` on the link line is an `-O3` one from outside the runtime:
-    `ccandidaturas.cpp.o` (unit 89) defines it ahead of `asn1.o`'s `-Os` copy and RHVoice's `document.cpp.o`, binaryen
-    merges it into `roots_boost.o`'s `vector<long>::push_back(const long&)` (item 8), and decodeCommon's call re-points
-    to 543. Without that object, or with `document.cpp.o` ahead of the runtime, decodeCommon calls a body of its own and
-    the row differs at that `call`, on `call 3475` (`src/units/89-uenux2-clocal.mk`,
+    `crespostas.cpp.o` and `ccandidaturas.cpp.o` (unit 89) define it ahead of `asn1.o`'s `-Os` copy and RHVoice's
+    `document.cpp.o`, that copy is the body that matches 543 (item 8), and decodeCommon's call re-points to 543.
+    Without such a definition ahead of the runtime, or with `document.cpp.o` ahead of it, decodeCommon calls a body of
+    its own and the row differs at that `call`, on `call 3475` (`src/units/89-uenux2-clocal.mk`,
     `src/units/103-rhvoice-nocatch.mk`).
 20. **3199, 3308, 6914, 6980, 7037, 7048, 7718 and 14424, OpenSSL, by 7049's census pair.** Each reads an OpenSSL
     `.bss` name whose only voters are itself and 7049, `OPENSSL_cleanup`, an `unresolved` row whose census pair votes
