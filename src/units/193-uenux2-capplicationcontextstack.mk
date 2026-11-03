@@ -84,9 +84,9 @@
 #   the object's Pop and guard destructor unchanged (wasm-objdump -d of the object at the tree's flags, against the
 #   form written; the guard's destructor compared by its D1, the symbol the object defines). The guard's destructor (fn
 #   675), which holds Pop inlined and drops its result, matches either way.
-# - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of Pop, CriaContextoAplicacao,
-#   CriaContextoPadrao and the copy constructor that are not reconstructed (its header lists them); the guard's are in
-#   unit 171's.
+# - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of CriaContextoAplicacao and the copy
+#   constructor that are not reconstructed (its header lists them; Pop's two target callers are in the link, 10467
+#   with unit 192); the guard's are in unit 171's.
 CAPPLICATIONCONTEXTSTACK_SRCS := src/api/gui/capplicationcontext.cpp src/api/gui/capplicationcontextstack.cpp
 UENUX2_SRCS += $(CAPPLICATIONCONTEXTSTACK_SRCS)
 $(ROOT)/$(APP)/193-uenux2-capplicationcontextstack-roots.o: $(ROOT)/src/units/193-uenux2-capplicationcontextstack-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/193-uenux2-capplicationcontextstack.mk

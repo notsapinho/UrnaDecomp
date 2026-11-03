@@ -34,7 +34,7 @@ namespace vota {
 // The layout: +11 whether the voter voted: fn 1901 clears it, and the code that goes to this state sets it first, to 0
 // in CMostraEleitorVotando's and CPerguntaCodigoSuspensao's slot 6 (fns 10425, 10419) and to 1 in
 // CSincronismoOperador's (fn 10209); StartState says "VOTOU" when it is not 0. bool is a choice: a uebyte gives a
-// cmp-identical module. private with no setter is a choice too: those three classes write it. +12 and +20 two
+// cmp-identical module. Those three classes write it through SetVotou, a setter whose name is chosen. +12 and +20 two
 // std::shared_ptr<std::string>: fn 1901 builds each with std::make_shared (control block vptr 1588328,
 // __shared_ptr_emplace<std::string>), the first from "pode/nao pode entregar comp", the second empty, and hands each to
 // a field of the form (fn 1152). +28 the form: fn 1901 takes it from fn 301, whose control block is
@@ -49,6 +49,8 @@ public:
     virtual void StartState() override;
 
     virtual void ProcessInput() override;
+
+    void SetVotou(bool votou) { m_bVotou = votou; }
 
 private:
     CEleitorVotouNaoVotou();

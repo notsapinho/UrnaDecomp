@@ -8,7 +8,11 @@
 #   vota::CPedeDigital's destructor and deleting destructor     2739, 10469
 #   vota::CPedeDigital::ProcessInput (slot 7)                   10466
 # Pending, trapped in 192-uenux2-app-vota-estados-sincronismo-pending.cpp (its header says what each waits for):
-# CPedeDigital's StartState (10468), FinishState (10467) and ProcessTick (10465).
+# CPedeDigital's StartState (10468) and ProcessTick (10465).
+# Matched since: CPedeDigital::FinishState (10467, slot 5) at its records (cpededigital.cpp:131 and :132, column 5, each
+# the start of a CPolySingleton<api::IFingerScanner>::instance() call that takes the default argument): the scanner's
+# slot 7 with 0, its slot 6, then api::CApplication::s_contextos.Pop of the context at +32 (5553), as unit 197's
+# CEleitorVotando pops its own; 7 over 46 rows, all operand-only, before steps 7 to 9.
 # CSincronismoEleitor's GetInst, statics and constructor are in csincronismoeleitor.cpp, the constructor out of line
 # (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is
 # written and not matched (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.

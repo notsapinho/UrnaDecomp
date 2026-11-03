@@ -49,16 +49,10 @@
 // f5400 · 82 B · unmatched · placement: link order · name unknown
 // void f5400(i32) { ... }
 
-// f5399 · 105 B · unmatched · placement: link order · name unknown
-// ? f5399() { ... }
-
 // link-order cluster 756 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown
 // void f5408(i32) { ... }
-
-// f5402 · 754 B · unmatched · placement: link order · name unknown
-// ? f5402() { ... }
 
 // link-order cluster 757 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
 
@@ -204,11 +198,6 @@
 
 // f3872 · 180 B · unmatched · placement: link order · name unknown
 // void f3872(i32, i32) { ... }
-
-// link-order cluster 1032 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmclp.cpp
-
-// f3883 · 173 B · unmatched · placement: link order · name unknown
-// void f3883(i32, i32) { ... }
 
 // link-order cluster 1034 · uses=3
 

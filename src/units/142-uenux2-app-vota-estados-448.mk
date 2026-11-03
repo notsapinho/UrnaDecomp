@@ -168,6 +168,14 @@
 # without -fno-strict-aliasing; its IR keeps the source's order, so the wasm code generator moves the store. No form
 # found gives the target's order; the body kept is the plainest one, in the target's order.
 #
+# Matched since: vota::CPerguntaCodigoSuspensao::ProcessKey (10419, slot 6, in cperguntacodigosuspensao.cpp after
+# ProcessInput, the band's order: 10420 links before 10419). Key 5 goes to CMostraEleitorVotando::GetInst (1150); keys 2
+# and 13 clear the byte at +28 and go to vota::CEleitorVotouNaoVotou::GetInst (1901) with its +11 set to false, or to
+# vota::CSincronismoOperador::GetInst (1897) with its +11 set to true, through two setters added to unit 71's and unit
+# 104's headers (SetVotou, SetSincronizado; names chosen). The cases are written 5, 2, 13: the br_table sends key 5 to
+# the first block and 13 to the last. With 2, 5, 13, 11 over 38 rows (3 inserted, 3 deleted); as written, 5 over 35,
+# operand rows only, and a match (pnpm wasm score before steps 7 to 9).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \

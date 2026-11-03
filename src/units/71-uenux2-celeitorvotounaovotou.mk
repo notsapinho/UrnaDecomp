@@ -34,8 +34,8 @@
 # sorts before them, but confirmaidentidade's files do not run in name order. The file name is the class-name
 # convention. The header's path, the member names and GetInst are chosen too, and so are two things of the +11 flag:
 # bool (with a uebyte the object differs, and with that one object swapped on the link line the plain link is
-# cmp-identical to this one) and private with no setter, although fns 10425, 10419 and 10209, of three other classes,
-# write it. No byte depends on the second, and those classes need a setter or public access when they are written.
+# cmp-identical to this one) and private, written by fns 10425, 10419 and 10209, of three other classes, through
+# SetVotou (celeitorvotounaovotou.h), a setter whose name is chosen; 10419 (unit 142) does so now.
 #
 # Other forms of StartState that give the same bytes (each compiled and compared with this one; none is singled out
 # by the target): assign() for either assignment, the literal held in a local const char* first, an if/else with one
@@ -107,7 +107,8 @@
 # destructor 10434, the other function that reads it (a thunk into 2903, the body four classes' statics share; elem
 # 4215 to 4222 tie it to this class), does not match: the census pairs our destructor of it with fn 10414 (the same
 # body as ours, over another class's pointer and D2: a shape pair), and 10434 stays no-candidate. The roots stand
-# for 1901's target callers (10209, 10419, 10425), and the vtable sink went: 1901's constructor stores the vptr.
+# for 1901's target callers not in the link (10209, 10425; 10419, unit 142's, is), and the vtable sink went: 1901's
+# constructor stores the vptr.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
 # (unit 65 wrote its first form): this unit adds nothing to it.

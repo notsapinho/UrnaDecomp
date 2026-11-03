@@ -2,13 +2,10 @@
 // vtable. The classes' vtables are emitted in their own .cpp and need every slot defined; these bodies are NOT the
 // target's, they trap. Move each into its class's .cpp when it is reconstructed, and delete this file with the last.
 // What each waits for is a callee with no body here (ledger/callgraph.tsv against splat/matched.txt and
-// splat/symbol_addrs.txt); fn 652, which three of them call, matches now:
+// splat/symbol_addrs.txt); fn 652, which two of them call, matches now:
 //
 // - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
 //   fns 781, 1393, 1823 and 2740.
-// - vota::CControlaReconhecimento::ProcessInput (target fn 10511, slot 7): through Read() (record cinteractiveform.h:57
-//   @1591088), on CONFIRMA it calls fn 3621 and goes to the state fn 2743 returns or, as fn 2746 decides (3621 and 2746:
-//   unit 50), after a call of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396
 //   (CRegistraDigitalOperador::GetInst, unit 221), 4661, 2097 and 5665, which has no body here (a voter's year of
 //   birth, the first four characters of the string at +68 of the voter's record), and it holds
@@ -34,11 +31,6 @@
 namespace vota {
 
 void CControlaReconhecimento::StartState()
-{
-    __builtin_trap();
-}
-
-void CControlaReconhecimento::ProcessInput()
 {
     __builtin_trap();
 }
