@@ -61,4 +61,9 @@ md::CRespostaConsulta* CRespostas::Busca(TCargoID cargo, TCandidatoID numero)
     return Find(cargo * 1000000 + numero);
 }
 
+uedword ChaveResposta(md::TCargoID cargo, TCandidatoID numero)
+{
+    return cargo * 1000000 + numero;
+}
+
 } // namespace comum

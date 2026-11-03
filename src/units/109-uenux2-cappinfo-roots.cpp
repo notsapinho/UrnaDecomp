@@ -49,8 +49,8 @@ __attribute__((noinline)) void Codigos(int a, int b, int c)
 // Stands for fn 2841's callers 11242, 12105 (two calls) and 12110, which pass the turn they read (not a constant).
 __attribute__((noinline)) int Votos(int a, int t) { return w2841(a, t) + 2 * w2841(a + 4, t ^ 1); }
 
-// Stands for fn 819's callers: 2543, 7787, 11260, 11629, 11976 (11213, 11255, 3820, 6954, 11181, 5922, 11261, 11683,
-// 11711 and 5604, unit 155's written Gera, are in the link).
+// Stands for fn 819's callers: 7787, 11260, 11629, 11976 (11213, 11255, 3820, 6954, 11181, 5922, 11261, 11683, 11711,
+// 5604, unit 155's written Gera, and 2543, unit 98's, are in the link).
 __attribute__((noinline)) int Partidos() { return w819() + 7 * w819(); }
 // Stands for fn 2819's callers: 7787, 12520, 12641.
 __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }

@@ -92,6 +92,15 @@ public:
     // inlined over comum::CPartidos, a find with no store of +12. The name and its being the base's member are chosen.
     bool Existe(const KeyType& chave) const { return m_registros.find(chave) != m_registros.end(); }
 
+    // A record by its key, the cursor left where it is, or nullptr: comum::VerificaVotos (target fn 11514) holds it
+    // inlined twice over comum::CCandidaturas, a find with no store of +12 whose record it reads. The name and its
+    // being the base's member are chosen, as Existe's.
+    const RecordType* Procura(const KeyType& chave) const
+    {
+        const typename Container::const_iterator it = m_registros.find(chave);
+        return it == m_registros.end() ? nullptr : &it->second;
+    }
+
 protected:
     Container m_registros;
     typename Container::iterator m_corrente;

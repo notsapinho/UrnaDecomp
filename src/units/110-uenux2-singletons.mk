@@ -119,6 +119,9 @@
 # the two locals, from a TCargoID local holding cargo + 1, and from an iterator loop for the structured binding.
 # Pushing a named local differs only in calling push_back(const unsigned int&) for push_back(unsigned int&&).
 # The includes it needed (ccargos.h, cstringutils.hpp) took two of the blank lines above GetInst's record line.
+# comum::ChaveResposta, in crespostas.cpp after Busca: with ccandidaturas.cpp's ChaveCandidatura (unit 89) the body
+# binaryen keeps as target fn 1939, whose match line names ChaveResposta since crespostas.cpp links first, as for 1273.
+# comum::VerificaVotos (11514, unit 98) calls the two; unit 98's fragment has the measurement and the choices.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
 #   since.
@@ -218,7 +221,8 @@
 #   operator, 11523) holds comum::asn::IConversorParcialASN::Desconverte (iconversorparcialasn.h:52) and
 #   api::CPartialFileASN's ReadFromFile and DecodeObjectFunction (cpartialfileasn.h:182, 277, 285), none reconstructed,
 #   and calls comum::asn::CConversorEntidadeEleitores's slot 2 (11411, not written) through its vtable. 6734 calls 5772,
-#   2543 (over 2834 and 11514, not written) and 1551, 1692, 2826, 3763, 3765, 5723, 5725, 5763 and 5766, none written.
+#   2543 (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763,
+#   3765, 5723, 5725, 5763 and 5766, none written.
 #   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
 #   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
 #

@@ -96,6 +96,9 @@
 #   compiled. FiltraPorAbrangencia calls 3783 twice in 7377, which is in the link now, so the roots' AtribuiCargos,
 #   which stood for 7377, went: the link without it (and without the other stand-ins 4454 and 7377 left standing
 #   for nothing) moves no row into or out of match, measured on that link by steps 6 to 10.
+# - CCargos::GetMapaCargos (fn 2834), after GetCurrentEleicaoID: the map of every post of m_todos by its id that
+#   comum::VerificaIntegridadeVotos (2543, cintegridadereferencial.cpp) and three unwritten callers take. Its forms,
+#   measured, and its stand-ins are in unit 98's fragment and roots.
 # - CEleicaoPE::GetIDsCargos (fn 5654) matches since comum's data classes build with strict aliasing, as ValidaOrdem
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
