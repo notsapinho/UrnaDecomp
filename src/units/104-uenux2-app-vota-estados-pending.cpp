@@ -19,7 +19,6 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
-#include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 #include "app/vota/operador/leidentidade/celeitorencontrado.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
@@ -41,9 +40,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name (491 is named now (unit 205)): 1935, 2543, 2821, 2824, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
+// with no name (491 is named now (unit 205)): 1935, 2543, 2821, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
 // (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889, 5891
-// and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822, 88's 3782, fragment 227's 3825 and 3826, and
+// and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, fragment 227's 3825 and 3826, and
 // 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).
 void CGravaResultado::StartState()
 {
@@ -125,12 +124,6 @@ void CMenuVisualizarCandidatos::StartState()
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
 // no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's).
 void CReimprimindoResumoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 unresolved (unit 161; 599 and 1687 are unit 50's).
-void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();
 }

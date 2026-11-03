@@ -60,4 +60,9 @@ int CInformacaoEleicao::GetNumViasPU() const
     return EhModoDemonstracao() ? 1 : m_parametros.GetNumRelatorioPU();
 }
 
+ecourna::app::dados::CParametrosUrna::EFormaSuspenderComVoto CInformacaoEleicao::GetFormaSuspensaoComVoto() const
+{
+    return m_parametros.GetFormaSuspensaoComVoto();
+}
+
 } // namespace comum

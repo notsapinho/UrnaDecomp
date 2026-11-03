@@ -24,4 +24,26 @@ public:
         uedword zona, uedword secao, const std::string& tipo, const std::string& extensao);
 };
 
+// The election's part of a section's file name: the phase, the pleito and the state, at +0, +4 and +8, which fns 3745
+// and 5727 pass on to NomeArquivoSecao. Both callers of each (comum::CEleitorDetalhe::GetBiometria, fn 1937, and fn
+// 7787) pass comum::CConfiguracaoEleicao's +620 as the address, the municipality at +644 and the zone at +648 beside
+// it. The struct, its name, its members' names and its place here are chosen. app/comum/dados/cconfiguracaoeleicao.h
+// reads the same bytes as the end of m_naoRecuperado3 (+616) and m_descricao (+628): both are readings, and whoever
+// writes 1937 or 7787 reconciles them, CConfiguracaoEleicao then holding one.
+struct SIdentificacaoArquivo {
+    EUrnaFase fase;
+    uedword pleito;
+    std::string uf;
+};
+
+// The names of the files of a section's voters, "el", and of the voters temporarily transferred to it, "tte", both
+// ".dat" (target fns 3745 and 5727): each builds its two strings and calls NomeArquivoSecao. No record names them: their
+// names, their being free functions of comum declared here and defined in cnomearquivoeleitores.cpp, and the
+// parameters' names and types (the bodies pass the three numbers on as words; the callers load the zone and the section
+// as 16 bits) are chosen.
+std::string NomeArquivoEleitores(const SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
+    ueword secao);
+std::string NomeArquivoEleitoresTTE(const SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
+    ueword secao);
+
 } // namespace comum

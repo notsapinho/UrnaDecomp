@@ -181,6 +181,22 @@ public:
     void LogaEspacoUtilizadoMI(uintmax_t espaco);
     void LogaEspacoUtilizadoMV(uintmax_t espaco);
 
+    // The shape of the members held inlined above, each calling loga (fn 233), each held by its one caller, which calls
+    // GetInst before the member's own stack frame opens: LogaInspecaoTerminada ("Inspeção da urna terminada") by
+    // vota::CConfirmaInspecionada::ProcessInput (fn 10527); LogaEleitorSuspensoTreinamento ("Eleitor foi suspenso
+    // automaticamente no treinamento eleitor"), LogaEleitorSuspensoPeloMesario ("Eleitor foi suspenso pelo mesário")
+    // and LogaEleitorVotouParcialmenteSuspenso ("Eleitor votou parcialmente e em seguida foi suspenso") by
+    // vota::CEleitorVotando::suspenderEleitor (fn 4442), the first two after one call of GetInst; and
+    // LogaEleitorSuspensoSemVoto ("Eleitor foi suspenso e não confirmou nenhum voto") by
+    // vota::CEleitorVotando::DescartaVotos (fn 4449). Each literal is loaded by its caller alone. Their names are chosen
+    // from their messages, and their place here and in clogvota.cpp, before LogaQuantidade, is chosen: they have no
+    // index to order.
+    void LogaInspecaoTerminada();
+    void LogaEleitorSuspensoTreinamento();
+    void LogaEleitorSuspensoPeloMesario();
+    void LogaEleitorVotouParcialmenteSuspenso();
+    void LogaEleitorSuspensoSemVoto();
+
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
 
 private:

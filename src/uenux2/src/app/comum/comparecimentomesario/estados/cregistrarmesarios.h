@@ -23,14 +23,14 @@ class IControladorRegistraMesarios;
 // comum::CRegistrarMesarios (RTTI: si_class of comum::CAppState; vtable @1593584 [448, 765, 10392, 7480, 1661, 218,
 // 425, 10391, 425]): it overrides StartState (slot 2, fn 10392), which calls the controller's slots 23
 // (LogaIndagaRegistroMesarios), 5 and 7 and goes to CLimiteMesariosRegistradosAtingido when slot 7 returns true, else
-// shows both forms; and ProcessInput (slot 7, fn 10391), a thunk into binaryen's fn 6011, not reconstructed
-// (src/units/247-uenux2-cregistrarmesarios-pending.cpp says what it waits for). A singleton: GetInst (fn 3610) keeps the
-// object in a static std::unique_ptr (@1909428, destroyed at exit by fn 10394) under a static std::mutex (@1909404, by
-// fn 10393); the constructor, out of line and inlined there by binaryen, passes EVENTO_ENTRADA to the base's and assigns
-// both forms, the voter's from TelaRegistroMesarios and the operator's from TelaIndagaRegistroMesarios. The 28-byte
-// object and its two forms are those of the 19 states over the destructors 448 and 765
-// (src/units/135-uenux2-comum-mesario-estados.mk); src/units/247-uenux2-cregistrarmesarios.mk says which of this is
-// evidence and which is chosen.
+// shows both forms; and ProcessInput (slot 7, fn 10391), a thunk into binaryen's fn 6011, the body it shares with
+// comum::CMesarioRegistrado::ProcessInput (fn 10338; src/units/247-uenux2-cregistrarmesarios.mk has its evidence).
+// A singleton: GetInst (fn 3610) keeps the object in a static std::unique_ptr (@1909428, destroyed at exit by fn
+// 10394) under a static std::mutex (@1909404, by fn 10393); the constructor, out of line and inlined there by
+// binaryen, passes EVENTO_ENTRADA to the base's and assigns both forms, the voter's from TelaRegistroMesarios and the
+// operator's from TelaIndagaRegistroMesarios. The 28-byte object and its two forms are those of the 19 states over the
+// destructors 448 and 765 (src/units/135-uenux2-comum-mesario-estados.mk); src/units/247-uenux2-cregistrarmesarios.mk
+// says which of this is evidence and which is chosen.
 class CRegistrarMesarios final : public CAppState {
 public:
     virtual ~CRegistrarMesarios() override;

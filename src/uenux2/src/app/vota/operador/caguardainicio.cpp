@@ -8,7 +8,11 @@
 #include "api/gui/iform.h"
 #include "api/gui/iscreenmt.h"
 #include "api/util/cdatetime.h"
+#include "app/comum/comparecimentomesario/estados/cregistrarmesarios.h"
+#include "app/vota/log/clogvota.h"
 #include "app/vota/operador/cthreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
+#include "app/vota/operador/outrasopcoes/cfimaquisicaovotos.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace vota {
@@ -77,6 +81,25 @@ void CAguardaInicio::ProcessTick(uebyte id)
 {
     if (id == m_tick) {
         m_form->Slot2();
+    }
+}
+
+void CAguardaInicio::ProcessKey(uebyte tecla)
+{
+    switch (tecla) {
+    case 8:
+        CLogVota::GetInst().loga("Urna pronta para receber votos");
+        m_pNextState = &CPedeIdentidade::GetInst();
+        break;
+    case 7:
+        m_pNextState = &comum::CRegistrarMesarios::GetInst();
+        break;
+    case 10:
+        m_pNextState = &CFimAquisicaoVotos::GetInst();
+        break;
+    default:
+        CAppState::ProcessKey(tecla);
+        break;
     }
 }
 

@@ -58,11 +58,24 @@
 #   in GetMovie, with the vector moved through a local, gives 221 over 516 rows at -O3.
 #
 # Written and not matched:
-# - Caminho (2626): 200 over 1934 rows at the tree's -O3 (202 at -O2, d4cbc1a), and 200 at 441ae041, with this
-#   directory at strict aliasing. The target loads the path's size, its long-string flag and its data again after each
-#   rfind, for the substr, and again before the second rfind, where ours keeps the values from before the first search:
-#   the target's body has 5 loads of the size (frame +52), 5 of the flag (+59, signed) and 6 of the data (+48), ours
-#   3, 2 and 4. With the existence test written in the loop (an std::ifstream temporary in the condition) the frame's
+# - Caminho (2626): 121 over 1920 rows (90 replaced, 83 of them operand-only, 20 inserted, 11 deleted) with each prefix
+#   test through ComecaCom, which takes the prefix as a const std::string&, so each test builds and frees a std::string
+#   of its literal; 200 over 1934 with the literal passed to rfind, the form before (202 at -O2, d4cbc1a, and 200 at
+#   441ae041, this directory at strict aliasing). The target loads the path's size, its long-string flag and its data
+#   again after each rfind, for the substr, and again before the second rfind: its body has 5 loads of the size (frame
+#   +52), 5 signed and 1 unsigned of the flag (+59) and 6 of the data (+48). With the literal passed to rfind ours had
+#   3, 2 and 2, and 4 (the link at 5ab3adc2, the function's disassembly); with ComecaCom 5, 4 and 2, and 6. In the
+#   object's IR after GVN (em++ -S -emit-llvm -mllvm -print-after=gvn) the loads follow the prefix's operator delete;
+#   that the delete is the write GVN does not look past is a reading. The object's function then has no allocation of
+#   the prefix and as many calls as without ComecaCom, 47, and its search compares the literal's bytes as constants. What
+#   differs now is where those loads sit: ours loads after the delete, before the test of rfind's result, and keeps the
+#   values for the second search when the first fails (a phi in the object's IR); the target loads after that test, in
+#   the substr's path, and again before the second search on both paths, which reads as the write sitting after the
+#   test there. Measured on the object, each with ours' loads in ours' places: rfind(std::string(literal), 0) written in
+#   the condition (the same function as ComecaCom's, the disassemblies' numbers masked), the prefix taken by value, and
+#   -mllvm -jump-threading-threshold=10 or 20. The prefix as a named std::string in an if-with-initializer (destroyed
+#   after the if) gives 3 loads of the size and 4 of the data. ComecaCom's name, its being a helper in the anonymous
+#   namespace and its parameters' form are chosen. With the existence test written in the loop (an std::ifstream temporary in the condition) the frame's
 #   shared slot sits at the bottom, 391 rows; Existe, the test as a helper, gives the target's frame. Scored the same,
 #   200: a non-const path, the prefix test as a helper (ComecaCom). Further: Candidatos written into Caminho (928),
 #   Normaliza into Candidatos (365), the normalised path as Candidatos' parameter (293). Counted in the object

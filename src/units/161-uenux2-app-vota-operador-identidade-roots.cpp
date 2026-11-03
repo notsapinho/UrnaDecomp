@@ -90,8 +90,9 @@ __attribute__((noinline)) unsigned long LeDois(const std::string& primeiro, cons
     return std::stoul(primeiro) + 3 * std::stoul(segundo);
 }
 
-// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 2295, 10209, 10217, 10404, 10435, 10443,
-// 10447, 10452, 10527, 10588, 10590, 10624, 10626, 10646, 10689, 10718, 10721, 10731, 10734, 10751 and 10762.
+// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 2295, 10209, 10404, 10443, 10447, 10452,
+// 10588, 10590, 10624, 10626, 10689, 10718, 10721, 10731, 10734 and 10751 (10217, 10435, 10527, 10646 and 10762 are
+// in the link: units 165, 152, 281, 104 and 119).
 __attribute__((noinline)) int PedeIdentidade()
 {
     return w161_pede_identidade() + 89;

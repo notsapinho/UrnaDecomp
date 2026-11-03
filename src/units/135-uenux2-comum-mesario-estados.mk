@@ -83,7 +83,7 @@
 #   (std::__format::__allocating_buffer<char>::__prepare_write, matched), where ours has 43; the literal was a string of
 #   its own then. With 5389 in the link it is the tail of 5389's string, one copy as in the target, and 5386 matches
 #   (splat-review passes both ways). Its other target caller, comum::CMesarioRegistrado's
-#   slot 2 (10339), is not written: 135-uenux2-comum-mesario-estados-roots.cpp stands for it. Band: 10360, 10359,
+#   slot 2 (10339), is written in unit 279, and the roots' stand-in for it went. Band: 10360, 10359,
 #   10358 and 10357 run 3727 to 3730 in ld_index. Chosen: TelaLimiteMesariosRegistrados, its being a free function of
 #   comum declared in the class's header, its parameter, and its place at the file's end; the constructor and GetInst
 #   above the statics.
@@ -112,9 +112,10 @@
 # before step 9, all operand-only, and a match after it.
 # The roots: the vtable sinks of CConfirmaFimRegistroMesarios, CTituloMesarioVazio, CTituloMesarioInvalido,
 # CTituloMesarioJaRegistrado and CPedeDigitalMesario went, since their constructors are in the link (inlined through
-# GetInst into 5389 and 10313). ConfirmaFimRegistro calls 5389 for fn 6011, its other target caller; ReconheceDigital
-# calls CPolySingleton<api::IFingerMatcher>::instance twice for its six unwritten callers, which puts 1686 in the link
-# beside 816 and lets binaryen form 6013 from the two, as the target does. The roots object compiles at uenux2's flags
+# GetInst into 5389 and 10313). ConfirmaFimRegistro, which called 5389 for fn 6011, went: 6011's two callers, the
+# ProcessInput of comum::CRegistrarMesarios and CMesarioRegistrado (10391, 10338), are written (units 247 and 279).
+# ReconheceDigital calls CPolySingleton<api::IFingerMatcher>::instance twice for its six unwritten callers, which puts
+# 1686 in the link beside 816 and lets binaryen form 6013 from the two, as the target does. The roots object compiles at uenux2's flags
 # for this directory ($(UENUX2_CXXFLAGS)), so no match rests on a flag the tree lacks; with strict aliasing on the
 # instance's code is the same (wasm-objdump -d of the function in the two objects: 154 identical lines).
 # api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
@@ -153,10 +154,7 @@
 # Not reconstructed, and what each waits for:
 # - CDigitalMesarioNaoReconhecida's GetInst, inlined into fn 10316 (pending), with its file's anonymous
 #   CNomeMesariosUrnaDS::Text (10323), the other half of fn 6008.
-# - comum::CMesarioRegistrado (10339, 10338): 10339 calls 5386, matched. Fn 6011 is binaryen's shared body of its
-#   ProcessInput and comum::CRegistrarMesarios's (10391, pending in unit 247, whose StartState 10392 matches), each
-#   `f6011(p0, <its GetControlador record>, <its Read() record>)`, so it forms only once both are written; its one
-#   callee that had no name, 5389, matches now. Its stub file stays as it is.
+# - comum::CMesarioRegistrado (10339, 10338) is written in unit 279, whose fragment says what of it matches.
 # - The pending traps (135-uenux2-comum-mesario-estados-pending.cpp names each): IGestorDadoMesario::StartState
 #   (10337), CPedeDigitalMesario's FinishState (10315, a thunk into fn 6012, which it shares with
 #   vota::CRegistraDigitalOperador::FinishState, 10453, not written; the pending file holds its source) and ProcessTick

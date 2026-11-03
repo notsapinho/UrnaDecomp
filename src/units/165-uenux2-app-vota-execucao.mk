@@ -20,8 +20,9 @@
 #   constructor (1501, named by its vptr store), added since: it passes comum::CAssinador's constructor (unit 34's file,
 #   which binaryen inlined into it) the ESavdAplic 1 and its package; its callers are fragment 205's, and the vtable needs
 #   no roots sink any more.
-# - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219) and ProcessTick
-#   (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written and differs (below).
+# - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219), ProcessKey (10217,
+#   below) and ProcessTick (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written
+#   and differs (below).
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 #   IPoliticaExecucaoEleitor::GetInst (record 45:100) has no target function of its own: its one target caller, 5925
 #   (the slot 17 of vota::CConfirmaVotoNominal and CMajoritarioValido, one body, unit 97's), holds it inlined, as ours
@@ -30,9 +31,23 @@
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so);
 #   CPreShowFormVota::PreShow (7707, slot 2, the class's key function) and DesenhaDescricaoModo (4620), below.
-# Not matched, and why: the -pending.cpp traps CAguardaInicio's ProcessKey
-# (10217), with what it waits for. The roots file says what stands for the unwritten caller of IExecucaoVota's GetInst
-# (5408 for 3594) and for 576's 16 callers.
+# Not matched: CAguardaInicio::GetInst (5343, below). The roots file says what stands for the unwritten caller of
+# IExecucaoVota's GetInst (5408 for 3594) and for 576's 16 callers.
+#
+# CAguardaInicio::ProcessKey (10217, slot 6): key 8 logs "Urna pronta para receber votos" (comum::IEventosLog::loga, fn
+# 233, on vota::CLogVota::GetInst, 184) and goes to vota::CPedeIdentidade::GetInst (652), key 7 to
+# comum::CRegistrarMesarios::GetInst (3610), key 10 to vota::CFimAquisicaoVotos::GetInst (5428), any other key nowhere.
+# The target stores the next state in each case: three stores at +4. Measured on objects of caguardainicio.cpp at the
+# tree's flags (wasm-objdump -d, the function's `i32.store 2 4`, one of them the log string's): a switch with no
+# default, its cases ending in break or in return, and an if-chain give one store after the join, and the link scores
+# `31 over 83 rows (same 52, replaced 19 [16 operand-only], inserted 5, deleted 7)` (pnpm wasm score against our
+# symbol). A call clang cannot see through in the default case keeps the three apart: comum::CAppState::ProcessKey, out
+# of line and empty (cappstate.h), which binaryen then inlines away. The case order is the target's block order, key 8's
+# code first: with key 7's first the br_table reads [0 1 3 2] where the target's reads [1 0 3 2] (`21 over 83 rows (same
+# 62, replaced 11 [10 operand-only], inserted 5, deleted 5)` on the whole link), with key 8's first [1 0 3 2], and the
+# function matches. An if-chain in that order, the base's call in its else, gives the same object (cmp of the
+# function's disassembly). Chosen: the default's call of the base and the base's body out of line, which the target's
+# bytes do not tell from another call of an empty function another object defines, and the switch over the if-chain.
 #
 # The two GetInsts are unit 50's macro, POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO (api/pattern/
 # polysingletongetinst.h), over CExecucaoVota and CPoliticaExecucaoEleitor: each record's column (74:78, 45:100) is the
@@ -190,9 +205,6 @@ APP_VOTA_EXECUCAO_SRCS := src/app/vota/iexecucaovota.cpp src/app/vota/cexecucaov
     src/app/vota/comum/cpreshowformvota.cpp src/app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp \
     src/app/vota/operador/caguardainicio.cpp
 UENUX2_SRCS += $(APP_VOTA_EXECUCAO_SRCS)
-APP_VOTA_EXECUCAO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/165-uenux2-app-vota-execucao-pending.o: $(ROOT)/src/units/165-uenux2-app-vota-execucao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/165-uenux2-app-vota-execucao.mk $(APP_VOTA_EXECUCAO_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/165-uenux2-app-vota-execucao-pending.cpp -o $(R)
 $(ROOT)/$(APP)/165-uenux2-app-vota-execucao-roots.o: $(ROOT)/src/units/165-uenux2-app-vota-execucao-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/165-uenux2-app-vota-execucao.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/165-uenux2-app-vota-execucao-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/165-uenux2-app-vota-execucao-pending.o $(APP)/165-uenux2-app-vota-execucao-roots.o
+override EXTRA_OBJS += $(APP)/165-uenux2-app-vota-execucao-roots.o

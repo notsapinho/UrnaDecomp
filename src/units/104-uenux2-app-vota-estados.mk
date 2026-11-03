@@ -130,8 +130,15 @@
 #   and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with -fexceptions. In the target, fn 5400
 #   (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and 10500) has the same shape, a store in
 #   each branch, the second after a Post(1), and fn 10511 (vota::CControlaReconhecimento's slot 7) holds the same calls
-#   with one store after the join. Not explained. It stays
+#   with one store after the join. Not explained. CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met
+#   the same joining, matches with a call clang cannot see through in its default case (unit 165's fragment has the
+#   forms); StartState has no base body to call (slot 2 is pure), and no such call was tried here. It stays
 #   written: it is CFimAquisicaoVotos's slot 2 (a trap would hide it: docs/how-to-decompile.md step 5) and 3610's caller.
+# - vota::CCancelaHabilitacaoEleitor::StartState (fn 10646, slot 2, in ccancelahabilitacaoeleitor.cpp after the statics,
+#   a chosen line): when vota::IsAudioAtivadoMesario() (fn 1687) holds, CLogVota's LogaAudioDesativadoFimVotacao (fn
+#   4529, unit 152's), then slot 2 of vota::impl::IInformacaoThreadOperador::GetInst() (fn 599), CancelaHabilitacao, its
+#   only call (iinformacaothreadoperador.h), and CPedeIdentidade::GetInst() (fn 652, unit 161) as the next state. 5 over
+#   16 rows, operand rows only, before step 8; matched at step 9, named by its vtable slot.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:

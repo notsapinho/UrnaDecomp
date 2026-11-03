@@ -9,8 +9,9 @@
 # - celeitorvotando.cpp: GetInst 3229 with the constructor inlined, its statics' exit destructors 7416 (s_inst) and
 #   7405 (s_mutex), the D2 2483 and D0 7385, StartState 7377 (slot 2) with IniciaCiclo inlined, NeedChangeState 7352
 #   (slot 3, over a callers+content hand line for FinalizaEleitor), FinishState 7370 (slot 5), RegistraVoto 4471, the
-#   free MostraCargoNoOperador 4464, ChamaEstadoProximoCargo 4459 (EUeVotaError 9310), ProcessTick 7349 (slot 8) and
-#   ProcessInput 7345 (slot 7);
+#   free MostraCargoNoOperador 4464, ChamaEstadoProximoCargo 4459 (EUeVotaError 9310), ProcessTick 7349 (slot 8),
+#   ProcessInput 7345 (slot 7), ProcessKey 7337 (slot 6), DescartaVotos 4449 and suspenderEleitor 4442 (EUeVotaError
+#   9312 and 9313), below;
 # - cinformacaoeleitor.cpp: the exit destructors of g_numeroDigitado (13593) and g_votosEleitor (13588), and
 #   AdicionaVoto 4192 with comum::md::CCedula::Adiciona inlined by binaryen;
 # - ccedula.cpp: CCedula's constructor, one body with api::CFormBuilder's (fn 203): this object links ahead of
@@ -23,8 +24,8 @@
 # GetCurrentAbrangenciaEleitor), unit 91 (celeitordecorator.cpp: GetAbrangencia, 3721), unit 13 (md/rdv/ and
 # crdvvota.cpp: the ballot's way into the RDV), unit 93 (cestadogeralvota.cpp: MarcaUltimoVoto) and unit 192
 # (csincronismoeleitor.cpp: GetInst).
-# Written, not matched: FinalizaEleitor 4454 (below), every row an operand row, waiting for the name of fn 5681. Pending
-# (197-uenux2-celeitorvotando-pending.cpp, whose header says what it waits for): ProcessKey 7337.
+# Written, not matched: FinalizaEleitor 4454 (below), every row an operand row, waiting for the name of fn 5681. Every
+# slot is written.
 # celeitorvotando.cpp is compiled through unit 13's list, ahead of crdvvota.cpp and md/rdv/ (that fragment has the order
 # and its measurements); the rest of this unit's sources are in its own list (below).
 #
@@ -80,13 +81,23 @@
 #   1533300, cthreadoperador.cpp's vtable and record at 1601200 to 1601232. A scan of the moved link with the symbol
 #   file and match list of the link before the move (docs/reference/facts/workflow.md W13) moved no other row.
 #   cthreadoperador.cpp's notes stay in unit 116's fragment.
-# - RegistraVoto: celeitorvotando.h says what it does and why it is a member. Its callers and suspenderEleitor's
-#   calls of AdicionaVoto and of the five loggers have stand-ins (Companions).
+# - RegistraVoto: celeitorvotando.h says what it does and why it is a member. Its callers are in the link, and
+#   suspenderEleitor (4442) holds it inlined, with its calls of AdicionaVoto and of the five loggers.
+# - ProcessKey (7337), suspenderEleitor (4442) and DescartaVotos (4449): celeitorvotando.h says what each does, what
+#   rests on what and what is chosen. Before step 8 each scored operand rows only (7337 6 over 45, 4442 74 over 506,
+#   4449 20 over 139: pnpm wasm score against our symbols), and each matches at step 9, 4442 and 4449 named by their
+#   records' anchors, 7337 by its vtable slot. suspenderEleitor reads the two suspension forms through unit 111's
+#   comum::CInformacaoEleicao (cinformacaoeleicao.h says why one getter is in the class and the other, 657, out of
+#   line), throws the two EUeVotaError codes its records give (euevotaerror.h), and holds RegistraVotosSuspensao, a
+#   member binaryen inlines (its 32-byte frame), with RegistraVoto inlined by clang into that. It and DescartaVotos hold
+#   four CLogVota members inlined (clogvota.h); DescartaVotos shows CTelasVota's +164 form (ctelasvota.h). The throws'
+#   column 23 puts the cases of their switches one level in.
 # - AdicionaVoto: with the append written as a free function beside it in cinformacaoeleitor.cpp, clang inlined it,
 #   one 48-byte frame where the target has AdicionaVoto's 16-byte frame and then binaryen's 32-byte one: 102 over 328
 #   rows (14 inserted, 23 deleted); with the append in ccedula.cpp it matches. With the constructor there too,
-#   our __wasm_call_ctors calls it on g_votosEleitor as the target's calls fn 203's body on 1833300. g_votosEleitor's
-#   line (`vote:5 by:13588`) has 4192, 7377, 6999, 4454 and 11683 among the target's other users of the address.
+#   our __wasm_call_ctors calls it on g_votosEleitor as the target's calls fn 203's body on 1833300. g_votosEleitor is
+#   named by a `vote` line (splat/symbol_addrs.txt; its count grows with the matches that use the address); 4192,
+#   7377, 6999, 4454 and 11683 are among the target's other users of it.
 # - The five loggers: clogvota.h says what they are. Their places in clogvota.cpp are a choice. Use band 2 puts
 #   4546, 4542, 4541 and 4537 after fns 4556 and 4551 and before 4535, 4529, 4522 and 4511, which that file's lines do
 #   not allow together (4556 and 4551 already come after 4535, 4529 and 4522): right after
@@ -142,11 +153,14 @@
 #   the same opcodes on both sides now (docs/reference/splat.md section 2). The callers+content hand line that named
 #   4454 from its own body before went: with it removed, splat-match added no match and moved no verdict.
 # - FinalizaEleitor (fn 4454, celeitorvotando.h says what it does), written and not matched. In the target its band (use
-#   band 2 of ledger/ordinals.tsv) puts it after ChamaEstadoProximoCargo (4459) and before DescartaVotos (4449, records
-#   :253 and :254), so it is defined in the lines between them, which leave it eight: the state's finishing is the
-#   inline helper TerminaEstado (celeitorvotando.h). It reaches, each out of line in its own file and inlined by
-#   binaryen into this one body (none of them is in names.tsv): comum::CRdvVota::RecebeCedula (crdvvota.cpp),
-#   md::CVotosEleicoesVota::RecebeCedula, CVotosCargos::InsereCedula and ConfereCedula, CVotos::Insere and its
+#   band 2 of ledger/ordinals.tsv) puts it after ChamaEstadoProximoCargo (4459) and before DescartaVotos (4449), but the
+#   lines between them do not hold it: 4459 ends at :240, below its record :229, and DescartaVotos' records :253 and
+#   :254 follow five calls of its own, so it begins at :246 at the latest, which leaves five lines. It is defined above
+#   4459 instead, against the band's order, a choice; 4454 scores 178 over 2686 rows in either place (below, and on
+#   this link). The state's finishing is the inline helper TerminaEstado (celeitorvotando.h). It reaches, each out of
+#   line in its own file and inlined by binaryen into this one body (none of them is in names.tsv):
+#   comum::CRdvVota::RecebeCedula (crdvvota.cpp), md::CVotosEleicoesVota::RecebeCedula, CVotosCargos::InsereCedula and
+#   ConfereCedula, CVotos::Insere and its
 #   ErroPosicao (md/rdv/), CEstadoGeralVota::MarcaUltimoVoto and CSincronismoEleitor::GetInst with its constructor; unit
 #   13's fragment has the md members. Measured (pnpm wasm score against 4454, on the whole link, each step on the one
 #   before): 1438 over 3181 rows (495 inserted) while 5681 and 3251, the map copy's __emplace_hint_unique_key_args and
@@ -181,21 +195,21 @@
 # The lines of members with no record are a choice: the constructor, GetInst, the statics and the destructor first,
 # RegistraVoto before StartState and IniciaCiclo's records (:125, :131), FinishState and MostraCargoNoOperador after
 # them, in the order use bands 1 and 2 link them (7416, 7405, 7385, 7377, 7370; 4471, then 4464 and 4459, first
-# mentioned in IniciaCiclo); 4459 ends at :240, FinalizaEleitor follows it (above), NeedChangeState ends after its
-# record (:294), and ProcessTick and ProcessInput follow, in the order use band 1 links them (7352, 7349, 7345). The
+# mentioned in IniciaCiclo); FinalizaEleitor before 4459 (above), DescartaVotos after it at its records (:253, :254),
+# NeedChangeState ends after its record (:294), and ProcessTick, ProcessInput and ProcessKey follow, in the order use
+# band 1 links them (7352, 7349, 7345, 7337); suspenderEleitor last, at its records (:410, :427), as band 2 links it
+# after 4449, with RegistraVotosSuspensao, which has no index, above it. The
 # callee comum::CCargos::IsPrimeiro (ccargos.h) is inline. The number typed is assigned through SetNumeroDigitado("")
 # (cinformacaoeleitor.h says what it rests on).
 #
-# Companions. 197-uenux2-celeitorvotando-pending.cpp traps ProcessKey; the destructor, declared first, is the key
-# function, so celeitorvotando.cpp's object emits the vtable. The pending object compiles at the class's flags
-# (uenux2_cxxflags of celeitorvotando.cpp's path, so without -fno-strict-aliasing, as app/vota/'s sources).
+# Companions. The destructor, declared first, is the key function, so celeitorvotando.cpp's object emits the vtable,
+# whose slots are all written: the pending file went with ProcessKey.
 # 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem for GetInst's (fn 7481; 7428 and
-# 11754 are in the link, and Registra, which stood for 11754's RegistraVoto calls, went), Suspende for
-# suspenderEleitor's (fn 4442) calls of
-# AdicionaVoto, the five loggers and FinalizaEleitor, Abrange for GetAbrangencia's (fns 2824 and 5761), Imprime for
-# OrdenaPorImpressao's (fns 5604, 12098 and 12110), Converte for 5681's (fn 11349) and Procura for 3251's (fns 2386 and
-# 3266). Precisa and Inicia, which stood for 7352 and 7377, went with them. GetInst's constructor stores the vptr, the
-# target's one reference to the vtable, so no root takes it.
+# 11754 are in the link, and Registra, which stood for 11754's RegistraVoto calls, went), Abrange for GetAbrangencia's
+# (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 5604, 12098 and 12110), Converte for 5681's (fn 11349) and
+# Procura for 3251's (fns 2386 and 3266). Precisa and Inicia, which stood for 7352 and 7377, went with them, and
+# Suspende, which stood for suspenderEleitor's (fn 4442) calls of AdicionaVoto, the five loggers and FinalizaEleitor,
+# with 4442. GetInst's constructor stores the vptr, the target's one reference to the vtable, so no root takes it.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
 # g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's members' names, SVotoCargo and its members' names,
@@ -222,13 +236,8 @@ UENUX2_SRCS += $(CELEITORVOTANDO_SRCS)
 # celeitorvotando.cpp reads comum::CConfiguracaoEleicao, whose header reaches Boost through CConfiguracaoMunicipio's
 # CHorariosUrna: an include path, not a flag of the code (src/units/README.md "What a fragment holds")
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/celeitorvotando.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# one of CEleitorVotando's slots is not reconstructed: 197-uenux2-celeitorvotando-pending.cpp gives it a trapping
-# body, compiled with the unit's flags; celeitorvotando.h includes headers of api/gui and app/comum/dados, so the
-# rule depends on every header of both trees
-$(ROOT)/$(APP)/197-uenux2-celeitorvotando-pending.o: $(ROOT)/src/units/197-uenux2-celeitorvotando-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/197-uenux2-celeitorvotando.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/celeitorvotando.cpp) -c src/units/197-uenux2-celeitorvotando-pending.cpp -o $(R)
-# GetInst, RegistraVoto, AdicionaVoto, the five loggers, FinalizaEleitor and the callees the Companions paragraph names
-# have target callers not in the link: 197-uenux2-celeitorvotando-roots.cpp stands in for them
+# GetInst and the callees the Companions paragraph names have target callers not in the link:
+# 197-uenux2-celeitorvotando-roots.cpp stands in for them
 $(ROOT)/$(APP)/197-uenux2-celeitorvotando-roots.o: $(ROOT)/src/units/197-uenux2-celeitorvotando-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/197-uenux2-celeitorvotando.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/197-uenux2-celeitorvotando-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/197-uenux2-celeitorvotando-pending.o $(APP)/197-uenux2-celeitorvotando-roots.o
+override EXTRA_OBJS += $(APP)/197-uenux2-celeitorvotando-roots.o

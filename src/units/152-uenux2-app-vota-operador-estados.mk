@@ -8,6 +8,10 @@
 #   std::map StartState builds (3613);
 # - vota::CPerguntaEleitorVotando::ProcessKey (5394, slot 6, one body with vota::CEleitorDemorando's slot 6, a class our
 #   link does not hold) and vota::CHabilitaAudioEleitor::ProcessInput (10523, slot 7);
+# - vota::CDesabilitaAudioEleitor::ProcessInput (10435, slot 7): when the form reads CONFIRMA, Post(10) on
+#   CThreadEleitor's queue (316, 501), usleep(300) (3966) while vota::CEstadoAudio::GetInst() (509) says the audio is
+#   active, CLogVota's LogaAudioDesativadoFimVotacao (4529) and CPedeIdentidade::GetInst() (652, unit 161) as the next
+#   state; 12 over 93 rows, operand rows only, before step 8, and matched at step 9, named by its vtable slot;
 # - the StartState (slot 2) of six states over the destructors 49 final states share (fns 244 and 387):
 #   vota::CPerguntaEleitorVotando (10416) and vota::CDesabilitaAudioEleitor (10436) in aguardaeleitor/,
 #   vota::CHabilitaAudioEleitor (10524) in confirmaidentidade/, vota::CHorarioVotacaoTerminou (10758) and
@@ -47,7 +51,7 @@
 #   in a CLogVota member gives a prologue after the form's call, `21 over 82 rows (... inserted 5, deleted 5)`, and the
 #   call in place `11 over 77 rows (... [11 operand-only] ...)` and a match after step 9.
 # - CLogVota::LogaAudioDesativadoFimVotacao and LogaSuspensaoAbortada: out of line with two callers each (fns 10435 and
-#   10646; 10407 and 10420), each building its message and calling loga (fn 233) on `this`.
+#   10646; 10407 and 10420, all four in the link), each building its message and calling loga (fn 233) on `this`.
 # - IIniciaJustificativa: its record (iiniciajustificativa.cpp:27, column 15) names the constructor and spells its
 #   parameter `IConfirmaJustificativa *`; fn 3624 passes 0 to CAppState's constructor, stores the argument at +12 before
 #   the vptr (a derived class's member), and throws CBaseError<vota::EUeVotaError, {9300, 9500}> (fn 253) with 9396 and

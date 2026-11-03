@@ -6,7 +6,9 @@
 
 
 // A validated plain value: the constructor rejects anything outside [MIN_VAL, MAX_VAL]. Global namespace, as the
-// target's std::source_location records spell it (CBaseType<unsigned short, 0, 99, 4>::CBaseType(TYPE)).
+// target's std::source_location records spell it (CBaseType<unsigned short, 0, 99, 4>::CBaseType(TYPE)). Its
+// constructor is defined below the class, not inline: the target's callers of TTipoIdentificadorEleitor's call it
+// out of line, which app/dados/tiposbasicos.hpp's extern template then gives (src/units/112-ecourna-cbasetype.mk).
 template <typename TYPE, TYPE MIN_VAL, TYPE MAX_VAL, int BASIC_TYPE>
 class CBaseType {
 public:
@@ -18,9 +20,18 @@ public:
     // static initialiser). No primary definition: an instantiation without a specialization fails to link.
     static const std::string NOME;
 
-    // (original lines 21-33: content not recovered)
-#line 34
-    CBaseType(TYPE valor) : m_valor(valor)
+    CBaseType(TYPE valor);
+
+    TYPE Get() const { return m_valor; }
+    operator TYPE() const { return m_valor; }
+
+private:
+    TYPE m_valor;
+};
+
+
+    template <typename TYPE, TYPE MIN_VAL, TYPE MAX_VAL, int BASIC_TYPE>
+    CBaseType<TYPE, MIN_VAL, MAX_VAL, BASIC_TYPE>::CBaseType(TYPE valor) : m_valor(valor)
     {
         if (!(valor >= MIN_VAL && valor <= MAX_VAL)) {
             const int minimo = MIN_VAL;
@@ -29,10 +40,3 @@ public:
                 std::format("O tipo '{}' deve ter valores no intervalo [{},{}].", NOME, minimo, maximo));
         }
     }
-
-    TYPE Get() const { return m_valor; }
-    operator TYPE() const { return m_valor; }
-
-private:
-    TYPE m_valor;
-};

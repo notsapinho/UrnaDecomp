@@ -354,6 +354,31 @@ void CLogVota::LogaEspacoUtilizadoMV(uintmax_t espaco)
     loga(std::format("Espaço utilizado na MV [{}]", comum::FormataTamanho(espaco)));
 }
 
+void CLogVota::LogaInspecaoTerminada()
+{
+    loga("Inspeção da urna terminada");
+}
+
+void CLogVota::LogaEleitorSuspensoTreinamento()
+{
+    loga("Eleitor foi suspenso automaticamente no treinamento eleitor");
+}
+
+void CLogVota::LogaEleitorSuspensoPeloMesario()
+{
+    loga("Eleitor foi suspenso pelo mesário");
+}
+
+void CLogVota::LogaEleitorVotouParcialmenteSuspenso()
+{
+    loga("Eleitor votou parcialmente e em seguida foi suspenso");
+}
+
+void CLogVota::LogaEleitorSuspensoSemVoto()
+{
+    loga("Eleitor foi suspenso e não confirmou nenhum voto");
+}
+
 void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
 {
     loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));

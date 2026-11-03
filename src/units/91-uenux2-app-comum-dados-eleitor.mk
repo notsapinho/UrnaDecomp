@@ -108,7 +108,7 @@
 # md::CEleitorDecorator::GetAbrangencia (fn 3721, celeitordecorator.cpp, after GetIdentidadePorTipo): the voter's reach
 # for the urn's state and municipality, 0 with no temporary transfer or one to that municipality, 1 to that state, 2
 # otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; unit 197's roots stand in
-# for its callers 2824 and 5761. The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial and
+# for its caller 5761 (2824, unit 110's, is in the link). The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial and
 # m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of names only.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.

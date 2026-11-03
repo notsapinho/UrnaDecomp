@@ -125,8 +125,8 @@
 #   CConfiguracaoEleicao::GetCargos brings 1135's other target callers, 761 and 5789: with 242 its one caller in our
 #   link, binaryen inlined 1135 into it, and 242 differed at both levels (at the tree's -O3 96 over 152 rows, 86
 #   inserted; 79 over 134 at -O2).
-# - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
-#   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
+# - CEleitores's one slot, 2824, is written (below), and the roots keep the class's vtable. CreateInst of each class is
+#   inlined into 7787 or 2787 and is not written.
 # - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
 #   CDataText<CRespostasDSNumero>::GetText, holds this file's record 28): it matches since fn 11973's literal is in the
 #   link, and src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waited for. Its line
@@ -178,6 +178,57 @@
 #   456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which
 #   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734) and
 #   DynamicCreate (5761) are not written; GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is (below).
+#   CompleteLoad, LoadEleitorDetalhe and the static voters' reader (5772, whose lambda's typeinfo names
+#   CEleitores::GetEleitoresEstaticos, with 5771, 5770 and the lambda's slots 11521 to 11525) copy an md::CEleitor
+#   through fn 946 (`pnpm --silent wasm disasm ../target/vota_web_wasm.wasm <fn> | /usr/bin/grep -cE 'call +946( |$)'`
+#   prints 1, 2 and 1), which md::CEleitorDecorator, no CEleitor here (celeitordecorator.h), cannot give: they wait
+#   for a decorator that derives from md::CEleitor. DynamicCreate waits for md::CEleitorDinamico's third constructor
+#   (fn 2800: two identities and the state, the rest defaulted) and the equality and order it sorts and compares by,
+#   which no header holds.
+#
+# CEleitores's slot 0, its impediments' reader and the path list both readers build (celeitores.cpp; scores are pnpm
+# wasm score of the target's index against ours in build/out/wasm/vota_web/vota_web_wasm.wasm, before steps 7 to 9):
+# - QuantidadeAptosPorAbrangencia (2824, slot 0 of CEleitores's vtable @1559112; the name and const are chosen,
+#   celeitores.h): it builds the map CGeradorBUQRCodeVota's constructor (5603) moves into CGeradorBUQRCode, the three
+#   coverages at zero, then counts each record with no impediment (CEleitorDetalhe::SemImpedimento, 2266) at its
+#   voter's coverage (md::CEleitorDecorator::GetAbrangencia, 3721, with the string at +32 and the word at +44) and at
+#   each wider one, in the first 16-bit count when IsTTE's word is 0 and in the second otherwise. The coverages come from a list a
+#   file-static free function builds, AbrangenciasAPartirDe (name and linkage chosen), which clang inlines: 2824 holds
+#   the list's growth inline, unrolled for the first call. Its loop pushes each coverage from the one given and leaves
+#   after the federal one, the target's `i32.ne` with 2 after the push; written `tipo <= ABRANGENCIA_FEDERAL` with that
+#   break, 15 over 1236 rows, all operand-only, calls and data; `tipo != ABRANGENCIA_FEDERAL + 1` with no break, 315
+#   over 1284 (48 inserted, 51 deleted), and the plainest form, `tipo <= ABRANGENCIA_FEDERAL` with no break, 313 over
+#   1284 (48 inserted, 51 deleted), each on a whole link. Band 4 (ledger/ordinals.tsv) runs 2824, 2823, 2822 in link
+#   order, so it is defined above QuantidadeAptos; its lines are a choice. The target stores CEleitores's vptr in 7787
+#   alone (`/usr/bin/grep -rlE 'i32\.const 1559120($|[^0-9])' build/out/splat/pieces/asm`), a constructor inlined
+#   there: the roots keep the vtable, and the slot's direct callers (5603, 11968, 12098) are not written either.
+# - GetEleitoresImpedidos (5767): its lambda's __func typeinfo (string 501161, a local `$_0` of
+#   `ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vector...`) names the member and its parameter, and the
+#   wasm has no `this` (the result and the list), so it is static. The lambda reads one file
+#   (CFileASN::ReadFromFile<ModuloImpedidos::EntidadeImpedidos>, then asn::CConversorImpedido::Desconverte), and a
+#   file-static template, LeArquivos (name, linkage and its being a template chosen), appends each file's list in the
+#   files' order; 5767 holds it inlined, with the std::function built and then copied for the by-value parameter (the
+#   __func's vptr, 1559572, stored at +24 and at +0 of its frame). 20 over 1235 rows, all operand-only, calls and
+#   data. Band 2 runs 5773, 5772, 5771, 5770, 5767, 5766, 5765, 5764 in link order: after the destructor and the
+#   static voters' reader, ahead of what CompleteLoad mentions after it (docs/reference/facts/reading.md R9); its
+#   lines are a choice, after LocalizaEleitor. Being private is chosen. Its __func's slots (vtable @1559564: 11520,
+#   11519, 11517, 11516 and 11515, the clones, the call operator, target and target_type; the others are the shared
+#   174, 144, 218 and 355) come from this object: 2 over 8, 1 over 5, 1 over 11 and 1 over 3 rows, operand-only, data
+#   and calls. The call operator, 11517, scores 169 over 1604 rows, operand-only, 35 of them local numbers: locals 5
+#   and 6 swap from the first Position() result of ReadFromFile(const CFile &) on, the instructions the same. Our
+#   object keeps the two ReadFromFile instances and DecodeObjectFunction out of line after the call operator, and
+#   binaryen inlines them into it (none is in names.tsv); reading: the order binaryen inlines them in, which
+#   docs/reference/facts/codegen.md C4 measures, and which here only the TU's order of template instances could move.
+#   No source form was tried. It stays written (the lambda is 5767's), its row differs.
+# - comum::MontaCaminhos (1936; name, namespace and external linkage are chosen): the directory prepended to each
+#   name, after a reserve. 6 over 181 rows, operand-only, calls and data. This file is a reading the data support, more
+#   than a choice: its target callers are 5772, 6734 and 7787, which holds CEleitores::StaticLoad's records 395 and
+#   407, all CEleitores code by a reading, and band 6 (ledger/ordinals.tsv) puts 1936 between 1937
+#   (celeitordetalhe.cpp:94) and 1934 (CFotos's map), next to 1938 (ccargos.cpp:68) and 1933 (CLocal::GetLocalID),
+#   celeitores.cpp's place in the name order of app/comum/dados/'s objects. No other function of this file is in that
+#   band, so its lines are a choice, above the impediments' reader.
+# The roots' LeImpedidos and MontaListas stand for 5767's callers (6734, 7787) and 1936's (5772, 6734, 7787), and
+# vt_CEleitores for 7787's vptr store.
 #
 # CEleitores::QuantidadeHabilitacaoSemBiometria (2822, celeitores.cpp line 640) and CHV's constructor (3754, chv.cpp line
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
