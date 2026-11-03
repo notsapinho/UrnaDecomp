@@ -14,11 +14,10 @@
 //   SAVD file 43 and 44 and the envelope type 2 and 4, and reads its result.
 // comum::CGravadorEnvelopeArquivo::LeConteudo (fn 11623) needs no root: its vtable, which the target reaches it
 // through, is in unit 136's sink.
-// comum::asn::CConversorEnvelopeGenerico: the target reaches DoConverte and DoDesconverte (fns 10271, 10270) only
-// through its vtable (@1598820), which fn 2724 stores (a shim into a body binaryen merged, which 11626, 11629 and
-// 2725 call), not written yet; so its address goes into a sink. Its slots store CConversorUrna's vtable,
-// CConversorUrna's those of CConversorCorrespResultado and CConversorTipoApuracaoSA, and CConversorCorrespResultado's
-// slots CConversorCarga's.
+// comum::asn::CConversorEnvelopeGenerico needs no root: the target reaches DoConverte and DoDesconverte (fns 10271,
+// 10270) only through its vtable (@1598820), which comum::asn::GravaArquivo (fn 2724, unit 293's roots stand in for
+// its callers) stores. Its slots store CConversorUrna's vtable, CConversorUrna's those of CConversorCorrespResultado
+// and CConversorTipoApuracaoSA, and CConversorCorrespResultado's slots CConversorCarga's.
 #include <new>
 
 #include "app/comum/carquivosresultado.h"
@@ -26,7 +25,6 @@
 #include "app/comum/gravadores/cgravadorenvelopearquivo.h"
 #include "app/comum/gravadores/md/cvotosvotavel.h"
 
-extern "C" const char w160_vt_envelope[] __asm__("_ZTVN5comum3asn26CConversorEnvelopeGenericoE");
 
 namespace {
 
@@ -75,15 +73,12 @@ long (*volatile w160_sink_votos)(void*, void*, comum::md::CVoto::ETipo, comum::m
 long (*volatile w160_sink_envelopes)(void*, void*, const api::CDateTime&, comum::TMunicipioID, comum::TZonaID,
     comum::TLocalID, comum::TSecaoID, char, const comum::md::estadoaplicacao::CDadoCorrespondencia&, const std::string&);
 
-const void* volatile w160_sink_vt;
-
 struct SW160Roots {
     SW160Roots()
     {
         w160_sink_copiadores = w160_copiadores;
         w160_sink_votos = w160_votos;
         w160_sink_envelopes = w160_envelopes;
-        w160_sink_vt = w160_vt_envelope;
     }
 } w160_roots;
 

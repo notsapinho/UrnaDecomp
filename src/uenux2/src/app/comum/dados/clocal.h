@@ -39,6 +39,14 @@ public:
     uebyte GetQtdAgregadas() const;
     std::vector<ueword> GetAgregadas() const;
     ETipoLocalVotacao GetTipoLocalVotacao() const;
+    // Whether the data hold a section, the byte at +120 of md::CLocal (its section optional's flag), read with no
+    // VerificaLido first (target fn 5739, 10 bytes: `i32.load8_u[i32.load[p0]+120]`). Its callers, fn 2725
+    // (comum::CControlaArmazenamentoDeImagens' function, which builds the envelope's optional local id from GetLocalID
+    // when it is set) and fn 4161 (whose text holds the section's number only when it is set), call it on
+    // CLocal::GetInst's result. Out of line in clocal.cpp, between VerificaEhSecao and FormataAgregadas, by its place in
+    // use band 2 of ledger/ordinals.tsv (5742 before it, 5738 after). The name, from md::CLocal's member it returns,
+    // is chosen: no record, slot or RTTI names it.
+    bool TemSecao() const;
 
     void VerificaEhSecao(const std::string& funcao) const;
 

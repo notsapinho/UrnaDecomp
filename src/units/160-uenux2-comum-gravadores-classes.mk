@@ -43,6 +43,11 @@
 #   own frame for each call (below); the constructors' bytes are the same either way, and their match lines (3821,
 #   5860, 5861) follow the new symbols. md::CUrna's implicit destructor (fn 1394) now comes from
 #   cconversorenvelopegenerico.cpp.o, whose DoDesconverte deletes one.
+# - comum::asn::GravaArquivo for the envelope (fn 2724, a thunk into fn 6006), in cconversorenvelopegenerico.cpp after
+#   the static members (its line a choice): a converter on the stack, Converte and api::CFileASN::WriteToFile, which
+#   binaryen inlines. Its notes, and the merge 6006 it forms with the hashes' writer, are in its header and unit 293's
+#   fragment, whose roots stand for its callers (2725, 11626, 11629). It stores CConversorEnvelopeGenerico's vptr, so
+#   the vtable's sink in this unit's roots went with it.
 # The data classes gain the inline getters these bodies read (ccorrespondenciaresultado.h, curna.h, cenvelopegenerico.h;
 # unit 136's headers): their names are chosen.
 #
@@ -102,7 +107,7 @@ UENUX2_SRCS += $(GRAVADORES_CLASSES_SRCS) $(GRAVADORES_CLASSES_ASN_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_CLASSES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 160-uenux2-comum-gravadores-classes-roots.cpp stands in for the others (the copiers'
-# builder fn 12134, fns 3819 and 12098) and keeps CConversorEnvelopeGenerico's vtable; it compiles with the tree's flags
+# builder fn 12134, fns 3819 and 12098); it compiles with the tree's flags
 $(ROOT)/$(APP)/160-uenux2-comum-gravadores-classes-roots.o: $(ROOT)/src/units/160-uenux2-comum-gravadores-classes-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/160-uenux2-comum-gravadores-classes.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/160-uenux2-comum-gravadores-classes-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/160-uenux2-comum-gravadores-classes-roots.o
