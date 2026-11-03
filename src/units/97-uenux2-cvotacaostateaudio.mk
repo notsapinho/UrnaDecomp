@@ -252,7 +252,7 @@
 # one branch out of the tag's chain, and ours keeps one more block (FormataProgresso defined after GetProgresso gives
 # the same). The rest are local numbers. 6999 also reads its static std::regex and guard (1833216, 1833256), which no
 # other target function reads but 14464, which reads the object. 6999 scores the same with cvotacaostateaudio.cpp
-# compiled without strict aliasing. It stays written, as slot 14
+# compiled with strict aliasing and without it, as the file builds now. It stays written, as slot 14
 # (a trap would hide it), and the matches above rest on its code.
 #
 # std::regex's copies, src/app/roots_cbasetype.cpp (its comment says what it holds) and src/app/roots_regex.cpp (the
@@ -268,8 +268,9 @@
 #   iterator and std::regex_replace in roots_cbasetype.cpp too, as written: 65, none stops (2054, 4276, 4279, 4307 and
 #   5492 besides).
 # So the target's copies over const char* and of the token iterator are uenux2's without strict aliasing and without
-# landing pads, though cinputmenufield.cpp and cvotacaostateaudio.cpp, their users here, build in UENUX2_TBAA_DIRS;
-# that flag is not changed here.
+# landing pads, though cinputmenufield.cpp, one of their users here, builds with strict aliasing, and the other,
+# cvotacaostateaudio.cpp, which builds without it (below), links after it; that flag is not changed here, and listing
+# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows.
 #
 # CVotacaoStateAudio's slots 7, 8 and 13 and its static helpers, written since (target fns 7029, 7010, 3139, 1455, 3143
 # and 1204), with the copies of api::CPolySingleton<T>::instance they call (1091, 2079) and has<ITextToSpeech> (3281).
@@ -319,13 +320,13 @@
 # its end). That PararTicks and FalaMensagem are functions is a choice: the lines of ProcessTick's record (:120) and
 # PlayKey's (:136) leave their statements no room in ProcessTick. FinishState uses PararTicks too, and 7022 still
 # matches. Other forms of PlayKey's switch and of the echo's test are not measured.
-# Not matched: $_1's two __clone slots (13732 and 13740, `differs`) store the vptr before they copy the capture, as only
-# code without strict aliasing does (fn 786, the merge 13740 calls, has that order; ours joins the merge with the other
-# order, the target's 1083). In a variant link with cvotacaostateaudio.cpp.o compiled with -fno-strict-aliasing (the
-# shared objects cloned and that one replaced, docs/reference/facts/workflow.md W13), 13732 scored 1 over 9 rows (the
-# vptr's address), 13740 called a merge of 786's order, and every other function of the object with a target row scored
-# as it does with strict aliasing. That file's carve-out from strict aliasing is the user's decision, not on this
-# branch, so the two wait for it.
+# $_1's two __clone slots (13732 and 13740) store the vptr before they copy the capture, as only code without strict
+# aliasing does (fn 786, the merge 13740 calls, has that order; with strict aliasing ours joins the merge with the other
+# order, the target's 1083, and 13732 scores 6 over 12 rows, 3 inserted and 3 deleted). They match since
+# cvotacaostateaudio.cpp builds without strict aliasing (src/Makefile's UENUX2_NOTBAA_FILES, the user's decision;
+# docs/reference/facts/app-flags.md F6 has the measurement on the whole link). In a variant link with only that object
+# so (docs/reference/facts/workflow.md W13), every other function of the object with a target row scored as it does with
+# strict aliasing.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
