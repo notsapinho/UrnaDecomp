@@ -588,9 +588,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   tree's stores where the target keeps it in a local, the sign above, and 5571 differs (394 over 992 rows, its local
   numbers besides); with it every row left is an operand row and 5571 matches (unit 179's fragment). Measured in place
   on the merged tree at 6df50018 (12251 matches): the compile lines `make -n -C src link APP=<a new directory>` prints
-  (912) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 856 objects that depend on
-  `src/Makefile`, and of the 1001 under `build/out/app` 1000 are `cmp`-equal to 6df50018's build, the other the
-  file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
+  (906) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 858 objects that depend on
+  `src/Makefile`, and of the 906 the link compiles, rebuilt from nothing, 905 are `cmp`-equal to 6df50018's, the other
+  the file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
   tier alone, `none` to `shape`, its row staying `match`; step 8 adds a `call` name for 4679, already matched, and
   moves `__THREW__`'s voter), and `make -C src splat` gives the target's sha256. With strict aliasing the object's
   code changes in 26 functions, the map's constructor, `__tree_balance_after_insert` and 24 libc++ `std::format`

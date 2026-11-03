@@ -3,7 +3,7 @@
 // member two call sites, varying what the target's callers vary, so dead-argument elimination folds nothing in:
 // - GetPathRoot (fn 3834): callers 11620 and 12098.
 // - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905; 1164 (unit
-//   95's), 11905 (unit 176's) and 1937 (unit 110's) are in the link.
+//   95's), 3771 (unit 280's), 11905 (unit 176's) and 1937 (unit 110's) are in the link.
 // - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11661 (1164, unit 95's, 11569, unit 206's, and
 //   10226, unit 116's, are in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
@@ -17,8 +17,8 @@
 // - GetPathResult (fn 1399): callers 1164 and 1274, both in the link (1164 is unit 95's), so it has no stand-in.
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
 //   5874 (unit 160's), 11630 to 11632, 6041 and 11579 (unit 122's) are in the link.
-// - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 1836, 2890, 4657, 6035, 6036, 7174, 7787, 12098;
-//   11630 to 11632 (unit 122's), 2890 (unit 156's) and 11852 (unit 104's) are in the link.
+// - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 6035, 6036, 7174, 7787, 12098; 1836 and 4657 (unit
+//   205's), 2890 (unit 156's), 11630 to 11634 (unit 122's), 11835 (unit 138's) and 11852 (unit 104's) are in the link.
 // - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451; 2298 and 3898 (unit 122's pathwsq.cpp) are in the link.
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,
