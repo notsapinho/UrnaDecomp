@@ -85,10 +85,13 @@ void CPedeMajoritario::ProcessInputAudio()
 bool CPedeMajoritario::ExisteVotoRepetido(const std::string& numero) const
 {
     const auto& cargo = comum::CCargos::GetInst().GetCurrent();
-    if (cargo.GetQtdeEscolhas() == 1 || cargo.PodeRepetir() || g_escolhaAtual == 1) {
+    if (cargo.GetQtdeEscolhas() == 1 || cargo.PodeRepetir()) {
         return false;
     }
     const auto& votos = g_votosEleitor.GetVotos();
+    if (g_escolhaAtual == 1) {
+        return false;
+    }
     const size_t quantidade = votos.size();
     for (comum::md::TQtdEscolha escolha = 1; escolha < g_escolhaAtual; ++escolha) {
         const comum::md::SVotoCargo& anterior = votos.at(quantidade - escolha);
@@ -100,7 +103,7 @@ bool CPedeMajoritario::ExisteVotoRepetido(const std::string& numero) const
     return false;
 }
 
-// (original lines 106-110: content not recovered)
+// (original lines 109-110: content not recovered)
 #line 111
 bool CPedeMajoritario::ExisteCandidatoValidoResposta(const std::string& numero) const
 {

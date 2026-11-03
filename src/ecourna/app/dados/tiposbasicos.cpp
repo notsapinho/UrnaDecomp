@@ -50,12 +50,9 @@ CErroLeituraBiometria::CErroLeituraBiometria(EErroLeituraBiometria erro) : TErro
     }
 }
 
-// Stand-in: the target links CBaseType<ETipoIdentificadorEleitor, ...>::CBaseType (fn 2666) from THIS object (its
-// record 1122400 follows the CErroLeituraBiometria ones), so something here calls it out of line after the constructor
-// above. Which function did is unknown; this one is dead in the target and garbage-collected by the link.
-TTipoIdentificadorEleitor CriaTipoIdentificadorEleitor(int tipo)
-{
-    return TTipoIdentificadorEleitor(static_cast<ETipoIdentificadorEleitor>(tipo));
-}
-
 } // namespace ecourna::app::dados
+
+// tiposbasicos.hpp's extern template names it: the constructor's copy the target keeps is this object's (its record
+// 1122400 follows the CErroLeituraBiometria ones).
+template class CBaseType<ecourna::app::dados::ETipoIdentificadorEleitor, ecourna::app::dados::TipoIDPrimeiro,
+                         ecourna::app::dados::TipoIDNumeroLivre, 40>;

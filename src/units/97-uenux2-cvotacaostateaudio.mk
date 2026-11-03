@@ -78,7 +78,7 @@
 # every instance shares (1278), slot 16 (the thunks above, and 1961 and 2901, which our link forms from the same six and
 # four bodies) and 1286, the body binaryen shares for the ten std::unique_ptr statics' exit-time destructors. The
 # statics' exit destructors of the instances 11711, 11724 and 11744 build (11708, 11709, 11718 to 11723, 11740 to 11743)
-# match, voted by their builders; those of the four 11683 builds (11674 to 11681) wait for 11683 (below).
+# match, voted by their builders, and so do those of the four 11683 builds (11674 to 11681, below).
 #
 # vota::IConfereVotoEmCargo (cconferevotoemcargo.h, new, and cconferevotoemcargo.cpp, named by its records): the head,
 # the constructor (fn 1165), the destructor (fn 1717), FinishStateAudio (11792) and GetMensagem (11789); its other slots
@@ -390,18 +390,33 @@
 #   over CProporcionalBranco (11708, 11709) match with 11711. Chosen: LegendaValida's name, membership, parameters'
 #   types beyond their widths and file; the singletons' form is unit 104's.
 # - CPedeMajoritario::ProcessInputAudio (11683, record :64, code 9381) and ExisteCandidatoValidoResposta (record :125,
-#   code 9382, held inlined by binaryen), written; 11683 reads `unresolved` (its first operand with no target name is
-#   the mutex of the CConfereVotoEmCargo instance over CMajoritarioBranco, which only 11683 reads) and its body is one
-#   row off (77 over 532 rows, 75 of 76 replaced operand-only, 1 inserted): the repeated-vote test (ExisteVotoRepetido, a chosen member clang leaves out of line and
-#   binaryen inlines, with comum::md::CCargo::PodeRepetir, +14) guards its loop with `i32.const 2; i32.lt_u` on the
-#   choice being voted, where the target, past the same `== 1` test, has `i32.eqz`. The vote count is read before the
-#   loop, as the target reads it between the two tests (with the count in the loop's at() it came after the guard: 116
-#   over 541 rows, 10 inserted, 14 deleted). None of fourteen other forms gives the target's guard (the early tests
-#   split, nested in one if, `<= 1`, no `== 1` test; the counter as int, unsigned or size_t, or compared with `!=` as
-#   int, size_t or uebyte, or with `<= g_escolhaAtual - 1`; a while loop; a descending index; the tests split by a
-#   continue; each compiled with try-tu.sh --symbols and the guard read in the object's ExisteVotoRepetido), so the
-#   remainder is not explained. The four CConfereVotoEmCargo instances it
-#   builds keep their statics' exit destructors (11674 to 11681) `unresolved` or `differs`: 11683 is their one reader.
+#   code 9382, held inlined by binaryen), matched. The repeated-vote test (ExisteVotoRepetido, a chosen member clang
+#   leaves out of line and binaryen inlines, with comum::md::CCargo::PodeRepetir, +14) tests the choice being voted
+#   (`g_escolhaAtual == 1`) in an `if` of its own, after the reference to g_votosEleitor.GetVotos() and before the vote
+#   count, and its loop's guard on the choice is then the target's `i32.eqz`. Measured on the object at the file's
+#   flags (em++ -S -emit-llvm -mllvm -print-after-all, ExisteVotoRepetido's dumps): with the test in the `||` of the
+#   post's two tests, the form before, the first SimplifyCFG (before inlining) joins it and PodeRepetir's into one
+#   `select` branch, and the InstCombine after LoopRotate leaves the rotated guard `icmp ugt i8 n, 1` (`i32.const 2;
+#   i32.lt_u`: 77 over 532 rows in the whole link, 1 inserted); with GetVotos' call between the two `if`s (inline: a
+#   call in that first pass, no code once inlined), the `== 1` test keeps a branch of its own, and that InstCombine
+#   rewrites the guard `icmp ult i8 1, n` as `icmp eq i8 n, 0`. Whole link: 75 over 531 rows, all operand-only; matched
+#   at step 9. Measured on the object and not the target's guard: the `== 1` test in its own `if` with no call before
+#   it, and an external function in PodeRepetir's place, keep the `== 1` test and guard with `i32.const 2; i32.lt_u`;
+#   the vote count computed before the `== 1` test, or above the post's two tests, leaves no `== 1` test (the two join
+#   into `i32.const 2; i32.lt_u`). The forms measured at the earlier commit give `i32.const 2; i32.lt_u` or other code
+#   too (the early tests nested in one if, `<= 1`, no `== 1` test; the counter as int, unsigned or size_t, or compared
+#   with `!=` as int, size_t or uebyte, or with `<= g_escolhaAtual - 1`; a while loop; a descending index; the tests
+#   split by a continue), and the count in the loop's at() came after the guard (116 over 541 rows, 10 inserted, 14
+#   deleted). The reference's place between the two tests is chosen, the one form found that gives the guard; no record
+#   fixes it, and the three lines the function gained took three of the blank lines above line 111.
+#   The statics of the four CConfereVotoEmCargo instances it builds, each one's s_mutex and s_inst, are named by
+#   11683's votes alone (`vote:2 by:11683` and `vote:6 by:11683` in splat/symbol_addrs.txt), and each of their eight
+#   addresses has one other target reader, its exit destructor (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
+#   build/out/splat/pieces/asm` lists 11683 and one of 11674 to 11681 for each of 1838344 to 1838480): the second match
+#   docs/reference/splat.md section 3 asks of a .bss name. The eight match with 11683, 11675, 11677, 11679 and 11681 by
+#   the scan's content pass: the census pairs those four with other objects' mutex destructors of the same shape, and
+#   two other target rows, 8378 and 9267, with two of ours (`__cxx_global_array_dtor.30` and `.22`): those two rows read
+#   `differs` now, where they read `unresolved` before the statics had names.
 # - CCompletaProporcional (ccompletaproporcional.cpp): ProcessInputAudio (11756) and EmiteEcoComInputField (5930, record
 #   :60, code 9383), final, as 11756 calls it directly; 29 over 342 and 17 over 245 rows, operand-only; matched. The
 #   INPUT_CONFIRMA branch copies vota::g_numeroDigitado before it appends the field's text (the target copies it first).

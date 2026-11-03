@@ -101,6 +101,11 @@ template <> const std::string ecourna::app::dados::TSecaoID::NOME;
 template <> const std::string ecourna::app::dados::TQtdEleitor::NOME;
 template <> const std::string ecourna::app::dados::TAno::NOME;
 
+// TTipoIdentificadorEleitor's constructor is tiposbasicos.cpp's alone: its callers in the target (3939, the CNumero*
+// constructors' merged body, and 9116) call it out of line with a constant, and the copy kept is that object's.
+extern template class CBaseType<ecourna::app::dados::ETipoIdentificadorEleitor, ecourna::app::dados::TipoIDPrimeiro,
+                                ecourna::app::dados::TipoIDNumeroLivre, 40>;
+
 // An enum formats as its underlying unsigned value (the target's handle formatter fn 536 tests `>= 128` unsigned for
 // the char presentation, i.e. formatter<unsigned int>).
 template <>
