@@ -48,13 +48,13 @@
 // 78:19), and the builder's code (ITextToSpeech's members) has none, so they do not place it. The typeinfos and
 // vtables between them do: they lie in the order the TU's code first refers to them, a reading that matches how a
 // function's records lie in the order its body is emitted (docs/reference/facts/reading.md §R8). Between 1526324 and
-// 1526584 the target has ITextToSpeech's typeinfo (1526340), push's record (1526348), the typeinfos of the errors push
-// throws (1526364, 1526376), std::format_error's typeinfo and vtable (1526388, 1526400: the first format code's), the
-// format bool strings (1526420, 1526428), CPolySingletonList::debug's s_urna (1526436), the errors' vtables (1526440,
-// 1526460), the vtable and typeinfo of the __shared_ptr_pointer that 7667's shared_ptr<api::ITextToSpeech> makes
-// (1526480, table slots 290 to 294, and 1526508, whose name is at 463190), and only then ITextToSpeech's vtable
-// (1526520, slots 295 to 306), which an ITextToSpeech constructor's vptr store refers to first: the builder's here. The
-// named ones, in hex, and the words from 1526420 on:
+// 1526584 the target has ITextToSpeech's typeinfo (1526340), push's record (1526348), the typeinfo of the error push
+// throws and its base's (1526364, 1526376), std::format_error's typeinfo and vtable (1526388, 1526400: the first format
+// code's), the format bool strings (1526420, 1526428), CPolySingletonList::debug's s_urna (1526436), the errors'
+// vtables (1526440, 1526460), the vtable and typeinfo of the __shared_ptr_pointer that 7667's
+// shared_ptr<api::ITextToSpeech> makes (1526480, table slots 290 to 294, and 1526508, whose name is at 463190), and
+// only then ITextToSpeech's vtable (1526520, slots 295 to 306), which an ITextToSpeech constructor's vptr store refers
+// to first: the builder's here. The named ones, in hex, and the words from 1526420 on:
 //   /usr/bin/grep -E ' = 0x174(a[3-9a-f]|b[0-3])[0-9a-f];' splat/symbol_addrs.txt
 //   python3 -I -c "import struct, sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, img = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print(struct.unpack_from('<28I', img, 1526420 - base))"
 // So that TU emitted the set code Init reaches, 7667's push in it, and push's format code before what the builder
