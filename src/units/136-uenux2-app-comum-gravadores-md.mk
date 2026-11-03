@@ -16,11 +16,13 @@
 #   (gravadores/asn/cconversortipoapuracaosa.{h,cpp}): DoConverte (fn 10283, the four ConverteMotivo* inlined by
 #   binaryen) and DoDesconverte (fn 10282, the data class's constructor and checks inlined).
 # - The recorders' destructors, emitted with their vtables in 136-uenux2-app-comum-gravadores-md-pending.cpp, whose
-#   traps are the classes' key functions (src/units/README.md "The key function pending"): IGravadorEnvelope's (fn
-#   11625), CGravadorHashes's (5853, 11619), CGravadorRDV's (11586, and 11585, matched, below), CGravadorLog's (5823,
-#   11583), and binaryen's merge of the base-object destructors of
-#   CGravadorRDV and IGravadorEnvelope (fn 6043, written, below; our link forms the same two-member merge,
-#   byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev). The class heads are unit 102's (gravadores/cgravador*.h,
+#   traps are the classes' key functions (src/units/README.md "The key function pending"): CGravadorHashes's (5853,
+#   11619) and CGravadorLog's (5823, 11583). IGravadorEnvelope's (fn 11625) and CGravadorRDV's (11586, and 11585,
+#   matched, below) come with their vtables from unit 160's igravadorenvelope.cpp and unit 305's cgravadorrdv.cpp,
+#   which hold their key functions (GravaResultado, fns 11626 and 11587), under the same symbols; and binaryen's merge
+#   of the base-object destructors of CGravadorRDV and IGravadorEnvelope (fn 6043, written, below; our link forms the
+#   same two-member merge, byn$mgfn-shared$_ZN5comum17IGravadorEnvelopeD2Ev since igravadorenvelope.cpp.o links ahead
+#   of cgravadorrdv.cpp.o: step 9 renamed the match line). The class heads are unit 102's (gravadores/cgravador*.h,
 #   igravadorenvelope.h); this unit adds their layouts and virtual members there. CGravadorRCSecao's deleting destructor
 #   (fn 11615) is unit 122's. CGravadorEnvelopeArquivo's (fns 11622, 11621, matched, below) are emitted with its vtable
 #   by unit 160's cgravadorenvelopearquivo.cpp, which holds its key function, and CGravadorVersoesArquivos's (11581,

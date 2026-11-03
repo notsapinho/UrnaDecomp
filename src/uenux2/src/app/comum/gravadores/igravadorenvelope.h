@@ -22,13 +22,18 @@ namespace comum {
 // md::estadoaplicacao::CDadoCorrespondencia to +76 (fn 1249). The base-object destructor (fn 11625, slot 0) destroys
 // the correspondencia (fn 857) only: binaryen merged it with CGravadorRDV's (fn 6043). The destructor is not declared
 // (implicit); slot 1 holds the abstract class's trap (fn 325). GravaResultado (slot 7, fn 11626) is out of line, so it
-// is the key function; it is not reconstructed. Slot 8 is pure: GravaResultado calls it with a result slot and `this`
+// is the key function (igravadorenvelope.cpp). Slot 8 is pure: GravaResultado calls it with a result slot and `this`
 // (fn 11626: table[i32.load[i32.load[p0]+32]](l2+356, p0)), and CGravadorEnvelopeArquivo's override (fn 11623) returns
 // the content of its file as a std::vector<uebyte> by value; it is const since the const GravaResultado (records)
 // calls it on `this`. LeConteudo is chosen from that role, and uebyte follows cenvelopegenerico.h's choice.
-// The path is chosen, beside igravador.h: no record names it. Chosen: +56 as comum::EUrnaTipo (49 is eUrnaVota), +60
-// as a std::optional<md::CTipoApuracaoSA>, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and
-// zeresima impressa), and every member name. The constructor has no target index of its own: it is written out of line
+// GravaResultado passes +56 to md::CUrna's constructors as their ETipoArquivo (fn 11626), so +56 is one: 49 is
+// TIPO_ARQUIVO_VOTACAO_UE. +60 is the md::CTipoApuracaoSA GravaResultado passes to the CUrna constructor that takes
+// one when +68 is set (fn 2855, else fn 2854). The builder of the envelope, MontaEnvelope, is a function of its own that
+// binaryen inlined into GravaResultado (fn 11626 holds it behind a 400-byte frame of its own inside its 224-byte one):
+// igravadorenvelope.cpp says what it reads. The path is chosen, beside igravador.h: no record names it. Chosen: +60 as a
+// std::optional, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and zeresima impressa), MontaEnvelope's
+// name, its being a private member (it reads the members and calls slot 8), and every member name. The constructor
+// has no target index of its own: it is written out of line
 // in igravadorenvelope.cpp, and binaryen inlines it into its one caller, fn 5856 (in the whole link: 6 over 77 rows,
 // all operand-only; defined in the class, 8 over 77, with other bytes). Its parameters are in the order fn 5856 uses
 // its arguments in; their types beyond IGravador's constructor's are chosen, and so is storing 49 as a constant (a
@@ -45,10 +50,13 @@ public:
 protected:
     api::CDateTime m_dataHora;
     EUrnaFase m_faseUrna;
-    EUrnaTipo m_tipoUrna;
+    ETipoArquivo m_tipoArquivo;
     std::optional<md::CTipoApuracaoSA> m_tipoApuracao;
     md::CEnvelopeGenerico::Tipo m_tipoEnvelope;
     md::estadoaplicacao::CDadoCorrespondencia m_correspondencia;
+
+private:
+    md::CEnvelopeGenerico MontaEnvelope() const;
 };
 
 } // namespace comum

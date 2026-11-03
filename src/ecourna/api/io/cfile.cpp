@@ -281,7 +281,7 @@ std::vector<uebyte> CFile::ReadFileBinary(const std::filesystem::path& caminho)
     return conteudo;
 }
 
-uedword CFile::Write(const std::vector<char>& dados) const
+uedword CFile::Write(const std::vector<uebyte>& dados) const
 {
     if (dados.empty()) {
         return 0;

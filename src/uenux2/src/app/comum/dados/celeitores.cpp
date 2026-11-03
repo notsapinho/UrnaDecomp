@@ -7,6 +7,7 @@
 #include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/util.h"
 #include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
+#include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 #include "app/comum/dados/md/eleitor/cimpedido.h"
@@ -15,7 +16,7 @@
 
 namespace comum {
 
-// (original lines 18-40: content not recovered)
+// (original lines 19-40: content not recovered)
 #line 41
 std::unique_ptr<CEleitores> CEleitores::s_instance;
 std::mutex CEleitores::s_mutex;
@@ -67,13 +68,12 @@ std::vector<std::string> MontaCaminhos(const std::string& diretorio, const std::
 std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<std::string>& arquivos)
 {
     const std::function<std::vector<md::CImpedido>(const std::string&)> leitor = [](const std::string& arquivo) {
-        asn::CConversorImpedido conversor;
-        return conversor.Desconverte(api::CFileASN::ReadFromFile<ModuloImpedidos::EntidadeImpedidos>(arquivo));
+        return CarregaArquivo<asn::CConversorImpedido>(arquivo);
     };
     return LeArquivos(arquivos, leitor);
 }
 
-// (original lines 97-201: content not recovered)
+// (original lines 96-201: content not recovered)
 #line 202
 // <stubs>
 // f6734 · 6461 B · unmatched · name unknown

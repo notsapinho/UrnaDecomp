@@ -10,8 +10,8 @@
 // The callers each instance stands for:
 //   3730: 11411 (10270 is written). 3726, 3727 and 3736 need none: their callers 11390 and 11394, 11391 and 11395, and
 //   11424 and 11451, are written.
-//   3737 needs none: its callers 11381, 11423 and 11452 are written. 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
-//   2275: 10266, 10273, 11587 (10271, 11458). 5688 needs none: its callers 11359 and 11375 are written.
+//   3737 needs none: its callers 11381, 11423 and 11452 are written. 3738: 11411 (10270, 11457). 3799: 10273 (10271, 11587).
+//   2275: 10266, 10273 (10271, 11458, 11587). 5688 needs none: its callers 11359 and 11375 are written.
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.

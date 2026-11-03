@@ -22,19 +22,7 @@ extern "C" int w1348_par(void*, const char*, const char*) __asm__(
     "TnNS_9enable_ifIXclsr25__check_pair_constructionIS6_S6_EE23__is_pair_constructibleIT_T0_EEEiE4typeELi0EEE"
     "OSF_OSG_");
 
-// std::__uninitialized_allocator_relocate over md::CCargo (target fn 3816, the move of a std::vector<md::CCargo>'s
-// elements when it grows) has two direct callers in the target: fn 11371 (comum::asn::CConversorEleicaoPE's
-// DoDesconverte, in our link, through push_back's slow path) and fn 3818. This stands for 3818.
-extern "C" void w3816_reloca(void*, void*, void*, void*) __asm__(
-    "_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md6CCargoEEEPS4_EEvRT_T0_S9_S9_");
-
 namespace {
-
-__attribute__((noinline)) int CargosRealocados(char* cargos, char* destino)
-{
-    w3816_reloca(cargos, cargos + 140, cargos + 280, destino);
-    return destino[3];
-}
 
 __attribute__((noinline)) int ParDeTextos(char* par, const char* textos)
 {
@@ -63,7 +51,6 @@ struct SCQRCodeDSRoots {
         cqrcodeds_sink = reinterpret_cast<const void*>(&QRCodeTela);
         cqrcodeds_sink = reinterpret_cast<const void*>(&ConteudoQRCode);
         cqrcodeds_sink = reinterpret_cast<const void*>(&ParDeTextos);
-        cqrcodeds_sink = reinterpret_cast<const void*>(&CargosRealocados);
     }
 } cqrcodeds_roots;
 

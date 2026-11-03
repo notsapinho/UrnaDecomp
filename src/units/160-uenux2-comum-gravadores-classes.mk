@@ -23,6 +23,18 @@
 #   constructor defined in the class, in the whole link (one variant object): 8 over 77 rows (same 69, replaced 7, 6 of
 #   them operand-only, deleted 1), other bytes; tried alone (try-tu.sh --single), binaryen also inlines
 #   CDadoCorrespondencia's copy constructor (fn 1249) and nothing is told. The headers say which types are chosen.
+# - comum::IGravadorEnvelope::GravaResultado (target fn 11626, slot 7, the class's key function) in
+#   igravadorenvelope.cpp, which emits IGravadorEnvelope's vtable and implicit destructor now (fn 11625, under the same
+#   symbol; unit 136's pending object held the trap), with its builder MontaEnvelope (no index of its own: binaryen
+#   inlines it, the 400-byte frame inside 11626's 224-byte one; clang keeps it out of line, wasm-objdump -d of the
+#   object). The file's notes say what the body reads; igravadorenvelope.h why +56 is the urna's ETipoArquivo, the
+#   type the CUrna constructors take there (it was a chosen EUrnaTipo; 49 either way, the constructor's bytes the same).
+#   It reads the media's serial through comum::CarregaArquivoEcourna (fn 3735, unit 280) and a getter of
+#   ecourna::app::dados::CSerialMidia added for it (cserialmidia.hpp; its name chosen). With it ecourna's
+#   CInformacaoMidia's implicit destructor (fn 3815) comes from this object (its band place, among cgravadorbu.cpp's
+#   functions, reads as that object's copy in the target: a reading; the copies are the same code). Measured in this link before step 8 (pnpm wasm score against the target): 11626
+#   57 over 664 rows and 3815 8 over 137, operand-only, every operand a call's or a data address; it is the first form
+#   written, and no other was measured.
 # - comum::md::CVotosVotavel's two constructors (fns 2856, 5863) and the constructor of the identification it holds
 #   (fn 5864, class name chosen: comum::md::CIdentificacaoVotavel), in app/comum/gravadores/md/cvotosvotavel.{h,cpp}.
 # - comum::asn::CConversorCorrespResultado (gravadores/asn/cconversorcorrespresultado.{h,cpp}): DoConverte (fn 10289)
@@ -46,8 +58,8 @@
 # - comum::asn::GravaArquivo for the envelope (fn 2724, a thunk into fn 6006), in cconversorenvelopegenerico.cpp after
 #   the static members (its line a choice): a converter on the stack, Converte and api::CFileASN::WriteToFile, which
 #   binaryen inlines. Its notes, and the merge 6006 it forms with the hashes' writer, are in its header and unit 293's
-#   fragment, whose roots stand for its callers (2725, 11626, 11629). It stores CConversorEnvelopeGenerico's vptr, so
-#   the vtable's sink in this unit's roots went with it.
+#   fragment, whose roots stand for its callers (2725, 11629; 11626 is this unit's). It stores
+#   CConversorEnvelopeGenerico's vptr, so the vtable's sink in this unit's roots went with it.
 # The data classes gain the inline getters these bodies read (ccorrespondenciaresultado.h, curna.h, cenvelopegenerico.h;
 # unit 136's headers): their names are chosen.
 #
@@ -91,11 +103,11 @@
 #   are not recovered). The constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn 12098)
 #   matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written: template
 #   instances whose callers are not written, so that no instance of ours exists (the element types are readings of the
-#   bodies; 5859, which was among them, matches from unit 200's roots): 3815 (a destructor of a class no evidence names;
-#   fns 11587, 11626, 11629), 5843 and 5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths;
-#   fn 11616). 3816 (the relocation of a vector of comum::md::CCargo; fns 3818 and 11371) and 5868 (a tree insertion
-#   with a string key), which were among them, match: 3816 from fragment 299's cconversoreleicaope.cpp.o (11371's
-#   object, whose roots stand for 3818), 5868 from fragment 268's object, its caller fn 5869's.
+#   bodies; 5859 and 3815, which were among them, match from unit 200's roots and igravadorenvelope.cpp.o): 5843 and
+#   5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths; fn 11616). 3816 (the relocation of a
+#   vector of comum::md::CCargo; fns 3818 and 11371) and 5868 (a tree insertion with a string key), which were among
+#   them, match: 3816 from unit 200's cgravadorbu.cpp.o (3818's object; fragment 299's cconversoreleicaope.cpp.o,
+#   11371's, held the copy before), 5868 from fragment 268's object, its caller fn 5869's.
 # - 5852 and 5854 (std::vector<api::hash::CHashArquivo>'s range insert and its helper; fns 5358 and 11620 call 5854) are
 #   fragment 227's: 5852 matches from cmontadorhash.cpp's object, and 5854 waits for 11620, whose object, built without
 #   strict aliasing, reads as the one that holds the target's copy (fragment 227 has the measurement).
@@ -105,6 +117,10 @@ GRAVADORES_CLASSES_SRCS := src/app/comum/gravadores/ccopiadormr.cpp src/app/comu
 GRAVADORES_CLASSES_ASN_SRCS := src/app/comum/gravadores/asn/cconversorcorrespresultado.cpp \
 	src/app/comum/gravadores/asn/cconversorurna.cpp src/app/comum/gravadores/asn/cconversorenvelopegenerico.cpp
 UENUX2_SRCS += $(GRAVADORES_CLASSES_SRCS) $(GRAVADORES_CLASSES_ASN_SRCS)
+# igravadorenvelope.cpp reads ecourna's media information (CInformacaoMidia, whose CDadosGeracaoMidia holds a Boost
+# ptime) through its converter, whose header includes the generated ASN.1 module by its bare name
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/igravadorenvelope.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Isrc/asn1/modules
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/igravadorenvelope.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_CLASSES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 160-uenux2-comum-gravadores-classes-roots.cpp stands in for the others (the copiers'

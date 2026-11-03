@@ -15,7 +15,11 @@
 // entity's typeid name, the string fn 5825 (its instance for ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, two
 // callers) builds before the code of DecodeObjectFunction, which sits behind a frame of its own there; fn 1937 holds
 // the instance for ModuloEleitores::BiometriaEleitorCifrada so. Its name is read from that literal too, and its line is
-// chosen.
+// chosen. CodeObject(const T &) has no record either: it codes the entity under the name "CodeObject de " + the entity's
+// typeid name into the vector it returns, the string comum::CGravadorRDV::GravaResultado (fn 11587) builds, for
+// ModuloRegistroDigitalVoto::EntidadeResultadoRDV, behind a frame of its own (32 bytes, the vector its caller's) before
+// the code of CodeObjectFunction, behind another; its name is read from that literal, and its line, above DecodeObject,
+// is chosen.
 // Chosen: that CFileASN is a class, the lines of every statement but the throws, and the names of the locals.
 #pragma once
 
@@ -35,7 +39,7 @@ namespace api {
 class CFileASN {
 public:
 
-    // (original lines 38-43: content not recovered)
+    // (original lines 42-43: content not recovered)
 #line 44
     template <typename T>
     static T ReadFromFile(const CFile& arquivo)
@@ -94,8 +98,14 @@ public:
         WriteToFile(arquivo, objeto);
     }
 
-    // (original lines 110-117: content not recovered)
-#line 118
+    template <typename T>
+    static std::vector<char> CodeObject(const T& objeto)
+    {
+        std::vector<char> buffer;
+        CodeObjectFunction(buffer, objeto, std::string("CodeObject de ") + typeid(T).name());
+        return buffer;
+    }
+
     template <typename T>
     static T DecodeObject(const std::vector<char>& buffer)
     {

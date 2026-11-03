@@ -6,7 +6,8 @@
 //   an empty std::source_location, as unit 100's w100_usa does: a record here would be none of the target's.
 // - ecourna::api::io::DeserializeFromFile<ModuloEnvelopeChave::EntidadeChave> (fn 2280): fns 2725, 11419, 11616 and
 //   11629.
-// - comum::asn::GravaArquivo for the envelope (fn 2724): fns 2725, 11626 and 11629 (which calls it twice).
+// - comum::asn::GravaArquivo for the envelope (fn 2724): fns 2725, 11626 and 11629 (which calls it twice); 11626 is
+//   written (unit 160), the stand-in is for the others.
 // - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.
 // - libc's __futimesat (fn 6236), the body of utimes, which binaryen inlines into each caller (the dirfd it passes
 //   folded): fn 2725 calls utimes. Its other caller, SQLite's dotlockLock (fn 12674), is in the link, and with no

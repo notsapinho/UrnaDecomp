@@ -392,12 +392,6 @@
 // f3819 · 3993 B · unmatched · placement: link order · name unknown
 // void f3819(i32, i32, i32, i32, i32, i32) { ... }
 
-// f3818 · 659 B · unmatched · placement: link order · name unknown
-// void f3818(i32, i32, i32) { ... }
-
-// f3815 · 278 B · unmatched · placement: link order · name unknown
-// void f3815(i32) { ... }
-
 // link-order cluster 1050 · uses=3
 
 // f4161 · 2019 B · unmatched · placement: link order · name unknown

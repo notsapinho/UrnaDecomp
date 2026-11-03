@@ -41,10 +41,10 @@ __attribute__((noinline)) void w227_insere(std::vector<api::hash::CHashArquivo>&
     hashes.insert(hashes.end(), outros.begin(), outros.end());
 }
 
-// ecourna::api::io::CFile::Write (fn 5180): its target callers, fn 5371 (api::CFileASN::CodeObjectFunction for
-// ModuloRegistroDigitalVoto::EntidadeResultadoRDV) and fn 11587 (comum::CGravadorRDV::GravaResultado), are not written.
-__attribute__((noinline)) void w227_escreve(const ecourna::api::io::CFile& arquivo, const std::vector<char>& dados,
-    const std::vector<char>& outros)
+// ecourna::api::io::CFile::Write (fn 5180): stands for fn 5371, its target caller besides fn 11587
+// (comum::CGravadorRDV::GravaResultado, unit 305's).
+__attribute__((noinline)) void w227_escreve(const ecourna::api::io::CFile& arquivo, const std::vector<uebyte>& dados,
+    const std::vector<uebyte>& outros)
 {
     arquivo.Write(dados);
     arquivo.Write(outros);
