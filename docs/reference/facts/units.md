@@ -147,10 +147,9 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3;
 The tree roots, `src/app/roots_*.o`, have no `-roots.o` suffix, so that filter misses them. They hold 162 match lines at
 0b5f410, and the same rule applies: code a landed header or a library defines, compiled at `APP_CXXFLAGS` like a
 fragment's roots, except `roots_cbasetype.o`, `roots_iconversorasn.o`, `roots_vector.o` and `roots_set.o`, at
-`UENUX2_CXXFLAGS`,
-and `roots_coderenv.o` and `roots_texttospeech.o`, at the executable TU's
-`VOTA_WEB_CXXFLAGS`
-(`src/units/README.md` "Companion files"):
+`UENUX2_CXXFLAGS`, and `roots_coderenv.o`, `roots_texttospeech.o` and `roots_messagequeue.o`, at the executable TU's
+`VOTA_WEB_CXXFLAGS` (`src/units/README.md` "Companion files"; `/usr/bin/grep -E '^\$\(ROOT\)/\$\(APP\)/roots[^:]*\.o:'
+-A1 src/Makefile` prints each rule):
 
 ```sh
 awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($2 in r) {n[r[$2]]++} END {for (x in n) print n[x], x}' \
@@ -569,7 +568,7 @@ build/docker-build.sh /emsdk/upstream/bin/llvm-objdump -r $P/rtti.o | /usr/bin/g
 ## U14. The charset of `src/units/`
 
 `.editorconfig` gives one file of `src/units/` a charset, the externs file, Latin-1 (it compiles as a TSE source), so
-`check_encoding.py` reads no other. At bbf27ac1, by what each file decodes as:
+`check_encoding.py` reads no other. At 182dc6c1, by what each file decodes as:
 
 ```sh
 python3 -I -c "
@@ -585,15 +584,17 @@ for p in sorted(pathlib.Path('src/units').iterdir()):
     n.setdefault((p.suffix, k), []).append(p.name.split('-')[0])
 for (s, k), v in sorted(n.items()): print(s, k, len(v), ' '.join(v) if k != 'ascii' else '')
 "
-# .cpp ascii 193
-# .cpp latin-1 1 12
-# .cpp utf-8 1 05
-# .mk ascii 144
-# .mk latin-1 4 110 124 130 143
-# .mk utf-8 22 01 04 05 08 10 100 109 13 136 145 152 157 169 176 186 24 67 80 85 88 94 96
+# .cpp ascii 208
+# .cpp latin-1 2 12 121
+# .cpp utf-8 4 05 104 116 176
+# .mk ascii 149
+# .mk latin-1 11 104 110 124 130 142 143 152 179 193 283 35
+# .mk utf-8 61 01 02 04 05 08 10 100 109 111 113 116 119 120 121 122 123 13 135 136 138 139 140 145 156 157 161 165 168 169 176 178 186 199 200 204 205 220 221 229 230 239 24 243 247 273 278 281 282 32 50 51 59 67 77 80 85 88 94 96 97 98
 ```
 
 UTF-8 is what most non-ASCII fragments hold, quotes of accented target literals among them (169's
-`"Aguardando confirmação para emissão da zerésima"`), and what a tool that writes UTF-8 gives. The four Latin-1
-fragments are the exception the README's
-rule leaves.
+`"Aguardando confirmação para emissão da zerésima"`), and what a tool that writes UTF-8 gives. The Latin-1 ones
+(eleven fragments and unit 121's pending file, against four fragments at bbf27ac1) are what a script that reads and
+writes
+Latin-1, the safe edit of a TSE source, leaves in a `src/units/` file it edits; the README's rule asks UTF-8, and
+`check_encoding.py` passes either.

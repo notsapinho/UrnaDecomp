@@ -4,14 +4,17 @@ Probes of source forms whose code the target shows: the order of a function's st
 and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
 two forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what
 the source's named values, a TU's first emissions and an inlined callee do to a frame, a C1 or D1 call `-fPIC` keeps,
-`-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, and what a caller's temporaries
-say of a parameter's form. `docs/how-to-decompile.md` steps 1 to 5 and 9
+`-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, what a caller's temporaries
+say of a parameter's form, a throw path's blocks, a loop clang turns twice, a store in each arm of a branch, and a
+condition's test order. `docs/how-to-decompile.md` steps 1 to 5 and 9
 rely on these; [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors,
 linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`,
 or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since, [app-flags.md](app-flags.md); the probes marked
-bbf27ac1 and C10's at those flags, each command giving its own), in the pinned
+bbf27ac1 or 182dc6c1 and C10's at those flags, each command giving its own), in the pinned
 image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the host's (wabt);
-`em++` and `/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH).
+`em++` and `/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH). A variant built
+through make instead, as an object of the tree, is removed by name before each make, and the make's output must hold
+one compile line for it: make 3.81 compares whole seconds ([workflow.md](workflow.md) §W26).
 
 ## C1. The stores follow the loads: values read first are stored in reverse
 
@@ -217,7 +220,29 @@ for o in 'N B T' 'N T B' 'B N T' 'B T N' 'T N B' 'T B N'; do n=$(echo $o | tr -d
 The `this` store (+4) is last in every one, and 10490
 (`CPedeAnoNascimentoSemBiometria::StartState`) stores +4 first, so its order is no evidence of a source order. Stores
 into different temporaries that feed one call can come out in an order neither the source's nor its reverse explains:
-3673's interval of 600 for `CreateTimer`, under six spellings of the argument (unit 120's fragment).
+3673's interval of 600 for `CreateTimer`, under six spellings of the argument (unit 120's fragment). Stores of
+constants alone keep no source order either: 10405 (`CSuspensaoAutomaticaEleitor::ProcessTick`) written
+`m_bSinalizado = true; m_contagem = 0;` (a byte at +24, an i64 at +16) stored the i64 first (`14 over 82`), and the
+other way round matched (`7 over 78`, operand rows only; unit 152's fragment). Only a whole-link score decides such a
+pair's source order.
+
+**A store's `align=` hint.** Two 16-bit values read before two adjacent 16-bit stores are joined by the backend into one
+32-bit load and store at the first store's alignment; each stored right after its own load stays two `i32.store16`.
+Probe `align.cpp` (182dc6c1): an `SPoint` of two `short`s at +52 of `M`, from `Src`'s +6 and +8, copied through a
+`memcpy` into a local (0), read into two locals and built (1), or stored field by field (2):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' '#include <cstring>' 'struct SPoint { short x, y; };' 'struct M { char pad[52]; SPoint p; };' 'struct Src { short pad[3]; short w, h; };' '#if FORM == 0' 'void F(M& m, const Src& s) { SPoint t; std::memcpy(&t, &s.w, 4); m.p = t; }' '#elif FORM == 1' 'void F(M& m, const Src& s) { const short w = s.w; const short h = s.h; m.p = SPoint{w, h}; }' '#else' 'void F(M& m, const Src& s) { m.p.x = s.w; m.p.y = s.h; }' '#endif' > $P/align.cpp
+for f in 0 1 2; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/$P/align.cpp -o /work/$P/align-$f.o
+  printf 'FORM=%s: ' $f; wasm-objdump -d $P/align-$f.o | awk '/<_Z1FR1MRK3Src>:/ {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'i32\.(load|store)(16_s|16_u|16)? [0-9] [0-9]+' | tr '\n' ';'; echo; done
+# FORM=0: i32.load 1 6;i32.store 1 52;
+# FORM=1: i32.load 1 6;i32.store 1 52;
+# FORM=2: i32.load16_u 1 6;i32.store16 1 52;i32.load16_u 1 8;i32.store16 1 54;
+```
+
+A 32-bit store at a 4-byte alignment (`i32.store 2 52`) is a whole-object copy into an object whose alloca LLVM raised
+to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fragment lists the forms that give it.
 
 **Seven ways a form comparison lies.**
 
@@ -247,9 +272,9 @@ into different temporaries that feed one call can come out in an order neither t
   # _GLOBAL__sub_I_ginit.cpp
   # _GLOBAL__sub_I_ginit_copy.cpp
   ```
-- **A constructor's C2 and a destructor's D2 compare zero rows.** `wasm-objdump -d` names one body by its `C1` or `D1`
-  symbol, so a slice on `…C2…` is empty on both sides, and two empty lists compare equal. Treat 0 rows as a failed
-  comparison, never as equal.
+- **The object renumbers and renames.** A slice by a C2 or D2 name is empty on both sides, which compares equal, and
+  ` (type N)` and `env.` change with no code change: [tool-traps.md](tool-traps.md) §X12 has each, and the counts to
+  read before a 0.
 - **The edit may sit in a callee.** A template or helper is its own symbol in the object even when wasm-opt inlines it
   at link, so the caller compares `SAME`, with rows, while the edit moved `decodeTime` beside it. List the object's
   symbols first (`wasm-objdump -x <object>`), and compare the symbol the edit is in.
@@ -386,8 +411,17 @@ second caller lands (unit 95's fragment).
 ## C4. The order of a caller and its callee decides what binaryen makes of them
 
 When two bodies differ in locals, or in what a pointer folds into, the order of the caller and the function binaryen
-inlines into it can be the cause, with no difference in the object. Either order can be the target's, so try the
-other one. Why, binaryen's source in the image does not show; the effect is measured, the caller first in these:
+inlines into it can be the cause, with no difference in the object. Either order can be the target's, so try the other
+one. The target's data give the objects' order ([placing.md](placing.md) §P4): when both orders give the bytes, keep the
+data's, and a source moved between fragments keeps every pair of objects it reorders in the data's order where a
+measured form allows it, the fragment naming any pair it inverts (moving `cpartecandidatos.cpp` after
+`ccandidaturas.cpp` for 11213 inverted `CParteCandidatos*`'s vtables, 1576388 on, against `CParteEleitores`' 1576588 and
+`CParteRdv`'s 1576620). A body that holds a chain inlined from several objects can need the order of all of them, not
+one swap: 4454 holds five functions of four objects of unit 13's list and is unit 197's; the data's order of them all
+(`awk -F'\t' '$2 ~ /crdvvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}' ledger/source-locations.tsv | sort
+-n`: `celeitorvotando.cpp`, `crdvvota.cpp`, then `md/rdv/` in name order) took it from `958 over 2759` to `562 over
+2719` in two steps. Why, binaryen's source in the image does not show; the effect is measured, the caller first in
+these:
 
 - **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with
   `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, `34 over 189`, and matches with the
@@ -420,6 +454,28 @@ one object moved ([workflow.md](workflow.md) §W13, "One variant object"); "Name
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
+
+**Trying orders on binaryen alone.** A relink costs about 40 s an order, and a chain of several inlined functions has
+many. The link's own `wasm-opt -Oz` step can run alone instead: `link-map` writes it as line 3 of
+`build/out/wasm-map/vota_web/replay.sh`, on `r02-stripped.wasm` beside it, and run on a copy it gives the link's
+`r05.wasm` byte for byte in about 8 s (182dc6c1):
+
+```sh
+P=build/out/codegen-facts/replay; mkdir -p $P
+sed -n 3p build/out/wasm-map/vota_web/replay.sh | sed 's# -o wasm-map/vota_web/r05.wasm # -o codegen-facts/replay/r05.wasm #' > $P/oz.sh
+TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $P/oz.sh)"
+cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
+# same
+```
+
+Then change the input and run it again: move functions in its `wasm-dis` text and `wasm-as` it back, patch one
+function's bytes, or add `--skip-pass=<pass>` (`rse`, `inlining-optimizing`), and compare the function with
+`wasm-objdump -d`, found through `--symbolmap` (`<post index>:<wasm-ld index>`, the `ld_index` of `names.tsv`). 652's
+eight inlined functions took the target's locals with `GetInst` above the constructor and the dispatcher above both
+screen builders, which one source change and one relink confirmed (`144 over 2051`, all operands); patching LLVM's local
+numbers in 10689's callee left the output unchanged, so binaryen, not the object, decides 10689's locals. Only orders a
+source can give count: a template instance takes its place after its first user, a file's functions their definition
+order, objects their list order.
 
 ## C5. A frame's offsets: which values the source names, and what a TU emitted first
 
@@ -495,6 +551,31 @@ kinds re-points both 4879 and 4890 `IDENTICAL`. The line only steers the compile
 records say: `awk -F'\t' '$2 ~ /cpolysingletonlist.h/ && $3==129 {print $1, $6}' ledger/source-locations.tsv` lists
 4879's record, 1531292, right after 8302's, 1531180, in another object's run. That clang declares a callee at its first
 mention, so that the inlined parts' allocas come in another order, is the reading; the scores are the measurement.
+
+What the TU emits *after* the function moves those slots too. 1937's reader (`comum::CLeitorASN::LeBiometriaEleitor`,
+which inlines `legravaentidade.h`'s `LeEntidadeBiometria`) has the target's 576-byte frame slots in the TU with
+`CConversorCabecalhoPacote`'s `Desconverte` or a `CarregaArquivo` instance after it, as with
+`ReadFromFile<CabecalhoPacote>` ahead of it; alone in its TU, or with that `ReadFromFile` after it, most slots are 8
+bytes lower and the second throw's packed format string sits at +488 where the target's is at +136. So another instance
+of the templates the function shares, before it or after it, can move its slots: compare the variants on objects before
+reading an order into it (unit 280's `carregaarquivo.cpp` gives the target's slots at the head of the file, between its
+instances and at its end).
+
+**A frame larger than what its code addresses.** Count the frame bytes the target's instructions address (the folded
+readout's frame offsets and the addresses passed on) against the objects the code shows:
+
+- **An unused run right above an object in its slot** can be a larger object whose extra member folds away. 1695
+  (`api::CApplication::GetContexto`) copies a 52-byte, 4-aligned `CApplicationContext` to +0 of an 80-byte frame, with
+  +52..+56 unused under the next object; eleven orders of plain locals, two flags and two header variants gave +4, +24,
+  +28 or the result, never +0. A `std::optional<CApplicationContext>`, 56 bytes, declared where the plain local was and
+  read only through `*`, gives +0 and the target's function, the flag's store and test folded away (`13 over 140`, all
+  operands; unit 171's fragment lists the five forms that give the same object). No other wrapper was measured.
+- **Bytes no instruction addresses at all,** more than every object of ours with its alignment, are objects whose code
+  the target lost after clang laid out the frame (binaryen removed it: §R1's folding is one way). 5821
+  (`comum::CGravadorWSQ::CompactaWsq`) has a 160-byte frame whose instructions address 76 bytes (`pnpm --silent wasm fn
+  ../target/vota_web_wasm.wasm 5821 | sed -n '/folded readout/,$p'`: +64..+75, +88..+99, +104, +148..+159), and ours
+  holds the same four slots in 80: no order of the source gives the other 84, and the body waits until that code is
+  known (unit 122's fragment).
 
 ## C6. At `-fPIC` a call of an out-of-line C1 or D1 stays a call in its own TU, and no remark says so
 
@@ -665,7 +746,88 @@ for a in byvalue cref; do printf '%s:' $a; wasm-objdump -d $P/paramform-$a.o | s
 `std::function`'s, and 5904 reuses the `std::function`'s slot for its next temporary, so the callback is a reference
 (`src/uenux2/src/api/util/itimerscheduler.h`, where `&&`, giving the same object, is the form not chosen).
 
+Two more caller-side signs, at the tree's flags (182dc6c1):
+
+- **A small struct built from constants is stored twice.** By value, the caller stores the temporary at the higher
+  offset and the `byval` copy below it, the same word in both, and passes the copy; by `const &`, one store whose
+  address is passed. 7707 stores 328020 (`SPoint{340, 5}`) at +12 and +8 and passes +8 to 4620, and 13550 the same with
+  `{320, 30}`, so `DesenhaDescricaoModo` takes its `api::SPoint` by value (unit 165):
+
+  ```sh
+  P=build/out/codegen-facts; printf '%s\n' 'struct SPoint { short x, y; };' 'struct IScreen;' '#if BYVALUE' 'void D(IScreen&, SPoint);' '#else' 'void D(IScreen&, const SPoint&);' '#endif' 'void F(IScreen& s) { D(s, SPoint{340, 5}); }' > $P/byval2.cpp
+  for b in 1 0; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -DBYVALUE=$b -c /work/$P/byval2.cpp -o /work/$P/byval2-$b.o; printf 'BYVALUE=%s: ' $b; wasm-objdump -d $P/byval2-$b.o | awk '/<_Z1FR7IScreen>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -E 'i32.const|i32.store|call' | tr '\n' ';'; echo; done
+  # BYVALUE=1: i32.const 16;i32.const 328020;i32.store 2 8;i32.const 328020;i32.store 1 12;i32.const 8;call 0 <env._Z1DR7IScreen6SPoint>;i32.const 16;
+  # BYVALUE=0: i32.const 16;i32.const 328020;i32.store 1 12;i32.const 12;call 0 <env._Z1DR7IScreenRK6SPoint>;i32.const 16;
+  ```
+- **A by-value class argument's temporary keeps a slot of its own,** and a later temporary cannot reuse it, while one
+  bound to a reference parameter can share its slot with a later object (its lifetime is marked; a reading). So a
+  caller frame larger than the target's by such a temporary, the slots above it shifted, reads as by-value where the
+  target's parameter is a reference: `main` (10307) is 96 bytes over `simulador::Inicializa`'s `std::function` by value
+  and 80, the target's, by `const&` (units 188 and 170). A probe, a `std::function` then a string temporary:
+
+  ```sh
+  P=build/out/codegen-facts; printf '%s\n' '#include <functional>' '#include <string>' '#if BYVALUE' 'void Init(std::function<void()> f);' '#else' 'void Init(const std::function<void()>& f);' '#endif' 'void Run(const std::string&);' 'int Main(int* p) { Init([p] { *p = 1; }); Run(std::string("abcdefghijklmnopqrstuvwxyz0123")); return 0; }' > $P/byval3.cpp
+  for b in 1 0; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -DBYVALUE=$b -c /work/$P/byval3.cpp -o /work/$P/byval3-$b.o; printf 'BYVALUE=%s frame: ' $b; wasm-objdump -d $P/byval3-$b.o | awk '/<_Z4MainPi>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -m1 -A1 'global.get 0' | tail -1; done
+  # BYVALUE=1 frame: i32.const 48
+  # BYVALUE=0 frame: i32.const 32
+  ```
+
 A copy is the other sign, and it says less. A caller that passes an lvalue of the parameter's own type with no copy
 rules out by-value. A copy made just before the call is a by-value parameter or a temporary a conversion binds to a
 `const &`: 2890 copies a `std::filesystem::path` into a string before calling `api::IPaper`'s slot 8, which `const
 std::string&`, `std::string` and `std::filesystem::path` by value all give (how-to step 2).
+
+## C11. A throw path's blocks follow the named locals in scope at each call that can throw
+
+Rows that differ only where the exception paths sit (an `unreachable` after `__cxa_throw` in a block of its own or
+shared, a call's catch block shared with the function's or one of its own), every other row an operand, come from which
+named locals are in scope at each call that can throw. clang pushes a named local's lifetime-end cleanup when the local
+is declared, before its initializer runs, so `if (const unsigned long erro = ERR_get_error(); …)` gives that call a
+landing pad of its own (`invoke @ERR_get_error … unwind label %151`, where `EVP_DecryptUpdate`'s unwinds to `%87`, in
+the TU's `-S -emit-llvm`), and SROA later removes the marker but not the pad. `CAesCipher`'s `SetKey`, `Encrypt` and
+`Decrypt` (9494, 9493, 9491) matched with the key's size held in a named local before its test, and with `erro`
+declared among the function's locals and assigned in the test, after the IV's first call; three places of that
+declaration were measured and gave one wasm (unit 11's fragment, where `CSha::Reset` and `Finish`, 5177 and 3518, show
+the same). `-Xclang -disable-lifetime-markers` on a probe compile shows whether a form's difference is this.
+
+## C12. A loop clang turns twice: in the caller and in a helper it inlines
+
+A loop the target carries a value through (a loop variable the next pass computes) or whose exits it threads (a `select`
+folded into the exits), where every form written in the caller's own body keeps a reload or a select, can need its
+search in a function of its own that clang inlines. In the caller, LoopRotate turns the loop once before GVN and
+JumpThreading and once in the late pipeline, after the last JumpThreading; in a helper the first turn happens in the
+helper's own pipeline and the second in the caller's, before its JumpThreading. 5497
+(`api::CTextFieldMultiLine::GetTextLines`) stayed at best `143 over 925` over fifteen in-place forms of its two loops,
+and with the space search in `UltimoEspaco`, which takes the line as a parameter, scored `40 over 910`, all operands,
+then matched (unit 14's fragment). Where a loop's shape is made shows with `-mllvm
+-print-after=loop-rotate,inline,jump-threading -mllvm -filter-print-funcs=<mangled>` (or `-print-after-all`) on the TU's
+compile line from `make -n -C src link -W $PWD/<tu>`, `-c … -o <scratch>.o`, the dumps on stderr.
+
+## C13. A member stored in each arm of a two-way branch
+
+10737 (`vota::CFimAquisicaoVotos::StartState`) stores one member in each arm of an if/else (`i32.store offset=4` then
+`br 1` in the first, another at the end of the second), and every form tried at the tree's flags joined the two stores
+after the branch; `-mllvm -print-after-all -mllvm -filter-print-funcs=<mangled>` names the pass, MergedLoadStoreMotion
+(unit 104's fragment lists the forms; the row lands written, `16 over 41`). 5400 has the same shape, and 10511 the
+joined one, in the target. The join is not general: a switch's cases keep their stores apart (11848), and so do two
+arms that each store a call's result:
+
+```sh
+P=build/out/codegen-facts; printf '%s\n' 'struct S { int pad; void* m_next; };' 'void* A(); void* B(); void* C();' 'void If(S& s, int c) { if (c == 2) s.m_next = A(); else s.m_next = B(); }' 'void Sw(S& s, int c) { switch (c) { case 1: s.m_next = A(); break; case 2: s.m_next = B(); break; default: s.m_next = C(); } }' > $P/arms2.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/arms2.cpp -o /work/$P/arms2.o
+for f in _Z2IfR1Si _Z2SwR1Si; do printf '%s: ' $f; wasm-objdump -d $P/arms2.o | awk -v f="<$f>:" '$0 ~ f {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -c 'i32.store 2 4'; done
+# _Z2IfR1Si: 2
+# _Z2SwR1Si: 3
+```
+
+So read the arms' contents before spending links on the shape: what keeps 10737's two stores apart in the target is not
+explained yet.
+
+## C14. A condition's test order
+
+An `&&`/`||` chain written as an `if`'s condition can come out with its tests reordered: Reassociate orders an `or` of
+two compares by rank, a compare of the value defined earlier first. For 10797 (`CControladorRegistraMesariosVota`'s
+slot 5) eight spellings written in the condition, in either order, gave one test order, not the target's; the same
+chain computed into a `bool` value first, a named `const bool` tested after or a lambda's return with either capture,
+kept the source's order (unit 119's fragment has the forms and their objects). Compile both before reading a test order
+as the source's.

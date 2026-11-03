@@ -51,13 +51,20 @@ run it with one short command: no zsh array or `${(@f)…}` expansion, no heredo
 ## Working in one shared checkout
 
 - **Claim before editing.** Post a `rounds/` claim listing the files or directories you own. Do not edit a path
-  another active stage claimed; file a `queue/` request instead. A header you derive from is one you depend on, claimed
-  or not: when another stage claims it, read that claim's layout and link against it before you commit, since a base's
-  moved member breaks your matches at the merge and no check shows it earlier.
+  another active stage claimed; file a `queue/` request instead. A claim of a unit's fragment covers its paragraphs,
+  not the whole file: another stage that extends that unit writes its own paragraph in a hunk apart and says so in
+  its claim (`src/units/README.md` "Landing a unit" item 2 says which table row it writes). With a worktree per lane, a
+  header another lane claims can take an add-only hunk apart from the owner's after a `queue/` yes, measured in your
+  worktree meanwhile; `docs/how-to-decompile.md` step 10 ("Landing onto a moved main") has the merge check. A header you
+  derive from is one you depend on, claimed or not: when another stage claims it, read that claim's layout and link
+  against it before you commit, since a base's moved member breaks your matches at the merge and no check shows it
+  earlier.
 - **A type no lane owns.** Before you declare a type a record names, look for it on the other lanes' branches: no check
   sees two definitions until the first TU that includes both stops on a redefinition. `for b in $(git branch --list
   'decomp/*' --format='%(refname:short)'); do LC_ALL=C git grep -n -E 'class <T>|enum( class)? <T>' "$b" --
-  'src/uenux2/*.h'; done` lists them; take the first one byte for byte (`docs/how-to-decompile.md` step 10). A type
+  'src/uenux2/*.h'; done` lists them; take the first one byte for byte (`docs/how-to-decompile.md` step 10). The search
+  covers this machine's branches only: for a type in the area of a lane on the other machine, post the declaration you
+  would write to `queue/` and keep the members that need it pending until the answer. A type
   several lanes of a round need is the pick's to generate whole, once, for every lane to copy as one blob, names marked
   as chosen, so that an add/add merges clean ([facts/workflow.md](reference/facts/workflow.md) §W17). An error enum read
   from the target's codes needs the merge thunks too ([facts/placing.md](reference/facts/placing.md) §P6). A static
@@ -175,7 +182,10 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   for the whole link needs `APP_CXXFLAGS` passed too, since `UENUX2_EXTRA` does not reach the roots, and a variant's
   scan reads the committed symbol file (both §W13). `make` compares times, not paths: an override such as
   `RHVOICE_DIR=<dir>` over an existing link whose inputs are older relinks nothing, and the census and scan then
-  measure the old link, so delete the two link outputs by name first, or use a private `OUT`.
+  measure the old link, so delete the two link outputs by name first, or use a private `OUT`; an `APP_OBJS=<order>` on
+  the command line is no prerequisite either ([facts/workflow.md](reference/facts/workflow.md) §W26). Nor is a source
+  written in the same second as its object (the next variant of a loop, a `cp -p` or a `cat` restore): before each
+  variant's make remove that one object by name, and require exactly one compile line in its log (§W26).
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds the objects whose rules name it: `roots_asn1.o` always, the fragment's companions when their rules
@@ -195,18 +205,34 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   added or changed, fragments too), keep a copy of them before the first link or try, and compare each after relinking
   ([facts/workflow.md](reference/facts/workflow.md) §W13 has the commands). An object not in the list compares equal
   with itself and proves nothing, and the list can miss one: a companion that holds a header its rule omits, and an
-  edit of an `src/asn1` module header (§W15 has the check). A reviewer with no copy from before the edit compiles the
-  base's objects from `git archive <commit> src` in scratch (§W13).
-- To check a unit's objects fresh afterwards, move aside every object its worktree built and rebuild with
-  `TMPDIR=/tmp make -C src splat`, serially. `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists
-  them, since the worktree's `.git` file dates from its creation and a cloned `build/out/` keeps older mtimes (§W15); an
-  object listed that does not come back is one no rule of the link makes, a deleted file's or a probe's compiled by
-  hand, and `make -s -C src print-LINK_OBJS` does not name it. Three kinds the list misses, so move them aside by name
-  too: what the `-W` list of an edited fragment names outside `build/out/app/` (fragment 06's zlib objects), a library
-  variant directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which
-  `TMPDIR=/tmp make -C src libs` rebuilds before the splat build, since the link takes those objects on trust, and, when
-  the range edits `asn1.h` or a `src/asn1/modules/*.h` header, the link objects that hold its mangled names, which make
-  does not rebuild (§W15 has the search).
+  edit of an `src/asn1` module header (§W15 has the check). A uenux2 header's list is the whole tree: only the objects
+  whose sources include it, directly or through another header, can change, so a reviewer with no copy from before the
+  edit compiles those from `git archive <commit> src` in scratch (§W13 lists them). An object of another unit that the
+  edit changes is named in the commit message, and what that unit's fragment states about it (a score, a form, a type's
+  shape) is measured again and rewritten (5113's score in unit 69, after `SPathCommand` gained constructors): a fresh
+  rebuild against the lane's own objects cannot see it, only the base compile can.
+- An include added to a header reaches every TU that includes it, and a header that brings guarded template or inline
+  statics adds their initializers to each (`votadefs.h` including `cpaperformbuilder.h` gave every includer
+  `api::CFormStack<api::IScreen>`'s `s_forms` and `s_mutex`). Declare what the header's own declarations need (a
+  forward declaration for a reference), include the full header in the `.cpp` that uses it, and count the includers'
+  `wasm-objdump -x <object> | /usr/bin/grep -c -E '__cxx_global_var_init|_ZGV'` before and after.
+- To check a unit's objects fresh afterwards, move aside every object its worktree built, compile them with the object
+  list, `TMPDIR=/tmp make -C src -j<n> $(make -s -C src print-LINK_OBJS)` (`docs/how-to-decompile.md` step 6 item 4),
+  then run `TMPDIR=/tmp make -C src splat`, which links serially: left to `splat`, they compile one at a time, about
+  eight a minute on the mini (818 after a header edit). `find build/out/app -name '*.o' -newer .git`, run in the
+  worktree, lists them, since the worktree's `.git` file dates from its creation and a cloned `build/out/` keeps older
+  mtimes (§W15); an object listed that does not come back is one no rule of the link makes, a deleted file's or a
+  probe's compiled by hand, and `make -s -C src print-LINK_OBJS` does not name it. Three kinds the list misses, so move
+  them aside by name too: what the `-W` list of an edited fragment names outside `build/out/app/` (fragment 06's zlib
+  objects), a library variant directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in
+  `src/Makefile`), which `TMPDIR=/tmp make -C src libs` rebuilds before the splat build, since the link takes those
+  objects on trust, and, when the range edits `asn1.h` or a `src/asn1/modules/*.h` header, the link objects that hold
+  its mangled names, which make does not rebuild (§W15 has the search). When the range edits `src/Makefile` or a
+  fragment's flags, the list shows what the lane rebuilt, not what the edit changed, and a lane may have set
+  `src/Makefile`'s mtime back: compare the compile lines `make -n -C src link APP=<a new directory>` prints with the
+  base's Makefile (`git show <base>:src/Makefile > <copy>`, then `-f <copy> ROOT=$PWD`) and with the branch's, and move
+  aside every object whose line differs. A lane that keeps `src/Makefile`'s old mtime says so in its result, with that
+  comparison.
 - A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
   moved main", says what to copy, what to add and where.
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
