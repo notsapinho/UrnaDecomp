@@ -158,7 +158,9 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
-  merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store.
+  merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store. It suits a callee no vote
+  reaches: its callers in the link all named by `vtable` and its other target callers not written (1150,
+  `CMostraEleitorVotando::GetInst`, alone holds 1593008; its comment names both kinds of caller).
 - `rtti-operand`: the only target function holding a class's vtable and typeinfo addresses.
 - `pair-depth0`: the only pair with that hash at depth 0, where a callee's body does not count, so a callee that
   differs or is inlined leaves the pair standing while deeper hashes part (`pnpm wasm fingerprint <wasm> --depth 0`, on
@@ -233,8 +235,10 @@ A hand edit needs evidence that does not come from the match it enables. A name 
 function match proves nothing; see the AudioCollector trap in [facts/splat.md](facts/splat.md) §S4. §3's self-vote rule
 reads only `call` and `table` lines, so it never refuses a hand edit: 2656's name passes as `callers+content`, and
 written `evidence:call by:9012` it gives `9012 unresolved self-voted`. So a hand edit with one caller is the case that
-rule exists for, and its comment leads with the callee's own body: what it stores or holds, read without the match.
-"Reviewing a match" has the removal check for a line, and the check for a line a generated one has caught up with.
+rule exists for, and its comment leads with the callee's own body. Here and everywhere these docs say it, the callee's
+own body is what the body stores, holds or loads, read without the match (a `std::source_location` record only it
+loads, whose text names it, is such evidence), never its bytes matching. "Reviewing a match" has the removal check for a
+line, and the check for a line a generated one has caught up with.
 
 ### 3. Substitute
 
@@ -721,7 +725,15 @@ say less than it seems to:
 
 The same line rewritten `evidence:call by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses
 is sound only on evidence from the callee's own body. With two or more callers the line carries, the rewrite refuses
-nothing, since each is the others' holding match: count only the callers that hold without the line.
+nothing, since each is the others' holding match: count only the callers that hold without the line. A caller named by
+`vtable` is the exception: its name does not come from the line, so its aligned call counts even when its row needs the
+line, and for a recursive callee with a twin that differs only in its self-call it is the one evidence that tells them
+apart (3613 under 10409, `CSuspensaoAutomaticaEleitor::StartState`, against 3814).
+
+A source body a name rests on (a voter its `by:` list names, or an anchor) is weighed the same way, by a variant link
+without that body. A scan with the committed symbol file keeps every name, so it shows nothing there: regenerate the
+symbol file from the variant and read the lines it no longer writes ([facts/workflow.md](facts/workflow.md) §W13, "Scan
+a variant with the committed symbol file", has the command and `CSystem::ReplaceDir`'s case).
 
 Two generated names the build does not weigh, a reviewer does. A callee of a new match named `call` with no `by:`
 list (§3): `awk -F'\t' '$2==<callee>' ledger/callgraph.tsv` lists its target callers, and when no other is matched,

@@ -244,7 +244,7 @@ for f in 0 1 2; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -
 A 32-bit store at a 4-byte alignment (`i32.store 2 52`) is a whole-object copy into an object whose alloca LLVM raised
 to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fragment lists the forms that give it.
 
-**Eight ways a form comparison lies.**
+**Seven ways a form comparison lies.**
 
 - **A copy's path moves every offset.** A record holds its file name, so a copy under another path has other offsets in
   every later row, and a variant compares as different with nothing changed. Compile the copy with
@@ -272,13 +272,9 @@ to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fra
   # _GLOBAL__sub_I_ginit.cpp
   # _GLOBAL__sub_I_ginit_copy.cpp
   ```
-- **A constructor's C2 and a destructor's D2 compare zero rows.** `wasm-objdump -d` names one body by its `C1` or `D1`
-  symbol, so a slice on `…C2…` is empty on both sides, and two empty lists compare equal. Treat 0 rows as a failed
-  comparison, never as equal, and count the lines each slice cut.
-- **A type index moves.** `call_indirect 0 <env.__indirect_function_table> (type N)` indexes the object's own type
-  section, which renumbers when the object gains or loses a signature, and a callee that became undefined prints
-  `call <env._ZN…>` where it printed `call <_ZN…>`. Five of 261 common functions of `cmtformbuilder.cpp.o` differed in
-  `(type 11)` against `(type 12)` alone after the object gained members; strip ` (type N)` and `env.` too.
+- **The object renumbers and renames.** A slice by a C2 or D2 name is empty on both sides, which compares equal, and
+  ` (type N)` and `env.` change with no code change: [tool-traps.md](tool-traps.md) §X12 has each, and the counts to
+  read before a 0.
 - **The edit may sit in a callee.** A template or helper is its own symbol in the object even when wasm-opt inlines it
   at link, so the caller compares `SAME`, with rows, while the edit moved `decodeTime` beside it. List the object's
   symbols first (`wasm-objdump -x <object>`), and compare the symbol the edit is in.

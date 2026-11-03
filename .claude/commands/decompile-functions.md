@@ -270,7 +270,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   (`VOTA_WEB_CXXFLAGS`), both in `src/Makefile` (`docs/reference/facts/levels.md` §V3, §V1), and strict aliasing by
   directory and file in uenux2, landed as the directories and files `UENUX2_TBAA_DIRS` lists and the files
   `UENUX2_NOTBAA_FILES` keeps out of them (`docs/reference/facts/app-flags.md` §F6): a lane reports a measurement that
-  would move a directory or a file, and does not move it, and the user decides each file. Every other flag stays the
+  would move a directory or a file, and does not move it, and the user decides each file. A measurement of several
+  forms or flags in one worktree removes the object before each make and reads one compile line in its log
+  (`docs/reference/facts/workflow.md` §W26: make 3.81 compares whole seconds). Every other flag stays the
   user's to decide: a member whose body needs one (a no-stub row goes by its callers' tree, not its group) is listed
   as waiting for that decision, not as expected.
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
@@ -334,10 +336,11 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    each is copied and compared the same way. A header the lane added or edited rebuilds every object of
    its tree and the companions that name its directory, not only the unit's (`src/units/README.md` "What a fragment
    holds" item 3; `docs/reference/facts/workflow.md` §W15), and `-newer <header>` misses an object built before that
-   header's last edit. Run `TMPDIR=/tmp make -C src splat`, with no `-j`, check that it compiled exactly those objects, and `cmp`
-   each with its old copy, looping over that list, never over `old-objs/`. A stale object means the source edits never
-   rebuilt. An object that does not come back is a
-   deleted file's: `cmp` is owed for the objects the link names.
+   header's last edit. Compile them with the object list, `TMPDIR=/tmp make -C src -j<n> $(make -s -C src
+   print-LINK_OBJS)` (left to `splat`, they compile one at a time: [docs/agents.md](../../docs/agents.md) "Shared build
+   outputs"), check that it compiled exactly those objects, run `TMPDIR=/tmp make -C src splat` with no `-j`, and `cmp`
+   each object with its old copy, looping over that list, never over `old-objs/`. A stale object means the source edits
+   never rebuilt. An object that does not come back is a deleted file's: `cmp` is owed for the objects the link names.
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
    `comm`, against `<base>`). A
    line removed and its index added back under another symbol is a twin rename: check that the old symbol is gone
@@ -357,7 +360,9 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    legitimately, and the command lists each reading the target body picked. Say which way gave which result.
 4. **The checks**: `make -C src stubs-check`, `python3 -I -B tools/round/status.py --check`,
    `python3 -I -B tools/round/stubs.py --check`, `python3 -I -B tools/round/check_encoding.py`,
-   `TMPDIR=/tmp make -C src check-srcloc` with no wrong record of a matched function (its records that only
+   `TMPDIR=/tmp make -C src check-srcloc` after `TMPDIR=/tmp make -C src link-map` on the last link (an older map
+   reads other objects' linkonce copies as wrong records: how-to step 10), with no wrong record of a matched function
+   (its records that only
    unmatched functions load are the base's unless they sit in an object the range rebuilds or on a line of a file it
    edits: compare the list per object, [docs/reference/facts/tool-traps.md](../../docs/reference/facts/tool-traps.md)
    §X7), and from `asmlift-wasm/` `TMPDIR=/tmp pnpm test:bench`. The last one fails when the lane compiles an object
@@ -392,14 +397,14 @@ Brief: the rules above, the board path, the batch's CONFIRMED lanes in landing o
 confirmed, and the match count and commit of `main` before the batch. Land in batches as the verdicts arrive: each
 batch is a LAND stage of its own, and it touches no lane its brief does not name. It posts a `rounds/` claim of `main`
 first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
-batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
-of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there: a merge already
-staged when the need shows is aborted (`git merge --abort`, everything staged first: `docs/reference/facts/workflow.md`
-§W22), the fix committed on `main`, and the lane merged again. A row lost to
-one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as
-a table slot),
-may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the
-top of the result.
+batch that meets a lost match stops before committing that merge and posts it. A real-link test case that reads a
+number or a premise the merge moved is no toolkit fix: it changes to read the rule in the merge commit (step 2). A
+toolkit fix the merge needs is a commit of its own on `main`, with a VERIFY of its own before the push, and the batch
+then goes on from there: a merge already staged when the need shows is aborted (`git merge --abort`, everything staged
+first: `docs/reference/facts/workflow.md` §W22), the fix committed on `main`, and the lane merged again. A row lost to
+one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as a
+table slot), may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say
+so at the top of the result.
 
 The commit to land is the one the verdict confirmed. A lane branch's tip can differ from it: a pause can leave the
 worktree on another branch (`wip/<lane>`), and the lane branch then points at an older commit. Check
@@ -423,9 +428,9 @@ lands ("Pausing and resuming" below).
    --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
    stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
-   name, and which side of a twin's line to keep, with the check after step 9. A stand-in whose every target caller is
-   now in the link goes in the merge; one whose callers landed in part stays, with its comment saying which still wait,
-   unless a link without it moves no row (`src/units/README.md` "Companion files").
+   name, and which side of a twin's line to keep, with the check after step 9. A stand-in, or a call of one, whose
+   every target caller is now in the link goes in the merge; one whose callers landed in part stays, with its comment
+   saying which still wait, unless a link without it moves no row (`src/units/README.md` "Companion files").
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The

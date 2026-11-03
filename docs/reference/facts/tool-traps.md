@@ -60,6 +60,8 @@ awk -F'\t' '$1==3939 {print substr($2, 1, 16)}' ../splat/scan.tsv               
 ```
 
 So read a one-caller row's caller in `splat/scan.tsv` before taking its body out of line as a puzzle of the source.
+When neither the twin nor the merge's other members are identified, a roots stand-in gives the second call site
+(`src/units/README.md` "Companion files", 11514 under 2543).
 
 ## X2. Probe links
 
@@ -315,10 +317,12 @@ A comparison of two relocatable objects by `wasm-objdump -d` text (to show that 
 edit left the rest of an object alone) reads three things that change with no code change:
 
 - `call_indirect 0 <env.__indirect_function_table> (type N)`: N indexes the object's own type section, which
-  renumbers when a function leaves the object;
+  renumbers when the object gains or loses a signature (five of 261 common functions of `cmtformbuilder.cpp.o` differed
+  in `(type 11)` against `(type 12)` alone after the object gained members);
 - a callee that became undefined prints `call <env._ZN…>` where it printed `call <_ZN…>` while the object defined it;
-- a destructor can be in an object under its D1 name only, so a cut by the D2 name gets nothing from both objects and
-  a `diff` prints 0 lines: count the lines cut before reading a 0. `names.tsv` can still name the same body `…D2Ev`.
+- `wasm-objdump -d` names a constructor's or destructor's one body by its C1 or D1 symbol, so a cut by the C2 or D2
+  name gets nothing from both objects and a `diff` prints 0 lines: count the lines cut before reading a 0, and treat 0
+  rows as a failed comparison. `names.tsv` can still name the same body `…D2Ev`.
 
 ```sh
 wasm-objdump -d build/out/app/uenux2/src/api/gui/capplicationcontextstack.cpp.o | /usr/bin/grep -o 'func\[[0-9]*\] <[^>]*Guard[^>]*>'

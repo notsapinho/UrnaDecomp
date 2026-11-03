@@ -343,7 +343,7 @@ beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a m
 
 `make -C src splat-symbols` and the scan re-pick some names and pairs at every landing, whatever the unit adds. None
 of it is evidence from the unit. The first kind below could cost a match until the generator stopped casting most of
-it, and the last kind can. The function lines of the symbol file each landing of
+it, and the seventh can. The function lines of the symbol file each landing of
 `main` changed, leaving out the indices it matched:
 
 ```sh
@@ -502,6 +502,13 @@ names its function, and data votes for `.bss` objects alone; a pair casts them a
 and 9113 went from `srcloc-anchor` to `table`: `theInfo` got `vote:1` by its only reader, which is self-voted, and 9113
 stopped casting the votes that named `CHOICE::isValid` (1068). `git diff splat/symbol_addrs.txt` shows each change of
 evidence. A name with evidence of its own brings the rows back: a named callee, or a hand edit.
+
+An eighth comes from a unit's own match: **an anchor lost to a second pair of one shape.** A unit that gives a second
+holder of an anchored operand the target's shape makes two pairs of that shape, which anchor nothing (two such pairs
+anchor nothing, [../splat.md](../splat.md) §2), so the first holder's anchor line goes. `CPreShowFormVota`'s vptr
+(1532608) has two holders in the target, 576 and 886 (`/usr/bin/grep -rlE 'i32\.const 1532608($|[^0-9])'
+build/out/splat/pieces/asm`); when a unit made our 886 the target's thunk, 576's `vptr-anchor` line left. 576 stayed
+`match`, since the scan applies the match list, and its fragment says why the line went.
 
 Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses). These are
@@ -1022,7 +1029,9 @@ same 16 bytes, and no aligned word of its data points at one, so a landing that 
 object. 84 of the 98 differ elsewhere as well (6319 and 11024 at byte 279, `offset=36` against `44`). The other 14, in 5
 groups of 12 or 14 B, are byte-equal but for the record's address, key `cinteractiveform.h` 57:25: 10342=10347=10352,
 10493=10641, 10496=10504=10508, 10598=10601, 10604=10667=10709=10757. Each is slot 7 of its own class's vtable, and only
-that slot can name it.
+that slot can name it. While a member's class is in no object of ours, the census pairs its index with another member
+of the group and step 9 writes that member's symbol, which no hand correction keeps (10604 under 10667's, §S11): the
+route is to write the class's own member, whose vtable then names the index (how-to step 9).
 
 ## S13. A guard sits at our link's distance from its object
 
@@ -1074,5 +1083,7 @@ as `UNCONFIRMED: self-voted`. Taken out of the match list, the lines come back a
 added`), and `status.py --check` then fails on `scan only: [<indices>]`: no state passes both. At 951cf4b4, 3526 and
 9518 (ecourna's `basic_regex` parsers over a `__wrap_iter`) were such callers, over 5189 and 2689; before 64215e06,
 1166 over 1322. `awk -F'\t' '$1==<caller> || $1==<callee> {print $1, $5, $6}' splat/scan.tsv` prints `match` for the
-caller and `unresolved self-voted` for the callee. The build is the verdict: the lines stay out, and the result says
-`status.py --check` names them. A weighing on such a state takes them out of every copy ("Reviewing a match").
+caller and `unresolved self-voted` for the callee. The build is the verdict, and `status.py --check`, which CI runs,
+fails while the lines stay out, so a branch keeps the code that brings such a caller out of the link until the
+callee's name holds (how-to step 9: 1166 held once 13974 matched; 3526 and 9518 waited so for 2393 and 2688, the
+callees' own callees). A weighing on a state that holds such rows takes them out of every copy ("Reviewing a match").

@@ -419,31 +419,41 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   Each stand-in's comment names the target callers it stands for. A stand-in beside a real caller compiles, links and
   passes every check, so a search of those indices is what says it can go, at a merge too: in `splat/matched.txt`, and in
   the scan for a caller written but not matched, since a caller in the link ends a stand-in whether or not its row
-  matches (unit 08's `UsaFaseDeconverte` stood for 9052 and went while 9052 was written and `differs`). A library caller
-  can be in our link with the callee inlined into it, its row `no-candidate` all the same (SQLite's `unixSleep`, 12902,
-  holds `nanosleep`, 6265): look a library caller's name up in `build/out/wasm-map/vota_web/names.tsv` before writing a
-  stand-in for it. A stand-in that reads the callee's result stands for a reader too, and goes only when a real reader
-  is in the link, or binaryen drops the result and the callers that drop it lose a row: unit 123's `w123_copia` reads
-  1249's returned `this`, as the target's 11395 does, where 5856 and 11197 drop it. A stand-in goes when every caller
-  it stands for is in the link, not when the link first holds two
-  real call sites: one whose callers landed in part stays, and its comment says which still wait. A caller counts when
-  our link holds its call: one in the link that inlines the callee where the target calls it ends nothing, and the
-  comment says so (unit 190's two `GetPathLog` calls stay for 8302, whose copy inlines it). A stand-in may go earlier
-  only with a link without it that moves no row (`docs/reference/facts/workflow.md` §W13, "One variant object in the
-  whole link"), measured and said in the fragment. Scanned with the committed symbol file, such a link counts the rows
-  under the names they have now; for the set a fragment quotes, run steps 7 to 9 on the variant link with private
-  paths (`docs/reference/facts/app-flags.md` §F9 item 6 gives the options). A stand-in that only keeps a library
-  callee of the unit out of line, as the target does, stays only when a row moves with it (unit 214's for 3373 and
-  3372 moved none). One stand-in stands for one target caller, whatever units its callees are in, and goes whole when
-  that caller lands; each callee's fragment says where its call site is. One in a file another active stage claims is
-  left to the landing, with a link without it measured and its lines named in the result (how-to step 10).
-  5629 has two direct callers in the target (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and 11387);
-  unit 20 reconstructs 11387, so `20-…-roots.cpp` adds one caller standing in for 5324. binaryen inlines a function
-  for having one call only when no table entry or export refers to it (`docs/reference/facts/tool-traps.md` §X1), so a
-  function the table also holds keeps its body with a single caller. A destructor whose other target caller is
-  `__shared_ptr_emplace<T>::__on_zero_shared` gets that caller only from a live `std::make_shared<T>` call, which
-  needs T's constructor: while the constructor is not written, the vtable's address is enough, and the control block's
-  members come from a builder the link drops ("A control block") or wait for the unit that writes it;
+  matches (unit 08's `UsaFaseDeconverte` stood for 9052 and went while 9052 was written and `differs`). A written caller
+  with no symbol line reads `no-candidate` with no object in the scan, as if not written (4349 did): look its symbol up
+  in `build/out/wasm-map/vota_web/names.tsv`, and its call in our link (how-to step 10's `wasm-objdump` awk). A library
+  caller can be in our link with the callee inlined into it, its row `no-candidate` all the same (SQLite's `unixSleep`,
+  12902, holds `nanosleep`, 6265): look a library caller's name up in `build/out/wasm-map/vota_web/names.tsv` before
+  writing a stand-in for it. A stand-in that reads the callee's result stands for a reader too, and goes only when a
+  real reader is in the link, or binaryen drops the result and the callers that drop it lose a row: unit 123's
+  `w123_copia` reads 1249's returned `this`, as the target's 11395 does, where 5856 and 11197 drop it. A stand-in goes
+  when every caller it stands for is in the link, not when the link first holds two real call sites: one whose callers
+  landed in part stays, and its comment says which still wait. A caller counts when our link holds its call: one in the
+  link that inlines the callee where the target calls it ends nothing, and the comment says so (unit 190's two
+  `GetPathLog` calls stay for 8302, whose copy inlines it). A stand-in may go earlier only with a link without it that
+  moves no row (`docs/reference/facts/workflow.md` §W13, "One variant object in the whole link"), measured and said in
+  the fragment. Scanned with the committed symbol file, such a link counts the rows under the names they have now; for
+  the set a fragment quotes, run steps 7 to 9 on the variant link with private paths
+  (`docs/reference/facts/app-flags.md` §F9 item 6 gives the options). A stand-in that only keeps a library callee of the
+  unit out of line, as the target does, stays only when a row moves with it (unit 214's for 3373 and 3372 moved none).
+  The rule goes call by call: in a stand-in that calls several callees, a call whose callee's every target caller is in
+  the link goes, measured with steps 6 to 10, and the stand-in stays for its other calls (unit 31's `TelaMTA` and
+  `TelaMTB` call ten adders, and their calls of 5419 stand for none, since its one caller, 1905, is in the link). A
+  stand-in for one target caller, whatever units its callees are in, goes whole when that caller lands; each callee's
+  fragment says where its call site is. One in a file another active stage claims is left to the landing, with a link
+  without it measured and its lines named in the result (how-to step 10). 5629 has two direct callers in the target
+  (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and 11387); unit 20 reconstructs 11387, so `20-…-roots.cpp`
+  adds one caller standing in for 5324. binaryen inlines a function for having one call only when no table entry or
+  export refers to it (`docs/reference/facts/tool-traps.md` §X1), so a function the table also holds keeps its body with
+  a single caller. A function with one direct caller in the target that keeps its body all the same (11514, 6868 bytes,
+  under 2543: `awk -F'\t' '$2==11514' ledger/callgraph.tsv`) had a second call the target's later merges took away (X1:
+  a function can end with one caller and keep its body). Its caller inlines it in our link once written, so a stand-in
+  gives the second call site; its comment names the one caller, says the merged-away call is a reading (X1), and says
+  what would identify that caller (a twin of the caller, a merge's other members). It goes once that caller is
+  identified and in the link. A destructor whose other target caller is `__shared_ptr_emplace<T>::__on_zero_shared` gets
+  that caller only from a live `std::make_shared<T>` call, which needs T's constructor: while the constructor is not
+  written, the vtable's address is enough, and the control block's members come from a builder the link drops ("A
+  control block") or wait for the unit that writes it;
 - a function the target inlines into its only caller is left unrooted, so it is inlined here too. It can be a
   function the source defined out of line that binaryen inlined, which `docs/how-to-decompile.md` step 3 tells from
   the caller's body: write it out of line, in the file that step says, and leave it unrooted. When such a function
@@ -566,7 +576,7 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     clone of `APP` (§W13) and link into a private `OUT` and `OUT_NAMED` with `"APP_OBJS=$(make -s -C src print-APP_OBJS)
     <root>.o"` on the make line, which links the existing object; `make -s -C src print-LINK_OBJS` with the same
     override shows its place. On the default `OUT` with a current link, make links nothing and steps 7 to 9 measure the
-    plain link: check that the link's `link.cmd` holds the new order.
+    plain link (`docs/reference/facts/workflow.md` §W26): check that the link's `link.cmd` holds the new order.
   - **The executable TU's copies.** Its `-Oz` code without landing pads comes from an explicit instantiation with
     `__attribute__((minsize))`, the header's own body (`roots_vector.cpp`, below), at uenux2's flags when the body
     loads across a store, since that TU compiles without strict aliasing, which `docs/reference/facts/levels.md` §V1
@@ -750,9 +760,10 @@ code, so no match can land on it. It compiles with the unit's own flags, as the 
 rule of its own in the fragment (it is not in `ECOURNA_SRCS`) that is added to `EXTRA_OBJS`. Each member
 moves into the class's real source when it is reconstructed, and the file and its rule go with the last one.
 
-A trap is for a member that cannot be written yet (no form measured comes close, and the `-pending.cpp` header
-gives the forms and their rows: unit 140's 11483), that cannot match until other code lands (a merge thunk, below),
-or whose real body would cost a match. A member whose body is written and right keeps it where it belongs, in the
+A trap is for a member that cannot be written yet (a callee or a type the tree lacks, or no form measured comes
+close, the `-pending.cpp` header giving the forms and their rows: unit 140's 11483; a slot member one remainder off
+stays written), that cannot match until other code lands (a merge thunk, below), or whose real body would cost a
+match. A member whose body is written and right keeps it where it belongs, in the
 class or its `.cpp`, and its row stays as it is, whatever the reason outside its source: `docs/how-to-decompile.md`
 step 5, "A written body that does not match yet", has the rule and what to measure. An implicit destructor has no body
 to trap either: declaring it to trap it changes the class. A destructor the D0 shows out of line (step 5, "The
@@ -943,7 +954,8 @@ compiles: it extends that unit.
    (`docs/how-to-decompile.md` step 10).
 3. Add a roots file if nothing in the skeleton calls the unit, following the shapes above, and a pending file if
    the class's vtable needs members you have not written.
-4. Add the fragment's row to the table under "Names".
+4. Add the fragment's row to the table under "Names", in its numeric order (100 after 99, not the text order make
+   reads the fragments in).
 5. Link, census, symbols, match and build, in the order and with the reasons `docs/how-to-decompile.md` steps 6 to
    10 give, and commit the fragment, its companions and its table row with them.
 

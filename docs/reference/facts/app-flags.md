@@ -783,16 +783,14 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    1143 is `CError`'s constructor, an ecourna function whose object the uenux2 flags do not change: its row names
    whatever function 1860 is in the private link. Take a row that moves there to `splat-remap` against the private link
    (`docs/reference/splat.md` "Matching a function"). To have steps 7 to 9 name what a flag adds, run them on the
-   private
-   link with every path given, which writes nothing tracked: the census's `ledger` line (`tools/round/census.sh`) over
-   a copy of `ledger/`, with `skeleton=<$P plain>@<$P named>` and `-o $P/ledger/functions.tsv`; `splat-symbols
-   <target> <$P plain> --kinds $P/wasm-kinds/vota_web/kinds.json --ledger $P/ledger -o $P/symbol_addrs.txt` over the
-   re-keyed copy of the symbol file (it keeps the copy's hand lines); then `splat-scan` and `splat-build` with
-   `--kinds`, `--symbols $P/symbol_addrs.txt`, `--ledger $P/ledger` and the re-keyed list, and the `join` against the
-   committed scan. Or build in place in a worktree of your own: `rm -f -- <object>` for each object whose flags change
-   before its make, since make keeps an object whose flags changed, and check that the make log holds one compile line
-   for it, since GNU Make 3.81 calls an object written in the same second as its source up to date
-   (`docs/reference/facts/workflow.md` §W13).
+   private link with every path given, which writes nothing tracked: the census's `ledger` line
+   (`tools/round/census.sh`) over a copy of `ledger/`, with `skeleton=<$P plain>@<$P named>` and `-o
+   $P/ledger/functions.tsv`; `splat-symbols <target> <$P plain> --kinds $P/wasm-kinds/vota_web/kinds.json --ledger
+   $P/ledger -o $P/symbol_addrs.txt` over the re-keyed copy of the symbol file (it keeps the copy's hand lines); then
+   `splat-scan` and `splat-build` with `--kinds`, `--symbols $P/symbol_addrs.txt`, `--ledger $P/ledger` and the re-keyed
+   list, and the `join` against the committed scan. Or build in place in a worktree of your own, each object whose flags
+   change removed before its make and its one compile line read in the make's log: make keeps an object whose flags
+   changed, and calls one written in the same second as its source up to date (`docs/reference/facts/workflow.md` §W26).
 7. **A lone-link residue of whole-program DAE.** Extra `drop`s after `~shared_ptr` in a landing pad, or a
    `memcpy` return value kept or dropped, come from callers elsewhere in the program; they close only in the
    whole link.

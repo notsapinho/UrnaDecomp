@@ -455,7 +455,10 @@ b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
-  at the other setting, one variant object in the plain link ([workflow.md](workflow.md) §W13).
+  at the other setting, one variant object in the plain link ([workflow.md](workflow.md) §W13). For one file, add it
+  to the list on the command line, which reaches a companion whose rule passes the file's path to `uenux2_cxxflags`
+  too: [app-flags.md](app-flags.md) §F9 item 6 lists the objects it changes (fragment 217's pending object for
+  `ctesteteclado.cpp`).
 - **The split is the tree's flag.** A directory or file moved into or out of the lists is a flag change, measured on
   the whole link by F6's recipe, and it lands as a commit of its own only when it gains rows and loses no match. A lane
   reports such a measurement; it does not change the lists. The commit that changes them rewrites every text that

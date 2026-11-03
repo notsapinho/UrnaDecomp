@@ -197,7 +197,8 @@ a choice the fragment names with both neighbours. `comum::asn::CConversorCodigoC
 11592 beside `app/comum/asn/cconversorcabecalhoentidade.cpp`'s functions, and its vtable, typeinfos and `theInfo`
 (1555728 to 1555820) lie between two `app/comum/md/` files' records (unit 126 took the band and says so).
 
-**What each order shows.** Three orders place code, and a comment says which one it rests on and what is a reading:
+**What each order shows.** Three orders place code, and a comment says which one it rests on and what is a reading
+([../link-order.md](../link-order.md) §2 has the rule; these are the measurements behind it):
 
 - *Between objects*, the data: each object's vtables, typeinfos and records lie in link-line order (L7 item 15). That
   is evidence of the objects' order.
@@ -229,13 +230,13 @@ a choice the fragment names with both neighbours. `comum::asn::CConversorCodigoC
         int: keep _ZTV1K _ZTI1K _ZTS1K _ZN12_GLOBAL__N_12F1E _ZN12_GLOBAL__N_12F2E
 
 So two forms that give one object's code can give its data in two orders, and the target's run tells them apart:
-`carregaarquivo.cpp`'s entity reader at the head of the file, between the `EleicaoPE` and `CabecalhoPacote` instances,
-or at its end gives the same 143 functions with the object-local numbers masked, and only "between" puts the reader's
-typeinfo, records and vtable after `EntidadeEleicao`'s vtable and before `CabecalhoPacote`'s records, as the target's
-run 1562844-1565964 does. That our object's data order equals the target's under one form is a measurement (the
-object's `wasm-objdump -x -j Data` segment order against the target's addresses); that the original code was in that
-order is a reading, which the comment marks as one wherever it is restated (1937's reader; 7667, whose tree root's
-builder follows `push<ITextToSpeech>`'s record 1526348 because `ITextToSpeech`'s vtable, 1526520, follows it).
+`carregaarquivo.cpp`'s entity reader (1937) at the head of the file, between two instances or at its end gives the same
+143 functions with the object-local numbers masked, and only "between" gives the target's data order
+([link-order.md](link-order.md) §L7 item 15 prints the target's run). That our object's data order equals the target's
+under one form is a measurement (the object's `wasm-objdump -x -j Data` segment order against the target's addresses);
+that the original code was in that order is a reading, which the comment marks as one wherever it is restated (1937's
+reader; 7667, whose tree root's builder follows `push<ITextToSpeech>`'s record 1526348 because `ITextToSpeech`'s vtable,
+1526520, follows it).
 
 A constant between two classes' typeinfo names belongs most directly to the file of the name that follows it, or to
 the file before it when only file-internal code reads it: 1255's fonts (@540572, @540580) between

@@ -469,7 +469,9 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-review.test.ts`, "confirms a self-voted name through the matches that may use it" | 1877's `call by:9218` line | a table holder of 1877 that matches names it by `table`: `desconverteVotedBy9218Alone` now sets the premise |
 
 Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
-case takes the number from the link ([splat.md](splat.md) §S5 item 3).
+case takes the number from the link ([splat.md](splat.md) §S5 item 3). A case that restates the slot rule reads the
+function in our slot through `resolveFunction(maps, maps.ours.elem.get(N))`, as `slotReadings` does, not by symbol key:
+a slot can hold an import, which `ours.fns` lacks ([splat.md](splat.md) §S5).
 
 So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
 that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the
@@ -675,7 +677,9 @@ Both scripts keep their intermediates in `$V/wasm-map/tmp/` and `$V/wasm-kinds/t
 folder for every variant under that `$V`: two run at once overwrite each other's map (`--Map lists 22553 functions,
 wasm-ld wrote 22552`) and lock (`FileNotFoundError: … emscripten.lock`). Map variants one at a time, or give each its
 own `$V`. `splat-kinds` on the `wasm-kinds/<n>/` copy stops with `… does not describe …: run make -C src link-map`.
-Compile the variant object as W26 says, its object removed first.
+Compile the variant object as W26 says, its object removed first. Score the variant's wasm where the link wrote it,
+with its `vota_web_wasm.js` beside it: a copy without the glue scores every import call as a replaced row
+(`asmlift-wasm/README.md`).
 
 Compile a variant from a copy with the `-ffile-prefix-map` of [codegen.md](codegen.md) §C1, or its records move every
 offset. A control with an unchanged object gives the plain link's sha256, so comparing sha256 says "the same module" at
@@ -718,7 +722,9 @@ variant into scratch (`pnpm wasm splat-symbols <target> <variant wasm> --kinds �
 <scratch>`) and read the lines of the indices it named or voted for: anchor names (`srcloc-`, `vptr-`,
 `content-anchor`) and the `call` votes their pairs cast read no census pair and hold there, while a census pair's vote
 in a band the variant reorders does not. Without `CSystem::ReplaceDir`, 5455 scores `717 over 1984`, anchors nothing,
-and 3645 and 5458, `call by:5455`, lose their names, though the committed-symbols scan moved no row.
+and 3645 and 5458, `call by:5455`, lose their names, though the committed-symbols scan moved no row. The row set a
+fragment quotes for a variant comes from steps 7 to 9 run on the variant link with private paths
+([app-flags.md](app-flags.md) §F9 item 6 gives the options).
 
 **A header for the whole link.** `UENUX2_EXTRA="-iquote <overlay>"` reaches the tree's objects and not the roots:
 `src/Makefile` sets `APP_CXXFLAGS` from `UENUX2_CXXFLAGS` with `:=` (line 90) before it adds `UENUX2_EXTRA` (line 97).

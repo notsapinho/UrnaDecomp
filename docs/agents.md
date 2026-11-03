@@ -51,11 +51,14 @@ run it with one short command: no zsh array or `${(@f)…}` expansion, no heredo
 ## Working in one shared checkout
 
 - **Claim before editing.** Post a `rounds/` claim listing the files or directories you own. Do not edit a path
-  another active stage claimed; file a `queue/` request instead. With a worktree per lane, a header another lane claims
-  can take an add-only hunk apart from the owner's after a `queue/` yes, measured in your worktree meanwhile;
-  `docs/how-to-decompile.md` step 10 ("Landing onto a moved main") has the merge check. A header you derive from is one
-  you depend on, claimed or not: when another stage claims it, read that claim's layout and link against it before you
-  commit, since a base's moved member breaks your matches at the merge and no check shows it earlier.
+  another active stage claimed; file a `queue/` request instead. A claim of a unit's fragment covers its paragraphs,
+  not the whole file: another stage that extends that unit writes its own paragraph in a hunk apart and says so in
+  its claim (`src/units/README.md` "Landing a unit" item 2 says which table row it writes). With a worktree per lane, a
+  header another lane claims can take an add-only hunk apart from the owner's after a `queue/` yes, measured in your
+  worktree meanwhile; `docs/how-to-decompile.md` step 10 ("Landing onto a moved main") has the merge check. A header you
+  derive from is one you depend on, claimed or not: when another stage claims it, read that claim's layout and link
+  against it before you commit, since a base's moved member breaks your matches at the merge and no check shows it
+  earlier.
 - **A type no lane owns.** Before you declare a type a record names, look for it on the other lanes' branches: no check
   sees two definitions until the first TU that includes both stops on a redefinition. `for b in $(git branch --list
   'decomp/*' --format='%(refname:short)'); do LC_ALL=C git grep -n -E 'class <T>|enum( class)? <T>' "$b" --
@@ -180,10 +183,9 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   scan reads the committed symbol file (both §W13). `make` compares times, not paths: an override such as
   `RHVOICE_DIR=<dir>` over an existing link whose inputs are older relinks nothing, and the census and scan then
   measure the old link, so delete the two link outputs by name first, or use a private `OUT`; an `APP_OBJS=<order>` on
-  the command line is no prerequisite either ([facts/workflow.md](reference/facts/workflow.md) §W26). `/usr/bin/make`
-  is GNU Make 3.81, which compares whole seconds: a source written in the same second as its object (the next variant of
-  a loop, a `cp -p` or a `cat` restore) is not compiled, and the object stays the last variant's. Before each variant's
-  make remove that one object by name, and require exactly one compile line in its log (§W26 has the check).
+  the command line is no prerequisite either ([facts/workflow.md](reference/facts/workflow.md) §W26). Nor is a source
+  written in the same second as its object (the next variant of a loop, a `cp -p` or a `cat` restore): before each
+  variant's make remove that one object by name, and require exactly one compile line in its log (§W26).
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds the objects whose rules name it: `roots_asn1.o` always, the fragment's companions when their rules

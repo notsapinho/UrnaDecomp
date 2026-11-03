@@ -808,7 +808,7 @@ typeinfo (1526340, push's `typeid`), push's record (1526348), `std::format_error
 1526400) and `ITextToSpeech`'s vtable (1526520), which a constructor's vptr store creates, put the tree root's builder
 of `ITextToSpeech` after `push<ITextToSpeech>`. Compare an object's `wasm-objdump -x -j Data` segment order with the
 target's run to see which order a form reproduces: that is the measurement, and that the source was in that order is
-the reading, marked as one.
+the reading, marked as one ([../link-order.md](../link-order.md) §2 says what each order is evidence of).
 
 ## R9. A member with no record: its place in its use band says whether the `.cpp` defines it
 
@@ -1069,7 +1069,7 @@ and with `CSystem::ReplaceDir` calling them too (the link drops it), clang kept 
 them as the target has them (`155 over 1836` after two more source fixes). Write such a caller when the evidence shows
 what it calls, marked as a reading with the score without it (unit 32). Which TU defined such a function, its records'
 place in the data says; where in that TU, the object's data order, which is a reading the comment marks
-([placing.md](placing.md) §P4, "What each order shows").
+([placing.md](placing.md) §P4, "What each order shows"; [../link-order.md](../link-order.md) §2).
 
 Whether such a function is a member is how-to step 3's member rule ("Names no evidence gives"); these are its cases. One
 that reads its class's state is a member in the class's `.cpp`. One that reads none (8533's tone sequences) is a free

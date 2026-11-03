@@ -421,10 +421,12 @@ function may still be written and compiled, dropped by the link or inlined into 
 is the `no-candidate` verdict. *Where:* `docs/status.md` "What is left", `docs/reference/splat.md` "Matching a
 function".
 
-**self-voted** — a data name whose only vote came from the function being matched, so it proves nothing about that
-match. Such a match holds only if our object's bytes agree with the target's at that address, or another holding match
-uses the name; otherwise the scan reports `unresolved (self-voted)` and the build `UNCONFIRMED`.
-*Where:* `docs/reference/splat.md` §3.
+**self-voted** — a name whose only vote came from the function being matched, so it proves nothing about that match:
+a data name, or a function's `call` or `table` name whose `by:` list holds that function alone (a name with no `by:`
+list is never read so). A data name holds only if our object's bytes agree with the target's at that address, or
+another holding match uses the name; a function's, only if another holding match calls it or holds a constant the target
+reads as its slot. Otherwise the scan reports `unresolved (self-voted)` and the build `UNCONFIRMED`. *Where:*
+`docs/reference/splat.md` §3.
 
 **drift** — a match that stops verifying because a source, flag, link-order or toolchain change altered our body. The
 build exits 1 and names each failing match; the fix is the source, or deleting the match line with a reason in the
