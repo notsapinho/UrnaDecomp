@@ -12,7 +12,9 @@
 #include "api/gui/iform.h"
 #include "api/gui/itext.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/comum/comparecimentomesario/estados/cconfirmafimregistromesarios.h"
 #include "app/comum/comparecimentomesario/estados/climitemesariosregistradosatingido.h"
+#include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/comum/comparecimentomesario/estados/icontroladorregistramesarios.h"
 
 namespace comum {
@@ -61,11 +63,23 @@ void CRegistrarMesarios::StartState()
     m_form->Slot2();
 }
 
-// (original lines 64-65: content not recovered)
-#line 66
 const IControladorRegistraMesarios& CRegistrarMesarios::GetControlador()
 {
     return api::CPolySingleton<IControladorRegistraMesarios>::instance();
+}
+
+void CRegistrarMesarios::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA:
+        GetControlador().LogaConfirmouRegistroMesarios();
+        m_pNextState = &CPedeTituloMesario::GetInst();
+        break;
+    case api::INPUT_CORRIGE:
+        GetControlador().LogaCancelouRegistroMesarios();
+        m_pNextState = &CConfirmaFimRegistroMesarios::GetInst();
+        break;
+    }
 }
 
 const api::SFont FONTE_TITULO_REGISTRO_MESARIOS{35, 0};
