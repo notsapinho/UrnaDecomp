@@ -1,8 +1,8 @@
 // Pending members of the classes of src/units/161-uenux2-app-vota-operador-identidade.mk, each reached only through its
 // vtable. The classes' vtables are emitted in their own .cpp and need every slot defined; these bodies are NOT the
 // target's, they trap. Move each into its class's .cpp when it is reconstructed, and delete this file with the last.
-// What each waits for is a callee with no body here (ledger/callgraph.tsv against splat/matched.txt and
-// splat/symbol_addrs.txt):
+// What each waits for is a callee with no body here, or fn 652, written and unresolved (the fragment says on what)
+// (ledger/callgraph.tsv against splat/matched.txt and splat/symbol_addrs.txt):
 //
 // - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
 //   fns 781, 1393, 1823 and 2740.

@@ -1,9 +1,9 @@
 // Pending members of the classes of src/units/152-uenux2-app-vota-operador-estados.mk, each reached only through its
 // vtable. The classes' vtables need every slot defined; these bodies are NOT the target's, they trap. Move each into
 // its class's .cpp when it is reconstructed, and delete this file with the last. What each waits for is a callee with
-// no name (ledger/callgraph.tsv against splat/symbol_addrs.txt). Fn 501, which six of them call too, matches now
-// (api::CPriorityMessageQueue<api::SMessage>::Insert, named by its callers' calls:
-// src/units/269-uenux2-cmessagequeue-insert.mk):
+// no name, or fn 652, written and unresolved (unit 161) (ledger/callgraph.tsv against splat/symbol_addrs.txt).
+// Fn 501, which six of them call too, matches now (api::CPriorityMessageQueue<api::SMessage>::Insert, named by its
+// callers' calls: src/units/269-uenux2-cmessagequeue-insert.mk):
 // - vota::CSuspensaoAutomaticaEleitor::ProcessKey (fn 10404, slot 6): fn 652, one of the two states it goes to (the
 //   other, fn 1150, is unit 142's CMostraEleitorVotando::GetInst).
 // - vota::CPerguntaEleitorVotando::ProcessInput (fn 10415, slot 7): every direct callee has a name now (1151 is unit

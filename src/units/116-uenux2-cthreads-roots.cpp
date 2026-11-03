@@ -1,8 +1,8 @@
 // Roots: reach unit 116's singletons the way the target does.
 // - CThreadOperador::GetInst (target fn 270, 54 callers, among them 652, 2740, 3887): its real callers here are 10225,
-//   10219, 10220, 10232 to 10236, unit 119's 3887 and slots 10785, 10788, 10798 and 10799, and unit 165's 5343; Stop
-//   stands for the other callers' flag store. CThreadMonitor::GetInst (fn 1898) needs none: its five callers are in
-//   the link.
+//   10219, 10220, 10232 to 10236, unit 119's 3887 and slots 10785, 10788, 10798 and 10799, unit 165's 5343 and unit
+//   161's 652; Stop stands for the other callers' flag store. CThreadMonitor::GetInst (fn 1898) needs none: its five
+//   callers are in the link.
 // - CEstadoAudio::GetInst (fn 509, 17 callers, among them 1455, 4349, 7028): unit 97's 7028 and this unit's 4349 are
 //   its real callers here, and two stand-ins stand for the others.
 // - CThreadEleitor::ProcessaEventos (fn 4349): of its two target callers, vota::CExecucaoVotaCooperativa's slot 7 (fn

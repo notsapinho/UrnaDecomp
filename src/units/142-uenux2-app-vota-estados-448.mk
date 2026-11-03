@@ -84,8 +84,8 @@
 #   the inline CThreadEleitor::Existe added to cthreadeleitor.h) and CEstadoAudio's mode is not 2, or
 #   IsAudioAtivadoMesario (1687, unit 50's) holds. Only 1150 passes its slot. It is a function of this file's anonymous
 #   namespace, TextoAudioAtivado: name, linkage and file are chosen, the file against its band, which puts 10539 right
-#   after the __func slots of the lambdas of BatteryIconDataSource, CTextFieldUpdate and CTextFieldBlinking (10540 to
-#   10544; api::CTextFieldUpdateMT's own members are 10545 to 10549), not among this file's functions (10424 to 10429).
+#   after the __func slots of api::CTextFieldUpdateMT's timer lambda (10540 to 10544, unit 51's; the class's own
+#   members are 10545 to 10549), not among this file's functions (10424 to 10429).
 # Chosen too: CriaForm's name and its being a static member, the statics' names.
 #
 # CJustificativaEfetuada's singleton, in cjustificativaefetuada.cpp, at chosen lines after the destructor (the file has

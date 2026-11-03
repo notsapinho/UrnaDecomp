@@ -11,7 +11,7 @@
 //   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
 //   so the target holds one body for both and does not tell which source defines it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
-//   652, 2734, 5397, 10440 and 10465, and by 1150, 1901 and 2747, which are in the link) and api::CInputMenuField (1579324, fn 3675). A dropped builder
+//   2734, 5397, 10440 and 10465, and by 652, 1150, 1901 and 2747, which are in the link) and api::CInputMenuField (1579324, fn 3675). A dropped builder
 //   needs T's constructor declared, not defined.
 // And six stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, of
 // vota::CEscolheOpcao::GetInst and of vota::AdicionaCampoNumerico, kept by their addresses: each comment names the target
@@ -98,7 +98,7 @@ __attribute__((noinline)) bool w121_escolhe()
     return &vota::CEscolheOpcao::GetInst() == &vota::CEscolheOpcao::GetInst();
 }
 
-// Stands for eight target callers of vota::AdicionaCampoNumerico (fn 1151), all but fn 2753: fns 652, 2735, 3631, 5418,
+// Stands for seven target callers of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753 and 652: fns 2735, 3631, 5418,
 // 10388, 10415, 10500 and 10627. They pass the length and the flag as 1 and 0, 4 and 1 or 12 and 1, so these pass 12 and
 // false, which keeps both parameters through binaryen's dead-argument elimination, as fn 2753's 1 and true alone would not.
 __attribute__((noinline)) bool w121_campo(api::CMTFormBuilder& builder, const api::SPoint& posicao)

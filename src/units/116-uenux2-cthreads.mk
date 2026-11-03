@@ -33,7 +33,8 @@
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
 # Not matched, and why: CThreadVota's slots 3 and 4 and CThreadEleitor's slot 2 are traps, listed in the -pending.cpp
 # with what they wait for; CThreadMonitor's slot 2, Run (10226), is written and waits for its debug wrapper's other
-# caller (its paragraph); 10230, CMonitoraAlimentacao::s_mutex's exit destructor, reads differs: the census pairs it with
+# caller (its paragraph); 10230, CMonitoraAlimentacao::s_mutex's exit destructor (it destroys 1911544, the mutex that
+# Run's inlined GetInst locks at 10226 +0x4e), reads differs: the census pairs it with
 # cpedenulo.cpp's copy of the same 10 bytes (and ours with 10665, which so goes from differs to unresolved), and the
 # mutex at 1911544 has no name in splat/symbol_addrs.txt: the destructor waits for the match that names its object, here
 # 10226 (docs/how-to-decompile.md step 5). ProcessaEventos 4349 is written and differs (below), and the two debug

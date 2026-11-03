@@ -111,26 +111,28 @@
 # 10677, 10676, 10625 and 10624 (pending).
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
-# its 16-byte frame follows the `new` of 32 bytes) and the statics, and is `unresolved`: it is right but for one
-# literal. Its row reads `+0x5ab i32.const 6273: an address of ours: string tail occurs 4098 times`: the end of
-# "/{:04}", which the target holds as the tail of "{:02}/{:02}/{:04}" (8609), a literal whose start only fns 2687 and
-# 10273 load (grep over build/out/splat/pieces/asm), neither written. In a scratch link with an object that stores that literal in
-# a volatile sink (docs/reference/facts/workflow.md W13), pnpm wasm splat-remap prints `target 652: IDENTICAL` against
-# our GetInst. In the target's order, under a std::lock_guard of the static std::mutex (the bytes show its unlock, fn
-# 150, at the end): on the first call the object
+# its 16-byte frame follows the `new` of 32 bytes) and the statics, and is `unresolved` on a name, not on its bytes.
+# The end of "/{:04}" in it is, in the target, the tail of "{:02}/{:02}/{:04}" (8609), a literal whose start only fns
+# 2687 and 10273 load (grep over build/out/splat/pieces/asm); with 2687 in the link (unit 265's conversaodatahora.cpp)
+# pnpm wasm splat-remap prints `target 652: IDENTICAL` against our GetInst. Its row reads `unresolved self-voted +0x5
+# i32.const 1905336: _ZN4vota15CPedeIdentidade6s_instE = 0x1d12b8 (evidence:vote:8 by:652)`: 652 is the one voter of
+# s_inst's name (docs/reference/splat.md section 3, "No circular evidence"), and the target's other reader of 1905336,
+# 10682 (below), is no function of our link. In the target's order, under a std::lock_guard of the static std::mutex
+# (the bytes show its unlock, fn 150, at the end): on the first call the object
 # (CAppState's constructor with EVENTO_ENTRADA | EVENTO_TICK, 6), the three ticks through CThreadOperador::GetInst
 # (fn 270) and AddStoppedTick (fn 807) with 60000, 5000 and 1000, the std::make_shared<std::string>(" ") at +16, the
 # form at +24 from vota::MontaTelaPedeIdentidade(m_aviso) (by value: the copy at +8 of the constructor's frame moved to
 # +0; unit 51's telasoperador.cpp, where the reasons it is another object are), then vota::AgendaInspecao (fn 3620,
 # unit 50) in the constructor's body; then the unique_ptr's reset (the old object through its D2, fn 1537, and
-# operator delete) and the mutex's unlock. GetInst is defined before the constructor, both after FinishState: the
-# order is measured with the screens' (unit 51's fragment: binaryen's choice of locals turns on it); the lines are
-# free. The statics are defined before StartState: their exit destructors (10682, s_inst's, and 10681, s_mutex's) sit
-# above StartState (10680) in band 1. 10681 matches (its body's content; s_mutex is named by 652's votes, the one other
-# reader of 1905312). 10682 is `f3886(1905336)`: 3886 is called by 10321, 10457 and 10682, the exit destructors of
-# three static std::unique_ptr (10313 and 5396 read the other two), read as one body binaryen keeps for three classes'
-# identical ~unique_ptr (the three share the D2 1537); our link, with the other two not written, inlines ours, and 10682
-# stays no-candidate. Chosen: the statics' names, the lock_guard's spelling and EVENTO_ENTRADA | EVENTO_TICK for 6.
+# operator delete) and the mutex's unlock. GetInst is defined before the constructor, an order measured with the
+# screens' (unit 51's fragment: binaryen's choice of locals turns on it); that both come after FinishState is a choice
+# (above StartState they give the same rows), and the lines are free. The statics are defined before StartState: their
+# exit destructors (10682, s_inst's, and 10681, s_mutex's) sit above StartState (10680) in band 1. 10681 matches (its
+# body's content; s_mutex is named by 652's votes, the one other reader of 1905312). 10682 is `f3886(1905336)`: 3886 is
+# called by 10321, 10457 and 10682, the exit destructors of three static std::unique_ptr (10313 and 5396 read the other
+# two), read as one body binaryen keeps for three classes' identical ~unique_ptr (the three share the D2 1537); our link
+# holds two of the three statics (10313's, unit 135's CPedeDigitalMesario::s_inst, but not 5396's), and 3886, 10321 and
+# 10682 stay no-candidate. Chosen: the statics' names, the lock_guard's spelling and EVENTO_ENTRADA | EVENTO_TICK for 6.
 #
 # CPedeIdentidade::StartState (10680, slot 2) is written in cpedeidentidade.cpp, its records on lines 62 and 63 (the
 # CPolySingleton<IUrna>::instance() call of the `if` and CPolySingleton<IScreenMT>::instance()'s inside it, both at

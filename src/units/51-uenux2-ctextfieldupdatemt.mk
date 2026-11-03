@@ -51,7 +51,8 @@
 #   with the four screen functions in an anonymous namespace clang inlines them into the constructor, one frame);
 #   DescricaoTipoIdentificador (95) and TextoQuantidadeAptos (internal) are inlined by
 #   clang, as the target's rows have them (out of line in another object, Descricao keeps a pointer local the target
-#   lacks).
+#   lacks). DescricaoTipoIdentificador's external linkage is a choice: internal gives the same module byte for byte.
+#   TextoQuantidadeAptos's internal linkage is measured: external, 652 scores 696 over 2091 rows.
 # - The target tests the "%s" temporary for a long string after the adder returns. With the adder a plain member in
 #   the object of MontaTelaVotacao that test is gone; as a template's instance it stays (a reading: the optimizer takes
 #   nothing about the call from a linkonce_odr body). With the adder a plain member in ctextfieldupdatemt.cpp, beside
@@ -94,8 +95,8 @@
 # CTextFieldUpdateMT, a copy pushed into the builder's vector with emplace_back inlined (clang: cost 320, threshold
 # 325) and the field released.
 #
-# 652 itself is unit 161's row (unresolved, waiting for a literal: unit 161's fragment). The roots file went: its
-# vtable sink stood for the constructor, which is in the link now, inlined through unit 161's GetInst.
+# 652 itself is unit 161's row (unresolved, self-voted on CPedeIdentidade::s_inst: unit 161's fragment). The roots file
+# went: its vtable sink stood for the constructor, which is in the link now, inlined through unit 161's GetInst.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDUPDATEMT_SRCS := src/app/vota/operador/comum/ctextfieldupdatemt.cpp \

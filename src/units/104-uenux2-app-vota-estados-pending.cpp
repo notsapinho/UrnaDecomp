@@ -136,7 +136,7 @@ void CFimAquisicaoVotos::StartState()
     __builtin_trap();
 }
 
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee with no name: 652 (599 and 1687 are unit 50's).
+// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 unresolved (unit 161; 599 and 1687 are unit 50's).
 void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();

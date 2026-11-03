@@ -12,7 +12,7 @@
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
-//   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 652, 2881, 11242 and 12110
+//   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 2881, 11242 and 12110 (652 is in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 6034, 7174, 10635 and 11616 (2822, 2825 and 10210 are
 //                       in the link)
 //   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fn 3616
@@ -113,8 +113,8 @@ __attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
     w2825(eleitores, dados + 64);
 }
 
-// Stands for fns 652, 2881, 11242 and 12110, the target callers of CEleitores::QuantidadeAptos (fn 2823): two calls,
-// each reading one of the two counts the result's address receives.
+// Stands for fns 2881, 11242 and 12110, target callers of CEleitores::QuantidadeAptos (fn 2823; 652 is in the link):
+// two calls, each reading one of the two counts the result's address receives.
 __attribute__((noinline)) int QuantidadesAptos(int eleitores)
 {
     int quantidade[2];

@@ -4,8 +4,8 @@
 // api::CMTFormBuilder::AddTextFieldUpdate (the instance over api::CTextSource, defined here because it builds an
 // api::CTextFieldUpdateMT), the constant TITULO_TREINAMENTO, MontaTelaPedeIdentidade and the functions it builds the
 // form with. Binaryen inlines each into its one caller, so none has a target index: the chain ends in fn 652,
-// vota::CPedeIdentidade::GetInst, whose constructor calls MontaTelaPedeIdentidade. The order of the definitions is
-// measured (the fragment says how).
+// vota::CPedeIdentidade::GetInst, whose constructor calls MontaTelaPedeIdentidade. Of the order of the definitions,
+// only MontaTelaPedeIdentidade's place ahead of both builders is measured (the fragment says how); the rest is free.
 #include "app/vota/operador/comum/telasoperador.h"
 
 #include <chrono>

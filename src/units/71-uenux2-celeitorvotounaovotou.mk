@@ -11,8 +11,8 @@
 # CEstadoAudio::GetInst()'s mode at +4 (fn 509) is not 2 (CEstadoAudio::Ativo), else vota::CPedeIdentidade::GetInst
 # (fn 652). Its line is after StartState's, as band 1 has them (10431 above 10430). It matches with 652 named by its
 # vptr anchor (652 is the one function that stores CPedeIdentidade's vptr, 1588240: grep over build/out/splat/pieces/asm),
-# while 652 itself waits for a literal (unit 161's fragment). The if/else around the two GetInst is written as a
-# choice; no other form was measured.
+# while 652 itself is unresolved, self-voted on CPedeIdentidade::s_inst (unit 161's fragment). The if/else around the
+# two GetInst is written as a choice; no other form was measured.
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
 # comment, app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp, is the tool's class-convention guess, and the data

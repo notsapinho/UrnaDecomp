@@ -10,8 +10,8 @@
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
 //   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10646, 10689, 10695, 10742, 10751; 10539 is in the link),
-//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620; 652,
-//   10527, 10676), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
+//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
+//   10527, 10676; 652 is in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
 //   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
 //   GetTipoIdentidadeDigitada (5416; 10588; 10664, unit 161's, is in the link), GetIdentidadeEleitor (1535; 3616,
 //   10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
