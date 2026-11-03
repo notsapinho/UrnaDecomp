@@ -7,17 +7,17 @@
 # comum::CDataSourcesRelatorio<CRdvVota, CEleitores>::LinhaPartido (11261) in unit 183's cdatasourcesrelatorio.h;
 # comum::asn::CConversorLocal::DoDesconverte (11452) in unit 157's asn/cconversorlocal.cpp and comum::CAppInfo::
 # LeGeralInterno (2273) in unit 109's appinfo/cappinfo.cpp, the two of CLocal's loader (5740, not written) that land
-# without it. Paths
-# relative to src/uenux2. This fragment compiles the two new files; the others extend their units, whose fragments point
-# here, and this unit's roots keep its stand-ins.
+# without it. Paths relative to src/uenux2. This fragment compiles the two new files; the others extend their units,
+# whose fragments point here, and this unit's roots keep its stand-ins.
 #
 # Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596, 11911
 # and 11452 (vtable). Scores before steps 7 to 9 (pnpm wasm score against this link's names.tsv), all operand-only: 1156
 # 3 over 56 rows, 2252 31 over 1130, 2792 7 over 248, 5596 37 over 356, 11911 22 over 243, 5591 262 over 3779, 11261 23
-# over 320, 11452 39 over 721, 2273 2 over 18. 11261 (LinhaPartido) is written for its literal as much as for itself: its one user, fn 12110 (vota::CGeraBU's
-# slot 2, not written), passes its address (table slot 2921), and the target holds 5591's "{}\n" as the tail of 11261's
-# "{}: {} - {}\n" (@445555). While that literal was not in the link, 5591 stayed `no-candidate` (splat-remap: `+1559
-# i32.const 370742: an address of ours: string tail occurs 4098 times`) and 11911 `unresolved` on 5591's name.
+# over 320, 11452 39 over 721, 2273 2 over 18. 11261 (LinhaPartido) is written for its literal as much as for itself:
+# its one user, fn 12110 (vota::CGeraBU's slot 2, not written), passes its address (table slot 2921), and the target
+# holds 5591's "{}\n" as the tail of 11261's "{}: {} - {}\n" (@445555). While that literal was not in the link, 5591
+# stayed `no-candidate` (splat-remap: `+1559 i32.const 370742: an address of ours: string tail occurs 4098 times`) and
+# 11911 `unresolved` on 5591's name.
 #
 # Written, not matched:
 # - 2772, the constructor, `differs` in local numbers alone: 97 over 696 rows, 7 inserted and 7 deleted, every one a
@@ -55,12 +55,12 @@
 #   -rlE 'i32\.const 377469($|[^0-9])' build/out/splat/pieces/asm` prints nothing) and its code (4950, between the two)
 #   are chosen. The image is built with `imagem.resize(n)` on an empty vector: the object fills the block, then stores
 #   the end of storage, the end and the begin, as the target does; `std::vector<uebyte> imagem(n, 0)`, `imagem(n)` and
-#   `assign(n, 0)` store the begin before the fill (wasm-objdump -d of each variant's object). The scale is a local
-#   uebyte computed after the width test: the division then sits there and the min at the store, and the result's scale
-#   is stored before its size, as in the target; computed at the return, the size is stored first. The constructor
-#   assigns the three members one by one: `m_dados = dados` copies the byte before the size (the implicit copy
-#   assignment copies the two scalars as one block), the target the size first; AddQRCode's copy (2775, unit 53's
-#   constructor) is that block's order, so QrcodeData stays a struct.
+#   `assign(n, 0)` store the begin before the fill (wasm-objdump -d of each variant's object, as for the next two
+#   points). The scale is a local uebyte computed after the width test: the division then sits there and the min at the
+#   store, and the result's scale is stored before its size, as in the target; computed at the return, the size is
+#   stored first. The constructor assigns the three members one by one: `m_dados = dados` copies the byte before the
+#   size (the implicit copy assignment copies the two scalars as one block), the target the size first; AddQRCode's copy
+#   (2775, unit 53's constructor) is that block's order, so QrcodeData stays a struct.
 # - SetBit (api/util/cstringutils.cpp, records 71:15 and 83:15): the vector overload throws 7027 with "Bit fora dos
 #   limites ({}) do vetor ({})" (2772 loads that record) and calls the byte overload, which binaryen inlines (a frame of
 #   480 bytes nothing reads). The byte overload's test of the bit is folded (the vector overload passes bit % 8): its
