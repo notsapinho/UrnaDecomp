@@ -93,6 +93,15 @@ public:
         Wait([] { return false; });
     }
 
+    // The volume at +4, with no call: vota::CInstrucaoVotacaoAcessibilidade::StartStateAudio (fn 7242) stores 7 there,
+    // and its ProcessInputAudio (fn 7248) raises it by one up to 10 and lowers it by one down to 0, telling one message
+    // or another as it moved or not, as for ITextToSpeech's speed (slots 5 to 7): inline members, whose names,
+    // membership (the volume is protected) and uneven ternaries below (an unmeasured form) are chosen.
+    int GetVolume() const { return m_volume; }
+    void SetVolume(int volume) { m_volume = volume; }
+    void IncreaseVolume() { m_volume = m_volume == 10 ? 10 : m_volume + 1; }
+    void DecreaseVolume() { m_volume = m_volume != 0 ? m_volume - 1 : 0; }
+
 protected:
     int m_volume = 9;
 };

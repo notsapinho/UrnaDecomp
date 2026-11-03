@@ -9,7 +9,7 @@
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
-# EUeIpcError. The class headers say what each layout and name rests on. The thirteen members not written are in
+# EUeIpcError. The class headers say what each layout and name rests on. The ten members not written are in
 # 97-uenux2-cvotacaostateaudio-pending.cpp, with what each waits for.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
@@ -212,7 +212,7 @@
 # FormataProgresso, has no frame, so no evidence makes it a function: it is one as a measured form ({progresso}, below).
 # Chosen: the helpers' names (SoletraNumero and TextoConsulta, which picks the consulta's string, in an anonymous
 # namespace; GetNomeCargoAtual, GetCandidatoComSuplentes, GetQuantidadeDigitos, FormataProgresso and GetProgresso, in
-# vota), their being free functions, their locals' names, and their place after `#line 228` (cvotacaostateaudio.cpp:65).
+# vota), their being free functions, their locals' names, and their place, lines 231 to 288 of cvotacaostateaudio.cpp.
 # Each tag's text, read from 6999's code:
 # - {cargo-atual}: the current post's GetNomeNeutro (fn 1547), or for a consulta the detail's string at +36, else the
 #   one at +12 (GetDetalheConsulta, fn 1923), then, when the post has more than one choice, " {}ª {}" of
@@ -252,7 +252,7 @@
 # one branch out of the tag's chain, and ours keeps one more block (FormataProgresso defined after GetProgresso gives
 # the same). The rest are local numbers. 6999 also reads its static std::regex and guard (1833216, 1833256), which no
 # other target function reads but 14464, which reads the object. 6999 scores the same with cvotacaostateaudio.cpp
-# compiled without strict aliasing. It stays written, as slot 14
+# compiled with strict aliasing and without it, as the file builds now. It stays written, as slot 14
 # (a trap would hide it), and the matches above rest on its code.
 #
 # std::regex's copies, src/app/roots_cbasetype.cpp (its comment says what it holds) and src/app/roots_regex.cpp (the
@@ -268,8 +268,65 @@
 #   iterator and std::regex_replace in roots_cbasetype.cpp too, as written: 65, none stops (2054, 4276, 4279, 4307 and
 #   5492 besides).
 # So the target's copies over const char* and of the token iterator are uenux2's without strict aliasing and without
-# landing pads, though cinputmenufield.cpp and cvotacaostateaudio.cpp, their users here, build in UENUX2_TBAA_DIRS;
-# that flag is not changed here.
+# landing pads, though cinputmenufield.cpp, one of their users here, builds with strict aliasing, and the other,
+# cvotacaostateaudio.cpp, which builds without it (below), links after it; that flag is not changed here, and listing
+# cvotacaostateaudio.cpp in UENUX2_NOTBAA_FILES moved none of these rows.
+#
+# CVotacaoStateAudio's slots 7, 8 and 13 and its static helpers, written since (target fns 7029, 7010, 3139, 1455, 3143
+# and 1204), with the copies of api::CPolySingleton<T>::instance they call (1091, 2079) and has<ITextToSpeech> (3281).
+# Each instance() call sits at its record's line and column (cvotacaostateaudio.cpp :69, :120, :136, :172, :173, :178,
+# :179, :226 and :388), and 3139's throw (code 9318) at :188; where a local takes the call's result, the length of its
+# name puts the call at its column, and the names are chosen.
+# - ProcessInput (7029) and ProcessTick (7010): when audio is on, each ends the wait for the audio
+#   (CancelaEsperaFimAudio) and stops both ticks (PararTicks, inline in the .cpp: the test and the two StopTick calls
+#   FinishState, 7029 and 7010 hold with no frame of their own); ProcessInput then calls ISound's slot 5 and PararTicks
+#   again, then slot 9, and restarts the echo tick (+12) when slot 4 returns this state; ProcessTick, on one of its two
+#   ticks and unless ISound's slot 7 returns 1, speaks slot 15's message through slot 14 (FalaMensagem, inline) and
+#   starts the wait (IniciarEsperaFimAudio, record :388, which 7010 holds in a stack frame of its own: out of line,
+#   inlined by binaryen into its one caller here too), else it calls slot 12. IniciarEsperaFimAudio stores
+#   ISound::WaitAsync's result over `[] { return false; }` and a lambda that restarts the echo tick when the audio
+#   ended: the lambdas' __func typeinfos name them $_0 and $_1 of that function, and their slots 13703, 13712, 13721,
+#   13750, 13761, 13769 and 13778 match from this object.
+# - PlayMessage (1204) and PlayInterruptibleMessage (3143), static by their records: ITextToSpeech's slot 0 of the text,
+#   played through ISound's slot 4, queued (mode 1) and waited for with ISound::Wait() (its lambda's __func @1530436),
+#   or interrupting (mode 0). PlayKey (1455): a zero key beeps (IBeep's slot 6) and is logged
+#   (CLogVota::LogaTeclaIndevida, clogvota.cpp); with audio on, a digit, 'B' and 'D' speak api::KeyName's text
+#   interrupting, 'C' queued, and a zero key plays ":/resource/sounds/tecE.wav" through PlayFile (static by its record
+#   :226; clang inlines it), which, when CEstadoAudio is active, copies the path and passes it to ISound's slot 1.
+#   EmiteEcoComInputField (3139): the form's one input field (else the throw), its text before and after Read, the
+#   field's last key echoed through PlayKey unless Read returns 5 or 13 with the text unchanged (0 then), and the pair
+#   of Read's result and the text after it. The access of PlayKey, PlayFile, IniciarEsperaFimAudio and the two inline
+#   helpers is chosen (the header says so).
+# - The instances: 1091 (instance<ISound>, with landing pads) is the executable TU's copy (its record @1526584 in that
+#   TU's data) and matches from vota_web_wasm.cpp.o, now that its target callers here keep it out of line; so does unit
+#   170's votaSetAudioEnabled (10240), whose body held it inlined in our link. 2079 (instance<ITextToSpeech>) is
+#   cinstrucaovotacaoacessibilidade.cpp's copy (its record @1533836 follows that file's) and matches from unit 150's
+#   object. 3281 matches from src/app/roots_texttospeech.cpp, whose comment says why, with unit 150's roots standing for
+#   its unwritten callers.
+# Measured, pnpm wasm score in the whole link before step 8 (each matched at step 9):
+# - the tick read into a local before CThreadEleitor::GetInst() in ProcessInput and in the lambda, as StartState has it:
+#   with m_tickEco as StartTick's argument 7029 scored 16 over 125 rows (1 inserted, 3 deleted), the call first;
+# - ProcessTick as an if/else on the tick, and IniciarEsperaFimAudio's instance() bound to a reference before WaitAsync:
+#   an early return for the other ticks, written first, put slot 12's call at the head, and instance() in WaitAsync's
+#   expression kept its std::source_location live into that call in a slot of its own (+52, where the target's result
+#   reuses +56): 7010 scored 66 over 327 rows (13 inserted, 18 deleted); as written, operand rows only;
+# - LogaTeclaIndevida a member PlayKey calls on GetInst's result: a free function that built its message and then
+#   called GetInst gave 1455 31 over 211 rows (1 inserted, 1 deleted), GetInst inside the member's frame;
+# - 3281: the copy simulador.cpp.o gives at the tree's flags is a thunk into a body of three constants, 4 over 7 rows (2
+#   inserted); from roots_texttospeech.o, operand rows only.
+# Readings, not measured as forms: PlayFile's copy of the path before instance() is called (a by-value argument would be
+# built after instance(): a test TU at -O3 calls the object first, wasm-objdump -d), and FalaMensagem's local (the
+# target frees slot 15's string before PlayInterruptibleMessage, where the temporaries of one full expression live until
+# its end). That PararTicks and FalaMensagem are functions is a choice: the lines of ProcessTick's record (:120) and
+# PlayKey's (:136) leave their statements no room in ProcessTick. FinishState uses PararTicks too, and 7022 still
+# matches. Other forms of PlayKey's switch and of the echo's test are not measured.
+# $_1's two __clone slots (13732 and 13740) store the vptr before they copy the capture, as only code without strict
+# aliasing does (fn 786, the merge 13740 calls, has that order; with strict aliasing ours joins the merge with the other
+# order, the target's 1083, and 13732 scores 6 over 12 rows, 3 inserted and 3 deleted). They match since
+# cvotacaostateaudio.cpp builds without strict aliasing (src/Makefile's UENUX2_NOTBAA_FILES, the user's decision;
+# docs/reference/facts/app-flags.md F6 has the measurement on the whole link). In a variant link with only that object
+# so (docs/reference/facts/workflow.md W13), every other function of the object with a target row scored as it does with
+# strict aliasing.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
@@ -306,7 +363,7 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXX
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cvotacaostateaudio.cpp includes cconfiguracaoeleicao.h too
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# thirteen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
+# ten members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)

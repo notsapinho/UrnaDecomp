@@ -13,10 +13,14 @@
 // CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. 4135 is written; NomesTela stands for
 // 2386, which is not, with two calls.
 //
-// vota::CConfirmaVotoSemCandidato::GetTelaCargoAtual (fn 4483) has two direct callers in the target, StartStateAudio
-// (fn 7441, written) and ProcessInputAudio (fn 7428, pending): with the first alone binaryen inlines it, and it does
-// not join the shared body fn 3921. TelaSemCandidato stands for 7428; the form it gets is left as it is, as nothing
-// calls this.
+// api::CPolySingletonList::has<api::ITextToSpeech> (fn 3281, an 11-byte thunk into binaryen's merge, fn 1166) has three
+// direct callers in the target: fn 2079 (api::CPolySingleton<api::ITextToSpeech>::instance, whose copy the target keeps
+// from cinstrucaovotacaoacessibilidade.cpp, its record 1533836 among that file's), in the link; fn 7667 (the executable
+// TU's set<api::ITextToSpeech>) and fn 14478 (__wasm_call_ctors, a static initializer that calls it and drops the
+// result), not written. TemFala stands for 7667 and 14478 with one call. Our link has one more, simulador::Inicializa
+// (fn 8302, unit 188), which holds set<api::ITextToSpeech> inlined where the target's 8302 calls fn 4162, a wrapper
+// that reaches it (7667, table slot 65) through invoke_vii: in a link of this object without TemFala (W13) 3281 stays
+// out of line, and it and 2079 score as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
 //
 // vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
 // (vota::CMenuFiltrarCandidatosPorNumero's slots, pending in unit 104): CargoVisualizado stands for them with two calls.
@@ -26,8 +30,8 @@ extern "C" {
 int w150_instrucao() __asm__("_ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv");
 int w150_visualizar() __asm__("_ZN4vota21CVisualizarCandidatos7GetInstEv");
 void w150_nome_tela(void* nome, int tela) __asm__("_ZN4vota8NomeTelaENS_12ETelaVotacaoE");
-void w150_tela_sem_candidato(void* tela, void* estado, const void* chamador) __asm__(
-    "_ZN4vota25CConfirmaVotoSemCandidato17GetTelaCargoAtualERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
+int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
 int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
 }
 
@@ -57,12 +61,10 @@ __attribute__((noinline)) int NomesTela(int tela)
     return nome[11] + outro[11];
 }
 
-// stands for fn 7428
-__attribute__((noinline)) int TelaSemCandidato(void* estado, const void* chamador)
+// stands for fns 7667 and 14478
+__attribute__((noinline)) int TemFala()
 {
-    char tela[8];
-    w150_tela_sem_candidato(tela, estado, chamador);
-    return tela[6] + 15;
+    return w150_tem_fala(w150_info()) + 17;
 }
 
 // stands for fns 11891 and 11892
@@ -77,7 +79,7 @@ struct SEleitorEstadosRoots {
         eleitor_estados_sink = reinterpret_cast<const void*>(&InstrucaoAcessibilidade);
         eleitor_estados_sink = reinterpret_cast<const void*>(&VisualizarCandidatos);
         eleitor_estados_sink = reinterpret_cast<const void*>(&NomesTela);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&TelaSemCandidato);
+        eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
         eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
     }
 } eleitor_estados_roots;

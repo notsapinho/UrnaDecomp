@@ -11,15 +11,15 @@
 // std::string (6958, `no-candidate`: unit 97's fragment says why). The TSE functions that use them in the target are
 // uenux2's (5492 in api/gui/cinputmenufield.cpp, 6999 in app/vota/eleitor/cvotacaostateaudio.cpp, and 5782, which has
 // no record or stub and calls 2062), and these rows match at this flag set, without strict aliasing and without
-// -fexceptions, while the objects that instantiate them in our link, cinputmenufield.cpp's and cvotacaostateaudio.cpp's,
-// build in UENUX2_TBAA_DIRS: with strict aliasing they match fewer rows (src/units/97-uenux2-cvotacaostateaudio.mk has
-// the measurements). urna_regex_uenux2 and urna_regex_tokens only instantiate: nothing calls them and they leave the
-// link. They go when a uenux2 object outside UENUX2_TBAA_DIRS that uses std::regex links ahead of them. Not when the
-// two users build without strict aliasing: with both so and these two gone, cinputmenufield.cpp.o's copies take every
-// row, but its destructor (5491) needs strict aliasing and stops matching; with cvotacaostateaudio.cpp alone so, the
-// copies of cinputmenufield.cpp.o, ahead of it on the link line, take the rows and 32 stop matching
-// (docs/reference/facts/app-flags.md §F6). The constructor from a std::string and what it instantiates are an
-// -fexceptions object's in the target: ecourna's api/compression/icompressor.cpp.o gives them (unit 06's fragment).
+// -fexceptions, while of their users in our link cinputmenufield.cpp's object builds with strict aliasing, with which
+// they match fewer rows (unit 97's fragment has the measurements), and links ahead of cvotacaostateaudio.cpp's, which
+// UENUX2_NOTBAA_FILES builds without it. urna_regex_uenux2 and urna_regex_tokens only instantiate: nothing calls them
+// and they leave the link. They go when a uenux2 object without strict aliasing that uses std::regex links ahead of
+// cinputmenufield.cpp's. Not when both users build without it: with both so and these two gone, cinputmenufield.cpp.o's
+// copies take every row, but its destructor (5491) needs strict aliasing and stops matching; with
+// cvotacaostateaudio.cpp alone so, the copies of cinputmenufield.cpp.o, ahead of it, take the rows and 32 stop matching
+// (docs/reference/facts/app-flags.md §F6, at b7c2e8a5). The constructor from a std::string and what it instantiates are
+// an -fexceptions object's in the target: ecourna's api/compression/icompressor.cpp.o gives them (unit 06's fragment).
 #include "ecourna/app/dados/tiposbasicos.hpp"
 
 #include <regex>

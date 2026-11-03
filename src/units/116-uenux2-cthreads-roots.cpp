@@ -3,8 +3,8 @@
 //   10219, 10220, 10232 to 10236, unit 119's 3887 and slots 10785, 10788, 10798 and 10799, unit 165's 5343 and unit
 //   161's 652; Stop stands for the other callers' flag store. CThreadMonitor::GetInst (fn 1898) needs none: its five
 //   callers are in the link.
-// - CEstadoAudio::GetInst (fn 509, 17 callers, among them 1455, 4349, 7028): unit 97's 7028 and this unit's 4349 are
-//   its real callers here, and two stand-ins stand for the others.
+// - CEstadoAudio::GetInst (fn 509, 17 callers): its real callers here are unit 97's 7028 and 1455, 7198 (unit 241),
+//   7377 (197), 10430 (71), 10539 (142) and this unit's 4349, and two stand-ins stand for the other ten.
 // - CThreadEleitor::ProcessaEventos (fn 4349): of its two target callers, vota::CExecucaoVotaCooperativa's slot 7 (fn
 //   7823, unit 165) is in the link and CThreadEleitor's Run (fn 7061, this unit's pending file) is a trap, so
 //   EventosEleitor stands for 7061 and calls it twice.

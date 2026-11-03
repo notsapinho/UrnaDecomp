@@ -92,6 +92,11 @@ public:
     // Out of line (fn 4550: logaErro, fn 2282), called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName
     // (fn 6954) and vota::CPedeMajoritario's fn 11683. Its name is chosen from its message.
     void LogaErroPartidoNaoEncontrado();
+    // Held inlined by vota::CVotacaoStateAudio::PlayKey (fn 1455), its one caller, which calls GetInst before the
+    // member's own stack frame opens; it logs "Tecla indevida pressionada" through loga (fn 233), a literal only fn
+    // 1455 loads. Its name is chosen from its message, and its place here and in clogvota.cpp, after
+    // LogaErroPartidoNaoEncontrado, is chosen: it has no index to order.
+    void LogaTeclaIndevida();
 
     void LogaMesarioRegistrado(const std::string& titulo);
     void LogaMesarioJaRegistrado(const std::string& titulo);

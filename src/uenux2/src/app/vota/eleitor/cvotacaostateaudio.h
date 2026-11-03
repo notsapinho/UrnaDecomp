@@ -41,7 +41,8 @@ public:
 // {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string). Slot 14 is not
 // const, and the target forces it: its tags' member, SubstituiMarcador, calls FormatPartyName (fn 6954), whose record
 // shows it not const, and 6999 calls 6954 twice, which a const slot 14 could not do on `this`.
-// Slots 7, 8 and 13 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
+// Slots 7, 8 and 13 are written in cvotacaostateaudio.cpp, with the static helpers the records name (PlayMessage,
+// PlayInterruptibleMessage, PlayFile) and PlayKey; src/units/97-uenux2-cvotacaostateaudio.mk has their notes.
 //
 // The layout is what the constructor (fn 1785) stores: +11 a flag read before every use of audio (fn 7028 stores a
 // comparison's result there, and the readers compare it with 1: the width is evidence, the bool is chosen), +12 and +13
@@ -80,10 +81,28 @@ public:
 
     virtual std::string GetMensagem() const = 0;
 
+    // Static members by their records (cvotacaostateaudio.cpp:178 and :172): each has the text spoken through
+    // api::ITextToSpeech's slot 0 and played through api::ISound's slot 4, queued (and waited for) or interrupting what
+    // plays. PlayMessage is public as vota::CFimVotoEleitor::StartState (fn 7198), of no derived class, calls it;
+    // PlayInterruptibleMessage's access is chosen.
+    static void PlayMessage(const std::string& mensagem);
+    static void PlayInterruptibleMessage(const std::string& mensagem);
+
 protected:
     explicit CVotacaoStateAudio(int eventos);
 
+    // By its record (:136), not static and const; the derived classes' input slots call it. Its access is chosen.
+    void PlayKey(const char tecla) const;
+
 private:
+    // Static by its record (:226); PlayKey, its one caller, holds it inlined. Its access is chosen.
+    static void PlayFile(const std::string& arquivo);
+
+    // By its record (:388) and the typeinfos of its two lambdas, $_0 and $_1 of IniciarEsperaFimAudio() (the names
+    // clang gives a lambda of a function that is not inline, a reading); ProcessTick (fn 7010), its one caller, holds it
+    // in a stack frame of its own (docs/reference/facts/reading.md R10), so it is out of line. Its access is chosen.
+    void IniciarEsperaFimAudio();
+
     // The record (cvotacaostateaudio.cpp:297, fn 6954) names it and shows it neither static nor const; fn 6999, slot 14,
     // calls it twice. Its access is chosen.
     std::string FormatPartyName(const std::string& numero);
@@ -99,6 +118,18 @@ private:
             m_esperaFimAudio.reset();
         }
     }
+
+    // Both ticks stopped when audio is on: FinishState (fn 7022), ProcessInput (fn 7029, twice) and ProcessTick (fn
+    // 7010) hold that test and the two calls with no frame of their own. Defined inline in cvotacaostateaudio.cpp, the
+    // one TU that calls it; its name, its being a member and where it is defined are chosen.
+    void PararTicks();
+
+    // The current message, its tags filled in, spoken when audio is on: ProcessTick (fn 7010) holds the test and both
+    // slot calls with no frame of their own, and frees slot 15's string before PlayInterruptibleMessage, which a local
+    // holding slot 14's result gives (a reading: the temporaries of one full expression live until its end). Defined
+    // inline in cvotacaostateaudio.cpp; its name, its being a member, and that it is a function at all (the lines of
+    // ProcessTick's record and of PlayKey's leave its statements no room in ProcessTick) are chosen.
+    void FalaMensagem();
 
     bool m_bAudioHabilitado;
     uebyte m_tickEco;

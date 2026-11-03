@@ -1,9 +1,9 @@
 // Roots: keep vota::CEleitorVotando's functions in the skeleton link the way the target keeps them.
-// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, none reconstructed: Obtem
-//   stands for them, two call sites. GetInst holds the constructor inlined, whose vptr store is the target's reference
-//   to the class's vtable, and so keeps every slot.
+// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, of which 7428 is reconstructed
+//   (unit 150): Obtem stands for the other two, two call sites. GetInst holds the constructor inlined, whose vptr store
+//   is the target's reference to the class's vtable, and so keeps every slot.
 // - RegistraVoto (fn 4471) has two direct callers in the target, fns 7428 and 11754, each calling it right after
-//   GetInst: Registra stands for them, two call sites on GetInst's result.
+//   GetInst: 7428 is reconstructed (unit 150), and Registra stands for 11754, two call sites on GetInst's result.
 // - AdicionaVoto (fn 4192) and the five CLogVota::LogaVoto* members (fns 3272, 4546, 4542, 4541 and 4537) have two
 //   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442, records celeitorvotando.cpp:410 and
 //   :427, not written), which makes RegistraVoto's calls; FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn
@@ -52,7 +52,7 @@ namespace {
 
 const void* volatile celeitorvotando_sink;
 
-// stands for fns 7428, 7481 and 11754
+// stands for fns 7481 and 11754 (7428 is in the link)
 __attribute__((noinline)) int Obtem(int vezes)
 {
     const char* primeiro = w197_inst();
@@ -60,7 +60,7 @@ __attribute__((noinline)) int Obtem(int vezes)
     return primeiro[vezes] - segundo[3];
 }
 
-// stands for fns 7428 and 11754
+// stands for fn 11754 (7428 is in the link)
 __attribute__((noinline)) int Registra(const unsigned char* cargos, int tipo, const char* numeros)
 {
     char* eleitor = w197_inst();

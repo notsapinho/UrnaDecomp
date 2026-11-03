@@ -112,9 +112,9 @@ __attribute__((noinline)) int w100_tem_qrcode()
 
 // Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
 // where clang leaves the calls. Each goes when the target callers below are in our link and call it there; those that
-// are not: of 321's, 1091 2893 5344 10212; of 388's, 1091; of 871's none, its calls here stand for none (4771 and 5560
-// call it since unit 116's std::async; 2927, 518 and 2650 call them since unit 229's root; 3373, 8096 and 8101 match;
-// 9039, 9135 and 13621 are in the link since unit 170's has<T> stand-ins and the guard of unlock_shared_and_lock).
+// are not: of 321's, 2893 5344 7667 10212; of 388's, 7667 (its row pairs 8758's body); of 871's none, its calls here
+// stand for none (1091 since unit 97; 4771, 5560 since unit 116's std::async; 2927, 518, 2650 since unit 229's root;
+// 3373, 8096, 8101 match; 9039, 9135, 13621 since unit 170's has<T> roots and unlock_shared_and_lock's guard).
 // - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
 // - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
 // - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096

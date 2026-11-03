@@ -70,10 +70,11 @@
 # - The default arguments' records of instance() name this file only at 592: the TU's other calls of instance() are in
 #   functions not written.
 #
-# Not written, and what each waits for:
-# - 10240 (votaSetAudioEnabled): written and `unresolved`. The target's 1091 (instance<ISound>, this TU's copy; callers
-#   1204 1455 3143 3851 4449 7010 7029 7242 7248 10240 and 7840 by invoke) has one caller in our link, so binaryen
-#   inlines it into 10240. Measured on a scratch link with a stand-in calling instance<ISound> and has<ISound> once each
+# Not written, and what each waits for (and what matches since, said so):
+# - 10240 (votaSetAudioEnabled) matches now, with no edit of its own, and so does 1091 (instance<ISound>, this TU's
+#   copy; callers 1204 1455 3143 3851 4449 7010 7029 7242 7248 10240 and 7840 by invoke), from this object: unit 97's
+#   and unit 150's members call 1091, so binaryen keeps it out of line. While 10240 was its one caller in our link,
+#   binaryen inlined it there, and 10240 read `unresolved`. Measured then on a scratch link with a stand-in calling instance<ISound> and has<ISound> once each
 #   and a hand line naming has<ISound> 3343 (its thunk passes ISound's type name, as unit 100's has<T> lines read): 1091
 #   stays out of line and stops `unresolved` at +0xc11 on ~shared_ptr<ISound>, `pnpm wasm score` 340 over 1315 rows, 132
 #   inserted: our link inlines 5650 and 5656 (target callers 455 and 1091), keeps ~CTravaLeitura whole where the target
