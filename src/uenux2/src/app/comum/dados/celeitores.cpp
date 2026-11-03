@@ -2,15 +2,20 @@
 
 #include <algorithm>
 #include <format>
+#include <functional>
 
+#include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/util.h"
+#include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "app/comum/dados/md/eleitor/cimpedido.h"
+#include "app/comum/relatorios/cgeradorbuqrcode.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace comum {
 
-// (original lines 13-40: content not recovered)
+// (original lines 18-40: content not recovered)
 #line 41
 std::unique_ptr<CEleitores> CEleitores::s_instance;
 std::mutex CEleitores::s_mutex;
@@ -34,7 +39,41 @@ CEleitorDetalhe* CEleitores::LocalizaEleitor(const std::string& identificador, e
     return LocalizaEleitor(identidade);
 }
 
-// (original lines 63-201: content not recovered)
+namespace {
+
+template <typename T>
+std::vector<T> LeArquivos(const std::vector<std::string>& arquivos, std::function<std::vector<T>(const std::string&)> leitor)
+{
+    std::vector<T> lidos;
+    for (const std::string& arquivo : arquivos) {
+        const std::vector<T> doArquivo = leitor(arquivo);
+        lidos.insert(lidos.end(), doArquivo.begin(), doArquivo.end());
+    }
+    return lidos;
+}
+
+} // namespace
+
+std::vector<std::string> MontaCaminhos(const std::string& diretorio, const std::vector<std::string>& nomes)
+{
+    std::vector<std::string> caminhos;
+    caminhos.reserve(nomes.size());
+    for (const std::string& nome : nomes) {
+        caminhos.push_back(diretorio + nome);
+    }
+    return caminhos;
+}
+
+std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<std::string>& arquivos)
+{
+    const std::function<std::vector<md::CImpedido>(const std::string&)> leitor = [](const std::string& arquivo) {
+        asn::CConversorImpedido conversor;
+        return conversor.Desconverte(api::CFileASN::ReadFromFile<ModuloImpedidos::EntidadeImpedidos>(arquivo));
+    };
+    return LeArquivos(arquivos, leitor);
+}
+
+// (original lines 97-201: content not recovered)
 #line 202
 // <stubs>
 // f6734 · 6461 B · unmatched · name unknown
@@ -99,7 +138,48 @@ md::ETipoAbrangencia CEleitores::GetCurrentAbrangenciaEleitor() const
     return detalhe->GetEleitor().GetAbrangencia(m_uf, m_municipio);
 }
 
-// (original lines 502-623: content not recovered)
+// (original lines 502-559: content not recovered)
+#line 560
+namespace {
+
+std::vector<md::ETipoAbrangencia> AbrangenciasAPartirDe(md::ETipoAbrangencia abrangencia)
+{
+    std::vector<md::ETipoAbrangencia> abrangencias;
+    for (int tipo = abrangencia; tipo <= md::ABRANGENCIA_FEDERAL; ++tipo) {
+        abrangencias.push_back(static_cast<md::ETipoAbrangencia>(tipo));
+        if (tipo == md::ABRANGENCIA_FEDERAL) {
+            break;
+        }
+    }
+    return abrangencias;
+}
+} // namespace
+
+std::map<md::ETipoAbrangencia, SQtdeAptos> CEleitores::QuantidadeAptosPorAbrangencia() const
+{
+    std::map<md::ETipoAbrangencia, SQtdeAptos> quantidades;
+    for (md::ETipoAbrangencia abrangencia : AbrangenciasAPartirDe(md::ABRANGENCIA_MUNICIPAL)) {
+        quantidades[abrangencia] = SQtdeAptos{};
+    }
+    for (const Container::value_type& registro : m_registros) {
+        const CEleitorDetalhe& detalhe = registro.second;
+        if (detalhe.SemImpedimento()) {
+            const md::CEleitorDecorator& eleitor = detalhe.GetEleitor();
+            const md::ETipoAbrangencia abrangenciaEleitor = eleitor.GetAbrangencia(m_uf, m_municipio);
+            const bool tte = eleitor.IsTTE();
+            for (md::ETipoAbrangencia abrangencia : AbrangenciasAPartirDe(abrangenciaEleitor)) {
+                if (!tte) {
+                    ++quantidades[abrangencia].m_qtdeAptosDaSecao;
+                } else {
+                    ++quantidades[abrangencia].m_qtdeAptosTTE;
+                }
+            }
+        }
+    }
+    return quantidades;
+}
+
+// (original lines 599-623: content not recovered)
 #line 624
 CEleitores::SQuantidadeAptos CEleitores::QuantidadeAptos() const
 {

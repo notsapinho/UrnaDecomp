@@ -14,12 +14,19 @@
 namespace comum {
 
 class CEleitorDadosHabilitacao;
+struct SQtdeAptos;
+
+namespace md {
+class CImpedido;
+} // namespace md
 
 // RTTI: comum::CEleitores has two bases, api::CDataMap<CEleitorIdentidade, CEleitorDetalhe> at +4 and
-// comum::IDataSourceAptos at +0, listed in that order, and its vtable has one slot, fn 2824. Slot 0's name is chosen.
+// comum::IDataSourceAptos at +0, listed in that order, and its vtable has one slot, fn 2824. That slot returns the map
+// CGeradorBUQRCodeVota's constructor (fn 5603) moves into comum::CGeradorBUQRCode's +404 (cgeradorbuqrcode.h has its
+// types). The slot's name, from what the body counts, and its const are chosen; the class has no other member.
 class IDataSourceAptos {
 public:
-    virtual void Slot0() const = 0;
+    virtual std::map<md::ETipoAbrangencia, SQtdeAptos> QuantidadeAptosPorAbrangencia() const = 0;
 };
 
 // Recovered: the layout, from the destructor (fn 5773), which is out of line and frees, in this order, a tree of
@@ -44,7 +51,10 @@ public:
 
     static CEleitores& GetInst();
 
-    void Slot0() const override;
+    // fn 2824, slot 0: the map's three keys (every md::ETipoAbrangencia) start at zero, and each record with no
+    // impediment counts once at its voter's coverage and at each wider one, in the first count without a temporary
+    // transfer and in the second with one (the IsTTE word, as QuantidadeAptos reads it).
+    std::map<md::ETipoAbrangencia, SQtdeAptos> QuantidadeAptosPorAbrangencia() const override;
 
     CEleitorDetalhe* LocalizaEleitor(const md::CEleitorIdentidade& identidade);
     CEleitorDetalhe* LocalizaEleitor(const std::string& identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo);
@@ -83,6 +93,11 @@ public:
     md::ETipoAbrangencia GetCurrentAbrangenciaEleitor() const;
 
 private:
+    // fn 5767: the impediments read from each file of a list, through a std::function over a lambda (RTTI of its
+    // __func, vtable @1559564, names this member and its parameter), appended in the files' order. No `this`: the
+    // target passes the list alone. Its being private is chosen.
+    static std::vector<md::CImpedido> GetEleitoresImpedidos(const std::vector<std::string>& arquivos);
+
     // GetCurrentAbrangenciaEleitor passes the string at +32 and the word at +44 to
     // md::CEleitorDecorator::GetAbrangencia (fn 3721), which compares them with the voter's temporary transfer's
     // string and word: the urn's state and
