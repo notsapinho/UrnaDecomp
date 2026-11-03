@@ -1,6 +1,6 @@
-// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetImpedimento, GetDinamico,
-// MarcaHabilitado and MarcaVotou below it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
-// recovered.
+// comum::CEleitorDetalhe: the two constructors (the record at line 49 col 15 is the second's; the first's lines are a choice),
+// ConfereDadosDinamicos (line 224 col 15), and GetImpedimento, GetDinamico, MarcaHabilitado and MarcaVotou below it, which
+// have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not recovered.
 #include "app/comum/dados/celeitordetalhe.h"
 
 #include <format>
@@ -11,7 +11,26 @@
 
 namespace comum {
 
-// (original lines 14-90: content not recovered)
+// (original lines 14-35: content not recovered)
+#line 36
+CEleitorDetalhe::CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::ETipoImpedimento impedimentoP1,
+    const md::ETipoImpedimento impedimentoP2)
+    : m_eleitor(eleitor), m_impedimentoP1(impedimentoP1), m_impedimentoP2(impedimentoP2)
+{
+}
+
+// (original lines 42-43: content not recovered)
+#line 44
+CEleitorDetalhe::CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::CEleitorDinamico& dinamico,
+    const md::ETipoImpedimento impedimentoP1, const md::ETipoImpedimento impedimentoP2)
+    : m_eleitor(eleitor), m_dinamico(dinamico), m_impedimentoP1(impedimentoP1), m_impedimentoP2(impedimentoP2)
+{
+    if (eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()) != dinamico.GetEleitor()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7829, "CEleitorDetalhe - identidades divergentes");
+    }
+}
+
+// (original lines 53-90: content not recovered)
 #line 91
 // <stubs>
 // f1937 · 5175 B · unmatched · name unknown

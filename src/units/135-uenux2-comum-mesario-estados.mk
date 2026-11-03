@@ -143,8 +143,10 @@
 #   (a scratch link), where the target's band puts 816. Not explained; its slot needs it, so it stays written.
 # - 10319, CNomeMesariosUrnaDS::Text: a whole body where the target's is a thunk into fn 6008, the shared body with
 #   cdigitalmesarionaoreconhecida.cpp's 10323, which is not in our link (10316, pending, holds it). Against 6008 ours
-#   scores 346 over 704 rows (226 inserted): the voter's md::CEleitorDecorator is copied in place where 6008 calls fn
-#   946. It is written because 10313's form takes its address, and a hand line names it for 10313 (its comment).
+#   scored 346 over 704 rows (226 inserted), the voter's md::CEleitorDecorator copied in place where 6008 calls fn 946;
+#   since the decorator derives from md::CEleitor (unit 110's fragment) ours calls 946 too and scores 225 over 507
+#   (29 inserted, 77 deleted). It is written because 10313's form takes its address, and a hand line names it for 10313
+#   (its comment).
 # - The static pointer and mutex of CDigitalMesarioNaoReconhecida (10326 through fn 389, 10324): no reader is written,
 #   so their destructors' `.bss` names have no voter but themselves, and their .bss order is a choice, as unit 104 says
 #   of CQuerReimprimirZeresima's. CPedeDigitalMesario's pointer's destructor (10321) is a thunk into fn 3886, the reset

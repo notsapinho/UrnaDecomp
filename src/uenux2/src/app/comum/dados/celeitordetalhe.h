@@ -21,9 +21,19 @@ class CEleitorDadosHabilitacao;
 // written. MarcaVotou passes its own name to ConfereDadosDinamicos (the literal "MarcaVotou" in target fn 10210, which
 // holds it inlined), as GetDinamico and MarcaHabilitado pass theirs: the name is read from that literal.
 // Chosen: the members' names, the two accessors, GetDinamico's const and const& result, GetImpedimento's name,
-// MarcaHabilitado's parameter type. Nothing builds it.
+// MarcaHabilitado's parameter type.
+// The constructors: CEleitores::LoadEleitorDetalhe (fn 5764) builds the record one of two ways, with the voter's
+// dynamic data (the record's constructor, line 49, which throws code 7829 when the data's voter is not the decorator's
+// identity, held behind a frame of its own in 5764: out of line here, binaryen inlined it) or without it (the optional
+// left empty, no frame). For the one without the data, its being out of line beside the other, its parameters and its
+// line are chosen (not measured against an inline form).
 class CEleitorDetalhe {
 public:
+    CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::ETipoImpedimento impedimentoP1,
+        const md::ETipoImpedimento impedimentoP2);
+    CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::CEleitorDinamico& dinamico,
+        const md::ETipoImpedimento impedimentoP1, const md::ETipoImpedimento impedimentoP2);
+
     void ConfereDadosDinamicos(const std::string& funcao) const;
 
     const md::CEleitorDecorator& GetEleitor() const { return m_eleitor; }

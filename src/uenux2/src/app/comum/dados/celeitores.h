@@ -98,6 +98,13 @@ private:
     // target passes the list alone. Its being private is chosen.
     static std::vector<md::CImpedido> GetEleitoresImpedidos(const std::vector<std::string>& arquivos);
 
+    // fn 5764, record celeitores.cpp:719, which gives the signature: the voter's record, with the impediments of the
+    // entry of the sorted list at the index when its identity is the voter's (the index then moves on), none when it
+    // is beyond the voter's, and code 7851 when the voter's is beyond it; with the voter's dynamic data when given. The
+    // wasm has no `this`: binaryen dropped the one it never reads. Its being private is chosen.
+    CEleitorDetalhe LoadEleitorDetalhe(const md::CEleitorDecorator& eleitor, const std::vector<md::CImpedido>& impedidos,
+        size_t& indice, const md::CEleitorDinamico* dinamico) const;
+
     // GetCurrentAbrangenciaEleitor passes the string at +32 and the word at +44 to
     // md::CEleitorDecorator::GetAbrangencia (fn 3721), which compares them with the voter's temporary transfer's
     // string and word: the urn's state and
