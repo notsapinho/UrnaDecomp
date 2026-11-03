@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp` and `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` and `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -579,6 +579,25 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   12098 lies under `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified,
   and its comment says when it goes. The file's flag is a reading of the original build's settings like the rest of
   the split.
+
+  One file of `validamidia/` has it: `cfabricaconteudomidiastart.cpp` (unit 179), whose
+  `comum::impl::RemoveArquivosDeSistema` (5571) holds the initializer-list constructor of a `std::map` inlined
+  (binaryen's inlining of the object's linkonce copy). Without TBAA that constructor loads a word again after the
+  tree's stores where the target keeps it in a local, the sign above, and 5571 differs (394 over 992 rows, its local
+  numbers besides); with it every row left is an operand row and 5571 matches (unit 179's fragment). Measured in place
+  on the merged tree at 6df50018 (12251 matches): the compile lines `make -n -C src link APP=<a new directory>` prints
+  (912) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 856 objects that depend on
+  `src/Makefile`, and of the 1001 under `build/out/app` 1000 are `cmp`-equal to 6df50018's build, the other the
+  file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
+  tier alone, `none` to `shape`, its row staying `match`; step 8 adds a `call` name for 4679, already matched, and
+  moves `__THREW__`'s voter), and `make -C src splat` gives the target's sha256. With strict aliasing the object's
+  code changes in 26 functions, the map's constructor, `__tree_balance_after_insert` and 24 libc++ `std::format`
+  internals, all linkonce (`wasm-objdump -d` of the two objects, function by function), and the link takes none of
+  them from this object: `build/out/wasm-map/vota_web/names.tsv`'s object column names four functions of it,
+  ConteudoValido, the map's tree destroy, RemoveArquivosDeSistema and ValidaConteudo, whose code does not change.
+  The directory's other file, `cvalidamidia.cpp`, was not measured with the flag, so whether TSE's build gave it to
+  the file or to `validamidia/` no row says: listing the file is a choice, and its flag a reading of the original
+  build's settings like the rest of the split.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

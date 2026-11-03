@@ -5434,7 +5434,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5568	-	-	-	no-candidate	no symbol and no ledger pair	100	none	libc++	0	-
 5569	_ZN3api17GetExceptionLevelEv	5740	symbol	match	-	217	addr	vota	1	app/uenux2/src/api/gui/capplication.cpp.o
 5570	-	-	-	no-candidate	no symbol and no ledger pair	26	none	unknown	0	-
-5571	_ZN5comum4impl23RemoveArquivosDeSistemaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5729	symbol	differs	+0xa target +0x9 local.tee 1 | ours +0x9 local.tee 2	2179	none	comum	1	app/uenux2/src/app/comum/validamidia/cfabricaconteudomidiastart.cpp.o
+5571	_ZN5comum4impl23RemoveArquivosDeSistemaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5729	symbol	match	readings: address string	2179	none	comum	1	app/uenux2/src/app/comum/validamidia/cfabricaconteudomidiastart.cpp.o
 5572	_ZN5comum4impl14ValidaConteudoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_6vectorIS7_NS5_IS7_EEEE	5730	symbol	match	readings: address same-content,address string	2128	none	comum	1	app/uenux2/src/app/comum/validamidia/cfabricaconteudomidiastart.cpp.o
 5573	_ZNSt3__228__exception_guard_exceptionsINS_6vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS5_IS7_EEE16__destroy_vectorEED2B8ne210108Ev	3528	symbol	match	-	16	addr	app	1	app/roots_coderenv.o
 5574	_ZL10DepuraInfoPKcz@app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o	5733	symbol	unresolved	ours +0x7 i32.const 1510088: an address of ours: _ZZL10DepuraInfoPKczE12s_habilitado.0@app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o (.data) has no target symbol; re-pointed bytes occur 65+ times	16	addr	comum	2	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
@@ -11029,7 +11029,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11163	__cxx_global_array_dtor@app/uenux2/src/api/gui/capplication.cpp.o	11983	symbol	match	readings: address symbol	36	addr	unknown	2	app/uenux2/src/api/gui/capplication.cpp.o
 11164	_ZNKSt3__220__shared_ptr_pointerIPN5comum4impl12IValidaMidiaENS_14default_deleteIS3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	11927	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11165	__cxx_global_array_dtor@app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o	11928	symbol	match	readings: address symbol	10	addr	app	2	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
-11166	_ZN5comum4impl12CValidaMidia10LimpaMidiaEv	11929	symbol	match	-	138	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
+11166	_ZN5comum4impl12CValidaMidia10LimpaMidiaEv	11929	symbol	match	-	138	shape	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11167	_ZN5comum4impl12CValidaMidia29ContemApenasArquivosResultadoEv	11930	symbol	match	readings: address string,address same-content	1260	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11168	_ZN5comum4impl12CValidaMidia13ContemArquivoERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	11931	symbol	match	-	414	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11169	_ZN5comum4impl12CValidaMidia23ContemArquivosResultadoEv	11933	symbol	match	readings: address string	388	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o

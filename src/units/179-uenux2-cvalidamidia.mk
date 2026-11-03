@@ -115,18 +115,20 @@
 #   ConteudoIncializacao's condition written out without IndependeDoTurno, and this unit's two objects in the other
 #   order (docs/reference/facts/codegen.md C4); worse, a const_iterator loop (117 over 1020) and an index loop (151 over
 #   1044). Step 8 names it by srcloc-anchor now, and its call names 5574 (below).
-# - RemoveArquivosDeSistema (5571), `394 over 992 rows (311 operand-only, 42 inserted, 39 deleted)`: the frame, the
-#   names' order and the order their buffers are freed are the target's (allocation 13 down to 1 on both sides); the
-#   scan's first difference is the frame pointer's local, 2 where the target has 1. Besides local numbers, our map
-#   constructor's code (binaryen's inlining) loads a word again after the tree's stores where the target keeps it in a
-#   local, what -fno-strict-aliasing gives (src/Makefile, UENUX2_TBAA_DIRS). Measured on a scratch link with
+# - RemoveArquivosDeSistema (5571) matches, with this file built with strict aliasing (src/Makefile's UENUX2_TBAA_DIRS
+#   lists it; docs/reference/facts/app-flags.md F6). Without it, `394 over 992 rows (311 operand-only, 42 inserted, 39
+#   deleted)`: the frame, the names' order and the order their buffers are freed are the target's (allocation 13 down
+#   to 1 on both sides); the scan's first difference is the frame pointer's local, 2 where the target has 1. Besides
+#   local numbers, our map constructor's code (binaryen's inlining) loads a word again after the tree's stores where the
+#   target keeps it in a local, what -fno-strict-aliasing gives. Measured first on a scratch link with
 #   cfabricaconteudomidiastart.cpp built with strict aliasing (its object removed, then make -C src link with
 #   UENUX2_TBAA_DIRS given the file on the command line): 93 over 950 rows, every one operand-only and none outside
 #   calls and data addresses (pnpm wasm score); ValidaConteudo (5572) 106 over 924 and ConteudoValido (2784) 1 over
 #   19 stay operand-only, Valida (11172) is unchanged; through steps 7 to 9 and make -C src splat on that link (the same
 #   override on each), 5571 matches and no other row of the scan moves (12188 matches against 12187, the target's
-#   sha256). The flag is the user's decision: not landed. Its callers match all the same, as its name comes from their
-#   calls (5572 and slot 9, both matched).
+#   sha256), then in place on the whole tree with the file in the list: 5571 matches, no other row moves, none is
+#   lost (12251 to 12252). Its callers match all the same, as its name comes from their calls (5572 and slot 9, both
+#   matched).
 # - CasamTodos (2758), `101 over 278 rows (56 operand-only, 21 inserted, 14 deleted)` with CasaPadrao over two
 #   std::string_view (its first form, an index loop over the strings, `144 over 325`; std::equal, `129 over 300`):
 #   its row reads unresolved on CasaCaractere, which has no target function name.

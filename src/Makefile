@@ -95,13 +95,15 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # strict aliasing by directory: the generic uenux2 rule compiles these without -fno-strict-aliasing (TBAA on), where
 # std::set and std::map inserts, a list's clear and lambdas' __clone keep in a local what the flag reloads; the rest of
 # comum keeps the flag, and its ASN.1 converters, comparecimentomesario, gravadores, relatorios and cfederacoes.cpp lose
-# matches with TBAA, but two files: comum's own carquivossavd.cpp, whose map insertions match only with it, and
-# gravadores' cgeracaoversoescontratos.cpp, whose std::set copy and insert (fns 1163 and 5868) match only with it
-# (docs/reference/facts/app-flags.md §F6). An entry is a pattern of the source's path, .cpp included. The -pending
-# and roots objects keep their rules' flags.
+# matches with TBAA, but three files: comum's own carquivossavd.cpp, whose map insertions match only with it,
+# gravadores' cgeracaoversoescontratos.cpp, whose std::set copy and insert (fns 1163 and 5868) match only with it,
+# and validamidia's cfabricaconteudomidiastart.cpp, whose RemoveArquivosDeSistema (fn 5571), holding a std::map's
+# initializer-list constructor inlined, matches only with it (docs/reference/facts/app-flags.md §F6). An entry is
+# a pattern of the source's path, .cpp included. The -pending and roots objects keep their rules' flags.
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
 UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/% \
-                      src/app/comum/carquivossavd.cpp src/app/comum/gravadores/cgeracaoversoescontratos.cpp
+                      src/app/comum/carquivossavd.cpp src/app/comum/gravadores/cgeracaoversoescontratos.cpp \
+                      src/app/comum/validamidia/cfabricaconteudomidiastart.cpp
 # the files inside those directories that keep -fno-strict-aliasing. The first four are each read from code that only
 # their own functions reach: in ctelasvota.cpp the map constructor GetKeyboardLayout alone calls (fn 6579) reloads the
 # tree's begin after a new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006,

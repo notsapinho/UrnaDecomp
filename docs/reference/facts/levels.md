@@ -407,13 +407,15 @@ name, and a probe object lands nowhere.
 
 uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile`
 (`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`,
-`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`) but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
+`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp`)
+but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
 `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp` and
 `operador/leidentidade/celeitorencontrado.cpp`), and without it elsewhere; [app-flags.md](app-flags.md) §F6 has the
 evidence and the measurement of the split, and [reading.md](reading.md) §R21 reads the setting from a body. Measured
 at bbf27ac1 for the four directories, at 36dda756 for `carquivossavd.cpp`, at b7c2e8a5 for the first two files
 `UENUX2_NOTBAA_FILES` lists, at fbf5698f for `cvotacaostateaudio.cpp`, at a3ab1f25 for `cconferevotoemcargo.cpp`, at
-b283f0e0 for `celeitorencontrado.cpp` and at e5577685 for `cgeracaoversoescontratos.cpp` (§F6 has each).
+b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos.cpp` and at 6df50018 for
+`cfabricaconteudomidiastart.cpp` (§F6 has each).
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
@@ -424,7 +426,7 @@ b283f0e0 for `celeitorencontrado.cpp` and at e5577685 for `cgeracaoversoescontra
   restates the split or its rule, which this lists (`asmlift-wasm/benchmark/dataset/selection-inputs/` is a snapshot
   pinned by blob id, and stays):
 
-      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -e 'cgeracaoversoescontratos.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
+      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -e 'cgeracaoversoescontratos.cpp`' -e 'cfabricaconteudomidiastart.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
 
 - **The list drops every `-fno-strict-aliasing` of a line**, an `UENUX2_EXTRA` one too (`uenux2_cxxflags` in
   `src/Makefile`), but in the files `UENUX2_NOTBAA_FILES` lists. So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a

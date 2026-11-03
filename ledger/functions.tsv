@@ -11029,7 +11029,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11163	36	0	-	-	skeleton	11921	addr	4	__cxx_global_array_dtor.4_4941
 11164	17	0	app	libc++	skeleton	11671	addr	1	std::__2::__shared_ptr_pointer<api::CPreShowClearMT*, std::__2::shared_ptr<api::IPreShow<api::IScreenMT>>::__shared_ptr_default_delete<api::IPreShow<api::IScreenMT>, api::CPreShowClearMT>, std::__2::allocator<api::CPreShowClearMT>>::__get_deleter(std::type_info const&) const
 11165	10	0	app	-	skeleton	12243	addr	2	__cxx_global_array_dtor.2_4018
-11166	138	0	app	comum	-	-	none	-	
+11166	138	0	app	comum	skeleton	11929	shape	5	comum::impl::CValidaMidia::LimpaMidia()
 11167	1260	0	app	comum	-	-	none	-	
 11168	414	0	app	comum	-	-	none	-	
 11169	388	0	app	comum	-	-	none	-	
