@@ -142,7 +142,4 @@
 # The generic uenux2 rule depends on the source and every uenux2 header.
 CREGISTRARMESARIOS_SRCS := src/app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp
 UENUX2_SRCS += $(CREGISTRARMESARIOS_SRCS)
-# the target caller of 3610 that is not written (10689): 247-uenux2-cregistrarmesarios-roots.cpp stands for it
-$(ROOT)/$(APP)/247-uenux2-cregistrarmesarios-roots.o: $(ROOT)/src/units/247-uenux2-cregistrarmesarios-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/247-uenux2-cregistrarmesarios.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/247-uenux2-cregistrarmesarios-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/247-uenux2-cregistrarmesarios-roots.o
+# No roots file: GetInst's target callers (10217, 10689, 10737) and the two screen functions' are all in the link.

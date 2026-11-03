@@ -3,7 +3,8 @@
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (held inlined)
 // Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's seven
 // after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's four after
-// LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's eight.
+// LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's eight;
+// 119's 2502 and 3258 where their bands put them (clogvota.h says which).
 #include "app/vota/log/clogvota.h"
 #include <format>
 #include <memory>
@@ -14,7 +15,6 @@
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 
 namespace vota {
-
 CLogVota::CLogVota() : comum::IEventosLog(static_cast<api::ELogAplicativos>(1)) {}
 
 void CLogVota::LogaMesarioRegistrado(const std::string& titulo)
@@ -213,6 +213,11 @@ void CLogVota::LogaVotoConfirmado(const uebyte cargo)
                      comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
 }
 
+void CLogVota::LogaOperadorSelecionou(const std::string& opcao)
+{
+    loga(std::format("Operador selecionou: {}", opcao));
+}
+
 void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
 {
     logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
@@ -359,7 +364,12 @@ void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade
     loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
 }
 
-// (original lines 362-382: content not recovered)
+void CLogVota::LogaMesarioHabilitouEleitor(const std::string& titulo)
+{
+    loga(std::format("Mesário {} habilitou o eleitor", titulo));
+}
+
+// (original lines 372-382: content not recovered)
 #line 383
 void CLogVota::LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento)
 {

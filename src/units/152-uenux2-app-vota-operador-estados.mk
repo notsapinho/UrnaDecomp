@@ -112,9 +112,10 @@
 #   votacao terminou!" at {1, 1}, "Favor encerrar a urna!" at {1, 2}, "CORRIGE" at {1, 4}, AddInputControl,
 #   GetInteractiveForm("", true). 35 over 412 rows, all operand-only, the statics.
 # The two forms are the target's: the member-list helper where 301 writes into the member, the assignment where the
-# member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. Their target callers are
-# not reconstructed (10209 for 5393, 10689 for 5430; 5393's other, 10430, is: unit 71, and so is 5430's, 10677: unit
-# 161): the roots stand in for them, and the vtable sinks for these two classes went.
+# member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. 5393's target caller
+# 10209 is not reconstructed (its other, 10430, is: unit 71): the roots stand in for it. 5430's two, 10677 (unit 161)
+# and 10689 (CEscolheOpcao::ProcessInput, unit 277's list), are in the link, so its stand-in went. The vtable sinks for
+# these two classes went.
 # - vota::CPerguntaFilaEleitorVazia::GetInst (5426; 10716 and 10717), written with unit 277's states: the form from a
 #   member-list helper (AddClock({33, 1}), "Todas as pessoas presentes já votaram?" at {1, 2}, "CORRIGE: não" at {1, 4},
 #   "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true)); named by vptr-anchor and

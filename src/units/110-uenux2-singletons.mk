@@ -271,10 +271,20 @@
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
 # - 2822 walks the base CDataMap's map at +4 and counts the records whose detail holds dynamic data (the optional's flag
 #   at +192), whose GetDinamico() (1271, called twice) has tipo_habilitacao 0 (+36) and estado_comparecimento 3 (+32),
-#   and returns the count's low 16 bits. Its callers (10699, 11242, 12098, 12110, not written) pass
+#   and returns the count's low 16 bits. Its callers (10699, unit 277's, written; 11242, 12098 and 12110, not) pass
 #   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
 #   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
+# - 2821 and 1935, CEleitores::QuantidadeHabilitacaoBiometrica and QuantidadeHabilitacaoBiografica: the same count for
+#   the kinds of enabling 1 and 2 (md::CEleitorDinamico's HabilitaPorBiometria and HabilitaPorMesario store them). The
+#   target holds each as a 9-byte thunk of one body binaryen merged, fn 6034 (135 B), which takes the kind as its second
+#   parameter (2821 passes 1, 1935 passes 2); 2822 keeps a body of its own: it tests the kind with a br_if on the loaded
+#   word itself, no compare (a reading of why binaryen leaves it out of the merge).
+#   Written as 2822 is, they form the same merge in our link: 6034 matches as the byn$mgfn-shared$ body named after
+#   QuantidadeHabilitacaoBiometrica (the first member in link order), 2821 and 1935 by step 8's pair-addr names. Their
+#   callers 10701 and 10700 (unit 277's) are in the link and call one each; unit 216's roots stand for the others. In
+#   celeitores.cpp after 2822, a choice their bands allow (2821 follows 2822 in band 4, 1935 follows MontaCaminhos,
+#   1936, in band 6); their names are chosen from the texts 10701 and 10700 format.
 # - 2823, CEleitores::QuantidadeAptos (celeitores.cpp, the lines just above 2822's, a choice; band 4 runs 2824, 2823,
 #   2822): it walks the same map and, for each record whose detail has no impediment (CEleitorDetalhe::SemImpedimento,
 #   fn 2266, celeitordetalhe.cpp's), adds one to the first of two 16-bit counts it returns through the result's address

@@ -14,6 +14,23 @@
 
 namespace vota {
 
+CIniciaFinalizacao::CIniciaFinalizacao()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CIniciaFinalizacao& CIniciaFinalizacao::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CIniciaFinalizacao());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CIniciaFinalizacao> CIniciaFinalizacao::s_inst;
+std::mutex CIniciaFinalizacao::s_mutex;
+
 void CIniciaFinalizacao::StartState()
 {
     const api::CDateTime agora = api::CDateTime::Now();

@@ -1,7 +1,7 @@
 # uenux2 comum dados loaders: the stand-ins of comum members whose files landed units compile, in
 # 216-uenux2-app-comum-dados-loaders-roots.cpp. No source of its own: each member is written in its file, and that file's
 # fragment has a paragraph on it (src/units/README.md "Landing a unit" item 2): celeitores.cpp and chv.cpp (unit 110:
-# 2822, 3754), cjustificador.cpp (unit 113: 1391, 2809, 2810, 11475, 11476, 11477) and cintegridadereferencial.cpp
+# 2822, 2821, 1935, 3754), cjustificador.cpp (unit 113: 1391, 2809, 2810, 11475, 11476, 11477) and cintegridadereferencial.cpp
 # (unit 98: 5746, 5747). The roots declare their callees through asm labels and include no header, so they emit no TSE
 # code: no match comes from this object.
 #
@@ -9,8 +9,11 @@
 # link:
 # - Justificadores: two calls of CJustificador::GetInst (1391) for 5971, 6734, 10590, 11616, 12105 (11835, unit 138's,
 #   10587, unit 152's, and 10797, unit 119's, are in the link);
-# - HabilitadosSemBiometria: two calls of CEleitores::QuantidadeHabilitacaoSemBiometria (2822) for 10699, 11242, 12098,
-#   12110;
+# - HabilitadosSemBiometria: two calls of CEleitores::QuantidadeHabilitacaoSemBiometria (2822) for 11242, 12098 and
+#   12110 (10699, unit 277's, is in the link);
+# - HabilitadosPorTipo: one call each of CEleitores::QuantidadeHabilitacaoBiometrica (2821) and
+#   QuantidadeHabilitacaoBiografica (1935) for 11242, 12098, 12110 and, of 1935, 12105 (their other callers, 10701
+#   and 10700, unit 277's, are in the link);
 # - FotosCandidatura and CargosCandidatura: two calls each of VerificaFotoCandidatura (5746) and VerificaCargoCandidatura
 #   (5747) for their two calls each in fn 7787's integrity tests;
 # - ConstroiHV: two calls of CHV's constructor (3754) for its three in fn 7787 (CHV::CreateInst, inlined there);

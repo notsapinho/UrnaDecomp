@@ -6,6 +6,8 @@
 # (cescolheopcao.cpp:150 to 152, StartState's; ccalculacv.cpp:58 to 74, the constructor's, and 109, IncluiString's).
 # IncluiString's throw and StartState's three records are on their lines; the constructor is not written, and the lines
 # of the functions here that have no record are a choice, after the records. Paths relative to src/uenux2.
+# cescolheopcao.cpp is compiled in unit 277's list, after the four files whose GetInst its ProcessInput holds (that
+# function's paragraph, below, has the measurement); its notes stay here.
 #
 # Target functions matched:
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
@@ -37,8 +39,8 @@
 #
 # vota::CEscolheOpcao itself (cescolheopcao.h has the layout and what each part rests on): its destructor is out of line
 # in cescolheopcao.cpp, at line 140, a choice before the records (10691 sits above 10690 and 10689 in their use band, so it
-# links first); it is the class's key function, so the object emits the vtable, whose ProcessInput (10689) is trapped in
-# 121-uenux2-datasources-pending.cpp (its header says what it waits for). Evidence:
+# links first); it is the class's key function, so the object emits the vtable, whose ProcessInput (10689) is written
+# below the records and not matched (its paragraph, below). Evidence:
 # 10691 is `f2752(p0); drop; f136(p0)`, an out-of-line destructor (docs/reference/facts/reading.md R5), and 2752 stores
 # no vptr first, a final class (R4); it releases the std::shared_ptr at +24 and then destroys the std::map at +12 with
 # 3630, which destroys each node's std::function at +40 and nothing else of it. 2752, 10691 and 3630 matched as written;
@@ -113,6 +115,56 @@
 # va_list, and the target's 10690 has that frame too around its call of __vsyslog (2946). Chosen: `>= 2020` spelled in
 # both places, which gives the target's rows (the first as `i32.gt_s` of 2019; `> 2019` spelled there is not measured),
 # and api:: written at each call. Before steps 7 to 9 it scored 14 over 96 rows, all operand-only (pnpm wasm score).
+#
+# ProcessInput (10689, slot 7) is written in cescolheopcao.cpp after StartState (its band, 1, has it after 10690; the
+# line is a choice) and does not match: `pnpm wasm score` 173 over 1348 rows (same 1175, replaced 165 [165
+# operand-only], inserted 5, deleted 3) on the whole link; step 9 reads it `unresolved` at the first operand with no
+# target name, CHabilitacaoAudioNaoPermitida::s_inst's address. cescolheopcao.cpp is compiled in unit 277's list now,
+# after ccontadoresbiometria.cpp: with this unit's list ahead of unit 277's, the object linked before the four files
+# whose GetInst 10689 holds, and scored 373 over 1358 rows (15 inserted, 10 deleted, every inlined GetInst's locals off);
+# after them it scores as above. The target's data put it there too: CEscolheOpcao's vtable (@1587996) and the file's
+# records (@1588040 to @1588072) come after the four classes' vtables (unit 277's fragment has the run). The move leaves
+# every match and row of the scan as it was but census re-picks among exit destructors (steps 7 to 9 run both ways).
+# From the target's body (pnpm wasm fn):
+# - the form's Read() (its source_location record @1588216, cinteractiveform.h:57) and a switch on the result:
+#   api::INPUT_CORRIGE (5) goes to vota::CPedeIdentidade (GetInst, fn 652), api::INPUT_CONFIRMA (9) to the state the
+#   CONFIRMA branch returns when it is not null, through one store of the next state for both.
+# - That branch is a function of its own that binaryen inlined (a 32-byte frame of its own inside 10689), written as
+#   the private member ConfirmaOpcao after ProcessInput: it copies the text of the first input field (std::vector::at,
+#   its out_of_range throw through fn 234), returns null unless the text is not empty and all digits, converts it with
+#   ecourna::api::util::CStringUtils::ToInt32 (fn 2200), finds it in m_opcoes and switches on the option's code (SOpcao's
+#   int, 1 to 4). Each case logs the option's text through CLogVota::LogaOperadorSelecionou (fn 2502, four calls; the
+#   texts are TextoAudio's and the three others', which clang inlines) and returns the next state: 1, when
+#   IsVotacaoBloqueadaPorHorario (fn 2226), clears the input fields and focuses the first (IInputField's slot 9 in a
+#   loop, then SetFocus, fn 1401, with 0) and returns CHorarioVotacaoTerminou (GetInst, fn 5430), else
+#   CHabilitacaoAudioNaoPermitida when CConfiguracaoEleicao's byte at +485 is 0, else CConfirmaAudio; 2,
+#   CIniciaFinalizacao; 3, comum::CRegistrarMesarios (fn 3610); 4, CContadoresBiometria when comum::CLocal's
+#   UrnaBiometrica (fn 820) holds. +485 is CParametrosUrna::GetPermitirHabManualAudio: clang's record layout of the
+#   headers (-fdump-record-layouts-simple) puts the CParametrosUrna at +88 and that bool at +397 of it. The four states'
+#   GetInst are written in their files (unit 277), each with this one call site, which binaryen inlines.
+# - The form is held in a local reference across the clearing loop: the target loads m_form once for the loop and for
+#   SetFocus, and through `m_form->` at each use ours loads it again after the loop (380 over 1365, 22 inserted, 14
+#   deleted, with the object at this unit's place). A member of api::CInteractiveForm that clears and focuses would hold
+#   it as well; not measured.
+# - What is left differs in binaryen's locals: our link keeps a zero-init of the inlined branch's result at the head of
+#   its block and drops the `= 0` the target sets after the text's copy, and the locals around it take other numbers
+#   (the rows inserted and deleted are those and an add's operands in that order). Measured on whole links, none of
+#   these changes it: ConfirmaOpcao defined before ProcessInput (340 over 1350 after the four files, a scratch link of
+#   the plain link.cmd with that variant's object; 390 over 1354 at this unit's place), and at this unit's place the
+#   empty test after the digit test (373 over 1358) and the digit test as a range-for (376 over 1358). These give an object
+#   whose ConfirmaOpcao is the written one's (wasm-objdump -d compared): one exit through a local, the tests nested,
+#   `int numero` and `codigo` locals, std::ranges::all_of. And on the module before wasm-opt of a link of this source
+#   (build/out/wasm-map/vota_web/r02-stripped.wasm, kept by link-map), the link's own `wasm-opt -Oz` line gives the same
+#   ProcessInput with
+#   ConfirmaOpcao's copy temporaries moved into its result's local (the bytes' local index patched; wasm-objdump -d of
+#   the output compared), and drops the head zero-init when its `rse` pass is skipped: the remainder is binaryen's
+#   choice after inlining, not explained.
+# - Chosen: ConfirmaOpcao's name, its being a private member, its result type, the local reference and the switch's
+#   spelling; the file's place in unit 277's list is measured.
+# The four states' statics' exit destructors (10704, 10705, 10707, 10708, 10743, 10744, 10755, 10756) wait for 10689's
+# match: it is their statics' one other reader (step 1's grep of each address over the split's pieces lists 10689 and
+# the destructor).
+# cescolheopcao.cpp includes comum::CConfiguracaoEleicao's header for +485, which reaches Boost (unit 277's rule).
 #
 # Matched once a literal landed:
 # - 12621, CDataText<comum::CRespostasDSNumero>::GetText, emitted by unit 102's roots object. Its operator is in
@@ -194,16 +246,10 @@
 # 6561 (CTelasVota::CriaTelaVisualizacaoCandidato), 12587, 12588, 12589, 12592, 12591 for fn 6627 (ctelasvota.cpp's
 # anonymous namespace, reached through fn 1192); 10373, 10367, 10361 are in the link with fn 10388 (unit 104) and still
 # differ (unit 97's fragment).
-W121_SRCS := src/app/comum/relatorios/ccalculacv.cpp src/app/vota/operador/outrasopcoes/cescolheopcao.cpp
+W121_SRCS := src/app/comum/relatorios/ccalculacv.cpp
 UENUX2_SRCS += $(W121_SRCS)
 # The roots file reads uenux2 headers, and through them ecourna's (uetypes.hpp, the error templates).
 W121_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/121-uenux2-datasources-roots.o: $(ROOT)/src/units/121-uenux2-datasources-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/121-uenux2-datasources.mk $(W121_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/121-uenux2-datasources-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/121-uenux2-datasources-roots.o
-
-# vota::CEscolheOpcao's pending slots (StartState and ProcessInput), trapped at the unit's flags so that the class links;
-# the -pending.cpp says what each waits for. The rule depends on every header of both trees, as the roots rule does.
-$(ROOT)/$(APP)/121-uenux2-datasources-pending.o: $(ROOT)/src/units/121-uenux2-datasources-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/121-uenux2-datasources.mk $(W121_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/121-uenux2-datasources-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/121-uenux2-datasources-pending.o

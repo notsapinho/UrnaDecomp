@@ -9,14 +9,14 @@
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   5400, 10481; 3883, unit 282's merge, and 10511, unit 161's, are in the link), IsAudioAtivadoMesario (1687; 10689,
-//   10742; 10539, 10646, 10695 and 10751 are in the link), LimpaBiometria (3621; 5400, 10500; 10511 is in the link),
-//   IsVotacaoBloqueadaPorHorario (2226; 10689; 10676, 10677, 10680 and 10706 are in the link), GetIdentidadeEleitor
-//   (1535; 3616, 10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
-//   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
-//   SetIdentidadeDigitada (5414) needs none: its one target caller, 10677 (unit 161's), calls it twice. AgendaInspecao
-//   (3620), SetTipoIdentidadeDigitada (3619) and GetIdentidadeDigitada (3623) need none either: their target callers
-//   are in the link (652, 10527 and 10676; 10626, 10627 and 10677; 10420, 10627 and 10670).
+//   5400, 10481; 3883, unit 282's merge, and 10511, unit 161's, are in the link), LimpaBiometria (3621; 5400, 10500;
+//   10511 is in the link), GetIdentidadeEleitor (1535; 3616, 10425, 10590; 10587 and 10631, units 152's and 104's, are
+//   in the link), SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor
+//   (2745; 10425). SetIdentidadeDigitada (5414) needs none: its one target caller, 10677 (unit 161's), calls it twice.
+//   AgendaInspecao (3620), SetTipoIdentidadeDigitada (3619), GetIdentidadeDigitada (3623), IsAudioAtivadoMesario (1687)
+//   and IsVotacaoBloqueadaPorHorario (2226) need none either: their target callers are in the link (652, 10527 and
+//   10676; 10626, 10627 and 10677; 10420, 10627 and 10670; 10539, 10646, 10689, 10695, 10742 and 10751; 10676, 10677,
+//   10680, 10689 and 10706).
 //   SetAudioAtivadoMesario (5415) and GetTipoIdentidadeDigitada (5416) have their two target callers each in the link
 //   (10523, unit 152's, and 10751, unit 277's; 10588, unit 174's, and 10664, unit 161's): no stand-in.
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652, the one target function
@@ -27,9 +27,7 @@ extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
 
 int vota_IsAudioAtivado() __asm__("_ZN4vota14IsAudioAtivadoEv");
-int vota_IsAudioAtivadoMesario() __asm__("_ZN4vota21IsAudioAtivadoMesarioEv");
 void vota_LimpaBiometria() __asm__("_ZN4vota14LimpaBiometriaEv");
-int vota_IsVotacaoBloqueadaPorHorario() __asm__("_ZN4vota28IsVotacaoBloqueadaPorHorarioEv");
 void vota_GetIdentidadeEleitor(void* identidade) __asm__("_ZN4vota20GetIdentidadeEleitorEv");
 void vota_SetEleitorSemFoto() __asm__("_ZN4vota17SetEleitorSemFotoEv");
 void vota_SetFotoNaoApresentada(int resultado) __asm__(
@@ -50,10 +48,8 @@ __attribute__((noinline)) int w50_fachada(int salto, void* resultado)
 {
     int soma = salto;
     soma += vota_IsAudioAtivado() + 2 * vota_IsAudioAtivado();
-    soma += vota_IsAudioAtivadoMesario() + 3 * vota_IsAudioAtivadoMesario();
     vota_LimpaBiometria();
     vota_LimpaBiometria();
-    soma += vota_IsVotacaoBloqueadaPorHorario() + 5 * vota_IsVotacaoBloqueadaPorHorario();
     vota_GetIdentidadeEleitor(resultado);
     vota_GetIdentidadeEleitor(static_cast<char*>(resultado) + 32);
     vota_SetEleitorSemFoto();
