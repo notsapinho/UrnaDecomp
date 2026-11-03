@@ -83,7 +83,9 @@
 # held: a TU emits the format code first) and it matches by its record (srcloc-anchor); its mutex's exit destructor
 # (11165), matched by the scan's content pass, its operand the mutex GetInst's match names; slots 4, 5, 6, 7 and 9
 # (11171, 11170, 11169, 11168, 11166, named by vtable, 11171 by pair-addr); ConteudoValido (2784) and ValidaConteudo
-# (5572), named by their callers' calls; the map's tree destroy (3685, pair-addr); CasaRegex (5465), with
+# (5572), named by their callers' calls (5572's call of CasamTodos, fn 2758, names 2758 by 5572's own alignment alone:
+# 2758's other target caller, slot 8, is a trap, and 2758's own body scores 101 over 278, below; the name holds
+# through that one vote until a second caller lands); the map's tree destroy (3685, pair-addr); CasaRegex (5465), with
 # FindRegexPosition inlined, matched by the content pass (its one target caller is 2758, ours CasamTodos).
 # Not matched, written, and what each waits for (pnpm wasm score after link-map):
 # - Valida (11172), `146 over 1040 rows (104 replaced, 103 operand-only, 21 inserted, 21 deleted)`:
@@ -100,7 +102,8 @@
 # - CasaCaractere (5464), no-candidate, `30 over 58 rows (10 inserted, 19 deleted)`: our link calls isalnum, which the
 #   target holds inlined. musl's ispunct calls isalnum too, and our link keeps ispunct through
 #   boost::char_separator<char>::operator() (src/app/roots_boost.o), which the target does not hold, so isalnum keeps
-#   two call sites in our link and one in the target. 5464 waits for that tree root not to keep the separator; the
+#   two call sites in our link and one in the target. 5464 waits, a prediction not measured, for that tree root not to
+#   keep the separator; the
 #   alpha-or-digit test written by hand would copy the library's arithmetic (how-to step 3).
 # - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h).
 #

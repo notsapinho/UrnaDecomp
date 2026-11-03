@@ -181,7 +181,7 @@
 # The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and w121_codigo for 11260 and
 # 11974, CalculaCodigo's: each goes when they land. 11260 and 11974 (CDataSourcesRelatorio<CRdvVota, CEleitores>'s
 # TrailerProporcionalPartido and CodVerificador, records cdatasourcesrelatorio.h:188 and 348) wait for fn 5967, which
-# loads IncluiString's record and calls fn 1281 (439 B, no body or name of ours).
+# loads IncluiString's record and calls fn 1281 (439 B, CPleito's copy constructor, matched: unit 280).
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions

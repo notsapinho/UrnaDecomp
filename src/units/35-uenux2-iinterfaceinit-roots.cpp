@@ -3,7 +3,8 @@
 // deleting destructor (fn 9388), which unit 127 writes: they keep it (body intact, `this` result kept as a table entry
 // keeps it) with the vtable its vptr store names, and with it CurrentBootDevice (fn 11646, slot 2), so it takes nothing
 // here. The others are called directly in the target, by functions not reconstructed
-// yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 12031 12134, 5897, 3832 and 5896 from 7160 and
+// yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 and 12134 (12031 is in the link), 5897, 3832 and
+// 5896 from 7160 and
 // 12134, 729 from 17 functions): two noinline callers with different bodies give each two call sites, so binaryen keeps it out
 // of line. DesabilitarMR has one call site, the one binaryen inlines it into in the target (7160). DesligarUrna (fn
 // 5894) takes nothing here: both its target callers, 11982 (unit 169) and 12017 (unit 61), are in the link.

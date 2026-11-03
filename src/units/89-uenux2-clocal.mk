@@ -220,7 +220,9 @@
 #   on try-tu.sh --symbols) and binaryen inlines, its one caller in the link. The target tests the section, frees the
 #   literal and only then zeroes the result, and calls md::CLocal::GetSecao three times before the loop, using only
 #   the third result: written as EhSecao into a local before the vector and two unused references before the range-for,
-#   a form chosen for those calls; what the original held there is not known. With the result zeroed first and one
+#   a form chosen for those calls (two bare calls, `m_local->GetSecao();`, are likely the same bytes, not measured);
+#   what
+#   the original held there is not known. With the result zeroed first and one
 #   call, 3752 scored 30 over 441 rows (6 inserted, 14 deleted); as written, 12 over 435, all operand-only (`pnpm wasm
 #   score` against the whole link). 2816 scored 6 over 68, all operand-only. Both match.
 # - GetTipoLocalVotacao (no index): VerificaEhSecao("GetTipoLocalVotacao") and the section's type, which 11188 holds

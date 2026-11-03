@@ -5,7 +5,7 @@
 # Matched: 11373, and the three copies it calls, which this unit brings into the link: comum::md::CDetalheCandidato's
 # copy constructor (fn 365, implicit), std::construct_at<comum::md::CSuplencia> (2341, the element copy inside it) and
 # std::vector<comum::md::CRespostaConsulta>::__init_with_size (3018, the vector copy inside CDetalheConsulta's copy,
-# which clang inlines). Each comes from ccargo.cpp.o, the first object that calls it.
+# which clang inlines). Each comes from the first object of the link that holds a copy (splat/scan.tsv's object column).
 #
 # Evidence. The records: DoDesconverte's throw at 69:15 ("Opcao de Detalhe Invalida.", code 7948, with its accents) and
 # DesconverteTipoCargo's at 83:19 ("Tipo invalido: {}", 7949, TipoCargoConsulta::NamedNumber through the enum formatter of

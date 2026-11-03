@@ -14,8 +14,9 @@ namespace comum {
 
 // Recovered: the layout, 204 bytes: CreateInst (fn 2787) allocates 204, copies a CProcessoEleitoral to +0, stores the
 // load's turn at +176 and builds a SIdentificacaoArquivo at +180 through fn 5726; the destructor (fn 5598) frees the string at
-// +188 and calls fn 2830 on +0. The members' names are chosen. CreateInst's record names its two parameters
-// (cpe.cpp:26); the constructor, which CreateInst holds inlined, is chosen in its parameters as in its name.
+// +188 and calls fn 2830 on +0. The members' names are chosen. CreateInst's record gives its two parameters' types
+// (cpe.cpp:26), and their names are chosen; the constructor, which CreateInst holds inlined, is chosen in its
+// parameters as in its name.
 class CPE {
 public:
     ~CPE();

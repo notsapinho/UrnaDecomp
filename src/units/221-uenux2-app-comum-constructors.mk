@@ -95,7 +95,9 @@
 #   (splat/symbol_addrs.txt without it, the match list without 10313 and 10321, the scan run twice beside a control with
 #   every line, then splat-build on both copies), both sides kept 11905 match rows, 10313 and 10321 among them, and
 #   built the target's sha256.
-# Chosen: every member's and data member's name; the builders' names and their linkage; the CLogVota member's name and
+# Chosen: every member's and data member's name but the overrides' (StartState, FinishState, ProcessInput,
+# ProcessTick and the destructors are comum::CAppState's slots, app/comum/cappstate.h); the builders' names and their
+# linkage; the CLogVota member's name and
 # its place in clogvota.cpp; the `if` spellings; the lines but the records' (the destructor, the statics, the builders,
 # the constructor and GetInst above StartState, ProcessInput between FinishState's records and ProcessTick's, the band's
 # order).

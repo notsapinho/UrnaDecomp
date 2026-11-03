@@ -9,7 +9,8 @@
 #              so their lines stay blank, and the header declares the two overloads as the records print them.
 #   matched    5465 CasaRegex, added for unit 179 (src/units/179-uenux2-cvalidamidia.mk has its evidence and choices),
 #              over ecourna's CStringUtils::FindRegexPosition (unit 00's file), which binaryen inlines into it.
-#   written    5464 CasaCaractere, added with it, `no-candidate`: it waits for isalnum to keep one call site (unit 179).
+#   written    5464 CasaCaractere, added with it, `no-candidate`: it waits, a prediction, for isalnum to keep one
+#              call site (unit 179).
 # Chosen: the parameter's and the locals' names; 7025's local constant in the .cpp, as
 # app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp names a code the shared header lacks
 # (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line within

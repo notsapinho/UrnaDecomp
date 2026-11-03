@@ -35,7 +35,9 @@
 #   its Read() record. Their GetInst and constructors are held inlined by CRegistraDigitalOperador::ProcessTick (10451,
 #   pending: unit 221), the one store of each vptr (1592288, 1592360), and are not written.
 #
-# Chosen: every name of a member, a data member and the helper; ProximoEstadoOpcaoDigitada's being a member (it reads
+# Chosen: every name of a member, a data member and the helper but the overrides' (StartState, ProcessInput and the
+# destructors are comum::CAppState's slots, app/comum/cappstate.h); ProximoEstadoOpcaoDigitada's being a member (it
+# reads
 # the form and the map) and its result type; the map's value type, md::CEleitorIdentidade: ProcessInput formats the
 # string at +0 of the value and passes the word at +12 to SetTipoIdentidadeDigitada, which fits that class's layout (a
 # std::pair<std::string, ETipoIdentificadorEleitor> has the same layout and is not measured); the switch and if

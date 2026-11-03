@@ -42,8 +42,8 @@ public:
     // beside three calls of GetImpedimento (fn 3769), which reads the same members out of line; the target functions
     // whose pieces hold the two offsets and a call of 457 are 2266, 3769, 7787 and 10635 (`/usr/bin/grep -rlE
     // 'i32\.const 196' build/out/splat/pieces/asm | xargs /usr/bin/grep -lE 'i32\.const 200' | xargs /usr/bin/grep -lE
-    // 'call 457'`). So that code is a member a header defines, which reads the private members; this one, its name, its
-    // parameter and its being inline are chosen.
+    // 'call 457'`). That code is written as a member a header defines, reading the private members the base header
+    // declares: its being a member, this one, its name, its parameter and its being inline are chosen.
     md::ETipoImpedimento GetImpedimentoTurno(EUrnaTurno turno) const
     {
         return turno == TURNO_2 ? m_impedimentoP2 : m_impedimentoP1;

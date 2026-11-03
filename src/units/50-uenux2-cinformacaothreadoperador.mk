@@ -18,7 +18,7 @@
 #   3623, GetTipoIdentidadeDigitada 5416, GetIdentidadeEleitor 1535, SetEleitorSemFoto 5413, SetFotoNaoApresentada 1904,
 #   GetApresentacaoFotoEleitor 2745.
 # Written and not matched: CInformacaoThreadOperador::SorteiaDataHoraInspecao (5412), below. Slots 16 and 19 (10569,
-# 10566): below.
+# 10566, both matched): below.
 # With them: the vota::impl::IInformacaoThreadOperador interface (iinformacaothreadoperador.h beside the source, with the
 # vota:: functions' declarations), the 9401 to 9404 and 9409 enumerators of EUeVotaError, the layouts of
 # comum::md::CEleitorIdentidade (src/app/comum/dados/md/eleitor/celeitoridentidade.h), api::CDateTime and api::CDate
@@ -125,15 +125,15 @@
 #   it through fn 903, CAppInfo's const GetVota, so the source calls GetVota on a const CAppInfo& (the named local
 #   appInfo is a choice; no other spelling was tried). `pnpm wasm score` before step 8: 14 over 83 rows, all
 #   operand-only.
-# - Slot 16, GetTextoComparecimento (fn 10569), is written and `differs`: std::format("{:04}") over
+# - Slot 16, GetTextoComparecimento (fn 10569), matched: std::format("{:04}") over
 #   CAppInfo::EhTreinamentoEleitor() (697) ? CRdvVota::GetInst().Comparecimento() (555, 1269) :
 #   CEleitores::GetInst().GetComparecimento() (326, +104); the format's argument type is 6, an unsigned, which that
 #   conditional of a TQtdVoto and an unsigned int gives. The target's "{:04}" (8862) is the tail of the 39-byte literal
-#   "Local                             {:04}" at 8828, which only fn 11188 (comum::CRelatorioTesteImpressora's pending
-#   slot, unit 123) loads; our link holds the 5 bytes elsewhere, and the scan stops at the end pointer (+0x77). In a
-#   variant link with a scratch object that keeps that literal (docs/reference/facts/workflow.md W13), a scan with this
-#   unit's symbol file and match list reads 10569 `match` and moves no other row into or out of `match`. 12 over 169
-#   rows, all operand-only, in this link.
+#   "Local                             {:04}" at 8828, which only fn 11188 (comum::CRelatorioTesteImpressora's slot 15,
+#   unit 123) loads. Until 11188 was in the link ours held the 5 bytes elsewhere and the scan stopped at the end pointer
+#   (+0x77): 12 over 169 rows, all operand-only. A variant link with a scratch object that kept that literal
+#   (docs/reference/facts/workflow.md W13) read 10569 `match` and moved no other row, and so 10569 matched once 11188's
+#   literal was in the link.
 # The -pending.cpp went with them. cinformacaothreadoperador.cpp includes app/comum/appinfo/cappinfo.h,
 # app/comum/dados/crdvvota.h and app/vota/comum/votadefs.h for them: the three include lines come out of the blank run
 # above TipoToStr (line 30), and the 27 lines of the two members out of the run above the vota:: functions, which move

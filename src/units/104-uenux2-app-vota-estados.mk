@@ -340,8 +340,8 @@
 # - The objects' order (docs/reference/facts/codegen.md C4): with the five new files and celeitorjavotou.cpp after
 #   celeitorencontrado.cpp, 10635 scored `590 over 1714 rows (same 1124, replaced 525 [523 operand-only], inserted 33,
 #   deleted 32)`, binaryen's locals numbered otherwise in the inlined GetInst; with celeitorjavotou.cpp alone after it,
-#   `490 over 1704 rows (same 1214, replaced 445 [443 operand-only], inserted 23, deleted 22)` (a link that still held
-#   unit 243's stand-in for 10635); with all six before it, `221 over 1681 rows (same 1460, replaced 221 [221
+#   `490 over 1704 rows (same 1214, replaced 445 [443 operand-only], inserted 23, deleted 22)`; with all six before it,
+#   `221 over 1681 rows (same 1460, replaced 221 [221
 #   operand-only], inserted 0, deleted 0)` (pnpm wasm score on whole links, the rest of the tree as committed). In use
 #   band 1 the target links them so too: 10662 to 10638 above 10635, in reverse link order.
 # - The set's range insert (fn 6733, libc++'s std::set<ecourna::app::dados::ETipoIdentificadorEleitor>::insert over two

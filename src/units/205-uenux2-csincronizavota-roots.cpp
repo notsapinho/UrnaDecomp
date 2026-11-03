@@ -17,7 +17,7 @@
 // - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 10710 and 10734 (unit 277) are in the link.
 // - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 and 10710 (unit 277, in the link).
 // - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
-//   pending file, and 10226 (CThreadMonitor::Run, unit 116's, in the link, written and not matched).
+//   pending file, and 10226 (CThreadMonitor::Run, unit 116's, matched).
 #include "app/vota/comum/csincronizavota.h"
 
 namespace {

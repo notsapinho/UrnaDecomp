@@ -15,7 +15,9 @@
 #   277"): each object has two target readers, the slot that holds its class's GetInst inlined (named by vtable, which
 #   casts no vote) and its exit destructor (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
 #   build/out/splat/pieces/asm`). Weighed together: scanned twice on copies without the ten lines and the ten match
-#   lines, the ten rows fall (to differs and no-candidate) and the five slots go from differs to unresolved.
+#   lines, the ten rows fall (to differs and no-candidate), the five slots go from differs to unresolved, and so do six
+#   other exit destructors the census pairs with these statics' destructors, unmatched either way (7239, 10223, 10341,
+#   10364, 10371 and 10418).
 # This unit's members in other units' files, each noted in that unit's fragment: CPerguntaFilaEleitorVazia's GetInst
 # (5426) with its statics' destructors (10716, 10717), its ProcessInput (10713) and CHorarioVotacaoTerminou's (10757)
 # (unit 152); CSincronizaVota::SincronizaEstadoGeral (3333, unit 205) over CAppInfo::SalvaGeralInterno and
@@ -68,7 +70,8 @@
 #   store; matched 11838 takes l1 as ours does). For 10731 the switch, an if chain, the cases swapped and the cases
 #   ending in return each give one store after the switch in the object (measured). Not explained.
 # - CConfirmaEncerramento::ProcessInput (10734): 49 over 273 (inserted 2, deleted 2), all in MarcaFimAquisicao (unit
-#   93's fragment has the forms measured).
+#   93's fragment has the forms measured). Its store of the state goes through CEstadoGeralVota::SetEstadoVota, out of
+#   line in cestadogeralvota.cpp (unit 156's measurement); written in the class instead, 10734 scored the same.
 # - CEncerramentoHorarioInvalido::ProcessInput (10709) and unit 152's CHorarioVotacaoTerminou::ProcessInput (10757)
 #   match since the link holds 2295's other three members (units 161, 278 and 283): with only these two, our link
 #   merged them into one shared body of two parameters, each 14-byte thunk passing its record, where the target's 2295

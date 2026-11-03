@@ -8,7 +8,7 @@
 //   api::CMTFormBuilder::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
-//   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, and a stand-in for 1543, 5586, ...),
+//   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586, and a stand-in for 1543, ...),
 //   CDateTime::ConvertFromLocalTime (fn 5476: 1000 and a stand-in for 11862), CDateTime(time_t) (fn 1000: Now, 5472,
 //   5473, 10870, 10401 and 10402, and a stand-in for 11914, ...), CDateTime::Now (fn 479, 33 target callers: 11198, and
 //   two stand-ins for the others), ConvertToLocalTime (fn 1381: unit 101's Ajusta, 10875, 10403, and a stand-in for

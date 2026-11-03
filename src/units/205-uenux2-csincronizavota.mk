@@ -18,7 +18,7 @@
 #         choice (in use band 3, 3333, which holds VerificaUrnaDesligando inlined, lies three places away, with 3334
 #         and 3335, 3335 stubbed in src/ecourna/unplaced.cpp, between them). Its callers, 7709 and 7710
 #         (vota::CThreadVota's TrataErro), traps in unit 116's pending file, and 10226 (CThreadMonitor::Run, unit
-#         116's, in the link, written and not matched); w205_desligando stands for the first two.
+#         116's, matched); w205_desligando stands for the first two.
 # and, with no target index of their own: VerificaUrnaDesligando (record 47:15, inlined by clang into each of its seven
 # target callers, 491, 1836, 3333, 4662, 6737, 7174 and 10590), SincronizaAssinaturaRelatorio (binaryen inlined it into
 # 1836, its one caller, behind a stack frame of its own) and AssinaESincroniza (an anonymous-namespace helper clang
@@ -81,7 +81,8 @@
 # "... na MV"), added with unit 277's 10710, one of its callers: after VerificaUrnaDesligando it builds the title as
 # SincronizaEstadoGeralVota does and passes it to neither context: both CriaContexto calls (fn 676) get a string of
 # length 0 (the target zeroes the size and first byte at +132 and at +48), and the title at +200 is only destroyed at
-# the end. Written so (`""`), its body scores 59 over 529 rows, every one an operand (with the title passed, 158 over
+# the end. Written so (`""`; `std::string()` and `{}`, other spellings of the empty argument, are likely the same
+# bytes and were not measured), its body scores 59 over 529 rows, every one an operand (with the title passed, 158 over
 # 573, inserted 44, deleted 5), and it matches by the content pass; 10710 calls it at the aligned site. In between: a
 # CAssinadorVota of package 120 (fn 1501), CAppInfo::SalvaGeralInterno (unit 109's file; binaryen inlines it behind a
 # 16-byte frame), Assina(25) (fn 1277) and Sync, then SalvaGeralExterno, CopyFile of package 120 to 121 (fn 378) and
