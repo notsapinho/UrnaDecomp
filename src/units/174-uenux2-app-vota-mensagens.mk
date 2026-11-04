@@ -66,8 +66,12 @@
 # Roots (174-uenux2-app-vota-mensagens-roots.cpp): CMostraTelaContinuaVotacao's vtable. Insert (501) needs no stand-in now: fn 11914, the
 # one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller
 # binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read `score 4 over 39 rows`
-# with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):
-# IConfirmaJustificativa's StartState.
+# with one row deleted, then operand-only).
+# Matched since: IConfirmaJustificativa::StartState (fn 10589, slot 2 of the class and its three derived classes, in
+# iconfirmajustificativa.cpp after the destructor, before ProcessInput: 10589 above 10588 in use band 1): the form's
+# slot 2, vota::ApresentaFotoEleitor (fn 3616, unit 319) and `this` as the next state; 1 over 13 rows before steps 7
+# to 9, the call. Named by its vtable; its call of 3616 holds through 3616's hand line. The -pending.cpp that trapped it
+# went with it.
 #
 # IConfirmaJustificativa::ProcessInput (fn 10588, 1112 B): through Read() (its TU's record of cinteractiveform.h:57) it
 # goes, on CONFIRMA, to CEleitorImpedidoJustificarVotoCPF::GetInst() when the identifier typed is a CPF
@@ -87,9 +91,6 @@ APP_VOTA_MENSAGENS_SRCS := src/app/vota/eleitor/cmostratelacontinuavotacao.cpp \
     src/app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.cpp \
     src/app/vota/operador/justificativa/iconfirmajustificativa.cpp
 UENUX2_SRCS += $(APP_VOTA_MENSAGENS_SRCS)
-APP_VOTA_MENSAGENS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/174-uenux2-app-vota-mensagens-pending.o: $(ROOT)/src/units/174-uenux2-app-vota-mensagens-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/174-uenux2-app-vota-mensagens.mk $(APP_VOTA_MENSAGENS_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/174-uenux2-app-vota-mensagens-pending.cpp -o $(R)
 $(ROOT)/$(APP)/174-uenux2-app-vota-mensagens-roots.o: $(ROOT)/src/units/174-uenux2-app-vota-mensagens-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/174-uenux2-app-vota-mensagens.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/174-uenux2-app-vota-mensagens-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/174-uenux2-app-vota-mensagens-pending.o $(APP)/174-uenux2-app-vota-mensagens-roots.o
+override EXTRA_OBJS += $(APP)/174-uenux2-app-vota-mensagens-roots.o

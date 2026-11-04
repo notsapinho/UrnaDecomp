@@ -118,9 +118,14 @@
 #
 # Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
 # CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
-# CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465, pending), whose line stays blank;
-# the slot the -pending.cpp traps (10625), with what it waits for. Rows of these classes left for later: 10512
-# (CControlaReconhecimento's StartState, written, below), 10625 (pending), 10676 (written, below).
+# CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465, pending), whose line stays blank.
+# Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState, written, below), 10676 (written,
+# below).
+# Matched since: vota::IEleitorImpedidoVotar::StartState (fn 10625, slot 2 of the base and its six derived classes, in
+# ieleitorimpedidovotar.cpp after the destructor, before ProcessInput: 10625 above 10624 in use band 1): the form's
+# slot 2, the class's slot 9 (LogaImpedimento), vota::ApresentaFotoEleitor (fn 3616, unit 319) and `this` as the next
+# state; 1 over 18 rows before steps 7 to 9, the call. Named by its vtable; its call of 3616 holds through 3616's hand
+# line. The -pending.cpp that trapped it went with it.
 #
 # vota::CControlaReconhecimento's constructor and GetInst (target fn 1256, named by vptr-anchor) in
 # ccontrolareconhecimento.cpp, in the tree's singleton form (the constructor kept out of line by clang and inlined by
@@ -363,12 +368,8 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_IDENTIDADE_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # celeitornaoencontrado.cpp includes it too, for the identifier type the urna takes first (an include path, not a flag)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 161-uenux2-app-vota-operador-identidade-pending.cpp gives the vtables trapping bodies,
-# compiled with the unit's flags
-$(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-pending.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/161-uenux2-app-vota-operador-identidade-pending.cpp -o $(R)
 # nothing reconstructed calls the members the roots stand for: the roots file
 # (161-uenux2-app-vota-operador-identidade-roots.cpp) gives those members call sites
 $(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-roots.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/log/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/log/*.h $(ROOT)/src/uenux2/src/api/uelog/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/161-uenux2-app-vota-operador-identidade-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/161-uenux2-app-vota-operador-identidade-pending.o $(APP)/161-uenux2-app-vota-operador-identidade-roots.o
+override EXTRA_OBJS += $(APP)/161-uenux2-app-vota-operador-identidade-roots.o

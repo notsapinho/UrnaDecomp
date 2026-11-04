@@ -3,19 +3,13 @@
 // instantiates nothing.
 
 // comum::md::estadoaplicacao::CEstadoGeral::SetAjusteDataHora (target fn 3705) has three direct callers in the target,
-// fns 7160, 7306 and 10710, of which 10710 (unit 277) is in our link. binaryen inlines a function with one call site, so
-// these two stand for 7160 and 7306, with bodies that differ from each other's and from every target function.
+// fns 7160, 7306 and 10710, of which 10710 (unit 277) and 7306 (unit 104) are in our link. binaryen inlines a function
+// with one call site, so this one stands for 7160, with a body that differs from every target function; the other,
+// for 7306, went.
 extern "C" void w3705_ajuste(void*, const void*) __asm__(
     "_ZN5comum2md15estadoaplicacao12CEstadoGeral17SetAjusteDataHoraERKNS1_15CAjusteDataHoraE");
 
 namespace {
-
-__attribute__((noinline)) int AjustaGeral(char* geral, int tipo)
-{
-    int ajuste[2] = {tipo, tipo + 3};
-    w3705_ajuste(geral, ajuste);
-    return ajuste[1];
-}
 
 __attribute__((noinline)) int AjustaDuasVezes(char* geral, int delta)
 {
@@ -60,7 +54,6 @@ const void* volatile leftovers_sink;
 struct SLeftoversRoots {
     SLeftoversRoots()
     {
-        leftovers_sink = reinterpret_cast<const void*>(&AjustaGeral);
         leftovers_sink = reinterpret_cast<const void*>(&AjustaDuasVezes);
         leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
         leftovers_sink = reinterpret_cast<const void*>(&DadosDaTela);

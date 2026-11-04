@@ -1,8 +1,10 @@
 # uenux2 vota operador: vota::CNomeEleitor (app/vota/operador/confirmaidentidade/cnomeeleitor.{h,cpp}), the operator's
 # screen with the voter's name: GetInst (target fn 5401) with the constructor and the helper that builds the form, the
-# statics' destructors (10503, s_inst's, and 10502, s_mutex's) and the destructor. Paths relative to src/uenux2.
+# statics' destructors (10503, s_inst's, and 10502, s_mutex's), the destructor, StartState (10501), ProcessInput (10500)
+# with the four members it holds inlined, and HabilitaEleitor (5400) in cnomeeleitorauxiliares.cpp. This list also
+# compiles unit 282's cinformaanodesabilitadodemo.cpp, ahead of cnomeeleitor.cpp (below). Paths relative to src/uenux2.
 #
-# Target fns matched: 5401, 10503, 10502. The destructor's slots hold the shared fns 244 and 387.
+# Target fns matched: 5401, 10503, 10502, 10500, 10501, 5400. The destructor's slots hold the shared fns 244 and 387.
 #
 # Evidence:
 # - The class: RTTI and its vtable @1591248 [244, 387, 10501, 7480, 1661, 218, 425, 10500, 425], which 5401 alone stores
@@ -22,16 +24,57 @@
 #   band 1, a choice of line beyond that.
 # - Names (step 8): 5401 by vptr-anchor, the statics by its votes, their destructors match through them.
 #
-# Chosen: the header's path (beside the records' file), the member names, the helper's name and its being in an
-# anonymous namespace, the lines before the records.
+# - ProcessInput (10500, slot 7): the form's Read (record cinteractiveform.h:57 in this object's data); on CONFIRMA,
+#   GetParametrosUrna().GetPedeAnoNascimentoEleitor() (+489) picks ConfirmaComAnoNascimento or ConfirmaSemAnoNascimento,
+#   each behind a frame of its own in 10500, so out of line and inlined by binaryen into their one caller (a reading,
+#   how-to step 3); clang does not inline them (cost 860 and 455 against 250, -Rpass=inline). On CORRIGE, CLogVota's
+#   LogaHabilitacaoCanceladaConfirmacaoDado (2097) and CCancelaHabilitacaoEleitor::GetInst (1536) as the next state; the
+#   cases are written CONFIRMA, CORRIGE, the br_table's block order. NavegaBiometrica and NavegaAnoNascimento hold the
+#   records (lines 145 and 156, column 19: `bool ehDemo = ` at four spaces, a spelling chosen of that length); clang
+#   inlines each into its callers (no frame of its own). NavegaAnoNascimento holds CInformaAnoDesabilitadoDemo's and
+#   CPedeAnoNascimentoSemBiometria's GetInst, each behind its constructor's frame: out of line in their files, inlined by
+#   binaryen, each its one caller's (units 282 and 142 write them).
+# - ConfirmaComAnoNascimento's shape, measured on the objects and in the link: the flag test after a && reads `i32.eqz`
+#   on CEleitor's +100 in the target, which comum::md::CEleitor::TemBiometria out of line in celeitor.cpp gives (unit
+#   157's), where the inline accessor gave `i32.const 1; i32.ne`; HabilitaBiometria (+665) read into a local before the
+#   test gives the target's `i32.and` with 1, where a call in the condition gave `i32.ne`; the training test, the
+#   current voter's sequence number above five sixths of the voters and not past them, reads `i32.eqz(i32.and(gt_u,
+#   le_u))` in the target, which clang turns into `i32.or(le_u, gt_u)` whenever it sees the whole expression (seven
+#   polarities and spellings tried on probe objects, every one gave the or), and keeps as the call of an out-of-line vota::EleitorNaFaixaSemBiometria
+#   (cnomeeleitorauxiliares.cpp) that binaryen inlines (the three tests' forms measured on probe objects at the tree's
+#   flags). In the link, 10500 read 343 over 1749 rows (13 inserted, 13 deleted) with none of the three, 339 over 1748
+#   with the first two, 335 over 1748 with all three, and 172 over 1736, all operand rows, with
+#   cinformaanodesabilitadodemo.cpp's object ahead of this one (below; pnpm wasm score each time).
+# - The order of objects, measured: with cinformaanodesabilitadodemo.cpp.o after cnomeeleitor.cpp.o, as unit 282's list
+#   gave it, 10500 read 335 over 1748 rows (12 inserted, 11 deleted), its locals in CInformaAnoDesabilitadoDemo::GetInst's
+#   inlined code numbered apart from the target's; in a scratch link of the same objects with that object first, 172 over
+#   1736, all operand rows (docs/reference/facts/codegen.md C4). The target's data has that order too: the class's vtable
+#   (@1591176) before CNomeEleitor's (@1591248). So the file is compiled here, in front of cnomeeleitor.cpp, and stays
+#   unit 282's. The move renames the merge body binaryen forms of the three classes' ProcessInput slots
+#   (byn$mgfn-shared$..._ZN4vota27CInformaAnoDesabilitadoDemo12ProcessInputEv, after its first member now), so its hand
+#   line in splat/symbol_addrs.txt follows the new name (unit 282's 10496, 10504, 10508).
+# - HabilitaEleitor (5400): LimpaBiometria, then CHabilitaAudioEleitor when IsAudioAtivado, else Post(1) to
+#   CThreadEleitor's queue and CMostraEleitorVotando, the next state stored in each branch (two stores, which
+#   comum::CAppState::SetNextState called in both gives: docs/reference/facts/codegen.md C13; assignments gave one store
+#   after the join, 17 over 42 rows, 3 inserted, 5 deleted). Its two target callers keep the call where clang inlines it
+#   in their TU (cost 185, threshold 250), so it is in a TU of its own (docs/reference/facts/placing.md P2): the file,
+#   cnomeeleitorauxiliares.cpp, and its place after cnomeeleitor.cpp in this list are chosen; the band (5401, 5400 and
+#   cinformaeleitorpodevotar.cpp's 5399) has it between those objects.
+# - StartState (10501): CAppInfo::EhTreinamentoEleitor (697) sends the voter to HabilitaEleitor; else
+#   vota::ApresentaFotoEleitor (3616, unit 319), the form's slot 2 and `this`. It is defined before ProcessInput, the
+#   band's order (10501 above 10500). Named by its vtable; its call of 3616 holds through 3616's hand line.
+# - Names (step 8): 5401 by vptr-anchor, the statics by its votes, their destructors match through them; 10500 by
+#   srcloc-anchor, 5400 by 10500's call.
 #
-# Pending (239-uenux2-cnomeeleitor-pending.cpp says what each waits for): StartState (10501) and ProcessInput (10500).
+# Chosen: the header's path (beside the records' file), the member names but NavegaBiometrica's and
+# NavegaAnoNascimento's, the helper's name and its being in an anonymous namespace, cnomeeleitorauxiliares.cpp and
+# EleitorNaFaixaSemBiometria (name, being a free function of vota, file), the lines before and between the records.
 # GetInst's two target callers, fns 10635 (vota::CEleitorEncontrado's StartState, unit 104) and 10677 (CPedeIdentidade's
-# ProcessInput, unit 161), are in the link, so the roots file that stood in for them went.
-CNOMEELEITOR_SRCS := src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp
+# ProcessInput, unit 161), are in the link; so are 5400's two, 10500 and 10501, so no roots file is needed.
+CNOMEELEITOR_SRCS := src/app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitorauxiliares.cpp
 UENUX2_SRCS += $(CNOMEELEITOR_SRCS)
-# StartState and ProcessInput are not reconstructed: 239-uenux2-cnomeeleitor-pending.cpp gives the vtable trapping
-# bodies, compiled with the unit's flags.
-$(ROOT)/$(APP)/239-uenux2-cnomeeleitor-pending.o: $(ROOT)/src/units/239-uenux2-cnomeeleitor-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/239-uenux2-cnomeeleitor.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/239-uenux2-cnomeeleitor-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/239-uenux2-cnomeeleitor-pending.o
+# cnomeeleitor.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CConfiguracaoMunicipio's
+# CHorariosUrna (an include path, not a flag of the code: unit 104 adds the same)
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)

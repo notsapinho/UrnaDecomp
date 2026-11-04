@@ -1,15 +1,28 @@
 // vota::CNomeEleitor (/home/rubio/tse/uenux2/src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp). This comment
-// is the reconstruction's. The file's records are ProcessInput's (fn 10500, pending), lines 145 and 156; they stay blank.
-// Written here: the destructor (the shared fns 244 and 387), the helper that builds the form, the constructor and GetInst
-// (fn 5401) and the statics, whose lines are a choice before the records; the statics' exit destructors (fns 10503 and
-// 10502) sit above StartState (10501) in their use band, so they are defined before it. src/units/239-uenux2-cnomeeleitor.mk
-// says which of this is evidence.
+// is the reconstruction's. The file's records, lines 145 and 156, are NavegaBiometrica's and NavegaAnoNascimento's (in
+// ProcessInput, fn 10500). The other lines are a choice: the statics' exit destructors (fns 10503 and 10502) sit above
+// StartState (10501), and StartState above ProcessInput, in their use band, so they are defined in that order; the
+// helpers ProcessInput holds come after it. HabilitaEleitor (5400) is in cnomeeleitorauxiliares.cpp.
+// src/units/239-uenux2-cnomeeleitor.mk says which of this is evidence.
 #include "app/vota/operador/confirmaidentidade/cnomeeleitor.h"
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "api/pattern/cpolysingleton.h"
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/clocal.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/iinterfaceinit.h"
+#include "app/vota/comum/votadefs.h"
+#include "app/vota/log/clogvota.h"
+#include "app/vota/operador/comum/fotoeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
+#include "app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.h"
+#include "app/vota/operador/confirmaidentidade/cinformabiodesabilitadademo.h"
+#include "app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.h"
+#include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 
 namespace vota {
 
@@ -54,105 +67,88 @@ CNomeEleitor& CNomeEleitor::GetInst()
 std::unique_ptr<CNomeEleitor> CNomeEleitor::s_inst;
 std::mutex CNomeEleitor::s_mutex;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void CNomeEleitor::StartState()
+{
+    if (comum::CAppInfo::EhTreinamentoEleitor()) {
+        HabilitaEleitor();
+        return;
+    }
+    ApresentaFotoEleitor();
+    m_form->Slot2();
+    m_pNextState = this;
+}
+
+// (original lines 81-90: content not recovered)
+#line 91
+void CNomeEleitor::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA:
+        if (comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetPedeAnoNascimentoEleitor()) {
+            ConfirmaComAnoNascimento();
+        } else {
+            ConfirmaSemAnoNascimento();
+        }
+        break;
+    case api::INPUT_CORRIGE:
+        CLogVota::GetInst().LogaHabilitacaoCanceladaConfirmacaoDado();
+        m_pNextState = &CCancelaHabilitacaoEleitor::GetInst();
+        break;
+    default:
+        break;
+    }
+}
+
+void CNomeEleitor::ConfirmaComAnoNascimento()
+{
+    bool temDedos = false;
+    if (comum::CLocal::GetInst().UrnaBiometrica() && comum::CEleitores::GetInst().GetCurrent()->GetEleitor().TemBiometria()) {
+        temDedos = comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().TemDedos();
+    }
+    const bool treinamento = EhTreinamentoMesario();
+    bool usaBiometria = temDedos && !treinamento;
+    if (temDedos && treinamento) {
+        usaBiometria = !EleitorNaFaixaSemBiometria();
+    }
+    const bool habilitaBiometria = comum::CConfiguracaoEleicao::GetInst().HabilitaBiometria();
+    if (usaBiometria && habilitaBiometria) {
+        NavegaBiometrica();
+    } else {
+        NavegaAnoNascimento();
+    }
+}
+
+void CNomeEleitor::ConfirmaSemAnoNascimento()
+{
+    if (comum::CConfiguracaoEleicao::GetInst().HabilitaBiometria() && comum::CLocal::GetInst().UrnaBiometrica()) {
+        NavegaBiometrica();
+    } else {
+        HabilitaEleitor();
+    }
+}
+
+// (original lines 138-142: content not recovered)
+#line 143
+void CNomeEleitor::NavegaBiometrica()
+{
+    bool ehDemo = api::CPolySingleton<comum::IInterfaceInit>::instance().GetDemoMode();
+    if (ehDemo) {
+        m_pNextState = &CInformaBioDesabilitadaDemo::GetInst();
+    } else {
+        m_pNextState = &CControlaReconhecimento::GetInst();
+    }
+}
+
+
+void CNomeEleitor::NavegaAnoNascimento()
+{
+    bool ehDemo = api::CPolySingleton<comum::IInterfaceInit>::instance().GetDemoMode();
+    if (ehDemo) {
+        m_pNextState = &CInformaAnoDesabilitadoDemo::GetInst();
+    } else {
+        LimpaBiometria();
+        m_pNextState = &CPedeAnoNascimentoSemBiometria::GetInst();
+    }
+}
 
 } // namespace vota

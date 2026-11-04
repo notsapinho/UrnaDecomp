@@ -38,11 +38,13 @@
 
 #include <memory>
 #include <mutex>
+#include <vector>
 
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/iimage.h"
 #include "api/gui/primitives.h"
 #include "api/pattern/iobserver.h"
+#include "ecourna/api/uetypes.hpp"
 
 namespace comum {
 
@@ -57,6 +59,11 @@ public:
     void Update(const api::SharedIImage& imagem) override;
     void MostraIconeBateria();
     void MostraImagem(const api::IImage& imagem, const api::SPoint& posicao);
+    // The bytes of an image shown as an api::CFixedImage built from a copy of them: vota::ApresentaFotoEleitor (fn 3616)
+    // holds it behind a frame of its own that holds the image, after GetInst and the position, so it is out of line
+    // here, inlined by binaryen into its one caller (no target index), a reading. Its being an overload of
+    // MostraImagem is chosen.
+    void MostraImagem(const std::vector<uebyte>& imagem, const api::SPoint& posicao);
 
 private:
     void MostrarImagemNoLCD(const api::IImage& imagem, const api::SPoint& posicao, bool opcao);

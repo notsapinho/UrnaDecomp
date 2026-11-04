@@ -18,8 +18,6 @@
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 2881, 11242 and 12110 (652 is in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 7174 and 11616 (2822, 2825, 6034, 10210 and 10635
 //                       are in the link)
-//   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fn 3616
-//                       (5385, unit 214's, 10631, unit 104's, 10789 and 10790, unit 119's, are in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
@@ -32,6 +30,8 @@
 //   vt_CEleitores       comum::CEleitores's vtable (@1559112), whose one slot is QuantidadeAptosPorAbrangencia (fn 2824):
 //                       the target stores its vptr in fn 7787 alone (a constructor inlined there), which is not
 //                       written; the sink goes when 7787 lands
+// LocalizaEleitores, for CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264), went: its
+// last target caller not in the link, fn 3616 (unit 319's), is.
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -70,7 +70,6 @@ void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
 void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoERKNS_24CEleitorDadosHabilitacaoE");
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
-int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
@@ -142,11 +141,6 @@ __attribute__((noinline)) int ConsultaDinamicos(int detalhe)
     return w1271(detalhe) + w1271(detalhe + 204) * 3;
 }
 
-__attribute__((noinline)) int LocalizaEleitores(int eleitores, int identificador)
-{
-    return w2264(eleitores, identificador, 1) + w2264(eleitores, identificador + 12, 3) * 5;
-}
-
 __attribute__((noinline)) void LeImpedidos(int resultado, int arquivos)
 {
     w5767(resultado, arquivos);
@@ -188,7 +182,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&HabilitaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
-        singletons_sink = reinterpret_cast<const void*>(&LocalizaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&s11478);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);

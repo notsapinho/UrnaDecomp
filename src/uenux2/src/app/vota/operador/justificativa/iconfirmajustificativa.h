@@ -17,8 +17,8 @@ namespace vota {
 // vota::IConfirmaJustificativa (RTTI: si_class of comum::CAppState; vtable @1589948 [1688, 2748, 10589, 7480, 1661, 218,
 // 425, 10588, 425]), the base of vota::CConfirmaJustificativa, CConfirmaJustificativaTemporario and
 // CConfirmaJustificativaTransito, whose vtables hold the same slots but slot 0 (fn 3626, a call of fn 1688). It overrides
-// StartState (slot 2, fn 10589) and ProcessInput (slot 7, fn 10588), both pending (unit 174's -pending.cpp says what
-// they wait for). The constructor (fn 3625, record iconfirmajustificativa.cpp:34, which spells its parameter) passes 2 to
+// StartState (slot 2, fn 10589: the form's slot 2, vota::ApresentaFotoEleitor (fn 3616), `this` as the next state) and
+// ProcessInput (slot 7, fn 10588). The constructor (fn 3625, record iconfirmajustificativa.cpp:34, which spells its parameter) passes 2 to
 // the base's, throws the vota error 9395 with "Frase muito grande [" + the text + "]" when the text is longer than 40
 // characters (the record's line, before the builder), and builds the form, the text on line 2, with
 // api::CMTFormBuilder::GetInteractiveForm (fn 301), whose std::shared_ptr it moves into +12 in the body; its callers

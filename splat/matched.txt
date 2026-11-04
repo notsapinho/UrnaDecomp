@@ -12444,3 +12444,15 @@
 10443 _ZN4vota20CVerificaDadoEleitor12ProcessInputEv
 10449 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp.o
 10450 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp.o
+3617 _ZN4vota22MostraFotoIndisponivelEv
+5400 _ZN4vota12CNomeEleitor15HabilitaEleitorEv
+7306 _ZN4vota14CIniciodeCiclo10StartStateEv
+10490 _ZN4vota30CPedeAnoNascimentoSemBiometria10StartStateEv
+10491 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.cpp.o
+10492 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.cpp.o
+10500 _ZN4vota12CNomeEleitor12ProcessInputEv
+10505 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.cpp.o
+10506 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.cpp.o
+10501 _ZN4vota12CNomeEleitor10StartStateEv
+10589 _ZN4vota22IConfirmaJustificativa10StartStateEv
+10625 _ZN4vota21IEleitorImpedidoVotar10StartStateEv

@@ -21,7 +21,6 @@
 // `this`), so this TU needs no uenux2 header and instantiates nothing.
 extern "C" {
 int r178_identidade(int, int, int) __asm__("_ZN5comum2md18CEleitorIdentidadeC1ENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
-void r178_formata(int, int, int) __asm__("_ZN5comum2md17FormataIdentidadeENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r178_formata_identificador(int, int) __asm__("_ZN5comum2md20FormataIdentificadorERKNS0_18CEleitorIdentidadeE");
 }
 
@@ -30,12 +29,6 @@ namespace {
 __attribute__((noinline)) int DuasIdentidades(int destino, int identificador, int tipo)
 {
     return r178_identidade(destino, identificador, tipo) + r178_identidade(destino + 16, identificador + 12, tipo + 1);
-}
-
-__attribute__((noinline)) void DuasFormatacoes(int destino, int identificador, int tipo)
-{
-    r178_formata(destino, identificador, 1);
-    r178_formata(destino + 12, identificador + 12, tipo);
 }
 
 __attribute__((noinline)) void DuasFormatacoesIdentificador(int destino, int identidade)
@@ -50,7 +43,6 @@ struct SRoots178 {
     SRoots178()
     {
         r178_sink = reinterpret_cast<const void*>(&DuasIdentidades);
-        r178_sink = reinterpret_cast<const void*>(&DuasFormatacoes);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoesIdentificador);
     }
 } roots178;

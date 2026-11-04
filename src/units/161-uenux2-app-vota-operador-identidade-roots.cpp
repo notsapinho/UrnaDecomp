@@ -16,13 +16,14 @@
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
 //   CControlaReconhecimento::PrimeiraTentativa (fn 5403, called twice by 10465),
-//   CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097: 10500; 10443, 10447, 10489 and 10626 are in the link)
-//   and LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
+//   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
 //   10430, and the ones the stand-in's comment names are in the link). A stand-in goes when the target callers it names
 //   are in splat/matched.txt or written in the link.
 // - vota::CControlaReconhecimento::GetInst (fn 1256): its target callers are 10425, 10474, 10486 and 10500; 10474 and
-//   10486 (unit 282's) are in the link and drop the result, as 10425 does, while 10500 stores it as its next state. The
-//   stand-in stands for 10425 and 10500 and reads the result, so that GetInst keeps it, as the target's does.
+//   10486 (unit 282's) are in the link and drop the result, as 10425 does, while 10500 (unit 239's, in the link) stores
+//   it as its next state. The stand-in stands for 10425 and reads the result, as 10500 does.
+// The call of CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097) went: its target callers 10500, 10443, 10447,
+// 10489 and 10626 are in the link.
 // The stand-in for vota::MontaTelaEleitorPodeVotar (5410) went: its callers 1256 (this unit's) and 5399 (unit 282's) are
 // in the link.
 // The stand-ins for AtingiuLimiteVerificacoes (5404), AtingiuLimiteTentativas and AvancaTentativa (5405, 5406) went:
@@ -46,11 +47,10 @@ __attribute__((noinline)) int PrimeiraDuasVezes()
     return CControlaReconhecimento::PrimeiraTentativa() + 2 * CControlaReconhecimento::PrimeiraTentativa();
 }
 
-// Stands for 10500 and 10451.
+// Stands for 10451.
 __attribute__((noinline)) int CancelaUm()
 {
     CLogVota& log = CLogVota::GetInst();
-    log.LogaHabilitacaoCanceladaConfirmacaoDado();
     log.LogaHabilitacaoCanceladaCapturaDigitalMesario();
     return 71;
 }
@@ -65,7 +65,7 @@ __attribute__((noinline)) int PedeIdentidade()
     return w161_pede_identidade() + 89;
 }
 
-// Stands for 10425 and 10500.
+// Stands for 10425.
 __attribute__((noinline)) int ControlaReconhecimento()
 {
     return reinterpret_cast<const char*>(&CControlaReconhecimento::GetInst())[9] + 161;

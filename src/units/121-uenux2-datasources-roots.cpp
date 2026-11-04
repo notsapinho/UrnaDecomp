@@ -13,8 +13,9 @@
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fn
 //   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link) and api::CInputMenuField
 //   (1579324, fn 3675). A dropped builder needs T's constructor declared, not defined.
-// And five stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo and of
-// vota::AdicionaCampoNumerico, kept by their addresses: each comment names the target callers it stands for.
+// And four stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, kept by their
+// addresses: each comment names the target callers it stands for. The one of vota::AdicionaCampoNumerico (fn 1151) went:
+// its last target caller not in the link, fn 10500 (unit 239's), is.
 // vota::CEscolheOpcao::GetInst (fn 2753), whose four target callers (10677, 10698, 10740 and 10754) are in the link,
 // stores the vptrs of CEscolheOpcao and of CDataText<CEscolheOpcao::COpcaoDS>
 // in cescolheopcao.cpp's object, so no sink keeps those vtables here. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
@@ -92,15 +93,6 @@ __attribute__((noinline)) unsigned w121_codigo(comum::CCalculaCV& calcula)
     return calcula.CalculaCodigo().size() + 121;
 }
 
-// Stands for one target caller of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753, 652, 2735, 3631, 5418,
-// 10627 and 10388 (units 121, 161, 277, 283, 278 and 104) and 10415 (unit 152): fn 10500. It, 10415, 10627 and 10388
-// pass the length and the flag as 1 and 0, 4 and 1 or 12 and 1, so these pass 12 and false, which keeps both
-// parameters through binaryen's dead-argument elimination, as fn 2753's 1 and true alone would not.
-__attribute__((noinline)) bool w121_campo(api::CMTFormBuilder& builder, const api::SPoint& posicao)
-{
-    return vota::AdicionaCampoNumerico(builder, 12, false, posicao) != nullptr;
-}
-
 const void* volatile w121_sink;
 
 struct SW121Roots {
@@ -110,7 +102,6 @@ struct SW121Roots {
         w121_sink = reinterpret_cast<const void*>(&w121_inclui);
         w121_sink = reinterpret_cast<const void*>(&w121_reinicia);
         w121_sink = reinterpret_cast<const void*>(&w121_codigo);
-        w121_sink = reinterpret_cast<const void*>(&w121_campo);
         w121_sink = w121_vt_respostas;
         w121_sink = w121_vt_string;
         w121_sink = w121_vt_menu;

@@ -1,7 +1,7 @@
 // Roots of fragment 291: keep comum::CEleitores::GetCurrentBiometriaEleitor (fn 1393, unit 110's celeitores.cpp) in
 // the skeleton link the way the target reaches it: six direct callers (fns 10425, 10465, 10474, 10478, 10500 and
-// 10512, vota's identification states; 10474, 10478 and 10512 are in the link, units 282 and 161), each passing
-// CEleitores::GetInst()'s result. The stand-in is for the other three, 10425, 10465 and 10500. binaryen
+// 10512, vota's identification states; 10474, 10478, 10500 and 10512 are in the link, units 282, 239 and 161), each passing
+// CEleitores::GetInst()'s result. The stand-in is for the other two, 10425 and 10465. binaryen
 // inlines a function called once, so the stand-in calls it twice, on two objects, and reads both 40-byte results.
 // Declared through an asm label with the object's signature (the md::CBiometriaEleitor comes back through the result's
 // address); the results are left undestroyed: nothing calls the stand-in.

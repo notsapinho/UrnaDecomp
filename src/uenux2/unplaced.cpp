@@ -21,11 +21,6 @@
 // f5376 · 343 B · unmatched · placement: link order · name unknown
 // void f5376(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 755 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
-
-// f5400 · 82 B · unmatched · placement: link order · name unknown
-// void f5400(i32) { ... }
-
 // link-order cluster 756 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown

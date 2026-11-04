@@ -16,7 +16,7 @@
 // - SincronizaRelatorios (fn 1836): callers 11943, 11946, 12105 (three times) and 12110, the slot 2 of four vota states.
 // - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 15 are in the link: 5972, 10710, 10734, 10797, 11830,
 //   11905, 11920, 11924, 11927, 11931, 11940, 12031, 12034, 12077 and 12081.
-// - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 and 10710 (unit 277, in the link).
+// - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 (unit 104, in the link) and 10710 (unit 277, in the link).
 // - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
 //   pending file, and 10226 (CThreadMonitor::Run, unit 116's, matched).
 #include "app/vota/comum/csincronizavota.h"
@@ -81,8 +81,8 @@ __attribute__((noinline)) int w205_estado(int vezes)
     return vezes * 7;
 }
 
-// stands for fns 7160 and 7306, SincronizaEstadoGeral's (fn 3333's) target callers that are not in the link (10710,
-// the third, is: unit 277)
+// stands for fn 7160, SincronizaEstadoGeral's (fn 3333's) target caller that is not in the link (10710 and 7306 are:
+// units 277 and 104)
 __attribute__((noinline)) int w205_estado_geral(int passo)
 {
     vota::CSincronizaVota::SincronizaEstadoGeral();
