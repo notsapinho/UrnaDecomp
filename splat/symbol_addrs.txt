@@ -632,6 +632,7 @@ _ZNSt3__225__throw_bad_function_callB8ne210108Ev = func:648; // size:0x20 eviden
 _ZN5boost13re_detail_60018basic_regex_parserIcNS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE13parse_literalEv = func:649; // size:0x136 evidence:pair-addr
 _ZN3api14CMTFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_ERKNS_6SPointES9_NS_14ETextAlignmentE = func:651; // size:0x109 evidence:vptr-anchor
 _ZN4vota15CPedeIdentidade7GetInstEv = func:652; // size:0x1201 evidence:vptr-anchor
+_ZN3api23CInteractiveFormBuilder22AddLabeledInputControlERKNSt3__26vectorINS1_4pairIcNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEENS7_ISA_EEEERKNS_5SRectEb = func:653; // size:0x5fb evidence:srcloc-anchor
 _ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE = func:654; // size:0x1290 evidence:srcloc-anchor
 _ZN7ecourna3api9exception10CBaseErrorIN3api11EUeRdvErrorEXtlNS1_12SErrorLimitsELi4650ELi4850EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE = func:655; // size:0x12 evidence:vptr-anchor
 _ZNK3api8CDataMapIN5comum2md18CEleitorIdentidadeENS1_15CEleitorDetalheEE10GetCurrentEv = func:656; // size:0xe evidence:srcloc-anchor
@@ -3173,6 +3174,7 @@ _ZN3api11IInputFieldINS_9IScreenMTEEC2ERKNSt3__210shared_ptrINS_16IInputValidati
 _ZN3api14CMTFormBuilder8AddFieldEONSt3__210shared_ptrINS_10IFormFieldINS_9IScreenMTEEEEE = func:3674; // size:0x111 evidence:call by:395,1151
 _ZN3api11CFramedText4MoveERKNS_6SPointE = func:3676; // size:0xc evidence:pair-fingerprint
 _ZNK3api11CFramedText4RectEv = func:3677; // size:0x85 evidence:pair-fingerprint
+_ZN3api12CFormBuilder13AddLabeledKeyERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_NS_14ETextAlignmentENS_6TColorESB_ = func:3678; // size:0x234 evidence:call by:653
 _ZN3api10CLineFieldD0Ev = func:3681; // size:0xc evidence:vtable
 _ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_ = func:3682; // size:0x14d evidence:call by:676,2740,3229
 _ZN3api12CApplication11PushContextENS_19CApplicationContextE = func:3684; // size:0x274 evidence:call by:7377,10468,11159
@@ -9791,6 +9793,7 @@ _ZN4vota12testeteclado15CEsperaRetestar10StartStateEv = func:11825; // size:0x93
 _ZN4vota12testeteclado12_GLOBAL__N_111TextoEsperaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE = func:11826; // size:0x1e3 evidence:table by:5936
 _ZN4vota12testeteclado9CRetomada17GetEstadoSemTesteEv = func:11829; // size:0x13 evidence:pair-addr
 _ZN4vota12testeteclado9CRetomada22GetEstadoPassouNoTesteEv = func:11830; // size:0x4a evidence:vtable
+_ZN4vota12testeteclado9CRetomada7GetTelaEv = func:11831; // size:0x5c evidence:vtable
 _ZN4vota16CReinicioVotacao12ProcessInputEv = func:11834; // size:0x1c0 evidence:vtable
 _ZN4vota16CReinicioVotacao10StartStateEv = func:11835; // size:0x2c8 evidence:vptr-anchor
 _ZN4vota24CConfirmaRegerarZeresima12ProcessInputEv = func:11838; // size:0xf2 evidence:vptr-anchor
@@ -9802,6 +9805,7 @@ _ZN4vota23CQuerReimprimirZeresima10StartStateEv = func:11849; // size:0xfa evide
 _ZN4vota21CReimprimindoZeresima10StartStateEv = func:11852; // size:0x481 evidence:srcloc-anchor
 _ZN4vota22CDefineRotaPosReinicio15NeedChangeStateEv = func:11858; // size:0x232 evidence:srcloc-anchor
 _ZN4vota12testeteclado12CPreZeresima17GetEstadoSemTesteEv = func:11861; // size:0x46 evidence:vtable
+_ZN4vota12testeteclado12CPreZeresima7GetTelaEv = func:11862; // size:0x6b evidence:vtable
 _ZN4vota24CVerificaHorarioZeresima11FinishStateEv = func:11868; // size:0xd evidence:vtable
 _ZN4vota24CVerificaHorarioZeresima26ProcessTickNaoDesligamentoEh = func:11870; // size:0x7c evidence:srcloc-anchor
 _ZN4vota24CVerificaHorarioZeresima10StartStateEv = func:11871; // size:0x138 evidence:srcloc-anchor
@@ -29680,9 +29684,8 @@ _ZTSN4ASN18DataFreeE = 0x11933c; // type:data size:0x11 evidence:rtti
 str.9c687a1d42d1 = 0x11933c; // type:data size:0x11 evidence:string "N4ASN18DataFreeE"
 g_AlignedAlloc = 0x119368; // type:data size:0x8 evidence:vote:18
 _ZTV12CFilterCoder = 0x119370; // type:data size:0x238 evidence:rtti
-g_Alloc = 0x11944c; // type:data size:0x8 evidence:content
-g_MidAlloc = 0x119454; // type:data size:0x8 evidence:content
-g_BigAlloc = 0x119464; // type:data size:0x8 evidence:content
+g_Alloc = 0x119448; // type:data size:0x8 evidence:content
+g_MidAlloc = 0x119450; // type:data size:0x8 evidence:content
 _ZTI12CFilterCoder = 0x1195a8; // type:data size:0x98 evidence:rtti
 _ZTS12CFilterCoder = 0x119640; // type:data size:0xf evidence:rtti
 str.5c02b0d4057d = 0x119640; // type:data size:0xf evidence:string "12CFilterCoder"
@@ -37897,9 +37900,6 @@ _ZNK5comum8CRdvVota9CandidatoEhjh = func:1931; // evidence:vtable comum::CRdvVot
 _ZNSt3__29to_stringEj = func:327; // evidence:pair-depth0 the only target and the only ours with this depth-0 fingerprint (normalizeModule depth 0: target [327], ours [_ZNSt3__29to_stringEj]); depth 1-2 differ only by the inlined string::__init (docs/reference/facts/tool-traps.md §X5)
 _ZNSt3__225__throw_bad_function_callB8ne210108Ev = func:648; // evidence:rtti-operand the only target function holding _ZTV/_ZTI std::bad_function_call (vptr i32.const 0x13bd7c and typeinfo 0x13bd88, 1 target function each); ours likewise the only one holding them
 _ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE = func:3707; // evidence:callers+content its target callers are exactly 1931, 2296 and 6033 (CRdvVota count slots: Candidato, the merged Nominais..Cargo and Legenda/Partido bodies), ours exactly Candidato and the two binaryen-merged count bodies; one of the 2 target functions building "Cargo " + n + " nao encontrado" and throwing _ZTI CBaseError<EUeRdvError,{4650,4850}> (0x17cda4), the other (11350, comum::asn::CConversorEleicoesVota vtable slot 2) is never called directly
-# 406: the only target function holding 1529396, the address point of CBaseError<EUeGuiError>'s vtable (rtti, 0x17562c + 8);
-# its body is binaryen's merged-ctor thunk (the four ctor arguments + that vtable, into 710), the shape our CBaseError<EUeGuiError> ctor has.
-_ZN7ecourna3api9exception10CBaseErrorIN3api11EUeGuiErrorEXtlNS1_12SErrorLimitsELi4900ELi5100EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE = func:406; // size:0x12 evidence:rtti-vptr
 # 5498: stores 1582836, the address point of CTextFieldMultiLine's vtable (rtti, 0x1826ec + 8); the only other holders are its two
 # destructors 10922/10923 (pair-addr), and its two callers 2782/12055 build a __shared_ptr_emplace<CTextFieldMultiLine> (rtti).
 _ZN3api19CTextFieldMultiLineC2ERKNS_5SRectERKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_ = func:5498; // size:0xe6 evidence:rtti-vptr
@@ -38051,7 +38051,6 @@ byn$mgfn-shared$_ZNK7RHVoice8userdict8deletion8describeEv = func:6160; // eviden
 byn$mgfn-shared$_ZNK7RHVoice12_GLOBAL__N_113feat_ssyl_out4evalERKNS_4itemE = func:6163; // evidence:callers+content 2 function(s) the symbol file names, each with rows equal to ours up to callees, call it at the site where ours calls this symbol (9835 9837), and no such site disagrees
 byn$mgfn-shared$_ZNK7RHVoice12_GLOBAL__N_112feat_ssyl_in4evalERKNS_4itemE = func:6164; // evidence:callers+content 2 function(s) the symbol file names, each with rows equal to ours up to callees, call it at the site where ours calls this symbol (9836 9838), and no such site disagrees
 _ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE2EEEvv = func:6770; // evidence:pair-depth0 the only target and the only ours with this depth-0 fingerprint (pnpm wasm fingerprint <wasm> --depth 0: target [6770], ours [_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE2EEEvv])
-_ZN3api12CFormBuilder8AddFieldENSt3__210shared_ptrINS_10IFormFieldINS_7IScreenEEEEE = func:426; // evidence:callers+content calls slot 7 of its by-value shared_ptr argument's object (GetTypeName), appends to_string(unsigned) (327), compares the result with the string at +12 of each element of the vector at this+0, assigns it to the argument's +12 and pushes the argument through 1400. Callers the records name pass it their CFormBuilder, after copying a shared_ptr by words into a temporary: 502 (void api::CFormBuilder::AddStatusHeader(StatusHeaderFields)), 6624 and 6652 (api::CFormBuilder & first), and 6561 (the same after the result's address). Our body differs at -O2: what it inlines, and one compare loop where the target holds two. With cformbuilder.cpp at -O3 one add's operand order still differs: src/units/31-uenux2-cformbuilder.mk has both scores
 # The singletons over fn 1406 (src/units/110-uenux2-singletons.mk). Each thunk is f1406(mutex, record, message, pointer): the record and its "<Class> - instancia nao criada" name the class, 1406 reads *pointer, throws 1303 when it is null, and unlocks the mutex through 150. So what the thunk's body holds says which object each address is, read without a match of the thunk. These names have no generated route: 273's and 326's records are held by functions that inline GetInst too (273 and 11556; 326, 7377, 11526 to 11529), and srclocAnchors takes one holder a side, so those two thunks cast no vote (2812's record is held so too, by 2812, 11478, 11479 and 12621, but 2812 is named by its call from 11212, so CRespostas's mutex and pointer have generated lines with two voters, 2812 and 12621, and no line here); 555's and 2817's pointers have one voter, and their exit destructors cannot land yet.
 _ZN5comum10CEleitores7s_mutexE = 0x1c0ecc; // type:data size:0x18 evidence:callers+content 326 passes 1838796 as the mutex beside record 1559096 celeitores.cpp:44 static CEleitores &comum::CEleitores::GetInst() and the message at 232636; 7377, 11526, 11527, 11528, 11529 inline that GetInst and unlock it; 11534, table slot 2391, destroys it
 _ZN5comum8CRdvVota11s_instanciaE = 0x1c0f6c; // type:data size:0x4 evidence:callers+content 555 passes 1838956 as the pointer beside record 1560132 crdvvota.cpp:87 static CRdvVota &comum::CRdvVota::GetInst() and the message at 232879; 7787 reads it and unlocks 1838932, the mutex 555 passes, and stores it; 11495, table slot 2422, nulls it and calls 5734 and operator delete on the old value; 5734 stores CRdv's vptr 1559900 (rtti), which only a CRdv can hold. It needs this line while CRdvVota's converter member is not written, which keeps 5734 and 11495 out

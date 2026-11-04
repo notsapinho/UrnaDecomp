@@ -80,7 +80,7 @@
 #
 # 3678 and 2243, AddLabeledKey over a key's name and over a key, and 2782, AddTextFieldMultiLine, match; the scan's
 # content pass names each (source `content`), as no vote reaches them. Their target callers are screens, none written
-# (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the roots say which
+# but 653 (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the roots say which
 # stand-in stands for which. Each measured in the link (`pnpm wasm score`, and `pnpm wasm splat-remap`, which reads
 # 3678 and 2782 IDENTICAL, and 2243 unresolved on its one call, of 3678, whose name only that match gives):
 # - 3678 passes 5544 the screen's area, api::CApplication::s_areaTela (capplication.h lists its readers), through
@@ -93,8 +93,9 @@
 #   give one plain link (sha256 c3f8a83f01c01a68... both). Both parameters is the choice.
 # - With both positions and the second field temporaries, 3678's frame is the target's.
 # - 2243 is KeyName (744, api/hwil/iinput.h) and a call of 3678; 744's copy now links from this object, still matching.
-#   653 holds that code behind a second prologue, so what it inlined had 653 as its one caller when binaryen inlined, a
-#   twin of 2243 (docs/reference/facts/tool-traps.md X1): which of the two is CFormBuilder's is not settled.
+#   653 (unit 120) holds that code behind a second prologue: AddKeyLabel, written after 2243, which only 653 calls and
+#   binaryen inlines there (cformbuilder.h says why it is a function apart from 2243; unit 120's fragment has the
+#   measurements). Which of the two is the 3-parameter AddLabeledKey and which the other is chosen.
 # - 2782 has AddTextField's shape over the CTextFieldMultiLine constructor (5498, unit 14). Its CFixedText control
 #   block's vptr, 1578304, is the one 202 and 1265 store; its CTextFieldMultiLine control block's, 1539360, which only
 #   2782, 12055 and that block's members 12298 and 12300 hold, is no neighbour of it, so the target's copy of that block
@@ -215,10 +216,11 @@
 #   reference; the constructors `= default` or `{}`.
 # What the bytes fix and what is chosen in GetLabeledKeyPos:
 # the throw's column (11, one level in) puts it after the switch, so each arm
-# returns; the arms' order (left, centre, right) is the target's block order (br_table 3 1 0 2); the arms assign a
-# temporary SPoint to the named result, because with SPoint an aggregate (primitives.h) only that evaluates both
-# coordinates before the first store, as the target does (a constructor SPoint(TPosition, TPosition) would give the
-# same code from return SPoint(...)). The names of the three distances, of the parameters and of the enumerator are
+# returns; the arms' order (left, centre, right) is the target's block order (br_table 3 1 0 2); each arm returns
+# SPoint(...) through SPoint's constructor (primitives.h), which evaluates both coordinates before the first store, as
+# the target does; while SPoint was an aggregate only a temporary assigned to a named result did, and with the
+# constructor that form scores 33 over 245 rows (6 inserted, 7 deleted), return SPoint(...) 15 over 239, every row an
+# operand (pnpm wasm score in the link). The names of the three distances, of the parameters and of the enumerator are
 # chosen; the alignment is formatted as an int (the argument type 3 the throw stores).
 #
 # CPaperFormBuilder::Build (target fn 357, cpaperformbuilder.cpp): the form of GetForm (fn 5515), after which the

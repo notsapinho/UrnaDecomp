@@ -27,7 +27,8 @@
 #   CInteractiveForm  SetFocus 1401 and Slot6 5529 (one body each for both instances); <IScreen, IInputKbd>: D2 11079,
 #                     D0 11078, Slot2 11077, Slot3 11075, Slot7 11074; <IScreenMT, IInputMT>: 11032, 11031, 11030,
 #                     11029, 11028
-#   CInteractiveFormBuilder::GetInteractiveForm 554, and AddInputControl 901 (no argument) and 5530 (the keys), with
+#   CInteractiveFormBuilder::AddLabeledInputControl 653 (below), GetInteractiveForm 554, and AddInputControl 901 (no
+#                     argument) and 5530 (the keys), with
 #                     what this object emits first of api/gui/cinputfieldcontrol.h and iinputfield.h:
 #                     CInputFieldControlBase<IScreen>'s constructor 5565 and IInputField<IScreen>'s 2024 (unit 92's
 #                     headers, whose notes they are)
@@ -62,9 +63,8 @@
 # names Slot2, Slot3, Slot6 and Slot7, which the landed callers use; Slot6's parameter type; IPaper::Refresh, an empty
 # non-virtual member (ipaper.h says why); the spacing that puts GetRenderForm's call on its records' columns (iform.h
 # 178:52, cpaperformbuilder.h 51:54); CInteractiveFormBuilder deriving from CFormBuilder, its header's path and
-# GetInteractiveForm's name and place after the records' lines 76 and 86 of cinteractiveformbuilder.cpp, which stay
-# blank (AddLabeledInputControl, fn 653, is not written); SetFocus, SetAtivo, ApagaCursor and every data member's and
-# parameter's name.
+# GetInteractiveForm's name and its place after AddLabeledInputControl (653); what 653's paragraph below lists; SetFocus,
+# SetAtivo, ApagaCursor and every data member's and parameter's name.
 #
 # splat/symbol_addrs.txt gets nine hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
@@ -104,23 +104,45 @@
 #   the keys 4 folded in and CInputFieldControl<IScreen>'s vptr stored last, and 5530 calls 5565 and then stores that
 #   vptr. The header's one constructor with the default argument 4 gives both (the object keeps 901's
 #   __shared_ptr_emplace constructor over no argument out of line, which binaryen inlines into its one caller, and
-#   5530's call of 5565); 5565 keeps its body only with a second caller in the link, which the roots give for 653.
+#   5530's call of 5565); 5565 keeps its body only with a second caller in the link, 653.
 #   5565 is named by its own vptr anchor; 2024 by 5565's call vote alone, which docs/reference/splat.md 3 holds through
 #   901, a match that calls 2024 too; 901 and 5530 by the scan's content pass. With 2383 out of the link (below), 2024's callers in it pass the length 0, true and false alike, and binaryen
 #   folded the three (2024 then 5 parameters, 5565 three rows short); unit 92's roots stand for 2024's other callers.
-# - Not written, measured with each written here and taken out again, as nothing that matches needs it:
-#   653, AddLabeledInputControl (records 76:23, the throw of a lambda over the key, "Tecla de controle n√£o suportada
-#   '{}'", EUeGuiError 4936; 86:15, "O n√∫mero m√°ximo de teclas suportado √© {}", 4937, past three keys): for each
-#   key it takes the bit of 'B', 'C' or 'D' (1, 4, 2, the table at 524056), adds the key's labels through the twin of
-#   2243 that it inlines (31-uenux2-cformbuilder.mk) with the alignments 1, 0, 2 popped from a vector {2, 0, 1}, draws
-#   a line 50 above the bottom of the screen's area (the SRect at .data 1577200), and returns the form's first
-#   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits. Written so, beside 2243 and 3678 (unit
-#   31), over a CFormBuilder member with 2243's code that only 653 calls, and called by two stand-ins that pass
-#   api::CApplication::s_areaTela and true, which binaryen folds to the target's three parameters, it scores 272 over
-#   704 rows (1518 bytes, the target's 1531; `pnpm wasm score`), and 2243, 3678 and 5544 score as they do matched:
-#   the target's frame is 544 bytes, ours 528, and the target lays the bad key's throw after the label calls of the
-#   loop's body (KeyName, 3678), ours before them, with its std::format buffer at +96 of the frame, ours at +464; not
-#   explained. The roots' ControleTeclas stands for its call of 5565.
+# - 653, AddLabeledInputControl (records 76:23, the throw of the lambda over a key, EUeGuiError 4936, "Tecla de controle
+#   n„o suportada '{}'"; 86:15, 4937, "O n˙mero m·ximo de teclas suportado È {}", past three keys), matches. For each key
+#   it takes the bit of 'B', 'C' or 'D' (1, 4, 2: the switch's table at 524056), adds the key's labels with the alignment
+#   popped from a vector {2, 0, 1}, draws a line 50 above the bottom of the area and returns the form's first
+#   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits (AddInputControl(int), 5530's code, which clang
+#   inlines). Of its 14 target callers 2376 is written (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, which passes
+#   api::CApplication::s_areaTela and false); the roots' RotulosA and RotulosB pass the same for the others, and binaryen
+#   folds both to the target's three parameters. What fixes its form, each measured on a copy of
+#   this tree's link.cmd with the variant objects swapped in (`pnpm wasm score`), or on the object where it says so:
+#   - The key loop holds a branch on the bool, which clang unswitches (the object holds the loop twice) and binaryen,
+#     with the bool folded, cuts to one loop. Without such a branch the frame is 528 bytes, the target's 544, and the bad
+#     key's throw lies inside the loop, before the label call, where the target has it after the loop (objects); with
+#     it, both are the target's. That the 16 bytes are the lambda's message, whose lifetime start the
+#     unswitched loop holds twice, so that stack colouring keeps its slot (+96) apart from the format code's, is a
+#     reading: the loop without the branch compiled with -mllvm -stackcoloring-lifetime-start-on-first-use=false gives
+#     the target's 544-byte frame and its slots too (object).
+#   - Under that branch the label: with it under `if (!flag)`, or after `if (flag) continue;` (the same wasm), the throw
+#     comes between the loop and the line, as in the target; under `if (flag)`, or after `if (!flag) continue;`, at the
+#     function's end (objects). So the labels are added when the flag is false, the value the stand-ins pass; its name
+#     (semRotulos) and that it gates the labels, not something else the false loop does, are chosen.
+#   - The labels through api::CFormBuilder::AddKeyLabel (cformbuilder.cpp), 2243's code with the label first, which only
+#     653 calls and binaryen inlines (cformbuilder.h says why it is a function apart from 2243): 653 passes it the key
+#     it loaded once for the switch (i32.load8_s); passing the key's whole std::pair loads it twice (68 over 650 rows,
+#     with the aggregate SPoint). AddLabeledKey(char, rotulo, alinhamento, 2, 1), the colours two more parameters,
+#     gives 653 the same body (wasm-objdump -d of both links).
+#   - The line's first point loads area.bottom before area.left: with api::SPoint's constructor (primitives.h) 653 scores
+#     49 over 648, every row an operand; with the aggregate SPoint(...) 53 over 649 (1 inserted, 3 deleted, that order
+#     alone), and fifteen other spellings of the two points with the aggregate (a named y, named x and y, named
+#     points, copies, braces, a copy or a structured binding of the area) gave none of the target's order (objects).
+#   - The search for an input field: std::find_if over a dynamic_cast, then std::dynamic_pointer_cast of what it found,
+#     the target's two __dynamic_cast calls; the form is chosen among those that give them (no other was measured).
+#   Chosen: the names (mascara, teclasAtivas, alinhamentos, the parameters'); the switch with its cases one level in (the
+#   record's column 23 puts the throw four levels in, not how); the size check's argument alinhamentos.size(); the
+#   loop's range-for with structured bindings and the OR before the label; the blank lines between the lambda and the
+#   size check (the records fix only lines 76 and 86).
 #   2383, an adder of a CInputField<CFramedText> over a CNumberValidation (callers 1591, 2384, 7787, 11892), written
 #   as the target's code reads (the validation a named local, the field a SharedInput, AddField, return) differs in
 #   its frame alone: the target keeps the validation at +16 and the field's SharedField copy at +24, ours the other
@@ -133,7 +155,7 @@
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
 # no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of
-# CPolySingleton<IScreenMT>::instance's others is reconstructed yet, nor 653, 5565's other caller:
+# CPolySingleton<IScreenMT>::instance's others is reconstructed yet, nor 653's:
 # 120-uenux2-iform-roots.cpp stands for them, and says which they are
 IFORM_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/120-uenux2-iform-roots.o: $(ROOT)/src/units/120-uenux2-iform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/120-uenux2-iform.mk $(IFORM_HDRS)

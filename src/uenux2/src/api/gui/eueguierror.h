@@ -35,6 +35,12 @@ enum EUeGuiError {
     // the value is the code api::CMenuItem::SetSearchText (target fn 3655) throws; the name is chosen from its message,
     // "Texto de busca repetido [" + text + "]!": no evidence names it
     EUE_GUI_MENUITEM_BUSCA_REPETIDA = 4929,
+    // the values are the codes api::CInteractiveFormBuilder::AddLabeledInputControl (target fn 653) throws: 4936 in its
+    // lambda over a key (record cinteractiveformbuilder.cpp 76:23), 4937 past three keys (86:15); the names are chosen
+    // from their messages, "Tecla de controle não suportada '{}'" and "O número máximo de teclas suportado é {}": no
+    // evidence names them
+    EUE_GUI_INTERACTIVEFORMBUILDER_TECLA_NAO_SUPORTADA = 4936,
+    EUE_GUI_INTERACTIVEFORMBUILDER_MAXIMO_DE_TECLAS = 4937,
     // the value is the code api::CLedFieldMT::Draw (target fn 11050) throws; the name is chosen from its message,
     // "Operação desconhecida {}": no evidence names it
     EUE_GUI_LEDFIELDMT_OPERACAO_DESCONHECIDA = 4940,

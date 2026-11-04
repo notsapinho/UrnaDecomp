@@ -35,7 +35,6 @@
 #include "api/uelog/cescritorlog.h"
 #include "api/util/cajustedatahora.h"
 #include "api/util/iajustedatahora.h"
-#include "api/util/isystemdatetime.h"
 #include "api/util/itimerscheduler.h"
 #include "app/comum/comparecimentomesario/estados/icontroladorregistramesarios.h"
 #include "app/comum/iinterfaceinit.h"
@@ -80,13 +79,11 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<comum::IControladorRegistraMesarios>() + w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for the callers of the two GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024, 3658, 3673, 5904 and 8302 are in the link, and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
-// 5473, 10226, 10870, 10874 and 10875 are in the link.
+// Stands for the callers of the GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024,
+// 3658, 3673, 5904 and 8302 are in the link. Fn 1155's last one, 11862 (unit 138), is in the link, and its calls went.
 __attribute__((noinline)) int w100_getinst()
 {
-    int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
-    soma += &api::ISystemDateTime::GetInst() == &api::ISystemDateTime::GetInst() ? 6 : 8;
-    return soma;
+    return &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
 }
 
 // The control block of each singleton: __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>. The target's builder is

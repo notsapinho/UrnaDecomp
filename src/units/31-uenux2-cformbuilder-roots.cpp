@@ -21,8 +21,9 @@
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
-//   RotuloTecla       7787 and 653 (which holds 2243's code inlined), the other callers of 3678 (AddLabeledKey over the
-//                     key's name): its second call site, beside 2243's. It leaves the colours at their defaults
+//   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
+//                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
+//                     their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
 //   RelatorioA        5579, 5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, which calls
