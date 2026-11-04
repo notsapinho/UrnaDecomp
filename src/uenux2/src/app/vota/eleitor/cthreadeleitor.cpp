@@ -1,11 +1,16 @@
+// Reconstruction's note, not TSE's text: vota::AbreDiretorio's place in this file is chosen (unit 329's fragment).
 #include "app/vota/eleitor/cthreadeleitor.h"
 
 #include <typeinfo>
 #include <vector>
 
 #include "api/hwil/iinput.h"
+#include "api/util/cdirreader.h"
+#include "api/util/csystem.h"
 #include "api/util/uedebug.h"
+#include "app/vota/eleitor/cajusteinicial.h"
 #include "app/vota/eleitor/cestadoaudio.h"
+#include "app/vota/eleitor/iajusteinicial.h"
 #include "app/vota/iexecucaovota.h"
 
 namespace vota {
@@ -68,7 +73,7 @@ bool CThreadEleitor::ProcessarMensagens(comum::CAppStateContext& contexto)
     return processou;
 }
 
-// (original lines 71-131: content not recovered)
+// (original lines 76-131: content not recovered)
 #line 132
 bool CThreadEleitor::ProcessarEntrada(comum::CAppStateContext& contexto)
 {
@@ -107,6 +112,30 @@ bool CThreadEleitor::ProcessaEventos()
         m_contexto->TrocaEstado();
     }
     return mensagens || eventos;
+}
+
+void CThreadEleitor::Run()
+{
+    comum::CAppState* inicial = &IAjusteInicial::GetInst();
+    m_contexto.reset(new comum::CAppStateContext(inicial));
+    if (comum::CAppState* estado = m_contexto->GetState()) {
+        estado->StartState();
+    }
+    while (!PararSolicitado()) {
+        const bool processou = ProcessaEventos();
+        if (PararSolicitado()) {
+            break;
+        }
+        Yield();
+        if (!processou) {
+            api::CSystem::Dorme(50);
+        }
+    }
+}
+
+api::CDirReader* AbreDiretorio(const std::string& caminho)
+{
+    return new api::CDirReader(caminho);
 }
 
 void CThreadEleitor::ParaOutrasThreads()

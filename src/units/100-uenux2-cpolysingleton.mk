@@ -46,8 +46,12 @@
 #   written and not matched) holds push<T>, so it has no w100_bloco.
 #   11801, vota::testeteclado::impl::IGeradorTeclas's __get_deleter, comes from ctesteteclado.cpp.o, whose
 #   IGeradorTeclas::GetInst (inlined into fn 11805, unit 217) holds push<T>, so its w100_bloco went.
-#   New heads, a virtual destructor alone: vota::IAjusteInicial, vota::impl::ISincronismoVotoEleitor,
-#   api::IFingerPrepare and ecourna::api::security::ISymmetricCipherFactory (vota::IExecucaoVota and
+#   7137 and 7126, vota::IAjusteInicial's and comum::IControladorRegistraMesarios's __get_deleter, come from
+#   cajusteinicial.cpp.o, whose IAjusteInicial::GetInst (inlined into fn 7061) and registrar (inlined into fn 7160)
+#   hold push<T>, so their w100_bloco lines went (unit 329).
+#   New heads, a virtual destructor alone: vota::impl::ISincronismoVotoEleitor, api::IFingerPrepare and
+#   ecourna::api::security::ISymmetricCipherFactory (vota::IAjusteInicial was one too, and unit 329 declares it over
+#   comum::CAppState with its GetInst; vota::IExecucaoVota and
 #   vota::impl::IPoliticaExecucaoEleitor were too, and unit 165 declares them whole; so was comum::impl::IValidaMidia,
 #   and unit 179 gives it slots 2 to 9; so was vota::testeteclado::impl::IGeradorTeclas, and unit 217 gives it GetInst
 #   and slot 2), each

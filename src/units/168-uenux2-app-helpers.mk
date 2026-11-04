@@ -1,4 +1,4 @@
-# uenux2 helpers the vota threads and operator states call, in two new sources, and one template instance the roots emit:
+# uenux2 helpers the vota threads and operator states call, in two new sources, and one template instance:
 # - comum::CAppStateContext (src/app/comum/cappstatecontext.cpp; its head, app/comum/cappstatecontext.h, is unit 116's,
 #   grown here, with the head of its base api::CStateContext<STATE> in the new api/pattern/cstatecontext.h): the
 #   constructor (target fn 3844), ProcessKey (3843), ProcessInput (5911), ProcessTick (5910), AcceptsKey (3842),
@@ -62,10 +62,11 @@
 #
 # Same bytes, not measured as variants: 5908 to 5911 are written in the forms of 3842 and 3843 above.
 #
-# How the matches are named: 3843, 3844, 2450 and 3842 by symbol-file lines (pair-fingerprint, vptr-anchor,
-# content-anchor and pair-fingerprint), and 5908 to 5911 by pair-fingerprint lines; 1485 by the scan's content pass
-# alone while none of its callers was in the link, and since unit 50's slot 19 (fn 10566) is, by that caller's `call`
-# vote (splat/symbol_addrs.txt: `evidence:call by:10566`).
+# How the matches are named: 3843, 3844 and 3842 by symbol-file lines (pair-fingerprint, vptr-anchor and
+# pair-fingerprint), 2450 by its caller 7061's call since that match (`evidence:call by:7061`; content-anchor before),
+# and 5908 to 5911 by pair-fingerprint lines; 1485 by the scan's content pass alone while none of its callers was in
+# the link, and since unit 50's slot 19 (fn 10566) is, by that caller's `call` vote (splat/symbol_addrs.txt:
+# `evidence:call by:10566`).
 #
 # vota::AdicionaSeparador (fn 1387, 169 B), at the end of votadefs.cpp: std::string(38, '-') (operator new of 40 and
 # the dashes stored eight at a time) passed to api::CPaperFormBuilder::AddTextField (fn 193) with IPaper's style 1 and
@@ -169,8 +170,10 @@ UENUX2_SRCS += $(APP_HELPERS_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/comum/votadefs.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # 168-uenux2-app-helpers-roots.cpp gives two call sites to each function whose target callers are not all in the link
 # (its header comment names them). It compiles
-# at the tree's flags, so the has<T> instance it emits is the code a uenux2 object gives, and no match rests on a flag
-# the tree lacks
+# at the tree's flags, so no match rests on a flag the tree lacks. It emits no has<T> instance any more: its two calls
+# of 2450, which stood for 7061 and 14478, went once 7061 was in the link, measured on a link without them (steps 7 to 9
+# on it and on the link with them: 12540 match rows each, no row's verdict, symbol or object moved), and the instance
+# our link keeps is unit 329's cajusteinicial.cpp.o's
 $(ROOT)/$(APP)/168-uenux2-app-helpers-roots.o: $(ROOT)/src/units/168-uenux2-app-helpers-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/168-uenux2-app-helpers.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/168-uenux2-app-helpers-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/168-uenux2-app-helpers-roots.o

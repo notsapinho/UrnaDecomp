@@ -43,7 +43,6 @@
 #include "app/comum/relatorios/ccalculacv.h"
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
-#include "app/vota/eleitor/iajusteinicial.h"
 #include "app/vota/eleitor/isincronismovotoeleitor.h"
 #include "app/vota/iexecucaovota.h"
 #include "ecourna/api/security/irng.hpp"
@@ -90,7 +89,8 @@ __attribute__((noinline)) int w100_getinst()
 // push<T>, or the shared_ptr constructor its thunks hold (10335, 10547, ...: a merged 1010 with that vptr), and each stores
 // that vtable. w100_bloco is never called, uses no constructor of T, and is no target function: it reads the count back.
 // The singletons that fn 8302 (unit 188) and the executable TU's main (unit 170) push have their builders in the link
-// and no line here.
+// and no line here, and so do vota::IAjusteInicial and comum::IControladorRegistraMesarios, whose push<T> unit 329's
+// cajusteinicial.cpp holds (fns 7061 and 7160 hold them inlined).
 template <typename T>
 long w100_bloco(std::unique_ptr<T> instancia)
 {
@@ -143,8 +143,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&api::CPolySingletonList::depura);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
         w100_sink_getinst = w100_getinst;
         w100_sink_qrcode = w100_tem_qrcode;

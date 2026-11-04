@@ -17,9 +17,6 @@
 //   "Exceptions"); not written. The
 //   first is the class's key function, so CThreadVota's vtable, typeinfo and D2 are emitted in this object, and move to
 //   cthreadvota.cpp when it lands.
-// - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450 and 3844, and ProcessaEventos 4349 (written in
-//   cthreadeleitor.cpp, not matched: the fragment says why). 7061's records all belong to code inlined from
-//   cajusteinicial.cpp, so its stub sat there, and that file's stub-only state is unchanged by this trap's taking the stub.
 #include "app/vota/eleitor/cthreadeleitor.h"
 
 namespace vota {
@@ -30,11 +27,6 @@ void CThreadVota::TrataErro(const ecourna::api::exception::CError&)
 }
 
 void CThreadVota::TrataErro(const std::exception&)
-{
-    __builtin_trap();
-}
-
-void CThreadEleitor::Run()
 {
     __builtin_trap();
 }

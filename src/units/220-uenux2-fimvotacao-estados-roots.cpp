@@ -4,7 +4,6 @@
 // stand-in names the target callers it stands for, and goes when they are in splat/matched.txt or written in the link.
 // Declared through asm labels, so this TU needs no uenux2 header; compiled as app code.
 extern "C" {
-int w220_gerabu_getinst(void) __asm__("_ZN4vota7CGeraBU7GetInstEv");
 int w220_gerarelatorios_getinst(void) __asm__("_ZN4vota15CGeraRelatorios7GetInstEv");
 int w220_copiaresultado_getinst(void) __asm__("_ZN4vota21CCopiaResultadoParaMR7GetInstEv");
 long long w220_diferenca(int, int) __asm__("_ZNK3api9CDateTimemiERKS0_");
@@ -14,16 +13,11 @@ namespace {
 
 volatile int w220_n;
 
-// Stands for fn 7160, which calls the GetInst of vota::CGeraBU (fn 6129), vota::CCopiaResultadoParaMR (fn 6174) and
-// vota::CGeraRelatorios (fn 6084), each once.
-__attribute__((noinline)) int ChamaEstadosEncerramento(int n)
-{
-    return w220_gerabu_getinst() + w220_copiaresultado_getinst() * 3 + w220_gerarelatorios_getinst() * 5 + n;
-}
-
-// Stands for the other caller of two GetInst: CGravaResultado::StartState (fn 12098, CCopiaResultadoParaMR's) and
-// CGeraBU::StartState (fn 12110, pending here, CGeraRelatorios's). Its call of CGeraBU's went: that one's other target
-// caller, fn 7481 (unit 104's CAguardaMensagem::ProcessKey), is in the link.
+// Stands for the other caller of two GetInst, vota::CCopiaResultadoParaMR's (fn 6174) and vota::CGeraRelatorios's
+// (fn 6084), whose first, vota::CAjusteInicial::StartState (fn 7160, unit 329), is in the link:
+// CGravaResultado::StartState (fn 12098, CCopiaResultadoParaMR's) and CGeraBU::StartState (fn 12110, pending here,
+// CGeraRelatorios's). The calls of vota::CGeraBU's (fn 6129) went: its target callers, 7160 and fn 7481 (unit 104's
+// CAguardaMensagem::ProcessKey), are in the link.
 __attribute__((noinline)) int ChamaEstadosEncerramentoOutros(int n)
 {
     return w220_gerarelatorios_getinst() * 7 + w220_copiaresultado_getinst() + n;
@@ -43,7 +37,6 @@ __attribute__((noinline)) int DiferencaDatas(int a, int b)
 struct SW220Roots {
     SW220Roots()
     {
-        w220_n = ChamaEstadosEncerramento(w220_n);
         w220_n = ChamaEstadosEncerramentoOutros(w220_n);
         w220_n = DiferencaDatas(w220_n, w220_n + 12);
     }

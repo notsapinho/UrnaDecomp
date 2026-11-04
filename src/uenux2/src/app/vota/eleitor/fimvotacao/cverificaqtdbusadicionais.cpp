@@ -12,8 +12,23 @@ using namespace comum;
 
 namespace vota {
 
-// (original lines 15-31: content not recovered)
-#line 32
+CVerificaQtdBUsAdicionais::CVerificaQtdBUsAdicionais()
+    : CAppState(EVENTO_NENHUM)
+{
+}
+
+CVerificaQtdBUsAdicionais& CVerificaQtdBUsAdicionais::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CVerificaQtdBUsAdicionais());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CVerificaQtdBUsAdicionais> CVerificaQtdBUsAdicionais::s_inst;
+std::mutex CVerificaQtdBUsAdicionais::s_mutex;
+
 void CVerificaQtdBUsAdicionais::StartState()
 {
     const md::estadoaplicacao::CEstadoGeralVota& egVota = CAppInfo::GetInst().GetVota();

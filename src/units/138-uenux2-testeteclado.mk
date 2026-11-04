@@ -86,8 +86,10 @@
 # - CBase's constructor (fn 5948), in cbase.cpp: the base's constructor with 2 (EVENTO_ENTRADA), +28 cleared, this
 #   class's vptr. It is a function of its own called by fns 11914 and 7160, which hold CPreZeresima's and CRetomada's
 #   constructors inlined (each stores its class's vptr after the call), so it is out of line in a TU of its own; its
-#   line follows its stub's link-order place, a choice. 2 over 12 rows, operand-only. The roots stand in for its two
-#   callers.
+#   line follows its stub's link-order place, a choice. 2 over 12 rows, operand-only. Both callers are in the link
+#   (units 199 and 329), and the roots' stand-in went with 7160. CRetomada's GetInst, constructor and statics are
+#   written in cretomada.cpp since, in CPreZeresima's shape (unit 329's fragment says what 7160 shows of them), and
+#   the roots no longer keep CRetomada's vtable, which that GetInst stores.
 # - CAplicacaoEncerrada's constructor, GetInst (fn 3877) and statics, pointer first below GetInst (unit 104's shape):
 #   with them our link forms fn 1564, binaryen's body for the exit destructors of every static std::unique_ptr whose
 #   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,

@@ -12,7 +12,6 @@ int w185() __asm__("_ZN5comum8CAppInfo7GetInstEv");
 int w291(int) __asm__("_ZN5comum8CAppInfo8GetGeralEv");
 int w457(int) __asm__("_ZNK5comum8CAppInfo8GetGeralEv");
 int w261(int, int) __asm__("_ZN5comum8CAppInfo7GetVotaENS_10EUrnaTurnoE");
-int w903(int, int) __asm__("_ZNK5comum8CAppInfo7GetVotaENS_10EUrnaTurnoE");
 int w697() __asm__("_ZN5comum8CAppInfo20EhTreinamentoEleitorEv");
 void w1942(int) __asm__("_ZN5comum20GetIdentificacaoUrnaEv");
 void w3788(int, int, int) __asm__("_ZNK5comum8CAppInfo15GetCodigosCargaENS_10EUrnaTurnoE");
@@ -30,12 +29,11 @@ namespace {
 const void* volatile cappinfo_sink;
 
 // Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898, unit 110's 2266,
-// unit 104's 10635 and unit 277's 10710 are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451,
-// 10590, 11242, 12098, 12105, 12110, 12134.
+// unit 104's 10635, unit 277's 10710 and unit 329's 7160 are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7174,
+// 7787, 10451, 10590, 11242, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
-// Stands for fn 903's caller 7160 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566, unit 104's 12082 and
-// 12081, unit 277's 10710 and unit 110's 13023, CTelasVota::GetTelaDestinoBUs's lambda, are linked).
-__attribute__((noinline)) int VotasConst(int a, int b) { return w903(a, 51) * w903(b, 51); }
+// The stand-in for fn 903's caller 7160 went: 7160 (unit 329) is linked, with unit 102's four, unit 138's 11870 and
+// 11871, unit 50's 10566, unit 104's 12082 and 12081, unit 277's 10710 and unit 110's 13023.
 // Stands for fn 697's callers: 6737, 7174 and 10209 (unit 239's 10501, unit 199's 11994, unit 142's 1150, unit 50's 10569, unit
 // 197's 3229, unit 138's 11835, unit 161's 10680, 652 and 10677, unit 121's 2753, unit 277's 10706 and 10722, unit
 // 104's 11924, unit 156's 12077 and unit 152's 10440 are linked).
@@ -71,7 +69,6 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&w261);
         cappinfo_sink = reinterpret_cast<const void*>(&w1942);
         cappinfo_sink = reinterpret_cast<const void*>(&GeraisConst);
-        cappinfo_sink = reinterpret_cast<const void*>(&VotasConst);
         cappinfo_sink = reinterpret_cast<const void*>(&Treinamentos);
         cappinfo_sink = reinterpret_cast<const void*>(&Codigos);
         cappinfo_sink = reinterpret_cast<const void*>(&Votos);
