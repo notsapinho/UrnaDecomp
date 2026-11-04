@@ -17,7 +17,10 @@
 #include "api/gui/ctextfieldmultiline.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/clocal.h"
+#include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
@@ -27,7 +30,7 @@
 
 namespace vota {
 
-// (original lines 30-290: content not recovered)
+// (original lines 33-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -450,6 +453,136 @@ CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeBU(std::function<std::string()
         ->SetName("Confirma");
     builder.AddLabeledKey('B', "Ver certificado", api::ALINHAMENTO_CENTRO);
     return GetFormularioInterativo(builder, "telaQRCodeBU");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaRetireMR()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Retire a mídia de resultado", api::SPoint(320, 170), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("e faça a entrega", api::SPoint(320, 220), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("conforme as instruções.", api::SPoint(320, 270), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaRetireMR");
+}
+
+CFormInterativoTelaVota TelaLacreTampa()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Lacre a tampa do compartimento", api::SPoint(320, 145), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("da mídia de resultado conforme", api::SPoint(320, 195), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("as instruções", api::SPoint(320, 245), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Continuar"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaLacreTampa");
+}
+
+CFormInterativoTelaVota TelaMRModoDemo()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Substitua a mídia de resultado por outra vazia", api::SPoint(320, 90), FONTE_AGUARDE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("para deixar a urna pronta para votação", api::SPoint(320, 130), FONTE_AGUARDE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("ou", api::SPoint(320, 210), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1));
+    builder.AddTextField("Mantenha a mídia de resultado", api::SPoint(320, 290), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("para voltar para a verificação pré-eleição", api::SPoint(320, 330), FONTE_AGUARDE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Prosseguir"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaMRModoDemo");
+}
+
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaDestinoBUs()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Imprimindo vias obrigatórias", api::SPoint(320, 60), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("do Boletim de Urna", api::SPoint(320, 110), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(
+        []() {
+            const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+            return std::format("Via nº {}", static_cast<uebyte>(appInfo.GetVota().GetQtdBU() + 1));
+        },
+        api::SPoint(320, 170), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO);
+    builder.AddTextField("Por favor, aguarde...", api::SPoint(320, 200), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLine(api::SPoint(0, 250), api::SPoint(639, 250), static_cast<api::TColor>(3));
+    api::TPosition y = 275;
+    for (const std::string& linha : ecourna::api::util::CStringUtils::Split(
+             comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetTelaEmissaoBU(), '\n')) {
+        if (!linha.empty()) {
+            builder.AddTextField(linha, api::SPoint(10, y), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA,
+                                 static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+            y += 25;
+        }
+    }
+    return GetFormulario(builder, "telaDestinoBUs");
 }
 
 } // namespace vota

@@ -139,6 +139,16 @@ public:
     // TelaPreparandoDadosEncerramento (fn 6583) and before the map instance 6579 and the destructor (6548)
     static CFormInterativoTelaVota GetTelaTesteTecladoObrigatorio();
     static CFormInterativoTelaVota GetTelaTesteTecladoOpcional();
+    // The screen vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065) shows before each mandatory copy of the BU:
+    // the status header (5), "Imprimindo vias obrigatórias" and "do Boletim de Urna" at (320, 60) and (320, 110) in the
+    // 30-point font, the copy's number at (320, 170) through a function slot (fn 13023, std::format("Via nº {}") of
+    // the vote's BU count plus 1, an unsigned) and "Por favor, aguarde..." at (320, 200) in the 25-point one, a line in
+    // colour 3 from (0, 250) to (639, 250), and each non-empty line of comum::CConfiguracaoEleicao's parameters' text
+    // at +260 split at '\n' at x 10 from y 275, 25 apart, left-aligned in the 20-point one (@474896), named
+    // "telaDestinoBUs" through GetFormulario. Fn 12065 holds it behind a second stack-pointer prologue right after
+    // CTelasVota::GetInst() (fn 407), whose result it drops: a static member called through the instance (as fns 6580
+    // and 6581). Its name, its being static and its place in ctelasvota.cpp after the file's last record are chosen
+    static std::shared_ptr<api::IForm<api::IScreen>> GetTelaDestinoBUs();
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
@@ -181,6 +191,19 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada();
 std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR();
 std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     std::function<std::string(const std::string&)> fonte);
+
+// The three screens of vota::CRetirarMR, which its constructor builds into +12, +20 and +28 (inlined with GetInst into fn
+// 2291, each behind a second stack-pointer prologue: one caller each, inlined by binaryen, so out of line in the object,
+// docs/how-to-decompile.md step 3). Each is the status header (5) and centred lines in colours 2 over 1: TelaRetireMR
+// three in the 30-point font (@474888) named "telaRetireMR" through GetFormulario (fn 886); TelaLacreTampa three in that
+// font and TelaMRModoDemo five in the 25-point one (@474992), each with the label of CONFIRMA ('C', "Continuar" and
+// "Prosseguir", fn 653), named "telaLacreTampa" and "telaMRModoDemo" through GetFormularioInterativo (fn 576). Why
+// ctelasvota.cpp: both fonts are the ones AdicionaTelaAguarde passes, file constants of ctelasvota.cpp (the reading
+// above). No record names them: the names (from the forms' names), their being free functions of vota and their place
+// after the file's last record are chosen.
+std::shared_ptr<api::IForm<api::IScreen>> TelaRetireMR();
+CFormInterativoTelaVota TelaLacreTampa();
+CFormInterativoTelaVota TelaMRModoDemo();
 
 // The keyboard test's screen and key sequence, which vota::testeteclado::CTesteTeclado::StartState (fn 11805) holds
 // behind second stack-pointer prologues, one caller each: TelaTesteTeclado and SorteiaTeclasTesteTeclado, defined in

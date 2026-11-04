@@ -6,7 +6,8 @@
 #   12051, unit 37's), the constructor and the statics (exit-time destructors fns 12041, 12042);
 # - vota::CQuerImprimirBU: StartState (fn 12035), the destructor (fns 244, 387), and GetInst (inlined into fn 12062,
 #   unit 104's), the constructor and the statics (exit-time destructors fns 12036, 12037), written since (below);
-# - vota::CRetirarMR: ProcessInput (fn 12030) and the destructor (fns 1284, 2884);
+# - vota::CRetirarMR: ProcessInput (fn 12030), the destructor (fns 1284, 2884), and GetInst (fn 2291), the constructor
+#   and the statics (exit-time destructors fns 12032, 12033), written since (below);
 # - vota::CImprimindoBU: GetInst (fn 5986), the constructor, the destructor (fns 244, 387) and the statics (fns 12079,
 #   12080), and ImprimeBU (fn 2890, below);
 # - comum::CItemImprimeEstadoUrna, CItemImprimeListaEleitores, CItemParametrosUrna and CItemVersoesPacotes: slot 2 (fns
@@ -89,7 +90,8 @@
 # steps 7 to 9 matched it:
 # - vota::CImprimindoBU::ImprimeBU (fn 2890, records cimprimindobu.cpp 111:22 and 114:79, `static void
 #   vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`), public: four target slots call it (12077 and 12078 here,
-#   12065 and 12081 in unit 104); 12065 is pending, and the roots stand in for it. It takes
+#   12065 and 12081 in unit 104); 12065 is in the link now (unit 104, matched), and the roots' stand-in for it went. It
+#   takes
 #   CPolySingleton<api::IPaperRelatorios>'s instance (fn 905) at :111:22 (the 21 characters ` auto& impresso = ` before
 #   the call, a chosen spelling of that length, as in unit 104's creimprimindozeresima.cpp:51), asserts the vote's BU
 #   count against the copy number (the text "Assert (estVota.GetQtdBU() == numVia - 1)", ledger/strings.tsv 402739,
@@ -115,12 +117,28 @@
 #     first, where the target falls into the building one; an if/else of two PrintFile calls keeps two calls. Of these,
 #     the const char* conditional gives the target's order and stores, and in the whole link 62 over 818, operand-only.
 #   PrintMessageMode (cimprimindobu.h) has the values the callers pass, 0 and 1; its scope, enumerators and kind are
-#   chosen. The roots' ImprimeBUs stands for 12065, the caller that passes mode 1 and still waits.
+#   chosen. The roots' ImprimeBUs stood for 12065, the caller that passes mode 1, and went when 12065 was written.
 # - vota::CLogVota::LogaImprimindoRelatorio (fn 1127) takes its copy number as uebyte, not unsigned int: every target
 #   caller that passes a computed number masks it to 8 bits (11852, 11855 and 11991 their loop counter `& 255`, 12065
 #   and 12081 a byte plus one `& 255`), which a byte parameter gives the callers; the body is the same, and the match
-#   line moved to the new symbol (`...ERelatoriosUEEh`). The roots' label follows it.
+#   line moved to the new symbol (`...ERelatoriosUEEh`). The roots' stand-in for its callers went: all ten are in
+#   the link.
 #
+# - vota::CRetirarMR::GetInst (fn 2291, 3426 B; target callers 7160 and the print states' StartState 12065, 12068, 12071
+#   and 12074, units 104 and 315), in cretirarmr.cpp above StartState's records (lines chosen), unit 104's shape with
+#   the constructor clang inlines: 123 over 1449 rows, operand-only. The constructor passes 2 (EVENTO_ENTRADA) to the
+#   base's, stores the vptr 1542684 and builds +12, +20 and +28 from TelaRetireMR, TelaLacreTampa and TelaMRModoDemo,
+#   free functions of unit 110's ctelasvota.cpp (ctelasvota.h says what each shows and why that file) that binaryen
+#   inlines, each behind a stack-pointer prologue of its own (frames of 64, 64 and 80 bytes, as the target's). Matched
+#   with it: 12032, the exit destructor of s_mutex (@1833908, `f150(1833908)`), through the content pass. Its operand
+#   re-points through s_mutex's name, which only 2291's vote gives (`evidence:vote:1 by:2291`), so 12032 rests on
+#   2291's written body, whose re-pointed bytes are the target's (`pnpm wasm splat-remap <target> <ours>
+#   sym:_ZN4vota10CRetirarMR7GetInstEv --against 2291` prints IDENTICAL; reference/splat.md section 3). 2291 matches
+#   with 12033, the exit destructor of s_inst (@1833932, `evidence:vote:4 by:2291`), the name's one other target
+#   reader: 12033 calls fn 2903, the std::unique_ptr reset binaryen keeps once for the states whose destructor is fn
+#   1284, and pairs by content since 2903's other callers (10434, 10442 and 10476, units 71, 152 and 282) are in the
+#   link, which then keeps that reset once for all four; 12033 is then the second holder 2291's self-vote needs. With
+#   12033 the reset's one caller, our link inlined it there, and 2291 read `unresolved self-voted` (splat.md S10).
 # Written since too, measured the same way (pnpm wasm score on the whole link, before steps 7 to 9):
 # - vota::CQuerImprimirBU::ProcessInput (fn 12034): Read() on the form (record cinteractiveform.h:57); on
 #   api::INPUT_CORRIGE (5) the vote's state EAVENCERRADA (64) through comum::CAppInfo::GetInst().GetVota() (fns 185,
@@ -186,10 +204,9 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/informacao/citemmenu.cpp.o: UENUX2_CXXFLAGS 
 # the unit's flags
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
-# nothing reconstructed builds CRetirarMR or comum's items yet: 156-uenux2-fimvotacao-bu-roots.cpp keeps their
-# vtables, the way the target reaches their slots, and stands for the callers of ImprimeBU and of two CLogVota members
-# that still wait (CLimiteCopiasBUAtingido's vptr is stored by unit 185's 12023, CQuerImprimirBU's by unit 104's 12062,
-# CMostraQRCodeCertificado's by unit 37's 12051)
+# nothing reconstructed builds comum's items yet (fn 6599): 156-uenux2-fimvotacao-bu-roots.cpp keeps their vtables,
+# the way the target reaches their slots (CRetirarMR's vptr is stored by 2291, CLimiteCopiasBUAtingido's by unit 185's
+# 12023, CQuerImprimirBU's by unit 104's 12062, CMostraQRCodeCertificado's by unit 37's 12051)
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-roots.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/156-uenux2-fimvotacao-bu-pending.o $(APP)/156-uenux2-fimvotacao-bu-roots.o

@@ -107,7 +107,8 @@
 # destructor 10434, the other function that reads it (a thunk into 2903, the body four classes' statics share; elem
 # 4215 to 4222 tie it to this class), matches only since our link forms 2903 too, from three of the target's four
 # members (10434, and 10442 and 10476, the statics of units 152's and 282's vota::CEleitorDemorando and
-# CDigitalNaoReconhecida); before that the census paired our destructor of it with fn 10414 (the same body as ours,
+# CDigitalNaoReconhecida; the fourth, 12033, unit 156's vota::CRetirarMR's, joined it since and matches with it);
+# before that the census paired our destructor of it with fn 10414 (the same body as ours,
 # over another class's pointer and D2: a shape pair), and 10434 read no-candidate. The roots stand
 # for 1901's target callers not in the link (10209, 10425; 10419, unit 142's, is), and the vtable sink went: 1901's
 # constructor stores the vptr.

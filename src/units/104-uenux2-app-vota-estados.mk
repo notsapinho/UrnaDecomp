@@ -370,6 +370,42 @@
 # link (unit 138). The pairs for CReimprimindoZeresima::GetInst (5941) and CReimprimindoResumoZeresima::GetInst (5942)
 # went: their target callers, 11848 with 11845 and with 11852, are in the link.
 #
+# The print states' StartState, measured in the whole link with `pnpm wasm score` against
+# build/out/wasm-map/vota_web/names.tsv before steps 7 to 9:
+# - vota::CImprimindoBim::StartState (fn 12071, records cimprimindobim.cpp 50:87, 51:107 and 66:22) matches: 69 over 458
+#   rows, operand-only. It asserts the vote's and the closing's states (codes 3463 and 3464, the texts "Assert
+#   (vota.GetEstadoVota() == EAVENCERRADA)" and "Assert (vota.GetEstadoEncerramento() == EAEIMPRIMIROBRIGATORIABU)",
+#   names chosen to the columns), then holds behind a 144-byte frame the private ImprimeRelatorio, whose record (:66)
+#   is the default std::source_location of CPolySingleton<api::IPaperRelatorios>::instance() (fn 905; the 21 characters
+#   `    auto& impresso = ` before it, a chosen spelling of that length, as in unit 156's cimprimindobu.cpp:111):
+#   GetPathTrab(FLASH_INTERNA) / "bim.dat", vota::CriaArquivoImprimindo (fn 1488), LogaImprimindoRelatorio with
+#   RELATORIO_BIM (9) and 1, api::IPaper's slot 7 (PrintFile) with the path's string, a comum::CSigVerifier of 1 over
+#   GetPathTrab(FLASH_INTERNA), "bim.dat" and "bim.vsu" (fn 1540), the title and "via única", then slot 10
+#   (EndPrintFile) and vota::RemoveArquivoImprimindo (fn 1487). The title is a named const char array, as unit 156's
+#   TITULO_BOLETIM is: its text (@485824) lies right before the class's typeinfo name (@485844), and the target loads
+#   its first 16 bytes with align=3; its name, TITULO_BIM, is chosen. Then a comum::CInformacaoEleicao over
+#   CConfiguracaoEleicao's parameters (fn 603) and comum::CLocal::GetInst (fn 401), called before EhModoDemonstracao
+#   (fn 2286) and UrnaBiometrica (fn 820): outside the demonstration mode on a biometric urna it goes to
+#   vota::CImprimindoBEHB (unit 315's GetInst, inlined), else to vota::CRetirarMR::GetInst (fn 2291). An if/else over
+#   m_pNextState gives the target's value block; the local names are chosen.
+# - vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065, records cimprimirbuoutrasobrigatorias.cpp 50:117, 53:64
+#   and 57:116), matched. It builds its
+#   comum::CInformacaoEleicao first, asserts three conditions whose texts name the locals appInfo and qtdBuObrigatorio
+#   (codes 3470 to 3472; the second invocation closes on a line of its own, its column less than the condition's
+#   length), takes GetNumViasBU (fn 3847) as a uebyte (the target masks it, `& 255`), and while the BU count is below it
+#   prints a copy: the shutdown flag first (vota::CSincronizaVota::s_urnaDesligando, @1832936: when it is set the
+#   function returns, since the target's `br_if 2` leaves the block that holds the m_pNextState store, so it chooses
+#   no next state), CTelasVota::GetInst()'s
+#   static GetTelaDestinoBUs (unit 110's ctelasvota.cpp, inlined) and its slot 2, LogaImprimindoRelatorio with
+#   RELATORIO_BU and the count plus 1, CImprimindoBU::ImprimeBU (fn 2890) with that number and PRINT_WITHOUT_MESSAGE,
+#   IncrementaQtdBU (fn 3701) and CSincronizaVota::SincronizaEstadoGeralVota (fn 491). Then it goes to
+#   vota::CImprimirBJust (unit 315's GetInst, inlined) when AceitaJustificativa (fn 5918) holds, to vota::CImprimindoBim
+#   (fn 5985) when ImprimeBJust (fn 1950) does, else to CRetirarMR. The flag's type does not decide the loop: with the
+#   return a plain bool gives the target's, which tests the flag at the loop's head only, and std::atomic<bool> the same
+#   object; a `break` in its place (the next state chosen after a set flag too) lets clang test the flag on the loop's
+#   guard and back edge as well, which the target does not. vota::CImprimirBJust's statics' exit destructors (fns 12069,
+#   12070) match with it.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
 # app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).
 # vota::CReimprimindoResumoZeresima::StartState (target fn 11855) and vota::CImprimindoZeresima::StartState (11991),
@@ -429,6 +465,10 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitorencontrado.cpp.
 # and so do cimprimindozeresima.cpp and creimprimindoresumozeresima.cpp, whose printers read the number of copies
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# cimprimindobim.cpp and cimprimirbuoutrasobrigatorias.cpp include it too, for the comum::CInformacaoEleicao their
+# StartState builds over CConfiguracaoEleicao's parameters (the same include path)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

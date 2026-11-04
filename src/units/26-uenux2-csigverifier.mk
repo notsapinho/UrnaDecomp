@@ -17,8 +17,7 @@ UENUX2_SRCS += $(CSIGVERIFIER_SRCS)
 # compiled with the unit's flags
 $(ROOT)/$(APP)/26-uenux2-csigverifier-pending.o: $(ROOT)/src/units/26-uenux2-csigverifier-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/26-uenux2-csigverifier.mk $(ROOT)/src/uenux2/src/app/comum/relatorios/csigverifier.h $(ROOT)/src/uenux2/src/api/gui/isigverifier.h $(ROOT)/src/uenux2/src/app/comum/iinterfacesavd.h
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/26-uenux2-csigverifier-pending.cpp -o $(R)
-# the constructor's seven callers are not reconstructed yet: 26-uenux2-csigverifier-roots.cpp gives it two direct
-# callers that pass the same ESavdAplic, as the target's do
-$(ROOT)/$(APP)/26-uenux2-csigverifier-roots.o: $(ROOT)/src/units/26-uenux2-csigverifier-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/26-uenux2-csigverifier-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/26-uenux2-csigverifier-pending.o $(APP)/26-uenux2-csigverifier-roots.o
+# the constructor's seven target callers are all in the link (2890, 11852, 11855, 11991, 12068, 12071 and 12074:
+# units 156, 104 and 315), each passing the same ESavdAplic, so it needs no roots: the stand-ins that gave it two
+# direct callers went
+override EXTRA_OBJS += $(APP)/26-uenux2-csigverifier-pending.o

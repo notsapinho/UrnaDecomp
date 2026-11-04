@@ -13,7 +13,9 @@ namespace vota {
 // deletes the old object with no call through the vtable. A singleton: GetInst (fn 5984, a thunk into binaryen's fn
 // 764) keeps the object in a static std::unique_ptr (@1833764, destroyed at exit by fn 12067) under a static
 // std::mutex (@1833740, by fn 12066). The constructor passes 0 to the base's. src/units/104-uenux2-app-vota-estados.mk
-// says which of this is evidence and which is chosen.
+// says which of this is evidence and which is chosen. StartState (fn 12065, records cimprimirbuoutrasobrigatorias.cpp
+// 50, 53 and 57) prints the BU's mandatory copies, each under CTelasVota::GetTelaDestinoBUs, and goes to
+// vota::CImprimirBJust, vota::CImprimindoBim or vota::CRetirarMR, unless the urna is shutting down; matched.
 class CImprimirBUOutrasObrigatorias final : public comum::CAppState {
 public:
     static CImprimirBUOutrasObrigatorias& GetInst();
