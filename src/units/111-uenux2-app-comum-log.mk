@@ -64,7 +64,8 @@
 #   those thunks.
 # - not reconstructed: 5372 (needs 2224; 816 and 1686 match since unit 135's IFingerMatcher stand-in, 1903 since
 #   unit 307),
-#   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
+#   12098 and the other CLogComum members, and 2742 (another thunk of 2900: its class is not named); 3603, the fourth,
+#   is comum::asn::CAssinaVotavelBu::GetInst, fragment 321's, in gravadores/asn/util.cpp.
 #
 # Inlining, by who did it. clang: EhModoDemonstracao into the seven members (one frame, restored after the member's load)
 # and ConverteStatusBateria into LogaCargaBateria (no prologue, the throw's string in that frame, the length folded into

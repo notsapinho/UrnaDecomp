@@ -17,10 +17,15 @@ namespace comum::md {
 // line, in md/cvotoscargo.cpp, whose path is chosen beside this header; the vector is copied, so a const reference, and
 // the parameters' types follow the members'. Chosen: the path, beside cvotosvotavel.h; the two bytes'
 // types beyond their width and every member name, after ModuloBoletimUrna::TotalVotosCargo's fields codigoCargo,
-// ordemImpressao and votosVotaveis, in their order.
+// ordemImpressao and votosVotaveis, in their order. The getters are what fn 10273 (CConversorEntidadeBU::DoConverte)
+// reads, the code and the order by value (it copies the code to pass it by reference); their names are chosen.
 class CVotosCargo {
 public:
     CVotosCargo(TCargoID codigoCargo, uebyte ordemImpressao, const std::vector<CVotosVotavel>& votosVotaveis);
+
+    TCargoID GetCodigoCargo() const { return m_codigoCargo; }
+    uebyte GetOrdemImpressao() const { return m_ordemImpressao; }
+    const std::vector<CVotosVotavel>& GetVotosVotaveis() const { return m_votosVotaveis; }
 
 private:
     TCargoID m_codigoCargo;

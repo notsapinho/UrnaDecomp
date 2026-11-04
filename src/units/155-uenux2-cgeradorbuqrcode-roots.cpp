@@ -6,9 +6,9 @@
 //   the link), so that binaryen keeps the three out of line, each with two call sites. It passes Gera a size that is
 //   not a constant, as 12110 passes another value than 1956's 2500, so that the parameter stays, and the constructor
 //   false and false for its two flags, as 1956 does: binaryen folds the two into the body, as the target's 5603 shows.
-// - w155_pkcs11 stands for fns 5635 and 10273, the target callers not in our link of
-//   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, whose third caller, 5604, is in the link): it calls
-//   it twice, so binaryen keeps it out of line. The instance is cgeradorbuqrcode.cpp's object's: this file only
+// - w155_pkcs11 stands for fn 5635, the target caller not in our link of
+//   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, whose other callers, 5604 and 10273, are in the
+//   link): it calls it twice. The instance is cgeradorbuqrcode.cpp's object's: this file only
 //   declares it.
 // They are declared through __asm__ labels with the objects' signatures (a constructor and a destructor return this
 // there); this file includes no header and instantiates nothing.
@@ -35,7 +35,7 @@ __attribute__((noinline)) void w155_gerador(void* gerador, const void* cabecalho
     w155_destroi_cabecalho(cabecalho2);
 }
 
-// Stands for fns 5635 and 10273 (CPolySingleton<IPkcs11>::instance).
+// Stands for fn 5635 (CPolySingleton<IPkcs11>::instance; 5604 and 10273 are in the link).
 __attribute__((noinline)) void* w155_pkcs11(void* info, const void* local1, const void* local2)
 {
     w155_instancia_pkcs11(info, local1);

@@ -10776,7 +10776,7 @@
 5979 _ZN4vota24CExibeAlertaDesligamento7GetInstEv
 11718 __cxx_global_array_dtor.18@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11719 __cxx_global_array_dtor.16
-11720 __cxx_global_array_dtor.10
+11720 __cxx_global_array_dtor.10@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11721 __cxx_global_array_dtor.8@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11722 __cxx_global_array_dtor.6@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11723 __cxx_global_array_dtor.4@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
@@ -12444,3 +12444,9 @@
 10443 _ZN4vota20CVerificaDadoEleitor12ProcessInputEv
 10449 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp.o
 10450 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp.o
+3603 _ZN5comum3asn16CAssinaVotavelBu7GetInstEv
+8327 _ZN9simulador9CWasmLogd7escreveEhN3api11ESeveridadeERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE
+10273 _ZNK5comum3asn20CConversorEntidadeBU10DoConverteERKNS_2md11CEntidadeBUE
+10274 __cxx_global_array_dtor@app/uenux2/src/app/comum/gravadores/asn/cconversorentidadebu.cpp.o
+10280 __cxx_global_array_dtor.10@app/uenux2/src/app/comum/gravadores/asn/util.cpp.o
+10281 __cxx_global_array_dtor@app/uenux2/src/app/comum/gravadores/asn/util.cpp.o

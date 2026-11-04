@@ -16,9 +16,9 @@
 #   md::CEntidadeHashes; RTTI names the class and its base, fn 5367 stores its vptr, and the header's path is chosen,
 #   the directory its data class's and its link neighbours' records', docs/reference/facts/placing.md P3) and of
 #   CConversorEntidadeBU 10272 (its head is gravadores/asn/cconversorentidadebu.h, beside the .cpp its records name,
-#   over md::CEntidadeBU, whose head gravadores/md/centidadebu.h recovers from fn 10273: with those members the default
-#   returns the TDado in memory, the target's (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, not
-#   written, is the one target function that stores its vptr, which the roots stand in for);
+#   over md::CEntidadeBU, gravadores/md/centidadebu.h, with which the default returns the TDado in memory, the target's
+#   (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, not written, is the one target function that
+#   stores its vptr, which the roots stand in for);
 # and 11418, IConversorBiometriaASN's default DoConverte, slot 2 of CConversorBiometriaEleitorCifrada. All of them come
 # from the headers' code; the pending object emits this fragment's classes' vtables, and the defaults with them, except
 # CConversorHistoricoVotoImpresso's and CConversorFotoCandidato's: fragment 172 writes their own slots (10276, 11440),
@@ -27,7 +27,9 @@
 # writes its slot 3 (11377), and cconversordetalheconsulta.cpp.o emits the vtable and the default 11376 with it; and
 # CConversorEleicaoPE's and CConversorDetalheCandidato's: fragment 299 writes their slot 3 (11371, 11375), and
 # cconversoreleicaope.cpp.o and cconversordetalhecandidato.cpp.o emit the vtables and the defaults 11370 and 11374
-# with them. The roots keep no vtable of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment
+# with them; and CConversorEntidadeBU's: fragment 321 writes its slot 2 (10273), and cconversorentidadebu.cpp.o emits
+# the vtable and the default 10272 with it. The roots keep no vtable of CConversorDetalheCandidato and
+# CConversorDetalheConsulta: fn 11373 (fragment
 # 191's) stores both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367
 # (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores.
 #

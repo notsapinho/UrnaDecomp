@@ -7,12 +7,17 @@
 #   binaryen inlines into it (its second stack frame), matches at the tree's -O3 (below).
 # - comum::asn::ConverteSerialFlash (target fn 3605, records :26 and :31) and DesconverteSerialFlash (fn 3604, record
 #   :54, matched at the tree's -O3: below) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
-# - comum::asn::CalculaHashSha512 (fn 3602, no record), util.cpp's last function: in band uses 3 of ledger/ordinals.tsv
-#   it follows 3605 and 3604 (with 3603 between, not written), so it is placed after them, a reading of the band; its
-#   name, its being a free function of comum::asn and its parameter's name are chosen. It hashes a string's bytes with a
+# - comum::asn::CalculaHashSha512 (fn 3602, no record): in band uses 3 of ledger/ordinals.tsv it follows 3605, 3604
+#   and 3603, so it is placed after them, a reading of the band; its name, its being a free function of comum::asn and
+#   its parameter's name are chosen. It hashes a string's bytes with a
 #   std::shared_ptr<IHash>(new CSha512): Reset, then Update of a vector the target frees after Finish (written as a
 #   named local), then Finish into the result. Its CSha512 pointer block (10277, 10279) matches from this object now (unit 102's row).
-#   Its only target caller, fn 10273 (CConversorEntidadeBU's slot 2), is not written: the roots stand in for it.
+#   Its callers are comum::asn::CAssinaVotavelBu's three hash members, after it in util.cpp, which binaryen inlines into
+#   fn 10273 (CConversorEntidadeBU's slot 2, fragment 321).
+# - Fragment 321 extends this unit's util.cpp with comum::asn::CAssinaVotavelBu's GetInst (fn 3603, matched), its
+#   statics (their destructors 10280 and 10281 matched), its constructor and destructor, between DesconverteSerialFlash
+#   and CalculaHashSha512, and the class's hash members after it; that fragment and cassinavotavelbu.h say what places
+#   them here and what is chosen.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
 #   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,

@@ -327,11 +327,6 @@
 // f6601 · 504 B · unmatched · placement: link order · name unknown
 // void f6601(i32, i32) { ... }
 
-// link-order cluster 969 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/asn/util.cpp
-
-// f3603 · 15 B · unmatched · placement: link order · name unknown
-// ? f3603() { ... }
-
 // link-order cluster 1000 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp
 
 // f3713 · 437 B · unmatched · placement: link order · name unknown
