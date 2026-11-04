@@ -8,15 +8,19 @@
 #   ConverteTipoCargo (records :284 and :299) and ConverteDadosVota (no record); md::CEntidadeBU's GetDadosVota,
 #   GetDadosSA and GetDetalhamentoComparecimento (md/centidadebu.cpp, records :186, :196 and :206) and
 #   md::CDadosBUVota::GetDataHoraDesligamentoVotoImpresso (md/cdadosbuvota.cpp, record :37); comum::asn::CAssinaVotavelBu::
-#   Assinar (asn/cassinavotavelbu.cpp, record :89) and the class's three hash members (asn/util.cpp, unit 122's file,
-#   which this unit extends: unit 122's fragment says what it holds); and the template copies IConversorASN's Converte
+#   Assinar (record :89) and the class's three hash members, both in asn/cassinavotavelbu.cpp, with the class's other
+#   members and the SHA-512 helper the hash members call; and the template copies IConversorASN's Converte
 #   (comum's for the post code and the vote history, ecourna's for the attendance detail) and SEQUENCE_OF's operator= for
 #   three of the lists.
 #
 # Matched: 10273 (named by its srcloc-anchor) and the exit destructor of its file's static s_ultimoHash (10274), and from
-# asn/util.cpp's object CAssinaVotavelBu::GetInst (fn 3603, a thunk of binaryen's shared 2900, named by 10273's call)
-# and the exit destructors of the class's statics s_mutex (10280) and s_instancia (10281). The statics' names have the
-# votes of 3603 and 10273, which match, and each a reader beside its destructor. Released: unit 62's
+# asn/cassinavotavelbu.cpp's object CAssinaVotavelBu::GetInst (fn 3603, a thunk of binaryen's shared 2900, named by
+# 10273's call) and the exit destructors of the class's statics s_mutex (10280) and s_instancia (10281). The statics'
+# names have the votes of 3603 and 10273, which match, and each a reader beside its destructor. The same object gives
+# comum::asn::CalculaHashSha512 (fn 3602, no record, declared in unit 122's util.h; its name, its being a free function
+# and its parameter's name are chosen), which hashes a string's bytes with a std::shared_ptr<IHash>(new CSha512): Reset,
+# then Update of a vector the target frees after Finish (written as a named local), then Finish into the result; and the
+# CSha512 control block it builds (10277, 10279; unit 102's fragment). Released: unit 62's
 # CWasmLogd::escreve (fn 8327) matches, since its "{}|{}|{}" is the tail of "{}|{}|{}|{}|{}|{}|{}", which this unit's
 # CalculaHashVotavel brings (unit 62's fragment). 10272, the inherited DoDesconverte, comes from cconversorentidadebu.cpp's
 # object now, which emits the vtable with DoConverte, the key function (unit 159's fragment).
@@ -35,14 +39,15 @@
 #   codigo and partido, numeroInternoUrnaOrigem and ResultadoVotacao's tipoCargo; and the CHOICE dadosSecaoSA gets
 #   select_dadosSecao and select_dadosSA that take the value, since the target loads the CHOICE before it builds the
 #   DadosSecao or DadosSA and selects after (a call's object is evaluated before its arguments).
-# - The hash members are in asn/util.cpp, beside CalculaHashSha512: with them in cassinavotavelbu.cpp, 429 over 5380 (2
-#   inserted, 2 deleted), the initial hash's formatted text's long-string byte read after CalculaHashSha512's call
-#   where the target reads it before (a reading: in one TU clang sees that the callee only reads its argument). GetInst
-#   and its statics are there too, a reading of the band and the table: 3603 lies between util.cpp's 3604 and 3602 in
-#   their use band (ledger/ordinals.tsv), and its statics' destructors' table slots (4466, 4467) in the run of
-#   util.cpp's object (the CSha512 control block that CalculaHashSha512 builds, 4469 and 4470). The last hash
-#   (s_ultimoHash, 1910004) is the converter's file static, passed to the hash members and to Assinar: its destructor's
-#   slot (4476) heads the run of this object's slots, its vtable's four (4477 to 4480), a reading too.
+# - The hash members are in CalculaHashSha512's TU: with CalculaHashSha512 in asn/util.cpp and the hash members in
+#   asn/cassinavotavelbu.cpp, 429 over 5380 (2 inserted, 2 deleted), the initial hash's formatted text's long-string
+#   byte read after CalculaHashSha512's call where the target reads it before (a reading: in one TU clang sees that the
+#   callee only reads its argument). That TU is cassinavotavelbu.cpp's, as the target's data give it: the table's
+#   slots of the statics' exit destructors (4466, 4467) and of the CSha512 block's members 10279 and 10277 (4469, 4470)
+#   lie after util.cpp's object, and the one record between those of the objects around them is cassinavotavelbu.cpp:89
+#   (cassinavotavelbu.h has the slots and the records, and why GetInst is with its statics). The last hash (s_ultimoHash,
+#   1910004) is the converter's file static, passed to the hash members and to Assinar: its destructor's slot (4476)
+#   heads this object's run, before its vtable's four (4477 to 4480).
 # - The votable's hash is one conditional expression: written as an if over two assignments, 632 over 5390 (12 inserted,
 #   9 deleted), GetInst called in each arm where the target calls it once before the test.
 # - md::CEntidadeBU::GetLocal returns a ueword, the target's i32.load16_u of the 32-bit member at +168 (fn 11629 stores it
@@ -79,3 +84,5 @@ $(foreach u,$(CCONVERSORENTIDADEBU_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(
 # cconversorentidadebu.cpp includes ecourna's app/dados/asn/cconversordetalhamentocomparecimento.hpp, which includes its
 # ASN.1 module by its bare name, as the ecourna objects' include path finds it
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/cconversorentidadebu.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
+# cassinavotavelbu.cpp's CalculaHashSha512 includes ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/cassinavotavelbu.cpp.o: UENUX2_CXXFLAGS += $(OPENSSL_INCLUDES)

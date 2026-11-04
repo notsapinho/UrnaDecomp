@@ -12,16 +12,17 @@ namespace {
 
 // std::string::find_first_not_of(const char*, size_t) (1843): 11546, 11571 and 14477 are not written, and they pass
 // other sets and positions than 1519 and 2185 do; without a caller that varies them binaryen folds both arguments.
-// ASN1::SEQUENCE_OF<ASN1::GeneralString>'s vtable and operator= (5731): of the two converters that call it, 11483 is not
-// written (10273, fragment 321's, is). This stand-in calls it twice, as those two do, and building the local stores the vtable 5731 stores, so
-// its slot 1 (859) comes along. Its body is no target function's, and optnone keeps clang from folding the two calls.
+// ASN1::SEQUENCE_OF<ASN1::GeneralString>'s vtable and operator= (5731): of the two converters that call it, once each,
+// 11483 is not written (10273, fragment 321's, is). This stand-in calls it once, as 11483 does, and building the local
+// stores the vtable 5731 stores, so its slot 1 (859) comes along. Its body is no target function's. optnone keeps the
+// local's constructor and SEQUENCE_OF_Base's destructor calls, which clang inlines without it (wasm-objdump -d of the
+// object); the call of operator= stays either way.
 typedef ASN1::SEQUENCE_OF<ASN1::GeneralString> TNomes;
 
-__attribute__((optnone, noinline)) void CopiaNomes(TNomes& destino, const TNomes& origem)
+__attribute__((optnone, noinline)) void CopiaNomes(const TNomes& origem)
 {
-    TNomes vazio;
-    vazio = origem;
-    destino = vazio;
+    TNomes copia;
+    copia = origem;
 }
 
 __attribute__((noinline)) int FirstNotOfStandIn(int texto, int posicao)

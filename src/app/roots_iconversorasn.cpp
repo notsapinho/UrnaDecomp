@@ -91,7 +91,10 @@ int urna_roots_iconversorasn(int a)
 // locals after it are numbered otherwise (831 over 5399 rows, 21 inserted and 22 deleted); with the copy from this
 // object, ahead of the trees, 10273 differs in operands only and matches. Why the copy's place decides is a reading
 // (binaryen inlines the copy into 10273 and optimizes them in module order). It goes when an object ahead of
-// cconversorentidadebu.cpp's on the link line instantiates the member.
+// cconversorentidadebu.cpp's on the link line instantiates the member. The instance also brings a weak copy of libc++'s
+// basic_ostringstream<char>::str() const & (match 230), and the link takes 230 from this object, ahead of
+// app/uenux2/src/app/comum/dados/asn/municipiozona/cconversorcomplementomunicipio.cpp.o, whose copy it took without
+// the instance (splat/scan.tsv's object column).
 #include "app/comum/asn/cconversorcodigocargoconsulta.h"
 
 template ModuloTiposEleitorais::CodigoCargoConsulta

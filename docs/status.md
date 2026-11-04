@@ -121,8 +121,8 @@ candidate are not placed by anything yet.
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
 | `match` | 12,448 | 3,885,311 | matched |
-| `differs` | 372 | 150,325 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 489 | 577,376 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `differs` | 372 | 150,327 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 489 | 577,374 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 1,034 | 1,270,891 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -179,8 +179,8 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,345 | 1,345 | 0 | 0 | 0 |
-| `fingerprint` | 615 | 614 | 0 | 1 | 0 |
+| `byte` | 1,343 | 1,343 | 0 | 0 | 0 |
+| `fingerprint` | 617 | 616 | 0 | 1 | 0 |
 | `addr` | 7,721 | 7,465 | 131 | 124 | 1 |
 | `shape` | 1,118 | 1,071 | 33 | 14 | 0 |
 | `none` | 3,544 | 1,953 | 208 | 350 | 1,033 |

@@ -4,6 +4,12 @@
 // ConverteDadosVota and ConverteDadosSA. The throws are records of the target, so their lines are fixed (87, 110, 132,
 // 164, 175, 232, 284 and 299); where each function starts, the blank lines and the place of ConverteDadosVota and
 // ConverteDadosSA, which have no record, are a choice. The fragment that compiles this file has the rest.
+// The two std::formatter specializations: the two throws print the post's and the vote's type through a handle (table
+// slots 2954 and 2776, both target fn 536, the body every comum::SFormatoEnum instance shares), as
+// relatorios/cgeradorbuqrcode.cpp does for the post's type. s_ultimoHash is the chained hash's last value, which each
+// votable's hash covers and each election's result carries and signs; its exit destructor (fn 10274, table slot 4476)
+// heads this object's run of slots, before the vtable's four (4477 to 4480: 174, 144, 10273, 10272). That the vector
+// is a file static, and its name, are chosen.
 
 #include "app/comum/gravadores/asn/cconversorentidadebu.h"
 
@@ -21,8 +27,6 @@
 #include "app/comum/gravadores/euecomumgravadoreserror.h"
 #include "ecourna/app/dados/asn/cconversordetalhamentocomparecimento.hpp"
 
-// The two throws print the post's and the vote's type through a handle (table slots 2954 and 2776, both target fn 536,
-// the body every comum::SFormatoEnum instance shares), as relatorios/cgeradorbuqrcode.cpp does for the post's type.
 template <>
 struct std::formatter<comum::md::CCargo::ETipo> : comum::SFormatoEnum {};
 template <>
@@ -34,10 +38,6 @@ namespace {
 
 using TCargoID = md::TCargoID;
 
-// The chained hash's last value, which each votable's hash covers and each election's result carries and signs. Its exit
-// destructor (fn 10274, table slot 4476) heads the run of this object's slots, the vtable's four (4477 to 4480: 174,
-// 144, 10273, 10272), where GetInst's statics' destructors (4466, 4467) lie in util.cpp's run; that the vector is a file
-// static, and its name, are chosen.
 std::vector<uebyte> s_ultimoHash;
 
 // (original lines 43-58: content not recovered)

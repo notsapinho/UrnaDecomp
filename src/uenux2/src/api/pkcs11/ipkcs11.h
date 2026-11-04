@@ -20,7 +20,7 @@
 namespace api::pkcs11 {
 
 // The result of IPkcs11::Assina: the caller copies the vector at +8 through GetAssinatura, then destroys the
-// temporary. The two words before it, their names and types, and the accessor are chosen.
+// temporary. The 64-bit word before it, its name and type, and the accessor are chosen.
 struct SResultadoAssinatura {
     ueqword m_status;
     std::vector<uebyte> m_assinatura;

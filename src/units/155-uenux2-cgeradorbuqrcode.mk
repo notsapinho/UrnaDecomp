@@ -38,13 +38,13 @@
 # each part's SHA-512 chained over the earlier parts (CalculaHash), and the last part's hash signed through IPkcs11
 # (RetornaBlocoAssinado, record cgeradorbuqrcode.cpp:405, the instance() call). Each helper is a frame of its own in
 # 5604, so each is a function binaryen inlined into its one caller. The target's body holds 10253 instructions and ours
-# 10255, with the same direct calls and format strings in the same order but for one free (read from `pnpm wasm fn`'s
-# folded readouts of both). pnpm wasm score: 3113 over 10484 rows (230 inserted, 228 deleted, 2590 of 2655 replaced rows
+# 10252, with the same direct calls and format strings in the same order but for one free (read from `pnpm wasm fn`'s
+# folded readouts of both). pnpm wasm score: 3104 over 10481 rows (227 inserted, 228 deleted, 2585 of 2649 replaced rows
 # operand-only); a diff of the two disassemblies (`pnpm wasm disasm` bodies) with locals renamed by first use and call
 # targets, data addresses and wide constants masked, counted as difflib opcodes, has 758 hunks (the same diff unmasked,
-# `diff -U0`, has 1465): 584 differ in local
-# numbers, call targets or data addresses alone, 94 only in local.get, local.set and local.tee rows, 20 only in one
-# table slot operand (the target's 148, our 43), and 60 in more. What differs beyond locals, measured and not explained:
+# `diff -U0`, has 1467): 588 differ in local numbers, call targets or data addresses alone, 94 only in local.get,
+# local.set and local.tee rows, 20 only in one table slot operand (the target's 148, our 43), and 56 in more. What
+# differs beyond locals, measured and not explained:
 # GetCorpo's post loops reload the post's id and digit count where the target holds them in locals before the loop;
 # DivideEmBlocos keeps the content's size and long flag in locals where the target reloads them in substr's check and
 # bounds the loop by the size read before it; the frees of the label strings after preBuild's first table run in another
@@ -82,8 +82,8 @@ CGERADORBUQRCODE_SRCS := src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/c
 UENUX2_SRCS += $(CGERADORBUQRCODE_SRCS)
 # cgeradorbuqrcode.cpp includes cconfiguracaoeleicao.h, whose ecourna CConfiguracaoMunicipio holds a CHorariosUrna of
 # Boost ptimes, and ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h; UENUX2_CXXFLAGS has neither path
-# (unit 88 gives ccargos.cpp the Boost one, unit 122 gravadores/asn/util.cpp the OpenSSL one). An include path is not a
-# flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
+# (unit 88 gives ccargos.cpp the Boost one, unit 321 gravadores/asn/cassinavotavelbu.cpp the OpenSSL one). An include
+# path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
 $(ROOT)/$(APP)/uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) $(OPENSSL_INCLUDES)
 W155_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 # the member the vtable needs that is not reconstructed traps here, at the tree's flags

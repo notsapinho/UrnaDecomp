@@ -197,8 +197,9 @@ $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Make
 # instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
 $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_cbasetype.cpp -o $(R)
-# the same for IConversorASN's members (src/app/roots_iconversorasn.cpp); the include paths are its headers' (the modules, Boost)
-$(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+# the same for IConversorASN's members (src/app/roots_iconversorasn.cpp), ecourna's and comum's: it includes headers of
+# both trees (UENUX2_HDRS holds ECOURNA_HDRS); the include paths are its headers' (the modules, Boost)
+$(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -Isrc/asn1/modules -I$(BOOST_HDR) -c src/app/roots_iconversorasn.cpp -o $(R)
 # the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967) and vector<CDadoCorrespondencia>'s
 # (5294, 1698, 5532, 9873), ahead of both trees' objects and without strict aliasing, which 4967 needs

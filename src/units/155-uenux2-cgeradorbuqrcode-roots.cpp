@@ -8,8 +8,7 @@
 //   false and false for its two flags, as 1956 does: binaryen folds the two into the body, as the target's 5603 shows.
 // - w155_pkcs11 stands for fn 5635, the target caller not in our link of
 //   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, whose other callers, 5604 and 10273, are in the
-//   link): it calls it twice. The instance is cgeradorbuqrcode.cpp's object's: this file only
-//   declares it.
+//   link): it calls it once, as 5635 does. The instance is cgeradorbuqrcode.cpp's object's: this file only declares it.
 // They are declared through __asm__ labels with the objects' signatures (a constructor and a destructor return this
 // there); this file includes no header and instantiates nothing.
 extern "C" {
@@ -36,10 +35,9 @@ __attribute__((noinline)) void w155_gerador(void* gerador, const void* cabecalho
 }
 
 // Stands for fn 5635 (CPolySingleton<IPkcs11>::instance; 5604 and 10273 are in the link).
-__attribute__((noinline)) void* w155_pkcs11(void* info, const void* local1, const void* local2)
+__attribute__((noinline)) void* w155_pkcs11(void* info, const void* local)
 {
-    w155_instancia_pkcs11(info, local1);
-    return w155_instancia_pkcs11(info, local2);
+    return w155_instancia_pkcs11(info, local);
 }
 
 const void* volatile w155_sink;
