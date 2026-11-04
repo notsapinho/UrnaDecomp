@@ -61,11 +61,11 @@ void CConfirmaFimRegistroMesarios::ProcessInput()
 {
     switch (m_form->Read()) {
     case api::INPUT_CONFIRMA:
-        m_pNextState = &CEncerraRegistroMesarios::GetInst();
+        SetNextState(&CEncerraRegistroMesarios::GetInst());
         break;
     case api::INPUT_CORRIGE:
         GetControlador().LogaConfirmouRegistroMesarios();
-        m_pNextState = &CPedeTituloMesario::GetInst();
+        SetNextState(&CPedeTituloMesario::GetInst());
         break;
     }
 }

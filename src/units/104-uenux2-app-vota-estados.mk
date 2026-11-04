@@ -122,24 +122,24 @@
 #   this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of unit
 #   110's (celeitordetalhe.cpp.o and celeitores.cpp.o), which only renumbering landed units would change, so the row
 #   waits for that order.
-# - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line) is
-#   written and differs. When vota::RegistraMesarios() (fn 2520) says so the next state is
-#   comum::CRegistrarMesarios::GetInst() (fn 3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst,
-#   fn 316, +36; the type 7 and the queue stored in the frame, then Insert, fn 501), then CFinalizaOperador::GetInst()
-#   (fn 5342). The target stores m_pNextState in each branch (two `i32.store offset=4`, the first followed by `br 1`);
-#   every form compiled here stores it once after the join: as written, `16 over 41 rows (same 25, replaced 8 [5
-#   operand-only], inserted 3, deleted 5)` (pnpm wasm score). clang's MergedLoadStoreMotion pass joins the two stores
-#   (-mllvm -print-after-all on a scratch copy: two stores after VectorCombinePass, one after
-#   MergedLoadStoreMotionPass). Forms tried, each object read with wasm-objdump -d at this directory's flags, each with
-#   one store: the early return as written; if/else; the condition negated; a local next state stored once; a reference
-#   to m_pNextState bound first; the queue and the message as named locals of the else branch; a ternary for the state;
-#   and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with -fexceptions. In the target, fn 5400
-#   (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and 10500) has the same shape, a store in
-#   each branch, the second after a Post(1), and fn 10511 (vota::CControlaReconhecimento's slot 7) holds the same calls
-#   with one store after the join. Not explained. CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met
-#   the same joining, matches with a call clang cannot see through in its default case (unit 165's fragment has the
-#   forms); StartState has no base body to call (slot 2 is pure), and no such call was tried here. It stays
-#   written: it is CFimAquisicaoVotos's slot 2 (a trap would hide it: docs/how-to-decompile.md step 5) and 3610's caller.
+# - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line), a
+#   match. When vota::RegistraMesarios() (fn 2520) says so the next state is comum::CRegistrarMesarios::GetInst() (fn
+#   3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst, fn 316, +36; the type 7 and the queue
+#   stored in the frame, then Insert, fn 501), then CFinalizaOperador::GetInst() (fn 5342). The target stores
+#   m_pNextState in each branch (two `i32.store offset=4`, the first followed by `br 1`), which the two stores made as
+#   calls of comum::CAppState::SetNextState give: clang keeps the two calls apart, and binaryen inlines each (unit 61's
+#   fragment has the measurements). Every form written with assignments stored once after the join: as written then,
+#   `16 over 41 rows (same 25, replaced 8 [5 operand-only], inserted 3, deleted 5)` (pnpm wasm score); clang's
+#   MergedLoadStoreMotion pass joins the two stores (-mllvm -print-after-all on a scratch copy: two stores after
+#   VectorCombinePass, one after MergedLoadStoreMotionPass). Forms tried then, each object read with wasm-objdump -d at
+#   this directory's flags, each with one store: the early return as written; if/else; the condition negated; a local
+#   next state stored once; a reference to m_pNextState bound first; the queue and the message as named locals of the
+#   else branch; a ternary for the state; and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with
+#   -fexceptions. In the target, fn 5400 (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and
+#   10500) has the same shape, a store in each branch, the second after a Post(1), and fn 10511
+#   (vota::CControlaReconhecimento's slot 7) holds the same calls with one store after the join.
+#   CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met the same joining, matches with a call clang cannot
+#   see through in its default case (unit 165's fragment has the forms).
 # - vota::CCancelaHabilitacaoEleitor::StartState (fn 10646, slot 2, in ccancelahabilitacaoeleitor.cpp after the statics,
 #   a chosen line): when vota::IsAudioAtivadoMesario() (fn 1687) holds, CLogVota's LogaAudioDesativadoFimVotacao (fn
 #   4529, unit 152's), then slot 2 of vota::impl::IInformacaoThreadOperador::GetInst() (fn 599), CancelaHabilitacao, its

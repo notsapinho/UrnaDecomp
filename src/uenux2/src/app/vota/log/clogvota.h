@@ -296,6 +296,12 @@ public:
 
 private:
     CLogVota();
+
+    // api::CLoga::loga (fn 433) with +4 and severity 2, for LogaEncerramentoAntesDoHorario, its one caller: defined in
+    // clogvota.cpp, where clang inlines it (wasm-objdump -d of the object), so it has no target function. That the
+    // call goes through a member, and the member's name, are chosen (the forms measured are in
+    // src/units/277-uenux2-app-vota-operador-outrasopcoes.mk).
+    void LogaAlertaVota(const std::string& mensagem);
 };
 
 } // namespace vota

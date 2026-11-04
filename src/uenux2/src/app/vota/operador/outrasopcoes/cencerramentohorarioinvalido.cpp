@@ -75,7 +75,7 @@ void CEncerramentoHorarioInvalido::StartState()
         CSincronizaVota::SincronizaEstadoGeralVota();
         CSincronizaVota::SincronizaEstadoGeral();
     }
-    m_pNextState = this;
+    SetNextState(this);
 }
 
 void CEncerramentoHorarioInvalido::ProcessInput()

@@ -160,7 +160,8 @@
 #   ProcessInput with
 #   ConfirmaOpcao's copy temporaries moved into its result's local (the bytes' local index patched; wasm-objdump -d of
 #   the output compared), and drops the head zero-init when its `rse` pass is skipped: the remainder is binaryen's
-#   choice after inlining, not explained.
+#   choice after inlining, not explained. Unit 277's list in the target's data order leaves it at 173 over 1348, and its
+#   two next-state stores through comum::CAppState::SetNextState gave a byte-identical module (unit 61's fragment).
 # - Chosen: ConfirmaOpcao's name, its being a private member, its result type, the local reference and the switch's
 #   spelling; the file's place in unit 277's list is measured.
 # The four states' statics' exit destructors (10704, 10705, 10707, 10708, 10743, 10744, 10755, 10756) wait for 10689's

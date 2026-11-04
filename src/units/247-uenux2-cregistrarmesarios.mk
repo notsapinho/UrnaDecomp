@@ -123,8 +123,9 @@
 #   INPUT_CORRIGE (5) through slot 25 (LogaCancelouRegistroMesarios) to CConfirmaFimRegistroMesarios::GetInst (5389),
 #   and the next state stored once after the cases. With both ProcessInput written our link forms the shared body too
 #   (names.tsv's byn$mgfn-shared$ of CRegistrarMesarios::ProcessInput), which scores 29 over 100 rows against 6011, all
-#   operand-only, binaryen's local numbers among them (3 and 4 swapped; unit 135's fragment has the same in 10383,
-#   not explained), so 6011 does not match. A hand line in splat/symbol_addrs.txt names it for its two callers
+#   operand-only, binaryen's local numbers among them (3 and 4 swapped, not explained; unit 135's 10383 read so until
+#   its next-state stores went through a setter, unit 61's fragment), so 6011 does not match. A hand line in
+#   splat/symbol_addrs.txt names it for its two callers
 #   (callers+content, its comment the evidence); without it, step 9 read both thunks `unresolved` (our merge has no
 #   target function), and with it both match. The case order and the labels' spelling are chosen.
 # Chosen, no evidence names them: TelaIndagaRegistroMesarios, its being a free function of comum and its declaration in
