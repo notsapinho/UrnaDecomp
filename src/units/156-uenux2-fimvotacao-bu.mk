@@ -57,13 +57,16 @@
 # instance() call of CPolySingleton<comum::IInterfaceInit>: the 18 characters of `    bool ehDemo = ` before it are a
 # chosen spelling of that length.
 #
+# Matched since:
+# - fn 12030, CRetirarMR::ProcessInput: its next state through comum::CAppState::SetNextState (cappstate.h, unit 61's),
+#   which binaryen inlines, gives the target's value block (`block (result i32)` and a `local.set` after it): 11 over 93
+#   rows, every row an operand (pnpm wasm score in the whole link), then a match (srcloc-anchor). With the assignment
+#   `m_pNextState = ...` it scored 15 over 95 (2 inserted, 1 deleted), the ternary and an if/else of the two Read() calls
+#   alike; one Read() on the form the ternary selects gave 44 over 98, and an if per arm that compares its own Read()
+#   and sets m_pNextState 50 over 125 (32 inserted). That the setter is the inlined call is a reading of the replay
+#   unit 61's fragment cites; the setter and the ternary are what landed.
+#
 # Not matched, with what it waits for:
-# - fn 12030, CRetirarMR::ProcessInput, `differs` at +0x38: the target carries the Read() result out of a value block
-#   (`block (result i32)` and a `local.set` after it), ours sets the local in each arm. Measured on the whole link, by
-#   `pnpm wasm score`: the ternary written here and an if/else of the two Read() calls give the same rows (score 15 over
-#   95, 2 inserted, 1 deleted); one Read() on the form the ternary selects gives score 44 over 98, and an if per arm
-#   that compares its own Read() and sets m_pNextState gives 50 over 125 (32 inserted). No other form found. The
-#   written form's other differing rows are operand-only (12 of 12: calls and data addresses).
 # - fns 12041 and 12042, CMostraQRCodeCertificado's statics' destructors: their only other reader is GetInst, inlined
 #   into fn 12051, and they match since unit 37 wrote 12051, whose votes name the data; 12042 is also a thunk of fn
 #   1564, which matches since unit 138 gave our link its third member (unit 37 says so for fn 2888).

@@ -45,8 +45,46 @@ void CTesteTeclado::StartState()
     m_form->Slot2();
     it->second.second->SetStatus(api::TEXTSTATUS_PREENCHIDO);
 }
+void CTesteTeclado::ProcessInput()
+{
+    auto& leitor = api::CPolySingleton<api::IInputKbd>::instance();
+    if (!leitor.HasKey()) {
+        return;
+    }
+    const char tecla = leitor.GetKey();
 
-// (original lines 49-88: content not recovered)
+    auto it = m_teclas.find(m_sequencia[m_indice]);
+
+
+    if (it == m_teclas.end()) {
+        throw CUeVotaError(EUE_VOTA_TESTE_TECLADO_TECLA_ATUAL_NAO_ENCONTRADA,
+                           "Tecla não encontrada: " + m_sequencia.at(m_indice));
+    }
+    if (it->second.first != tecla) {
+        CLogVota::GetInst().LogaFimTesteTecladoSucesso();
+        CEstadoAudio::GetInst().SetTeclasTesteTeclado(it->second.first, tecla);
+        m_pNextState = &CTesteFalhou::GetInst();
+        return;
+    }
+    it->second.second->SetStatus(api::TEXTSTATUS_DESTAQUE);
+    ++m_indice;
+    if (m_indice == m_sequencia.size()) {
+        CLogVota::GetInst().LogaFimTesteTecladoSucesso();
+        m_pNextState = m_pEstadoPassouNoTeste;
+        return;
+    }
+
+
+    it = m_teclas.find(m_sequencia[m_indice]);
+
+    if (it == m_teclas.end()) {
+        throw CUeVotaError(EUE_VOTA_TESTE_TECLADO_PROXIMA_TECLA_NAO_ENCONTRADA,
+                           "Tecla não encontrada: " + m_sequencia.at(m_indice));
+    }
+    it->second.second->SetStatus(api::TEXTSTATUS_PREENCHIDO);
+}
+
+// (original lines 87-88: content not recovered)
 #line 89
 CTesteTeclado::CTesteTeclado()
     : CEstadoComDesligamentoAutomatico(EVENTO_ENTRADA)

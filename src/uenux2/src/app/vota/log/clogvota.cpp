@@ -615,4 +615,19 @@ void CLogVota::LogaAnoNascimentoDiferenteCadastro()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
 }
 
+void CLogVota::LogaEleitorHabilitado()
+{
+    loga("Eleitor foi habilitado");
+}
+
+void CLogVota::LogaInicioEncerramento()
+{
+    loga("Inicio do Encerramento");
+}
+
+void CLogVota::LogaInspecaoUrnaConfirmada()
+{
+    loga("Inspeção da urna confirmada");
+}
+
 } // namespace vota

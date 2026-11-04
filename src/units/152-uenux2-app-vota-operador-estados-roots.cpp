@@ -1,10 +1,9 @@
 // Roots of src/units/152-uenux2-app-vota-operador-estados.mk: keep its functions in the skeleton link the way the target
 // keeps them.
 //
-// - The vtable of vota::CInspecionaUrna, and with it every slot: it is referenced in the target only by the class's
-//   constructor, inlined into the function that creates the singleton (not reconstructed: the fragment names it).
-//   Taking the vtable's address keeps every slot, as unit 142's roots do. The other states' constructors are in the
-//   link, so no sink keeps their vtables: vota::CDesabilitaAudioEleitor's and vota::CHorarioVotacaoTerminou's, inlined
+// - No sink keeps a vtable: the states' constructors are in the link. vota::CInspecionaUrna's, inlined with its GetInst
+//   into vota::CAguardaMensagem::ProcessKey (fn 7481, unit 104); vota::CDesabilitaAudioEleitor's and
+//   vota::CHorarioVotacaoTerminou's, inlined
 //   into their GetInst (fns 5393 and 5430), which the next item covers; vota::CPerguntaFilaEleitorVazia's, inlined into
 //   its GetInst (fn 5426), which vota::CIniciaFinalizacao::StartState (fn 10706, unit 277) calls twice;
 //   vota::CHabilitaAudioEleitor's, inlined into its GetInst (fn 2743), which CControlaReconhecimento::ProcessInput
@@ -26,7 +25,6 @@
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2
 // header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-extern const char cinspecionaurna_vt[] __asm__("_ZTVN4vota15CInspecionaUrnaE");
 int w5393_root_0() __asm__("_ZN4vota23CDesabilitaAudioEleitor7GetInstEv");
 int w2734_root_0() __asm__("_ZN4vota17CEleitorDemorando7GetInstEv");
 }
@@ -51,7 +49,6 @@ const void* volatile estados152_sink;
 struct SEstados152Roots {
     SEstados152Roots()
     {
-        estados152_sink = cinspecionaurna_vt;
         estados152_sink = reinterpret_cast<const void*>(&DesabilitaAudio);
         estados152_sink = reinterpret_cast<const void*>(&EleitorDemorando);
     }

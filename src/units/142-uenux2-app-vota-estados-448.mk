@@ -15,8 +15,10 @@
 #   docs/reference/facts/reading.md R5, and fn 448 destroys the members and stores no vptr (R4). Measured on
 #   CUrnaInspecionada: without final the D2 gains the vptr store (55 rows against 50).
 # - The members' offsets and types: the constructors that fns 11797, 2747, 10500, 1150 and 10415 hold inlined (the class
-#   headers list what each stores). Two stay unwritten here: fns 11797 and 10500 call functions with no name
-#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fns 1150 and 2747 are written
+#   headers list what each stores). One stays unwritten here: fn 10500 calls functions with no name
+#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; its header names them). CUrnaInspecionada's GetInst and
+#   constructor, which 11797 holds, are written in curnainspecionada.cpp with its statics (exit destructors 11796 and
+#   11795, matched with 11797, unit 152's), and its vtable sink in the roots went. Fns 1150 and 2747 are written
 #   (below), and so is CPerguntaCodigoSuspensao's GetInst, which 10415 (unit 152's
 #   CPerguntaEleitorVotando::ProcessInput) holds inlined.
 # - The log members: fns 10594 and 10421 call vota::CLogVota::GetInst (fn 184) and then open a stack frame of their own
@@ -211,7 +213,15 @@
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 # cpedeanonascimentosembiometria.cpp, this unit's, is compiled in unit 161's list (10489's paragraph above).
-APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
+# cinspecionaurna.cpp, unit 152's, links here ahead of curnainspecionada.cpp, the target data's order (CInspecionaUrna's
+# vtable @1547448 before CUrnaInspecionada's @1547520): fn 11797 (CInspecionaUrna::ProcessInput), which holds
+# CUrnaInspecionada::GetInst inlined, differs in local numbers with the other order (65 over 243 rows, pnpm wasm score in
+# the whole link) and has operand rows only with this one (38 over 243). The move puts cinspecionaurna.cpp.o ahead of
+# five objects whose data the target holds before its vtable (cconversorsecaoeleitoral.cpp, cconfirmavotosemcandidato.cpp,
+# cinstrucaovotacaoacessibilidade.cpp, cvisualizarcandidatos.cpp and ctelascargo.cpp, by their records and vtables) and
+# takes it behind sixteen whose data the target holds after it, which the link had before it.
+APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/cinspecionaurna.cpp \
+    src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
     src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp \
     src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp \

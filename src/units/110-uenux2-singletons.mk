@@ -526,7 +526,18 @@
 # - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
 #   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and
-#   11797, and they stand in for 6557, 7787 and 11797.
+#   11797, and they stand in for 7787 (6557 and 11797 are in the link now).
+# ctelasvota.cpp also holds the screens of vota::CMostraTelaContinuaVotacao, CInspecionaUrna and CUrnaInspecionada
+# (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
+# - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
+#   operand rows only in the whole link (9 over 65, pnpm wasm score), named by its callers' calls (7481 and 11797) and
+#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2806 between
+#   6579's 2800 and the destructor's 2807; the five lines it adds take five of the blank lines above record 3530.
+# - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
+#   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
+#   and TelaErroTesteTeclado (over three named char arrays, ctelasvota.h says why): one caller each, which holds it
+#   inlined; after the file's last record, their lines chosen. cestadoaudio.h is included for the lambda's
+#   CEstadoAudio::GetTeclasTesteTeclado, in place of a blank line above the first record.
 # - 2380's last parameter is an int tested by its low bit: as a bool the object tests it bare where the target has
 #   `i32.const 1; i32.and` (a probe of both forms at the file's flags; in the link 2380 then scored 17 over 280, the two
 #   rows deleted). Four forms of the positions were compared in the object, between AddStatusHeader's call and the loop

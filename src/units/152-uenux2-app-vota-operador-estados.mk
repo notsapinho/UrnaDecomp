@@ -21,8 +21,8 @@
 #   StartState (10587, slot 2 of the class and of its three derived classes);
 # - vota::CLogVota::LogaAudioDesativadoFimVotacao and LogaSuspensaoAbortada (4529, 4535), in app/vota/log/clogvota.cpp
 #   (unit 119's file), with the five members five of the StartStates hold inlined.
-# The class headers say what each layout rests on; 152-uenux2-app-vota-operador-estados-pending.cpp names every slot
-# left and what it waits for.
+# The class headers say what each layout rests on. The unit has no -pending.cpp: its one trap,
+# vota::CInspecionaUrna::ProcessInput (11797), is written (below).
 #
 # Evidence, each read in the target (`pnpm wasm fn` of each function):
 # - CSuspensaoAutomaticaEleitor: fn 10411 is `f2732(p0); drop; f136(p0)`, an out-of-line destructor
@@ -98,7 +98,17 @@
 #   of api::CInteractiveForm<api::IScreen, api::IInputKbd>::Read() (cinteractiveform.h:57 @1547504), where the operator
 #   states' slots 7 load the <api::IScreenMT, api::IInputMT> one; cinspecionaurna.h types +12 so.
 #
-# Not reconstructed: vota::CInspecionaUrna's GetInst and constructor, inlined into its callers, which are not written.
+# vota::CInspecionaUrna, written since in cinspecionaurna.cpp, which links in unit 142's list for its order against
+# curnainspecionada.cpp (unit 142's fragment has the measurement):
+# - GetInst and the constructor, held inlined by vota::CAguardaMensagem::ProcessKey (fn 7481, unit 104), their one
+#   caller: the 20-byte object, comum::CAppState's constructor with EVENTO_ENTRADA (2), the vptr, CTelasVota::GetInst()
+#   and the form from CTelasVota::GetTelaInspecionaUrna (ctelasvota.cpp, held behind a 48-byte frame); the statics
+#   (@1837704, @1837680) defined before StartState, as their exit destructors (11800, 11799) sit above StartState in
+#   use band 1; matched with 7481. The roots' vtable sink went.
+# - ProcessInput (11797, slot 7): on CONFIRMA of Read() it goes to vota::CUrnaInspecionada::GetInst() (held inlined,
+#   unit 142's), logs CLogVota::LogaInspecaoUrnaConfirmada and posts 11 to vota::CThreadOperador's queue (the target's
+#   order). Operand rows only in the whole link (38 over 243, pnpm wasm score) and matched (vptr-anchor). Chosen: the
+#   `if` (one case), the 11 as a literal, the setter not used (the bytes do not need it here).
 #
 # GetInst written (each holds its constructor inlined behind a frame of its own, matched with its two static
 # destructors; the statics are defined before StartState, as the destructors' use band 1 sits above StartState's slot):
@@ -121,7 +131,7 @@
 #   "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true)); named by vptr-anchor and
 #   matched, its statics by its votes. Its one caller, 10706 (unit 277's), calls it twice, so no stand-in and no vtable
 #   sink.
-# - the pending slots: the -pending.cpp header lists them.
+
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):
 # - StartState (10409) runs the tick part in a function of its own that binaryen inlined: `this` copied to a local at
@@ -254,22 +264,16 @@ APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/celeitord
     src/app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.cpp \
     src/app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.cpp \
     src/app/vota/operador/justificativa/iiniciajustificativa.cpp \
-    src/app/vota/operador/outrasopcoes/chorariovotacaoterminou.cpp \
-    src/app/vota/eleitor/cinspecionaurna.cpp
+    src/app/vota/operador/outrasopcoes/chorariovotacaoterminou.cpp
 # outrasopcoes/cperguntafilaeleitorvazia.cpp, whose class this fragment notes, links in unit 277's list for its order
 # against caguardaeleitoresvotarem.cpp (10713, above).
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # celeitordemorando.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (an
 # include path, not a flag)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/aguardaeleitor/celeitordemorando.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 152-uenux2-app-vota-operador-estados-pending.cpp gives the vtables trapping bodies,
-# compiled with the unit's flags
-$(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-pending.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-pending.cpp -o $(R)
-# nothing reconstructed references four of the states' vtables, and two GetInst have callers not reconstructed:
-# 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in for those callers
+# two GetInst have callers not reconstructed: 152-uenux2-app-vota-operador-estados-roots.cpp stands in for those callers
 # (IIniciaJustificativa's constructor, 3624, and CLogVota::LogaAudioDesativadoFimVotacao, 4529, need none: 10631 and
 # 10635, unit 104, and 10435 and unit 104's 10646 are in the link)
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-roots.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-pending.o $(APP)/152-uenux2-app-vota-operador-estados-roots.o
+override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-roots.o

@@ -1299,7 +1299,8 @@ or a body of ours has no stub, so yours goes, and a stub-only file whose last st
 stub goes too, although its body is only a trap, and so do the stubs of slots a class's first written member never
 mentions: such a row is still `no-candidate` or `differs` on the `-pending.o`, so the `-pending.cpp` header is the only
 note that the member is left to do (a written body that does not match yet has its note in the fragment: step 5).
-`src/units/README.md` "Pending members" has the rule, the two ways the scan lists a trap (7481, 11486), why a trap is
+`src/units/README.md` "Pending members" has the rule, the two ways the scan lists a trap (7481 until it was written,
+11486), why a trap is
 declared with its record's signature, and what the header names when a stub-only file goes with the stub.
 
 For one function, `pnpm wasm splat-remap` shows the comparison directly;

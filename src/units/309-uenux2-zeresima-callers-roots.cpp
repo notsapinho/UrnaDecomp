@@ -4,7 +4,7 @@
 //   Cargas         comum::CLocal::Carrega (fn 5740, unit 89's clocal.cpp): fn 7787 (4161 is in the link)
 //   TodasSecoes    comum::CLocal::GetTodasSecoes (fn 5741, unit 89's clocal.cpp): fns 12105 and 7787
 //   Locais         vota::AdicionaLocal (fn 4161, unit 110's ctelasvota.cpp): fns 6601 and 7787 (2380 is in the link)
-//   TelasNeutras   vota::TelaNeutra (fn 2380, unit 110's ctelasvota.cpp): fns 6557, 7787 and 11797 (6587 is in the
+//   TelasNeutras   vota::TelaNeutra (fn 2380, unit 110's ctelasvota.cpp): fn 7787 (6557, 6587 and 11797 are in the
 //                  link); the target's wasm type keeps the font size and the location flag, so the stand-ins pass
 //                  values that vary, and dead-argument elimination folds neither
 // Declared through asm labels with the objects' signatures (a function that returns a std::shared_ptr takes the

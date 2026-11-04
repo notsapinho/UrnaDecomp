@@ -135,6 +135,10 @@
 # bool, `|` for `||`, an early return for the guarded block, a static ticks helper. Not explained. 4349 stays written:
 # the three setters, which match, are in the link only through it.
 # - CEstadoAudio's setters are out of line in cestadoaudio.cpp, each called twice by 4349, and match byte for byte.
+#   SetTeclasTesteTeclado and GetTeclasTesteTeclado (+9 and +10, the keyboard test's expected and pressed keys) are out
+#   of line there too, each with one target caller that holds it inlined (fns 11804 and 12903, unit 217's and unit
+#   110's ctelasvota.cpp): cestadoaudio.h says what of them is evidence; m_campo9 and m_campo10 are renamed for that
+#   role, names chosen.
 #
 # Names. 316 and 270 are named by `vptr-anchor`, which needs the symbol tool that casts .bss votes. Their statics follow from
 # them and the pair of static destructors. Two data lines are hand edits of kind callers+content, for objects no vote

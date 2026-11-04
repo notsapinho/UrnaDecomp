@@ -21,6 +21,21 @@
 # block order: that unit's fragment has their evidence; its record, cpedetitulomesario.cpp:33 column 32, takes the same
 # spelling; 186 over 2061 rows before step 9, all operand-only, the statics' addresses, then a match).
 # 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for.
+# vota::CAguardaMensagem::ProcessKey (fn 7481, slot 6) is written in caguardamensagem.cpp, after StartState (its use
+# band 1 puts it below the statics' destructors 7485 and 7482): a switch on the message the operator's thread posts.
+# On 7 it sets the vota state to comum::EAVGERARBU (the store of 59 into comum::CAppInfo::GetVota()'s result), runs
+# CSincronizaVota::SincronizaEstadoGeralVota (fn 491), logs "Inicio do Encerramento" and goes to CGeraBU::GetInst()
+# (fn 6129); on 1 it logs "Eleitor foi habilitado" and goes to CEleitorVotando::GetInst() (fn 3229); on 11, 12 and 14
+# it goes to the GetInst of vota::CIniciodeCiclo (fn 4433), vota::CInspecionaUrna and vota::CMostraTelaContinuaVotacao,
+# the last two held inlined with their constructors (cinspecionaurna.cpp, unit 152's class, and
+# cmostratelacontinuavotacao.cpp, unit 174's). Evidence: the target's br_table on the message less 1 and each block's
+# code; the two log members are clogvota.h's (held inlined after GetInst). Measured in the whole link with pnpm wasm
+# score: the case of 7 first gives the target's block order, 53 over 292 rows, every row an operand (the statics' and
+# vptrs' addresses before step 8); with the cases in ascending order the br_table's first two targets swap, 63 over 298
+# (6 rows inserted, 6 deleted). Chosen: the order of the other cases (ascending), the messages as literals (no evidence
+# names them), `break` and the default. Its four statics' exit destructors (7232, 7239, 11799, 11800) match with it:
+# 7481 is the one other target reader of their addresses. The roots' pair for CIniciodeCiclo::GetInst (4433) went: its
+# target callers, 7481 and 11994, are in the link.
 # vota::CQuerReimprimirZeresima landed its head, destructor and statics first, and its GetInst since (below). The
 # heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119

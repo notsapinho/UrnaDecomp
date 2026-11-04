@@ -8,15 +8,16 @@
 # the D2 they share with comum::IPedeTituloMesario (1378, unit 71's), and since their GetInst, constructors, forms and
 # statics (below, "Written since"). vota::testeteclado::CErroTesteTecladoFim:
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
-# states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
+# states), over the head of vota::CEstadoComDesligamentoAutomatico; its file, cerrotestetecladofim.cpp, links in unit
+# 217's list since that unit wrote its GetInst (unit 217's fragment has why). api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
 # EUeIpcError. The class headers say what each layout and name rests on. Every member the vtables need is written
 # (below), and the unit has no -pending.cpp.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
 # and FinishState (7022); CConfirmaVotoEmCargo's constructor (5929) with its two data members; CConfirmaProporcional's
-# (11752); CEstadoComDesligamentoAutomatico's (1285). Their callers in the target are not written, and the roots stand
-# in for them (its header names each). Out of line, by the target: each constructor is a function of its own with two
+# (11752); CEstadoComDesligamentoAutomatico's (1285). The roots' header says which of their callers are in the link
+# (1285's ten are, so its stand-in went). Out of line, by the target: each constructor is a function of its own with two
 # callers or more (11752 has one, fn 1961, the body binaryen shares for six builders that each called it). Lines and
 # files: StartState and FinishState sit after ProcessInput's record (:69) and before ProcessTick's (:120), as the band
 # orders them (7029, 7028, 7022, 7010 in use band 1, the higher index linked first); their exact lines are a choice, and
@@ -496,7 +497,6 @@ CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/vota/eleitor/votaproporcional/ccandidatoinexistente.cpp \
     src/app/vota/eleitor/votaproporcional/cproporcionalbranco.cpp \
     src/app/vota/eleitor/votaproporcional/cproporcionalnulo.cpp \
-    src/app/vota/eleitor/iniciovotacao/testeteclado/cerrotestetecladofim.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesarioinicial.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesariofinal.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp \
@@ -509,8 +509,8 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXX
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cvotacaostateaudio.cpp includes cconfiguracaoeleicao.h too
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# what nothing reconstructed references yet: 97-uenux2-cvotacaostateaudio-roots.cpp takes the addresses of four vtables and
-# of fn 5922, and stands for fn 1285's callers; it declares through asm labels and instantiates nothing
+# what nothing reconstructed references yet: 97-uenux2-cvotacaostateaudio-roots.cpp takes the address of fn 5922; it
+# declares through asm labels and instantiates nothing
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-roots.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/97-uenux2-cvotacaostateaudio-roots.o

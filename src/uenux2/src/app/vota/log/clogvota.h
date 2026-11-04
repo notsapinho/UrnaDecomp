@@ -317,6 +317,14 @@ public:
     // api::CLoga::loga (fn 433) on +4, severity 1 and 2. Their names, from the messages, and their place are chosen.
     void LogaAnoNascimentoIgualCadastro();
     void LogaAnoNascimentoDiferenteCadastro();
+    // LogaInicioEncerramento ("Inicio do Encerramento") and LogaEleitorHabilitado ("Eleitor foi habilitado"), held
+    // inlined by vota::CAguardaMensagem::ProcessKey (fn 7481) for the messages 7 and 1, and LogaInspecaoUrnaConfirmada
+    // ("Inspeção da urna confirmada"), by vota::CInspecionaUrna::ProcessInput (fn 11797), are LogaEleitorEstaVotando's
+    // shape: GetInst called before the member's own 16-byte frame opens, loga (fn 233). Each literal is loaded by its
+    // caller alone. Their names, from the messages, and their place here and at the end of clogvota.cpp are chosen.
+    void LogaEleitorHabilitado();
+    void LogaInicioEncerramento();
+    void LogaInspecaoUrnaConfirmada();
 
 private:
     CLogVota();

@@ -20,7 +20,7 @@
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
 //                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
 //                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, unit
-//                     110's, is in the link); TelaB for 7787,
+//                     110's, and 11812, unit 217's, are in the link); TelaB for 7787,
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2

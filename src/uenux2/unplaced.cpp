@@ -87,11 +87,6 @@
 // f5980 · 225 B · unmatched · placement: link order · name unknown
 // void f5980(i32) { ... }
 
-// link-order cluster 899 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
-
-// f6557 · 166 B · unmatched · placement: link order · name unknown
-// void f6557(i32) { ... }
-
 // link-order cluster 907 · uses=2
 
 // f6616 · 490 B · unmatched · placement: link order · name unknown

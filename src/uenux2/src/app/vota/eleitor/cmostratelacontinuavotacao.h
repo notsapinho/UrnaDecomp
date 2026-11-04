@@ -21,7 +21,8 @@ namespace vota {
 // with the destructor out of line (cmaisinformacoes.h says what shows it). A singleton: GetInst, which binaryen inlined
 // into its one caller (fn 7481, vota::CAguardaMensagem's slot 6), keeps the object in a static std::unique_ptr
 // (@1833104) under a static std::mutex (@1833080) and builds it with comum::CAppState's constructor and 0, its vptr,
-// vota::CTelasVota::GetInst() and fn 6557 over +12. GetInst and the constructor are not written: fn 6557 has no name.
+// vota::CTelasVota::GetInst() and fn 6557 (CTelasVota::GetTelaContinuaVotacao) over +12, written so in
+// cmostratelacontinuavotacao.cpp, whose statics' exit destructors are fns 7239 and 7232.
 // No record names the class or its file. Its vtable and typeinfo lie in app/vota/eleitor/'s data, after
 // cinstrucaovotacaoacessibilidade.cpp's records and right before vota::CFimVotoEleitor's vtable (cfimvotoeleitor.cpp's
 // record follows it), which is not that directory's name order: the data allow the class in cfimvotoeleitor.cpp's
