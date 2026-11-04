@@ -36,11 +36,6 @@
 // f5521 · 72 B · unmatched · placement: link order · name unknown
 // void f5521(i32, i32) { ... }
 
-// link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
-
-// f5579 · 638 B · unmatched · placement: link order · name unknown
-// void f5579(i32, i32, i32, i32) { ... }
-
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f5599 · 1759 B · unmatched · placement: link order · name unknown
@@ -127,14 +122,6 @@
 // f3862 · 72 B · unmatched · placement: link order · name unknown
 // void f3862(i32, i32) { ... }
 
-// link-order cluster 1031 · uses=3 · neighbours' file ecourna/api/security/csha.cpp
-
-// f3873 · 230 B · unmatched · placement: link order · name unknown
-// void f3873(i32) { ... }
-
-// f3872 · 180 B · unmatched · placement: link order · name unknown
-// void f3872(i32, i32) { ... }
-
 // link-order cluster 1034 · uses=3
 
 // f3916 · 593 B · unmatched · placement: link order · name unknown
@@ -194,11 +181,6 @@
 
 // f1591 · 658 B · unmatched · placement: link order · name unknown
 // void f1591(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1271 · uses=12
-
-// f1047 · 635 B · unmatched · placement: link order · name unknown
-// void f1047(i32, i32, i32) { ... }
 
 // link-order cluster 1278 · uses=13
 

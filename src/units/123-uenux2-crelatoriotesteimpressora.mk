@@ -197,8 +197,8 @@
 #   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
 #   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
 #   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
-# Three of GetIDCargaFormatado's four callers are not reconstructed (5579, 12105, 12110; 11256 is in the link):
-# w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
+# Two of GetIDCargaFormatado's four callers are not reconstructed (12105, 12110; 11256 and unit 325's 5579 are in the
+# link): w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
 # stands for is in the link. IncluiAvisoModoDemonstracao's two callers, 1543 and 5591, are in the link.
 #
 # Four more CRelUtil statics in crelutil.cpp, all matched; their stand-ins are in unit 230's roots, the unit of

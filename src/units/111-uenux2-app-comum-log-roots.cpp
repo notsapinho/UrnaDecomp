@@ -5,7 +5,6 @@
 // - comum::CLogComum's LogaCopiandoArqResParaFI, LogaResultadoCopiadoResFE, LogaGerandoResultados, LogaNivelBateria:
 //   the target's fns 12098 and 10226 call them, on GetInst's result, which they drop (10226, vota::CThreadMonitor::Run,
 //   unit 116's, is in the link, written and not matched: it calls LogaNivelBateria twice);
-// - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
 // - comum::IEventosLog::logaAlerta (fn 1398) and logaErro (fn 2282) need none: their target callers are all in the
 //   link, 1398's eight (10512, unit 161's, the last) and 2282's five (10478, unit 282's, the last);
 // - comum::IEventosLog's members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
@@ -43,12 +42,6 @@ __attribute__((noinline)) int w111_gera(comum::EExtensaoArquivoResultado extensa
     return 5;
 }
 
-// stands for fns 1047 and 1127
-__attribute__((noinline)) int w111_relatorio(comum::IEventosLog& log, comum::ERelatoriosUE relatorio, comum::ERelatoriosUE outro)
-{
-    return static_cast<int>(log.ConverteERelatoriosUE(relatorio).size() + log.ConverteERelatoriosUE(outro).size());
-}
-
 // stands for fns 7160, 12134 and 11869 (11921, 11849 and 11911 are in the link)
 __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEventosLog& outro)
 {
@@ -76,7 +69,6 @@ __attribute__((noinline)) int w111_informacao(const ecourna::app::dados::CParame
 
 int (*volatile w111_sink_copia)(comum::EExtensaoArquivoResultado, comum::EExtensaoArquivoResultado);
 int (*volatile w111_sink_gera)(comum::EExtensaoArquivoResultado, uebyte, uebyte);
-int (*volatile w111_sink_relatorio)(comum::IEventosLog&, comum::ERelatoriosUE, comum::ERelatoriosUE);
 int (*volatile w111_sink_informacao)(const ecourna::app::dados::CParametrosUrna&);
 int (*volatile w111_sink_textos)(comum::IEventosLog&, comum::IEventosLog&);
 
@@ -85,7 +77,6 @@ struct SW111Roots {
     {
         w111_sink_copia = w111_copia;
         w111_sink_gera = w111_gera;
-        w111_sink_relatorio = w111_relatorio;
         w111_sink_informacao = w111_informacao;
         w111_sink_textos = w111_textos;
     }

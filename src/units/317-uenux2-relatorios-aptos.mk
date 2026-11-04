@@ -1,14 +1,15 @@
 # uenux2: the reports' lines of the voters able to vote and the voters' list report. comum::CEleitoresAptos in
 # src/app/comum/relatorios/celeitoresaptos.{h,cpp}; api::CReport in src/api/gui/reports/creport.{h,cpp} (creport.cpp
-# was a stub-only file); the voters' list in src/app/comum/relatorios/cgeradorrellistaeleitores.{h,cpp} (a stub-only
+# was a stub-only file) and creportprinter.cpp (Imprime with DoPrintJob; unit 325 adds that file, below); the voters'
+# list in src/app/comum/relatorios/cgeradorrellistaeleitores.{h,cpp} (a stub-only
 # file until now), whose one user is vota::CImpressaoListaEleitores::StartState (target fn 11908), unit 176's, written
 # with it. Paths relative to src/uenux2. Unit 287's CGeradorRelVersaoPacoteDados::ImprimeTituloJE (11223) is written
 # with this unit in that unit's file, over CEleitores::QuantidadeAptos returning comum::SQtdeAptos (unit 110's
 # celeitores.h, 2823; the RTTI of four std::function<comum::SQtdeAptos()> whose call operator is 2881 says so).
 #
 # Matched: CEleitoresAptos's constructor (1922) and Formata (1921); the call operator four lambdas share (2881; our
-# link's two, ImprimeTituloJE's and MontaCabecalho's, give one body, and the match's name is ImprimeTituloJE's,
-# binaryen's pick of the first in link order) and the __func slots of ImprimeTituloJE's lambda (11217, 11218, 11219,
+# link's such lambdas give one body, and the match's name is binaryen's pick of the first in link order: ImprimeTituloJE's
+# at first, vota::CRelVotaUtil::CriaCabecalho's since unit 325 wrote it in crelvotautil.cpp, whose object links ahead) and the __func slots of ImprimeTituloJE's lambda (11217, 11218, 11219,
 # 11221) and of MontaCabecalho's (11229 to 11232); 11223; CReport's constructor (2259); DoPrintJob's lambda's slots
 # 10882, 10883, 10885 and 10886; CabecalhoEleitores (11234). Scores before steps 7 to 9 (pnpm wasm score against this
 # link's names.tsv): 1922 0 over 39 rows and 2259 0 over 27 (byte-exact), 1921 27 over 592, 11223 81 over 945, 11234 13
@@ -33,10 +34,10 @@
 #   defined out of line in md/eleitor/celeitor.cpp (binaryen inlines its two-instruction body at every call: names.tsv
 #   holds no TemBiometria) 11233 scored 40 over 564, all operand-only, and steps 7 to 9 matched it with no row of the
 #   base leaving match. celeitor.{h,cpp} is another stage's claim for that same change, so 11233 waits for it.
-# - 10884, DoPrintJob's lambda's call operator: the target calls 5486, CReport::ImprimePartes, which clang inlines into
-#   it here (24 rows inserted); 5486 has no body of ours. Not explained. 5486's other target caller is fn 3654 (the
-#   records creport.cpp:31 and :37 of api::CScopedReportFile, not written); a body clang sees in the lambda's TU is
-#   inlined whatever its callers (a reading), so the target's may be defined in another TU.
+# - 10884, DoPrintJob's lambda's call operator, matched since unit 325: the target calls 5486, CReport::ImprimePartes,
+#   which clang inlined into it here (24 rows inserted) while both were in creport.cpp. With DoPrintJob in another TU
+#   (creportprinter.cpp, below) it stays a call, and 10884 scores 0 over 5 rows and 5486 (in creport.cpp) 0 over 27,
+#   byte-exact, on that whole link (pnpm wasm score).
 #
 # Evidence and choices:
 # - CEleitoresAptos (no record, slot or RTTI names the class or its members; celeitoresaptos.h has the reading): the six
@@ -62,9 +63,19 @@
 #   free function of comum in cgeradorrelversaopacotedados.cpp (external: clang keeps it out of line) and its place
 #   below ImprimeTituloJE are chosen; that place is measured: above its caller 11223 scored 377 over 966 rows (21
 #   inserted, 21 deleted, local numbers), below it 81 over 945, operand-only (docs/reference/facts/codegen.md C4).
-# - CReport (creport.h has the class's evidence): the constructor in creport.cpp, below the records' lines 31 and 37
-#   (api::CScopedReportFile's, held by 3654, not written), which stay blank; Imprime and ImprimePartes after it, their
-#   names chosen. DoPrintJob is the RTTI's (`api::(anonymous namespace)::DoPrintJob(api::CReport const&, std::string
+# - CReport (creport.h has the class's evidence): the constructor and ImprimePartes in creport.cpp, below the records'
+#   lines 31 and 37 (api::CScopedReportFile's constructor and destructor, unit 325's), their names chosen; Imprime with
+#   DoPrintJob in creportprinter.cpp, with unit 325's GeraArquivoRelatorio (fn 3654). The split is measured: the target
+#   calls 5486 out of line from 10884 and 3654, and clang inlines it into both when one TU holds them (wasm-objdump -d
+#   of creport.cpp's object); and 3654, which holds CScopedReportFile's constructor and destructor behind frames of
+#   their own, scored 51 over 184 rows (3 inserted, 5 deleted: the destructor reads the member through the frame where
+#   the target keeps `this` in a local) in creport.cpp beside them, 65 over 182 above them there, and 12 over 181,
+#   operand-only, in a TU of its own. DoPrintJob's lambda's vtable and typeinfos (@1583752 to @1583816) run on from
+#   creport.cpp's records to iimpressorarelatorios.cpp's, so their TU is creport.cpp's or one that links right after
+#   it with no data before them. Written: one file after creport.cpp in the list for DoPrintJob, Imprime and 3654, its
+#   name (creportprinter.cpp, which sorts after creport.cpp) chosen; the other layout tried, 3654 and ImprimePartes each
+#   in a file of their own with DoPrintJob in creport.cpp, gave 3654 the same 12 over 181 (5486 alone in a file of its
+#   own had scored 0 over 27 and 10884 0 over 5 before), so two new files against one decided it. DoPrintJob is the RTTI's (`api::(anonymous namespace)::DoPrintJob(api::CReport const&, std::string
 #   const&, std::string const&)`); in 11908 its frame copies the two strings for CSubReport's by-value parameters and
 #   frees the copies before CLp::Imprime, so the sub-report is a named local.
 # - The voters' list (cgeradorrellistaeleitores.{h,cpp}): MontaCabecalho is the lambda's RTTI's; SituacaoEleitor the
@@ -84,11 +95,13 @@
 #   legend's separator is unit 168's vota::AdicionaSeparador (fn 1387), whose namespace is that unit's choice, called
 #   from this comum file.
 #
-# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's callers 3871, 5977, 12105 and 12110 (11223
-# and 11908 are in the link) and for 2259's callers 7787, 11943, 11946 and 12105 (11908 is in the link). Unit 57's and
+# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's callers 3871, 12105 and 12110 (11223, 11908
+# and unit 325's 5977 are in the link), for 2259's callers 7787, 11943, 11946 and 12105 (11908 is in the link) and,
+# since unit 325, for 3654's callers 11943, 11946 and 12105. Unit 57's and
 # unit 219's roots, unit 77's CParteEleitores stand-in and unit 280's w280_cpe, which stood for 11908 or 11223 alone,
 # went with this unit, and unit 176's and 287's pending files with their last traps (11908, 11223).
-RELATORIOS_APTOS_SRCS := src/api/gui/reports/creport.cpp src/app/comum/relatorios/celeitoresaptos.cpp \
+RELATORIOS_APTOS_SRCS := src/api/gui/reports/creport.cpp src/api/gui/reports/creportprinter.cpp \
+    src/app/comum/relatorios/celeitoresaptos.cpp \
     src/app/comum/relatorios/cgeradorrellistaeleitores.cpp
 UENUX2_SRCS += $(RELATORIOS_APTOS_SRCS)
 # cgeradorrellistaeleitores.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost's headers, and

@@ -504,6 +504,11 @@ void CLogVota::LogaEleitorSuspensoSemVoto()
     loga("Eleitor foi suspenso e não confirmou nenhum voto");
 }
 
+void CLogVota::LogaGerandoRelatorio(comum::ERelatoriosUE relatorio, bool termino)
+{
+    loga(std::format("Gerando relatório [{}] [{}]", ConverteERelatoriosUE(relatorio), ConverteInicioTermino(termino)));
+}
+
 void CLogVota::LogaAlertaVota(const std::string& mensagem)
 {
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);

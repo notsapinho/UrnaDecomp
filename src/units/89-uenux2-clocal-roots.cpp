@@ -50,8 +50,8 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 2725, 4160, 5579, 5977, 6599, 7787, 10500, 11223, 11242, 11908, 12098, 12105, 12110,
-// 12134 (5584, CRelUtil's ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798,
+// Stands for fn 401's callers: 2725, 4160, 6599, 7787, 10500, 11223, 11242, 11908, 12098, 12105, 12110,
+// 12134 (5579 and 5977, unit 325's, 5584, CRelUtil's ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798,
 // CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's IPedeTituloMesario::ProcessInput, 11188 and 1543, unit 123's,
 // 5591, unit 296's, 5604, unit 155's written Gera, 10689, CEscolheOpcao::ProcessInput, 10699, 10700 and 10701, unit
 // 277's texts, 11902, unit 176's, 4161, vota::AdicionaLocal in unit 110's ctelasvota.cpp, and 12071, unit 104's

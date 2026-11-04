@@ -8,11 +8,13 @@ extern "C" int w1922(int, int) __asm__("_ZN5comum15CEleitoresAptosC1ENSt3__28fun
 extern "C" void w1921(int, int) __asm__("_ZNK5comum15CEleitoresAptos7FormataEv");
 extern "C" int w2259(int, int) __asm__(
     "_ZN3api7CReportC1ENSt3__26vectorINS1_10shared_ptrINS_11IReportPartEEENS1_9allocatorIS5_EEEE");
+extern "C" void w3654(int, int) __asm__(
+    "_ZN3api20GeraArquivoRelatorioERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS_7CReportE");
 
 namespace {
 
-// Stands for fns 3871, 5977, 12105 and 12110, the target callers of 1922 and 1921 not written; fns 11223 and 11908
-// are in the link.
+// Stands for fns 3871, 12105 and 12110, the target callers of 1922 and 1921 not written; fns 11223, 11908 and 5977
+// (unit 325's) are in the link.
 __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* funcao)
 {
     w1921(reinterpret_cast<int>(texto), w1922(reinterpret_cast<int>(aptos), reinterpret_cast<int>(funcao) + 4));
@@ -28,6 +30,15 @@ __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
     return relatorios[3] + relatorios[15];
 }
 
+// Stands for fns 11943, 11946 and 12105, the target callers of api::GeraArquivoRelatorio (fn 3654), not written. The
+// first argument is the std::string the function takes by value, the second the report.
+__attribute__((noinline)) int ArquivosRelatorios(char* arquivos, char* relatorio)
+{
+    w3654(reinterpret_cast<int>(arquivos), reinterpret_cast<int>(relatorio));
+    w3654(reinterpret_cast<int>(arquivos) + 12, reinterpret_cast<int>(relatorio));
+    return arquivos[11] + arquivos[23];
+}
+
 const void* volatile relatorios_aptos_sink;
 
 struct SRelatoriosAptosRoots {
@@ -35,6 +46,7 @@ struct SRelatoriosAptosRoots {
     {
         relatorios_aptos_sink = reinterpret_cast<const void*>(&LinhasAptos);
         relatorios_aptos_sink = reinterpret_cast<const void*>(&Relatorios);
+        relatorios_aptos_sink = reinterpret_cast<const void*>(&ArquivosRelatorios);
     }
 } relatorios_aptos_roots;
 

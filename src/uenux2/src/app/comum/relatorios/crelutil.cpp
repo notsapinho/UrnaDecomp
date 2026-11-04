@@ -19,6 +19,7 @@
 #include "api/gui/cpaperformbuilder.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/cdatetime.h"
+#include "api/util/cstringutils.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/clocal.h"
@@ -35,7 +36,7 @@
 
 namespace comum {
 
-// (original lines 38-50: content not recovered)
+// (original lines 39-50: content not recovered)
 #line 51
 namespace {
 
@@ -258,8 +259,29 @@ void CRelUtil::ImprimeSeparadorFase(api::CPaperFormBuilder& builder, const EUrna
     builder.AddTextField(separador, static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_CENTRO);
 }
 
-// (original lines 348-402: content not recovered)
-#line 403
+// (original lines 348-381: content not recovered)
+#line 382
+std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormRodapeZeresima(
+    const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,
+    const md::estadoaplicacao::CDadoCorrespondencia& correspondencia)
+{
+    api::CPaperFormBuilder builder;
+    builder.AddTextField(separador, static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+    builder.AddTextField("Código de identificação da carga", static_cast<api::IPaper::EStyle>(1),
+                         api::ALINHAMENTO_CENTRO);
+    builder.AddTextField(GetIDCargaFormatado(correspondencia.GetCodigoCarga()), static_cast<api::IPaper::EStyle>(1),
+                         api::ALINHAMENTO_CENTRO);
+    builder.AddNewLine(1);
+    builder.AddTextField("Ver: " + api::CStringUtils::GetVersionNumber("10.23.0.1 - DESENVOLVIMENTO"),
+                         static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+    ImprimeTitulos(builder, rodape);
+    builder.AddNewLine(20);
+    builder.AddCut();
+    return builder.Build();
+}
+
 void CRelUtil::ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias)
 {
     builder.AddTextField(std::format("-------------- {:02} / {:02} ---------------", via, totalVias),

@@ -27,16 +27,17 @@
 //   11214, 3696, 942, 2786, 3689, 1543 and 11233 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
-//   5579, 11256, 12105, 12110): 11256 is in the link, and w123_idcarga stands for the other three and calls it twice.
+//   5579, 11256, 12105, 12110): 11256 and 5579 (unit 325's) are in the link, and w123_idcarga stands for the other
+//   two and calls it twice.
 // - CRelUtil::IncluiCabecalhoEleicoesMZS, fn 1543, has six callers in the target (awk -F'\t' '$2==1543'
 //   ledger/callgraph.tsv: 5977, 11223, 11902, 11908, 12105, 12110); 11902 (unit 176's), 11223 (unit 287's) and 11908
-//   (unit 176's) are in the link, with one call each, and w123_cabecalho stands for the other three and calls it twice,
-//   with the header types and the flag varied as those callers vary them (0 or 2 and 1, 11223 and 11902; 0 and 0, 5977,
+//   (unit 176's) are in the link, with one call each, as is 5977 (unit 325's), and w123_cabecalho stands for 12105 and
+//   12110 and calls it twice, with the header types and the flag varied as those callers vary them (0 or 2 and 1, 11223 and 11902; 0 and 0, 5977,
 //   11908, 12110; 0 or 1 and 0, 12105), so that dead-argument elimination folds none.
 // - CRelUtil::ImprimeResumoCorrespondencia, fn 1541, has the same six callers as 1543 (awk -F'\t' '$2==1541'
 //   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105);
-//   11902, 11223 and 11908 are in the link, and w123_rodape stands for the others (5977, 12105 and 12110 for 1541,
-//   12105 for 2785) and calls each twice.
+//   11902, 11223, 11908 and 5977 (unit 325's) are in the link, and w123_rodape stands for the others (12105 and 12110 for
+//   1541, 12105 for 2785) and calls each twice.
 // - CRelUtil::FormTituloPartido, which the target holds inlined by binaryen in fn 11946 (vota::CGeraZeresimaBase's slot
 //   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
 //   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181
