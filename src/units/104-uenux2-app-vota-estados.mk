@@ -453,6 +453,23 @@
 # - The summary's label "resumo da zerésima" is the target's tail of 7787's "[2] para imprimir somente o resumo da
 #   zerésima" (@227531, +28); the scan places our literal at that tail (`address string`).
 # - Both files reach Boost through cconfiguracaoeleicao.h, as creimprimindozeresima.cpp does (the lines below).
+#
+# vota::CMenuVisualizarCandidatos::StartState (11881, record cmenuvisualizarcandidatos.cpp:55, the
+# CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and does not match: 115 over
+# 1088 rows in the plain link, 105 operand-only (its callees AddInputMenuField 3675 and AddItem 1693, written in unit 84
+# and not matched, have no symbol line, and the .bss statics of the two GetInst it holds have none either). Its two
+# other rows: the result's address, which the target sets in a local before the inlined menu screen's prologue and ours
+# computes at its first store (one local fewer), not explained; the CONFIRMA case written before CORRIGE gives the
+# target's block order (the other order, 129 over 1094). It holds, in this order: the log line, the GetInst of
+# CMenuFiltrarCandidatosPorCargo, CMenuFiltrarCandidatosPorPartido (both inlined by binaryen, written in their files
+# cmenufiltrarcandidatosporcargo.cpp and cmenufiltrarcandidatosporpartido.cpp, which the StartState records name; their
+# headers' paths are chosen) and PorNumero (5954), three pairs of those states that it copies, as by-value arguments (a
+# reading), for vota::TelaMenuVisualizacaoCandidatos (ctelasvota.cpp, inlined), and the menu's loop: CONFIRMA takes the
+# chosen item's pair from its std::any and chains the next states (its own, then the pair's first's, then the second's,
+# CVisualizarCandidatos), CORRIGE goes back to CMaisInformacoes. The pairs' names, the locals and the case spelling are
+# chosen. The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp; their
+# statics' exit destructors (11885, 11886 PorPartido's, 11889, 11890 PorCargo's) differ: only 11881 reads the objects.
+# The two files sit in the list in name order beside the other auxiliares/ files, a choice not measured.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -465,7 +482,9 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/ciniciozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp \
+    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
+    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp \

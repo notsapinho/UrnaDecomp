@@ -12,6 +12,7 @@
 #include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cinputmenufield.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldmultiline.h"
@@ -31,7 +32,7 @@
 
 namespace vota {
 
-// (original lines 34-290: content not recovered)
+// (original lines 35-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -649,6 +650,22 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaErroTesteTeclado()
     builder.AddTextField(TEXTO_DEVIDAS_PROVIDENCIAS, api::SPoint(320, 260), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
                          static_cast<api::TColor>(2), static_cast<api::TColor>(1));
     return GetFormulario(builder, "telaErroTesteTeclado");
+}
+
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMenuVisualizacaoCandidatos(
+    TOpcaoMenuCandidatos porCargo, TOpcaoMenuCandidatos porPartido, TOpcaoMenuCandidatos candidato)
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Visualização de candidatos", api::SPoint(320, 40), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const std::shared_ptr<api::CInputMenuField> menu =
+        api::AddInputMenuField(builder, api::SPoint(40, 85), FONTE_AGUARDE, "Selecione um filtro: ", 32767);
+    menu->AddItem("Por cargo").SetDado(porCargo);
+    menu->AddItem("Por partido").SetDado(porPartido);
+    menu->AddItem("Candidato específico").SetDado(candidato);
+    builder.AddLabeledInputControl({{'C', "Executar opção"}, {'D', "Retornar"}}, api::CApplication::s_areaTela, false);
+    return {GetFormularioInterativo(builder, "telaMenuVisualizacaoCandidatos"), menu};
 }
 
 } // namespace vota
