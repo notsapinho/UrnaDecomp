@@ -23,11 +23,68 @@
 # - the four pair classes' statics' exit destructors (10615 and 10614, 10613 and 10612, 10611 and 10610, 10609 and
 #   10608) and 3885, binaryen's body of the three Confirma pointers' destructors (10615, 10611 and unit 243's 10622, a
 #   thunk into it, which matches with them).
-# Pending (283-uenux2-app-vota-operador-justificativa-pending.cpp says what each waits for):
-# CPedeAnoNascimento::ProcessInput (10590).
-# CEleitorMenor16Anos's and CAnoInformadoInvalido's GetInst and constructors are written and unreferenced: in the target
-# only 10590 holds them, inlined, so they are compared with nothing, and their statics' exit destructors (10600 and
-# 10599, 10603 and 10602) wait for 10590's match to name the objects.
+# - CPedeAnoNascimento::ProcessInput (10590, slot 7, in cpedeanonascimento.cpp after StartState), which holds
+#   CAnoInformadoInvalido's and CEleitorMenor16Anos's GetInst with their constructors (binaryen inlined each into its
+#   one caller), and their statics' exit destructors (10603 and 10602, 10600 and 10599), whose objects' names come from
+#   10590's votes; the notes below.
+# No member is pending: the -pending.cpp went with 10590's trap.
+#
+# vota::CPedeAnoNascimento::ProcessInput (10590). Evidence, the target's body (pnpm wasm fn):
+# - Read()'s result, less 5, goes through a br_table: 9 (api::INPUT_CONFIRMA) reads the year, 5 (INPUT_CORRIGE) logs
+#   "Mesário cancelou entrada dos dados" (severity 1) and goes to CPedeIdentidade (652), any other stays: a switch.
+# - CONFIRMA copies the text of the form's first entry (the vector at +72, at(0): its out_of_range throw is 234) into a
+#   std::string of the function's own 16-byte frame and acts only on 4 characters or more (i32.ge_u 4): it assigns it to
+#   CThreadOperador's string at +84 (the self-assignment test, fns 196 and 205), converts it with
+#   ecourna::api::util::CStringUtils::ToInt16 (3508) and subtracts it from CConfiguracaoEleicao's (187) 16-bit year at
+#   +48. The year is compared signed (i32.ge_s 1900; ueint16 is std::int16_t in uetypes.hpp), the age as a signed
+#   16-bit value (extend16_s, then > 0) and then unsigned against 15, which is clang's `< 16` once the age is known
+#   positive (a reading).
+# - Three outcomes, each a CLogVota member in a 16-byte frame of its own after GetInst (184), then the next state:
+#   below 1900 or not positive, "Ano de nascimento inválido" and CAnoInformadoInvalido; under 16, "Eleitor não tem
+#   idade mínima" and CEleitorMenor16Anos; else the justification and CJustificativaEfetuada::GetInst (2747, called).
+#   One store of m_pNextState (+4) follows the three.
+# - The justification, functions binaryen inlined into their one caller, each in a frame of its own:
+#   - vota::JustificaEleitor (16 B, iiniciajustificativa.cpp, unit 152): CJustificador::GetInst (1391), then
+#     GetIdentidadeEleitor (1535), whose result's string the target frees before it builds the key from it, so the
+#     source binds a const reference to the temporary's member, as written (the target reads freed memory there); the
+#     year is narrowed to Justifica's ueword (& 65535) after that call, inside this frame, so the parameter is the
+#     caller's ueint16; then the count at +54 of CAppInfo::GetVota() (261) incremented, SincronizaJustificativa, and
+#     SetRecebida(true) on 2747's result.
+#   - CJustificador::Justifica(const std::string&, ueword) (32 B, the key built and destroyed) and
+#     Justifica(const CNumeroInscricaoEleitoral&, ueword) (48 B, record cjustificador.cpp:55): Find, which stores the
+#     cursor when the título is there, then the throw 8800; else Add(key, CJustificadorDetalhe(ano)): the detail at
+#     +6, the pair built in place with 3743, and 5725.
+#   - CSincronizaVota::SincronizaJustificativa (176 B): VerificaUrnaDesligando inlined (the byte at 1832936, 1685), two
+#     contexts (676, kinds 2 and 4), SalvaVotaInterno (3790), SaveCurrentInternal, the signing of file 31 (1501, 1277,
+#     1007: csincronizavota.cpp's AssinaArquivo, clang-inlined), Sync (600, 620), GravaBancoDadosMI (4657),
+#     SalvaVotaExterno (3789), SincronizaAssinaturaVota (4687), Sync.
+#   - CJustificador::SaveCurrentInternal (80 B, record cjustificador.cpp:83): the map's size (+8), the cursor's node
+#     read once (a reference to *m_corrente; through m_corrente twice the body reloads +12 after the key's string
+#     copy), make_shared<CNumeroInscricaoEleitoral> of the key into a CRegistroIdentificacaoEleitor (1675), the
+#     CIdentificacaoJustificativa (1875) with TAno (2277) of the detail's year, then the servico's Salva.
+#   - comum::servico::CJustificadorServico::Salva (32 B): GetIdentificadorHabilitacao (2669) and GetNumero (1139) come
+#     before the DAO pointer is read, and the DAO's slot 7 result dies before the test that guards slot 3: Existe,
+#     taking the número and clang-inlined, is a reading of that order.
+# Measured (pnpm wasm score against 10590 on the whole link, after make -C src link-map):
+# - Salva and Existe defined in cjustificador.cpp above SaveCurrentInternal: 199 over 1839 rows, all operand-only. In
+#   cjustificadorservico.cpp, their class's file: 231 over 1845 (6 inserted, 6 deleted), the locals of the vector
+#   teardown inside both inlined constructors swapped. Replays of the link's own wasm-opt -Oz
+#   (docs/reference/facts/codegen.md C4) give the target's locals there in three orders that put Salva ahead of
+#   SaveCurrentInternal on the module, and not in that link's order: the place is measured, and binaryen's inlining
+#   order as its cause is a reading.
+# - Measured at that 231 state, each a scratch link with variant objects (workflow.md W13): JustificaEleitor's object
+#   (iiniciajustificativa.cpp.o) after cpedeanonascimento.cpp.o, 560 over 1863; CAnoInformadoInvalido's and
+#   CEleitorMenor16Anos's GetInst inline in their class, 646 over 1858; CThreadOperador's setter out of line in
+#   cthreadoperador.cpp, 240 over 1849; the next state in a local stored once, 238 over 1849. The same wasm at that
+#   state: GetInst defined above the constructor in canoinformadoinvalido.cpp and celeitormenor16anos.cpp.
+# Chosen: the three CLogVota members' names (from their messages) and place; the inline
+#   CThreadOperador::SetAnoNascimentoDigitado and CEstadoGeralVota::IncrementaQtdJustificativa and their names;
+#   JustificaEleitor's name, its being a free function and its file; the overload of Justifica over std::string (a
+#   function of its own, a reading of its frame), its name and signature; the names SincronizaJustificativa, Salva and
+#   Existe; the 8800 and 8801 enumerators' names; the switch's form; ueint16, ToInt16's type, for the year and the age
+#   (their signedness is the evidence above, the spelling a choice); every local's name.
+# 5725 differs (unit 113's fragment: a flag of cjustificador.cpp's), and its name, which 10590's call needs, rests on a
+# callers+content hand line in splat/symbol_addrs.txt, whose comment gives its evidence.
 #
 # Evidence, each class's header says the rest (RTTI, vtable, statics, the function that holds GetInst inlined):
 # - The pairs' constructors pass IConfirmaJustificativa's (3625) the literals 10635 loads, "está impedido de votar nesta
@@ -46,8 +103,7 @@
 #   neighbours are unit 243's and unit 142's justificativa/ classes'), the forms' helper names, the lines, and every
 #   member and local name.
 #
-# Roots (283-uenux2-app-vota-operador-justificativa-roots.cpp): CEleitorMenor16Anos's and CAnoInformadoInvalido's
-# vtables, whose one vptr store is in 10590 (pending), and a stand-in for fn 7787 (not written), the second target
+# Roots (283-uenux2-app-vota-operador-justificativa-roots.cpp): a stand-in for fn 7787 (not written), the second target
 # caller of std::set<ecourna::app::dados::ETipoIdentificadorEleitor>'s range insert (6733), which 10635 calls: with
 # 10635 as its one caller, binaryen inlined it there and 10635 differed by that body. Unit 104's fragment has the rest
 # of 6733, which matches from celeitorencontrado.cpp.o, built without strict aliasing (src/Makefile's
@@ -60,9 +116,7 @@ APP_VOTA_OPERADOR_JUSTIFICATIVA_SRCS := src/app/vota/operador/justificativa/cano
     src/app/vota/operador/justificativa/ciniciajustificativatransito.cpp \
     src/app/vota/operador/justificativa/cpedeanonascimento.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_JUSTIFICATIVA_SRCS)
-APP_VOTA_OPERADOR_JUSTIFICATIVA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/283-uenux2-app-vota-operador-justificativa-pending.o: $(ROOT)/src/units/283-uenux2-app-vota-operador-justificativa-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/283-uenux2-app-vota-operador-justificativa.mk $(APP_VOTA_OPERADOR_JUSTIFICATIVA_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/operador/justificativa/cpedeanonascimento.cpp) -c src/units/283-uenux2-app-vota-operador-justificativa-pending.cpp -o $(R)
 $(ROOT)/$(APP)/283-uenux2-app-vota-operador-justificativa-roots.o: $(ROOT)/src/units/283-uenux2-app-vota-operador-justificativa-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/283-uenux2-app-vota-operador-justificativa.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/283-uenux2-app-vota-operador-justificativa-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/283-uenux2-app-vota-operador-justificativa-pending.o $(APP)/283-uenux2-app-vota-operador-justificativa-roots.o
+override EXTRA_OBJS += $(APP)/283-uenux2-app-vota-operador-justificativa-roots.o
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/justificativa/cpedeanonascimento.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)

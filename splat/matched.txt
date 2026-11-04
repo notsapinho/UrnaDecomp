@@ -12478,3 +12478,8 @@
 11231 _ZNKSt3__210__function6__funcIZN5comum12_GLOBAL__N_114MontaCabecalhoEvE3$_0FNS2_10SQtdeAptosEvEE7__cloneEPNS0_6__baseIS6_EE
 11232 _ZNKSt3__210__function6__funcIZN5comum12_GLOBAL__N_114MontaCabecalhoEvE3$_0FNS2_10SQtdeAptosEvEE7__cloneEv
 11234 _ZN5comum12_GLOBAL__N_118CabecalhoEleitoresEv
+10599 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/justificativa/celeitormenor16anos.cpp.o
+10600 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/justificativa/celeitormenor16anos.cpp.o
+10602 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/justificativa/canoinformadoinvalido.cpp.o
+10603 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/justificativa/canoinformadoinvalido.cpp.o
+10590 _ZN4vota18CPedeAnoNascimento12ProcessInputEv

@@ -101,7 +101,7 @@
 # and 10595 (the std::mutex at 1905928), match: the statics are defined before StartState, s_inst first, since 10597 and
 # 10595 lie above StartState (10594) in use band 1. Its callers are vota::IIniciaJustificativa::StartState (10587, unit
 # 152), which calls it twice and clears +28 through the first result with SetRecebida(false), a setter added to
-# cjustificativaefetuada.h, and fn 10590 (not written). Chosen: the helper's name and linkage, SetRecebida's name and its
+# cjustificativaefetuada.h, and fn 10590 (unit 283). Chosen: the helper's name and linkage, SetRecebida's name and its
 # being a setter (a public member is the other form, not tried), the statics' names.
 #
 # Two more slots match, written in their classes' files (scores from pnpm wasm score before steps 7 to 9):

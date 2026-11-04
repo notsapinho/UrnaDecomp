@@ -326,6 +326,16 @@ private:
     // (fn 1398), the same body, which the target keeps out of line (8 callers) where 10706 holds 433 inline. The call
     // through a member and its name are chosen (src/units/277-uenux2-app-vota-operador-outrasopcoes.mk has the forms).
     void LogaAlertaVota(const std::string& mensagem);
+
+public:
+    // LogaAnoNascimentoInvalido, LogaEleitorSemIdadeMinima and LogaMesarioCancelouEntradaDados
+    // (vota::CPedeAnoNascimento::ProcessInput, fn 10590, after GetInst: "Ano de nascimento inválido", "Eleitor não tem
+    // idade mínima", "Mesário cancelou entrada dos dados") are LogaAnoNascimentoIgualCadastro's shape: the text's
+    // std::string in a 16-byte frame of its own and api::CLoga::loga (fn 433) on +4, severity 2, 2 and 1. Their names,
+    // from the messages, and their place here and at the end of clogvota.cpp are chosen.
+    void LogaAnoNascimentoInvalido();
+    void LogaEleitorSemIdadeMinima();
+    void LogaMesarioCancelouEntradaDados();
 };
 
 } // namespace vota

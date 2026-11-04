@@ -1,6 +1,7 @@
 #pragma once
 
 #include "app/comum/cappstate.h"
+#include "ecourna/api/uetypes.hpp"
 
 namespace vota {
 
@@ -25,5 +26,11 @@ public:
 protected:
     IConfirmaJustificativa* m_confirma;
 };
+
+// No target index: the 16-byte frame vota::CPedeAnoNascimento::ProcessInput (fn 10590) opens on its way to
+// CJustificativaEfetuada, a function binaryen inlined into its one caller. It justifies the voter whose identity was
+// typed and saves the justification; src/units/283-uenux2-app-vota-operador-justificativa.mk has the evidence for
+// its body. That it is a free function (it reads no class state), its name and its file are chosen.
+void JustificaEleitor(ueint16 ano);
 
 } // namespace vota

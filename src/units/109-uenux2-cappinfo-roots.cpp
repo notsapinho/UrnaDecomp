@@ -30,8 +30,8 @@ namespace {
 const void* volatile cappinfo_sink;
 
 // Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898, unit 110's 2266,
-// unit 104's 10635 and unit 277's 10710 are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160, 7174, 7787, 10451,
-// 10590, 11242, 12098, 12105, 12110, 12134.
+// unit 104's 10635, unit 277's 10710 and unit 283's 10590 are linked, and 491): 2725, 3059, 4160, 5382, 6737, 7160,
+// 7174, 7787, 10451, 11242, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
 // Stands for fn 903's caller 7160 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566, unit 104's 12082 and
 // 12081, unit 277's 10710 and unit 110's 13023, CTelasVota::GetTelaDestinoBUs's lambda, are linked).
@@ -58,9 +58,8 @@ __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }
 // is a second caller of the constructor, and none is written.
 __attribute__((noinline)) void ConstroiPartidos(int a) { w3751(a + 4); }
 __attribute__((noinline)) void ConstroiFotos(int a) { w3756(a + 8); }
-// Stands for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) callers 7174 and 10590, which call both, as
-// 491 (in the link) does: a second call site of each, which binaryen needs to keep them out of line (6039 is their
-// merge).
+// Stands for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) caller 7174, which calls both, as 491 and
+// 10590 (in the link, units 205 and 283) do: a call site of each for it, beside theirs (6039 is their merge).
 __attribute__((noinline)) void SalvaVotas(int a) { w3790(a); w3789(a + 16); }
 
 struct SCAppInfoRoots {

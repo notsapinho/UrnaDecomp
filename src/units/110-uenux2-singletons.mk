@@ -240,7 +240,7 @@
 #   (5773, 5772, 5771, 5770, 5767 in link order) allows. The roots' LeEstaticos stands for its callers 6734 and 7787.
 # - Not written. CompleteLoad (6734, records 205, 219, 238) copies an md::CEleitor through fn 946; it calls 5772, 2543
 #   (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763, 3765,
-#   5723, 5725, 5763 and 5766, none written.
+#   5723, 5763 and 5766, none written, and 5725 (unit 113's api::CDataMap<...>::Add, written).
 #   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
 #   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
 #
