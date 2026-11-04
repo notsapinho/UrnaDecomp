@@ -32,6 +32,9 @@ public:
     CDedo(TipoDedo tipo, uedword quantidadeMinucias, const std::vector<api::SXYT>& minucias);
 
     TipoDedo GetTipo() const { return m_tipo; }
+    // The minutiae, which vota::CControlaReconhecimento::GetMinuciasDedoCorrente copies for target fn 10465 (the
+    // vector's copy constructor inlined there); its name and its being inline are chosen.
+    const std::vector<api::SXYT>& GetMinucias() const { return m_minucias; }
 
 private:
     TipoDedo m_tipo;

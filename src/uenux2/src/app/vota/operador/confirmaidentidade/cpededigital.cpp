@@ -1,24 +1,34 @@
 // vota::CPedeDigital (/home/rubio/tse/uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp). The
 // reconstruction's note, not TSE's text. The file's records are StartState's (lines 115, 120, 125), FinishState's (131,
-// 132), ProcessTick's (162 to 164) and three private members' (234, 262, 279): StartState, FinishState and
-// ObtemEstadoPosReconhecimentoBiometrico are written at theirs, and the other record lines stay blank. The functions
-// with no record (the form helpers, the constructor, GetInst and the statics, the destructor, ProcessInput) take lines
-// of choice, in the order of their use bands (src/units/282-uenux2-confirmaidentidade-estados.mk).
+// 132), ProcessTick's (162 to 164) and three private members' (234, 262, 279), each written at its record. The
+// functions with no record (the form helpers, the constructor, GetInst and the statics, CalculaEntropia, the
+// destructor, ProcessInput, PararTicks) take lines of choice, in the order of their use bands where they have one
+// (src/units/282-uenux2-confirmaidentidade-estados.mk).
 #include "app/vota/operador/confirmaidentidade/cpededigital.h"
 
+#include <cmath>
+#include <map>
+
 #include "api/gui/capplication.h"
+#include "api/gui/cbmpconversor.h"
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "api/hwil/ifingerdetection.h"
+#include "api/hwil/ifingermatcher.h"
 #include "api/hwil/ifingerscanner.h"
+#include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/vota/comum/votadefs.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
 #include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.h"
+#include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecidaportempo.h"
 #include "app/vota/operador/confirmaidentidade/cdigitalreconhecida.h"
+#include "app/vota/operador/confirmaidentidade/cparametrosimagemdigital.h"
 #include "app/vota/operador/cthreadoperador.h"
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 
@@ -73,7 +83,21 @@ CPedeDigital& CPedeDigital::GetInst()
 std::unique_ptr<CPedeDigital> CPedeDigital::s_inst;
 std::mutex CPedeDigital::s_mutex;
 
-// (original lines 76-104: content not recovered)
+float CalculaEntropia(const api::TSharedImageVector& imagem)
+{
+    std::map<uebyte, int> ocorrencias;
+    for (const uebyte valor : *imagem) {
+        ++ocorrencias[valor];
+    }
+    float soma = 0;
+    for (const auto& [valor, quantidade] : ocorrencias) {
+        const float probabilidade = static_cast<float>(quantidade) / static_cast<int>(imagem->size());
+        soma += probabilidade * std::log2(probabilidade);
+    }
+    return -soma;
+}
+
+// (original lines 100-104: content not recovered)
 #line 105
 CPedeDigital::~CPedeDigital() = default;
 
@@ -115,7 +139,85 @@ void CPedeDigital::ProcessInput()
     }
 }
 
-// (original lines 145-231: content not recovered)
+// (original lines 145-147: content not recovered)
+#line 148
+void CPedeDigital::ProcessTick(uebyte tick)
+{
+    if (tick != m_tickLeitura && tick != m_tickTimeout && tick != m_tickVerificacao) {
+        return;
+    }
+    if ((CControlaReconhecimento::PrimeiraTentativa() && tick == m_tickLeitura) ||
+        (!CControlaReconhecimento::PrimeiraTentativa() && tick == m_tickTimeout)) {
+        PararTicks();
+        SetNextState(&CDigitalNaoReconhecidaPorTempo::GetInst());
+        return;
+    }
+    if (tick != m_tickVerificacao) {
+        return;
+    }
+    auto& detectorDedos = api::CPolySingleton<api::IFingerDetection>::instance();
+    auto& scannerDedos = api::CPolySingleton<api::IFingerScanner>::instance();
+    auto& urnaAtual = api::CPolySingleton<api::IUrna>::instance();
+
+    api::TSharedImageVector imagem;
+    float maiorEntropia = 0;
+    int amostras = 0;
+    while (amostras < 3) {
+        const api::TSharedImageVector captura = scannerDedos.Slot4();
+        if (captura->size() != static_cast<std::size_t>(scannerDedos.Slot0())) {
+            return;
+        }
+        if (urnaAtual.Modelo() == 2009 || urnaAtual.Modelo() == 2010 || urnaAtual.Modelo() == 2020 ||
+            urnaAtual.Modelo() == 2022) {
+            imagem = captura;
+            break;
+        }
+        const float entropia = CalculaEntropia(captura);
+        if (entropia > 4.0f) {
+            if (entropia > maiorEntropia) {
+                imagem = api::TSharedImageVector(captura);
+                maiorEntropia = entropia;
+            }
+            ++amostras;
+        } else {
+            return;
+        }
+    }
+    if (!detectorDedos.Slot2(imagem.get())) {
+        return;
+    }
+    m_formAguarde->Slot2();
+    CLogVota::GetInst().LogaDigitalCapturada(
+        CControlaReconhecimento::GetTentativa(),
+        comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetNumTentativasHabilitacao());
+    if (EhTreinamentoMesario()) {
+        const std::pair<bool, comum::TScoreHabilitacao> resultado = VerificaDigitalTreinamento();
+        ObtemEstadoPosReconhecimentoBiometrico(resultado.first);
+        CControlaReconhecimento::SetQualidadeCapturada(resultado.second);
+        return;
+    }
+    if (urnaAtual.Modelo() <= 2019) {
+        api::CBmpConversor::InvertColors(imagem->data(), scannerDedos.Slot2(), scannerDedos.Slot1());
+    }
+    api::CBmpConversor::VerticalFlip(imagem->data(), scannerDedos.Slot2(), scannerDedos.Slot1());
+    const std::vector<uebyte> wsq =
+        CConversorWsq::GetInst().ConverteParaWsq(*imagem, scannerDedos.Slot2(), scannerDedos.Slot1(), "");
+    const api::TSharedImageVector digital = std::make_shared<std::vector<uebyte>>(wsq.begin(), wsq.end());
+    CControlaReconhecimento::RegistraDigitalCapturada(*digital);
+    const std::pair<bool, comum::TScoreHabilitacao> resultado =
+        VerificaDigital(digital, scannerDedos.Slot2(), scannerDedos.Slot1());
+    ObtemEstadoPosReconhecimentoBiometrico(resultado.first);
+    CControlaReconhecimento::SetQualidadeCapturada(resultado.second);
+}
+
+void CPedeDigital::PararTicks()
+{
+    CThreadOperador::GetInst().StopTick(m_tickLeitura);
+    CThreadOperador::GetInst().StopTick(m_tickTimeout);
+    CThreadOperador::GetInst().StopTick(m_tickVerificacao);
+}
+
+// (original lines 224-231: content not recovered)
 #line 232
 void CPedeDigital::ObtemEstadoPosReconhecimentoBiometrico(const bool reconhecido)
 {
@@ -130,39 +232,36 @@ void CPedeDigital::ObtemEstadoPosReconhecimentoBiometrico(const bool reconhecido
     api::CSystem::Dorme(1000);
 }
 
+std::pair<bool, comum::TScoreHabilitacao> CPedeDigital::VerificaDigital(const api::TSharedImageVector& imagem,
+                                                                        const long largura, const long altura)
+{
+    std::vector<uebyte> modelo;
+    CParametrosImagemDigital::GetInst().ExtraiTemplate(*imagem, modelo);
+    PararTicks();
+    while (CControlaReconhecimento::GetIndiceDedo() != 4) {
+        const std::vector<api::SXYT> minucias = CControlaReconhecimento::GetMinuciasDedoCorrente();
 
+        // (original lines 254-261: content not recovered)
+#line 262
+        auto& matcher = api::CPolySingleton<api::IFingerMatcher>::instance();
+        if (matcher.Slot2(modelo, minucias, 20)) {
+            return {true, static_cast<comum::TScoreHabilitacao>(matcher.Slot4())};
+        }
+        CControlaReconhecimento::AvancaProximoDedo1x4();
+    }
+    return {false, 0};
+}
 
+// (original lines 271-275: content not recovered)
+#line 276
+std::pair<bool, comum::TScoreHabilitacao> CPedeDigital::VerificaDigitalTreinamento()
+{
+    PararTicks();
+    auto& matcher = api::CPolySingleton<api::IFingerMatcher>::instance();
+    const bool reconhecido = CControlaReconhecimento::DigitalReconhecidaTreinamento();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    matcher.Slot3(reconhecido, 20);
+    return {reconhecido, static_cast<comum::TScoreHabilitacao>(matcher.Slot4())};
+}
 
 } // namespace vota

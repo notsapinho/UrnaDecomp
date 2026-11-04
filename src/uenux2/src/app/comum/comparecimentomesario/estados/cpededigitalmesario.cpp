@@ -89,7 +89,7 @@ void CPedeDigitalMesario::StartState()
     GetControlador().StartTick(m_tickCaptura);
     GetControlador().StartTick(m_tickEspera);
     api::CPolySingleton<api::IFingerScanner>::instance().Slot3();
-    m_pNextState = this;
+    SetNextState(this);
 }
 
 // (original lines 113-114: content not recovered)

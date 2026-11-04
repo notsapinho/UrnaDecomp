@@ -14,8 +14,21 @@
 # So it has a file of its own here, named after the class.
 #
 # Its five target callers (fns 1256, 3614, 5372, 10316, 10465) drop its result, and the target keeps it all the same
-# (`()->(i32)`). Fn 1256 (CControlaReconhecimento::GetInst, unit 161) is in the link; 307-uenux2-cparametrosimagemdigital-roots.cpp
-# stands in for the other four and reads the result, so that binaryen keeps both the function and its result.
+# (`()->(i32)`). Fns 1256 (CControlaReconhecimento::GetInst, unit 161) and 10465 (unit 282) are in the link;
+# 307-uenux2-cparametrosimagemdigital-roots.cpp stands in for the other three and reads the result, so that binaryen
+# keeps both the function and its result.
+#
+# Also in this file, each matched (step 9): vota::CParametrosImagemDigital::ExtraiTemplate (fn 2224) and
+# vota::CConversorWsq, the 1-byte singleton of fn 2742 (its GetInst, a thunk into binaryen's shared body 2900, as our
+# link forms it too), with its statics' exit destructors (10521, s_mutex's; 10522, s_inst's) and its ConverteParaWsq,
+# whose body after binaryen's dead-argument elimination is 7-Zip's Xzs_Construct's (fn 1379, one body in our link too,
+# whose match line step 9 renamed to ours: our object links first). cparametrosimagemdigital.h says what each rests on
+# and what is chosen. CConversorWsq's GetInst and statics come first in the file: the target's .bss holds its mutex and
+# pointer right below CParametrosImagemDigital's, and band 1 links their exit destructors first (10522 and 10521 above
+# 10520 and 10519); the file's local destructor names moved with them (CParametrosImagemDigital's are now
+# __cxx_global_array_dtor.4 and .6, the match lines of 10520 and 10519 edited to them). Their callers that are not
+# written (2224's 3614, 5372 and 10316; 2742's 2725, 10316 and 10451; ConverteParaWsq's 10316 and 10451) have stand-ins
+# in the roots, since binaryen inlines a function its link calls once; they go when those callers are in the link.
 CPARAMETROSIMAGEMDIGITAL_SRCS := src/app/vota/operador/confirmaidentidade/cparametrosimagemdigital.cpp
 UENUX2_SRCS += $(CPARAMETROSIMAGEMDIGITAL_SRCS)
 # The roots declare what they call through an asm label, so they include no header; compiled with APP_CXXFLAGS.

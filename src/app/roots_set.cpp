@@ -22,3 +22,21 @@ void urna_insere_conjunto(std::set<std::string>& conjunto, const std::string& va
 {
     conjunto.insert(conjunto.end(), valor);
 }
+
+// libc++'s std::map<unsigned char, std::string> hinted insert, __tree::__emplace_hint_unique_key_args<unsigned char,
+// const pair&> (target fn 3266), which map's initializer-list constructor calls once per pair: its target callers are
+// vota::CDigitalReconhecida::ProcessInput (10481, the map of vota::CLogVota::LogaTipoHabilitacaoEleitor inlined there)
+// and 3076 (the cargos' map of images, :/resource/gifs/, 7787's callee, not reconstructed). The target's copy loads a
+// pointer again after a store, as this instance at UENUX2_CXXFLAGS does (2 over 101 rows, the calls), where
+// app/vota/log/clogvota.cpp's, with strict aliasing, does not (15 over 101, 5 rows deleted). Which uenux2 object gives
+// it is not identified (3076's, a reading, is not written); the instance goes once that object is. It brings
+// __tree::__find_equal<unsigned char> (3251), whose match line step 9 renamed to this instance, a twin of
+// md::CVotosCargos' map's, which links later. urna_insere_mapa_texto only instantiates: nothing calls it, and it leaves
+// the link.
+#include <map>
+
+void urna_insere_mapa_texto(std::map<unsigned char, std::string>& mapa,
+                            const std::pair<const unsigned char, std::string>& valor)
+{
+    mapa.insert(mapa.end(), valor);
+}

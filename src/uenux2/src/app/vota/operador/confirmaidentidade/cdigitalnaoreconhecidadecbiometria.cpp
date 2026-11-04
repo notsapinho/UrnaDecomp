@@ -81,11 +81,11 @@ void CDigitalNaoReconhecidaDecBiometria::ProcessInput()
 {
     switch (m_form->Read()) {
     case api::INPUT_CONFIRMA:
-        m_pNextState = &CVerificaDadoEleitor::GetInst();
+        SetNextState(&CVerificaDadoEleitor::GetInst());
         break;
     case api::INPUT_CORRIGE:
         CLogVota::GetInst().LogaHabilitacaoCanceladaReconhecimentoBiometrico();
-        m_pNextState = &CCancelaHabilitacaoEleitor::GetInst();
+        SetNextState(&CCancelaHabilitacaoEleitor::GetInst());
         break;
     default:
         break;

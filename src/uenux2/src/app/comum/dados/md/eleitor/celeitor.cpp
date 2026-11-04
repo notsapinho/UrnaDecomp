@@ -2,7 +2,8 @@
 // both call; ValidaCriacao's records (lines 103 and 107, column 15, and 113, column 19) place its throws. The
 // constructors have no record, so their lines are a choice, above the member they call, in the order the target's
 // indices give (docs/how-to-decompile.md step 3, "The order of two members"). GetOffsetBiometria (record line 79) has no
-// index: fn 1937 holds it behind a frame of its own (binaryen's inlining); its lines but the throw's are chosen.
+// index: fn 1937 holds it behind a frame of its own (binaryen's inlining); its lines but the throw's are chosen, and so
+// are GetDataNascimento's and TemBiometria's, out of line here for callers in other TUs (celeitor.h says why).
 #include "app/comum/dados/md/eleitor/celeitor.h"
 
 #include "app/comum/dados/euecomumdadoserror.h"
@@ -37,7 +38,12 @@ const std::string& CEleitor::GetDataNascimento() const
     return m_dataNascimento;
 }
 
-// (original lines 40-75: content not recovered)
+bool CEleitor::TemBiometria() const
+{
+    return m_offsetBiometria.has_value();
+}
+
+// (original lines 46-75: content not recovered)
 #line 76
 const CIndexer& CEleitor::GetOffsetBiometria() const
 {

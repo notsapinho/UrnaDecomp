@@ -10,8 +10,14 @@
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/ctextsource.h"
 #include "api/hwil/ifingermatcher.h"
+#include "api/ipc/cmessagequeue.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/log/clogvota.h"
+#include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
+#include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.h"
 
 namespace vota {
 
@@ -20,7 +26,7 @@ CDigitalReconhecida::~CDigitalReconhecida() = default;
 std::unique_ptr<CDigitalReconhecida> CDigitalReconhecida::s_inst;
 std::mutex CDigitalReconhecida::s_mutex;
 
-// (original lines 23-43: content not recovered)
+// (original lines 29-43: content not recovered)
 #line 44
 void CDigitalReconhecida::StartState()
 {
@@ -61,6 +67,20 @@ CDigitalReconhecida& CDigitalReconhecida::GetInst()
         s_inst.reset(new CDigitalReconhecida());
     }
     return *s_inst;
+}
+
+void CDigitalReconhecida::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CONFIRMA) {
+        if (IsAudioAtivado()) {
+            SetNextState(&CHabilitaAudioEleitor::GetInst());
+        } else {
+            CThreadEleitor::GetInst().GetMensagens().Post(1);
+            SetNextState(&CMostraEleitorVotando::GetInst());
+        }
+        impl::IInformacaoThreadOperador::GetInst().SetBiometriaEleitor();
+        CLogVota::GetInst().LogaTipoHabilitacaoEleitor(1);
+    }
 }
 
 } // namespace vota

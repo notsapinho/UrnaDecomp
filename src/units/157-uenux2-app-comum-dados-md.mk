@@ -80,6 +80,11 @@
 # md::CEleitorDecorator::GetAnoNascimento (5665), which needs the call binaryen inlines (unit 91's fragment has the
 # measurement); with it the string at +68 is named m_dataNascimento, the voter's date of birth fn 11411 passes the
 # constructor there (celeitor.h), a change of names only, and the constructors' parameter with it.
+# md::CEleitor::TemBiometria (no target index), out of line in celeitor.cpp after GetDataNascimento, for unit 239's
+# vota::CNomeEleitor::ProcessInput (10500), which tests the flag at +100 after a && with `i32.eqz`, the test of a call's
+# result, where the inline accessor gave `i32.const 1; i32.ne` (celeitor.h has the reading). Its other callers keep
+# their rows: 1937 (celeitordetalhe.cpp) read 184 over 2197, operand rows only, before and after, and matches; inside
+# celeitor.cpp clang inlines it into GetOffsetBiometria as before. Its line is a choice.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_MD157_SRCS := src/app/comum/md/ccabecalhoentidade.cpp \

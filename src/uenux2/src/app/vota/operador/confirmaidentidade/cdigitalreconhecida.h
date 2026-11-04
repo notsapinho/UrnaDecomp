@@ -17,8 +17,9 @@ namespace vota {
 
 // vota::CDigitalReconhecida (RTTI: si_class of comum::CAppState; vtable @1591640 [448, 765, 10482, 7480, 1661, 218,
 // 425, 10481, 425]): the operator is told that the voter's fingerprint was recognized. It overrides the destructors,
-// StartState (slot 2, fn 10482, record cdigitalreconhecida.cpp:47) and ProcessInput (slot 7, fn 10481, pending:
-// src/units/282-uenux2-confirmaidentidade-estados-pending.cpp says what it waits for). The destructor is out of line:
+// StartState (slot 2, fn 10482, record cdigitalreconhecida.cpp:47) and ProcessInput (slot 7, fn 10481, no record: its
+// line, after GetInst, is chosen; src/units/282-uenux2-confirmaidentidade-estados.mk has its forms). The destructor is
+// out of line:
 // slots 0 and 1 are fns 448 and 765, the bodies the states with two std::shared_ptr at +12 and +20 share. A singleton:
 // GetInst has no target function of its own, fn 5397 (vota::CPedeDigital::ObtemEstadoPosReconhecimentoBiometrico)
 // holds it inlined (the one store of the vptr, 1591648), with the 28-byte object kept in a static std::unique_ptr
