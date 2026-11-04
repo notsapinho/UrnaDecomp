@@ -1,5 +1,6 @@
 #pragma once
 
+#include <compare>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,14 @@ namespace comum::md {
 // members (protected in celeitor.h, a choice) and m_tipoIdentificador's name are chosen.
 class CEleitorDecorator : public CEleitor {
 public:
+    // comum::CEleitores::GetEleitoresEstaticos (target fn 5772) builds one per voter it reads: CEleitor's copy
+    // constructor (fn 946) on the voter, then the store of CEleitores's type at +100 into +104 through the pointer
+    // 946 returns. That store through the returned `this` is the sign of an out-of-line constructor binaryen inlined
+    // into its one caller (docs/how-to-decompile.md step 3): inline here, the measured store goes through the
+    // caller's frame address instead (5772 one row off). So it is defined in celeitordecorator.cpp, a reading; the
+    // parameters' names and order are chosen.
+    CEleitorDecorator(const CEleitor& eleitor, ecourna::app::dados::ETipoIdentificadorEleitor tipoIdentificador);
+
     CEleitorIdentidade GetIdentidadePorTipo(ecourna::app::dados::ETipoIdentificadorEleitor tipo) const;
 
     int GetSequencial() const { return m_sequencial; }
@@ -49,6 +58,13 @@ public:
     // callers keep the call, which their file (celeitores.cpp) would inline, so it is out of line in another TU (a
     // reading); this file, the name and the parameters' names and types are chosen.
     ETipoAbrangencia GetAbrangencia(const std::string& uf, uedword municipio) const;
+    // fn 456, the order GetEleitoresEstaticos's std::sort calls (its five callers are the sort's helpers, 945, 3761,
+    // 5755, 5756 and 5769, which call it and compare its sign-extended byte with 0): both voters' identities at their
+    // own type (the
+    // word at +104, through fn 708) compared with CEleitorIdentidade's <=> (the text, then the type as unsigned), whose
+    // -1, 0 or 1 it returns. The helpers keep the call, which their TU would inline, so it is out of line in another
+    // TU (a reading); this file and its being the class's <=> are chosen.
+    std::strong_ordering operator<=>(const CEleitorDecorator& outro) const;
 
 private:
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificador;

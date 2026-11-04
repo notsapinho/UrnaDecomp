@@ -63,6 +63,13 @@
 #     ModuloTiposEcoUrna::Carga's vtable and typeinfo and IConversorASN<IdentificadorGeradorMidia, ...>'s Converte and
 #     Deconverte records (fns 3734 and 3733, matched from other objects): code of this object no function here
 #     accounts for, not identified.
+#   - ModuloEleitores::EntidadeEleitores' partial reader (the data from the visitor's control block's vtable @1564316
+#     through the records @1564368 to @1564608, after the Candidatos reader's, fn 7787's, and before
+#     LeBiometriaEleitor's, CFileSeeder's vtable, records and control block among them): LeEleitores over the CarregaArquivoParcial pair, which fn 11523 (the lambda of
+#     CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp) holds behind an 80-byte frame of its own;
+#     src/units/310-uenux2-cconversorentidadeeleitores.mk has its evidence and forms. From this object match 5704 and
+#     5703 (the visitors' vector's __assign_with_size and copy loop) and the members of CFileSeeder (unit 83) and of
+#     the two control blocks (11427, 11435: unit 102), which this object now emits.
 #   The run's other readers are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
 # functions' being free functions of comum (they read no class's state), their lines and these paths;

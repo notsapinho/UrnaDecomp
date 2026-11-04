@@ -25,7 +25,8 @@
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
 //                       it): its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
-//   MontaListas         comum::MontaCaminhos 1936: fns 5772, 6734 and 7787
+//   MontaListas         comum::MontaCaminhos 1936: fns 6734 and 7787 (5772, GetEleitoresEstaticos, is in the link)
+//   LeEstaticos         CEleitores::GetEleitoresEstaticos 5772: fns 6734 and 7787
 //   CarregaDetalhes     CEleitores::LoadEleitorDetalhe 5764: fns 6734 and 7787, one call without dynamic data and one
 //                       with
 //   vt_CEleitores       comum::CEleitores's vtable (@1559112), whose one slot is QuantidadeAptosPorAbrangencia (fn 2824):
@@ -73,6 +74,7 @@ int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3_
 void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
+void w5772(int, int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w5764(int, int, int, int, int, int) __asm__("_ZNK5comum10CEleitores18LoadEleitorDetalheERKNS_2md17CEleitorDecoratorERKNSt3__26vectorINS1_9CImpedidoENS5_9allocatorIS7_EEEERmPKNS1_16CEleitorDinamicoE");
 extern const char vt_CEleitores[] __asm__("_ZTVN5comum10CEleitoresE");
 }
@@ -157,6 +159,12 @@ __attribute__((noinline)) void MontaListas(int resultado, int diretorio, int nom
     w1936(resultado + 12, diretorio, nomes + 12);
 }
 
+__attribute__((noinline)) void LeEstaticos(int resultado, int eleitores, int diretorio, int outroResultado)
+{
+    w5772(resultado, eleitores, diretorio);
+    w5772(outroResultado, eleitores, diretorio);
+}
+
 __attribute__((noinline)) void CarregaDetalhes(int resultado, int eleitores, int eleitor, int impedidos, int indice)
 {
     w5764(resultado, eleitores, eleitor, impedidos, indice, 0);
@@ -184,6 +192,7 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&s11478);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);
+        singletons_sink = reinterpret_cast<const void*>(&LeEstaticos);
         singletons_sink = reinterpret_cast<const void*>(&CarregaDetalhes);
         singletons_sink = vt_CEleitores;
     }

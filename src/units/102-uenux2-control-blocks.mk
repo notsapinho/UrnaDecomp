@@ -1,7 +1,7 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 44 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 22 come from the objects of units 31, 120, 101, 165,
-# 91, 127, 164, 113, 163, 110, 122 and 121, whose builders are written, so the roots no longer instantiate them:
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 43 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 23 come from the objects of units 31, 120, 101, 165,
+# 91, 127, 164, 113, 163, 110, 122, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
 # went all the same: one builder's vptr store keeps the block's vtable, and a link with the stand-in back moves no
@@ -26,7 +26,9 @@
 # which holds vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316
 # and 12314 match from it; the roots' builder and sink that stood for 5936 went) and IHash's over
 # ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 122's gravadores/asn/util.cpp, from which
-# 10277 and 10279 match). Each block below: the
+# 10277 and 10279 match) and comum::asn::CVisitanteEleitor's pointer block (11523, the lambda of
+# CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp, which holds unit 280's carregaarquivo.cpp's
+# LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o). Each block below: the
 # T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
 # shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):

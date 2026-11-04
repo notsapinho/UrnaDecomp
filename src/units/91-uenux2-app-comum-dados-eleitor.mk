@@ -119,6 +119,14 @@
 # The decorator now derives from md::CEleitor (celeitordecorator.h, unit 110's fragment), and GetAbrangencia reads the
 # transfer through CTransferenciaTemporaria's accessors: celeitordecorator.cpp.o is cmp-identical to the one before.
 #
+# Two members of the decorator that comum::CEleitores::GetEleitoresEstaticos (fn 5772, unit 110) needs, in
+# celeitordecorator.cpp (celeitordecorator.h says what shows each): its constructor from a CEleitor and the voter's type,
+# which has no target function (5772 holds it, binaryen's inlining of its one call: the type is stored through the
+# pointer CEleitor's copy constructor returns), and operator<=> (fn 456, matched from this object), which the sort's
+# five helpers call and which compares the two voters' identities at their own types. Their lines are chosen (the
+# constructor above GetIdentidadePorTipo's record, operator<=> last); 456 has no record and its band says nothing of
+# the file.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
 COMUM_ELEITOR_MD_SRCS := src/app/comum/dados/md/eleitor/celeitordinamico.cpp src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp src/app/comum/dados/md/eleitor/celeitordecorator.cpp
 COMUM_ELEITOR_DAO_SRCS := src/app/comum/dados/dao/celeitordinamicodao.cpp src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp
