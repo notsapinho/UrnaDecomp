@@ -28,6 +28,32 @@
 #   __introsort (5605), __insertion_sort_incomplete (2790), __sort4 (1920) and iter_swap (248). 2790, 1920 and 248 are
 #   also called by fn 5610 (another introsort of the same element, fn 11253's, not written); binaryen merges the
 #   identical instances, so these are ours.
+# - CGeradorBUQRCodeVota's Slot2 (fn 11242, no record of its own; the vtable's slot 2 names it): it fills the QR code
+#   header's fields of the builder Gera passes it, ORIG to HREM, with CEstadoGeralVota::GetDtHrInicioAquisicao and
+#   GetDtHrFimAquisicao inlined from their header (records cestadogeralvota.h:90 and :106, in this object's data), and
+#   sixteen setters of unit 93's ccabecalhoqrcodebuilder.cpp and CLocal::GetIdentificacoesAgregadas of unit 89's
+#   clocal.cpp, each behind a frame of its own, so each is a function binaryen inlined into its one caller (a
+#   reading; their headers say what each shows). What the bytes decided, measured with pnpm wasm score against the
+#   target in the whole link, the forms below as written but the one compared:
+#   - the objects' order. With this unit's two sources ahead of ccabecalhoqrcodebuilder.cpp (unit 93's) and
+#     clocal.cpp (unit 89's), as this fragment listed them, 939 over 4456 rows (58 inserted, 73 deleted: the target
+#     keeps the tails of three inlined setters in a block left by a `br 0`, ours none); with the builder's object
+#     moved ahead of cgeradorbuqrcode.cpp, 751 over 4441 (43 inserted, 44 deleted, locals); with clocal.cpp's moved
+#     alone, 1466 over 4510; with both moved, or with this unit's two objects moved after unit 93's list, 230 over
+#     4398, every row operand-only and every operand a call, a data address, a table slot (the format buffer's 148
+#     against our 43, the exception destructor's) or a packed string address (scratch links of the plain link.cmd
+#     with the objects moved). The target's data give that order: clocal.cpp's records @1559828, the builder's
+#     @1574996, cgeradorbuqrcode.cpp's @1575936, this class's vtable @1575976. So unit 93's list compiles the two
+#     sources, at its end (src/units/README.md "Names"): right after the builder measured the same, and the end
+#     keeps unit 93's other files, whose records lie at @1574836 to @1574932, ahead of them, as the data have them.
+#     Gera's rows moved with it (below).
+#   - GetIdentificacoesAgregadas tests for no section first and returns the empty vector there: with the copy's
+#     return first, 249 over 4406 (8 inserted, 9 deleted, the branch order).
+#   - The acquisition's start and end are copies, two const api::CDateTime locals read before the first of their
+#     setters (the target copies both after both tests): bound to references, 1532 over 4441.
+#   - TemVota's turn is read through the const GetGeral (fn 457) on a second GetInst() whose result the target hands
+#     to 457 directly: written with std::as_const, a choice; a static_cast to const CAppInfo& is the other spelling
+#     (not measured).
 #
 # Written, not matching: Gera (fn 5604, 22805 B, `no-candidate`: its records name no body that differs, since
 # srcloc-anchor pairs bodies of the same opcodes only, docs/reference/splat.md section 2).
@@ -39,21 +65,17 @@
 # (RetornaBlocoAssinado, record cgeradorbuqrcode.cpp:405, the instance() call). Each helper is a frame of its own in
 # 5604, so each is a function binaryen inlined into its one caller. The target's body holds 10253 instructions and ours
 # 10252, with the same direct calls and format strings in the same order but for one free (read from `pnpm wasm fn`'s
-# folded readouts of both). pnpm wasm score: 3104 over 10481 rows (227 inserted, 228 deleted, 2585 of 2649 replaced rows
-# operand-only); a diff of the two disassemblies (`pnpm wasm disasm` bodies) with locals renamed by first use and call
-# targets, data addresses and wide constants masked, counted as difflib opcodes, has 758 hunks (the same diff unmasked,
-# `diff -U0`, has 1467): 588 differ in local numbers, call targets or data addresses alone, 94 only in local.get,
-# local.set and local.tee rows, 20 only in one table slot operand (the target's 148, our 43), and 56 in more. What
-# differs beyond locals, measured and not explained:
-# GetCorpo's post loops reload the post's id and digit count where the target holds them in locals before the loop;
-# DivideEmBlocos keeps the content's size and long flag in locals where the target reloads them in substr's check and
-# bounds the loop by the size read before it; the frees of the label strings after preBuild's first table run in another
-# order.
+# folded readouts of both). pnpm wasm score, with its objects linked after unit 93's list (Slot2's bullet above):
+# 1327 over 10331 rows (77 inserted, 78 deleted), 951 over 10330 at --depth 0; with them ahead of unit 93's objects,
+# as before, 3104 over 10481 (227 inserted, 228 deleted). The rows that still differ are not read at this order: the
+# hunks this note listed before were read at the other one.
 #
 # Chosen: the names Slot2, Slot3, GetCamposAptos, GetCamposVotos, Gera and its helpers' (GetCabecalho, GetCorpo,
 # GetCamposEleicao, GetCamposSecao, GetCamposProporcional, GetCamposCandidatosPartido, GetCamposLegenda,
 # GetCamposVotosProporcional, GetCamposMajoritario, GetCamposConsulta, MontaPartes, DivideEmBlocos, CalculaHash), and
-# every data member's; the helpers' being members where they read the object and free functions where they do not;
+# every data member's (CGeradorBUQRCodeVota's two flags' after what Slot2 does with them); Slot2's locals and the
+# order of its statements no call fixes; the helpers' being members where they read the object and free functions
+# where they do not;
 # Gera's std::pair result; SQtdeAptos's place and its members' names (from the labels 3696 prints); TEleicaoID for
 # Slot3's parameter; the members' access; every line but the records' (80, 405); the "6.0" version and the 277 as
 # literals; std::as_const in DivideEmBlocos, which picks CStringUtils::Trim's copying overload (fn 1374, as the target
@@ -76,20 +98,14 @@
 #   `call_indirect`, as in the target. So the member is a `const CRdv&`, which the constructor stores
 #   CRdvVota::GetInst()'s result in. GetCamposVotos matched by content when it landed.
 #
-# Not reconstructed: CGeradorBUQRCodeVota's Slot2 (fn 11242), a trap in 155-uenux2-cgeradorbuqrcode-pending.cpp, whose
-# header says what it waits for.
-CGERADORBUQRCODE_SRCS := src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/comum/relatorios/cgeradorbuqrcodevota.cpp
-UENUX2_SRCS += $(CGERADORBUQRCODE_SRCS)
+# The two sources are compiled at the end of unit 93's list (src/units/93-uenux2-estadoaplicacao.mk): this fragment
+# holds no source list (Slot2's bullet above says why).
 # cgeradorbuqrcode.cpp includes cconfiguracaoeleicao.h, whose ecourna CConfiguracaoMunicipio holds a CHorariosUrna of
 # Boost ptimes, and ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h; UENUX2_CXXFLAGS has neither path
 # (unit 88 gives ccargos.cpp the Boost one, unit 321 gravadores/asn/cassinavotavelbu.cpp the OpenSSL one). An include
 # path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
 $(ROOT)/$(APP)/uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) $(OPENSSL_INCLUDES)
-W155_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-# the member the vtable needs that is not reconstructed traps here, at the tree's flags
-$(ROOT)/$(APP)/155-uenux2-cgeradorbuqrcode-pending.o: $(ROOT)/src/units/155-uenux2-cgeradorbuqrcode-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/155-uenux2-cgeradorbuqrcode.mk $(W155_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/155-uenux2-cgeradorbuqrcode-pending.cpp -o $(R)
 # the roots declare what they reach through __asm__ labels and include no header
 $(ROOT)/$(APP)/155-uenux2-cgeradorbuqrcode-roots.o: $(ROOT)/src/units/155-uenux2-cgeradorbuqrcode-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/155-uenux2-cgeradorbuqrcode.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/155-uenux2-cgeradorbuqrcode-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/155-uenux2-cgeradorbuqrcode-pending.o $(APP)/155-uenux2-cgeradorbuqrcode-roots.o
+override EXTRA_OBJS += $(APP)/155-uenux2-cgeradorbuqrcode-roots.o

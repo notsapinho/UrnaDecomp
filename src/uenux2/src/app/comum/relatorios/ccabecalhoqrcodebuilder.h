@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "api/util/cdate.h"
+#include "api/util/cdatetime.h"
 #include "app/comum/eurnaturno.h"
 #include "ecourna/api/uetypes.hpp"
 
@@ -18,8 +19,9 @@ namespace comum {
 //
 // The layout: fn 5608 copies 33 std::strings at a stride of 12 and fn 5624, which those two callers construct it with,
 // zeroes 396 bytes, so nothing else fits. 25 of the strings are named after the labels 5604 passes with them, in the
-// four tables it gives fn 2791; no label comes with +132 or with the 7 strings from +264, so those names are chosen.
-// The setters' names are chosen from the same labels: no record names them. The two tests (fns 5617, 5616, which fn
+// four tables it gives fn 2791, and the other eight (+132 and the seven from +264, which no table names) after the
+// labels comum::CGeradorBUQRCodeVota::Slot2 (fn 11242) formats into them (AGRE, HBBM, HBBG, HBSB, DTAB, HRAB, DTFC,
+// HRFC); every name is chosen. The setters' names are chosen from the same labels: no record names them. The two tests (fns 5617, 5616, which fn
 // 5604 calls on its copy of the object) compare m_origem with "ORIG:{} " over "SA" and over "RED"; their names are
 // chosen from those texts. The setters' integer types are chosen beyond their widths: fn 12110 loads zona and secao as
 // 16-bit values. comum::CGeradorBUQRCode::GetCabecalho (inlined into fn 5604) calls eight more setters on its copy,
@@ -50,6 +52,29 @@ public:
     void DefineUF(const std::string& uf);
     void DefineVersaoSoftware(const std::string& versao);
 
+    // The setters comum::CGeradorBUQRCodeVota::Slot2 (target fn 11242) calls, each binaryen-inlined there with a frame
+    // of its own (the class's header note has the reading): the ORIG field takes "RED" or "VOTA" in two frames, one per
+    // branch on the generator's flag, each with its literal as a constant, so there are two, as for ORLC; DefineAbertura,
+    // DefineFechamento and DefineEmissao each set a date and a time field in one 416-byte frame, from one
+    // api::CDateTime. The names are chosen from the labels, as the others'; the integer types beyond their widths too
+    // (APTO and FALT are masked to 16 bits at the call, LOCA and MUNI are 32-bit loads).
+    void DefineOrigemRED();
+    void DefineOrigemVOTA();
+    void DefineAgregadas(const std::vector<ueword>& agregadas);
+    void DefineLocal(uedword local);
+    void DefineQtdeAptos(ueword qtde);
+    void DefineQtdeAptosDaSecao(ueword qtde);
+    void DefineQtdeAptosTTE(ueword qtde);
+    void DefineQtdeCompareceram(ueword qtde);
+    void DefineMunicipio(uedword municipio);
+    void DefineQtdeHabilitacaoBiometrica(ueword qtde);
+    void DefineQtdeHabilitacaoBiografica(ueword qtde);
+    void DefineQtdeHabilitacaoSemBiometria(ueword qtde);
+    void DefineQtdeFaltosos(ueword qtde);
+    void DefineAbertura(const api::CDateTime& dataHora);
+    void DefineFechamento(const api::CDateTime& dataHora);
+    void DefineEmissao(const api::CDateTime& dataHora);
+
     bool IsOrigemSA() const;
     bool IsOrigemRED() const;
 
@@ -70,7 +95,7 @@ private:
     std::string m_municipio;
     std::string m_zona;
     std::string m_secao;
-    std::string m_campo132;
+    std::string m_agregadas;
     std::string m_idUrna;
     std::string m_codigoCarga;
     std::string m_historicoCarga;
@@ -81,7 +106,13 @@ private:
     std::string m_qtdeAptosTTE;
     std::string m_qtdeCompareceram;
     std::string m_qtdeFaltosos;
-    std::string m_campos264[7];
+    std::string m_qtdeHabilitacaoBiometrica;
+    std::string m_qtdeHabilitacaoBiografica;
+    std::string m_qtdeHabilitacaoSemBiometria;
+    std::string m_dataAbertura;
+    std::string m_horaAbertura;
+    std::string m_dataFechamento;
+    std::string m_horaFechamento;
     std::string m_junta;
     std::string m_turma;
     std::string m_dataEmissao;

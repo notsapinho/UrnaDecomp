@@ -131,13 +131,21 @@ std::vector<ueword> CLocal::GetAgregadas() const
     return numeros;
 }
 
+md::TVectorIdentificacaoAgregada CLocal::GetIdentificacoesAgregadas() const
+{
+    if (!EhSecao("GetAgregadas")) {
+        return {};
+    }
+    return m_local->GetSecao().GetAgregadas();
+}
+
 ETipoLocalVotacao CLocal::GetTipoLocalVotacao() const
 {
     VerificaEhSecao("GetTipoLocalVotacao");
     return m_local->GetSecao().GetTipo();
 }
 
-// (original lines 161-341: content not recovered)
+// (original lines 169-341: content not recovered)
 #line 342
 void CLocal::VerificaLido(const std::string& funcao) const
 {

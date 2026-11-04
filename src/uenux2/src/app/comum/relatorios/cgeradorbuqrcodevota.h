@@ -14,11 +14,12 @@
 // two callers, fns 1956 and 12110, pass the same 0s, so binaryen's dead-argument elimination folded them into the body,
 // and the wasm type keeps four words. The constructor takes two flags, and its callers pass false: the number is a
 // choice, since one bool stored into both bytes gives the same two stores (a probe object of both forms), and with
-// one flag 5603's symbol would mangle one bool. 11242 (Slot2, not reconstructed) tests the byte at +418 for "RED"
-// against "VOTA". The third argument is
-// comum::CRdvVota::Comparecimento()'s result in fn 1956. The names and the types beyond those widths are chosen;
-// api::CDateTime is a 12-byte value that the slot-2 overrider's fields "DTEM:{} " and "HREM:{} " could print, and fn
-// 1956 passes CEstadoGeralVota::GetDtHrEmissaoBU()'s copy. The destructor is out of line: the D0 (fn 11243) calls the
+// one flag 5603's symbol would mangle one bool. Slot2 (fn 11242) reads the two bytes apart: +418 picks "RED" over
+// "VOTA" for the ORIG field, +419 whether the DTEM and HREM fields are set from the 12 bytes at +420, an api::CDateTime
+// it formats as a date and a time; the members' names are chosen from that. The third argument is
+// comum::CRdvVota::Comparecimento()'s result in fn 1956, and Slot2 prints the word as COMP and subtracts it from the
+// voters able to vote for FALT. The names and the types beyond those widths are chosen; fn 1956 passes
+// CEstadoGeralVota::GetDtHrEmissaoBU()'s copy for +420. The destructor is out of line: the D0 (fn 11243) calls the
 // D2 and then frees this (docs/reference/facts/reading.md R5); the D2 (fn 11244) only calls the base's. Nothing here
 // shows whether the class is final: the D2 destroys no member of its own.
 
@@ -32,8 +33,8 @@ namespace comum {
 
 class CGeradorBUQRCodeVota : public CGeradorBUQRCode {
 public:
-    CGeradorBUQRCodeVota(const CCabecalhoQRCodeBuilder& cabecalho, ueword comparecimento, bool campo418, bool campo419,
-                         const api::CDateTime& dataHoraEmissao);
+    CGeradorBUQRCodeVota(const CCabecalhoQRCodeBuilder& cabecalho, ueword comparecimento, bool origemRED,
+                         bool comEmissao, const api::CDateTime& dataHoraEmissao);
     ~CGeradorBUQRCodeVota() override;
 
 protected:
@@ -42,8 +43,8 @@ protected:
 
 private:
     ueword m_comparecimento;
-    bool m_campo418;
-    bool m_campo419;
+    bool m_origemRED;
+    bool m_comEmissao;
     api::CDateTime m_dataHoraEmissao;
 };
 

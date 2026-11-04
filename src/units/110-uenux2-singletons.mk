@@ -292,7 +292,8 @@
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
 # - 2822 walks the base CDataMap's map at +4 and counts the records whose detail holds dynamic data (the optional's flag
 #   at +192), whose GetDinamico() (1271, called twice) has tipo_habilitacao 0 (+36) and estado_comparecimento 3 (+32),
-#   and returns the count's low 16 bits. Its callers (10699, unit 277's, written; 11242, 12098 and 12110, not) pass
+#   and returns the count's low 16 bits. Its callers (10699, unit 277's, and 11242, unit 155's, written; 12098 and
+#   12110, not) pass
 #   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
 #   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
@@ -314,8 +315,8 @@
 #   eqz); written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). It returns comum::SQtdeAptos
 #   (cgeradorbuqrcode.h), as the RTTI of four std::function<comum::SQtdeAptos()> whose call operator is fn 2881 says
 #   (2881 passes its own result's address straight to 2823); the function's name and const are chosen (celeitores.h).
-#   Its callers 11242 and 12110 are not written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's,
-#   and 2881, fragment 317's, are in the link).
+#   Of its callers, 11242 (unit 155's) is written and 12110 is not: this unit's roots stand for 12110,
+#   QuantidadesAptos (652, unit 161's, 2881, fragment 317's, and 11242 are in the link).
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,

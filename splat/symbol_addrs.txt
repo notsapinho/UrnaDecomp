@@ -9472,6 +9472,7 @@ _ZN5comum12_GLOBAL__N_115SituacaoEleitorEv = func:11233; // size:0x4b1 evidence:
 _ZN5comum12_GLOBAL__N_118CabecalhoEleitoresEv = func:11234; // size:0x2fd evidence:table by:11908
 _ZNSt3__213basic_ostreamIcNS_11char_traitsIcEEEC2B8ne210108EPNS_15basic_streambufIcS2_EE = func:11235; // size:0x38 evidence:pair-fingerprint
 _ZNK5comum20CGeradorBUQRCodeVota5Slot3Ej = func:11241; // size:0x10 evidence:pair-fingerprint
+_ZNK5comum20CGeradorBUQRCodeVota5Slot2ERNS_23CCabecalhoQRCodeBuilderE = func:11242; // size:0x2721 evidence:vtable
 _ZN5comum20CGeradorBUQRCodeVotaD0Ev = func:11243; // size:0xd evidence:pair-addr
 _ZN5comum20CGeradorBUQRCodeVotaD2Ev = func:11244; // size:0x7 evidence:vtable
 _ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKS8_EEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISG_SD_EENS6_ISD_EEE13__get_deleterERKSt9type_info = func:11245; // size:0x11 evidence:content-anchor
