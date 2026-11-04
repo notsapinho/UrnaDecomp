@@ -24,12 +24,16 @@
 #   call: passing the temporary to api::CLoga::loga reads +4 before the message is built, one row out of place (10779
 #   `score 13 over 70 rows (same 57, replaced 11 [11 operand-only], inserted 1, deleted 1)`, 6017 `13 over 211`). Their
 #   names, lines and order are chosen.
-# - Unit 277's eight, at the end of the file: LogaEncerramentoAntesDoHorario (held by 10706), LogaTodosEleitoresVotaram
-#   (10713), LogaTituloDigitadoEncerramento and LogaEncerramentoCancelado (10721), LogaEncerramentoAbortado and
-#   LogaEncerramentoConfirmado (10734), LogaAudioAtivadoPeloMesario and LogaAudioDesativadoPeloMesario (10751), each
-#   held by its one caller behind a frame of its own after the call of GetInst. LogaEncerramentoCancelado and the two
-#   audio ones call loga (fn 233); the others call api::CLoga::loga, naming the message first as the four above. clogvota.h says
-#   what each reads; unit 277's fragment has the one left differing in 10706. Names, lines and order chosen.
+# - Unit 277's eight (nine with the helper below), at the end of the file: LogaEncerramentoAntesDoHorario (held by
+#   10706), LogaTodosEleitoresVotaram (10713), LogaTituloDigitadoEncerramento and LogaEncerramentoCancelado (10721),
+#   LogaEncerramentoAbortado and LogaEncerramentoConfirmado (10734), LogaAudioAtivadoPeloMesario and
+#   LogaAudioDesativadoPeloMesario (10751), each held by its one caller behind a frame of its own after the call of
+#   GetInst. LogaEncerramentoCancelado and the two audio ones call loga (fn 233); the others call api::CLoga::loga,
+#   naming the message first as the four above, but for LogaEncerramentoAntesDoHorario, which builds its message in the
+#   statement that passes it to LogaAlertaVota, a private member defined right above it that calls api::CLoga::loga with
+#   severity 2: the target makes that call while the format's argument temporaries live (unit 277's fragment has the
+#   forms measured on 10706, which matches so). clogvota.h says what each reads. Names, lines and order chosen, the
+#   helper's too.
 # - LogaMesarioRegistrado and LogaMesarioJaRegistrado are above GetInst, measured: a std::format body emitted before push's
 #   moves push's frame slots (unit 100's fragment has the effect on 4879). With no such body above GetInst the link gave
 #   184 `score 158 over 947 rows (same 789, replaced 158 [153 operand-only], inserted 0, deleted 0)`, its first slot at

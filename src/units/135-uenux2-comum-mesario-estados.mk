@@ -158,12 +158,15 @@
 #   blocks. Left: the object (wasm-objdump -d of cencerraregistromesarios.cpp.o) keeps each case's last instance() call
 #   in the case, and our link folds the three into the shared tail where the target keeps one in each case. Not
 #   explained.
-# - 10383, CConfirmaFimRegistroMesarios::ProcessInput: local numbers only (`25 over 85 rows (... [25 operand-only] ...)`,
-#   scan `+0x9 target +0x8 local.tee 1 | ours +0x8 local.tee 2`): the target gives the input field `this`'s local once
-#   `this` is pushed for the final store, ours another. The same score with an if/else-if chain for the switch, with
+# - 10383, CConfirmaFimRegistroMesarios::ProcessInput: a match with its two next-state stores through
+#   comum::CAppState::SetNextState (unit 61's fragment has why: the target ran binaryen's passes on the body again after
+#   inlining a call). With the assignments it read local numbers only (`25 over 85 rows (... [25 operand-only] ...)`,
+#   scan `+0x9 target +0x8 local.tee 1 | ours +0x8 local.tee 2`: the target gives the input field `this`'s local once
+#   `this` is pushed for the final store, ours another), the same with an if/else-if chain for the switch, with
 #   GetControlador defined above the slots, and with cencerraregistromesarios.cpp first in this fragment. The case order
 #   is measured: CORRIGE first (with a `default: break;`) moves the blocks, `31 over 88 rows (... inserted 3, deleted
-#   3)`.
+#   3)`. Its StartState (10385) stays an assignment, matched as written: the replay of unit 61's fragment with an empty
+#   call binaryen inlines leaves 10385's bytes as they are, so they do not tell the two forms apart.
 # - 10318, CPedeDigitalMesario::StartState: the target's 257 bytes, row for row, but for binaryen's local numbers (`42
 #   over 106 rows (... [13 operand-only], inserted 12, deleted 12)`: the frame and the record's address are locals 3 and 2
 #   in the target, 2 and 3 here, and the last call's result takes the address's local there and the other results'

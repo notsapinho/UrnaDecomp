@@ -56,10 +56,10 @@ void CEncerramentoAntecipado::ProcessInput()
 {
     switch (m_form->Read()) {
     case api::INPUT_CORRIGE:
-        m_pNextState = &CPedeIdentidade::GetInst();
+        SetNextState(&CPedeIdentidade::GetInst());
         break;
     case api::INPUT_CONFIRMA:
-        m_pNextState = &CConfirmaEncerramento::GetInst();
+        SetNextState(&CConfirmaEncerramento::GetInst());
         break;
     default:
         break;

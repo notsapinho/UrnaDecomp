@@ -78,6 +78,12 @@ public:
 protected:
     explicit CAppState(int eventos = EVENTO_NENHUM);
 
+    // Stores the next state. Out of line in cappstate.cpp, and called by the states whose bytes show a call binaryen
+    // inlined into them (src/units/61-uenux2-cexibealertadesligamento.mk has the measurements); the other states assign
+    // m_pNextState. binaryen inlines this one-store body into every caller, so it has no target function of its own.
+    // No record or text names it: its name, its parameter's name, its access and its being a member are chosen.
+    void SetNextState(CAppState* pNextState);
+
     CAppState* m_pNextState;
 
 private:

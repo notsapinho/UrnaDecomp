@@ -52,10 +52,10 @@ std::mutex CMesarioRegistrado::s_mutex;
 
 void CMesarioRegistrado::StartState()
 {
-    m_pNextState = this;
+    SetNextState(this);
     GetControlador().LogaMesarioRegistrado(GetControlador().GetTituloMesario());
     if (GetControlador().Slot7()) {
-        m_pNextState = &CLimiteMesariosRegistradosAtingido::GetInst();
+        SetNextState(&CLimiteMesariosRegistradosAtingido::GetInst());
         return;
     }
     GetControlador().LogaIndagaContinuaRegistro();

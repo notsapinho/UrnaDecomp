@@ -25,10 +25,12 @@
 # - comum::CMesarioRegistrado (cmesarioregistrado.h has the class's evidence): vtable @1594872, [448, 765, 10339, 7480,
 #   1661, 218, 425, 10338, 425], and the record cmesarioregistrado.cpp:72, GetControlador's return, which 10339 and 6011
 #   (through 10338) load. ProcessInput (10338) is the thunk `f6011(p0, 1594916, 1594944)` of unit 247's paragraph.
-# - StartState (10339) is written and differs: `24 over 100 rows (same 76, replaced 20 [16 operand-only], inserted 2,
-#   deleted 2)`, the target's calls and slots in the target's order, binaryen's local numbers apart (the scan: `+0x2e
-#   target +0x2d local.tee 1 | ours +0x2d local.tee 4`; the record's address and the controllers sit in other locals).
-#   Not explained, as unit 135's 10318 and 10383; its vtable slot needs it, so it stays written.
+# - StartState (10339) matches with its two next-state stores through comum::CAppState::SetNextState (unit 61's fragment
+#   has why: the target ran binaryen's passes on the body again after inlining a call). With the assignments it read
+#   `24 over 100 rows (same 76, replaced 20 [16 operand-only], inserted 2, deleted 2)`, the target's calls and slots in
+#   the target's order, binaryen's local numbers apart (the scan: `+0x2e target +0x2d local.tee 1 | ours +0x2d local.tee
+#   4`; the record's address and the controllers sit in other locals). ProcessInput's stores stay assignments: 10338 is
+#   the thunk into 6011, the body it shares with CRegistrarMesarios::ProcessInput (unit 247's), and matches as written.
 # - GetInst, the constructor and the operator's form (TelaMesarioRegistrado) are written from IGestorDadoMesario::
 #   StartState (10337, unit 135), which holds them inlined: the 28-byte object, CAppState's constructor with 2
 #   (EVENTO_ENTRADA), the vptr, both forms assigned (fn 1255's at +20, then the builder's at +12, a frame of its own),

@@ -159,9 +159,11 @@
 #   object gives that order only so (ld_index in build/out/wasm-map/vota_web/names.tsv; the bytes are the same).
 # - With unit 277's states (that fragment has the evidence of the family): CPerguntaFilaEleitorVazia::ProcessInput
 #   (10713) goes to CPedeTituloEncerramento (3631) on CONFIRMA and to CAguardaEleitoresVotarem (its GetInst inlined) on
-#   CORRIGE, then logs the answer through a CLogVota member (unit 119's file); written, not matched: 52 over 611 rows
-#   (deleted 2), where the target's merged tail copies the inlined GetInst's result into a local of its own (`local.get
-#   6; local.set 1`) and ours keeps it in the GetInst's: binaryen's choice of locals, not explained.
+#   CORRIGE, then logs the answer through a CLogVota member (unit 119's file); a match since cperguntafilaeleitorvazia.cpp
+#   links in unit 277's list right after caguardaeleitoresvotarem.cpp, as the target's data have the two classes'
+#   vtables (@1587620, then this class's @1587692): with the file in this list, ahead of that one, it read 52 over 611
+#   rows (deleted 2), the target's merged tail copying the inlined GetInst's result into a local of its own (`local.get
+#   6; local.set 1`) where ours kept it in the GetInst's (unit 277's fragment has the measurement).
 #   CHorarioVotacaoTerminou::ProcessInput (10757), the next state CPedeIdentidade's (652) on CORRIGE: written, and a
 #   match since our link forms 2295 from the same five slots as the target's merge (unit 277's fragment).
 # Chosen: InicializaTick's and AtualizaMensagem's names and lines, the enumeration's names, the local names, the queue
@@ -253,8 +255,9 @@ APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/celeitord
     src/app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.cpp \
     src/app/vota/operador/justificativa/iiniciajustificativa.cpp \
     src/app/vota/operador/outrasopcoes/chorariovotacaoterminou.cpp \
-    src/app/vota/operador/outrasopcoes/cperguntafilaeleitorvazia.cpp \
     src/app/vota/eleitor/cinspecionaurna.cpp
+# outrasopcoes/cperguntafilaeleitorvazia.cpp, whose class this fragment notes, links in unit 277's list for its order
+# against caguardaeleitoresvotarem.cpp (10713, above).
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # celeitordemorando.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (an
 # include path, not a flag)

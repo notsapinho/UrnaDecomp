@@ -28,11 +28,11 @@ std::mutex CFimAquisicaoVotos::s_mutex;
 void CFimAquisicaoVotos::StartState()
 {
     if (RegistraMesarios()) {
-        m_pNextState = &comum::CRegistrarMesarios::GetInst();
+        SetNextState(&comum::CRegistrarMesarios::GetInst());
         return;
     }
     CThreadEleitor::GetInst().GetMensagens().Post(7);
-    m_pNextState = &CFinalizaOperador::GetInst();
+    SetNextState(&CFinalizaOperador::GetInst());
 }
 
 } // namespace vota
