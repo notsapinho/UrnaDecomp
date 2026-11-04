@@ -10,7 +10,7 @@
 #   1391) in band 9, and celeitores.cpp's records come before cjustificador.cpp's. Its name (after
 #   GetCurrentAbrangenciaEleitor's), its const and its line after GetCurrentAbrangenciaEleitor are chosen. It matched
 #   through the scan's content pass (`source` content in step 9's first scan) once 1937 had its name; BiometriasCorrentes
-#   in the roots stands in for the three callers not written (10425, 10465, 10500), two calls on two objects, reading
+#   in the roots stands in for the two callers not written (10425, 10465; 10500, unit 239's, is in the link), two calls on two objects, reading
 #   both results.
 # - api::CPolySingleton<api::IFingerDetection>::instance (target fn 3615, 2126 B): the header's template (records
 #   cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105, [T = api::IFingerDetection]), whose copy matches from the

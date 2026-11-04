@@ -23,6 +23,10 @@ public:
 private:
     CIniciodeCiclo();
 
+    // Records ciniciodeciclo.cpp:48 and :61 (in fn 7306, StartState, which holds it inlined) give its name and signature;
+    // its access is chosen.
+    void AjustaDataHora();
+
     static std::mutex s_mutex;
     static std::unique_ptr<CIniciodeCiclo> s_inst;
 };

@@ -36,7 +36,4 @@ CFixedImage::CFixedImage(const std::string& arquivo)
 // <stubs>
 // f13441 · 386 B · unmatched · placement: link order · name unknown
 // void f13441(i32) { ... }
-
-// f3617 · 222 B · unmatched · placement: link order · name unknown
-// void f3617() { ... }
 // </stubs>

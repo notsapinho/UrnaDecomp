@@ -60,8 +60,8 @@
 # compiles to the same bytes with the header edits (cmp of each object before and after). Whole link, before steps 7
 # to 9: 104 over 1771 rows, all operand-only. Chosen: the name, its being a member (it reads the members), the locals.
 #
-# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160 and 7306 for 3705 (10710, unit 277's, is in the
-# link), 5480 (twice) for 5484, 3059 for 5636 (11200, unit 123's, is in the link).
+# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160 for 3705 (10710, unit 277's, and 7306, unit
+# 104's, are in the link), 5480 (twice) for 5484, 3059 for 5636 (11200, unit 123's, is in the link).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
 UENUX2_SRCS += $(LEFTOVERS_UENUX2_SRCS)

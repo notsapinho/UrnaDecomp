@@ -317,6 +317,20 @@ public:
     // api::CLoga::loga (fn 433) on +4, severity 1 and 2. Their names, from the messages, and their place are chosen.
     void LogaAnoNascimentoIgualCadastro();
     void LogaAnoNascimentoDiferenteCadastro();
+    // vota::ApresentaFotoEleitor's (fn 3616) logs, each after GetInst behind a frame of its own, so out of line here and
+    // inlined by binaryen into that one caller (no target index): LogaErroCarregarFotoEleitor and
+    // LogaFotoEleitorApresentada ("Erro ao carregar a foto do eleitor", "Foto do eleitor apresentada") are
+    // LogaEleitorEstaVotando's shape, loga (fn 233) of the text's std::string in a 16-byte frame; LogaLarguraFotoInvalida,
+    // LogaAlturaFotoInvalida and LogaQuantidadeCoresFoto ("Largura da foto do eleitor inválida: {} px", "Altura da foto
+    // do eleitor inválida: {} px", "Quantidade de cores não conforme: {} bits por pixel") loga a std::format of one
+    // unsigned argument (type 6) in a 384-byte frame, the caller passing a 16-bit width and height (i32.load16_u) and
+    // an 8-bit count (i32.load8_u), whence the parameters' types. Their names, from the messages, and their place are
+    // chosen.
+    void LogaErroCarregarFotoEleitor();
+    void LogaLarguraFotoInvalida(ueword largura);
+    void LogaAlturaFotoInvalida(ueword altura);
+    void LogaQuantidadeCoresFoto(uebyte bitsPorPixel);
+    void LogaFotoEleitorApresentada();
 
 private:
     CLogVota();

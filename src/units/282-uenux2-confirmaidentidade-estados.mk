@@ -112,12 +112,14 @@
 #   list, 115 over 1283, operand-only. So this list holds the five files in the order of their vtables in the data, and
 #   unit 192's lists csincronismoeleitor.cpp alone. The move left 2739, 10466, 10467 and 10469 matched.
 #
+# Matched since: CInformaAnoDesabilitadoDemo::GetInst, its constructor and form, which have no target function of their
+# own: fn 10500 (unit 239's CNomeEleitor::ProcessInput) holds them inlined, and the statics' exit destructors (10505,
+# s_mutex's; 10506, s_inst's) match through the names 10500's votes give the statics. 10500 needs this file's object
+# ahead of cnomeeleitor.cpp's, so this list compiles unit 239's two files after it (below).
+#
 # Written and not matched, and what each waits for:
 # - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
 #   numbers (the queue's address in local 2 where the target reuses local 0, the same difference as 10511's, unit 161).
-# - CInformaAnoDesabilitadoDemo::GetInst, its constructor and form have no target function of their own: 10500 holds
-#   them inlined and is not written, so they link nowhere (wasm-ld drops the GetInst), and its statics' exit destructors
-#   (10505, 10506) read `differs`: nothing names s_mutex and s_inst, which only 10500 reads.
 # - The ProcessInput of CDigitalNaoReconhecida, CDigitalNaoReconhecidaDecBiometria and CDigitalNaoReconhecidaPorTempo
 #   (10473, 10477, 10485): `differs`, 13 over 78, 10 over 72 and 13 over 78 rows, every row an operand, the calls, the
 #   records and two local numbers: the target keeps the input field's pointer in local 0 once `this` is pushed for the
@@ -168,8 +170,17 @@
 # ObtemEstadoPosReconhecimentoBiometrico (`digitais`, whose length puts each record's column at 22); the lines of the
 # functions with no record (each file's head comment says which); cpededigital.cpp's StartState statements between its
 # records' lines.
+# This list also compiles unit 239's cnomeeleitor.cpp and cnomeeleitorauxiliares.cpp, after
+# cinformaanodesabilitadodemo.cpp and before cinformaeleitorpodevotar.cpp, the order of the classes' vtables in the
+# target's data (@1591104, @1591176, CNomeEleitor's @1591248, @1591352): unit 239's fn 10500 holds
+# CInformaAnoDesabilitadoDemo::GetInst inlined and reads 172 over 1736 rows, all operand rows, with this file's object
+# ahead of cnomeeleitor.cpp's, 335 over 1748 the other way (src/units/239-uenux2-cnomeeleitor.mk has the measurement
+# and the four pairs of objects the move inverts). 3883's merge name stays CInformaBioDesabilitadaDemo's, the first of
+# the three in link order.
 CONFIRMAIDENTIDADE_ESTADOS_SRCS := src/app/vota/operador/confirmaidentidade/cinformabiodesabilitadademo.cpp \
     src/app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitorauxiliares.cpp \
     src/app/vota/operador/confirmaidentidade/cinformaeleitorpodevotar.cpp \
     src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecidaportempo.cpp \
     src/app/vota/operador/confirmaidentidade/cdigitalreconhecida.cpp \

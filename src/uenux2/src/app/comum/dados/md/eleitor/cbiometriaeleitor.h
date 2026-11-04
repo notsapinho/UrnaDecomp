@@ -30,6 +30,11 @@ public:
     bool TemDedo(CDedo::TipoDedo tipo) const;
     bool TemDedos() const { return m_dedos.has_value(); }
     EErroDecifracaoBiometria GetErroDecifracao() const { return m_erroDecifracao; }
+    // The photo: GetFoto (record cbiometriaeleitor.cpp:115, its signature) throws when the optional at +0 is empty and is
+    // out of line, inlined by binaryen into its one caller, vota::ApresentaFotoEleitor (fn 3616, behind a frame of its
+    // own); TemFoto, the test of +16 that 3616 makes before it, is inline, its name and being inline chosen.
+    bool TemFoto() const { return m_foto.has_value(); }
+    const ecourna::app::dados::CFoto& GetFoto() const;
 
 private:
     void CriaComum(std::vector<CDedo> dedos);

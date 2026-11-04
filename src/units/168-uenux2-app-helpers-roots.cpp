@@ -9,7 +9,7 @@
 // - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 (unit 50) and 10680 (unit 161) are in the
 //   link, the stand-in stays for the other two, not written.
 // - vota::EhTreinamentoMesario (fn 1823; callers 7306, 10465, 10474, 10478, 10500, 10512): 10512 (unit 161), 10474 and
-//   10478 (unit 282) are in the link, the stand-in stays for the other three, not written.
+//   10478 (unit 282), 7306 (unit 104) and 10500 (unit 239) are in the link, the stand-in stays for 10465, not written.
 // - vota::AdicionaSeparador (fn 1387; callers 11908, 11946, 12105, 12110, none written), with the two alignments they
 //   pass, 0 and 2, so that dead-argument elimination keeps the parameter.
 // - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450; callers 7061, unit 116's trap, and the static
@@ -42,7 +42,7 @@ __attribute__((noinline)) void w168_separadores(api::CPaperFormBuilder* builder,
     vota::AdicionaSeparador(*outro, api::ALINHAMENTO_CENTRO);
 }
 
-// stands for fns 7306, 10465 and 10500, which call vota::EhTreinamentoMesario (fn 1823) and test what it
+// stands for fn 10465, which calls vota::EhTreinamentoMesario (fn 1823) and test what it
 // returns
 __attribute__((noinline)) int w168_mesario(int base)
 {

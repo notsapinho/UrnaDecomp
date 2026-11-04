@@ -615,4 +615,29 @@ void CLogVota::LogaAnoNascimentoDiferenteCadastro()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
 }
 
+void CLogVota::LogaErroCarregarFotoEleitor()
+{
+    loga("Erro ao carregar a foto do eleitor");
+}
+
+void CLogVota::LogaLarguraFotoInvalida(ueword largura)
+{
+    loga(std::format("Largura da foto do eleitor inválida: {} px", largura));
+}
+
+void CLogVota::LogaAlturaFotoInvalida(ueword altura)
+{
+    loga(std::format("Altura da foto do eleitor inválida: {} px", altura));
+}
+
+void CLogVota::LogaQuantidadeCoresFoto(uebyte bitsPorPixel)
+{
+    loga(std::format("Quantidade de cores não conforme: {} bits por pixel", bitsPorPixel));
+}
+
+void CLogVota::LogaFotoEleitorApresentada()
+{
+    loga("Foto do eleitor apresentada");
+}
+
 } // namespace vota

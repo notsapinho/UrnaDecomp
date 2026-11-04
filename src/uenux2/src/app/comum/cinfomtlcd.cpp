@@ -1,12 +1,12 @@
 // comum::CInfoMTLCD (/home/rubio/tse/uenux2/src/app/comum/cinfomtlcd.cpp). Records of the target: lines 50:21 and
 // 51:23 (Update, fn 11653), 84:25 (MostrarImagemNoLCD, inlined into 11653 and MostraImagem, 3836) and 33 (CreateInst,
 // fn 7787, not reconstructed: the line stays blank). The other lines are chosen; the unit's fragment says why.
-
 #include "app/comum/cinfomtlcd.h"
 
 #include <cstdint>
 #include <vector>
 
+#include "api/gui/cfixedimage.h"
 #include "api/gui/iimagesurfaceops.h"
 #include "api/gui/iscreen.h"
 #include "api/gui/iscreenmt.h"
@@ -69,6 +69,11 @@ void CInfoMTLCD::MostraImagem(const api::IImage& imagem, const api::SPoint& posi
     if (!imagem.GetData().empty()) {
         MostrarImagemNoLCD(imagem, posicao, true);
     }
+}
+
+void CInfoMTLCD::MostraImagem(const std::vector<uebyte>& imagem, const api::SPoint& posicao)
+{
+    MostraImagem(api::CFixedImage(imagem), posicao);
 }
 
 } // namespace comum

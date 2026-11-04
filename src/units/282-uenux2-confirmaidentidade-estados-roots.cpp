@@ -1,17 +1,11 @@
 // Roots of src/units/282-uenux2-confirmaidentidade-estados.mk: keep its functions in the skeleton link the way the
 // target keeps them.
 //
-// - vota::CInformaAnoDesabilitadoDemo's vtable, and with it every slot: the target references it only from its
-//   constructor, inlined with GetInst into fn 10500 (vota::CNomeEleitor::ProcessInput, not reconstructed), so the
-//   GetInst written in cinformaanodesabilitadodemo.cpp has no caller here and wasm-ld drops it. The sink goes when
-//   10500 is in the link.
 // - vota::CDigitalNaoReconhecidaPorTempo's vtable: the target references it only from the class's constructor, inlined
 //   with GetInst into fn 10465 (vota::CPedeDigital::ProcessTick), pending here. The sink goes when 10465 is in the
 //   link. (CDigitalReconhecida's and CDigitalNaoReconhecida's constructors are in the link, inlined into fn 5397,
 //   CPedeDigital's, inlined into its GetInst, fn 2740, which fns 10473 and 10485 call, and
 //   CDigitalNaoReconhecidaDecBiometria's, inlined with its GetInst into fn 10474: no sink keeps those four vtables.)
-// - vota::CInformaBioDesabilitadaDemo::GetInst (fn 5402), which fn 10500 calls twice: one stand-in calls it twice, so
-//   that binaryen keeps it a function of its own.
 // - vota::CPedeDigital::ObtemEstadoPosReconhecimentoBiometrico (fn 5397), whose one target caller, fn 10465 (pending),
 //   calls it twice, each time with a byte it reads (`i32.load8_u`): ObtemDuasVezes calls it twice with two values, so
 //   that binaryen keeps it a function of its own and folds neither argument.
@@ -19,24 +13,19 @@
 //   (vota::CRegistraDigitalOperador::ProcessTick) and 10489 (vota::CPedeAnoNascimentoSemBiometria::ProcessInput): 10489
 //   is in the link (unit 142's file), the stand-in stays for 10451.
 //
+// The sink of vota::CInformaAnoDesabilitadoDemo's vtable and the stand-in for vota::CInformaBioDesabilitadaDemo::GetInst
+// (fn 5402) went: fn 10500 (vota::CNomeEleitor::ProcessInput, unit 239's), which holds the first's constructor and
+// GetInst inlined and calls the second twice, is in the link.
 // Declared through asm labels with the object's signatures, so this TU needs no uenux2 header and instantiates nothing;
 // compiled with APP_CXXFLAGS. The stand-ins differ in their bytes, from each other and from every target function.
 extern "C" {
-extern const char cinformaanodesabilitadodemo_vt[] __asm__("_ZTVN4vota27CInformaAnoDesabilitadoDemoE");
 extern const char cdigitalnaoreconhecidaportempo_vt[] __asm__("_ZTVN4vota30CDigitalNaoReconhecidaPorTempoE");
 void w282_obtem(void* estado, bool reconhecido) __asm__(
     "_ZN4vota12CPedeDigital38ObtemEstadoPosReconhecimentoBiometricoEb");
-int w282_bio_demo() __asm__("_ZN4vota27CInformaBioDesabilitadaDemo7GetInstEv");
 int w282_pode_votar() __asm__("_ZN4vota24CInformaEleitorPodeVotar7GetInstEv");
 }
 
 namespace {
-
-// Stands for fn 10500, which calls vota::CInformaBioDesabilitadaDemo::GetInst twice.
-__attribute__((noinline)) int BioDesabilitada()
-{
-    return w282_bio_demo() - w282_bio_demo();
-}
 
 // Stands for fn 10451.
 __attribute__((noinline)) int PodeVotarRegistro()
@@ -56,10 +45,8 @@ const void* volatile w282_sink;
 struct SEstados282Roots {
     SEstados282Roots()
     {
-        w282_sink = cinformaanodesabilitadodemo_vt;
         w282_sink = cdigitalnaoreconhecidaportempo_vt;
         w282_sink = reinterpret_cast<const void*>(&ObtemDuasVezes);
-        w282_sink = reinterpret_cast<const void*>(&BioDesabilitada);
         w282_sink = reinterpret_cast<const void*>(&PodeVotarRegistro);
     }
 } w282_roots;

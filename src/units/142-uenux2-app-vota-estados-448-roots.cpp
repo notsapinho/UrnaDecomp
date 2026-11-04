@@ -1,8 +1,10 @@
-// Roots: keep the vtables of two classes of src/units/142-uenux2-app-vota-estados-448.mk, and with them their slots
-// (target fns 448, 765, 1718, 11794, 10490 and the pending traps), in the skeleton link the way the target keeps them.
+// Roots: keep the vtable of vota::CUrnaInspecionada (src/units/142-uenux2-app-vota-estados-448.mk), and with it its slots
+// (target fns 448, 765, 1718 and 11794), in the skeleton link the way the target keeps them.
 //
-// Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-// singleton (fns 11797 and 10500, not reconstructed). Taking the vtables' addresses keeps every slot.
+// The vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
+// singleton (fn 11797, not reconstructed). Taking the vtable's address keeps every slot.
+// vota::CPedeAnoNascimentoSemBiometria's sink went: its GetInst, which holds its constructor inlined, is in the link,
+// inlined into fn 10500 (unit 239) as in the target.
 // vota::CPerguntaCodigoSuspensao's GetInst, which holds its constructor inlined, is in the link, inlined into 10415
 // (unit 152), so no sink keeps that vtable.
 // vota::CJustificativaEfetuada's GetInst (fn 2747), which holds its constructor inlined, is in the link (its caller
@@ -25,7 +27,6 @@
 // uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 extern const char curnainspecionada_vt[] __asm__("_ZTVN4vota17CUrnaInspecionadaE");
-extern const char cpedeanonascimentosembiometria_vt[] __asm__("_ZTVN4vota30CPedeAnoNascimentoSemBiometriaE");
 int r142_habilitacao(int, int, int, int, int, int) __asm__("_ZN5comum24CEleitorDadosHabilitacaoC1ERKNS_2md18CEleitorIdentidadeENS0_16ETipoHabilitacaoEiRKNS1_34CEleitorDadosHabilitacaoBiometricaERKN7ecourna3app5dados24CApresentacaoFotoEleitorE");
 }
 
@@ -44,7 +45,6 @@ struct SEstados448Roots {
     SEstados448Roots()
     {
         estados448_sink = curnainspecionada_vt;
-        estados448_sink = cpedeanonascimentosembiometria_vt;
         estados448_sink = reinterpret_cast<const void*>(&DuasHabilitacoes);
     }
 } estados448_roots;
