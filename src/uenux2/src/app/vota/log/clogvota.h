@@ -153,6 +153,13 @@ public:
     // and 11991 their loop counter, 12065 and 12081 a byte plus one), which a uebyte parameter gives; its spelling is
     // chosen.
     void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, uebyte via);
+    // LogaGerandoRelatorio (fn 1047): comum::IEventosLog::loga (fn 233) of "Gerando relatório [{}] [{}]" (the report's
+    // name through ConverteERelatoriosUE, fn 5879, then "INÍCIO" when the flag is 0 and "TÉRMINO" otherwise). Its
+    // target callers pass CLogVota::GetInst()'s result, the report (fn 11946 RELATORIO_ZERESIMA, 11943
+    // RELATORIO_RESUMO_ZERESIMA, 12105 RELATORIO_BUJ and RELATORIO_BIM, 12110 RELATORIO_ELEITORES_HABILITADOS_
+    // BIOGRAFICAMENTE and RELATORIO_BU), and 0 before it and 1 after it. Its name, from the message, the flag's bool and
+    // its place are chosen.
+    void LogaGerandoRelatorio(comum::ERelatoriosUE relatorio, bool termino);
     void LogaMesarioIndagadoQtdViasAdicionais();
     void LogaMesarioNaoSolicitouViasAdicionais();
     void LogaMesarioIndagadoQualidadeBU();
