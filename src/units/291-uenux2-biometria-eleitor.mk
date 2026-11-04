@@ -2,14 +2,16 @@
 # by this unit's roots (291-uenux2-biometria-eleitor-roots.cpp), with no source of their own here:
 # - comum::CEleitores::GetCurrentBiometriaEleitor (target fn 1393, 15 B, no record): `f1937(p0, f656(p1 + 4))`, the
 #   current record's CEleitorDetalhe::GetBiometria (fn 1937, unit 98) returned through the result's address. Its six
-#   callers (10425, 10465, 10474, 10478, 10500, 10512, vota's identification states, not written) pass
+#   callers (10425, 10465, 10474, 10478, 10500, 10512, vota's identification states; 10474 and 10478, unit 282's, and
+#   10512, unit 161's, are in the link) pass
 #   CEleitores::GetInst()'s result (10500: `f1393(frame + 8, f326())`), and +4 is CEleitores' CDataMap base, whose
 #   GetCurrent (fn 656) it calls: so a member of CEleitores, out of line, a reading. Its file, celeitores.cpp (unit 110's
 #   source), is a reading too: in the target's link it comes before comum/justificativa/cjustificador.cpp's GetInst (fn
 #   1391) in band 9, and celeitores.cpp's records come before cjustificador.cpp's. Its name (after
 #   GetCurrentAbrangenciaEleitor's), its const and its line after GetCurrentAbrangenciaEleitor are chosen. It matched
 #   through the scan's content pass (`source` content in step 9's first scan) once 1937 had its name; BiometriasCorrentes
-#   in the roots stands in for the six callers, two calls on two objects, reading both results.
+#   in the roots stands in for the three callers not written (10425, 10465, 10500), two calls on two objects, reading
+#   both results.
 # - api::CPolySingleton<api::IFingerDetection>::instance (target fn 3615, 2126 B): the header's template (records
 #   cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105, [T = api::IFingerDetection]), whose copy matches from the
 #   roots object, as IFingerMatcher's 1686 does from unit 135's. The target keeps it a body of its own, where binaryen

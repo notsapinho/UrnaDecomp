@@ -58,6 +58,21 @@ public:
     // 185) and discards its result right before the call. Its name, after SalvaGeralInterno's, its const and its place
     // in cappinfo.cpp are chosen.
     md::estadoaplicacao::CEstadoGeral LeGeralInterno() const;
+    // The general state of the internal flash: the one held when m_geral is set and the word at +528 is 0, a copy of
+    // GetGeral()'s, else LeGeralInterno's. Fn 5740 holds it with no frame of its own (the copy goes to the caller's
+    // frame): CAppInfo::GetInst once for the two tests, GetInst again for GetGeral (fn 291), and LeGeralInterno (fn
+    // 2273) called on the first one's result. It reads private members, so it is a member. Out of line in cappinfo.cpp,
+    // clang inlines LeGeralInterno into it, the CServicoEstadoGeral in a 16-byte frame of its own where 5740 calls 2273
+    // (measured in the whole link: 5740's inserted rows); inline here, 2273 stays a call. Its name, its being static, the
+    // local reference and the test's spelling are chosen; what the word at +528 holds is not known.
+    static md::estadoaplicacao::CEstadoGeral GetGeralInterno()
+    {
+        const CAppInfo& appInfo = GetInst();
+        if (appInfo.m_geral && appInfo.m_turnoCarregado == 0) {
+            return GetInst().GetGeral();
+        }
+        return appInfo.LeGeralInterno();
+    }
 
     static bool EhTreinamentoEleitor();
 

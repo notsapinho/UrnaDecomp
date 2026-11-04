@@ -2,8 +2,13 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include <string>
+
 #include "app/comum/dados/celeitores.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.h"
+#include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
@@ -48,6 +53,34 @@ void CVerificaDadoEleitor::StartState()
     CLogVota::GetInst().LogaSolicitacaoDadoPessoalEleitor();
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CVerificaDadoEleitor::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA: {
+        const std::string ano = m_form->GetEntradas().at(0)->GetTexto();
+        if (ano.size() <= 3) {
+            CLogVota::GetInst().LogaDadoDigitadoIncompleto();
+            break;
+        }
+        const unsigned long digitado = std::stoul(ano);
+        if (comum::CEleitores::GetInst().GetCurrent()->GetEleitor().GetAnoNascimento() == digitado) {
+            CLogVota::GetInst().LogaDadoDigitadoConfere();
+            m_pNextState = &CRegistraDigitalOperador::GetInst();
+        } else {
+            CLogVota::GetInst().LogaDadoDigitadoNaoConfere();
+            m_pNextState = &CDadoEleitorNaoConfere::GetInst();
+        }
+        break;
+    }
+    case api::INPUT_CORRIGE:
+        CLogVota::GetInst().LogaHabilitacaoCanceladaConfirmacaoDado();
+        m_pNextState = &CPedeIdentidade::GetInst();
+        break;
+    default:
+        break;
+    }
 }
 
 } // namespace vota

@@ -113,6 +113,13 @@ private:
     // target passes the list alone. Its being private is chosen.
     static std::vector<md::CImpedido> GetEleitoresImpedidos(const std::vector<std::string>& arquivos);
 
+    // fn 5772: the voters of the urn's static files, sorted. Its lambda's __func typeinfo (string 500386, a local `$_0` of
+    // `ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_string...`, no K: not const) names the member and
+    // its parameter, and it reads `this`: the lists at +76 and +64 (each prefixed with the directory by MontaCaminhos,
+    // fn 1936, and read through LeArquivos, fn 5771) and the type at +100 it decorates each voter with. Its callers are
+    // CompleteLoad (fn 6734) and StaticLoad (fn 7787), not written. Its being private is chosen.
+    std::vector<md::CEleitorDecorator> GetEleitoresEstaticos(const std::string& diretorio);
+
     // fn 5764, record celeitores.cpp:719, which gives the signature: the voter's record, with the impediments of the
     // entry of the sorted list at the index when its identity is the voter's (the index then moves on), none when it
     // is beyond the voter's, and code 7851 when the voter's is beyond it; with the voter's dynamic data when given. The

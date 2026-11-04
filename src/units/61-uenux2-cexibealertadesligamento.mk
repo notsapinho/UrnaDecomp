@@ -47,6 +47,43 @@
 # names (s_mutex, s_inst), the type of the +24 pointee (api::IForm<api::IScreen>) and every member name. The +12
 # member's type is unit 50's api::CDateTime (api/util/cdatetime.h and cdate.h).
 #
+# CAppState::SetNextState, out of line in cappstate.cpp, has no target function: binaryen inlines its one store into
+# every caller. Five states call it for their next-state stores: vota::CEncerramentoAntecipado::ProcessInput (10731) and
+# CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
+# comum::CConfirmaFimRegistroMesarios::ProcessInput (10383), unit 135's; CMesarioRegistrado::StartState (10339), unit
+# 279's. Each matches so and not with the assignment; the bytes ask for the call itself in 10737 alone, and the four
+# others match a replay in which binaryen inlined a call (below). What was measured:
+# - With the assignment the first four differ in binaryen's local numbers, the target reusing `this`'s local where ours
+#   takes another (10731: `local.tee 0` against our `local.tee 1`); 10731 and 10383 in those alone, 10339 also by two
+#   rows inserted and two deleted, 10710 also in an `i32.or`'s operand order and a store's place. In a replay of the
+#   link's own `wasm-opt -Oz` (link-map's replay.sh, line 3) on our module before it (r02-stripped.wasm, edited as
+#   wasm-dis text and assembled again with wasm-as; the round trip gives the link's r05.wasm byte for byte), then
+#   link-map's metadce and final wasm-opt lines, each of the four takes the target's rows, names only, both with an
+#   empty function binaryen inlines called at the body's head and with each `i32.store offset=4` on `this` turned into a
+#   call of a two-parameter function that does that store (a reading: binaryen runs its function passes again on a body
+#   it inlined a call into). Nothing else in the target's bodies shows what was inlined: every callee of 10731, 10383
+#   and 10339 is a match.
+# - 10737 stores the next state in each arm (codegen.md C13), which an extra pass does not give (the replay with the
+#   empty call: 16 over 41 rows, unchanged): two setter calls do, in the replay and in the link, since clang keeps two
+#   calls apart (a probe compile of cfimaquisicaovotos.cpp: two calls of SetNextState in StartState, wasm-objdump -d)
+#   where its MergedLoadStoreMotion joins two stores.
+# - Not every state, and for most the bytes do not tell: the same empty call given to all 151 StartState and
+#   ProcessInput bodies of app/uenux2's objects at once, each body then scored on its own in the replay, changes the
+#   rows of 4 of the 136 matched ones (5958, 10391, 11905 and 7377), so those had no such call in the target (a reading)
+#   and assign the member; every other matched state, comum's CTituloMesarioInvalido::StartState 10348 and
+#   IPedeTituloMesario::ProcessInput 10313 among them, keeps its rows with the call and without it, so for those the
+#   bytes leave assignment and setter alike, and they assign the member, a choice. The setter itself, given to the
+#   next-state stores of nine more written states of units 277, 152, 135 and 121 (10734, 10740, 10722, 10721, 10713,
+#   10706, 10380, 10337, 10689) on the link before unit 277's list took the data's order, gave a byte-identical module
+#   (sha256): for them the bytes do not decide, and they assign the member, a choice (a reading of why: each already
+#   holds a body binaryen inlines, a one-caller GetInst or helper).
+# Chosen: that the call is a setter (an empty call binaryen inlines gives the first four the same rows; only 10737's two
+# stores need the store in the call), its name, its parameter's name, protected access and its place in cappstate.cpp.
+# Its body is the same bytes as simulador::CWasmNullPrinter::ApplyStyle's (target fn 8365, slot 12 of that class's
+# vtable), and cappstate.cpp.o links ahead of cwasmnullprinter.cpp.o, so binaryen's duplicate elimination keeps this
+# copy and 8365's match line names comum::CAppState::SetNextState, the twin our link keeps (how-to step 10, "A twin
+# whose name moved").
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CEXIBEALERTADESLIGAMENTO_SRCS := src/app/comum/cappstate.cpp src/app/vota/eleitor/iniciovotacao/cexibealertadesligamento.cpp
 UENUX2_SRCS += $(CEXIBEALERTADESLIGAMENTO_SRCS)

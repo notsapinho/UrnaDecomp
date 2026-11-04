@@ -16,4 +16,9 @@ void CAppState::ProcessKey(uebyte)
 {
 }
 
+void CAppState::SetNextState(CAppState* pNextState)
+{
+    m_pNextState = pNextState;
+}
+
 } // namespace comum

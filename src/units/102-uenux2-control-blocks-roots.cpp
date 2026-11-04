@@ -45,7 +45,6 @@
 #include "api/persistencia/idao.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
 #include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
-#include "app/comum/dados/asn/eleitor/cvisitanteeleitor.h"
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/crespostasds.h"
@@ -108,7 +107,6 @@ extern const char w102_vt_cgravadorversoesarquivos[] __asm__("_ZTVNSt3__220__sha
 extern const char w102_vt_cidentificacaosecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md19CIdentificacaoSecaoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md30CIdentificacaoUrnaContingenciaENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cvisitantefoto[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn14CVisitanteFotoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
-extern const char w102_vt_cvisitanteeleitor[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn17CVisitanteEleitorENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_ijustificadordao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao16IJustificadorDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_icomparecimentomesariodao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao25IComparecimentoMesarioDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cblockcipher_caescipher_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security12CBlockCipherINS3_10CAesCipherENS3_5CTrngEEENS_10shared_ptrINS3_16ISymmetricCipherEE27__shared_ptr_default_deleteISA_S7_EENS_9allocatorIS7_EEEE");
@@ -205,7 +203,6 @@ template struct SBloco<TItem, vota::CItemVersoesPacotesVota>;
 template struct SBloco<TItem, vota::CItemParametrosUrnaVota>;
 template struct SBloco<TItem, vota::CItemVisualizarCandidatosVota>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
-template struct SBloco<comum::asn::CVisitanteEleitor, comum::asn::CVisitanteEleitor>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w102_preshow()
 {
@@ -283,7 +280,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cidentificacaosecao;
         w102_sink = w102_vt_cidentificacaournacontingencia;
         w102_sink = w102_vt_cvisitantefoto;
-        w102_sink = w102_vt_cvisitanteeleitor;
         w102_sink = w102_vt_ijustificadordao_idao;
         w102_sink = w102_vt_icomparecimentomesariodao_idao;
         w102_sink = w102_vt_cblockcipher_caescipher_ctrng;

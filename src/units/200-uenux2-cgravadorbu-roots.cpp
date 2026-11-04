@@ -13,9 +13,9 @@
 //   caller, 11629 again, calls each three times. w200_votacao builds two results with different types and pushes a
 //   copy of each, two call sites of each; the push_back's copies call the vector copy fn 1556, which 3824 and 3817 call
 //   too.
-// - comum::CGravadorBU::AcrescentaVotoVotavel (fn 3820), a private static member: its one target caller is fn 3819
-//   (not written, unnamed), which calls it three times, with the vote types 2 and 1. w200_votos calls it twice through
-//   an asm label, with those two types and varying the candidate, so dead-argument elimination folds no argument.
+// - comum::MontaVotosCargos (fn 3819), a free function of cgravadorbu.cpp: its one target caller, 11629, calls it three
+//   times, over the cargos of each type. w200_monta calls it twice through an asm label (the result's address first),
+//   with two lists of cargos it is given.
 // - comum::FiltraCargos (fn 3818), a free function of cgravadorbu.cpp: its one target caller, 11629, calls it three
 //   times, with the types 0, 1 and 2. w200_filtra calls it twice through an asm label (the result's address first),
 //   with a type it is given and that type plus one, into buffers it is given.
@@ -27,8 +27,8 @@
 
 extern "C" {
 extern const char w200_vt_bu[] __asm__("_ZTVN5comum11CGravadorBUE");
-void w200_acrescenta(void*, int, int, int, const void*) __asm__(
-    "_ZN5comum11CGravadorBU21AcrescentaVotoVotavelERNSt3__26vectorINS_2md13CVotosVotavelENS1_9allocatorIS4_EEEENS3_5CVoto5ETipoEjtRKNS3_6CCargoE");
+void w200_monta_votos(void*, const void*, const void*, const void*, const void*, const void*) __asm__(
+    "_ZN5comum16MontaVotosCargosERKNSt3__26vectorINS_2md6CCargoENS0_9allocatorIS3_EEEERKNS0_3mapIhhNS0_4lessIhEENS4_INS0_4pairIKhhEEEEEERKNS_4CRdvERKNS_13CCandidaturasERKNS_9CPartidosE");
 void w200_filtra_cargos(void*, const void*, int) __asm__(
     "_ZN5comum12FiltraCargosERKNSt3__26vectorINS_2md6CCargoENS0_9allocatorIS3_EEEENS3_5ETipoE");
 }
@@ -56,12 +56,12 @@ __attribute__((noinline)) std::size_t w200_votacao(std::vector<comum::md::CResul
     return resultados.size();
 }
 
-// stands for fn 3819
-__attribute__((noinline)) void w200_votos(void* votos, int candidato, int quantidade, const void* cargo,
-    const void* outroCargo)
+// stands for fn 11629
+__attribute__((noinline)) void w200_monta(void* votos, void* outros, const void* cargos, const void* outrosCargos,
+    const void* ordem, const void* rdv, const void* candidaturas, const void* partidos)
 {
-    w200_acrescenta(votos, 2, candidato, quantidade, cargo);
-    w200_acrescenta(votos, 1, candidato >> 4, quantidade, outroCargo);
+    w200_monta_votos(votos, cargos, ordem, rdv, candidaturas, partidos);
+    w200_monta_votos(outros, outrosCargos, ordem, rdv, candidaturas, partidos);
 }
 
 // stands for fn 11629
@@ -77,7 +77,8 @@ std::size_t (*volatile w200_sink_resultados)(const std::vector<comum::md::CResul
 std::size_t (*volatile w200_sink_votacao)(std::vector<comum::md::CResultadoVotacao>&, uedword, ueword,
     const std::vector<comum::md::CVotosCargo>&);
 
-void (*volatile w200_sink_votos)(void*, int, int, const void*, const void*);
+void (*volatile w200_sink_monta)(void*, void*, const void*, const void*, const void*, const void*, const void*,
+    const void*);
 
 void (*volatile w200_sink_filtra)(void*, void*, const void*, int);
 
@@ -89,7 +90,7 @@ struct SW200Roots {
         w200_sink_vt = w200_vt_bu;
         w200_sink_resultados = w200_resultados;
         w200_sink_votacao = w200_votacao;
-        w200_sink_votos = w200_votos;
+        w200_sink_monta = w200_monta;
         w200_sink_filtra = w200_filtra;
     }
 } w200_roots;

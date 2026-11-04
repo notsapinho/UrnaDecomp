@@ -42,7 +42,8 @@ class CCargo;
 // CVotosVotavel its push_back (fn 1944) copies. TQtdEleitor is a 16-bit count the body passes on unmasked to
 // CVotosVotavel's constructors, which take a ueword: as ueword it gives the target's rows, and as ecourna's CBaseType
 // the count is masked where the target's is not (src/units/200-uenux2-cgravadorbu.mk); the spelling ueword is chosen.
-// That the aliases are the class's and the member private is chosen, and so is the forward declaration of md::CCargo.
+// That the aliases are the class's and the member public (fn 3819's helpers, free functions of cgravadorbu.cpp, call
+// it) is chosen, and so is the forward declaration of md::CCargo.
 // Evidence for the types: +72's copy
 // constructor call, +180's tree destroy, +168's 12-byte elements whose destruction frees a std::string, +284's node and
 // its unsigned compare of the post (md::TCargoID is a byte); +40 is the same object fn 12098 passes
@@ -56,10 +57,10 @@ public:
 
     virtual void GravaResultado(api::CFile& arquivo) const override;
 
-private:
     static void AcrescentaVotoVotavel(TVetorVotosVotaveis& votos, md::CVoto::ETipo tipo, TCandidatoID candidato,
         TQtdEleitor quantidade, const md::CCargo& cargo);
 
+private:
     api::CDateTime m_dataHora;
     uedword m_naoRecuperado1[3];
     EUrnaFase m_faseUrna;

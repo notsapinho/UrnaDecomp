@@ -23,6 +23,11 @@ enum EUeIoError {
     EUE_IO_SEEDER_POSICAO_INVALIDA = 5959,   // seek: the position is past the size
     EUE_IO_SEEDER_FALHA_REPOSICIONAR = 5960, // seek: CFile::Seek failed
     EUE_IO_SEEDER_SALTO_INVALIDO = 5961,
+    // the codes api::CPartialFileASN's readers throw (ReadFromFile, record cpartialfileasn.h 182, and
+    // DecodeObjectFunction, 277 and 285, all held by target fn 11523); chosen from the messages and the class
+    EUE_IO_ARQUIVO_PARCIAL_NAO_ABERTO = 5963,
+    EUE_IO_CONTEUDO_PARCIAL_NAO_DECODIFICADO = 5968,
+    EUE_IO_CONTEUDO_PARCIAL_INVALIDO = 5969,
     // the codes of api::CDataMap's four throws (target fns 2919, 3892, 5725 and 5377, 5378); chosen from the messages
     EUE_IO_REGISTRO_CORRENTE_INVALIDO = 5976,
     EUE_IO_OPERACAO_INVALIDA = 5977,

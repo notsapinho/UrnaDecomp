@@ -3,6 +3,8 @@
 // line is a choice (src/units/282-uenux2-confirmaidentidade-estados.mk).
 #include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecidaportempo.h"
 
+#include <format>
+
 #include "api/gui/cinteractiveform.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
@@ -13,6 +15,16 @@
 namespace vota {
 
 CDigitalNaoReconhecidaPorTempo::~CDigitalNaoReconhecidaPorTempo() = default;
+
+void CDigitalNaoReconhecidaPorTempo::StartState()
+{
+    m_pNextState = this;
+    *m_tentativa = std::format("Tentativa {} de {}", CControlaReconhecimento::GetInst().GetTentativa(),
+                               CControlaReconhecimento::GetInst().GetLimiteTentativas());
+    CLogVota::GetInst().LogaTimeoutReconhecimentoDedo(CControlaReconhecimento::GetTentativa(),
+                                                      CControlaReconhecimento::GetLimiteTentativas());
+    m_form->Slot2();
+}
 
 void CDigitalNaoReconhecidaPorTempo::ProcessInput()
 {

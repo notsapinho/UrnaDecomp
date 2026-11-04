@@ -9,16 +9,17 @@
 // callers vary varies here, or binaryen would fold it. A call goes when every target caller of its adder is in the
 // link (src/units/README.md "Companion files"):
 //   TelaMTA, TelaMTB  the callers of 180, 619, 651 and 1152 (AddTextField), 435 (AddLed) and 1072 (AddBeep) not in the
-//                     link: 4633, 5341, 10316, 10443, 10451, 10465, 10474, 10489, 10500 and 10590 for 180, the same
-//                     but 10489 for 435, 10316, 10451, 10465 and 10474 for 1072, 10316, 10465, 10474 and 10500 for
-//                     651, 10500 for 619 and 10465 for 1152. Their calls of 5409 and 5419 (AddTextField over a
+//                     link: 4633, 5341, 10316, 10451, 10465, 10500 and 10590 for 180 and 435, 10316, 10451 and 10465
+//                     for 1072, 10316, 10465 and 10500 for 651, 10500 for 619 and 10465 for 1152 (10443, 10474 and
+//                     10489 are in the link). Their calls of 5409 and 5419 (AddTextField over a
 //                     CTextSource and over a std::function, with no text), 941 (AddBuzz) and 728 (AddClock) went:
 //                     every target caller of the four is in the link (5409's 1150 and 2734, 5419's 1905, 941's 13
 //                     and 728's 16), and the link without those calls moved no row (steps 6 to 10)
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
-//                     2291, 2376, 2380, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
-//                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary; TelaB for 7787,
+//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
+//                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, unit
+//                     110's, is in the link); TelaB for 7787,
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
@@ -143,8 +144,7 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341; 1150, 5343, 10204, 10214 and 10676 are in the link) and of 301
-//                         (8 of its 49 target callers are not in the link: 10316, 10443, 10451, 10465, 10474, 10489,
-//                         10500 and 10590)
+//                         (5 of its 49 target callers are not in the link: 10316, 10451, 10465, 10500 and 10590)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
 //                12105 and 12110, not reconstructed (11256, 2890 and 12005 are in the link); it calls Build twice
@@ -182,8 +182,8 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
 }
 
 // The MT builder's input fields:
-//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (8 of its 39 target callers are not in the
-//                 link: 10316, 10443, 10451, 10465, 10474, 10489, 10500 and 10590): it calls it twice, or binaryen
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (5 of its 39 target callers are not in the
+//                 link: 10316, 10451, 10465, 10500 and 10590): it calls it twice, or binaryen
 //                 would inline it
 // The stand-in for 5410, the third caller of 3674 (CMTFormBuilder::AddField) and of 3673 (IInputField<IScreenMT>'s
 // constructor), went: 5410 is in the link (vota::MontaTelaEleitorPodeVotar, unit 161, over AddInputControl(int)), with

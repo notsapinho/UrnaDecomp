@@ -12,10 +12,16 @@ namespace comum::md {
 // target fn 10273) and its function-name text at 418762 (ledger/strings.tsv), which take a const md::CVotosCargo &.
 // Recovered: the layout only, 16 bytes: fn 3819 stores a byte at +0 and one at +1 and builds the vector at +4, and fn
 // 2853 copies the two bytes as one 16-bit word and the vector, whose 24-byte elements it copies whole (CVotosVotavel is
-// trivially copyable). The constructors are not reconstructed. Chosen: the path, beside cvotosvotavel.h; the two bytes'
+// trivially copyable). The constructor from the three members is held by fn 3819 (comum::MontaVotosCargos), which
+// binaryen inlines, its `this` returned through a block result there (docs/how-to-decompile.md step 3): written out of
+// line, in md/cvotoscargo.cpp, whose path is chosen beside this header; the vector is copied, so a const reference, and
+// the parameters' types follow the members'. Chosen: the path, beside cvotosvotavel.h; the two bytes'
 // types beyond their width and every member name, after ModuloBoletimUrna::TotalVotosCargo's fields codigoCargo,
 // ordemImpressao and votosVotaveis, in their order.
 class CVotosCargo {
+public:
+    CVotosCargo(TCargoID codigoCargo, uebyte ordemImpressao, const std::vector<CVotosVotavel>& votosVotaveis);
+
 private:
     TCargoID m_codigoCargo;
     uebyte m_ordemImpressao;

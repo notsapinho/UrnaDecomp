@@ -17,8 +17,7 @@ namespace vota {
 
 // vota::CDigitalNaoReconhecida (RTTI: si_class of comum::CAppState; vtable @1591800 [1284, 2884, 10474, 7480, 1661,
 // 218, 425, 10473, 425]): the operator is told that the voter's fingerprint was not recognized. It overrides the
-// destructors, StartState (slot 2, fn 10474, record cdigitalnaoreconhecida.cpp:82, pending:
-// src/units/282-uenux2-confirmaidentidade-estados-pending.cpp says what it waits for) and ProcessInput (slot 7, fn
+// destructors, StartState (slot 2, fn 10474, record cdigitalnaoreconhecida.cpp:82) and ProcessInput (slot 7, fn
 // 10473). The destructor is out of line: slots 0 and 1 are fns 1284 and 2884, the bodies binaryen keeps once for the
 // states with three std::shared_ptr at +12, +20 and +28 (vota::CRetirarMR's, CEleitorVotouNaoVotou's). A singleton:
 // GetInst has no target function of its own, fn 5397 (vota::CPedeDigital::ObtemEstadoPosReconhecimentoBiometrico)
@@ -32,7 +31,8 @@ namespace vota {
 // std::make_shared'd (control block vptr 1588328, __shared_ptr_emplace<std::string>), the first from "Tentativa x de
 // x", the second from " ", each the text of a field of the form; +28 the form, which ProcessInput reads through
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record cinteractiveform.h:57 @1591872). bool for the
-// byte and every member name are chosen; what StartState writes into the two strings is not read here.
+// byte and every member name are chosen. StartState formats the attempt into +12's string and the matcher's score into
+// +20's (src/units/282-uenux2-confirmaidentidade-estados.mk has its rows).
 class CDigitalNaoReconhecida final : public comum::CAppState {
 public:
     virtual ~CDigitalNaoReconhecida() override;

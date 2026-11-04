@@ -27,7 +27,8 @@ __attribute__((noinline)) int CodigosResumidos(const char* primeira, const char*
     return codigos[1] + codigos[4];
 }
 
-// Stands for fn 2273's callers 5740, 11223 and 12110, not written (1543 and 11902 are in the link). The first argument is the result's
+// Stands for fn 2273's callers 11223 and 12110, not written (1543, 5740 and 11902 are in the link). The first
+// argument is the result's
 // room, the second the object it is called on, which 2273 never reads (binaryen drops it, as in the target).
 __attribute__((noinline)) int EstadosGerais(char* estados, const char* appInfo)
 {

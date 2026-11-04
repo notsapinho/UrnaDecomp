@@ -76,9 +76,9 @@
 # strings). This fragment read that shape as the executable TU's copy (levels.md V1) while src/app/roots_vector.o's copy
 # of 857, at the tree's flags, was the link's and differed. The hand line that named 2240 went with it.
 #
-# Not written: 1903's singleton, whose class no body read names. CJustificador's (1391, 2810, 11476, 11477) is unit 113's,
-# with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment). 5635 stays a stub in
-# md/estadoaplicacao/cestadogeral.cpp. 436, which calls
+# 1903's singleton is unit 307's (vota::CParametrosImagemDigital, a chosen class). CJustificador's (1391, 2810, 11476,
+# 11477) is unit 113's, with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment).
+# 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp. 436, which calls
 # CPath::GetPathTrab (358), is unit 190's and matches.
 #
 # What decides the form, measured:
@@ -128,6 +128,11 @@
 # - 291, 457, 261, 903: !estado or !estado.has_value(); *estado or estado.value().
 # - 1553: the local or the same expression in the switch; a conditional or an if over a local.
 # - 697: the if or one return with &&. 3788: const CDadoCorrespondencia& or const auto&.
+# CAppInfo::GetGeralInterno (no index, a chosen name), inline in cappinfo.h for comum::CLocal's loader (5740, unit 89),
+# which holds it with no frame of its own: m_geral copied through GetGeral (291) when set and the word at +528 is 0, else
+# LeGeralInterno (2273) called. Written out of line in cappinfo.cpp first, clang inlined 2273 into it (a 16-byte frame
+# and CServicoEstadoGeral's two calls among 5740's inserted rows, where the target calls 2273); inline in the header, 2273
+# stays a call and 5740 matches. cappinfo.h says what is chosen.
 CAPPINFO_SRCS := src/app/comum/appinfo/cappinfo.cpp src/app/comum/appinfo/cappinfosingleton.cpp \
   src/app/comum/dados/md/estadoaplicacao/cestadogeralgap.cpp src/app/comum/dados/cfotos.cpp \
   src/app/comum/dados/cpartidos.cpp

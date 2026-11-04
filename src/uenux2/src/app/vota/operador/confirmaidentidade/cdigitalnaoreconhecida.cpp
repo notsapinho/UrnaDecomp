@@ -1,17 +1,22 @@
 // vota::CDigitalNaoReconhecida (/home/rubio/tse/uenux2/src/app/vota/operador/confirmaidentidade/
 // cdigitalnaoreconhecida.cpp, its record's file). This comment is the reconstruction's. The file's one record is
-// StartState's (line 82): StartState is pending (src/units/282-uenux2-confirmaidentidade-estados-pending.cpp), so that
-// line stays blank. Every other line is a choice, in the order of the use band where it gives one
-// (src/units/282-uenux2-confirmaidentidade-estados.mk): the statics before line 82, ProcessInput after it.
+// StartState's (line 82, column 22: the default argument of CPolySingleton's instance), where StartState's call of it
+// sits. Every other line is a choice, in the order of the use band where it gives one
+// (src/units/282-uenux2-confirmaidentidade-estados.mk): the statics before StartState, ProcessInput after it.
 #include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.h"
+
+#include <format>
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/ctextsource.h"
+#include "api/hwil/ifingermatcher.h"
+#include "api/pattern/cpolysingleton.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
+#include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecidadecbiometria.h"
 #include "app/vota/operador/confirmaidentidade/cpededigital.h"
 #include "app/vota/operador/confirmaidentidade/cverificadadoeleitor.h"
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
@@ -61,25 +66,25 @@ CDigitalNaoReconhecida& CDigitalNaoReconhecida::GetInst()
 std::unique_ptr<CDigitalNaoReconhecida> CDigitalNaoReconhecida::s_inst;
 std::mutex CDigitalNaoReconhecida::s_mutex;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (original lines 69-72: content not recovered)
+#line 73
+void CDigitalNaoReconhecida::StartState()
+{
+    m_pNextState = this;
+    if (TemErroDecifracaoBiometria()) {
+        m_pNextState = &CDigitalNaoReconhecidaDecBiometria::GetInst();
+        return;
+    }
+    *m_tentativa = std::format("Tentativa {} de {}", CControlaReconhecimento::GetInst().GetTentativa(),
+                               CControlaReconhecimento::GetInst().GetLimiteTentativas());
+    auto& digitais = api::CPolySingleton<api::IFingerMatcher>::instance();
+    if (m_bMostraScore) {
+        *m_score = std::format("Score: {}", digitais.Slot4());
+    }
+    CLogVota::GetInst().LogaTentativaReconhecimentoDedo(CControlaReconhecimento::GetTentativa(),
+                                                        CControlaReconhecimento::GetLimiteTentativas());
+    m_form->Slot2();
+}
 
 void CDigitalNaoReconhecida::ProcessInput()
 {

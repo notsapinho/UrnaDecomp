@@ -26,7 +26,8 @@ extern const char cdigitalmesarionaoreconhecida_vt[] __asm__("_ZTVN5comum29CDigi
 namespace {
 
 // Stands for the target callers of api::CPolySingleton<api::IFingerMatcher>::instance (fn 1686) not written: 3614,
-// 5372, 10316 (CPedeDigitalMesario::ProcessTick, pending here), 10465 and 10474 (10482, unit 282's, is in the link). It
+// 5372, 10316 (CPedeDigitalMesario::ProcessTick, pending here) and 10465 (10474 and 10482, unit 282's, are in the
+// link). It
 // calls the instance twice, so the copy stays out of line, with an empty std::source_location where the callers'
 // default argument makes a record of their own (unit 100's w100_usa does the same).
 __attribute__((noinline)) int ReconheceDigital()

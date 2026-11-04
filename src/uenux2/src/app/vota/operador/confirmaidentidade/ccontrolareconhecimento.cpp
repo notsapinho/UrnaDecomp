@@ -6,11 +6,16 @@
 #include "api/gui/cmtformbuilder.h"
 #include "api/ipc/cmessagequeue.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/celeitores.h"
+#include "app/vota/comum/votadefs.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/log/clogvota.h"
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.h"
+#include "app/vota/operador/confirmaidentidade/cparametrosimagemdigital.h"
+#include "app/vota/operador/confirmaidentidade/cpededigital.h"
 
 namespace vota {
 
@@ -18,10 +23,68 @@ int CControlaReconhecimento::s_tentativa = 1;
 int CControlaReconhecimento::s_verificacao = 1;
 int CControlaReconhecimento::s_tentativaRegistrada = 1;
 uebyte CControlaReconhecimento::s_indiceDedo = 0;
+std::vector<uebyte> CControlaReconhecimento::s_digitalCapturada;
+std::vector<uebyte> CControlaReconhecimento::s_digitalRegistrada;
+std::string CControlaReconhecimento::s_dedoRegistrado;
+ueword CControlaReconhecimento::s_qualidadeCapturada = 0;
+int CControlaReconhecimento::s_faixasTreinamento[5] = {};
 
 CControlaReconhecimento::~CControlaReconhecimento() = default;
 
-// (original lines 24-99: content not recovered)
+CControlaReconhecimento::CControlaReconhecimento()
+    : comum::CAppState(EVENTO_ENTRADA)
+    , m_form(MontaTelaEleitorPodeVotar())
+{
+    CParametrosImagemDigital::GetInst();
+}
+
+CControlaReconhecimento& CControlaReconhecimento::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CControlaReconhecimento());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CControlaReconhecimento> CControlaReconhecimento::s_inst;
+std::mutex CControlaReconhecimento::s_mutex;
+
+void CControlaReconhecimento::StartState()
+{
+    s_verificacao = 1;
+    s_tentativa = 1;
+    s_indiceDedo = 0;
+    s_tentativaRegistrada = 1;
+    s_digitalCapturada.clear();
+    s_digitalRegistrada.clear();
+    const bool treinamento = EhTreinamentoMesario();
+    comum::CEleitores& eleitores = comum::CEleitores::GetInst();
+    if (treinamento) {
+        s_faixasTreinamento[0] = eleitores.GetQuantidade();
+        const int faixa = s_faixasTreinamento[0] / 6;
+        s_faixasTreinamento[1] = faixa;
+        s_faixasTreinamento[2] = faixa;
+        s_faixasTreinamento[3] = faixa;
+        s_faixasTreinamento[4] = faixa;
+        const int sequencial = comum::CEleitores::GetInst().GetCurrent()->GetEleitor().GetSequencial();
+        if (sequencial > faixa * 5 && sequencial <= s_faixasTreinamento[0]) {
+            m_form->Slot2();
+            m_pNextState = this;
+        } else {
+            m_pNextState = &CPedeDigital::GetInst();
+        }
+    } else if (eleitores.GetCurrent()->GetEleitor().TemBiometria() &&
+               comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().TemDedos()) {
+        m_pNextState = &CPedeDigital::GetInst();
+    } else {
+        CLogVota::GetInst().LogaEleitorNaoPossuiBiometria();
+        m_form->Slot2();
+        m_pNextState = this;
+    }
+}
+
+// (original lines 87-99: content not recovered)
 #line 100
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTelaEleitorPodeVotar()
 {
@@ -98,9 +161,9 @@ bool CControlaReconhecimento::PrimeiraTentativa()
     return s_tentativa == 1;
 }
 
-} // namespace vota
+uebyte CControlaReconhecimento::GetLimiteTentativas()
+{
+    return comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetNumTentativasHabilitacao();
+}
 
-// <stubs>
-// f1256 · 109 B · unmatched · placement: link order · name unknown
-// ? f1256() { ... }
-// </stubs>
+} // namespace vota

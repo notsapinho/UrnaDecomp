@@ -106,8 +106,9 @@
 #   GetNomeMunicipio follows GetSecaoID, the order of their band, 1078 then 1077, by how-to step 3 "What a record's place
 #   says". That is a judgement: a call of GetSecaoID in unwritten code earlier in the file would give the same order with
 #   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
-#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223 and 11908 have no record, so
-#   they cannot be ruled out (11902 is written, in vota's cimpressaopu.cpp).
+#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 11223 and 11908 have no record, so they
+#   cannot be ruled out (11902 is written, in vota's cimpressaopu.cpp; 4161, written since, is ctelasvota.cpp's code,
+#   unit 110's).
 # - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
 #   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
@@ -242,8 +243,9 @@
 # - comum::CLocal::TemSecao (5739, 10 B, a name chosen from md::CLocal::TemSecao, which it returns): the byte at +120
 #   of the data (the section optional's flag) read with no VerificaLido, the target's two loads. No record names it;
 #   in use band 2 it sits between VerificaEhSecao (5742) and FormataAgregadas (5738), the place it has in the file.
-#   Its callers, 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's notes) and 4161, are not written: the roots'
-#   TemSecoes stands for both. It matches (`pnpm wasm score` BYTE-EXACT against the whole link).
+#   Its callers are 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's notes), not written, for which the roots'
+#   TemSecoes stands, and 4161 (vota::AdicionaLocal, unit 110's ctelasvota.cpp), written since. It matches (`pnpm wasm
+#   score` BYTE-EXACT against the whole link).
 # - comum::FormataQtdAgregadas (no index; its name and parameter chosen, its being a free function too): the count of the
 #   aggregated sections put into the format it is given at its one "{:04}" (std::vformat over one unsigned). Fn 1543
 #   (comum::CRelUtil::IncluiCabecalhoEleicoesMZS, unit 123's) holds it behind a 384-byte stack frame of its own, with
@@ -253,8 +255,39 @@
 #   with it (unit 123's fragment has the score).
 # The roots of unit 280 stand in for 4160 and 11242 (3752); 5738's other caller, 1543, is in the link, and its stand-in
 # went.
+#
+# comum::CLocal's loader and the section list, in clocal.cpp after VerificaEhSecao (no record; clocal.h says what is
+# chosen in each), with the pieces 5740 holds:
+# - GetTodasSecoes (target fn 5741) and Carrega (5740), in that order before TemSecao, as use band 2 orders them (5742,
+#   5741, 5740, 5739). Before step 8 (pnpm wasm score against this link's names.tsv) 5741 scored 16 over 657 rows and
+#   5740 183 over 2495, all operand-only: calls, data addresses, the packed std::format strings and the table slots of
+#   the format buffer and of the thrown object's destructor. Step 8 named 5740 by its records (srcloc-anchor: the
+#   cfileasn.h and iconversorasn.h:71 records of the ModuloLocal::Local instances); the scan's content pass found 5741.
+#   Both match.
+# - TemContingencia (no index), the byte fn 4161 reads, out of line after TemSecao.
+# - 5740 holds, each behind a stack frame of its own (binaryen's inlining of a function with one caller): GetPathArquivoLocal
+#   (64 bytes) and in it GetNomeArquivoLocal (208), free functions here; unit 131's CNomeArquivo::NomeArquivoLocal (112),
+#   cnomearquivo.cpp's code (it calls that file's internal FormataNumero, fn 1161, three times:
+#   docs/reference/facts/placing.md P2); CAppInfo::GetGeralInterno (unit 109's cappinfo.h, no frame); and unit 280's
+#   CarregaArquivo<asn::CConversorLocal> (64), with the CFileASN readers' frames (480, 528, 736) and Desconverte's (640).
+#   GetNomeArquivoLocal's frame holds the general state at +4 and the "dat" and "lo" strings at +184 and +196. With the
+#   strings built in GetNomeArquivoLocal itself, as temporaries of its call, the object put them at +4 and +16 and the
+#   state at +28 (wasm-objdump -d of the try object, tools/round/try-tu.sh --symbols); built in a file-static helper that
+#   clang inlines into it (NomeArquivoLocal, a chosen name), they sit above the state, as an inlined callee's locals do
+#   (how-to step 3), and the object has the target's offsets.
+# - The order is measured on whole links. carregaarquivo.cpp is compiled in this list now, right after clocal.cpp, a
+#   choice: the data put its object after clocal.cpp's (below), and the target holds ten other .cpp files' records
+#   between the two (crdv.cpp to ccabecalhopacote.cpp: awk -F'\t' '$1>1559876 && $1<1562844 {print $2}'
+#   ledger/source-locations.tsv). Unit 280's fragment keeps its rules and its notes, and says so. With its object
+#   ahead of clocal.cpp's, as unit 280's list had it, and the two path helpers above Carrega, 5740 scored 205 over 2503
+#   rows (8 inserted, 8 deleted: two of the reader's locals zeroed ahead of CarregaArquivo's frame where the target
+#   zeroes them after its vptr store, and two pairs of locals swapped); with clocal.cpp's object first and the helpers
+#   above Carrega, 331 over 2501 (6 inserted, 10 deleted); with clocal.cpp's object first and Carrega above the
+#   helpers, as written, 183 over 2495, all operand-only. The data agree with the objects' order: clocal.cpp's records
+#   (@1559828 to @1559876) lie ahead of the readers' run (1562844 on).
+# - Unit 309's roots stand in for 5740's caller 7787 (4161 is in the link) and for 5741's callers 12105 and 7787.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
-  src/app/comum/dados/clocal.cpp \
+  src/app/comum/dados/clocal.cpp src/app/comum/dados/carregaarquivo.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \
   src/app/comum/dados/md/clocal.cpp src/app/comum/dados/md/eleitor/cimpedido.cpp \
   src/app/comum/dados/md/candidatura/ccandidatura.cpp src/app/comum/dados/md/candidatura/cindicesfotos.cpp \

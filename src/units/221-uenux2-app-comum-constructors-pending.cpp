@@ -7,7 +7,7 @@
 //   BiometriaMesarioPresenteNosEleitores (fn 3614, three call sites, records :328 and :371, not written), fns 2223,
 //   2742, 2805, 2972, 5371, 5372 and 5376, none matched or named (splat/matched.txt, splat/symbol_addrs.txt),
 //   1149 and 5374 (unit 214's), 3615 (unit 291's) and 3258 (unit 119's CLogVota::LogaMesarioHabilitouEleitor), matched, and 5399 (unit 282's CInformaEleitorPodeVotar::GetInst,
-//   written and `unresolved`), and it holds the GetInst and constructor of vota::CTentativaCapturaDigitalEsgotada and
+//   matched), and it holds the GetInst and constructor of vota::CTentativaCapturaDigitalEsgotada and
 //   vota::CDigitalNaoCapturada inlined (the one store of each vptr, 1592288 and 1592360).
 #include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
 

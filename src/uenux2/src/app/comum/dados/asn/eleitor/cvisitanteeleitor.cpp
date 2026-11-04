@@ -1,5 +1,6 @@
-// Reconstruction: comum::asn::CVisitanteEleitor's destructor (target fns 5698 and 11408) and visit (11407), whose
-// record is line 91. Where each function starts is a choice. Fragment 225 has the rest.
+// Reconstruction: comum::asn::CVisitanteEleitor's constructor (no target function of its own: fn 11523 holds it, binaryen's
+// inlining of its one call), destructor (target fns 5698 and 11408) and visit (11407), whose record is line 91. Where
+// each function starts is a choice. Fragment 225 has the rest, fragment 310 the constructor's evidence.
 #include "app/comum/dados/asn/eleitor/cvisitanteeleitor.h"
 
 #include "app/comum/dados/euecomumdadoserror.h"
@@ -7,8 +8,11 @@
 
 namespace comum::asn {
 
-// (original lines 10-55: content not recovered)
-#line 56
+// (original lines 11-52: content not recovered)
+#line 53
+CVisitanteEleitor::CVisitanteEleitor() : m_naoRecuperado4(0), m_biometria() {}
+
+
 CVisitanteEleitor::~CVisitanteEleitor() = default;
 
 // (original lines 58-61: content not recovered)

@@ -11,11 +11,9 @@
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
-#include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
-#include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -28,8 +26,8 @@ void CAguardaMensagem::ProcessKey(uebyte)
     __builtin_trap();
 }
 
-// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callee with no
-// name: 1823 (491 and 3333 are named now, unit 205).
+// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61: every callee is
+// named now (491 and 3333, unit 205; 1823, unit 168).
 void CIniciodeCiclo::StartState()
 {
     __builtin_trap();
@@ -56,14 +54,6 @@ void CImprimindoBim::StartState()
 // cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 2291 (491 is named now (unit 205)); the
 // others have names (3701 unit 93's, 1880 unit 00's, 2890 unit 156's, 502 unit 31's, 886 unit 165's).
 void CImprimirBUOutrasObrigatorias::StartState()
-{
-    __builtin_trap();
-}
-
-// CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
-// callees with no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's; 2882
-// is unit 246's).
-void CImprimindoZeresima::StartState()
 {
     __builtin_trap();
 }
@@ -100,13 +90,6 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
 // name: 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576, 653 and 1279 have names).
 void CMenuVisualizarCandidatos::StartState()
-{
-    __builtin_trap();
-}
-
-// CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
-// no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's).
-void CReimprimindoResumoZeresima::StartState()
 {
     __builtin_trap();
 }

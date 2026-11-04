@@ -9,22 +9,32 @@
 #   states share (fns 448 and 765), CHabilitaAudioManualmente::StartState (10751);
 # - TituloEncerramentoDigitado (10728, a free function, its name chosen), the text of CTituloEncerramentoInvalido's form,
 #   by the content pass; 10721, which passes its slot (3781) to AddTextField (fn 619), passes ours at the aligned site;
-# - the exit destructors of the statics of CEncerramentoHorarioInvalido (10711, 10712), CAguardaEleitoresVotarem (10719,
-#   10720), CTituloEncerramentoInvalido (10729, 10730), CEncerramentoAntecipado (10732, 10733) and
-#   CHabilitaAudioManualmente (10752, 10753), through ten callers+content hand lines (splat/symbol_addrs.txt, "Unit
-#   277"): each object has two target readers, the slot that holds its class's GetInst inlined (named by vtable, which
-#   casts no vote) and its exit destructor (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
-#   build/out/splat/pieces/asm`). Weighed together: scanned twice on copies without the ten lines and the ten match
-#   lines, the ten rows fall (to differs and no-candidate), the five slots go from differs to unresolved, and so do six
-#   other exit destructors the census pairs with these statics' destructors, unmatched either way (7239, 10223, 10341,
-#   10364, 10371 and 10418; 10341, 10364 and 10371 match since, as comum::CMesarioRegistrado's and the
-#   CPedeTituloMesario* states' own: units 279 and 97).
+# - the slots that hold another class's GetInst inlined by binaryen, matches with the list in the target's data order
+#   (below), which links that class's object ahead of the slot's own: CConfirmaAudio::ProcessInput (10740,
+#   CHabilitaAudioManualmente's GetInst), CPedeTituloEncerramento::StartState (10722, CEncerramentoAntecipado's) and
+#   ProcessInput (10721, CTituloEncerramentoInvalido's), unit 152's CPerguntaFilaEleitorVazia::ProcessInput (10713,
+#   CAguardaEleitoresVotarem's), and CIniciaFinalizacao::StartState (10706, CEncerramentoHorarioInvalido's), which also
+#   needs CLogVota::LogaEncerramentoAntesDoHorario's log call made through a member (below);
+# - CEncerramentoAntecipado::ProcessInput (10731) and CEncerramentoHorarioInvalido::StartState (10710), with their
+#   next-state stores through comum::CAppState::SetNextState (unit 61's fragment has the measurements);
+# - the exit destructors of the statics of those five GetInst's classes, CEncerramentoHorarioInvalido (10711, 10712),
+#   CAguardaEleitoresVotarem (10719, 10720), CTituloEncerramentoInvalido (10729, 10730), CEncerramentoAntecipado (10732,
+#   10733) and CHabilitaAudioManualmente (10752, 10753): each object has two target readers, the slot that holds its
+#   class's GetInst inlined and its exit destructor (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
+#   build/out/splat/pieces/asm`), and the matched slot's votes name it (splat/symbol_addrs.txt, `vote:N by:10706`,
+#   `by:10713`, `by:10721`, `by:10722`, `by:10740`). The ten callers+content hand lines that named them while the slots
+#   did not match went: weighed on copies of the symbol file without them and of the match list without the slots'
+#   and destructors' lines, scanned twice beside a control over the same match copy, the copy and the control hold the
+#   same match rows (eight lines: 12362 and 12362; the last two, once 10706 matched: 12363 and 12363) and splat-build
+#   gives the target's sha256 on both pairs.
 # This unit's members in other units' files, each noted in that unit's fragment: CPerguntaFilaEleitorVazia's GetInst
 # (5426) with its statics' destructors (10716, 10717), its ProcessInput (10713) and CHorarioVotacaoTerminou's (10757)
-# (unit 152); CSincronizaVota::SincronizaEstadoGeral (3333, unit 205) over CAppInfo::SalvaGeralInterno and
-# SalvaGeralExterno (unit 109); CEstadoGeralVota::MarcaFimAquisicao (unit 93, held by 10734); eight CLogVota members
-# (unit 119's file); accessors in vota::CThreadOperador's and comum::CConfiguracaoEleicao's headers (each says what it
-# rests on). The class headers say what each layout rests on.
+# (unit 152; cperguntafilaeleitorvazia.cpp itself is in this unit's list, for its link order);
+# CSincronizaVota::SincronizaEstadoGeral (3333, unit 205) over CAppInfo::SalvaGeralInterno and SalvaGeralExterno (unit
+# 109); CEstadoGeralVota::MarcaFimAquisicao (unit 93, held by 10734); eight CLogVota members and LogaAlertaVota, the
+# private helper of one of them (unit 119's file); comum::CAppState::SetNextState (unit 61's file); accessors in
+# vota::CThreadOperador's and comum::CConfiguracaoEleicao's headers (each says what it rests on). The class headers say
+# what each layout rests on.
 #
 # Evidence, each read in the target (`pnpm wasm fn`):
 # - The vtables (ledger/vtables.json): every class's lies in the run from CHorarioVotacaoTerminou's (@1586824, unit
@@ -49,32 +59,32 @@
 #   and the string, and the text's words were loaded again after the loop. std::all_of, a range-for and
 #   std::ranges::all_of give the same object.
 #
-# Written, not matched, at this link (pnpm wasm score <target> <index> <link> <ours from names.tsv>):
-# - CIniciaFinalizacao::StartState (10706): 237 over 671 rows (inserted 14, deleted 13). The next state is a local
-#   stored once at the end, which our object then holds as one store after the arms, as matched 11838's object does;
-#   this stage's first link, with a store in each arm and the log's message built in the call, read 289 over 679
-#   (inserted 22, deleted 15). Left: binaryen's choice of locals in the
-#   inlined CEncerramentoHorarioInvalido::GetInst, and LogaEncerramentoAntesDoHorario's call of api::CLoga::loga, which
-#   the target makes while the format's temporaries live and after reading +4: of the two forms measured, the message
-#   in a local reads +4 after the format but destroys the temporaries before the call, and the call in one statement
-#   reads +4 before the format.
-# - CEncerramentoHorarioInvalido::StartState (10710): 51 over 126 (inserted 13, deleted 9): the target's condition is
-#   the `i32.or` of GetDemoMode's result and the training flag, ours of the flag and the result, and the target stores
-#   the record of CPolySingleton<comum::IInterfaceInit>::instance() before the info call, ours after it. Our object
-#   tests the flag first and calls first with the condition written either way and with the demo call in the
-#   condition (three forms measured on the object, one object).
-# - CPedeTituloEncerramento::ProcessInput (10721, 313 over 1046, inserted 11, deleted 10), StartState (10722, 171 over
-#   423, inserted 4, deleted 3), CPerguntaFilaEleitorVazia::ProcessInput (10713, unit 152), CEncerramentoAntecipado::
-#   ProcessInput (10731, 8 over 70, every row an operand: `local.tee 0` against our `local.tee 1`) and CConfirmaAudio::
-#   ProcessInput (10740, 102 over 422, inserted 8, deleted 7): every row that differs is a local's number, binaryen's
-#   (in 10731 the target gives the field pointer p0 where ours gives it l1, after `this` is pushed for the merged
-#   store; matched 11838 takes l1 as ours does). For 10731 the switch, an if chain, the cases swapped and the cases
-#   ending in return each give one store after the switch in the object (measured). Not explained.
+# Measured (pnpm wasm score <target> <index> <link> <ours from names.tsv>):
+# - The seven matched above, before: with the assignments and the lists as they were (cperguntafilaeleitorvazia.cpp in
+#   unit 152's list, ahead of this one; ciniciafinalizacao.cpp first here), 10706 read 237 over 671 rows (inserted 14,
+#   deleted 13), 10710 51 over 126 (13, 9), 10721 313 over 1046 (11, 10), 10722 171 over 423 (4, 3), 10713 52 over 611
+#   (deleted 2), 10731 8 over 70 (every row an operand: `local.tee 0` against our `local.tee 1`) and 10740 102 over 422
+#   (8, 7): binaryen's local numbers and places, and 10706's log call. With the list in the data's order, 10740, 10722,
+#   10721 and 10713 read operand rows only (38 over 414, 43 over 419, 74 over 1035, 46 over 611) and matched at step 9;
+#   10706 read 81 over 664 (inserted 7, deleted 7), all in the log call below. A replay of the link's wasm-opt with unit
+#   104's cfimaquisicaovotos.cpp and unit 152's chorariovotacaoterminou.cpp moved into the data's order too gave the same
+#   scores (unit 61's fragment says how the replay is run), so those two stay in their units.
+# - CLogVota::LogaEncerramentoAntesDoHorario (clogvota.cpp, unit 119's file), which 10706 holds inlined: the target calls
+#   api::CLoga::loga while the format's argument temporaries live ("hh:mm:ss" at +8 of the member's frame, the time's
+#   text at +20), destroys the message (+352) before them, and reads +4 after the message is built. On 10706: the message
+#   in a named local reads +4 after the format but destroys the temporaries before the call (81 over 664); the call in
+#   one statement reads +4 before the format (measured when the member was written); the three strings as named locals
+#   in that order give the destructions' order and the call's place but put "hh:mm:ss" and the time's text at +16 and
+#   +4 (73 over 657, operand rows); the call made through a member given the message in one statement, LogaAlertaVota,
+#   defined above it, gives the target's rows, names only, and so does a lambda that captures `this` in its place (the
+#   same module, sha256). The member, its name and its being a member and not a lambda or another helper are chosen.
 # - CConfirmaEncerramento::ProcessInput (10734): 49 over 273 (inserted 2, deleted 2), all in MarcaFimAquisicao (unit
 #   93's fragment has the forms measured), on the whole link with its store of the state through
 #   CEstadoGeralVota::SetEstadoVota out of line in cestadogeralvota.cpp (cestadogeralvota.h says what keeps it there);
 #   with the setter written in the class it scores the same 49 over 273, both on the link that also holds unit 156's
-#   CEstadoGeralVota::SetEstadoEncerramento (left out of line) and on an earlier one without it.
+#   CEstadoGeralVota::SetEstadoEncerramento (left out of line) and on an earlier one without it. With the list in the
+#   data's order it reads the same 49 over 273, and its two stores through SetNextState gave a byte-identical module (on
+#   the link before that order).
 # - CEncerramentoHorarioInvalido::ProcessInput (10709) and unit 152's CHorarioVotacaoTerminou::ProcessInput (10757)
 #   match since the link holds 2295's other three members (units 161, 278 and 283): with only these two, our link
 #   merged them into one shared body of two parameters, each 14-byte thunk passing its record, where the target's 2295
@@ -111,22 +121,34 @@
 # file's anonymous namespace) and locals' names, every data member's name, GetInst's and the constructors' access,
 # ConfirmaTitulo's and TituloValido's names and their being members (TituloValido
 # reads no member: a static member, where a free function of external linkage was not tried), TituloEncerramentoDigitado's
-# being a free function, each function's line (no record but 10718's and 10710's, whose lines the files keep), and the
-# local next state in CIniciaFinalizacao::StartState (the bytes ask for one store, which a local gives).
+# being a free function, each function's line (no record but 10718's and 10710's, whose lines the files keep), the
+# local next state in CIniciaFinalizacao::StartState (the bytes ask for one store, which a local gives), and that the
+# setter called for 10731's and 10710's next-state stores is a setter (unit 61's fragment: an empty call binaryen
+# inlines gives them the same rows), and that the other members assign (for those measured the two forms gave one
+# module).
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. Last in the list,
-# unit 121's cescolheopcao.cpp: its ProcessInput (10689) holds the GetInst of four of this list's classes, and links
-# after their objects as the target's data have it (unit 121's fragment has the measurement and keeps the file's notes).
-APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS := src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp \
-    src/app/vota/operador/outrasopcoes/cpedetituloencerramento.cpp \
-    src/app/vota/operador/outrasopcoes/ctituloencerramentoinvalido.cpp \
-    src/app/vota/operador/outrasopcoes/cencerramentoantecipado.cpp \
-    src/app/vota/operador/outrasopcoes/cconfirmaencerramento.cpp \
-    src/app/vota/operador/outrasopcoes/caguardaeleitoresvotarem.cpp \
-    src/app/vota/operador/outrasopcoes/cencerramentohorarioinvalido.cpp \
-    src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp \
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The list is in the
+# order of the classes' vtables in the target's data (placing.md P4; ledger/vtables.json): CHabilitacaoAudioNaoPermitida
+# @1586896, CHabilitaAudioManualmente @1586952, CConfirmaAudio @1587140, CConfirmaEncerramento @1587268,
+# CEncerramentoAntecipado @1587340, CTituloEncerramentoInvalido @1587412, CPedeTituloEncerramento @1587548,
+# CAguardaEleitoresVotarem @1587620, unit 152's CPerguntaFilaEleitorVazia @1587692 (its file moved here, as how-to step
+# 3 and src/units/README.md "Names" say for a file whose order against another unit's decides a body: 10713),
+# CEncerramentoHorarioInvalido @1587764, CIniciaFinalizacao @1587868, CContadoresBiometria @1587924 and, last, unit 121's
+# cescolheopcao.cpp (CEscolheOpcao @1587996: its ProcessInput, 10689, holds the GetInst of four of this list's classes;
+# unit 121's fragment has its measurement and keeps the file's notes). Measured, as the first item above says; the two
+# classes of this run in other units' lists, unit 152's CHorarioVotacaoTerminou (@1586824) and unit 104's
+# CFimAquisicaoVotos (@1587212), stay there.
+APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS := src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp \
     src/app/vota/operador/outrasopcoes/chabilitaaudiomanualmente.cpp \
-    src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp \
+    src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp \
+    src/app/vota/operador/outrasopcoes/cconfirmaencerramento.cpp \
+    src/app/vota/operador/outrasopcoes/cencerramentoantecipado.cpp \
+    src/app/vota/operador/outrasopcoes/ctituloencerramentoinvalido.cpp \
+    src/app/vota/operador/outrasopcoes/cpedetituloencerramento.cpp \
+    src/app/vota/operador/outrasopcoes/caguardaeleitoresvotarem.cpp \
+    src/app/vota/operador/outrasopcoes/cperguntafilaeleitorvazia.cpp \
+    src/app/vota/operador/outrasopcoes/cencerramentohorarioinvalido.cpp \
+    src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp \
     src/app/vota/operador/outrasopcoes/ccontadoresbiometria.cpp \
     src/app/vota/operador/outrasopcoes/cescolheopcao.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS)

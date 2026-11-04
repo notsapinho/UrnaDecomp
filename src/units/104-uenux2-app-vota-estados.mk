@@ -122,24 +122,24 @@
 #   this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of unit
 #   110's (celeitordetalhe.cpp.o and celeitores.cpp.o), which only renumbering landed units would change, so the row
 #   waits for that order.
-# - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line) is
-#   written and differs. When vota::RegistraMesarios() (fn 2520) says so the next state is
-#   comum::CRegistrarMesarios::GetInst() (fn 3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst,
-#   fn 316, +36; the type 7 and the queue stored in the frame, then Insert, fn 501), then CFinalizaOperador::GetInst()
-#   (fn 5342). The target stores m_pNextState in each branch (two `i32.store offset=4`, the first followed by `br 1`);
-#   every form compiled here stores it once after the join: as written, `16 over 41 rows (same 25, replaced 8 [5
-#   operand-only], inserted 3, deleted 5)` (pnpm wasm score). clang's MergedLoadStoreMotion pass joins the two stores
-#   (-mllvm -print-after-all on a scratch copy: two stores after VectorCombinePass, one after
-#   MergedLoadStoreMotionPass). Forms tried, each object read with wasm-objdump -d at this directory's flags, each with
-#   one store: the early return as written; if/else; the condition negated; a local next state stored once; a reference
-#   to m_pNextState bound first; the queue and the message as named locals of the else branch; a ternary for the state;
-#   and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with -fexceptions. In the target, fn 5400
-#   (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and 10500) has the same shape, a store in
-#   each branch, the second after a Post(1), and fn 10511 (vota::CControlaReconhecimento's slot 7) holds the same calls
-#   with one store after the join. Not explained. CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met
-#   the same joining, matches with a call clang cannot see through in its default case (unit 165's fragment has the
-#   forms); StartState has no base body to call (slot 2 is pure), and no such call was tried here. It stays
-#   written: it is CFimAquisicaoVotos's slot 2 (a trap would hide it: docs/how-to-decompile.md step 5) and 3610's caller.
+# - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line), a
+#   match. When vota::RegistraMesarios() (fn 2520) says so the next state is comum::CRegistrarMesarios::GetInst() (fn
+#   3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst, fn 316, +36; the type 7 and the queue
+#   stored in the frame, then Insert, fn 501), then CFinalizaOperador::GetInst() (fn 5342). The target stores
+#   m_pNextState in each branch (two `i32.store offset=4`, the first followed by `br 1`), which the two stores made as
+#   calls of comum::CAppState::SetNextState give: clang keeps the two calls apart, and binaryen inlines each (unit 61's
+#   fragment has the measurements). Every form written with assignments stored once after the join: as written then,
+#   `16 over 41 rows (same 25, replaced 8 [5 operand-only], inserted 3, deleted 5)` (pnpm wasm score); clang's
+#   MergedLoadStoreMotion pass joins the two stores (-mllvm -print-after-all on a scratch copy: two stores after
+#   VectorCombinePass, one after MergedLoadStoreMotionPass). Forms tried then, each object read with wasm-objdump -d at
+#   this directory's flags, each with one store: the early return as written; if/else; the condition negated; a local
+#   next state stored once; a reference to m_pNextState bound first; the queue and the message as named locals of the
+#   else branch; a ternary for the state; and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with
+#   -fexceptions. In the target, fn 5400 (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and
+#   10500) has the same shape, a store in each branch, the second after a Post(1), and fn 10511
+#   (vota::CControlaReconhecimento's slot 7) holds the same calls with one store after the join.
+#   CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met the same joining, matches with a call clang cannot
+#   see through in its default case (unit 165's fragment has the forms).
 # - vota::CCancelaHabilitacaoEleitor::StartState (fn 10646, slot 2, in ccancelahabilitacaoeleitor.cpp after the statics,
 #   a chosen line): when vota::IsAudioAtivadoMesario() (fn 1687) holds, CLogVota's LogaAudioDesativadoFimVotacao (fn
 #   4529, unit 152's), then slot 2 of vota::impl::IInformacaoThreadOperador::GetInst() (fn 599), CancelaHabilitacao, its
@@ -372,6 +372,22 @@
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
 # app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).
+# vota::CReimprimindoResumoZeresima::StartState (target fn 11855) and vota::CImprimindoZeresima::StartState (11991),
+# trapped in this unit's pending file until now, are written in their classes' files with the printers they hold:
+# creimprimindoresumozeresima.cpp's ImprimeResumoZeresima (record :60) and cimprimindozeresima.cpp's ImprimeZeresima and
+# ImprimeResumoZeresima (records :77 and :104), each record the default std::source_location of
+# api::CPolySingleton<api::IPaperRelatorios>::instance() at column 22, in CReimprimindoZeresima's shape (11852): the
+# records' lines are evidence, the other lines chosen. Measured before steps 7 to 9 (pnpm wasm score against
+# names.tsv), all operand-only: 11855 50 over 566 rows, 11991 104 over 1109. Both match, named by their records.
+# - Both show vota::TelaPorFavorAguarde's screen (fn 6587, unit 110's ctelasvota.cpp) through its slot 2, print, set the
+#   vota state to EAVZERESIMAIMPRESSA (54) and save it (fn 491). 11855 then goes to CDefineRotaPosReinicio (GetInst, fn
+#   5943), whose stand-in pair in this unit's roots went: its callers 11834 and 11855 are in the link. 11991 first cuts
+#   the paper (fn 2882) and tests vota::CSincronizaVota::s_urnaDesligando after each step (written as early returns;
+#   nested ifs not measured), then goes to CDefineRotaPreVotacao, whose GetInst (unit 199's) binaryen inlines into it as
+#   in the target; that GetInst's statics' exit destructors, 11995 and 11996, match with it (unit 199's fragment).
+# - The summary's label "resumo da zerésima" is the target's tail of 7787's "[2] para imprimir somente o resumo da
+#   zerésima" (@227531, +28); the scan places our literal at that tail (`address string`).
+# - Both files reach Boost through cconfiguracaoeleicao.h, as creimprimindozeresima.cpp does (the lines below).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -410,6 +426,9 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # celeitorencontrado.cpp includes it too, for the set StartState copies (the same include path)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitorencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# and so do cimprimindozeresima.cpp and creimprimindoresumozeresima.cpp, whose printers read the number of copies
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

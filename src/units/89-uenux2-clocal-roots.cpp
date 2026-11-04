@@ -41,7 +41,6 @@ int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_s
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");
-int w2271(int, int) __asm__("_ZNK5comum13CCandidaturas15ExisteCandidatoEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
 int w5809(int, int, int) __asm__("_ZNK5comum13CCandidaturas24ExisteCandidatoFederacaoEhRKN7ecourna3app5dados10CFederacaoE");
@@ -51,11 +50,11 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 2725, 4160, 4161, 5579, 5977, 6599, 7787, 10500, 11223, 11242, 11908, 12071, 12098,
-// 12105, 12110, 12134 (5584, CRelUtil's ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798,
+// Stands for fn 401's callers: 2725, 4160, 5579, 5977, 6599, 7787, 10500, 11223, 11242, 11908, 12071, 12098, 12105,
+// 12110, 12134 (5584, CRelUtil's ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798,
 // CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's IPedeTituloMesario::ProcessInput, 11188 and 1543, unit 123's,
 // 5591, unit 296's, 5604, unit 155's written Gera, 10689, CEscolheOpcao::ProcessInput, 10699, 10700 and 10701, unit
-// 277's texts, and 11902, unit 176's, are in the link).
+// 277's texts, 11902, unit 176's, and 4161, vota::AdicionaLocal in unit 110's ctelasvota.cpp, are in the link).
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
@@ -96,7 +95,7 @@ __attribute__((noinline)) void EhSecoes(int a, int b, int f)
 }
 // Stands for fn 1933's callers 2725, 7787, 11242 and 12098 (11188 and 1543, unit 123's, are in the link).
 __attribute__((noinline)) int LocaisID(int a, int b) { return (w1933(a) << 2) - w1933(b); }
-// Stands for fn 5739's callers 2725 and 4161, neither in the link.
+// Stands for fn 5739's caller 2725 (4161, vota::AdicionaLocal in unit 110's ctelasvota.cpp, is in the link).
 __attribute__((noinline)) int TemSecoes(int a, int b) { return w5739(a) * 5 + w5739(b); }
 __attribute__((noinline)) int Infos(int a, int b, int c, int d, int e, int f)
 {
@@ -132,9 +131,9 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
-// Stands for the callers of three CCandidaturas members that are not in our link, beside units 77's and 139's and
-// unit 155's written Gera (5604): GetCandidatosPartido (2272: 3819 and 11976, beside 5604, 11213 and 11255),
-// ExisteCandidato (2271: 3819, beside 11215, 11254, 11255 and unit 197's 4442) and Busca (1273: 11891, beside 5604,
+// Stands for the callers of two CCandidaturas members that are not in our link, beside units 77's and 139's and
+// unit 155's written Gera (5604): GetCandidatosPartido (2272: 11976, beside 5604, 11213, 11255 and unit 200's 3819) and
+// Busca (1273: 11891, beside 5604,
 // 11214, 11255, 11724, 11744, 11683 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
 // body, as one of 11683's two calls does). GetCandidatos (2840) needs none: its callers 4459, 5604 and 11214 are in the
 // link.
@@ -142,7 +141,7 @@ __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int part
 {
     w2272(r, c, cargo, partido);
     w2272(s, c, cargo + 1, partido);
-    return w2271(c, cargo) + w1273(c, cargo, candidato);
+    return w1273(c, cargo, candidato);
 }
 // Stands for fn 5807's caller 6076 (its other, 12649, CDataText<CCandidaturasDSNome>::GetText, matches).
 __attribute__((noinline)) void NomesUrna(int r, int s, int a)

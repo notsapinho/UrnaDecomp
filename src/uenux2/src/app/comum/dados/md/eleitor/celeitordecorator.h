@@ -1,5 +1,6 @@
 #pragma once
 
+#include <compare>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,14 @@ namespace comum::md {
 // members (protected in celeitor.h, a choice) and m_tipoIdentificador's name are chosen.
 class CEleitorDecorator : public CEleitor {
 public:
+    // comum::CEleitores::GetEleitoresEstaticos (target fn 5772) builds one per voter it reads: CEleitor's copy
+    // constructor (fn 946) on the voter, then the store of CEleitores's type at +100 into +104 through the pointer
+    // 946 returns. That store through the returned `this` is the sign of an out-of-line constructor binaryen inlined
+    // into its one caller (docs/how-to-decompile.md step 3): inline here, the measured store goes through the
+    // caller's frame address instead (5772 one row off). So it is defined in celeitordecorator.cpp, a reading; the
+    // parameters' names and order are chosen.
+    CEleitorDecorator(const CEleitor& eleitor, ecourna::app::dados::ETipoIdentificadorEleitor tipoIdentificador);
+
     CEleitorIdentidade GetIdentidadePorTipo(ecourna::app::dados::ETipoIdentificadorEleitor tipo) const;
 
     int GetSequencial() const { return m_sequencial; }
@@ -49,6 +58,23 @@ public:
     // callers keep the call, which their file (celeitores.cpp) would inline, so it is out of line in another TU (a
     // reading); this file, the name and the parameters' names and types are chosen.
     ETipoAbrangencia GetAbrangencia(const std::string& uf, uedword municipio) const;
+    // Target fn 5665: the year of birth, CStringUtils::ToDWord (fn 1523) of the first four characters of the date of
+    // birth (CEleitor::GetDataNascimento, the string at +68; a std::string of up to 4 built in place, then freed). Its
+    // callers, vota::CVerificaDadoEleitor::ProcessInput (fn 10443) and vota::CPedeAnoNascimentoSemBiometria::ProcessInput
+    // (fn 10489), compare it with the year the operator types and log "Ano de nascimento digitado é igual ao do
+    // cadastro" or "... diferente do cadastro", which is the evidence for the string's role. Its file is a reading: in
+    // use band 2 it comes right after celeitor.cpp's constructors (fns 5668, 5667, 5666) and before celeitordinamico.cpp's
+    // (5664, 5663), and the eleitor directory's objects link in name order; out of celeitor.cpp, its call of the
+    // accessor stays a call that binaryen inlines, the target's unfolded `+ 68`. No record names it: its name, its being
+    // a const member of the decorator and its uedword result (ToDWord's) are chosen.
+    uedword GetAnoNascimento() const;
+    // fn 456, the order GetEleitoresEstaticos's std::sort calls (its five callers are the sort's helpers, 945, 3761,
+    // 5755, 5756 and 5769, which call it and compare its sign-extended byte with 0): both voters' identities at their
+    // own type (the
+    // word at +104, through fn 708) compared with CEleitorIdentidade's <=> (the text, then the type as unsigned), whose
+    // -1, 0 or 1 it returns. The helpers keep the call, which their TU would inline, so it is out of line in another
+    // TU (a reading); this file and its being the class's <=> are chosen.
+    std::strong_ordering operator<=>(const CEleitorDecorator& outro) const;
 
 private:
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificador;

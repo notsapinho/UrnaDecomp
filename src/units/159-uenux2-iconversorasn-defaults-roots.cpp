@@ -7,6 +7,8 @@
 // - comum::asn::CConversorBiometriaEleitor, @1565992 (fns 11421, 11422);
 // - comum::asn::CConversorCandidaturas, @1562360 (fns 11444, 11445);
 // - comum::asn::CConversorFotoCandidato, @1562580 (fns 11439, 11440);
+// - comum::asn::CConversorEntidadeBU, @1597528 (fns 10273, 10272): the one target function that stores its vptr is
+//   comum::CGravadorBU::GravaResultado (fn 11629), not written;
 // comum::asn::CConversorCargo's vtable (@1569964) is not here: fn 11371, the one target function that stores its vptr,
 // is in the link (fragment 299). Nor is comum::asn::CConversorBiometriaEleitorCifrada's (@1566292, slots 2 and 3: fns
 // 11418, 11419): fn 1937 (unit 110's CEleitorDetalhe::GetBiometria), the one target function that stores its vptr,
@@ -19,11 +21,12 @@ extern const char dedo_vt[] __asm__("_ZTVN5comum3asn14CConversorDedoE");
 extern const char biometriaeleitor_vt[] __asm__("_ZTVN5comum3asn26CConversorBiometriaEleitorE");
 extern const char candidaturas_vt[] __asm__("_ZTVN5comum3asn22CConversorCandidaturasE");
 extern const char fotocandidato_vt[] __asm__("_ZTVN5comum3asn23CConversorFotoCandidatoE");
+extern const char entidadebu_vt[] __asm__("_ZTVN5comum3asn20CConversorEntidadeBUE");
 }
 
 namespace {
 
-const void* volatile defaults159_sink[6];
+const void* volatile defaults159_sink[7];
 
 struct SDefaults159Roots {
     SDefaults159Roots()
@@ -34,6 +37,7 @@ struct SDefaults159Roots {
         defaults159_sink[3] = biometriaeleitor_vt;
         defaults159_sink[4] = candidaturas_vt;
         defaults159_sink[5] = fotocandidato_vt;
+        defaults159_sink[6] = entidadebu_vt;
     }
 } defaults159_roots;
 

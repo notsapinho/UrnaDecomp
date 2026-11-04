@@ -76,6 +76,11 @@
 # and 11629, for which 157-uenux2-app-comum-dados-md-roots.cpp's Cargas stands; with 10290 alone binaryen inlined it
 # there (fragment 172).
 #
+# md::CEleitor::GetDataNascimento (no target index), out of line in celeitor.cpp after the constructors, for unit 91's
+# md::CEleitorDecorator::GetAnoNascimento (5665), which needs the call binaryen inlines (unit 91's fragment has the
+# measurement); with it the string at +68 is named m_dataNascimento, the voter's date of birth fn 11411 passes the
+# constructor there (celeitor.h), a change of names only, and the constructors' parameter with it.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_MD157_SRCS := src/app/comum/md/ccabecalhoentidade.cpp \
   src/app/comum/dados/md/eleitor/celeitor.cpp \
@@ -85,7 +90,8 @@ UENUX2_SRCS += $(DADOS_MD157_SRCS)
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(DADOS_MD157_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # the classes' users are not reconstructed yet: 157-uenux2-app-comum-dados-md-roots.cpp gives each function the call
-# sites the target gives it
+# sites the target gives it. Its sink of comum::asn::CConversorLocal's vtable went: unit 89's CLocal::Carrega (fn 5740),
+# which holds CarregaArquivo<CConversorLocal> and its vptr store, is in the link.
 $(ROOT)/$(APP)/157-uenux2-app-comum-dados-md-roots.o: $(ROOT)/src/units/157-uenux2-app-comum-dados-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/157-uenux2-app-comum-dados-md.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/157-uenux2-app-comum-dados-md-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/157-uenux2-app-comum-dados-md-roots.o

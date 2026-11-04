@@ -6,8 +6,8 @@
 # api/gui/cqrcodeimagepaper.cpp, with api::CStringUtils::SetBit's two overloads in unit 196's api/util/cstringutils.cpp;
 # comum::CDataSourcesRelatorio<CRdvVota, CEleitores>::LinhaPartido (11261) in unit 183's cdatasourcesrelatorio.h;
 # comum::asn::CConversorLocal::DoDesconverte (11452) in unit 157's asn/cconversorlocal.cpp and comum::CAppInfo::
-# LeGeralInterno (2273) in unit 109's appinfo/cappinfo.cpp, the two of CLocal's loader (5740, not written) that land
-# without it. Paths relative to src/uenux2. This fragment compiles the two new files; the others extend their units,
+# LeGeralInterno (2273) in unit 109's appinfo/cappinfo.cpp, the two of CLocal's loader (5740, matched since in unit
+# 89's clocal.cpp, which calls both) that landed before it. Paths relative to src/uenux2. This fragment compiles the two new files; the others extend their units,
 # whose fragments point here, and this unit's roots keep its stand-ins.
 #
 # Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596 and 11911
@@ -97,8 +97,8 @@
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
 # Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 5591's caller 11869 (11911 is in the link) and for 2792's
-# callers 3059 and 7787 (5591 and 1541 are in the link), and for 2273's callers 5740, 11223 and 12110 (1543 and 11902
-# are in the link). 11261's
+# callers 3059 and 7787 (5591 and 1541 are in the link), and for 2273's callers 11223 and 12110 (1543, 5740 and
+# 11902 are in the link). 11261's
 # address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
 # api::CQRCodeGuard's constructor, went.
 RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp src/api/gui/cqrcodeimagepaper.cpp

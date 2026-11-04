@@ -34,7 +34,11 @@ public:
 
     void Reset() { m_corrente = m_registros.begin(); }
 
-    // (original lines 37-94: content not recovered)
+    // The number of records, the map's size: vota::CControlaReconhecimento::StartState (fn 10512) reads that word of
+    // comum::CEleitores's map (CEleitores's +12) in place. Its name and its being a member here are chosen.
+    size_t GetQuantidade() const { return m_registros.size(); }
+
+    // (original lines 41-94: content not recovered)
 #line 95
     RecordType* GetCurrent() const
     {
@@ -100,6 +104,11 @@ public:
         const typename Container::const_iterator it = m_registros.find(chave);
         return it == m_registros.end() ? nullptr : &it->second;
     }
+
+    // The records themselves, read-only: comum::MontaVotosCargos (target fn 3819) walks comum::CPartidos' map from its
+    // first node (+0) to its end node (+4) with no cursor. The name, the const reference and its being the base's
+    // member are chosen, as Existe's.
+    const Container& GetRegistros() const { return m_registros; }
 
 protected:
     Container m_registros;

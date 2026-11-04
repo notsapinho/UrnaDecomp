@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -18,10 +19,15 @@ namespace vota {
 // slot 2: it shows the form at +12) and ProcessInput (slot 7, fn 10493, a thunk into binaryen's fn 6015, the body it
 // shares with vota::CEleitorJaVotou's), which goes to vota::CCancelaHabilitacaoEleitor on CONFIRMA. The destructor is
 // out of line, the body 49 final states share (fns 244 and 387): a std::shared_ptr at +12 is all it releases. A
-// singleton: fn 10489 (vota::CPedeAnoNascimentoSemBiometria::ProcessInput) holds GetInst and the constructor inlined,
-// allocates 20 bytes and passes comum::CAppState::EVENTO_ENTRADA (2) to the base's constructor; neither is
-// reconstructed. src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is
-// chosen.
+// singleton: fn 10489 (vota::CPedeAnoNascimentoSemBiometria::ProcessInput) holds GetInst inlined (the one store of the
+// vptr, 1591432), the 20-byte object kept in a static std::unique_ptr (@1908896, destroyed at exit by fn 10495) under
+// a static std::mutex (@1908872, by fn 10494), and the constructor behind a 64-byte frame of its own (binaryen's
+// inlining), which passes comum::CAppState::EVENTO_ENTRADA (2) to the base's and builds the form: four text lines
+// ("Por favor oriente o eleitor a procurar o", "cartório eleitoral para consultar a data", "de nascimento dele no
+// cadastro da urna" at {1, 1} to {1, 3}, "CONFIRMA: cancelar a habilitação" at {40, 4} on the right), the input
+// control and GetInteractiveForm("telaInformaAnoNascimentoErrado", false), with no LED. The form helper's name and its
+// being in an anonymous namespace are chosen. src/units/161-uenux2-app-vota-operador-identidade.mk says which of this
+// is evidence and which is chosen.
 class CInformaAnoNascimentoErrado final : public comum::CAppState {
 public:
     virtual ~CInformaAnoNascimentoErrado() override;
@@ -34,6 +40,9 @@ public:
 
 private:
     CInformaAnoNascimentoErrado();
+
+    static std::unique_ptr<CInformaAnoNascimentoErrado> s_inst;
+    static std::mutex s_mutex;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };

@@ -14,10 +14,10 @@ namespace comum::md {
 
 CEleitor::CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdentidade>& identidades,
     ENecessidadeEspecial necessidadeEspecial, const std::string& nome, const std::string& nomeSocial,
-    const CTransferenciaTemporaria& transferencia, const std::string& nomeMae, const std::vector<uebyte>& biometria,
+    const CTransferenciaTemporaria& transferencia, const std::string& dataNascimento, const std::vector<uebyte>& biometria,
     const CIndexer& offsetBiometria)
     : m_sequencial(sequencial), m_secao(secao), m_identidades(identidades), m_necessidadeEspecial(necessidadeEspecial),
-      m_nome(nome), m_nomeSocial(nomeSocial), m_transferencia(transferencia), m_nomeMae(nomeMae),
+      m_nome(nome), m_nomeSocial(nomeSocial), m_transferencia(transferencia), m_dataNascimento(dataNascimento),
       m_biometria(biometria), m_offsetBiometria(offsetBiometria)
 {
     ValidaCriacao();
@@ -25,14 +25,19 @@ CEleitor::CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdent
 
 CEleitor::CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdentidade>& identidades,
     ENecessidadeEspecial necessidadeEspecial, const std::string& nome, const std::string& nomeSocial,
-    const CTransferenciaTemporaria& transferencia, const std::string& nomeMae)
+    const CTransferenciaTemporaria& transferencia, const std::string& dataNascimento)
     : m_sequencial(sequencial), m_secao(secao), m_identidades(identidades), m_necessidadeEspecial(necessidadeEspecial),
-      m_nome(nome), m_nomeSocial(nomeSocial), m_transferencia(transferencia), m_nomeMae(nomeMae)
+      m_nome(nome), m_nomeSocial(nomeSocial), m_transferencia(transferencia), m_dataNascimento(dataNascimento)
 {
     ValidaCriacao();
 }
 
-// (original lines 35-75: content not recovered)
+const std::string& CEleitor::GetDataNascimento() const
+{
+    return m_dataNascimento;
+}
+
+// (original lines 40-75: content not recovered)
 #line 76
 const CIndexer& CEleitor::GetOffsetBiometria() const
 {

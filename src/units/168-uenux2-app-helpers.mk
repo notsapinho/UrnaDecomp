@@ -113,7 +113,7 @@
 # its own around the existence test (api::CSystem::ExistFile, fn 412, on the same path), a function binaryen inlined
 # into its one caller (docs/reference/facts/reading.md R10), ExisteArquivoImprimindo, out of line here (votadefs.cpp.o
 # keeps it, `wasm-objdump -x -j Function`), and when the file exists removes it (CSystem::RemoveFile, fn 2760) and syncs.
-# Seven printing functions call both, 2890 and 11852 (units 156 and 104, in the link) and 11855, 11991, 12068, 12071,
+# Seven printing functions call both, 2890, 11852, 11855 and 11991 (units 156 and 104, in the link) and 12068, 12071,
 # 12074.
 # Scores before step 8 (`pnpm wasm score`): 1488 18 over 190 rows, 1487 25 over 280, all operand-only. Each path is
 # `(GetPathRootSemSA(FLASH_INTERNA) / "dinamico/imprimindo").string()`: the temporaries the target builds and destroys
@@ -153,6 +153,15 @@
 #   TU was not measured); both are in the link. `pnpm wasm score` against the link: 1 over 21 rows, operand-only; matched (named by `call` from 10631). It
 #   reads no state: a free function of vota. Chosen: the name (the field 5918 reads is the one cparametrosurna.hpp calls
 #   aceitarJustificativa), the file and the line, last.
+#
+# vota::EhTreinamentoMesario (fn 1823, a chosen name) in votadefs.cpp, matched (named by `call` from unit 282's 10474):
+# the load's training phase (EhTreinamento's test, which clang inlines here, its own TU) and not the voters' training
+# (GetVota's +72), the expression RegistraMesarios negates a half of. Its six target callers (7306, 10465, 10474, 10478,
+# 10500, 10512) are in five TUs and all keep the call, so it is in none of them; this file is EhTreinamento's, whose code
+# it holds, and in use band 6 it comes right before fn 1822 (CPolySingleton<IInterfaceSavd>::instance, which
+# VerificaAssinaturaMI is this object's first to mention in our link), so its line is above that function's, with the
+# namespace opened earlier (both readings). The roots stand in for 7306, 10465 and 10500. Before steps 7 to 9, 4 over
+# 19 rows, operand-only.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna

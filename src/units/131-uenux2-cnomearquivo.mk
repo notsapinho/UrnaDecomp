@@ -36,6 +36,10 @@
 #   target holds as the tail of 11973's literal "  {}{}{:0{}}" at 1042; until 11973 landed, the scan read it
 #   `unresolved` at that one operand, `ours +0x69 i32.const 1040: an address of ours: string tail occurs 4098 times`
 #   (with a scratch object that held the literal, tools/round/try-tu.sh, splat-remap printed `target 1161: IDENTICAL`).
+# - CNomeArquivo::NomeArquivoLocal (no index, a chosen name, after the file's builders): the location file's name, a
+#   5-digit and two 4-digit numbers, "-" and the type, "." and the extension, which comum::CLocal::Carrega (fn 5740,
+#   unit 89) holds behind a 112-byte frame of its own (binaryen's inlining of a function with one caller), calling
+#   FormataNumero (1161) three times, so this file's code. Its caller in clocal.cpp passes "lo" and "dat". 5740 matches.
 #
 # Not matched, and what each waits for:
 # - 1705 and 3772 call std::string::append(const char*, size_t) (fn 160) 5 and 8 times in the target, as the tree's -O3

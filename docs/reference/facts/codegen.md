@@ -808,7 +808,7 @@ compile line from `make -n -C src link -W $PWD/<tu>`, `-c … -o <scratch>.o`, t
 10737 (`vota::CFimAquisicaoVotos::StartState`) stores one member in each arm of an if/else (`i32.store offset=4` then
 `br 1` in the first, another at the end of the second), and every form tried at the tree's flags joined the two stores
 after the branch; `-mllvm -print-after-all -mllvm -filter-print-funcs=<mangled>` names the pass, MergedLoadStoreMotion
-(unit 104's fragment lists the forms; the row lands written, `16 over 41`). 5400 has the same shape, and 10511 the
+(unit 104's fragment lists the forms; written so, the row read `16 over 41`). 5400 has the same shape, and 10511 the
 joined one, in the target. The join is not general: a switch's cases keep their stores apart (11848), and so do two
 arms that each store a call's result:
 
@@ -820,8 +820,11 @@ for f in _Z2IfR1Si _Z2SwR1Si; do printf '%s: ' $f; wasm-objdump -d $P/arms2.o | 
 # _Z2SwR1Si: 3
 ```
 
-So read the arms' contents before spending links on the shape: what keeps 10737's two stores apart in the target is not
-explained yet.
+So read the arms' contents before spending links on the shape. What keeps 10737's two stores apart in the target is
+explained by a call in each arm that binaryen inlines afterwards (a reading: the form that matches; no frame or record
+shows the call): clang does not join two calls of an out-of-line setter, and with `comum::CAppState::SetNextState` (out
+of line in `cappstate.cpp`) called in both arms the row matches. Unit 61's fragment has the measurements, and the replay
+of the link's own `wasm-opt -Oz` (§C4) that first showed it.
 
 ## C14. A condition's test order
 

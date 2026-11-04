@@ -16,7 +16,8 @@ namespace comum::md {
 // Recovered: the layout, 104 bytes, from the two constructors (target fns 5666 and 5668, whose only caller is
 // CConversorEntidadeEleitores's slot 2, fn 11411) and the implicit copy constructor (fn 946): a word at +0, a 16-bit word
 // at +4, the identities at +8, the special need at +20 (ValidaCriacao accepts 0 and 1), strings at +24 and +36 (the
-// name, which ValidaCriacao trims, and the social name), the transfer at +48, a string at +68, a byte vector at +80 and
+// name, which ValidaCriacao trims, and the social name), the transfer at +48, a string at +68 (the date of birth,
+// which CEleitorDecorator::GetAnoNascimento reads), a byte vector at +80 and
 // an optional CIndexer at +92, its flag at +100: fn 946 copies +92 to +103 as plain bytes, fn 5666 leaves the vector
 // and the optional empty and fn 5668 copies both from its last two parameters. comum::md::CEleitorDecorator
 // (celeitordecorator.h) derives from it. The constructors' parameter types are the widths and the copies the bodies
@@ -29,10 +30,10 @@ public:
 
     CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdentidade>& identidades,
         ENecessidadeEspecial necessidadeEspecial, const std::string& nome, const std::string& nomeSocial,
-        const CTransferenciaTemporaria& transferencia, const std::string& nomeMae);
+        const CTransferenciaTemporaria& transferencia, const std::string& dataNascimento);
     CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdentidade>& identidades,
         ENecessidadeEspecial necessidadeEspecial, const std::string& nome, const std::string& nomeSocial,
-        const CTransferenciaTemporaria& transferencia, const std::string& nomeMae, const std::vector<uebyte>& biometria,
+        const CTransferenciaTemporaria& transferencia, const std::string& dataNascimento, const std::vector<uebyte>& biometria,
         const CIndexer& offsetBiometria);
 
     // GetOffsetBiometria throws when the optional is empty (record celeitor.cpp:79). TemBiometria, the test of the
@@ -41,6 +42,13 @@ public:
     bool TemBiometria() const { return m_offsetBiometria.has_value(); }
     const std::vector<uebyte>& GetBiometria() const { return m_biometria; }
     const CIndexer& GetOffsetBiometria() const;
+    // The date of birth, the string at +68, which md::CEleitorDecorator::GetAnoNascimento (fn 5665) reads through this
+    // accessor out of line (celeitor.cpp): no target index, binaryen inlines its one call, and 5665 keeps its `this +
+    // 68` unfolded after its own prologue, where an inline accessor gives the loads' offsets folded (72, 79: measured).
+    // Its name and its line are chosen. The member is the target's: CConversorEntidadeEleitores' slot 2 (fn 11411)
+    // copies EleitorUrna's dataNascimento (field 4, src/asn1/modules/ModuloEleitores.h) and passes it as the string
+    // the constructor (fn 5668) stores at +68.
+    const std::string& GetDataNascimento() const;
 
 private:
     void ValidaCriacao() const;
@@ -53,7 +61,7 @@ protected:
     std::string m_nome;
     std::string m_nomeSocial;
     CTransferenciaTemporaria m_transferencia;
-    std::string m_nomeMae;
+    std::string m_dataNascimento;
     std::vector<uebyte> m_biometria;
     std::optional<CIndexer> m_offsetBiometria;
 };
