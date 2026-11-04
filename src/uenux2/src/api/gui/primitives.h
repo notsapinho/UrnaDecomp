@@ -13,6 +13,28 @@ enum TColor : int {};
 struct SPoint {
     TPosition x = 0;
     TPosition y = 0;
+
+    SPoint() = default;
+
+    // the point of two coordinates, a constructor rather than the aggregate's initialization. Evidence: the target
+    // evaluates both coordinates before it stores the first, where SPoint(x, y) of the aggregate stores x before it
+    // computes y. Measured in the whole link: in api::CInteractiveFormBuilder::AddLabeledInputControl (target fn 653)
+    // the line's first point loads area.bottom before area.left with this constructor and after it without, the one
+    // row that is no operand in 653's score without it; api::CFormBuilder::GetLabeledKeyPos (fn 5544) matches with
+    // `return SPoint(...)` through it, where the aggregate needed a temporary assigned to a named result. Of the 611
+    // objects compiled with it and without it, five differ (cinteractiveformbuilder.cpp's, cformbuilder.cpp's,
+    // cstepsprogressbar.cpp's, cvalidaidentidade.cpp's and unit 31's roots), and no match left
+    // (src/units/120-uenux2-iform.mk). It moves two written functions that do not match:
+    // vota::CValidaIdentidade::StartState (fn 10627, unit 278) reads its options' numbers before it stores the
+    // point's x, as the target does, 149 over 1740 rows -> 144 over 1739; api::CStepsProgressBar::Draw (fn 5504, unit
+    // 41) stores the text point Recalcula computes as one 32-bit word, where the target has the two 16-bit stores the
+    // aggregate gives, 1162 over 5684 rows -> 1196 over 5696 (pnpm wasm score). The parameter names and constexpr are
+    // chosen; the defaulted constructor keeps SPoint{} and a default-constructed point all zero
+    constexpr SPoint(TPosition x_, TPosition y_)
+        : x(x_)
+        , y(y_)
+    {
+    }
 };
 
 struct SRect {

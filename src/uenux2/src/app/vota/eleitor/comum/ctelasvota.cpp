@@ -4,12 +4,17 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cqrcodeimage.h"
+#include "api/gui/ctextfield.h"
+#include "api/gui/ctextfieldmultiline.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/vota/comum/cpreshowformvota.h"
@@ -19,7 +24,7 @@
 
 namespace vota {
 
-// (original lines 22-290: content not recovered)
+// (original lines 27-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -242,6 +247,16 @@ std::mutex CTelasVota::s_mutex;
 
 const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
 
+CFormInterativoTelaVota CTelasVota::GetTelaTesteTecladoOpcional()
+{
+    return TelaTextoConfirmaCorrige("Quer testar o teclado?", "Testar", "Não testar");
+}
+
+CFormInterativoTelaVota CTelasVota::GetTelaTesteTecladoObrigatorio()
+{
+    return TelaTextoConfirmaCorrige("Por favor, teste o teclado", "Testar", std::nullopt);
+}
+
 std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado()
 {
     api::CInteractiveFormBuilder builder;
@@ -266,7 +281,41 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
 
 CTelasVota::~CTelasVota() = default;
 
-// (original lines 3465-3529: content not recovered)
+namespace {
+
+const api::SFont FONTE_VERSAO{15, 0};
+const api::SFont FONTE_TECLA{20, 1};
+
+api::SRect AreaTela()
+{
+    return api::CApplication::s_areaTela;
+}
+
+} // namespace
+
+api::CFormBuilder::SharedField AdicionaTextoMultiLinha(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                                      const api::SRect& rect, const api::SFont& font,
+                                                      api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextFieldMultiLine>(
+        rect, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                            const api::SPoint& posicao, const api::SFont& font,
+                                            api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
+        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+// (original lines 3509-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {
@@ -276,6 +325,82 @@ CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, co
                            std::format("Nao existe o conjunto de telas associado ao cargo id {}", cargo));
     }
     return it->second.GetTela(tela);
+}
+
+namespace {
+
+const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
+
+} // namespace
+
+CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
+                                                 const std::optional<std::string>& corrige)
+{
+    api::CInteractiveFormBuilder builder;
+    std::vector<std::pair<char, std::string>> teclas;
+    if (confirma) {
+        teclas.emplace_back('C', *confirma);
+    }
+    if (corrige) {
+        teclas.emplace_back('D', *corrige);
+    }
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField(texto, api::SPoint(320, 200), FONTE_TEXTO_CONFIRMA_CORRIGE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddInputControl();
+    builder.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaTextoConfirmaCorrige");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeBU(std::function<std::string()> ajuda,
+                                                     std::function<std::string()> qrcode,
+                                                     std::function<std::string()> pagina) const
+{
+    api::CInteractiveFormBuilder builder;
+    const api::SRect area = AreaTela();
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    const api::TPosition altura = area.bottom + 1;
+    const api::TPosition linha = area.bottom - 49;
+    const api::TPosition linhaPagina = area.bottom - 109;
+    const api::TPosition linhaTecla9 = area.bottom - 27;
+    const api::TPosition linhaVersao = area.bottom - 79;
+    const auto imagem = std::make_shared<api::CQRCodeImage>(380, qrcode);
+    builder.AddImage(imagem, api::SPoint(630, 35));
+    const api::SPoint posicaoConfirma(area.right - 20, altura - 48);
+    const api::SPoint posicaoContinuar(area.right - 20, altura - 27);
+    builder.AddLine(api::SPoint(area.left, linha), api::SPoint(area.right, linha), static_cast<api::TColor>(3));
+    builder.AddTextField("Versão: " + api::CApplication::s_versao, api::SPoint(10, linhaVersao), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("BU digital", api::SPoint(10, 45), FONTE_TITULO, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaTextoMultiLinha(builder, ajuda, api::SRect(10, 95, 230, altura - 115), FONTE_INSTRUCAO_TESTE_TECLADO,
+                            api::ALINHAMENTO_ESQUERDA);
+    builder.AddInputControl(5);
+    AdicionaTexto(builder, pagina, api::SPoint(230, linhaPagina), FONTE_INSTRUCAO_TESTE_TECLADO,
+                  api::ALINHAMENTO_DIREITA)
+        ->SetName("Pagina");
+    const auto tecla9 = builder.AddTextField("9", api::SPoint(10, linhaTecla9), FONTE_TECLA, api::ALINHAMENTO_ESQUERDA,
+                                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    tecla9->SetName("9");
+    builder.AddTextField("para próxima parte", api::SPoint(tecla9->Rect().right + 4, linhaTecla9),
+                         FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1))
+        ->SetName("Acao9");
+    builder.AddTextField("3", api::SPoint(10, area.bottom - 48), FONTE_TECLA, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("3");
+    builder.AddTextField("para parte anterior", api::SPoint(tecla9->Rect().right + 4, area.bottom - 48),
+                         FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1))
+        ->SetName("Acao3");
+    builder.AddTextField("Continuar", posicaoContinuar, FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_DIREITA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("AcaoConfirma");
+    builder.AddTextField("CONFIRMA", posicaoConfirma, FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_DIREITA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("Confirma");
+    builder.AddLabeledKey('B', "Ver certificado", api::ALINHAMENTO_CENTRO);
+    return GetFormularioInterativo(builder, "telaQRCodeBU");
 }
 
 } // namespace vota

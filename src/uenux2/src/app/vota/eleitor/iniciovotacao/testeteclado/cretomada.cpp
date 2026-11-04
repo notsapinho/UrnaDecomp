@@ -2,11 +2,23 @@
 
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/vota/comum/csincronizavota.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/iniciovotacao/creiniciovotacao.h"
 
 namespace vota::testeteclado {
 
 CRetomada::~CRetomada() = default;
+
+CFormInterativoTelaVota CRetomada::GetTela()
+{
+    const uedword numeroInternoUrna = comum::CAppInfo::GetInst().GetGeral().GetCorrespondencia().GetNumeroInternoUrna();
+    const comum::md::estadoaplicacao::CEstadoGeralVota& vota = comum::CAppInfo::GetInst().GetVota();
+    m_retomada = vota.GetUrnaIdGerouZeresima() == numeroInternoUrna || vota.GetTecladoTestadoPosConversao();
+    if (m_retomada) {
+        return CTelasVota::GetInst().GetTelaTesteTecladoOpcional();
+    }
+    return CTelasVota::GetInst().GetTelaTesteTecladoObrigatorio();
+}
 
 comum::CAppState* CRetomada::GetEstadoPassouNoTeste()
 {

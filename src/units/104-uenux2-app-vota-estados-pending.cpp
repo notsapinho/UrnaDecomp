@@ -22,7 +22,7 @@
 
 namespace vota {
 
-// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 2376, 6557 (491 is named now (unit 205)).
+// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 6557 (491 is named now (unit 205), 2376 too).
 void CAguardaMensagem::ProcessKey(uebyte)
 {
     __builtin_trap();
@@ -74,8 +74,9 @@ void CMaisInformacoes::StartState()
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 653, 2383; the others have
-// names (365 since fragment 191, 374 since unit 88's GetCargos, 502 unit 31's, 1279 unit 150's, 576 unit 165's).
+// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 2383; the others have names
+// (365 since fragment 191, 374 since unit 88's GetCargos, 502 unit 31's, 1279 unit 150's, 576 unit 165's, 653 unit
+// 120's).
 void CMenuFiltrarCandidatosPorNumero::StartState()
 {
     __builtin_trap();
@@ -97,7 +98,7 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 }
 
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
-// name: 653, 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576 and 1279 have names).
+// name: 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576, 653 and 1279 have names).
 void CMenuVisualizarCandidatos::StartState()
 {
     __builtin_trap();

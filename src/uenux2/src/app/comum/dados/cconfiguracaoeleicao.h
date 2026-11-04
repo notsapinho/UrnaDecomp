@@ -46,6 +46,10 @@ public:
     md::EOrigemConfiguracao GetOrigem() const { return m_origem; }
     const md::CPleito& GetPleito() const { return m_pleito; }
     const ecourna::app::dados::CParametrosUrna& GetParametrosUrna() const { return m_parametros; }
+    // The municipality's configuration at +496: comum::CGeradorRelPU::ImprimeHorarios, held by vota::CImpressaoPU's slot 2
+    // (fn 11902), reads the four ptimes of its schedule at +8 to +32 of the address it gets from GetInst() + 496. The
+    // name is chosen.
+    const ecourna::app::dados::CConfiguracaoMunicipio& GetConfiguracaoMunicipio() const { return m_municipio; }
 
     // The word at +668: vota::impl::CInformacaoThreadOperador's fn 2225 compares the type of the identity typed with
     // it (`i32.load[f187()+668]`) and, when they are equal, copies that identity into the one slot 26

@@ -66,8 +66,8 @@
 # the scores of both orders).
 # comum::CLocal::GetLocalID (fn 1933; the name is its literal's, "GetLocalID", the reading of these literals below): it
 # calls VerificaEhSecao with that literal and returns the place's id, the word at +16 of md::CLocal::GetSecao() (the
-# CIdentificacaoSecao at +4, its TLocalID at +12). Its six callers (1543, 2725, 7787, 11188, 11242, 12098) are not
-# written; the roots' LocaisID stands for them. It has no record; its line, after UrnaBiometrica, is a choice.
+# CIdentificacaoSecao at +4, its TLocalID at +12). Of its six callers, 1543 and 11188 (unit 123's) are in the link and
+# 2725, 7787, 11242 and 12098 are not written; the roots' LocaisID stands for those four. It has no record; its line, after UrnaBiometrica, is a choice.
 # comum::CLocal::EhExterior has no target index of its own: unit 71's IPedeTituloMesario::ProcessInput (fn 10313) holds
 # it inlined by binaryen, a 16-byte frame of its own opened after CLocal::GetInst's call, which is what keeps it out of
 # line here. It passes "EhExterior" to VerificaLido (the literal @85932, which no other target function loads), then
@@ -106,8 +106,8 @@
 #   GetNomeMunicipio follows GetSecaoID, the order of their band, 1078 then 1077, by how-to step 3 "What a record's place
 #   says". That is a judgement: a call of GetSecaoID in unwritten code earlier in the file would give the same order with
 #   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
-#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223, 11902 and 11908 have no record, so
-#   they cannot be ruled out.
+#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223 and 11908 have no record, so
+#   they cannot be ruled out (11902 is written, in vota's cimpressaopu.cpp).
 # - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
 #   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
@@ -230,7 +230,7 @@
 #   scored 6 over 68, all operand-only. Both match.
 # - GetTipoLocalVotacao (no index): VerificaEhSecao("GetTipoLocalVotacao") and the section's type, which 11188 holds
 #   behind a stack frame of its own (binaryen's inlining of its one caller, from another TU). Its name is the literal's.
-# - comum::FormataAgregadas (5738; callers 1543, 11188), a free function (its name and parameter chosen): CLocal::GetInst
+# - comum::FormataAgregadas (5738; callers 1543 and 11188, both in the link), a free function (its name and parameter chosen): CLocal::GetInst
 #   and GetQtdAgregadas inlined, which clang gives only in their own TU, so it is this file's; in use band 2 it follows
 #   VerificaEhSecao (5742). It joins the numbers, each "{}{:04}" after "" for the first and " " for the next, and puts
 #   the
@@ -244,7 +244,15 @@
 #   in use band 2 it sits between VerificaEhSecao (5742) and FormataAgregadas (5738), the place it has in the file.
 #   Its callers, 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's notes) and 4161, are not written: the roots'
 #   TemSecoes stands for both. It matches (`pnpm wasm score` BYTE-EXACT against the whole link).
-# The roots of unit 280 stand in for 4160 and 11242 (3752) and for 1543 (5738), so binaryen keeps both out of line.
+# - comum::FormataQtdAgregadas (no index; its name and parameter chosen, its being a free function too): the count of the
+#   aggregated sections put into the format it is given at its one "{:04}" (std::vformat over one unsigned). Fn 1543
+#   (comum::CRelUtil::IncluiCabecalhoEleicoesMZS, unit 123's) holds it behind a 384-byte stack frame of its own, with
+#   CLocal::GetInst (the static's address, 1838900) and GetQtdAgregadas (VerificaLido's call with "GetQtdAgregadas",
+#   the section's flag, the vector's size over 8 masked to a byte) inlined, which clang gives only in this TU, so it is
+#   this file's, as FormataAgregadas is; it is the file's last function, a choice (no index places it). 1543 matches
+#   with it (unit 123's fragment has the score).
+# The roots of unit 280 stand in for 4160 and 11242 (3752); 5738's other caller, 1543, is in the link, and its stand-in
+# went.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

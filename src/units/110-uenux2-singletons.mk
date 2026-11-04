@@ -423,11 +423,21 @@
 # SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
 # 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 #
+# ctelasvota.cpp also holds the QR-code BU's screen, vota::CTelasVota::CriaTelaQRCodeBU, after GetTelaCargo, with the
+# free functions AdicionaTextoMultiLinha and AdicionaTexto, the file-local AreaTela and the fonts {15, 0} and {20, 1}
+# after CTelasVota's destructor; none has an index of its own (binaryen inlines them into fn 12055): ctelasvota.h and
+# src/units/37-uenux2-iqrcodebuds.mk have the evidence, the measurements and the choices.
+#
+# ctelasvota.cpp also holds vota::TelaTextoConfirmaCorrige (fn 2376, a free function) after GetTelaCargo with its font
+# {35, 0}, and CTelasVota's static GetTelaTesteTecladoOpcional and GetTelaTesteTecladoObrigatorio (fns 6581, 6580)
+# before TelaTesteTeclado: ctelasvota.h and src/units/138-uenux2-testeteclado.mk have the evidence and the choices.
+#
 # comum::CPE's members beside GetInst, in cpe.cpp (the file's records: GetInst's macro at line 21, CreateInst's throw at
 # 26:15, EUE_COMUM_DADOS_7876 "Instância já criada"):
 # - Existe (target fn 2788, no record: its name and its line before GetInst are chosen): a lock of s_mutex and the test
 #   of s_instancia, CSubstituidorTitulo::Existe's shape; a member, since it reads the class's statics. In use band 4 it
-#   precedes 2787, as here. Callers 1543, 5586 (unit 123), 11223 and 11902; unit 280's roots stand in for the three.
+#   precedes 2787, as here. Callers 1543, 5586 (unit 123), 11223 and 11902 (unit 176); unit 280's roots stand in for
+#   11223, the one not in the link.
 # - CreateInst (2787): the throw when the instance exists (no lock: the target's body takes none), comum's processo
 #   eleitoral load (3771, unit 280), then a new CPE (204 bytes) with the constructor inlined, which copies the processo
 #   (CPleito's copy constructor, 1281, for each pleito), stores the load's turn at +176 and builds a
@@ -441,7 +451,8 @@
 # - The libc++ copies cpe.cpp.o brings with it: CPleito's implicit copy constructor (1281), the CEleicaoPE vector's
 #   __uninitialized_allocator_copy (1953), the version map's hinted insert (3870) and its __find_equal (3869), all four
 #   matched (7, 4, 2 and 0 rows, all operand-only).
-#   Unit 280's roots read 1281's result for its callers that read it (1543, 5967, 7787, 11902) and give 3869 a second
+#   Unit 280's roots read 1281's result for its callers that read it (5967 and 7787; 1543 and 11902, which read it too,
+#   are in the link) and give 3869 a second
 #   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \

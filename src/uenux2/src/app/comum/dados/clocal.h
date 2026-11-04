@@ -70,4 +70,11 @@ private:
 // name, its parameter and its being a free function of comum are chosen.
 std::string FormataAgregadas(const std::string& formato);
 
+// The count of the aggregated sections put into the format it is given at its one "{:04}" (std::vformat with one
+// unsigned argument): comum::CRelUtil::IncluiCabecalhoEleicoesMZS (fn 1543) holds it behind a 384-byte stack frame of
+// its own (binaryen's inlining of a function with one caller), with CLocal::GetInst and GetQtdAgregadas inlined, which
+// clang does only in their own TU, so it is clocal.cpp's code, as FormataAgregadas is. It has no target index. Its name,
+// its parameter and its being a free function of comum are chosen.
+std::string FormataQtdAgregadas(const std::string& formato);
+
 } // namespace comum

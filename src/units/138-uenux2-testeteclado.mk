@@ -5,8 +5,9 @@
 #     CPreZeresima's and CRetomada's slot 0 hold too; the constructor 5948
 #   vota::testeteclado::CPreZeresima (testeteclado/cprezeresima.{h,cpp}) and vota::testeteclado::CRetomada
 #     (testeteclado/cretomada.{h,cpp}): the out-of-line destructors, whose D0 is one body, 5946; CRetomada's slots 11
-#     and 12, GetEstadoPassouNoTeste 11830 and GetEstadoSemTeste 11829; CPreZeresima's slot 11, GetEstadoPassouNoTeste
-#     5945, and its statics' exit destructors 11864 and 11863 (its GetInst is inlined into unit 199's 11914)
+#     and 12, GetEstadoPassouNoTeste 11830 and GetEstadoSemTeste 11829, and slot 10, GetTela 11831; CPreZeresima's
+#     slots 10 and 11, GetTela 11862 and GetEstadoPassouNoTeste 5945, and its statics' exit destructors 11864 and
+#     11863 (its GetInst is inlined into unit 199's 11914)
 #   vota::CReinicioVotacao (iniciovotacao/creiniciovotacao.{h,cpp}): GetInst 5938, with its constructor inlined by
 #     binaryen; the exit destructors of its static std::mutex and std::unique_ptr, 11836 and 11837; ProcessInput 11834
 #   vota::CAplicacaoEncerrada (fimvotacao/caplicacaoencerrada.{h,cpp}): StartState 12058, with
@@ -74,9 +75,9 @@
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 is written and matched since too, in unit 156;
-# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12040; 12038, ProcessInput, matches since in unit
-#   156, and 12051, ProcessInput, in unit 37): callees with no name (455 has one since unit 237, 576 since unit 165, 502
-#   since unit 220); CTesteTeclado is unit 217's;
+# - CMostraQRCodeCertificado's StartState (12040; its ProcessInput, 12038, matches since in unit 156, and
+#   CMostraQRCodeBU's slots are unit 37's: 12051 matches, 12055 is written): callees with no name (455 has one since
+#   unit 237, 576 since unit 165, 502 since unit 220, 653 since unit 120); CTesteTeclado is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
@@ -91,9 +92,9 @@
 #   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,
 #   CMostraQRCodeCertificado's and this one's here), and 1564,
 #   2888 (unit 37's), 12057, 12059 and 12060 match with 3877. The constructor copies CTelasVota's +36 through
-#   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. The roots stand in for its
-#   target caller 12055 (12034 and 12051 are in the link since, units 156 and 37), and its vtable has no sink:
-#   GetInst stores it.
+#   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. Its three target callers,
+#   12034, 12051 and 12055, are in the link (units 156 and 37), so the roots hold no stand-in for it, and its vtable
+#   has no sink: GetInst stores it.
 # - CReinicioVotacao::ProcessInput (fn 11834): Read(), then CONFIRMA logs and goes to CDefineRotaPosReinicio, BRANCO
 #   logs and goes to CMaisInformacoes with this state; each log a vota::CLogVota member binaryen inlines (GetInst, fn 184,
 #   is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:
@@ -156,7 +157,7 @@
 #   (fn 3648), and goes to GetEstadoPassouNoTeste's state when +36's date is before that date less one day
 #   (CDate::operator<=>, fn 1261), else stays. GetEstadoPassouNoTeste is called directly (the class is final) with the
 #   frame pointer as `this`, the target's row, which the source gives. At the end of cprezeresima.cpp, after
-#   GetEstadoPassouNoTeste: its line is a choice; its use band (1) puts it below GetTela (fn 11862, pending) and the
+#   GetEstadoPassouNoTeste: its line is a choice; its use band (1) puts it below GetTela (fn 11862, below) and the
 #   statics' exit destructors, the order a GetTela written above it keeps. The file includes cconfiguracaoeleicao.h,
 #   whose line takes a blank line of the run above GetEstadoPassouNoTeste, so its record stays on line 56. 3 over 35
 #   rows (pnpm wasm score before step 8), operand-only: the calls of fns 187, 3648 and 5945. The local's name
@@ -172,6 +173,18 @@
 #   cestadogeralvota.h, whose name and inline definition are chosen; the local's name tipoUrna is chosen.
 #   `pnpm wasm score` against the link: 6 over 35 rows, all operand-only (the calls); matched at step 9, named by its
 #   vtable slot.
+# - GetTela of CRetomada (fn 11831) and of CPreZeresima (fn 11862), slot 10 of each, written above the class's other
+#   slots (the use band: 11831 to 11829, 11862 above 11861). CRetomada's sets m_retomada (+36) when the vote state's
+#   urnaIdGerouZeresima (+12, a std::optional) holds the urna's internal number (CDadoCorrespondencia's first word, +60
+#   of CAppInfo::GetGeral(), read first), else to the byte at +96 (that order of the two tests is the target's), and
+#   returns CTelasVota's test screen that offers not to test (fn 6581) when it is set, else the one that does not (fn
+#   6580). CPreZeresima's sets +36 to ISystemDateTime's time through CDateTime::ConvertFromLocalTime (fn 5476, which
+#   cdatetime.h makes public for it) and returns fn 6581 when that date is before the zeresima's date less one day
+#   (GetEstadoSemTeste's test, fn 11861), else fn 6580. 8 over 43 and 7 over 51 rows, operand-only (pnpm wasm score
+#   before step 8); both match, named by their vtable slots. 6580 and 6581 are static members of vota::CTelasVota, which
+#   both call through CTelasVota::GetInst() (ctelasvota.h says why). cprezeresima.cpp's two new includes take two blank
+#   lines of the run above GetEstadoPassouNoTeste, whose record stays on line 56. Chosen: the ifs' sense (the other was
+#   not compiled), the local names numeroInternoUrna and vota.
 # Chosen, no evidence names them: in CBase::ProcessInput, the local holding slot 11's state and CTesteTeclado's setter
 # (that the target calls slot 11 before GetInst is its rows; that the setter called on GetInst() with slot 11 as its
 # argument would call GetInst first, and an assignment to a public member would not, is a reading of C++17's order of

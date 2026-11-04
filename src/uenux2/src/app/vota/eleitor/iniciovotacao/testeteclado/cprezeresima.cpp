@@ -2,9 +2,11 @@
 
 #include <string>
 
+#include "api/util/isystemdatetime.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.h"
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"
@@ -31,7 +33,7 @@ CPreZeresima& CPreZeresima::GetInst()
 std::unique_ptr<CPreZeresima> CPreZeresima::s_inst;
 std::mutex CPreZeresima::s_mutex;
 
-// (original lines 34-44: content not recovered)
+// (original lines 36-44: content not recovered)
 #line 45
 comum::CAppState* CPreZeresima::GetEstadoPassouNoTeste()
 {
@@ -47,6 +49,16 @@ comum::CAppState* CPreZeresima::GetEstadoPassouNoTeste()
             throw CUeVotaError(EUE_VOTA_PRE_ZERESIMA_ESTADO_NAO_ESPERADO,
                                "Estado nao esperado " + std::to_string(estado));
     }
+}
+
+CFormInterativoTelaVota CPreZeresima::GetTela()
+{
+    m_dataHora.ConvertFromLocalTime(api::ISystemDateTime::GetInst().GetTime());
+    const api::CDate dataZeresima = comum::CConfiguracaoEleicao::GetInst().GetDataHoraZeresima().GetData();
+    if (m_dataHora.GetData() < dataZeresima - 1) {
+        return CTelasVota::GetInst().GetTelaTesteTecladoOpcional();
+    }
+    return CTelasVota::GetInst().GetTelaTesteTecladoObrigatorio();
 }
 
 comum::CAppState* CPreZeresima::GetEstadoSemTeste()

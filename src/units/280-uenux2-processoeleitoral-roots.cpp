@@ -40,7 +40,8 @@ __attribute__((noinline)) bool w280_relatorio(void* primeiro, void* segundo, int
     return a->TemQRCode() && b->TemQRCode() && vias > 280;
 }
 
-// stands for fns 1543, 11223 and 11902, the other callers of CPE::Existe (fn 2788) and CPE::CreateInst (fn 2787)
+// stands for fn 11223, the other caller of CPE::Existe (fn 2788) and CPE::CreateInst (fn 2787) not in the link (1543
+// and 11902 are)
 __attribute__((noinline)) unsigned w280_cpe(const comum::md::estadoaplicacao::CEstadoGeral& geral)
 {
     if (!comum::CPE::Existe()) {
@@ -62,8 +63,8 @@ __attribute__((noinline)) comum::SIdentificacaoArquivo* w280_identificacao(void*
     return ::new (destino) comum::SIdentificacaoArquivo(fase, id + 280, uf, pleito);
 }
 
-// stands for fns 1543, 5967, 7787 and 11902, the callers of CPleito's copy constructor (fn 1281) that read its returned
-// this (2787 and 3771 drop it)
+// stands for fns 5967 and 7787, the callers of CPleito's copy constructor (fn 1281) not in the link that read its
+// returned this (1543 and 11902, which read it too, are in the link; 2787 and 3771 drop it)
 __attribute__((noinline)) std::size_t w280_copia(void* destino, const comum::md::CPleito& pleito)
 {
     return (::new (destino) comum::md::CPleito(pleito))->GetEleicoes().size() + 280;
@@ -118,12 +119,6 @@ __attribute__((noinline)) std::size_t w280_agregadas(const comum::CLocal& local)
     return local.GetAgregadas().size() + 280;
 }
 
-// stands for fn 1543 (comum::CRelUtil::IncluiCabecalhoEleicoesMZS), the other caller of FormataAgregadas (fn 5738)
-__attribute__((noinline)) std::size_t w280_formata(const std::string& formato)
-{
-    return comum::FormataAgregadas(formato).size() + 280;
-}
-
 bool (*volatile w280_sink_relatorio)(void*, void*, int);
 unsigned (*volatile w280_sink_cpe)(const comum::md::estadoaplicacao::CEstadoGeral&);
 unsigned (*volatile w280_sink_processo)(const comum::md::estadoaplicacao::CEstadoGeral&);
@@ -138,7 +133,6 @@ void (*volatile w280_sink_pleito)(void*, const comum::md::TVectorEleicaoPE&, con
 std::size_t (*volatile w280_sink_eleicoes)(comum::md::TVectorEleicaoPE&, const comum::md::CEleicaoPE&);
 int (*volatile w280_sink_busca)(comum::md::TMapVersaoPacoteEleicao&, unsigned);
 std::size_t (*volatile w280_sink_agregadas)(const comum::CLocal&);
-std::size_t (*volatile w280_sink_formata)(const std::string&);
 
 struct SProcessoEleitoralRoots {
     SProcessoEleitoralRoots()
@@ -155,7 +149,6 @@ struct SProcessoEleitoralRoots {
         w280_sink_eleicoes = w280_eleicoes;
         w280_sink_busca = w280_busca;
         w280_sink_agregadas = w280_agregadas;
-        w280_sink_formata = w280_formata;
     }
 } processoeleitoral_roots;
 

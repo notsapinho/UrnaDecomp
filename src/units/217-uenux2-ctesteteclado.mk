@@ -93,8 +93,9 @@
 #   where the target's, as fn 599's, is at +172) and where l8 + 28, the sequence's result slot, is set. With a call of
 #   api::CPolySingleton<api::IInputKbd>::instance() in a function above line 121 (a scratch line, not kept:
 #   ProcessInput calls that instance, fn 455), push's frame is the target's: 310 over 4520 (302 operand-only, the same
-#   4 and 4); docs/reference/facts/codegen.md C5 has the mechanism. ProcessInput (11804) waits for fn 653,
-#   api::CInteractiveFormBuilder::AddLabeledInputControl, which has no body of ours. The l8 + 28 rows are not explained.
+#   4 and 4); docs/reference/facts/codegen.md C5 has the mechanism. ProcessInput (11804) is not written; its
+#   callee fn 653, api::CInteractiveFormBuilder::AddLabeledInputControl, matches (unit 120). The l8 + 28 rows are not
+#   explained.
 # - 11802, the exit destructor of GetInst's mutex (`f150(1837656)`), and 12862, the key vector's, read no-candidate:
 #   no matched function uses either object (StartState uses both, __wasm_call_ctors builds the vector). 12862 is also
 #   `f6071(p0, 1833368, 1833364, 1833360, 4, 1, 12)`, a thunk into the body binaryen merged from it and fn 10879 (not

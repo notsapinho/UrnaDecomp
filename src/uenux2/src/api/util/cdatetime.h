@@ -77,6 +77,9 @@ public:
     const CTime& GetHora() const { return m_hora; }
 
     time_t ConvertToLocalTime() const;
+    // public: vota::testeteclado::CPreZeresima::GetTela (target fn 11862) calls it (fn 5476) on its member with
+    // ISystemDateTime's time, outside the class (public rather than a friend of that class is chosen)
+    void ConvertFromLocalTime(time_t tempo);
     void operator+=(int segundos);
     void operator+=(const std::chrono::seconds& segundos);
     CDateTime operator+(time_t segundos) const;
@@ -86,8 +89,6 @@ public:
     std::strong_ordering operator<=>(const CDateTime& dataHora) const;
 
 private:
-    void ConvertFromLocalTime(time_t tempo);
-
     CDate m_data;
     CTime m_hora;
 };

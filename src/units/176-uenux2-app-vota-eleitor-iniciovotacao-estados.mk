@@ -14,6 +14,17 @@
 # mutex's, @1834940 and @1834916, which 11835 alone votes for and these two destructors read too), and the roots' sink
 # of this class's vtable went, 11835 storing it.
 #
+# vota::CImpressaoPU::StartState (slot 2, target fn 11902) is written in cimpressaopu.cpp and matches: the shape of
+# CImpressaoVersaoPacotes's (11905) over comum::CGeradorRelPU (unit 183's cgeradorrelpu.{h,cpp}, which say what it
+# prints): the object built in the frame (its vptr and the zeroed builder; the class has no key function, so this object
+# emits its vtable and destructors now), CLogVota's "Imprimindo parâmetros de urna", Imprime with "parâmetros de urna"
+# (the same literal's tail) and std::format("{}ª via") of the PU's copies (the byte at +76 of GetVota()'s
+# CNumViasImpressasRelatorios, GetNumViasPU) plus one, as an int, then that byte incremented (IncrementaNumViasPU,
+# added to cnumviasimpressasrelatorios.h, its name chosen), CSincronizaVota::SincronizaEstadoGeralVota (491) and
+# CMaisInformacoes as the next state (1280). 287 over 2778 rows (pnpm wasm score, the plain link before step 8), all
+# operand-only, the one operand that is no call and no data address being the format buffer's table slot (148 in the
+# target). Its stand-ins in units 123, 183, 234, 246 and 265 went with it (their fragments say which).
+#
 # Evidence, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv:
 # - CConfirmaRegerarZeresima has a TU of its own. Written in cregerarzeresima.cpp, the TU that defines
 #   CRegerarZeresima::GetInst, clang inlined that GetInst into ProcessInput (wasm-objdump -d of the object: its body and
@@ -30,8 +41,8 @@
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
 # convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
-# defined; StartState as the key function of the four CImpressao* states, so the pending object emits two of their
-# vtables and cimpressaoversaopacotes.cpp and cimpressaoestadourna.cpp the other two; LogaMesarioIndagadoHorarioUrna's
+# defined; StartState as the key function of the four CImpressao* states, so the pending object emits one of their
+# vtables and cimpressaoversaopacotes.cpp, cimpressaoestadourna.cpp and cimpressaopu.cpp the other three; LogaMesarioIndagadoHorarioUrna's
 # name, from its message, and its place in clogvota.cpp, after LogaApresentadaTelaReinicioVotacao. The paths, by how-to
 # step 3's rules (no record names these classes' files), each header beside its .cpp and named after the class (rule 4):
 # - cconfirmaregerarzeresima.cpp in iniciovotacao/ (rule 2): its vtable and typeinfo follow vota::CRegerarZeresima's in

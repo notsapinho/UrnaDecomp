@@ -17,7 +17,7 @@
 // 16-byte object, an empty string) and passes IInputField's constructor the length 0, true, false and bits 2, 0 and 1
 // of its argument. fn 653 builds that argument from a table at 524056, (1, 4, 2) for keys 'B', 'C' and 'D', and fns 901
 // and 3673 hold it as 4, hence the default. The parameter's name and its default are chosen. 5565 matches, from
-// api/gui/cinteractiveformbuilder.cpp's object: AddInputControl(int) (5530) calls it, and the roots stand for 653.
+// api/gui/cinteractiveformbuilder.cpp's object: its two target callers, AddInputControl(int) (5530) and 653, are there.
 // CInputFieldControl<IScreen>'s constructor has no target function: clang inlines it into 5530, and into the
 // __shared_ptr_emplace constructor over no argument that binaryen inlines into 901.
 //

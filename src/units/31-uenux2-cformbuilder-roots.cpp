@@ -2,7 +2,8 @@
 // other stand-ins, and it emits none of them: each stand-in calls members its unit's objects define.
 //
 // The adders: the target calls each directly from the screens that build a form. Each pair of stand-ins stands for
-// those not in the link (TelaA's and TelaB's lists still name 1255, comum::TelaRegistroMesarios, unit 247, which is),
+// those not in the link (TelaA's and TelaB's lists still name 1255, comum::TelaRegistroMesarios, unit 247, 2376,
+// vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, and 12055, CMostraQRCodeBU::StartState, unit 37, which are),
 // and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
 // vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's
 // callers vary varies here, or binaryen would fold it. A call goes when every target caller of its adder is in the
@@ -21,8 +22,9 @@
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
-//   RotuloTecla       7787 and 653 (which holds 2243's code inlined), the other callers of 3678 (AddLabeledKey over the
-//                     key's name): its second call site, beside 2243's. It leaves the colours at their defaults
+//   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
+//                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
+//                     their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
 //   RelatorioA        5579, 5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, which calls

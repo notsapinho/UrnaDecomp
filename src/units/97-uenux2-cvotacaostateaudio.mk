@@ -209,8 +209,8 @@
 #   pnpm wasm score, whole link: the limit's test as a statement of its own (a bool local) gives operand rows only;
 #   `m_limite != api::CDateTime(-1) && api::CDateTime::Now() > m_limite` as one condition gives 41 over 206 rows (12
 #   inserted), a 32-byte frame for the target's 16, as the two temporaries share no slot. The target sign-extends both
-#   times to the 64-bit count (i64.load32_s, i64.extend_i32_s), where the getters return uedword, so they pass through
-#   an int: the int locals are a choice of that form. The target calls comum::CConfiguracaoEleicao::GetInst (fn 187)
+#   times to the 64-bit count (i64.load32_s, i64.extend_i32_s), as cparametrosurna.hpp's getters of the two, which
+#   return int, give; the int locals are a choice. The target calls comum::CConfiguracaoEleicao::GetInst (fn 187)
 #   once in the first branch and twice in the second, as written. Chosen too: the locals' and the lambda's names, the
 #   lambda's spelling (the record fixes the 44 characters before the call) and ProcessTick's first line.
 # - vota::CPedeNulo::GetProximoEstado and vota::CPedeNominal::GetProximoEstado (fns 11744 and 11724, slot 16), in

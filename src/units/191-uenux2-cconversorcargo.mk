@@ -36,7 +36,7 @@
 # a choice.
 #
 # Roots (191-uenux2-cconversorcargo-roots.cpp): one stand-in caller each for 365 (14 of its 16 other target callers;
-# 2289 and 3775 are in the link, unit 88), 2341 (5594; 11375 is in the link, fragment 299) and 3018 (6627; 374 and
+# 2289 and 3775 are in the link, unit 88), 2341 (it went once its callers 11375, fragment 299, and 5594, unit 123's crelutil.cpp.o, were in the link) and 3018 (6627; 374 and
 # 11377 are in the link, unit 88 and fragment 225), through asm labels; each goes when the callers it names are in the
 # link.
 CCONVERSORCARGO_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorcargo.cpp

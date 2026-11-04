@@ -3,10 +3,10 @@
 // reconstructed, so these stand-ins build each instantiation the way those callers do, with the exact template arguments
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it
-//     so), const std::string& (*)() (3060) and std::function<std::string()> (12055), CDataTextFmt over std::string
+//     so) and const std::string& (*)() (3060), CDataTextFmt over std::string
 //     (*)(const std::string&) (3058 builds it so) and const std::string (*)(const std::string&) (2028), CDataImage
 //     over std::vector<unsigned char> (*)() (6689),
-//     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
+//     and CQRCodeImage (12040), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
 //     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
 //     and so do CDataText over comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185 builds both), whose
 //     GetText (12649, 12742) calls the source's operator, matched (5807) or inlined by binaryen (unit 180's);
@@ -19,8 +19,11 @@
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
 // are template instances of landed headers, compiled with APP_CXXFLAGS like the other stand-ins. The destructors have no
 // direct caller: they are reached through the vtables the constructors store and through the control blocks.
-// CQRCodeImage's constructor, fn 3662, has three direct callers in the target, so two stand-ins call it here, and it stays
-// a function of its own. The stand-ins differ in their bodies and are address-taken from a static constructor. They take
+// CQRCodeImage's constructor, fn 3662, has three direct callers in the target, 3059, 12040 and 12055; 12055 is in the
+// link (unit 37: its std::make_shared is in vota::CTelasVota::CriaTelaQRCodeBU, ctelasvota.cpp, which binaryen inlines
+// into it), and two stand-ins call it here for the other two, so it stays a function of its own. CDataText over
+// std::function<std::string()> and its control block, which only 12055 builds with std::make_shared, come from
+// ctelasvota.cpp.o since then, and the stand-in for it went. The stand-ins differ in their bodies and are address-taken from a static constructor. They take
 // CTextSource by reference, as fn 5409 does, and build none: the target holds the record at ctextsource.h 37:19 twice, once
 // in each of two TUs, and our link holds no record of that kind yet.
 //
@@ -83,11 +86,6 @@ __attribute__((noinline)) SharedIText TextoProprio(FonteTexto fonte, api::ETextA
 __attribute__((noinline)) SharedIText TextoReferencia(FonteReferencia fonte)
 {
     return std::make_shared<CDataText<FonteReferencia>>(fonte);
-}
-
-__attribute__((noinline)) SharedIText TextoFuncao(const FuncaoTexto& fonte)
-{
-    return std::make_shared<CDataText<FuncaoTexto>>(fonte);
 }
 
 __attribute__((noinline)) SharedIText TextoFuncaoProprio(const FuncaoTexto& fonte, api::ETextAlignment alinhamento)
@@ -158,7 +156,6 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConstProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFuncaoProprio);
         w79_sink = reinterpret_cast<void*>(&ImagemDaFonte);
-        w79_sink = reinterpret_cast<void*>(&TextoFuncao);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonte);
         w79_sink = reinterpret_cast<void*>(&TextoReferencia);

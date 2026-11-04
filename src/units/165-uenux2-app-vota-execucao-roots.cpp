@@ -24,7 +24,8 @@ namespace {
 
 // vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target (2291, 2376, 6569, 6592, 6595, 6599, 7787,
 // 11804, 11805, 11809, 11881, 11884, 11888, 11892, 12040, 12055), none reconstructed but 11805 (unit 217's, not
-// matched): these two stand in for them, so it keeps more than one call site. Their bodies differ from each other's and
+// matched), 2376 (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp) and 12055 (unit 37's, not matched): these two
+// stand in for the others, so it keeps more than one call site. Their bodies differ from each other's and
 // from every target function.
 __attribute__((noinline)) void FormularioVota(int resultado, int builder, int nome)
 {
