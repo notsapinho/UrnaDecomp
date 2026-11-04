@@ -212,16 +212,16 @@ std::map<md::ETipoAbrangencia, SQtdeAptos> CEleitores::QuantidadeAptosPorAbrange
 
 // (original lines 599-623: content not recovered)
 #line 624
-CEleitores::SQuantidadeAptos CEleitores::QuantidadeAptos() const
+SQtdeAptos CEleitores::QuantidadeAptos() const
 {
-    SQuantidadeAptos quantidade{};
+    SQtdeAptos quantidade{};
     for (const Container::value_type& registro : m_registros) {
         const CEleitorDetalhe& detalhe = registro.second;
         if (detalhe.SemImpedimento()) {
             if (!detalhe.GetEleitor().IsTTE()) {
-                ++quantidade.m_semTransferencia;
+                ++quantidade.m_qtdeAptosDaSecao;
             } else {
-                ++quantidade.m_comTransferencia;
+                ++quantidade.m_qtdeAptosTTE;
             }
         }
     }

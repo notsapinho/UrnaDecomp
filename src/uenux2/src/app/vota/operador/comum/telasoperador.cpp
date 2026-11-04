@@ -21,6 +21,7 @@
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/relatorios/cgeradorbuqrcode.h"
 #include "app/vota/operador/comum/ctextfieldupdatemt.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
@@ -99,8 +100,8 @@ namespace {
 
 std::string TextoQuantidadeAptos()
 {
-    const comum::CEleitores::SQuantidadeAptos aptos = comum::CEleitores::GetInst().QuantidadeAptos();
-    return std::format("/{:04}", static_cast<ueword>(aptos.m_semTransferencia + aptos.m_comTransferencia));
+    const comum::SQtdeAptos aptos = comum::CEleitores::GetInst().QuantidadeAptos();
+    return std::format("/{:04}", static_cast<ueword>(aptos.m_qtdeAptosDaSecao + aptos.m_qtdeAptosTTE));
 }
 
 } // namespace

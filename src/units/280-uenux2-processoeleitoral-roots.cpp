@@ -12,7 +12,6 @@
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/carregaprocessoeleitoral.h"
 #include "app/comum/dados/clocal.h"
-#include "app/comum/dados/cpe.h"
 #include "app/comum/nomearquivo/cnomearquivo.h"
 #include "app/comum/relatorios/crelatoriotesteimpressora.h"
 #include "ecourna/app/dados/asn/midias/cconversorinformacaomidia.hpp"
@@ -38,16 +37,6 @@ __attribute__((noinline)) bool w280_relatorio(void* primeiro, void* segundo, int
     const comum::CRelatorioTesteImpressora* a = ::new (primeiro) comum::CRelatorioTesteImpressora();
     const comum::CRelatorioTesteImpressora* b = ::new (segundo) comum::CRelatorioTesteImpressora();
     return a->TemQRCode() && b->TemQRCode() && vias > 280;
-}
-
-// stands for fn 11223, the other caller of CPE::Existe (fn 2788) and CPE::CreateInst (fn 2787) not in the link (1543
-// and 11902 are)
-__attribute__((noinline)) unsigned w280_cpe(const comum::md::estadoaplicacao::CEstadoGeral& geral)
-{
-    if (!comum::CPE::Existe()) {
-        comum::CPE::CreateInst(geral, comum::FLASH_INTERNA);
-    }
-    return comum::CPE::GetInst().GetProcessoEleitoral().GetID() + 280;
 }
 
 // stands for fn 7787, the other caller of CarregaProcessoEleitoral (fn 3771)
@@ -120,7 +109,6 @@ __attribute__((noinline)) std::size_t w280_agregadas(const comum::CLocal& local)
 }
 
 bool (*volatile w280_sink_relatorio)(void*, void*, int);
-unsigned (*volatile w280_sink_cpe)(const comum::md::estadoaplicacao::CEstadoGeral&);
 unsigned (*volatile w280_sink_processo)(const comum::md::estadoaplicacao::CEstadoGeral&);
 comum::SIdentificacaoArquivo* (*volatile w280_sink_identificacao)(void*, comum::EUrnaFase, uedword, const std::string&,
     const comum::md::CPleito&);
@@ -138,7 +126,6 @@ struct SProcessoEleitoralRoots {
     SProcessoEleitoralRoots()
     {
         w280_sink_relatorio = w280_relatorio;
-        w280_sink_cpe = w280_cpe;
         w280_sink_processo = w280_processo;
         w280_sink_identificacao = w280_identificacao;
         w280_sink_copia = w280_copia;
