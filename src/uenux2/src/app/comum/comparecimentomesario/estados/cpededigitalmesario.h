@@ -3,6 +3,7 @@
 #include <memory>
 #include <mutex>
 
+#include "api/hwil/ifingerscanner.h"
 #include "app/comum/cappstate.h"
 
 namespace api {
@@ -23,7 +24,8 @@ class IControladorRegistraMesarios;
 // 10315, 425, 10317, 10316]): it overrides StartState (slot 2, fn 10318), FinishState (slot 5, fn 10315, a thunk into
 // binaryen's fn 6012), ProcessInput (slot 7, fn 10317), which goes back to asking for the titulo on CORRIGE, and
 // ProcessTick (slot 8, fn 10316); the records of cpededigitalmesario.cpp name StartState, FinishState and ProcessTick.
-// StartState and FinishState are written; ProcessTick is pending (src/units/135-uenux2-comum-mesario-estados-pending.cpp).
+// ProcessTick holds ExecutaBatimentoDigitalMesario (record cpededigitalmesario.cpp:262, its signature), PararTicks and
+// SalvaDigitalMesario (fn 5382; both names chosen) as members: they read this's ticks.
 // The destructor is out of line: the deleting one (fn 3629) calls it and frees `this`, and it stores no vptr, as a final
 // class's; vota::CPedeIdentidade and vota::CRegistraDigitalOperador share both bodies (fns 1537 and 3629).
 //
@@ -54,6 +56,9 @@ private:
     CPedeDigitalMesario();
 
     const IControladorRegistraMesarios& GetControlador();
+    void PararTicks();
+    bool ExecutaBatimentoDigitalMesario(const api::TSharedImageVector& imagem, const long largura, const long altura);
+    void SalvaDigitalMesario(const api::TSharedImageVector& digital);
 
     static std::mutex s_mutex;
     static std::unique_ptr<CPedeDigitalMesario> s_inst;
@@ -72,5 +77,9 @@ private:
 // (src/units/135-uenux2-comum-mesario-estados.mk).
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaPedeDigitalMesario();
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaAguardeDigitalMesario();
+
+// The Shannon entropy of a fingerprint image's bytes, which fn 10316 holds inlined (vota::CalculaEntropia's twin, unit
+// 282): its name, its being a free function of comum with external linkage and its line are chosen.
+float CalculaEntropia(const api::TSharedImageVector& imagem);
 
 } // namespace comum

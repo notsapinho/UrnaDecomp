@@ -30,6 +30,10 @@ public:
 
     std::vector<uebyte> ConverteParaWsq(const std::vector<uebyte>& imagem, int largura, int altura,
                                         const std::string& comentario) const;
+    // comum::CControlaArmazenamentoDeImagens' fn 2725 calls GetInst (fn 2742), drops its result and copies the image
+    // it was given in place: a member of this object inlined there, its name, its being inline and its body chosen
+    // (src/units/293-uenux2-ccontrolaarmazenamentodeimagens.mk).
+    std::vector<uebyte> PreparaWsq(const std::vector<uebyte>& wsq) const { return wsq; }
 
 private:
     CConversorWsq();

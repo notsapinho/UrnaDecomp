@@ -1,10 +1,13 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <filesystem>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
@@ -17,6 +20,11 @@ namespace comum {
 // (src/units/214-uenux2-app-comum-comparecimentomesario.mk). Declared here, beside the class whose constructor calls it,
 // a choice.
 std::vector<std::filesystem::path> ListaArquivosNaoRegistrados();
+
+// The poll worker's WSQ stored through comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725), held by fn 5382
+// behind a frame of its own: its name, its being a free function and its file (ccontroladorreconhecimetomesario.cpp)
+// are chosen (src/units/214-uenux2-app-comum-comparecimentomesario.mk).
+uint32_t ArmazenaImagemMesario(const std::vector<uebyte>& wsq, const std::string& titulo);
 
 // comum::CControladorReconhecimentoMesario: the records of ComparaDigitais (ccontroladorreconhecimetomesario.cpp:65 and
 // :76, fn 5372, not written) name the class and the file; no vtable or typeinfo of it is in the target. GetInst is fn
@@ -33,8 +41,10 @@ std::vector<std::filesystem::path> ListaArquivosNaoRegistrados();
 // of fn 2730 when the byte at +16 is set, fn 2731 otherwise: a std::optional<int>, whose empty construction clears its
 // two bytes. Fns 3614 and 10316 pass +4 to api::IFingerMatcher's slot 2 as its last argument; fns 10316 and 5382 store
 // +0, and fn 10316 stores 2 and 3 at +8. Chosen: the members' names, +4's int and +20's std::size_t (the vector's size:
-// the division by 12 is signed, a pointer difference), the getters and their names, the private constructor, and this
-// header's path and name, the .cpp's in lower case.
+// the division by 12 is signed, a pointer difference), the accessors and their names, the private constructor, and this
+// header's path and name, the .cpp's in lower case. SalvarBiometriaMesarioRegistrado's name and signature are its
+// lambda's typeinfo's (fn 5382 holds it); GravaWsq (fn 5371, a chosen name) is public, as fn 10451 of another class
+// calls it, a reading (src/units/214-uenux2-app-comum-comparecimentomesario.mk).
 class CControladorReconhecimentoMesario {
 public:
     static CControladorReconhecimentoMesario& GetInst();
@@ -42,6 +52,16 @@ public:
     md::CDedo::TipoDedo GetDedo() const { return m_dedo; }
     md::CComparecimentoMesario::EstadoReconhecimentoBiometrico GetEstadoBiometria() const { return m_estadoBiometria; }
     const std::optional<int>& GetIdArquivo() const { return m_idArquivo; }
+    int GetLimiar() const { return m_limiar; }
+    void SetDedo(md::CDedo::TipoDedo dedo) { m_dedo = dedo; }
+    void SetEstadoBiometria(md::CComparecimentoMesario::EstadoReconhecimentoBiometrico estado)
+    {
+        m_estadoBiometria = estado;
+    }
+
+    void SalvarBiometriaMesarioRegistrado(const std::vector<uebyte>& wsq, const std::string& titulo);
+    void GravaWsq(const std::vector<uebyte>& wsq, const std::filesystem::path& diretorio,
+        const std::filesystem::path& diretorioExterno, const std::function<uint32_t()>& geraId);
 
 private:
     CControladorReconhecimentoMesario();

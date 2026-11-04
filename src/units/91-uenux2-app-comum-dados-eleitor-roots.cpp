@@ -5,7 +5,7 @@
 // - The CEleitorDinamicoDAO constructor (fn 3768): three direct callers in the target (5761, 6734, 7174), which use the
 //   returned `this`, so the two stand-ins use it too.
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers), CBiometriaEleitor::GetDedo (fn 3720, three),
-//   TemDedo (fn 3719, three: 3614, 10316 and 10465, none in the link) and CriaComum (fn 2799, one caller with four call
+//   TemDedo (fn 3719, three: 3614, 10316 and 10465; 10316 and 10465, units 135 and 282, are in the link) and CriaComum (fn 2799, one caller with four call
 //   sites, 11422): one stand-in each with two call sites keeps each out of line, and no argument is the same constant at
 //   both, so dead-argument elimination folds nothing in.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.

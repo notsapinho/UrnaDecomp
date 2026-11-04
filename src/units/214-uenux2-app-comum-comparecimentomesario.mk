@@ -71,6 +71,39 @@
 # either way, measured on the whole link). No other spelling was measured, so no form here is listed as giving the same
 # bytes.
 #
+# Written in ccontroladorreconhecimetomesario.cpp after ComparaDigitais's records (their lines stay blank), held by
+# unit 135's match 5382 (comum::CPedeDigitalMesario::SalvaDigitalMesario), each behind a frame of its own there:
+# - CControladorReconhecimentoMesario::SalvarBiometriaMesarioRegistrado, the name and signature of its lambda's
+#   typeinfo (std::__function::__func<...SalvarBiometriaMesarioRegistrado(const std::vector<unsigned char> &, const
+#   std::string &)::$_0, unsigned int ()>), whose members 10299 to 10303 match from this object: it stores the image
+#   through comum::ArmazenaImagemMesario and, unless the id is 999999, gives GravaWsq the registered directories
+#   (pathwsq.cpp's GetPathWsqRegistrado, fn 5815, and its external twin) and a std::function returning the id.
+# - comum::ArmazenaImagemMesario (no index: binaryen inlined it into 5382's inlined SalvarBiometriaMesarioRegistrado):
+#   the file name, the poll worker's title padded to 12 digits with "_Operador", and the operator's WSQ directories
+#   (fns 3795 and 3794), passed to CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725, unit 293) with
+#   PREFIXO_MESARIO, the constant-initialized std::string "me" 5382 passes (@543548 in the target's read-only data;
+#   ours is in .rodata too: `const std::string` at namespace scope with constant initialization, llvm-nm). It is in
+#   this file and not in 2725's: there clang saw that ArmazenaImagem never reads the file name and kept the string in
+#   locals, where the target stores it in the frame (+64): 5382 scored `74 over 458 rows (... inserted 5, deleted 14)`
+#   so, and here `43 over 453`, operand-only (pnpm wasm score in the whole link). Its being a free function of comum,
+#   its name, its file (by that measurement, a reading) and PREFIXO_MESARIO's name and place are chosen.
+# - CControladorReconhecimentoMesario::GravaWsq (fn 5371, a chosen name; a member, as it sets the std::optional<int> at
+#   +12, its flag at +16): written, not matched. It tests the free space of the external flash with statfs on
+#   CPath::GetPathDinamico(FLASH_EXTERNA) (the result kept, the path freed, then the product of f_bavail and f_bsize
+#   compared with 5 MiB), then names the file "me{:06}.wsq" with the id the std::function gives until
+#   api::CSystem::ExistFile fails, writes it with ecourna's CFile ("w+b", FM_NOATIME) and copies it to the external
+#   flash (CopyFile, false for the bool the target keeps). Measured in the whole link (pnpm wasm score): `46 over 702
+#   rows (same 656, replaced 45 [44 operand-only], inserted 0, deleted 1)`, the one row not an operand the test: ours
+#   `f64.lt` where the target has `f64.ge` and `i32.eqz`. Every form tried gives `f64.lt` on the object (wasm-objdump
+#   of copies compiled at the file's flags, build/out/DECOMP21-I/statfsvars.sh): the nested ifs written, a static bool
+#   helper with an early `return true`, a bool local, an empty then-branch with `else return`, `!(a || b)`, a
+#   `const bool` of `a || b`, and the rest of the body inside `if (a || b)`. A reading: clang proves the product of
+#   two converted unsigned integers never NaN and folds `!(x >= c)` into `x < c`; the target's code keeps the
+#   unordered test. Not explained. The target's 2725 holds the same test (unit 293). A callers+content hand line in
+#   splat/symbol_addrs.txt names it, led by its own body (its comment), since 5382, its one caller in our link,
+#   needs the name; weighed by removal (unit 135's fragment). Its other caller, fn 10451, is not written: the roots
+#   stand in for it.
+#
 # Not written, and what each waits for:
 # - CControladorReconhecimentoMesario::ComparaDigitais (5372, records 65 and 76): not tried; its callers are fns 3614
 #   and 10451, which pass it 1149's result.
@@ -81,7 +114,7 @@
 COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp \
     src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
 UENUX2_SRCS += $(COMPARECIMENTOMESARIO_SRCS)
-# the functions' callers not reconstructed (fns 3614, 5382, 10316, 10451 and 12105):
+# the functions' callers not reconstructed (fns 3614, 10451 and 12105):
 # 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for them
 $(ROOT)/$(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o: $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp -o $(R)

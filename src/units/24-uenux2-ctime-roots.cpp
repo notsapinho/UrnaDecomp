@@ -6,7 +6,7 @@
 // each more than one call site, so binaryen keeps its body out of line as the target does. The constructor from hours,
 // minutes and seconds (fn 3642) needs no stand-in now:
 // cdatetime.cpp's ConvertFromLocalTime (5476) and operator+= (2233) call it, two of its three target callers (the third is
-// 2725). Neither does api::IsValidTime (fn 5449): its two target callers are 3643, in ctime.cpp, and the check 5475 inlines,
+// 2725, unit 293's). Neither does api::IsValidTime (fn 5449): its two target callers are 3643, in ctime.cpp, and the check 5475 inlines,
 // which cdatetime.cpp defines. Every caller reads the result, as the target's do (3641's callers use the returned word, 5475
 // stores the word 3643 leaves there), so binaryen's dead-argument elimination drops no return value, and each passes its
 // arguments through, so it folds no parameter in. operator+= and operator-= are deliberately not rooted: the target has no

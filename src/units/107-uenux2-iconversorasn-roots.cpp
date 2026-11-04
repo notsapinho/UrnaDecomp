@@ -17,7 +17,7 @@
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
 //   5715 and 5716 need none: their callers 11423 and 11452 are written.
 //   5828: 11445 (11373 is written).
-// w107_dados gives a constructor its second call site, and stands for: 3823 2725 and 11629. 5672's call went: its callers
+// w107_dados gives a constructor its second call site, and stands for: 3823 11629 (2725, unit 293's, is in the link). 5672's call went: its callers
 // 5741 and 11455 are written. 3712 needs none:
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.

@@ -15,8 +15,8 @@
 // sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
 // 5874, 6737, 7174, 11630, 11631, 11632 and 12098); 5873, 5874, 11630, 11631 and 11632 are in the link (units 160 and
-// 122), and so are vota::CSincronizaVota's 1836, 3333, 4657, 4682 and 4687 (fragment 205): CopiaDuas stands for the
-// other five. Every target
+// 122), and so are vota::CSincronizaVota's 1836, 3333, 4657, 4682 and 4687 (fragment 205), 2725 (unit 293) and 5371
+// (unit 214): CopiaDuas stands for the other three, 6737, 7174 and 12098. Every target
 // caller passes the same value for one of its two bools, which the target's type (i32 i32 i32) has folded, and 0 or 1
 // for the other (2725 passes 1, the rest 0): CopiaDuas passes the folded one as 1 at both sites, the other as 0 and 1.
 // Rename has no target index of its own: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's slot
@@ -25,10 +25,8 @@
 // libc's utime (fn 6238) is called by CopyFile and by 7-Zip's fn 2585, which our link does not hold: AjustaHora stands
 // for 2585, so binaryen keeps utime out of line as the target does.
 // libc's statfs (fn 3972) is called by libc++'s std::filesystem::__space (fn 4677, which GetFreeSpace and GetUsedSpace
-// call), through statvfs, and directly by 2725 (comum::CControlaArmazenamentoDeImagens, its records at
-// ccontrolaarmazenamentodeimagens.cpp 73 to 152) and 5371 (the "me{:06}.wsq" writer), neither reconstructed: with
-// __space its only caller, binaryen inlines it there and __space is not the target's. LivreEmDois stands for 2725 and
-// 5371 with one call site each.
+// call), through statvfs, and directly by 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's) and 5371 (the
+// "me{:06}.wsq" writer, unit 214's), both in the link, so the stand-in that gave it those two call sites went.
 // api::RemoveTree (target fn 5458) is called by itself and by 5455 (CSystem::ReplaceFile), both reconstructed.
 // CSystem::ReplaceFile (target fn 5455) is called twice by fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2),
 // not reconstructed: RepoeDois stands for it with two call sites, each passing an empty third string as 7174 does.
@@ -40,7 +38,6 @@
 // site but CopyFile's folded bool, which the target folds too, so dead-argument elimination folds no other. They are
 // address-taken from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as
 // uenux2 code.
-#include <sys/statfs.h>
 #include <utime.h>
 
 extern "C" {
@@ -96,16 +93,6 @@ __attribute__((noinline)) int AjustaHora(const char* arquivo)
     return utime(arquivo, nullptr) + 1;
 }
 
-__attribute__((noinline)) unsigned long long LivreEmDois(const char* particaoA, const char* particaoB)
-{
-    struct statfs infoA;
-    struct statfs infoB;
-    if (statfs(particaoA, &infoA) != 0 || statfs(particaoB, &infoB) != 0) {
-        return 0;
-    }
-    return infoA.f_bavail * infoA.f_bsize + infoB.f_bfree;
-}
-
 __attribute__((noinline)) void PartesDoCaminho(int arquivo, int diretorio, int caminho)
 {
     w2763_root_0(arquivo, caminho);
@@ -129,7 +116,6 @@ struct SW2759Roots {
         w2759_sink = reinterpret_cast<void*>(&CopiaDuas);
         w2759_sink = reinterpret_cast<void*>(&RenomeiaUma);
         w2759_sink = reinterpret_cast<void*>(&AjustaHora);
-        w2759_sink = reinterpret_cast<void*>(&LivreEmDois);
         w2759_sink = reinterpret_cast<void*>(&RepoeDois);
         w2759_sink = reinterpret_cast<void*>(&PartesDoCaminho);
         w2759_sink = reinterpret_cast<void*>(&DiretorioVazio);

@@ -193,7 +193,8 @@
 #   shared_ptr by reference, since the target reloads the vector through it after the counting loop, and returns
 #   `-soma` (the target adds each p * log2(p) and negates once). Its name, its being free and its line are chosen;
 # - musl's log2f (6269) has two target callers, 10316 and 10465, and with 10465 its one caller binaryen inlined it, so
-#   unit 282's roots call it for 10316 (with that and the next form together, 995 over 2258 rows became 352 over 2059);
+#   unit 282's roots called it for 10316 (with that and the next form together, 995 over 2258 rows became 352 over 2059)
+#   until 10316 was written (unit 135): with both callers in the link the stand-in went, and 6269 still matches;
 # - the best image kept by `imagem = api::TSharedImageVector(captura)`: the copy-assignment `imagem = captura` there
 #   stays a call of libc++'s operator= (wasm-objdump -d of the object: one call, and none with the temporary), which
 #   keeps the image in the frame where the target holds it in locals and calls the out-of-line ~shared_ptr (424) of a

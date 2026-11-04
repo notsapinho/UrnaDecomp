@@ -42,8 +42,8 @@ int UsaInfoSalt(int a)
     return UsaInfoSalt1(a, a + 24, a + 48) + UsaInfoSalt2(a + 1, a + 25, a + 49);
 }
 
-// Stands for fn 5168's callers 2725 and 11629, neither in the link: CPlainText's constructor over two words and four
-// vectors has those two direct callers, and 2725 reads its result.
+// Stands for fn 5168's caller 11629, not in the link: CPlainText's constructor over two words and four vectors has two
+// direct callers, 2725 (unit 293's, in the link) and 11629, and 2725 reads its result.
 __attribute__((noinline)) int TextosPlanos(int a, int b, int zona, int secao, int v)
 {
     return cepesc_plaintext_ctor_wsq(a, zona, secao, v, v + 12, v + 24, v + 36) -

@@ -4,18 +4,22 @@
 // the result), and none is called:
 // - comum::ListaArquivosNaoRegistrados (fn 5374): fns 1149 and 10451, one call each; 1149 is in the link (it holds the
 //   constructor that calls it), so one call here stands for 10451;
-// - comum::CControladorReconhecimentoMesario::GetInst (fn 1149): fns 3614, 5382, 10316, 10337 and 10451; 10337 is in
-//   the link (unit 135's IGestorDadoMesario::StartState), so one call here stands for the other four;
-// - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385): fn 12105, which calls it twice.
+// - comum::CControladorReconhecimentoMesario::GetInst (fn 1149): fns 3614, 5382, 10316, 10337 and 10451; 10337, 5382
+//   and 10316 are in the link (unit 135's), so one call here stands for 3614 and 10451;
+// - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385): fn 12105, which calls it twice;
+// - comum::CControladorReconhecimentoMesario::GravaWsq (fn 5371): fns 5382 and 10451; 5382 is in the link (unit 135),
+//   so one call here stands for 10451 (a member, called through an asm label as its object's symbol).
 // The first and the third return a class by value through a hidden result pointer, so they are declared through asm
 // labels with that pointer first and called into buffers the stand-ins never destroy: nothing of libc++ is
-// instantiated here. The member's `this` is a parameter of ours that its body never reads, as the target's wasm type
-// has none. GetInst returns a reference, the object's address.
+// instantiated here. GetNomeMesario's `this` is a parameter of ours that its body never reads, as the target's wasm
+// type has none. GetInst returns a reference, the object's address.
 extern "C" {
 void w214_lista(void* resultado) __asm__("_ZN5comum27ListaArquivosNaoRegistradosEv");
 const void* w214_controlador() __asm__("_ZN5comum33CControladorReconhecimentoMesario7GetInstEv");
 void w214_nome(void* resultado, void* objeto, const void* titulo) __asm__(
     "_ZN5comum35CImprimirIdentificacaoMesariosFinal14GetNomeMesarioERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void w214_grava(void* objeto, const void* wsq, const void* diretorio, const void* externo, const void* geraId) __asm__(
+    "_ZN5comum33CControladorReconhecimentoMesario8GravaWsqERKNSt3__26vectorIhNS1_9allocatorIhEEEERKNS1_10filesystem4pathESB_RKNS1_8functionIFjvEEE");
 }
 
 namespace {
@@ -27,7 +31,7 @@ __attribute__((noinline)) int w214_arquivos(void* resultado)
     return 23;
 }
 
-// stands for fns 3614, 5382, 10316 and 10451
+// stands for fns 3614 and 10451
 __attribute__((noinline)) int w214_controlador_limiar()
 {
     return static_cast<const int*>(w214_controlador())[1] + 31;
@@ -43,9 +47,18 @@ __attribute__((noinline)) int w214_nomes(void* objeto, const void* primeiro, con
     return a[11] + b[11];
 }
 
+// stands for fn 10451
+__attribute__((noinline)) int w214_gravacao(void* objeto, const void* wsq, const void* diretorio, const void* externo,
+    const void* geraId)
+{
+    w214_grava(objeto, wsq, diretorio, externo, geraId);
+    return 37;
+}
+
 int (*volatile w214_sink_arquivos)(void*);
 int (*volatile w214_sink_controlador)();
 int (*volatile w214_sink_nomes)(void*, const void*, const void*);
+int (*volatile w214_sink_gravacao)(void*, const void*, const void*, const void*, const void*);
 
 struct SW214Roots {
     SW214Roots()
@@ -53,6 +66,7 @@ struct SW214Roots {
         w214_sink_arquivos = w214_arquivos;
         w214_sink_controlador = w214_controlador_limiar;
         w214_sink_nomes = w214_nomes;
+        w214_sink_gravacao = w214_gravacao;
     }
 } w214_roots;
 
