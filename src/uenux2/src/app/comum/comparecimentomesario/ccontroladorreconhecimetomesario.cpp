@@ -96,16 +96,16 @@ void CControladorReconhecimentoMesario::SalvarBiometriaMesarioRegistrado(const s
         return;
     }
     const std::function<uint32_t()> geraId = [&id]() { return id; };
-    GravaWsq(wsq, GetPathWsqRegistrado(), GetPathWsqRegistradoExterno(), geraId);
+    GravaWsq(wsq, GetPathWsqRegistrado(), GetPathWsqRegistradoExterno(), geraId, 5 * 1024 * 1024);
 }
 
 void CControladorReconhecimentoMesario::GravaWsq(const std::vector<uebyte>& wsq, const std::filesystem::path& diretorio,
-    const std::filesystem::path& diretorioExterno, const std::function<uint32_t()>& geraId)
+    const std::filesystem::path& diretorioExterno, const std::function<uint32_t()>& geraId, double espacoMinimo)
 {
     std::string nome;
     struct statfs estado;
     if (statfs(CPath::GetPathDinamico(FLASH_EXTERNA).c_str(), &estado) == 0) {
-        if (!(static_cast<double>(estado.f_bavail) * estado.f_bsize >= 5 * 1024 * 1024)) {
+        if (!(static_cast<double>(estado.f_bavail) * estado.f_bsize >= espacoMinimo)) {
             return;
         }
     }

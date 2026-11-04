@@ -126,8 +126,9 @@
 # CTituloMesarioJaRegistrado and CPedeDigitalMesario went, since their constructors are in the link (inlined through
 # GetInst into 5389 and 10313). ConfirmaFimRegistro, which called 5389 for fn 6011, went: 6011's two callers, the
 # ProcessInput of comum::CRegistrarMesarios and CMesarioRegistrado (10391, 10338), are written (units 247 and 279).
-# ReconheceDigital calls CPolySingleton<api::IFingerMatcher>::instance twice for its six unwritten callers, which puts
-# 1686 in the link beside 816 and lets binaryen form 6013 from the two, as the target does. The roots object compiles at uenux2's flags
+# ReconheceDigital calls CPolySingleton<api::IFingerMatcher>::instance twice for its two callers not written, 3614 and
+# 5372 (10316, 10465, 10474 and 10482 are in the link, and the link takes 1686 from cpededigitalmesario.cpp.o); binaryen
+# forms 6013 from 1686 and 816, as the target does. The roots object compiles at uenux2's flags
 # for this directory ($(UENUX2_CXXFLAGS)), so no match rests on a flag the tree lacks; with strict aliasing on the
 # instance's code is the same (wasm-objdump -d of the function in the two objects: 154 identical lines).
 # api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
@@ -195,10 +196,11 @@
 #   of a function with one caller), CControladorReconhecimentoMesario::SalvarBiometriaMesarioRegistrado, named by its
 #   lambda's typeinfo (std::__function::__func<...SalvarBiometriaMesarioRegistrado(...)::$_0, unsigned int ()>, whose
 #   vtable 5382 stores), comum::ArmazenaImagemMesario and GetPathWsqRegistradoExterno (units 214 and 122). Measured as
-#   10316: `43 over 453 rows (same 410, replaced 43 [43 operand-only], ...)`. It matches with its callees 2725 and 5371
-#   named by hand lines (unit 293's and unit 214's fragments), since each of them differs and 5382 is their one caller
-#   in our link: weighed by removal (build/out/DECOMP21-I/weigh.sh on copies, a control keeping the names), each line
-#   alone out drops 5382 to `unresolved` and splat-build then refuses 10316 (`UNCONFIRMED: self-voted` on 5382's name).
+#   10316: `43 over 453 rows (same 410, replaced 43 [43 operand-only], ...)`. It matches with its callees 5371 (unit
+#   214's, a match) and 2725 (unit 293's), which differs and is named by a hand line, since 5382 is its one caller in
+#   our link: weighed by removal (copies of the symbol file and the match list, two scans beside a control keeping the
+#   names), the line alone out drops 5382 to `unresolved` and splat-build then refuses 10316 (`UNCONFIRMED:
+#   self-voted` on 5382's name).
 # - 10319 and 10323, CNomeMesariosUrnaDS::Text of each file, and 6008: the target's 10319 and 10323 are `f6008(p0, p1,
 #   <the record>)`, binaryen's shared body of the two. With both in the link ours forms it too. The voter's name is
 #   copied in an if over GetNomeUrna's emptiness, each branch with its own substr, as unit 214's GetNomeMesario: with

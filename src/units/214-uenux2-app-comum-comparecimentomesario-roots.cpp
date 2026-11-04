@@ -8,7 +8,9 @@
 //   and 10316 are in the link (unit 135's), so one call here stands for 3614 and 10451;
 // - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385): fn 12105, which calls it twice;
 // - comum::CControladorReconhecimentoMesario::GravaWsq (fn 5371): fns 5382 and 10451; 5382 is in the link (unit 135),
-//   so one call here stands for 10451 (a member, called through an asm label as its object's symbol).
+//   so one call here stands for 10451 (a member, called through an asm label as its object's symbol). It passes the
+//   5 MiB that 5382's inlined SalvarBiometriaMesarioRegistrado passes: dead-argument elimination puts the constant in
+//   GravaWsq's body, where the target has it, only when every caller passes it, so 10451 does too (a reading).
 // The first and the third return a class by value through a hidden result pointer, so they are declared through asm
 // labels with that pointer first and called into buffers the stand-ins never destroy: nothing of libc++ is
 // instantiated here. GetNomeMesario's `this` is a parameter of ours that its body never reads, as the target's wasm
@@ -18,8 +20,9 @@ void w214_lista(void* resultado) __asm__("_ZN5comum27ListaArquivosNaoRegistrados
 const void* w214_controlador() __asm__("_ZN5comum33CControladorReconhecimentoMesario7GetInstEv");
 void w214_nome(void* resultado, void* objeto, const void* titulo) __asm__(
     "_ZN5comum35CImprimirIdentificacaoMesariosFinal14GetNomeMesarioERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w214_grava(void* objeto, const void* wsq, const void* diretorio, const void* externo, const void* geraId) __asm__(
-    "_ZN5comum33CControladorReconhecimentoMesario8GravaWsqERKNSt3__26vectorIhNS1_9allocatorIhEEEERKNS1_10filesystem4pathESB_RKNS1_8functionIFjvEEE");
+void w214_grava(void* objeto, const void* wsq, const void* diretorio, const void* externo, const void* geraId,
+    double espacoMinimo) __asm__(
+    "_ZN5comum33CControladorReconhecimentoMesario8GravaWsqERKNSt3__26vectorIhNS1_9allocatorIhEEEERKNS1_10filesystem4pathESB_RKNS1_8functionIFjvEEEd");
 }
 
 namespace {
@@ -51,7 +54,7 @@ __attribute__((noinline)) int w214_nomes(void* objeto, const void* primeiro, con
 __attribute__((noinline)) int w214_gravacao(void* objeto, const void* wsq, const void* diretorio, const void* externo,
     const void* geraId)
 {
-    w214_grava(objeto, wsq, diretorio, externo, geraId);
+    w214_grava(objeto, wsq, diretorio, externo, geraId, 5 * 1024 * 1024);
     return 37;
 }
 

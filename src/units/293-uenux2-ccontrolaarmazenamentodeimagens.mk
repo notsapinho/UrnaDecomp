@@ -71,8 +71,9 @@
 # - Measured in the whole link (pnpm wasm score against the target): `417 over 2361 rows (same 1944, replaced 293
 #   [272 operand-only], inserted 53, deleted 71)`. The scan stops at +0x314 on the "{}{}" format string, which the
 #   target holds as the tail of "{:05}{:04}{:04}{}{}{}{}" (@1071), a literal no function of our link holds yet
-#   (`string tail occurs 4098 times`); the free-space test differs as 5371's does (unit 214's fragment: `f64.lt` for
-#   `f64.ge` and `i32.eqz`); and the frames: 2725's own is 160 bytes against 112, ZeraDataHora's timevals among them,
+#   (`string tail occurs 4098 times`); the free-space test differs (ours `f64.lt` where the target has `f64.ge`): 5371
+#   took the target's test with the threshold as a parameter (unit 214's fragment), a form not tried here; and the
+#   frames: 2725's own is 160 bytes against 112, ZeraDataHora's timevals among them,
 #   GravaEnvelope's 304 against 320. The rest is not explained.
 # - Its name: a callers+content hand line in splat/symbol_addrs.txt, led by the six records only 2725 loads, whose
 #   copies only our ArmazenaImagem loads (`check_srcloc.py --strict` lists them as the target's); 5382 (unit 135),

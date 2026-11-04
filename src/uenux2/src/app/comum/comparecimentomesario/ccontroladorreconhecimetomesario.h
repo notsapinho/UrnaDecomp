@@ -44,7 +44,8 @@ uint32_t ArmazenaImagemMesario(const std::vector<uebyte>& wsq, const std::string
 // the division by 12 is signed, a pointer difference), the accessors and their names, the private constructor, and this
 // header's path and name, the .cpp's in lower case. SalvarBiometriaMesarioRegistrado's name and signature are its
 // lambda's typeinfo's (fn 5382 holds it); GravaWsq (fn 5371, a chosen name) is public, as fn 10451 of another class
-// calls it, a reading (src/units/214-uenux2-app-comum-comparecimentomesario.mk).
+// calls it, a reading, and its last parameter, the free space it requires, is a reading of its test (its name and type
+// chosen; src/units/214-uenux2-app-comum-comparecimentomesario.mk).
 class CControladorReconhecimentoMesario {
 public:
     static CControladorReconhecimentoMesario& GetInst();
@@ -61,7 +62,7 @@ public:
 
     void SalvarBiometriaMesarioRegistrado(const std::vector<uebyte>& wsq, const std::string& titulo);
     void GravaWsq(const std::vector<uebyte>& wsq, const std::filesystem::path& diretorio,
-        const std::filesystem::path& diretorioExterno, const std::function<uint32_t()>& geraId);
+        const std::filesystem::path& diretorioExterno, const std::function<uint32_t()>& geraId, double espacoMinimo);
 
 private:
     CControladorReconhecimentoMesario();

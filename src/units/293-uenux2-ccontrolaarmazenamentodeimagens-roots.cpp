@@ -10,9 +10,9 @@
 // - comum::asn::GravaArquivo for the envelope (fn 2724): fns 2725, 11626 and 11629 (which calls it twice); 11626 (unit
 //   160) and 2725 are written, the stand-in is for 11629.
 // - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.
-// - comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725): fns 5382 and 10425, which calls it twice; 5382 is
-//   in the link (unit 135), w293_armazena stands for 10425 and reads the result, as 5382 does. It passes the name it
-//   gets as the prefix too, so dead-argument elimination folds no prefix in (5382 passes "me", 10425 "").
+// - comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725): fns 5382 and 10425, which calls it three times;
+//   5382 is in the link (unit 135), w293_armazena stands for 10425 and reads the result, as 5382 does. It passes the
+//   name it gets as the prefix too, so dead-argument elimination folds no prefix in (5382 passes "me", 10425 "").
 // libc's __futimesat (fn 6236), the body of utimes, needs no stand-in now: its callers 2725 (unit 293) and SQLite's
 // dotlockLock (fn 12674) are in the link. ccontrolaarmazenamentodeimagens.cpp.o instantiates the two templates first in
 // our link now, so the link keeps its copies; this TU compiles with the tree's flags too, as cgravadorbu.cpp's object
