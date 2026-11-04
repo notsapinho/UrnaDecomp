@@ -43,9 +43,10 @@
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
 # convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
-# defined; StartState as the key function of the four CImpressao* states, so each class's .cpp emits its vtable; LogaMesarioIndagadoHorarioUrna's
-# name, from its message, and its place in clogvota.cpp, after LogaApresentadaTelaReinicioVotacao. The paths, by how-to
-# step 3's rules (no record names these classes' files), each header beside its .cpp and named after the class (rule 4):
+# defined; StartState as the key function of the four CImpressao* states, so each class's .cpp emits its vtable;
+# LogaMesarioIndagadoHorarioUrna's name, from its message, and its place in clogvota.cpp, after
+# LogaApresentadaTelaReinicioVotacao. The paths, by how-to step 3's rules (no record names these classes' files), each
+# header beside its .cpp and named after the class (rule 4):
 # - cconfirmaregerarzeresima.cpp in iniciovotacao/ (rule 2): its vtable and typeinfo follow vota::CRegerarZeresima's in
 #   the data with nothing between (@1546492 to @1546608), and its statics' destructors follow CRegerarZeresima's slot 10
 #   (fn 11841) in link order and precede vota::CReinicioVotacao's (11837). The directory's data run from

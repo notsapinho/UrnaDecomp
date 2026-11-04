@@ -5,10 +5,12 @@
 //                     over two const pointers (fn 5704), which ASN1::CoderEnv::setVisitors gives api::CPartialFileASN's
 //                     DecodeObjectFunction: target fn 7787 (its photos' reader, not written); 11523, the other caller,
 //                     is in the link. With 11523 alone, binaryen inlines 5704 into it.
-//   w310_busca        the hinted __find_equal of std::map<md::CEleitorIdentidade, md::CIndexer>'s tree (fn 2805), which
-//                     11411's copy of the visitor's map calls through __emplace_hint_unique_key_args: target fns 3614,
-//                     5376 and 10451 (not written) call it too. With 11411 alone, binaryen inlines 2805 into its one
-//                     caller there, and 11411 differs.
+//   w310_busca        the hinted __find_equal of std::map<md::CEleitorIdentidade, md::CIndexer>'s tree, which 11411's
+//                     copy of the visitor's map calls through __emplace_hint_unique_key_args, matched as fn 2805: the
+//                     target's 2805 is binaryen's merge of at least three maps' instances (the nodes its callers
+//                     allocate right after the call are 40, 236 and 84 bytes), so the name is the instance our link
+//                     holds, and target fns 3614, 5376 and 10451 (not written) call it for the other instances. With
+//                     11411 alone, binaryen inlines this instance into its one caller there, and 11411 differs.
 extern "C" void w5704(int, int, int, int) __asm__(
     "_ZNSt3__26vectorINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIN4ASN116IAbstractVisitorEEEEENS5_ISC_EEE18__assign_with_sizeB8ne210108IPKSC_SH_EEvT_T0_l");
 

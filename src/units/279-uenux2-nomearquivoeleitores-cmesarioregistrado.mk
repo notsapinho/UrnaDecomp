@@ -28,10 +28,11 @@
 # - StartState (10339) matches with its two next-state stores through comum::CAppState::SetNextState (unit 61's fragment
 #   has why: the target ran binaryen's passes on the body again after inlining a call). With the assignments it read
 #   `24 over 100 rows (same 76, replaced 20 [16 operand-only], inserted 2, deleted 2)`, the target's calls and slots in
-#   the target's order, binaryen's local numbers apart (the scan: `+0x2e target +0x2d local.tee 1 | ours +0x2d local.tee
-#   4`; the record's address and the controllers sit in other locals). ProcessInput's two stores go through the setter as
-#   well, as CRegistrarMesarios::ProcessInput's do: the two bodies are what binaryen merges into 6011, which matches so
-#   (unit 247's paragraph has the measurement); 10338, the thunk into it, matches either way.
+#   the target's order, binaryen's local numbers apart (the scan:
+#   `+0x2e target +0x2d local.tee 1 | ours +0x2d local.tee 4`; the record's address and the controllers sit in other
+#   locals). ProcessInput's two stores go through the setter as well, as CRegistrarMesarios::ProcessInput's do: the two
+#   bodies are what binaryen merges into 6011, which matches so (unit 247's paragraph has the measurement); 10338, the
+#   thunk into it, matches either way.
 # - GetInst, the constructor and the operator's form (TelaMesarioRegistrado) are written from IGestorDadoMesario::
 #   StartState (10337, unit 135), which holds them inlined: the 28-byte object, CAppState's constructor with 2
 #   (EVENTO_ENTRADA), the vptr, both forms assigned (fn 1255's at +20, then the builder's at +12, a frame of its own),

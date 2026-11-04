@@ -127,8 +127,8 @@ __attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
     w2825(eleitores, dados + 64);
 }
 
-// Stands for fns 11242 and 12110, target callers of CEleitores::QuantidadeAptos (fn 2823; 652 and 2881 are in the link):
-// two calls, each reading one of the two counts the result's address receives.
+// Stands for fns 11242 and 12110, target callers of CEleitores::QuantidadeAptos (fn 2823; 652 and 2881 are in the
+// link): two calls, each reading one of the two counts the result's address receives.
 __attribute__((noinline)) int QuantidadesAptos(int eleitores)
 {
     int quantidade[2];

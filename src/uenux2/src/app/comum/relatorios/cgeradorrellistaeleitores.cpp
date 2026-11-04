@@ -1,8 +1,8 @@
 // The voters' list report of comum (target fn 11908 holds ImprimeListaEleitores inlined; fns 11233 and 11234 are
 // the text sources it passes by table slot). The reconstruction's note, not TSE's text: the file's one record is
 // SituacaoEleitor's throw (line 100, column 15); every other line, the helpers' names but SituacaoEleitor's and
-// MontaCabecalho's (the lambda's RTTI) and their order are chosen. cgeradorrellistaeleitores.h and
-// src/units/317-uenux2-relatorios-aptos.mk say what is evidence and what is chosen.
+// MontaCabecalho's (the lambda's RTTI), the other helpers' internal linkage and their order are chosen.
+// cgeradorrellistaeleitores.h and src/units/317-uenux2-relatorios-aptos.mk say what is evidence and what is chosen.
 #include "app/comum/relatorios/cgeradorrellistaeleitores.h"
 
 #include <memory>

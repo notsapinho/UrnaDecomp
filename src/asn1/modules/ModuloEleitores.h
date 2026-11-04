@@ -445,7 +445,8 @@ private:
 }; // end class DomicilioEleitoral
 
 //
-// ModuloEleitores::NecessidadeEspecial   // the field 'necessidade' of EleitorUrna; RTTI names the class (ledger/classes.json), whose vptr CConversorEntidadeEleitores's slot 2 (fn 11411) stores in its copy of the field
+// ModuloEleitores::NecessidadeEspecial   // the field 'necessidade' of EleitorUrna; RTTI names the class
+// (ledger/classes.json), whose vptr CConversorEntidadeEleitores's slot 2 (fn 11411) stores in its copy of the field
 //
 
 class NecessidadeEspecial : public ASN1::ENUMERATED

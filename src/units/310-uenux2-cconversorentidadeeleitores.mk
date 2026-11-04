@@ -61,15 +61,18 @@
 # rule 1 to 4 of how-to step 3 (the converter's head beside its .cpp, CEntidadeEleitores in md/eleitor/, as the
 # converter's directory mirrors).
 #
-# Matched: 11411, CConversorEntidadeEleitores::DoDesconverte, and 2805, the hinted __find_equal of std::map<
-# md::CEleitorIdentidade, md::CIndexer>'s tree, which this object instantiates (11411's copy of the visitor's map). The
+# Matched: 11411, CConversorEntidadeEleitores::DoDesconverte, and 2805, under the name of the hinted __find_equal of
+# std::map<md::CEleitorIdentidade, md::CIndexer>'s tree, which this object instantiates (11411's copy of the visitor's
+# map). The target's 2805 is binaryen's merge of at least three such instances, of maps whose nodes differ (the node
+# each caller allocates right after its call of 2805: 40 bytes in 11411, 236 in 3614, 84 in 5376 and 10451; pnpm wasm
+# fn), so the name is the instance our link holds, and the roots' stand-in stands for callers of the others. The
 # converter's .cpp is the class's key function's file, so its object emits the vtable (@1566768). Before step 8, 11411
 # scored 149 over 3308 rows, all operand-only: calls, data addresses, packed std::format strings and two table slots
 # (pnpm wasm score in this unit's link; the rows that are no call or data address are 69 against 9 and 148 against 43,
 # the throw's destructor slot and the format buffer's callback, and the format strings' packed i64 constants).
 #
-# What the target shows of 11411 (frames, pnpm wasm fn): DoDesconverte's own frame of 256 bytes, and inside it ten frames
-# of out-of-line functions binaryen inlined, each with one caller: __emplace_hint_unique_key_args (16 bytes; the
+# What the target shows of 11411 (frames, pnpm wasm fn): DoDesconverte's own frame of 256 bytes, and inside it ten
+# frames of out-of-line functions binaryen inlined, each with one caller: __emplace_hint_unique_key_args (16 bytes; the
 # visitor's map copied node by node, the hinted __find_equal a call), GetInscricoesEleitor (528, records :49 and :76),
 # ConverteNecessidadeEspecial (496, :38), DesconverteTransferenciaTemporaria (16, :236) and in it
 # DesconverteTipoTransferenciaTemporaria (480, :210), the two CTransferenciaTemporaria constructors (16 each), CDataJE's
@@ -83,20 +86,20 @@
 #   std::string, the copy constructor (138 a call on its long path). nomeSocial default-constructed: 152 over 3308 rows
 #   (3 not operand-only: twelve bytes zeroed where the target stores two), so it is built from "", as
 #   CTransferenciaTemporaria's m_uf is.
-# - The key: an assignment from the CSeguranca's GetChave, 482 over 3469 (161 inserted: the copy inlined where the target
-#   calls 1158, vector<uebyte>::__assign_with_size over __wrap_iter); chave.assign over the vector's iterators, as
-#   written, takes the CSeguranca as a named local (a temporary would be converted twice, a reading). The last arm's
+# - The key: an assignment from the CSeguranca's GetChave, 482 over 3469 (161 inserted: the copy inlined where the
+#   target calls 1158, vector<uebyte>::__assign_with_size over __wrap_iter); chave.assign over the vector's iterators,
+#   as written, takes the CSeguranca as a named local (a temporary would be converted twice, a reading). The last arm's
 #   CSeguranca as the constructor's temporary argument: 162 over 3314 (6 inserted, 7 deleted); it is named, as written.
-# - The voters' list bound to a reference before the map's copy: without it (the range-for over get_eleitores()) 171 over
-#   3314, the field read after the copy. Each voter's EleitorUrna through get_eleitor() at each use: one reference to it,
-#   654 over 3365. The biometria's search: assigning each find's result and testing it gives the same rows as the
+# - The voters' list bound to a reference before the map's copy: without it (the range-for over get_eleitores()) 171
+#   over 3314, the field read after the copy. Each voter's EleitorUrna through get_eleitor() at each use: one reference
+#   to it, 654 over 3365. The biometria's search: assigning each find's result and testing it gives the same rows as the
 #   written form (149 over 3308); the written one is chosen.
 # - GetInscricoesEleitor: the copy's emptiness tested first, then the vector and std::transform into a back_inserter
-#   over MontaEleitorIdentidade, a helper clang inlines, gives the target's zeroing of the vector after that test and its
-#   blocks' order (the 7900 throw before the copy's destruction, the 7899 throw last), and so does a do-while loop; a
-#   range-for, an iterator loop or a reserve after the same test place the 7899 throw right after the loop, and the test
-#   of the result after the loop zeroes the vector before it (objects). Three push_backs, one per selection, give three
-#   calls of the slow path where the target has one.
+#   over MontaEleitorIdentidade, a helper clang inlines, gives the target's zeroing of the vector after that test and
+#   its blocks' order (the 7900 throw before the copy's destruction, the 7899 throw last), and so does a do-while loop;
+#   a range-for, an iterator loop or a reserve after the same test place the 7899 throw right after the loop, and the
+#   test of the result after the loop zeroes the vector before it (objects). Three push_backs, one per selection, give
+#   three calls of the slow path where the target has one.
 # - DoDesconverte's place: after its callees (last in the file) 302 over 3319 rows, 11 inserted, 11 deleted, every one a
 #   local's number in the inlined callees; between GetInscricoesEleitor and DesconverteTipoTransferenciaTemporaria, the
 #   149 above. The four objects in name order or with ctransferenciatemporaria before centidadeeleitores score the same,
@@ -108,16 +111,17 @@
 # typedef of ASN1::SEQUENCE_OF<ModuloTiposEleitorais::IdentificadorEleitor>, whose vptr 11411 stores in its copy.
 #
 # Chosen, no evidence names them: MontaEleitorIdentidade and its being a file-local helper, GetIdentidades, CDataJE's
-# GetData and its test's spelling, ConverteNecessidadeEspecial's casts of 0 and 1 (CEleitor's enum has no enumerators),
-# the enumerators of CTransferenciaTemporaria::ETransferenciaTemporaria (their values are the target's) and the code
-# 8069 (euecomumdadoserror.h), the `case unknownEnumeration_` that throws (the target's table: -1 throws, 0 and unknown
-# kinds give no transfer), every local's name, DoDesconverte's line and the blank lines, the helper's and the files'
-# lines above the first record, and each file's header path (rule 4 of how-to step 3, beside its .cpp; md/cdataje.h in
-# md/ as its record's .cpp is).
+# GetData and its test's spelling, the names of CEleitor::ENecessidadeEspecial's enumerators, which
+# ConverteNecessidadeEspecial returns (SEM_NECESSIDADE and NECESSITA_AUDIO, 0 and 1: returning casts of 0 and 1 gives
+# the same object, measured), the enumerators of CTransferenciaTemporaria::ETransferenciaTemporaria (their values are
+# the target's) and the code 8069 (euecomumdadoserror.h), the `case unknownEnumeration_` that throws (the target's
+# table: -1 throws, 0 and unknown kinds give no transfer), every local's name, DoDesconverte's line and the blank lines,
+# the helper's and the files' lines above the first record, and each file's header path (rule 4 of how-to step 3, beside
+# its .cpp; md/cdataje.h in md/ as its record's .cpp is).
 #
 # Roots (310-uenux2-cconversorentidadeeleitores-roots.cpp): w310_visitantes stands for 5704's target caller 7787 (the
-# photos' reader, not written) and w310_busca for 2805's target callers 3614, 5376 and 10451 (not written); each goes
-# when its callers are in the link.
+# photos' reader, not written) and w310_busca for 2805's target callers 3614, 5376 and 10451 (not written; they call the
+# other maps' instances that the target's 2805 merges); each goes when its callers are in the link.
 W310_SRCS := src/app/comum/dados/asn/eleitor/cconversorentidadeeleitores.cpp src/app/comum/dados/md/cdataje.cpp \
   src/app/comum/dados/md/eleitor/centidadeeleitores.cpp src/app/comum/dados/md/eleitor/ctransferenciatemporaria.cpp
 UENUX2_SRCS += $(W310_SRCS)

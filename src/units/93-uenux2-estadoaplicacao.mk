@@ -61,27 +61,32 @@
 #
 # CEstadoGeralVota::MarcaUltimoVoto (records cestadogeralvota.cpp:131 and :136, 8086 and 8087) is written: unit 197's
 # FinalizaEleitor (fn 4454, written and not matched) holds it behind a 48-byte prologue: it throws unless the
-# acquisition began and has not ended (`if (m_dhFimAquisicao)` reads as the flag compared with 1, reading.md R14),
-# sets m_dhUltimoVoto to api::CDateTime::Now() and adds one to m_comparecimento.
+# acquisition began and has not ended (`if (m_dhFimAquisicao)` reads as the flag compared with 1, reading.md R14), sets
+# m_dhUltimoVoto to api::CDateTime::Now() and adds one to m_comparecimento. Its second test is written in place,
+# `if (m_dhFimAquisicao)`: written through IsFimAquisicaoMarcado() (below), the TU's object is the same byte for byte
+# (cmp), so the bytes leave it open there, and the spelling is a choice.
 # CEstadoGeralVota::MarcaFimAquisicao (records cestadogeralvota.cpp:108 and :113, 8084 and 8085) is written with unit
 # 277, whose CConfirmaEncerramento::ProcessInput (fn 10734, matched) holds it behind a 48-byte prologue: it throws when
 # the acquisition has ended (+48's flag), then when it has not begun (+32's), and sets m_dhFimAquisicao to
 # api::CDateTime::Now(). Its first test calls IsFimAquisicaoMarcado(), a bool member defined in the class
-# (cestadogeralvota.h): its name and its being a public member are chosen; that the test is a call clang inlines is
-# measured. With the test written in MarcaFimAquisicao's body (`if (m_dhFimAquisicao)`), 10734 scored 49 over 273 rows
-# (pnpm wasm score, inserted 2, deleted 2): after Now() the target stores the value's i64 (+36) and i32 (+44) and then
-# reads the flag (+48); ours read the flag first and stored through `this + 36`, which clang computes in the entry
-# block for that test and reuses for the store (the TU's IR, em++ -S -emit-llvm: the address in the entry block, the
-# flag's load, then the memcpy). The same TU's MarcaInicioAquisicao (5627, matched) has the target's order, and its IR
-# computes its optional's address in the block that stores. Through the inlined member the address is computed where
-# the value is stored, the object (wasm-objdump -d of this TU) stores before it reads the flag, and 10734 scored 43
-# over 271 rows, every one an operand of a call, a data address or __cxa_throw's destructor slot, then matched at step
-# 9. A lambda called in place for the test gave the same module (the plain link's sha256). Measured on the object,
-# each giving ours: the test written `.has_value()`, `!= std::nullopt`, through GetDhFimAquisicao() (the getter
-# returns the optional's address, which clang reuses the same way) or as an else-if chain, the assignment as is, from
-# a local or as an explicit operator= call, and the TU without strict aliasing; std::optional(...), std::make_optional
-# and emplace store the flag with no test. The two tests swapped give the target's order there too, against the
-# records' order (108's throw is 8084's, the acquisition already ended).
+# (cestadogeralvota.h, alone on line 126, in the gap's lines above record 131, which src/README.md "Gaps" lets recovered
+# code take): its name, its being a public member, its definition in the class and its place are chosen. That a test
+# through a call clang inlines gives the target's order, and every in-place spelling below the other, is measured; that
+# the original's test was such a call is a reading. With the test written in MarcaFimAquisicao's body
+# (`if (m_dhFimAquisicao)`), 10734 scored 49 over 273 rows (pnpm wasm score, inserted 2, deleted 2): after Now() the
+# target stores the value's i64 (+36) and i32 (+44) and then reads the flag (+48); ours read the flag first and stored
+# through `this + 36`, which clang computes in the entry block for that test and reuses for the store (the TU's IR, em++
+# -S -emit-llvm: the address in the entry block, the flag's load, then the memcpy). The same TU's MarcaInicioAquisicao
+# (5627, matched) has the target's order, and its IR computes its optional's address in the block that stores. Through
+# the inlined member the object (wasm-objdump -d of this TU) stores before it reads the flag, and 10734 scored 43 over
+# 271 rows, every one an operand of a call, a data address or __cxa_throw's destructor slot, then matched at step 9;
+# that the member's test leaves the address to be computed where the value is stored, as in MarcaInicioAquisicao, is a
+# reading (no IR of that form was taken). A lambda called in place for the test gave the same module (the plain link's
+# sha256). Measured on the object, each giving ours: the test written `.has_value()`, `!= std::nullopt`, through
+# GetDhFimAquisicao() (the getter returns the optional's address, which clang reuses the same way) or as an else-if
+# chain, the assignment as is, from a local or as an explicit operator= call, and the TU without strict aliasing;
+# std::optional(...), std::make_optional and emplace store the flag with no test. The two tests swapped give the
+# target's order there too, against the records' order (108's throw is 8084's, the acquisition already ended).
 # Not reconstructed: the slots of the other converters here, CEstadoGeral, CCabecalhoQRCodeBuilder's other
 # setters (fn 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and
 # preBuild().

@@ -12,8 +12,8 @@
 //   binaryen-inlined there), 10313 (unit 71) and 10721 (unit 277), all in the link: its stand-ins went.
 // - IRegraIdentidade::EhValida (fn 3723): callers 2803 and 10627 (vota::CValidaIdentidade's slot 2, unit 278's, which
 //   holds CValidadorIdentidade::TiposValidos inlined), both in the link: its stand-in went.
-// - FormataIdentificador (fn 1924): callers 10586, in the link (unit 50), 11233 (comum::(anonymous
-//   namespace)::SituacaoEleitor, record cgeradorrellistaeleitores.cpp:100) and 12105 (records of
+// - FormataIdentificador (fn 1924): callers 10586 (unit 50) and 11233 (comum::(anonymous namespace)::SituacaoEleitor,
+//   record cgeradorrellistaeleitores.cpp:100, fragment 317's), in the link, and 12105 (records of
 //   vota::CGeraRelatorios::StartState and comum::CGeradorBUJ::GeraBUJ), which DuasFormatacoesIdentificador stands for.
 // CValidadorIdentidade::Valida and IRegraIdentidade::Valida get no root: the target inlines each into its one caller (fn
 // 566), and our link has that one call too. The stand-ins differ from each other and call two things or add an offset,

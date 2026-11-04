@@ -6,8 +6,8 @@
 //   CCarga's constructor (fn 2802), called once each by fns 10290, 11587, 11626 and 11629: 10290, 11587 and 11626 are
 //   written (fragment 172, units 305 and 160), and the stand-in stands for 11629. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
 //   its one target caller, calls it twice.
-// CEleitor's constructors (fns 5666 and 5668) need none: fn 11411, their one target caller, calls each twice. CEleitor::
-// ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
+// CEleitor's constructors (fns 5666 and 5668) need none: fn 11411, their one target caller, calls each twice.
+// CEleitor::ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
 // The stand-ins
 // differ in their operators, so binaryen merges none of them. The target's wasm types keep every parameter of these
 // functions, so no argument is the same constant at both call sites of a stand-in, and dead-argument elimination folds

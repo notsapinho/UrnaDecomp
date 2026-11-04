@@ -19,8 +19,9 @@ namespace comum::md {
 // converter passes the voter's DomicilioEleitoral uf and codigoMunicipio, and md::CEleitorDecorator::GetAbrangencia (fn
 // 3721) compares them with the urn's. The enumerators' values are the converter's (0 for no transfer, which both
 // constructors' messages name, 1 to 6 for the ASN.1 kinds it maps: cconversorentidadeeleitores.cpp lists them); their
-// names are chosen. The enum's `int`, the type of the word at +16, every member and parameter name, ValidaConstrucao's
-// being private, and the three accessors, which the decorator reads, are chosen too.
+// names are chosen. The enum's `int`, the type of the word at +16, the three-argument constructor's taking the state by
+// `const std::string&`, every member and parameter name, ValidaConstrucao's being private, and the three accessors,
+// which the decorator reads, are chosen too.
 class CTransferenciaTemporaria {
 public:
     enum ETransferenciaTemporaria : int {

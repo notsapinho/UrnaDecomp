@@ -87,8 +87,8 @@
 #   ecourna::app::dados::CParametrosUrna), then 2266, then celeitores.cpp's 2265 and 2264: name order puts
 #   celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five
 #   callers: 2823 and 2824 (unit 110's CEleitores::QuantidadeAptos and QuantidadeAptosPorAbrangencia) and 10635 (unit
-#   104) in the link, and 11233 and 11616, not written, for which the roots' SemImpedimentoEmOutro stands. Its name, its
-#   being a member (it reads the private impediments) and const are chosen.
+#   104) and 11233 (fragment 317's SituacaoEleitor, written) in the link, and 11616, not written, for which the roots'
+#   SemImpedimentoEmOutro stands. Its name, its being a member (it reads the private impediments) and const are chosen.
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its

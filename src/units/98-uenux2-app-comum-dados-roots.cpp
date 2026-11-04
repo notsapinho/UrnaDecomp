@@ -42,9 +42,9 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
     w2263_root(segundo + 16);
 }
 
-// Stands for two target callers of CEleitorDetalhe::SemImpedimento (fn 2266): fns 11233 and 11616; the other three,
-// fns 2823 and 2824 (CEleitores's slot 0), unit 110's celeitores.cpp, and 10635 (unit 104's celeitorencontrado.cpp),
-// are in the link.
+// Stands for fn 11616, a target caller of CEleitorDetalhe::SemImpedimento (fn 2266) not written; the other four, fns
+// 2823 and 2824 (CEleitores's slot 0), unit 110's celeitores.cpp, 10635 (unit 104's celeitorencontrado.cpp) and 11233
+// (fragment 317's cgeradorrellistaeleitores.cpp), are in the link.
 __attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
 {
     return w2266_root(detalhe + 208) * 5;

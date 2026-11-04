@@ -1,9 +1,9 @@
 // Roots of src/units/317-uenux2-relatorios-aptos.mk: caller stand-ins for comum::CEleitoresAptos's constructor (fn
-// 1922) and Formata (fn 1921) and api::CReport's constructor (fn 2259), whose target callers are not all in our link. binaryen inlines a function with one call
-// site, so each gets a second one here; the stand-in's comment names the target callers it stands for, and it goes when
-// they are all in the link. Its body differs from every target function's. Declared through asm labels with the
-// object's signatures (a constructor returns this; Formata takes the result's address first), so this TU needs no
-// header and instantiates nothing.
+// 1922) and Formata (fn 1921) and api::CReport's constructor (fn 2259), whose target callers are not all in our link.
+// binaryen inlines a function with one call site, so each gets a second one here; the stand-in's comment names the
+// target callers it stands for, and it goes when they are all in the link. Its body differs from every target
+// function's. Declared through asm labels with the object's signatures (a constructor returns this; Formata takes the
+// result's address first), so this TU needs no header and instantiates nothing.
 extern "C" int w1922(int, int) __asm__("_ZN5comum15CEleitoresAptosC1ENSt3__28functionIFNS_10SQtdeAptosEvEEE");
 extern "C" void w1921(int, int) __asm__("_ZNK5comum15CEleitoresAptos7FormataEv");
 extern "C" int w2259(int, int) __asm__(
