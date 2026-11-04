@@ -2759,7 +2759,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2893	byn$mgfn-shared$_ZNK5comum3asn13IConversorASNIN21ModuloEstadoGeralUrna15EstadoGeralUrnaENS_2md15estadoaplicacao12CEstadoGeralEE8ConverteERKS6_	2818	symbol	match	readings: address symbol,table slot,address string	1021	shape	ecourna	1	<binaryen>
 2894	byn$mgfn-shared$_ZN5comum14IServicoEstadoINS_2md15estadoaplicacao12CEstadoGeralENS_3asn21CConversorEstadoGeralEE5SalvaERKS3_	2819	symbol	match	readings: address symbol,table slot	260	shape	comum	1	<binaryen>
 2895	byn$mgfn-shared$_ZN5comum29CDigitalMesarioNaoReconhecida12ProcessInputEv	2824	symbol	match	readings: address symbol	127	none	comum	1	<binaryen>
-2896	byn$mgfn-shared$_ZNSt3__214__split_bufferIcRNS_9allocatorIcEEED2Ev	6028	symbol	match	-	64	addr	ASN1	1	<binaryen>
+2896	byn$mgfn-shared$_ZNSt3__214__split_bufferIcRNS_9allocatorIcEEED2Ev	6029	symbol	match	-	64	addr	ASN1	1	<binaryen>
 2897	byn$mgfn-shared$_ZNSt3__210__function6__funcIZNK5comum2md18CVotosEleicoesVota8NominaisEhE3$_0FtRKNS3_12CVotosCargosEhEEclES8_Oh	2825	symbol	match	-	152	shape	libc++	1	<binaryen>
 2898	-	-	-	no-candidate	no symbol and no ledger pair	77	none	app	0	-
 2899	byn$mgfn-shared$_ZN5comum7servico29CComparecimentoMesarioServicoD2Ev	2828	symbol	match	-	63	fingerprint	app	1	<binaryen>
@@ -3634,7 +3634,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3768	_ZN5comum3dao19CEleitorDinamicoDAOC2ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	3622	symbol	match	readings: address symbol,address string	618	none	comum	1	app/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o
 3769	_ZNK5comum15CEleitorDetalhe14GetImpedimentoEv	4112	symbol	match	-	27	shape	vota	1	app/uenux2/src/app/comum/dados/celeitordetalhe.cpp.o
 3770	_ZNK5comum15CEleitorDetalhe21ConfereDadosDinamicosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	4113	symbol	match	readings: address string,table slot,address srcloc,address symbol	518	none	ecourna	1	app/uenux2/src/app/comum/dados/celeitordetalhe.cpp.o
-3771	_ZN5comum24CarregaProcessoEleitoralERKNS_2md15estadoaplicacao12CEstadoGeralENS_12EFlashOrigemE	5714	symbol	unresolved	ours +0x135d call 5716: _ZN5comum13CarregaPleitoENS_9EUrnaFaseERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_10filesystem4pathERKNS_2md10CPleitoDTOE has no target function	6814	none	comum	1	app/uenux2/src/app/comum/dados/carregaprocessoeleitoral.cpp.o
+3771	_ZN5comum24CarregaProcessoEleitoralERKNS_2md15estadoaplicacao12CEstadoGeralENS_12EFlashOrigemE	5714	symbol	differs	+0x14 target +0x13 local.tee 10 | ours +0x13 local.tee 6	6814	none	comum	1	app/uenux2/src/app/comum/dados/carregaprocessoeleitoral.cpp.o
 3772	_ZN5comum12CNomeArquivo16NomeArquivoSecaoENS_9EUrnaFaseEjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEjjjSA_SA_	2792	symbol	match	readings: address string	1233	none	comum	1	app/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp.o
 3773	_ZN5comum12_GLOBAL__N_19FormataUFERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5908	symbol	match	readings: address string,table slot,address srcloc,address symbol	540	none	ecourna	1	app/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp.o
 3774	_ZNK5comum20CConfiguracaoEleicao17GetCargosEleicoesEv	5577	symbol	match	-	389	none	app	1	app/uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp.o
@@ -5515,7 +5515,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5649	-	-	-	no-candidate	no symbol and no ledger pair	257	none	comum	0	-
 5650	_ZNSt3__218__format_arg_storeINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEJA9_KcNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEKSF_EEC2B8ne210108ERS9_RSF_RSG_	5326	symbol	match	readings: address string	168	addr	sqlite	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 5651	_ZNK5comum2md7CPleito10GetEleicaoEj	3637	symbol	match	readings: address string,table slot,address srcloc,address symbol	517	none	ecourna	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp.o
-5652	-	-	-	no-candidate	no symbol and no ledger pair	844	none	ecourna	0	-
+5652	_ZN5comum2md7CPleitoC2EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKN3api5CDateERKNS2_6vectorINS0_10CEleicaoPEENS6_ISG_EEEERKNS2_3mapIjS8_NS2_4lessIjEENS6_INS2_4pairIKjS8_EEEEEERKNSF_INS0_18CSituacoesEleicoesENS6_ISV_EEEE	5568	symbol	match	readings: address string,address srcloc,address symbol,table slot	844	none	ecourna	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp.o
 5653	_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv	5569	symbol	match	-	75	byte	app	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp.o
 5654	_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv	5570	symbol	match	-	243	none	comum	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp.o
 5655	_ZNK5comum2md6CCargossERKS1_	5573	symbol	match	-	23	byte	vota	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/ccargo.cpp.o
@@ -5641,7 +5641,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5775	_ZNK5comum3dao19CEleitorDinamicoDAO9AtualizarERKNS_2md16CEleitorDinamicoE	11258	symbol	match	readings: address symbol,address string	931	none	comum	1	app/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o
 5776	_ZNK5comum3dao19CEleitorDinamicoDAO7InserirERKNS_2md16CEleitorDinamicoE	11262	symbol	match	readings: address symbol,address string	942	none	comum	1	app/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o
 5777	_ZNSt3__26vectorIN5comum2md10CEleicaoPEENS_9allocatorIS3_EEE9push_backB8ne210108ERKS3_	5715	symbol	match	-	886	none	comum	1	app/uenux2/src/app/comum/dados/carregaprocessoeleitoral.cpp.o
-5778	-	-	-	no-candidate	no symbol and no ledger pair	10735	none	comum	0	-
+5778	_ZN5comum13CarregaPleitoENS_9EUrnaFaseERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_10filesystem4pathERKNS_2md10CPleitoDTOE	5716	symbol	match	readings: address same-content,address string,address symbol,table slot,address srcloc,address content-repointed	10735	none	comum	1	app/uenux2/src/app/comum/dados/carregaprocessoeleitoral.cpp.o
 5779	_ZNSt3__214__split_bufferIN3api18SPolySingletonInfoERNS_9allocatorIS2_EEED2Ev	5823	symbol	match	-	68	addr	app	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 5780	_ZNSt3__26vectorINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_EENS5_IS8_EEE24__emplace_back_slow_pathIJRA5_KcS7_EEEPS8_DpOT_	5696	symbol	match	-	374	none	app	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 5781	_ZNSt3__26vectorINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_EENS5_IS8_EEE24__emplace_back_slow_pathIJRA5_KcKS7_EEEPS8_DpOT_	5697	symbol	match	-	398	none	app	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
@@ -5878,7 +5878,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6012	byn$mgfn-shared$_ZN5comum19CPedeDigitalMesario11FinishStateEv	6061	symbol	match	readings: address symbol	100	shape	app	1	<binaryen>
 6013	byn$mgfn-shared$_ZN3api14CPolySingletonINS_14IFingerScannerEE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE	6062	symbol	match	readings: address symbol,address string,address same-content,table slot	2101	none	ecourna	1	<binaryen>
 6014	byn$mgfn-shared$_ZN4vota21CAnoInformadoInvalido12ProcessInputEv	6036	symbol	match	readings: address symbol	127	none	vota	1	<binaryen>
-6015	byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv	6080	symbol	match	readings: address symbol	127	none	vota	1	<binaryen>
+6015	byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv	6081	symbol	match	readings: address symbol	127	none	vota	1	<binaryen>
 6016	_ZNSt3__213__format_spec8__parserIcE17__parse_alignmentB8ne210108Ec	4500	symbol	match	-	72	byte	libc++	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 6017	byn$mgfn-shared$_ZNK4vota32CControladorRegistraMesariosVota21LogaMesarioRegistradoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	6069	symbol	match	readings: table slot	460	none	vota	1	<binaryen>
 6018	byn$mgfn-shared$_ZNK4vota32CControladorRegistraMesariosVota6Slot10Ev	6070	symbol	match	-	52	shape	vota	1	<binaryen>
@@ -5891,7 +5891,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6025	-	-	-	no-candidate	no symbol and no ledger pair	74	none	app	0	-
 6026	byn$mgfn-shared$_ZN5comum15CParteEleitoresD0Ev	6033	symbol	match	-	66	addr	app	1	<binaryen>
 6027	byn$mgfn-shared$_ZNSt3__26vectorIjNS_9allocatorIjEEE18__assign_with_sizeB8ne210108IPjS5_EEvT_T0_l	6183	symbol	match	-	314	none	app	1	<binaryen>
-6028	byn$mgfn-shared$_ZNK5comum23CCabecalhoQRCodeBuilder10IsOrigemSAEv	6029	symbol	match	readings: table slot,address string	478	none	ecourna	1	<binaryen>
+6028	byn$mgfn-shared$_ZNK5comum23CCabecalhoQRCodeBuilder10IsOrigemSAEv	6028	symbol	match	readings: table slot,address string	478	none	ecourna	1	<binaryen>
 6029	byn$mgfn-shared$_ZNK5comum2md6CCargo18GetDetalheConsultaEv	6030	symbol	match	readings: address symbol,table slot	68	none	ecourna	1	<binaryen>
 6030	byn$mgfn-shared$_ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23ModuloProcessoEleitoral18OrigemConfiguracaoE	6052	symbol	match	readings: address symbol,table slot	69	none	ecourna	1	<binaryen>
 6031	byn$mgfn-shared$_ZNK7ecourna3api3asn13IConversorASNIN27ModuloResultadoUrnaCadastro19DadosComparecimentoENS_3app5dados20CDadosComparecimentoEE8ConverteERKS7_	6193	symbol	match	readings: address string,address symbol,table slot	151	shape	ecourna	1	<binaryen>
@@ -5928,7 +5928,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6062	byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_11CFramedTextEED0Ev	6191	symbol	match	readings: address symbol	101	addr	api	1	<binaryen>
 6063	byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_11CFramedTextEED2Ev	6192	symbol	match	readings: address symbol	98	addr	api	1	<binaryen>
 6064	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle9DotSuffix9printLeftERNS0_12OutputBufferE	6079	symbol	match	-	123	fingerprint	libc++abi	1	<binaryen>
-6065	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13QualifiedName9printLeftERNS0_12OutputBufferE	6081	symbol	match	-	73	fingerprint	libc++abi	1	<binaryen>
+6065	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13QualifiedName9printLeftERNS0_12OutputBufferE	6080	symbol	match	-	73	fingerprint	libc++abi	1	<binaryen>
 6066	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle15TypeRequirement9printLeftERNS0_12OutputBufferE	6082	symbol	match	-	71	fingerprint	libc++abi	1	<binaryen>
 6067	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle21TemplateParamPackDecl9printLeftERNS0_12OutputBufferE	6083	symbol	match	-	70	fingerprint	libc++abi	1	<binaryen>
 6068	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13StringLiteral9printLeftERNS0_12OutputBufferE	6084	symbol	match	-	98	fingerprint	libc++abi	1	<binaryen>

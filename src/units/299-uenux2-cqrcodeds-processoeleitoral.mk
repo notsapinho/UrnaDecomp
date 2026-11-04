@@ -7,6 +7,8 @@
 # (11200, unit 123), CEstadoGeral::GetDadosQRCode (5636, unit 215), api::CStringUtils::JuntaTags (3646, unit 196),
 # CConversorCargo's constructor (unit 191), md::CEleicaoPE's constructor, ValidaNome and ValidaCargos (unit 88), and
 # CConversorProcessoEleitoral::DoDesconverte (11363, unit 140), which matches with the form 11371 showed.
+# cconversoreleicaope.cpp also defines CConversorEleicaoPE's default constructor, out of line for unit 280's
+# comum::CarregaPleito (5778; src/units/280-uenux2-processoeleitoral.mk has the evidence and the measurement).
 #
 # Matched (scores are `pnpm wasm score` against the plain link before steps 7 to 9, default depth; all rows that differ
 # are operand-only, the operands no call and no data address being table slots, .bss addresses and, in the converters,

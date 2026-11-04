@@ -1,6 +1,8 @@
-// comum::asn::CConversorEleicaoPE::DoDesconverte (target fn 11371). The reconstruction's own note: no record names this
-// file (its records are md::CEleicaoPE's, in md/processoeleitoral/celeicaope.cpp); the path is the header's, and the
-// function's line is a choice (src/units/299-uenux2-cqrcodeds-processoeleitoral.mk says what the bytes decide).
+// comum::asn::CConversorEleicaoPE::DoDesconverte (target fn 11371) and the class's constructor (no target index:
+// binaryen inlines it into fn 5778; src/units/280-uenux2-processoeleitoral.mk says why it is out of line). The
+// reconstruction's own note: no record names this file (11371's records are md::CEleicaoPE's, in
+// md/processoeleitoral/celeicaope.cpp); the path is the header's, and the functions' lines and order are a choice
+// (src/units/299-uenux2-cqrcodeds-processoeleitoral.mk says what the bytes decide).
 #include "app/comum/dados/asn/processoeleitoral/cconversoreleicaope.h"
 
 #include <algorithm>
@@ -10,6 +12,8 @@
 #include "app/comum/dados/asn/processoeleitoral/cconversorcargo.h"
 
 namespace comum::asn {
+
+CConversorEleicaoPE::CConversorEleicaoPE() = default;
 
 CConversorEleicaoPE::TDado CConversorEleicaoPE::DoDesconverte(const TEntidade& entidade) const
 {
