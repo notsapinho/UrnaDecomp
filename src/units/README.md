@@ -441,7 +441,7 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   unit out of line, as the target does, stays only when a row moves with it (unit 214's for 3373 and 3372 moved none).
   The rule goes call by call: in a stand-in that calls several callees, a call whose callee's every target caller is in
   the link goes, measured with steps 6 to 10, and the stand-in stays for its other calls (unit 31's `TelaMTA` and
-  `TelaMTB` call ten adders, and their calls of 5419 stand for none, since its one caller, 1905, is in the link). A
+  `TelaMTB` called ten adders; their calls of 728, 941, 5409 and 5419, whose callers are all in the link, went). A
   stand-in for one target caller, whatever units its callees are in, goes whole when that caller lands; each callee's
   fragment says where its call site is. One in a file another active stage claims is left to the landing, with a link
   without it measured and its lines named in the result (how-to step 10). 5629 has two direct callers in the target

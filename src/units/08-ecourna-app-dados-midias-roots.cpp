@@ -1,11 +1,14 @@
-// Roots: keep the app/dados/asn/midias converters in the skeleton link the way the target keeps them. Their
-// users (comum/vota code that reads and writes the media descriptor) are not reconstructed yet; in the target each
-// converter's vtable is data whose DoConverte/DoDeconverte slots put the bodies in the table, so rooting the vtables
-// keeps the same set (CConversorInformacaoMidia 1126676, CConversorAplicativo 1125708, CConversorAutenticacao 1125412,
-// CConversorDadosGeracaoMidia 1125148, CConversorIdentificadorGeradorMidia 1123132). Declared through asm labels, so
-// this TU needs no ecourna or ASN.1 header and instantiates nothing.
+// Roots: keep the app/dados/asn/midias converters in the skeleton link the way the target keeps them. In the target
+// each converter's vtable is data whose DoConverte/DoDeconverte slots put the bodies in the table, and the functions
+// that store a converter's vptr keep its vtable: 3735 alone (comum::CarregaArquivoEcourna<CConversorInformacaoMidia>,
+// unit 280's carregaarquivo.cpp) stores CConversorInformacaoMidia's (1126676), its DoDeconverte and DoConverte (9179,
+// 9190) store CConversorAplicativo's (1125708) and CConversorDadosGeracaoMidia's (1125148), CConversorAplicativo's
+// (9196, 9199) CConversorAutenticacao's (1125412), and CConversorDadosGeracaoMidia's (9202, 9203), with 10290, 10291,
+// 11399 and 11400, CConversorIdentificadorGeradorMidia's (1123132). 3735 is in the link, so the first vtable has no
+// sink here. The other four's holders are all in the link too; their sinks stay until a link without them is measured
+// (src/units/README.md "Companion files"). Declared through asm labels, so this TU needs no ecourna or ASN.1 header
+// and instantiates nothing.
 extern "C" {
-extern const char midias_vt_informacao[] __asm__("_ZTVN7ecourna3app5dados3asn25CConversorInformacaoMidiaE");
 extern const char midias_vt_aplicativo[] __asm__("_ZTVN7ecourna3app5dados3asn20CConversorAplicativoE");
 extern const char midias_vt_autenticacao[] __asm__("_ZTVN7ecourna3app5dados3asn22CConversorAutenticacaoE");
 extern const char midias_vt_dadosgeracao[] __asm__("_ZTVN7ecourna3app5dados3asn27CConversorDadosGeracaoMidiaE");
@@ -24,7 +27,6 @@ __attribute__((noinline)) void UsaBytesToHex(int texto, int bytes) { midias_byte
 struct SMidiasRoots {
     SMidiasRoots()
     {
-        midias_sink = midias_vt_informacao;
         midias_sink = midias_vt_aplicativo;
         midias_sink = midias_vt_autenticacao;
         midias_sink = midias_vt_dadosgeracao;

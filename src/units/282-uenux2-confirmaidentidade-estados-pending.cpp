@@ -16,7 +16,7 @@
 // - vota::CPedeDigital::ProcessTick (target fn 10465, slot 8, 4463 B, records cpededigital.cpp:162 to 164, whose lines
 //   stay blank; it holds VerificaDigital and VerificaDigitalTreinamento inlined, records 262 and 279): it calls fns 395
 //   and 1681 (matched: unit 31, src/app/roots_vector.cpp), 816 and 1686 (matched: unit 135), 1393, 3615 and 3719
-//   (matched: units 110, 291, 91), 5397 (written: cpededigital.cpp) and fns 781, 1823, 1903, 2223, 2224, 2742 and 6269,
+//   (matched: units 110, 291, 91), 5397 (matched: cpededigital.cpp) and fns 781, 1823, 1903, 2223, 2224, 2742 and 6269,
 //   which have no name on this tree. It holds vota::CDigitalNaoReconhecidaPorTempo's GetInst and constructor inlined
 //   (the one store of that vptr, 1591576).
 #include "app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.h"

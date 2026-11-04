@@ -6,15 +6,18 @@
 // function with one call site, so each gets two here, and the stand-ins' bodies differ from each other's and from every
 // target function. 3770's callers 1271 (CEleitorDetalhe::GetDinamico), 2825 (which holds
 // CEleitorDetalhe::MarcaHabilitado inlined) and 10210 (which holds CEleitorDetalhe::MarcaVotou inlined, unit 104's
-// csincronismooperador.cpp) are all in the link: it has no stand-in. The converter's users are not reconstructed
-// either: its vtable (@1570668) is what the target keeps it by (slots 2 and 3, table slots 2773 and 2774, no direct
-// caller). CConversorImpedido's vtable (@1567096) is kept the same way: its slots 2 and 3 (table slots 2633 and 2634,
-// fns 11409 and 11410) have no direct caller either. DesconverteTipoImpedimento (5699) needs no stand-in: its one
-// target caller, 11410, which calls it twice, is in the link (cconversorimpedido.cpp). Declared through asm labels with
-// the object's signatures, so this TU needs no uenux2 or ASN.1 header and instantiates nothing.
+// csincronismooperador.cpp) are all in the link: it has no stand-in. CConversorTipoIdentificadorEleitor's vtable
+// (@1570668) is what the target keeps that converter by (slots 2 and 3, table slots 2773 and 2774, no direct caller);
+// the one target function that stores its vptr, 11363 (CConversorProcessoEleitoral::DoDesconverte, unit 140), is in
+// the link too, and the sink stays until a link without it is measured (src/units/README.md "Companion files").
+// CConversorImpedido's vtable (@1567096) has no sink: its slots 2 and 3 (table slots 2633 and 2634, fns 11409 and
+// 11410) have no direct caller either, and the one target function that stores its vptr, 11517 (the std::function
+// body of CEleitores::GetEleitoresImpedidos's lambda, unit 110's celeitores.cpp), is in the link.
+// DesconverteTipoImpedimento (5699) needs no stand-in: its one target caller, 11410, which calls it twice, is in the
+// link (cconversorimpedido.cpp). Declared through asm labels with the object's signatures, so this TU needs no uenux2
+// or ASN.1 header and instantiates nothing.
 extern "C" {
 extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
-extern const char impedido_vt[] __asm__("_ZTVN5comum3asn18CConversorImpedidoE");
 void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
@@ -85,7 +88,6 @@ struct SComumDadosRoots {
     SComumDadosRoots()
     {
         comum_dados_sink = tipoidentificador_vt;
-        comum_dados_sink = impedido_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);

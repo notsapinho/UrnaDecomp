@@ -1,19 +1,19 @@
 // Roots: keep the unit's members in the skeleton link the way the target reaches them. Compiled with APP_CXXFLAGS, like the
 // other stand-ins, and it emits none of them: each stand-in calls members its unit's objects define.
 //
-// The adders: the target calls each directly from the screens that build a form, of which only 1255 is reconstructed
-// (comum::TelaRegistroMesarios, unit 247; the lists below still name it). Each pair of stand-ins stands for the others,
+// The adders: the target calls each directly from the screens that build a form. Each pair of stand-ins stands for
+// those not in the link (TelaA's and TelaB's lists still name 1255, comum::TelaRegistroMesarios, unit 247, which is),
 // and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
-// vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's callers
-// vary varies here, or binaryen would fold it. Of the MT screens listed, 1901, 1905, 2735, 2743, 2747, 2753, 5393,
-// 5401, 5430 and 652 (units 71, 121, 142, 152, 161 and 239), 3610, 5386, 5389 and 10313 (units 247, 135 and 71), 3625
-// (unit 174), 5396 (unit 221), and 2734, 2740, 5397, 10415, 10439 and 10440 (units 152 and 282) are in the link now;
-// the stand-ins stay for the others:
-//   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
-//                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
-//                     target callers all pass it, and they have no parameter for it. 5419's one target caller,
-//                     1905, is in the link now, and so are 5409's two, 1150 and 2734: the stand-ins' calls of 5419
-//                     and 5409 stand for none
+// vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's
+// callers vary varies here, or binaryen would fold it. A call goes when every target caller of its adder is in the
+// link (src/units/README.md "Companion files"):
+//   TelaMTA, TelaMTB  the callers of 180, 619, 651 and 1152 (AddTextField), 435 (AddLed) and 1072 (AddBeep) not in the
+//                     link: 4633, 5341, 10316, 10443, 10451, 10465, 10474, 10489, 10500 and 10590 for 180, the same
+//                     but 10489 for 435, 10316, 10451, 10465 and 10474 for 1072, 10316, 10465, 10474 and 10500 for
+//                     651, 10500 for 619 and 10465 for 1152. Their calls of 5409 and 5419 (AddTextField over a
+//                     CTextSource and over a std::function, with no text), 941 (AddBuzz) and 728 (AddClock) went:
+//                     every target caller of the four is in the link (5409's 1150 and 2734, 5419's 1905, 941's 13
+//                     and 728's 16), and the link without those calls moved no row (steps 6 to 10)
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
 //                     2291, 2376, 2380, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
@@ -30,7 +30,6 @@
 //                     in line, and it takes no constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
-#include <functional>
 #include <string>
 
 #include "api/gui/cformbuilder.h"
@@ -42,7 +41,7 @@ namespace {
 
 __attribute__((noinline)) int TelaMTA(const std::string& texto, const api::SPoint& posicao, api::ETextAlignment alinhamento,
                                       std::string (*fonte)(), std::string (*fonteFmt)(const std::string&),
-                                      const api::CTextSource& origem, const std::function<std::string()>& funcao, int vezes)
+                                      const api::CTextSource& origem, int vezes)
 {
     api::CMTFormBuilder form;
     form.AddLed(static_cast<api::ELedOperacao>(vezes));
@@ -50,24 +49,16 @@ __attribute__((noinline)) int TelaMTA(const std::string& texto, const api::SPoin
     form.AddTextField(fonte, posicao, alinhamento);
     form.AddTextField(fonteFmt, posicao, texto, alinhamento);
     form.AddTextField(origem, posicao, texto, alinhamento);
-    form.AddTextField(origem, posicao);
-    form.AddTextField(funcao, posicao);
     form.AddBeep(vezes);
-    form.AddBuzz(vezes, vezes + 1);
-    form.AddClock(posicao);
     return vezes;
 }
 
 __attribute__((noinline)) int TelaMTB(const std::string& texto, const api::SPoint& posicao, std::string (*fonte)(),
                                       std::string (*fonteFmt)(const std::string&), const api::CTextSource& origem,
-                                      const std::function<std::string()>& funcao, int vezes)
+                                      int vezes)
 {
     api::CMTFormBuilder form;
-    form.AddClock(posicao);
-    form.AddBuzz(vezes + 2, 5);
     form.AddBeep(vezes + 3);
-    form.AddTextField(funcao, posicao);
-    form.AddTextField(origem, posicao);
     form.AddTextField(origem, posicao, texto, api::ALINHAMENTO_DIREITA);
     form.AddTextField(fonteFmt, posicao, texto, api::ALINHAMENTO_CENTRO);
     form.AddTextField(fonte, posicao, api::ALINHAMENTO_DIREITA);
