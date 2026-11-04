@@ -82,11 +82,11 @@
 # - CGestorDadoMesario's branch first: the other order, 211 over 2653 (3 inserted, 4 deleted).
 # Same bytes: MesarioJaRegistrado defined above ProcessInput (the whole wasm's sha256 is the same). Chosen:
 # MesarioJaRegistrado's name, its being a const member, the locals' names, and 12 and '0' written as literals.
-# IPedeTituloMesario's slot 7 rests on a hand line of splat/symbol_addrs.txt, weighed by removal (10313 alone leaves
+# IPedeTituloMesario's slot 7 rested on a hand line of splat/symbol_addrs.txt, weighed by removal (10313 alone left
 # match without it, `unresolved self-voted`): CNomeMesariosUrnaDS::Text (10319), the source of that state's form, which
-# only 10313 holds by table slot. A second one, comum::CPedeDigitalMesario::s_inst, went once that name's other
-# reader, the exit destructor 10321, a thunk into 3886, matched (src/units/221-uenux2-app-comum-constructors.mk has
-# the measurement).
+# only 10313 holds by table slot; 10319 matches since unit 135, named by its record, and the hand line went. A second
+# one, comum::CPedeDigitalMesario::s_inst, went once that name's other reader, the exit destructor 10321, a thunk into
+# 3886, matched (src/units/221-uenux2-app-comum-constructors.mk has the measurement).
 #
 # comum::TelaEleitorRegistroMesarios, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
 # (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a

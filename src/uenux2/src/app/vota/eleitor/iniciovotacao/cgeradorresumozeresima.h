@@ -2,8 +2,8 @@
 
 // Two form builders of the zeresima reports that cgeradorresumozeresima.cpp defines (fns 3873 and 3872, no record of
 // their own). The file is the one the target's data and use bands give them: src/units/325-uenux2-geradores-zeresima.mk
-// says how. Their names, the parameter's bool, their being free functions of vota (the namespace of the file's records,
-// vota::(anonymous namespace)::CriaTituloExtratoRDV) and this header's path are chosen.
+// says how. Their names, the parameter's bool, their being free functions of vota, their external linkage (the file's
+// records are vota::(anonymous namespace)'s, CriaTituloExtratoRDV's) and this header's path are chosen.
 
 #include <memory>
 

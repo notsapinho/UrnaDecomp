@@ -9,7 +9,7 @@
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: GetIdentidadeEleitor (1535;
-//   10425, 10590; 10587, 10631 and 3616, units 152's, 104's and 319's, are in the link) and GetApresentacaoFotoEleitor
+//   10425; 10587, 10631, 3616 and 10590, units 152, 104, 319 and 283, are in the link) and GetApresentacaoFotoEleitor
 //   (2745; 10425). The calls of LimpaBiometria (3621), SetEleitorSemFoto (5413) and SetFotoNaoApresentada (1904) went:
 //   their target callers (5400, 10500 and 10511; 3616) are in the link. So did those of IsAudioAtivado (2746): its
 //   target callers 10481 (unit 282's), 3883 (unit 282's merge), 10511 (unit 161's) and 5400 (unit 239's) are in the

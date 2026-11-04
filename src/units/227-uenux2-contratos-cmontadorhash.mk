@@ -37,8 +37,8 @@
 #
 # ecourna::api::io::CFile::Write (fn 5180, matched; step 9 found it by the census's pair) is written in ecourna's
 # api/io/cfile.cpp, unit 03's source, and declared in cfile.hpp, whose comment has its evidence and the forms measured;
-# its callers 5371 (unit 214's GravaWsq, written) and 11587 (unit 305's) are in the link, so the roots' stand-in for
-# 5371 went. Unit 03's fragment and row name it at the landing.
+# its callers 5371 (unit 214's GravaWsq, matched) and 11587 (unit 305's) are in the link, so the roots' stand-in for
+# 5371 went. Unit 03's fragment and row say so.
 #
 # fn 5869, CDependenciasContratos::GetValor's other caller (comum::CGeracaoVersoesContratos::ObtemDependencias, a
 # chosen name), is fragment 268's, written in app/comum/gravadores/cgeracaoversoescontratos.cpp and not matched; that

@@ -1032,19 +1032,19 @@ can read `unresolved` instead, `an address of ours: string tail occurs N times` 
 
 A body whose remainder you cannot explain stays unwritten when nothing needs it: no trap, since nothing needs one. Take
 it out and put the measurement in the fragment. `comum::md::CPleito`'s constructor at `103 over 438` with every scratch
-help is that (unit 88's fragment). Step 9 writes its stub back, unless its group is no TSE component: `stubs.py` writes
-none for `app` (2770, unit 84) or for a TSE function the attribution files under a library (5764, whose log text reads
-as a pretty-function name, is `libc++`), and the fragment is then its only note. It stays written, its row as it is,
-when something needs it: a vtable slot whose written body is one remainder off (a trap would only hide it: 10490, unit
-142, matched once a call of the setter gave its store order; one no measured form comes close to is trapped, below), a matched caller, a caller that
-is written and right but does not match yet (3648 over 5477 and 5478, unit 125), or a match that only it brings into
-the link (502's lambda members 11107 to 11109, unit 31). The fragment says what is measured and that the remainder is
-not explained. A caller then holds only on evidence for the callee's name that does not rest on the callee's bytes
-matching: 5499, `CTextFieldDoubleLine::GetTextLines`, is `differs`, and its callers 10929 and 10931 match through
-10929's `call` vote, which 10929's own record anchors (`/usr/bin/grep -F '= func:5499;' splat/symbol_addrs.txt`). A
-differing callee's own records anchor nothing (`srcloc-anchor` pairs equal opcodes only), so when no other caller
-votes, its name takes a `callers+content` hand line resting on records only it loads (3771 under 2787; step 9, "Hand
-edits"), or the caller stays `unresolved self-voted`.
+help was that until it matched (unit 88's fragment). Step 9 writes its stub back, unless its group is no TSE component:
+`stubs.py` writes none for `app` (2770, unit 84) or for a TSE function the attribution files under a library (5764,
+whose log text reads as a pretty-function name, is `libc++`), and the fragment is then its only note. It stays written,
+its row as it is, when something needs it: a vtable slot whose written body is one remainder off (a trap would only hide
+it: 10490, unit 142, matched once a call of the setter gave its store order; one no measured form comes close to is
+trapped, below), a matched caller, a caller that is written and right but does not match yet (3648 over 5477 and 5478,
+unit 125), or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31). The fragment
+says what is measured and that the remainder is not explained. A caller then holds only on evidence for the callee's
+name that does not rest on the callee's bytes matching: 5499, `CTextFieldDoubleLine::GetTextLines`, is `differs`, and
+its callers 10929 and 10931 match through 10929's `call` vote, which 10929's own record anchors (`/usr/bin/grep -F '=
+func:5499;' splat/symbol_addrs.txt`). A differing callee's own records anchor nothing (`srcloc-anchor` pairs equal
+opcodes only), so when no other caller votes, its name takes a `callers+content` hand line resting on records only it
+loads (3771 under 2787; step 9, "Hand edits"), or the caller stays `unresolved self-voted`.
 
 A member right by construction (a singleton's `GetInst`) that the target holds inlined in one unwritten caller may be
 written, unrooted, or wait for that caller; the fragment says which. Written, it is compared with nothing

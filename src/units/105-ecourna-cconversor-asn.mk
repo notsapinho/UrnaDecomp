@@ -41,10 +41,11 @@
 # - 9216's lambda returns the number, not a TPartidoID: TPartidoID is one trivially copyable unsigned short, which comes
 #   back in a register, so a TPartidoID returned was copied into a second temporary before push_back (146 over 705).
 #   Returned as the number, it is converted by back_insert_iterator's assignment, which builds the temporary that
-#   push_back takes with CBaseType's constructor (out of line, not explicit): 139 over 699. 9216 also returns its result
-#   through a named local (federacao, a chosen name, const a choice): with `return TDado(...)` the constructor's landing
-#   pad is laid out after the normal path, the target's before it (unit 09's fragment measures 9106's two forms). With
-#   both, 84 over 675, all operand rows, and the row matches.
+#   push_back takes with CBaseType's constructor (out of line; not explicit in our header, cbasetype.hpp, which no
+#   record shows and this form needs): 139 over 699. 9216 also returns its result through a named local (federacao, a
+#   chosen name, const a choice): with `return TDado(...)` the constructor's landing pad is laid out after the normal
+#   path, the target's before it (unit 09's fragment measures 9106's two forms). With both, 84 over 675, all operand
+#   rows, and the row matches.
 # - 9063 is an insert into an empty OCTET_STRING: the (first, last) constructor gives other rows.
 # - 9102's optional fields insert the sequence: their value_type classes exist in the target, and take no assignment
 #   from SEQUENCE_OF<T>.

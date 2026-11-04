@@ -171,15 +171,16 @@
 #   with a range-for, gives each the other way (96 over 434 rows, 33 inserted, 32 deleted, `pnpm wasm score` in the
 #   whole link). The set comes from ObtemIDsEleicoes, a function of internal linkage in cpleito.cpp's anonymous
 #   namespace that takes the elections and returns their ids, and that clang inlines (no record, no index). Measured on
-#   the objects, the constructor's code with object-local numbers masked (docs/how-to-decompile.md step 3): that form
-#   and a lambda invoked in place give the same code, the target's order and throws; the same function with external
-#   linkage, a member defined in cpleito.cpp and a member defined in the class give the loads after the set's stores;
-#   a helper over the two iterators gives a load more; std::for_each with a lambda puts the throws last and the loads
-#   after the stores; an index loop in the body keeps both of the first form's differences. In the whole link the
-#   anonymous-namespace form scores 30 over 401 rows, all operand-only (calls, data addresses and the thrown error's
-#   destructor slot), and `splat-remap` prints `IDENTICAL`. So the internal linkage is evidence (measured); chosen: the
-#   function's name, its being free (it reads no class state; the member forms give other code), its parameter, its
-#   range-for, its line and the constructor's first line.
+#   the objects, the constructor's code with object-local numbers masked (docs/how-to-decompile.md step 3): that form,
+#   the same function `static` and a lambda invoked in place give the same code, the target's order and throws; the same
+#   function with external linkage, a member defined in cpleito.cpp and a member defined in the class give the loads
+#   after the set's stores; a helper over the two iterators gives a load more; std::for_each with a lambda puts the
+#   throws last and the loads after the stores; an index loop in the body keeps both of the first form's differences. In
+#   the whole link the anonymous-namespace form scores 30 over 401 rows, all operand-only (calls, data addresses and the
+#   thrown error's destructor slot), and `splat-remap` prints `IDENTICAL`. So the internal linkage is evidence
+#   (measured), and so is its being free, not a member (the member forms give other code); chosen: the function's name,
+#   its being a named function and not a lambda in place, the anonymous namespace and not `static` (each pair gives the
+#   same code), its parameter, its range-for, its line and the constructor's first line.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes

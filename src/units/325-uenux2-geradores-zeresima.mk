@@ -50,13 +50,18 @@
 #   first object that emits it, and DetalheCandidatoZE's record (cdatasourcesrelatorio.h:152, fn 11973), whose one
 #   user is 3872, lies at @1544048, after cgeradorresumozeresima.cpp's records (:43 and :47, @1543752 and @1543768) with
 #   only header records between, while crelvotautil.cpp's data (api::CSubReport's vtable @1543172, its two lambdas'
-#   __func vtables @1543232 and @1543296) end before vota::CDefineRotaPreVotacao's vtable (@1543448). Use band 3 agrees:
-#   3874, CSubReport::GetTitulo, a slot of that linkonce vtable, which crelvotautil.cpp's object emits after both of its
-#   functions (ld_index 5216 against CortaPapel's 5212 and CriaCabecalho's 5214; reading.md R9, a function only a
-#   vtable references), comes before 3873 and 3872, so they are not that file's functions. Their names, the bool and
-#   their being free functions of vota (the namespace of the file's records; no class evidence: how-to step 3, "Names no
-#   evidence gives") are chosen, their order (3873 above 3872) the band's, and their lines (56 to 71, below the records'
-#   lines of the unwritten CriaTituloExtratoRDV, which stay blank) chosen.
+#   __func vtables @1543232 and @1543296) end before vota::CDefineRotaPreVotacao's vtable (@1543448). Use band 3 agrees,
+#   a reading: 3874, CSubReport::GetTitulo, a slot of that linkonce vtable, which crelvotautil.cpp's object emits after
+#   both of its functions (ld_index 5216 against CortaPapel's 5212 and CriaCabecalho's 5214; reading.md R9, a function
+#   only a vtable references), comes before 3873 and 3872; but the target's 3874 is one body for four vtables'
+#   slots (CSubReport's, CSha's and CSha512's, __func<api::QRCodeSRC>'s), so its band place is the kept copy's, read as
+#   crelvotautil.cpp's (uenux2's objects link ahead of ecourna's security ones, link-order.md L3, and the QRCodeSRC
+#   vtable lies later in the data). Their names, the bool,
+#   their being free functions of vota (no class evidence: how-to step 3, "Names no evidence gives"; the file's records
+#   are vota::(anonymous namespace)'s) and their linkage, external (the file's one recorded function is internal, and no
+#   record, slot or caller shows theirs: how-to step 3, "What a record's place says") are chosen, their order (3873
+#   above 3872) the band's, and their lines (56 to 71, below the records' lines of the unwritten CriaTituloExtratoRDV,
+#   which stay blank) chosen.
 # - The file's place in the link: unit 169's list compiles it right after cinformacaozeresimatardia.cpp and ahead of
 #   cgerazeresimabase.cpp, the data's order (cinformacaozeresimatardia.cpp's records @1543692 and @1543708, this file's,
 #   then CGeraZeresimaBase's vtable @1544384), where both places measured give the four the same scores

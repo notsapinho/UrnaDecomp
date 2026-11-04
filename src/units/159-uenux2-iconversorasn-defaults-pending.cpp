@@ -13,9 +13,9 @@
 //   166's tree root), and it waits for three out-of-line md::CBiometriaEleitor constructors
 //   (md/eleitor/cbiometriaeleitor.{h,cpp}), which build its result.
 // - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
-//   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: of its 43 callees one, fn 1555,
-//   has no name in splat/symbol_addrs.txt or splat/matched.txt (imports aside); 183 and 412 (unit 32's) have one, and
-//   518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and src/app/roots_iconversorasn.cpp.
+//   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: its 43 callees all have names
+//   (splat/symbol_addrs.txt, splat/matched.txt; imports aside), 1555 since unit 293's 2725; 183 and 412 are unit 32's,
+//   and 518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and src/app/roots_iconversorasn.cpp.
 // - comum::asn::CConversorEntidadeHashes::DoConverte (slot 2, fn 10266, 1338 B), not written: md::CEntidadeHashes's
 //   members past +36 are not recovered (unit 160's fragment).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura

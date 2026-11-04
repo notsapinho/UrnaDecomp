@@ -32,9 +32,10 @@
 //                     their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
-//   RelatorioA        5579, 5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, which calls
-//                     them too, is in the link, unit 296's). Its form is a parameter: their callers zero the vector
-//                     in line, and it takes no constructor of ours. The EStyle and alignments vary as theirs do
+//   RelatorioA        5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, unit 296's, and
+//                     5579, unit 325's, which call them too, are in the link). Its form is a parameter: their callers
+//                     zero the vector in line, and it takes no constructor of ours. The EStyle and alignments vary as
+//                     theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
 #include <string>
@@ -142,10 +143,11 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341; 1150, 5343, 10204, 10214 and 10676 are in the link) and of 301
-//                         (3 of its 49 target callers are not in the link: 10316, 10451 and 10590)
+//                         (1 of its 49 target callers is not in the link: 10451)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11946, 12105 and
-//                12110, not reconstructed (11256, 2890, 12005 and 11908 are in the link); it calls Build twice
+//   FormPapelC   the callers of 357 (Build): 3699, 5580, 5970, 5971, 11253, 11946, 12105 and 12110, not
+//                reconstructed (11256, 2890, 12005, 11908, 3872, 3873, 5579 and 5977 are in the link); it calls Build
+//                twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {
     const auto simples = form.GetForm(nome);
@@ -180,8 +182,8 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
 }
 
 // The MT builder's input fields:
-//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (3 of its 39 target callers are not in the
-//                 link: 10316, 10451 and 10590): it calls it twice, or binaryen
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (1 of its 39 target callers is not in the
+//                 link: 10451): it calls it twice, or binaryen
 //                 would inline it
 // The stand-in for 5410, the third caller of 3674 (CMTFormBuilder::AddField) and of 3673 (IInputField<IScreenMT>'s
 // constructor), went: 5410 is in the link (vota::MontaTelaEleitorPodeVotar, unit 161, over AddInputControl(int)), with

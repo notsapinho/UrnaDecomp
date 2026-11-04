@@ -96,8 +96,9 @@
 #   The last parameter, the minimum free space as a double that both callers pass as 5 MiB, is a reading of the test:
 #   the target's wasm type has no such parameter and its body holds the constant (f64 5242880.0), which binaryen's
 #   dead-argument elimination puts there when every caller passes it (docs/how-to-decompile.md step 2), and its test
-#   is `f64.ge` then `i32.eqz`, which our clang keeps only when the threshold is a parameter. With the constant in the
-#   body it folds `!(x >= c)` into `x < c` (`f64.lt`), the product of two converted unsigned integers being never NaN,
+#   is `f64.ge` then `i32.eqz`, which our clang keeps with the threshold a parameter, and in none of seven forms with
+#   the constant in the body: there it folds `!(x >= c)` into `x < c` (`f64.lt`), the product of two converted unsigned
+#   integers being never NaN (a reading of why),
 #   in each of seven forms measured on the object (wasm-objdump of copies compiled at the file's flags): the nested
 #   ifs, a static bool helper with an early `return true`, a bool local, an empty then-branch with `else return`,
 #   `!(a || b)`, a `const bool` of `a || b`, and the rest of the body inside `if (a || b)`; the whole link scored

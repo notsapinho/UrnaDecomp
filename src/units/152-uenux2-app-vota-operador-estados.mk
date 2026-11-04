@@ -67,9 +67,10 @@
 #   to CJustificativaEfetuada::GetInst(); not found, to m_confirma. The helper is measured (pnpm wasm score before steps
 #   7 to 9): written in StartState, the identity's temporary takes the frame slot below the text's copy, +8 against the
 #   target's +24 (27 over 101 rows, ten of them frame offsets), and so with the text taken through a helper instead;
-#   through Justificou, 10 over 101, no frame offset among them. 3741 now comes from this object, which links ahead of
-#   unit 113's roots (their stand-in for 10587's search went). Chosen: the helper's name and linkage, the local's name.
-#   Not measured, and they may give the same bytes: a lambda or a static member in Justificou's place.
+#   through Justificou, 10 over 101, no frame offset among them. 3741 comes from cjustificador.cpp's object, the first
+#   on the link line to instantiate it, ahead of this one (unit 113's roots' stand-in for 10587's search went). Chosen:
+#   the helper's name and linkage, the local's name. Not measured, and they may give the same bytes: a lambda or a
+#   static member in Justificou's place.
 # - vota::JustificaEleitor (no target index), after StartState: the justification vota::CPedeAnoNascimento::ProcessInput
 #   (fn 10590, unit 283) holds behind a 16-byte frame, binaryen's inlining of its one caller. Its file is a choice, its
 #   object ahead of cpedeanonascimento.cpp.o measured; unit 283's fragment has its evidence and measurements.

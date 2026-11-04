@@ -22,7 +22,9 @@
 # - 9081 holds its second habilitacaoBiometrica_isPresent() test in a named bool (temHabilitacaoBiometrica, a chosen
 #   name) before the if. The target gives that test and the last return's constructor a landing pad of their own (16
 #   pads in all); the test written in the condition shares the first test's pad (15, 119 over 813, 5 rows deleted);
-#   named, 106 over 813, all operand rows. Why the source tests the field a second time is not known.
+#   named, 106 over 813, all operand rows; `if (const bool b = ...)` gives other code, so the bytes ask for the value
+#   held in a statement before the if. The bool's const is a choice (non-const gives the same object). Why the source
+#   tests the field a second time is not known.
 DADOS_RUC_ASN_SRCS := app/dados/asn/resultadournacadastro/cconversorapresentacaofotoeleitor.cpp \
                  app/dados/asn/resultadournacadastro/cconversorcomparecimentomesario.cpp \
                  app/dados/asn/resultadournacadastro/cconversorestadocomparecimento.cpp \

@@ -95,14 +95,16 @@
 # DoAdd (9538) matches. Two of its forms the target's bytes decide, each measured in the whole link (pnpm wasm score):
 # - The loop's buffer has an owner: the target frees it on the unwind path of RawRead and zipWriteInFileInZip (a null
 #   test and fn 136, the free the normal path calls too, in the pad after the loop), which a new[]/delete[] pair does
-#   not. The owner is a std::unique_ptr<char[]> from std::make_unique<char[]>, which value-initializes the bytes as
-#   new char[TAMANHO_BUFFER]() did (the memory.fill). With the raw pointer: 582 over 2643 (7 inserted, 14 deleted);
+#   not. The owner is a std::unique_ptr<char[]> from std::make_unique<char[]> (a choice: unique_ptr<char[]>(new
+#   char[TAMANHO_BUFFER]()) gives the same object), which value-initializes the bytes as new char[TAMANHO_BUFFER]() did
+#   (the memory.fill). With the raw pointer: 582 over 2643 (7 inserted, 14 deleted);
 #   with the unique_ptr: 518 over 2636, all operand rows, the frame 784 bytes for the target's 800.
 # - The time_point_cast result is a named local (ultimaModificacao, a chosen name): the target keeps it in a slot of
 #   its own (+336, between dataHora at +328 and informacoes at +348), where a temporary in dataHora's initializer
 #   shared a later temporary's slot; named, every frame offset is the target's (274 over 2636: call operands, data
 #   addresses, four packed std::format strings among them, and table slots), and step 9 matches the row.
-# Chosen: the buffer's type spelled out and const, the local's `auto` and const, and <memory> among the includes (the
+# Chosen: the buffer's type spelled out and const, std::make_unique over the constructor from new[], the local's `auto`
+# and const, and <memory> among the includes (the
 # TU compiles without it too). Its callees 891 and 1053 (libc++'s system_category and generic_category) and localtime
 # (6270) stay unresolved rows, each on a .bss word only it reads in the target (system_category's guard 1926461,
 # generic_category's 1926460, localtime's buffer 1932496: grep of the split's pieces; docs/reference/splat.md section

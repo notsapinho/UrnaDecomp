@@ -19,9 +19,9 @@
 #   binaryen merged IFingerScanner's and IFingerMatcher's into 6013: `pnpm --silent wasm score
 #   ../target/vota_web_wasm.wasm 3615 ../target/vota_web_wasm.wasm 6013` shows the copy of the typeid name built with
 #   another allocation and other stores ("N3api16IFingerDetectionE", 24 characters, against 22), which no merge's
-#   parameters cover. Of its three callers (10316, 10451, 10465) the first two are not written: DetectaDigital calls it
-#   twice with an empty std::source_location (unit 135's ReconheceDigital does the same). The head
-#   api/hwil/ifingerdetection.h is new and says what its slots rest on.
+#   parameters cover. Of its three callers (10316, 10451, 10465) 10451 is not written (10316 is unit 135's):
+#   DetectaDigital calls it twice with an empty std::source_location (unit 135's ReconheceDigital does the same). The
+#   head api/hwil/ifingerdetection.h is new and says what its slots rest on.
 # The roots object compiles at uenux2's flags ($(UENUX2_CXXFLAGS), with -fno-strict-aliasing), since it emits 3615, TSE
 # code that matches. With strict aliasing on, the instance's code is the same: wasm-objdump -d of the function in the
 # two objects, call and global indices masked, gives 154 identical lines.
