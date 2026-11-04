@@ -4,11 +4,11 @@
 // - comum::CCopiadorMR's constructor (fn 1276): fns 3827 and 12134; 3827 is written, the stand-in is for 12134, which
 //   calls it nine times with nine extensions;
 // - comum::CCopiadorWSQMR's constructor (fn 3827): fn 12134 calls it three times, with the extensions 16, 17 and 18;
-// - comum::md::CVotosVotavel's constructor without an identification (fn 2856): fn 3819 calls it three times and fn
-//   3820 once; 3820 is written (unit 200), the stand-in is for 3819. The constructor with an identification (fn 5863)
-//   and CIdentificacaoVotavel's (fn 5864) have one target caller, 3820, which calls each twice, and need no stand-in.
-// Each returns `this` in the target, which a caller reads (3827 reads 1276's, 12134 3827's, 3819 2856's), so the
-// stand-ins read the results of their placement news. The copiers' constructors store their classes' vptrs, which
+// comum::md::CVotosVotavel's constructors need no stand-in: the one without an identification (fn 2856) has its two
+// target callers in the link, 3819 and 3820 (unit 200), and the one with an identification (fn 5863) and
+// CIdentificacaoVotavel's (fn 5864) have one target caller, 3820, which calls each twice.
+// Each returns `this` in the target, which a caller reads (3827 reads 1276's, 12134 3827's), so the stand-ins read the
+// results of their placement news. The copiers' constructors store their classes' vptrs, which
 // keeps both vtables.
 // - comum::CGravadorEnvelopeArquivo's constructor (fn 5856): fn 12098 calls it twice, with the extension 9 and 11, the
 //   SAVD file 43 and 44 and the envelope type 2 and 4, and reads its result.
@@ -41,15 +41,6 @@ __attribute__((noinline)) long w160_copiadores(void* a, void* b, void* c, void* 
         (reinterpret_cast<long>(wsq) ^ reinterpret_cast<long>(outroWsq));
 }
 
-// stands for fn 3819
-__attribute__((noinline)) long w160_votos(void* a, void* b, comum::md::CVoto::ETipo tipo, comum::md::CVoto::ETipo outro,
-    comum::TCandidatoID candidato, ueword quantidade)
-{
-    comum::md::CVotosVotavel* x = new (a) comum::md::CVotosVotavel(tipo, candidato, quantidade);
-    comum::md::CVotosVotavel* y = new (b) comum::md::CVotosVotavel(outro, candidato, quantidade);
-    return reinterpret_cast<long>(x) ^ reinterpret_cast<long>(y);
-}
-
 // stands for fn 12098
 __attribute__((noinline)) long w160_envelopes(void* a, void* b, const api::CDateTime& dataHora,
     comum::TMunicipioID municipio, comum::TZonaID zona, comum::TLocalID local, comum::TSecaoID secao, char fase,
@@ -67,9 +58,6 @@ __attribute__((noinline)) long w160_envelopes(void* a, void* b, const api::CDate
 long (*volatile w160_sink_copiadores)(void*, void*, void*, void*, comum::TMunicipioID, comum::TZonaID, comum::TSecaoID,
     char, comum::EExtensaoArquivoResultado, comum::EExtensaoArquivoResultado);
 
-long (*volatile w160_sink_votos)(void*, void*, comum::md::CVoto::ETipo, comum::md::CVoto::ETipo, comum::TCandidatoID,
-    ueword);
-
 long (*volatile w160_sink_envelopes)(void*, void*, const api::CDateTime&, comum::TMunicipioID, comum::TZonaID,
     comum::TLocalID, comum::TSecaoID, char, const comum::md::estadoaplicacao::CDadoCorrespondencia&, const std::string&);
 
@@ -77,7 +65,6 @@ struct SW160Roots {
     SW160Roots()
     {
         w160_sink_copiadores = w160_copiadores;
-        w160_sink_votos = w160_votos;
         w160_sink_envelopes = w160_envelopes;
     }
 } w160_roots;

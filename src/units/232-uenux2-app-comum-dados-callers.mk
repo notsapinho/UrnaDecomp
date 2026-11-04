@@ -7,8 +7,8 @@
 #
 # The stand-ins, each for the target callers its comment names, none of them written; each goes when they are in the
 # link:
-# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 3819, 7787 and 11253 (6999 and 5604,
-#   unit 155's written Gera, are in the link and call it once each). ccargo.cpp's own calls are inlined by clang, so
+# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 7787 and 11253 (6999 and 5604,
+#   unit 155's written Gera, and 3819, unit 200's, are in the link and call it once each). ccargo.cpp's own calls are inlined by clang, so
 #   without these the link drops 1923's body. With it in the link, binaryen merges it with md::CLocal::GetContingencia
 #   (3724, unit 89) into one body as the target's 6029 does, and 1923, 3724 and 6029 match (fragments 88 and 89).
 # - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false, and 11629,

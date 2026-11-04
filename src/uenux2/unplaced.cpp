@@ -387,11 +387,6 @@
 // f3797 · 82 B · unmatched · placement: link order · name unknown
 // void f3797(i32, i32) { ... }
 
-// link-order cluster 1017 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorbu.cpp
-
-// f3819 · 3993 B · unmatched · placement: link order · name unknown
-// void f3819(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1050 · uses=3
 
 // f4161 · 2019 B · unmatched · placement: link order · name unknown
