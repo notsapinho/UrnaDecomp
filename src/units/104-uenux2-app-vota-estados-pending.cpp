@@ -5,7 +5,6 @@
 // the member lands (src/units/README.md "Pending members"). A member's stub goes with its vtable in the link, so the note
 // over each says what it waits for and the records it holds in the file of its class, whose lines stay blank there.
 
-#include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/fimvotacao/cgravaresultado.h"
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
@@ -18,12 +17,6 @@
 #include "app/vota/operador/csincronismooperador.h"
 
 namespace vota {
-
-// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 6557 (491 is named now (unit 205), 2376 too).
-void CAguardaMensagem::ProcessKey(uebyte)
-{
-    __builtin_trap();
-}
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
 // with no name (491, 1935 and 2821 are named now (units 205 and 110)): 2543, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names

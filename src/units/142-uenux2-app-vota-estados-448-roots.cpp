@@ -1,10 +1,9 @@
-// Roots: keep the vtable of vota::CUrnaInspecionada (src/units/142-uenux2-app-vota-estados-448.mk), and with it its slots
-// (target fns 448, 765, 1718 and 11794), in the skeleton link the way the target keeps them.
-//
-// The vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-// singleton (fn 11797, not reconstructed). Taking the vtable's address keeps every slot.
-// vota::CPedeAnoNascimentoSemBiometria's sink went: its GetInst, which holds its constructor inlined, is in the link,
-// inlined into fn 10500 (unit 239) as in the target.
+// Roots of src/units/142-uenux2-app-vota-estados-448.mk: keep its functions in the skeleton link the way the target
+// keeps them. No vtable of the unit needs a sink here:
+// vota::CUrnaInspecionada's GetInst, which holds its constructor inlined, is in the link, inlined into
+// vota::CInspecionaUrna::ProcessInput (fn 11797, cinspecionaurna.cpp, in this unit's list), so no sink keeps that
+// vtable. vota::CPedeAnoNascimentoSemBiometria's sink went: its GetInst, which holds its constructor inlined, is in
+// the link, inlined into fn 10500 (unit 239) as in the target.
 // vota::CPerguntaCodigoSuspensao's GetInst, which holds its constructor inlined, is in the link, inlined into 10415
 // (unit 152), so no sink keeps that vtable.
 // vota::CJustificativaEfetuada's GetInst (fn 2747), which holds its constructor inlined, is in the link (its caller
@@ -26,7 +25,6 @@
 // Declared through asm labels (the constructor with its object's signature: it returns `this`), so this TU needs no
 // uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-extern const char curnainspecionada_vt[] __asm__("_ZTVN4vota17CUrnaInspecionadaE");
 int r142_habilitacao(int, int, int, int, int, int) __asm__("_ZN5comum24CEleitorDadosHabilitacaoC1ERKNS_2md18CEleitorIdentidadeENS0_16ETipoHabilitacaoEiRKNS1_34CEleitorDadosHabilitacaoBiometricaERKN7ecourna3app5dados24CApresentacaoFotoEleitorE");
 }
 
@@ -44,7 +42,6 @@ const void* volatile estados448_sink;
 struct SEstados448Roots {
     SEstados448Roots()
     {
-        estados448_sink = curnainspecionada_vt;
         estados448_sink = reinterpret_cast<const void*>(&DuasHabilitacoes);
     }
 } estados448_roots;

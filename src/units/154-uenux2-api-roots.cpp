@@ -1,11 +1,12 @@
 // Roots of fragment 154.
 // - api::KeyName(char) (target fn 744), an inline function of api/hwil/iinput.h: the target calls it directly from five
 //   functions (653, 1455, 2243, 7787 and 12903), of which 2243 (api::CFormBuilder::AddLabeledKey, unit 31), 1455
-//   (vota::CVotacaoStateAudio::PlayKey, unit 97) and 653 (api::CInteractiveFormBuilder::AddLabeledInputControl, unit
-//   120) are reconstructed, and its copy reads as
-//   cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's records). TamanhoDoNome and
-//   SomaDosNomes call it and stand for the other two, 7787 and 12903; they are optnone, so that clang does
-//   not inline it into them, and with 2243 they give it three call sites, so binaryen keeps it out of line. The copy the
+//   (vota::CVotacaoStateAudio::PlayKey, unit 97), 653 (api::CInteractiveFormBuilder::AddLabeledInputControl, unit
+//   120) and 12903 (the keyboard test's failure text, a lambda of unit 110's ctelasvota.cpp, two calls) are
+//   reconstructed, and its copy reads as
+//   cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's records). TamanhoDoNome calls it
+//   and stands for 7787; it is optnone, so that clang does not inline it there. SomaDosNomes, which stood for 12903 with
+//   two calls, went. The copy the
 //   link keeps is cformbuilder.cpp.o's, the first in link order (the scan's object column). This object compiles at the uenux2 tree's flags (the
 //   fragment's rule), so its copy is compiled as the tree's own users compile theirs, but for -fno-strict-aliasing,
 //   which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same without it (wasm-objdump -d
@@ -36,10 +37,6 @@ __attribute__((optnone, noinline)) unsigned TamanhoDoNome(char tecla)
     return api::KeyName(tecla).size();
 }
 
-__attribute__((optnone, noinline)) unsigned SomaDosNomes(char teclaA, char teclaB)
-{
-    return api::KeyName(teclaA).size() * 2 + api::KeyName(teclaB).size();
-}
 
 __attribute__((noinline)) int InstanciaDuasVezes()
 {
@@ -63,7 +60,6 @@ struct SW154Roots {
     SW154Roots()
     {
         w154_sink = reinterpret_cast<void*>(&TamanhoDoNome);
-        w154_sink = reinterpret_cast<void*>(&SomaDosNomes);
         w154_sink = reinterpret_cast<void*>(&InstanciaDuasVezes);
         w154_sink = reinterpret_cast<void*>(&Constroi);
         w154_sink = reinterpret_cast<void*>(&SincronizaDuas);

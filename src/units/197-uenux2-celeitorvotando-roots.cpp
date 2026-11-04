@@ -1,7 +1,7 @@
 // Roots: keep vota::CEleitorVotando's functions in the skeleton link the way the target keeps them.
-// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, of which 7428 (unit 150) and
-//   11754 (unit 97) are reconstructed: Obtem stands for 7481, two call sites. GetInst holds the constructor inlined, whose vptr store
-//   is the target's reference to the class's vtable, and so keeps every slot.
+// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, all in the link (units 150, 104
+//   and 97): no stand-in. GetInst holds the constructor inlined, whose vptr store is the target's reference to the
+//   class's vtable, and so keeps every slot.
 // - RegistraVoto (fn 4471) has two direct callers in the target, fns 7428 and 11754, each calling it right after
 //   GetInst, both reconstructed (units 150 and 97): no stand-in.
 // - AdicionaVoto (fn 4192) and the five CLogVota::LogaVoto* members (fns 3272, 4546, 4542, 4541 and 4537) have two
@@ -20,7 +20,6 @@
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-char* w197_inst() __asm__("_ZN4vota15CEleitorVotando7GetInstEv");
 int w197_abrangencia(const void* eleitor, const void* uf, unsigned int municipio) __asm__(
     "_ZNK5comum2md17CEleitorDecorator14GetAbrangenciaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEj");
 void w197_ordena_impressao(void* cargos) __asm__("_ZN5comum7CCargos18OrdenaPorImpressaoEv");
@@ -39,14 +38,6 @@ int w197_find_equal(void* mapa, const void* dica, void* pai, void* auxiliar, con
 namespace {
 
 const void* volatile celeitorvotando_sink;
-
-// stands for fn 7481 (7428 and 11754 are in the link)
-__attribute__((noinline)) int Obtem(int vezes)
-{
-    const char* primeiro = w197_inst();
-    const char* segundo = w197_inst();
-    return primeiro[vezes] - segundo[3];
-}
 
 // stands for fn 5761
 __attribute__((noinline)) int Abrange(const char* registro, const char* eleitores)
@@ -82,7 +73,6 @@ __attribute__((noinline)) int Procura(char* mapa, const char* chave)
 struct SCEleitorVotandoRoots {
     SCEleitorVotandoRoots()
     {
-        celeitorvotando_sink = reinterpret_cast<const void*>(&Obtem);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Abrange);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Imprime);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Converte);
