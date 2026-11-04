@@ -276,6 +276,10 @@ enum EUeComumDadosError {
     EUE_COMUM_DADOS_8168 = 8168,
     EUE_COMUM_DADOS_8183 = 8183,
     EUE_COMUM_DADOS_8185 = 8185,
+    // No call of fn 170 passes 8069: md::CTransferenciaTemporaria's constructor from the kind throws it, a test binaryen
+    // folded away (its record, ctransferenciatemporaria.cpp:25, is loaded by no function). The code is chosen, next to
+    // that file's 8070.
+    EUE_COMUM_DADOS_8069 = 8069,
 };
 
 using CUeComumDadosError =

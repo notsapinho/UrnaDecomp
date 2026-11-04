@@ -42,8 +42,9 @@
 # names and their first parameter's `int` against `uedword`, CIndexer's two words and its header's path
 # (app/comum/dados/md/cindexer.h), that the 20-byte object at +48 of CEleitor is a CTransferenciaTemporaria (a reading
 # of fn 11411's records, ctransferenciatemporaria.h says how), the
-# enums CEleitor::ENecessidadeEspecial, CTransferenciaTemporaria::ETransferenciaTemporaria and md::ETipoCabecalho with no
-# enumerators, and the tests over them (`< 0 || > 1`, `< 0 || > 2`, the target's unsigned compares), `codigo > 99999`
+# enums CEleitor::ENecessidadeEspecial and md::ETipoCabecalho with no enumerators (CTransferenciaTemporaria::
+# ETransferenciaTemporaria has its converter's values since fragment 310, ctransferenciatemporaria.h), and the tests
+# over them (`< 0 || > 1`, `< 0 || > 2`, the target's unsigned compares), `codigo > 99999`
 # against `>= 100000`, the names EUE_COMUM_MD_8906 and 8907, the getters md::CLocal::GetIdPE, GetNomePais and GetNomeUF
 # and md::CInfoMunicipio::GetFusoHorario and TemHorarioVerao, cconversorlocal.h's path, CCarga::ValidaCriacao's being
 # private, the find_first_not_of tests of CCarga::ValidaCriacao (the form of CUrna::ValidaCriacao, curna.cpp; the target's

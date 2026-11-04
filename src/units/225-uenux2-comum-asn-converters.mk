@@ -10,7 +10,8 @@
 #   __emplace_unique_key_args (3728), from this object, whose copies the link keeps. Its constructor, out of line in
 #   the same file, has no target function: fn 11523 (unit 310's chain, through carregaarquivo.cpp) holds it, and
 #   src/units/310-uenux2-cconversorentidadeeleitores.mk has its evidence.
-# - std::vector<md::CEleitor>::__swap_out_circular_buffer (5700), an explicit instantiation in the roots.
+# - std::vector<md::CEleitor>::__swap_out_circular_buffer (5700), which this fragment's roots instantiated; its copy is
+#   now that of fragment 310's cconversorentidadeeleitores.cpp, whose 11411, its one target caller, calls it twice.
 #
 # Evidence. 11377: the records (the four throws, codes 8146, 8147, 8167 and 8168 with their messages); the frames
 # binaryen opened; the module's DetalhePergunta and RespostaPergunta (fields 0 to 3, the optional textoFonetico, read
@@ -38,9 +39,9 @@
 #   over 1210 rows, helper first, against 221 over 1206).
 # - visit: a std::pair of size_t at +8 and as the map's value stores two i32 where the target stores one i64 (51 over 594
 #   rows, 12 inserted); md::CIndexer with the constructor cindexer.h adds, 26 over 582, operand-only, and it matches.
-# - 5700: the roots compile at UENUX2_CXXFLAGS, the flags of 11411's directory (asn/eleitor); without
-#   -fno-strict-aliasing (md/'s), the instance differs (one load of the vector moves), while ~CEleitor and the stand-in
-#   compare equal (wasm-objdump -d, indices masked).
+# - 5700: at the flags of 11411's directory (asn/eleitor, with -fno-strict-aliasing) the instance is the target's;
+#   without it (md/'s flags) one load of the vector moves (measured on the roots' object, wasm-objdump -d, indices
+#   masked).
 #
 # Chosen, no evidence decides them: the names FormataPergunta (and its being an external function of comum::asn) and
 # the lambdas' parameters; std::transform and std::accumulate as the spellings of FormataPergunta's two inlined loops
@@ -52,10 +53,9 @@
 # word at +4; md::CIndexer as the type of the two words (a reading, cindexer.h says why); the destructor `= default`
 # ({} gives the same object, docs/reference/facts/reading.md R4).
 #
-# Roots (225-uenux2-comum-asn-converters-roots.cpp, at the tree's flags): the instance of 5700 and a stand-in that calls
-# it twice for fn 11411 (not written), which goes when 11411 is in the link. The sink of CVisitanteEleitor's vtable,
-# which stood for the constructor fn 11523 holds, went when 11523 was written (unit 110's celeitores.cpp, through
-# carregaarquivo.cpp's LeEleitores).
+# No roots: the instance of 5700 and its stand-in for fn 11411 went when 11411 was written (fragment 310), and the sink
+# of CVisitanteEleitor's vtable, which stood for the constructor fn 11523 holds, went when 11523 was written (unit
+# 110's celeitores.cpp, through carregaarquivo.cpp's LeEleitores).
 COMUMASN225_SRCS := src/app/comum/dados/md/processoeleitoral/cdetalheconsulta.cpp \
   src/app/comum/dados/md/processoeleitoral/crespostaconsulta.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversordetalheconsulta.cpp \
@@ -63,8 +63,3 @@ COMUMASN225_SRCS := src/app/comum/dados/md/processoeleitoral/cdetalheconsulta.cp
 UENUX2_SRCS += $(COMUMASN225_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(filter %/asn/processoeleitoral/cconversordetalheconsulta.cpp %/asn/eleitor/cvisitanteeleitor.cpp,$(COMUMASN225_SRCS)),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# The 5700 instance with its stand-in: 225-uenux2-comum-asn-converters-roots.cpp, at the
-# tree's flags, since the instance is TSE-template code whose target copy is a uenux2 object's
-$(ROOT)/$(APP)/225-uenux2-comum-asn-converters-roots.o: $(ROOT)/src/units/225-uenux2-comum-asn-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/225-uenux2-comum-asn-converters.mk $(UENUX2_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/225-uenux2-comum-asn-converters-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/225-uenux2-comum-asn-converters-roots.o

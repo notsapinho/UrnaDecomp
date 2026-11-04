@@ -51,6 +51,11 @@ public:
                 {"EntidadeEleitores.eleitores.eleitor.biometria", visitante}};
     }
 
+    // What CConversorEntidadeEleitores's slot 2 (target fn 11411) reads of the visitor: this map, the voters'
+    // identities and their biometria's place, which 11411 copies, node by node, into a frame slot of its own. The
+    // accessor, its name, its returning a reference (the copy the caller's local) and its being inline are chosen.
+    const std::map<md::CEleitorIdentidade, md::CIndexer>& GetIdentidades() const { return m_identidades; }
+
 private:
     int m_naoRecuperado4;
     md::CIndexer m_biometria;
