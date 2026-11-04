@@ -410,6 +410,11 @@
 # SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
 # 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 #
+# ctelasvota.cpp also holds the QR-code BU's screen, vota::CTelasVota::CriaTelaQRCodeBU, after GetTelaCargo, with the
+# free functions AdicionaTextoMultiLinha and AdicionaTexto, the file-local AreaTela and the fonts {15, 0} and {20, 1}
+# after CTelasVota's destructor; none has an index of its own (binaryen inlines them into fn 12055): ctelasvota.h and
+# src/units/37-uenux2-iqrcodebuds.mk have the evidence, the measurements and the choices.
+#
 # comum::CPE's members beside GetInst, in cpe.cpp (the file's records: GetInst's macro at line 21, CreateInst's throw at
 # 26:15, EUE_COMUM_DADOS_7876 "Instância já criada"):
 # - Existe (target fn 2788, no record: its name and its line before GetInst are chosen): a lock of s_mutex and the test

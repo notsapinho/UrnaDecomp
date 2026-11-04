@@ -3150,7 +3150,7 @@ _ZN3api9CMenuItem10UpdateRectEv = func:3657; // size:0xd7 evidence:srcloc-anchor
 _ZN3api16CTextFieldUpdateC2ERKNS_6SPointERKNSt3__210shared_ptrINS_5ITextEEERKNS4_6chrono8durationIxNS4_5ratioILx1ELx1000EEEEERKNS_5SFontENS_6TColorESK_ = func:3658; // size:0x12f evidence:srcloc-anchor
 _ZN3api20CTextFieldDoubleLineC2ERKNS_6SPointES3_sRKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_ = func:3659; // size:0x132 evidence:srcloc-anchor
 _ZN3api10CSubReportC2ENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_b = func:3660; // size:0x74 evidence:pair-addr
-_ZN3api12CQRCodeImageC2EsRKNSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEE = func:3662; // size:0x67 evidence:pair-addr
+_ZN3api12CQRCodeImageC2EsNSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEE = func:3662; // size:0x67 evidence:pair-addr
 _ZN3api13CBmpConversor12InvertColorsEPhii = func:3663; // size:0xea evidence:srcloc-anchor
 _ZN3api13CBmpConversor12VerticalFlipEPhii = func:3664; // size:0x112 evidence:srcloc-anchor
 _ZN3api17CStepsProgressBarD2Ev = func:3665; // size:0x11e evidence:pair-addr
@@ -9864,6 +9864,7 @@ _ZNKSt3__220__shared_ptr_pointerIPN4vota11IQRCodeBUDSENS_14default_deleteIS2_EEN
 _ZN4vota11IQRCodeBUDSD0Ev = func:12049; // size:0x77 evidence:pair-addr
 _ZN4vota11IQRCodeBUDSD2Ev = func:12050; // size:0x74 evidence:pair-addr
 _ZN4vota15CMostraQRCodeBU12ProcessInputEv = func:12051; // size:0x1be evidence:srcloc-anchor
+_ZN4vota15CMostraQRCodeBU10StartStateEv = func:12055; // size:0x14a7 evidence:vtable
 _ZN4vota19CAplicacaoEncerrada10StartStateEv = func:12058; // size:0x98 evidence:vtable
 _ZN4vota32CEstadoComDesligamentoAutomatico11ProcessTickEh = func:12061; // size:0x1b9 evidence:srcloc-anchor
 _ZN4vota9CInicioBU10StartStateEv = func:12062; // size:0xbd evidence:vptr-anchor

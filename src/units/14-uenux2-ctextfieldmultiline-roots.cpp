@@ -1,8 +1,8 @@
 // Roots: the CTextFieldMultiLine ctor has two callers in the target (fns 2782 and 12055, both a
 // std::make_shared<CTextFieldMultiLine> with the colours 2 and 1, which binaryen's dead-argument elimination folds
-// into the ctor). 2782 is in the link (api::CFormBuilder::AddTextFieldMultiLine, unit 31); CampoMultiLinhaB stands for
-// 12055 and gives the ctor its second call site. It is address-taken from a static constructor.
-// Compiled as uenux2 code.
+// into the ctor). Both are in the link: 2782 (api::CFormBuilder::AddTextFieldMultiLine, unit 31) and 12055, whose
+// call is vota::AdicionaTextoMultiLinha's (ctelasvota.cpp, inlined into it by binaryen; unit 37), so the stand-in that
+// stood for 12055 went. Address-taken from a static constructor. Compiled as uenux2 code.
 #include <memory>
 #include <string>
 
@@ -10,14 +10,6 @@
 #include "api/gui/eueguierror.h"
 
 namespace {
-
-__attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoMultiLinhaB(api::TPosition left, api::TPosition top, api::TPosition right,
-                                                                                          api::TPosition bottom, const api::SharedIText& text,
-                                                                                          const api::SFont& font)
-{
-    const api::SRect rect{left, top, right, bottom};
-    return std::make_shared<api::CTextFieldMultiLine>(rect, text, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-}
 
 // two more CUeGuiError throw sites (the target has 36 callers of its ctor thunk, fn 406): with one, binaryen inlines
 // the CBaseError<EUeGuiError> ctor into the ctextfieldmultiline.cpp throw
@@ -29,7 +21,6 @@ void* volatile w5498_sink;
 struct SW5498Roots {
     SW5498Roots()
     {
-        w5498_sink = reinterpret_cast<void*>(&CampoMultiLinhaB);
         w5498_sink = reinterpret_cast<void*>(&LancaGui1);
         w5498_sink = reinterpret_cast<void*>(&LancaGui2);
     }

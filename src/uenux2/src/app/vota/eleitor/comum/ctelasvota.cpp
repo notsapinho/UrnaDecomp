@@ -8,8 +8,12 @@
 #include <utility>
 #include <vector>
 
+#include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cqrcodeimage.h"
+#include "api/gui/ctextfield.h"
+#include "api/gui/ctextfieldmultiline.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/vota/comum/cpreshowformvota.h"
@@ -19,7 +23,7 @@
 
 namespace vota {
 
-// (original lines 22-290: content not recovered)
+// (original lines 26-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -266,7 +270,41 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
 
 CTelasVota::~CTelasVota() = default;
 
-// (original lines 3465-3529: content not recovered)
+namespace {
+
+const api::SFont FONTE_VERSAO{15, 0};
+const api::SFont FONTE_TECLA{20, 1};
+
+api::SRect AreaTela()
+{
+    return api::CApplication::s_areaTela;
+}
+
+} // namespace
+
+api::CFormBuilder::SharedField AdicionaTextoMultiLinha(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                                      const api::SRect& rect, const api::SFont& font,
+                                                      api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextFieldMultiLine>(
+        rect, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                            const api::SPoint& posicao, const api::SFont& font,
+                                            api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
+        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+// (original lines 3499-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {
@@ -276,6 +314,57 @@ CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, co
                            std::format("Nao existe o conjunto de telas associado ao cargo id {}", cargo));
     }
     return it->second.GetTela(tela);
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeBU(std::function<std::string()> ajuda,
+                                                     std::function<std::string()> qrcode,
+                                                     std::function<std::string()> pagina) const
+{
+    api::CInteractiveFormBuilder builder;
+    const api::SRect area = AreaTela();
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    const api::TPosition altura = area.bottom + 1;
+    const api::TPosition linha = area.bottom - 49;
+    const api::TPosition linhaPagina = area.bottom - 109;
+    const api::TPosition linhaTecla9 = area.bottom - 27;
+    const api::TPosition linhaVersao = area.bottom - 79;
+    const auto imagem = std::make_shared<api::CQRCodeImage>(380, qrcode);
+    builder.AddImage(imagem, api::SPoint(630, 35));
+    const api::SPoint posicaoConfirma(area.right - 20, altura - 48);
+    const api::SPoint posicaoContinuar(area.right - 20, altura - 27);
+    builder.AddLine(api::SPoint(area.left, linha), api::SPoint(area.right, linha), static_cast<api::TColor>(3));
+    builder.AddTextField("Versao: " + api::CApplication::s_versao, api::SPoint(10, linhaVersao), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("BU digital", api::SPoint(10, 45), FONTE_TITULO, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaTextoMultiLinha(builder, ajuda, api::SRect(10, 95, 230, altura - 115), FONTE_INSTRUCAO_TESTE_TECLADO,
+                            api::ALINHAMENTO_ESQUERDA);
+    builder.AddInputControl(5);
+    AdicionaTexto(builder, pagina, api::SPoint(230, linhaPagina), FONTE_INSTRUCAO_TESTE_TECLADO,
+                  api::ALINHAMENTO_DIREITA)
+        ->SetName("Pagina");
+    const auto tecla9 = builder.AddTextField("9", api::SPoint(10, linhaTecla9), FONTE_TECLA, api::ALINHAMENTO_ESQUERDA,
+                                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    tecla9->SetName("9");
+    builder.AddTextField("para próxima parte", api::SPoint(tecla9->Rect().right + 4, linhaTecla9),
+                         FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1))
+        ->SetName("Acao9");
+    builder.AddTextField("3", api::SPoint(10, area.bottom - 48), FONTE_TECLA, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("3");
+    builder.AddTextField("para parte anterior", api::SPoint(tecla9->Rect().right + 4, area.bottom - 48),
+                         FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1))
+        ->SetName("Acao3");
+    builder.AddTextField("Continuar", posicaoContinuar, FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_DIREITA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("AcaoConfirma");
+    builder.AddTextField("CONFIRMA", posicaoConfirma, FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_DIREITA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+        ->SetName("Confirma");
+    builder.AddLabeledKey('B', "Ver certificado", api::ALINHAMENTO_CENTRO);
+    return GetFormularioInterativo(builder, "telaQRCodeBU");
 }
 
 } // namespace vota

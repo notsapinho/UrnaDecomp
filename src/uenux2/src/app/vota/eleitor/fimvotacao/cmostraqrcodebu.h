@@ -39,8 +39,8 @@ public:
     static void CreateInst(std::vector<std::string> partes);
 
     // The parts and the index of the one shown: CMostraQRCodeBU's slots (fns 12051, 12055), AjustaTela (fn 5982) and
-    // the three text functions StartState passes by table slot (fns 12052 to 12054) read and step them inline. The
-    // accessors and their names are chosen.
+    // the three text functions StartState passes by table slot (fns 12052 to 12054, cmostraqrcodebu.cpp) read and
+    // step them inline. The accessors and their names are chosen.
     const std::vector<std::string>& GetPartes() const { return m_partes; }
     std::size_t GetAtual() const { return m_atual; }
     void Reinicia() { m_atual = 0; }
@@ -67,8 +67,9 @@ private:
 };
 
 // vota::CMostraQRCodeBU (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1542116 [785, 1560, 12055,
-// 7480, 1661, 218, 425, 12051, 12061, 425]): it overrides StartState (slot 2, fn 12055, record line 70), pending in
-// 37-uenux2-iqrcodebuds-pending.cpp, and ProcessInput (slot 7, fn 12051, record line 85), written. The destructors
+// 7480, 1661, 218, 425, 12051, 12061, 425]): it overrides StartState (slot 2, fn 12055, record line 70) and
+// ProcessInput (slot 7, fn 12051, record line 85), both written; StartState builds the screen with
+// CTelasVota::CriaTelaQRCodeBU (ctelasvota.h) over the three texts of cmostraqrcodebu.cpp. The destructors
 // are vota::testeteclado::CErroTesteTecladoFim's bodies: the D2 (fn 785) stores no vptr before it releases +32, so the
 // class is final, and the D0 (fn 1560) calls the D2 and frees `this`, so the destructor is out of line
 // (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 2888) keeps the object in a static std::unique_ptr
