@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <format>
+#include <memory>
 
 #include "ecourna/api/compression/ecompressionerror.hpp"
 #include "ecourna/api/io/cfile.hpp"
@@ -38,7 +39,7 @@ CZip::CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel)
     CreateZipFile();
 }
 
-// (original lines 41-132: content not recovered)
+// (original lines 42-132: content not recovered)
 #line 133
 void CZip::Close()
 {
@@ -110,8 +111,9 @@ void CZip::DoAdd(const std::filesystem::path& arquivo, const std::filesystem::pa
     AssertZipIsOpened();
 
     zip_fileinfo informacoes{};
-    const std::time_t dataHora = std::chrono::system_clock::to_time_t(std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-        std::chrono::file_clock::to_sys(std::filesystem::last_write_time(arquivo))));
+    const auto ultimaModificacao = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+        std::chrono::file_clock::to_sys(std::filesystem::last_write_time(arquivo)));
+    const std::time_t dataHora = std::chrono::system_clock::to_time_t(ultimaModificacao);
     const std::tm* data = std::localtime(&dataHora);
     informacoes.tmz_date.tm_sec = data->tm_sec;
     informacoes.tmz_date.tm_min = data->tm_min;
@@ -121,7 +123,7 @@ void CZip::DoAdd(const std::filesystem::path& arquivo, const std::filesystem::pa
     informacoes.tmz_date.tm_year = data->tm_year;
     const std::uintmax_t tamanho = std::filesystem::file_size(arquivo);
 
-    // (original lines 226-239: content not recovered)
+    // (original lines 227-239: content not recovered)
 #line 240
     int erro = zipOpenNewFileInZip2_64(m_zip, nome.string().c_str(), &informacoes, nullptr, 0, nullptr, 0, nullptr,
                                        m_nivel != ENivelCompressao::NENHUM ? Z_DEFLATED : 0, ConvertToCompressLevel(), 0,
@@ -135,21 +137,20 @@ void CZip::DoAdd(const std::filesystem::path& arquivo, const std::filesystem::pa
     io::CFile entrada(arquivo.string(), "rb");
     ueqword total = 0;
     while (!entrada.Eof()) {
-        char* buffer = new char[TAMANHO_BUFFER]();
-        const uedword lido = entrada.RawRead(buffer, TAMANHO_BUFFER);
+        const std::unique_ptr<char[]> buffer = std::make_unique<char[]>(TAMANHO_BUFFER);
+        const uedword lido = entrada.RawRead(buffer.get(), TAMANHO_BUFFER);
         if (lido != 0) {
-            erro = zipWriteInFileInZip(m_zip, buffer, lido);
+            erro = zipWriteInFileInZip(m_zip, buffer.get(), lido);
             if (erro < 0) {
                 throw CCompressionError(ECE_ZIP_ESCREVER, std::format("Falha ao adicionar o arquivo {}. {}", arquivo.string(), ConvertToErrorMessage(erro)));
             }
             total += lido;
             AtualizaProgresso(total, tamanho, nome.string());
         }
-        delete[] buffer;
     }
     entrada.Close();
 
-    // (original lines 273-278: content not recovered)
+    // (original lines 272-278: content not recovered)
 #line 279
     erro = zipCloseFileInZip(m_zip);
     if (erro != ZIP_OK) {
