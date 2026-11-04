@@ -89,22 +89,22 @@ void CGeradorRelPU::ImprimeParametros()
     }
     ImprimeHorarios(municipio);
     const ecourna::app::dados::CParametrosUrna& parametros = configuracao.GetParametrosUrna();
-    AdicionaParametro("Zerésimas", std::to_string(static_cast<int>(parametros.GetNumZeresimas())));
-    AdicionaParametro("BUs do Vota obrigatórios", std::to_string(static_cast<int>(parametros.GetNumBUVotaObrigatorios())));
-    AdicionaParametro("BUs do Vota adicionais", std::to_string(static_cast<int>(parametros.GetNumBUVotaAdicionais())));
-    AdicionaParametro("BUs do RED obrigatórios", std::to_string(static_cast<int>(parametros.GetNumBUFinalREDObrigat())));
-    AdicionaParametro("BUs do RED adicionais", std::to_string(static_cast<int>(parametros.GetNumBUFinalREDAdic())));
-    AdicionaParametro("BUs do SA obrigatórios", std::to_string(static_cast<int>(parametros.GetNumBUFinalSAObrigat())));
-    AdicionaParametro("BUs do SA adicionais", std::to_string(static_cast<int>(parametros.GetNumBUFinalSAAdic())));
+    AdicionaParametro("Zerésimas", std::to_string(parametros.GetNumZeresimas()));
+    AdicionaParametro("BUs do Vota obrigatórios", std::to_string(parametros.GetNumBUVotaObrigatorios()));
+    AdicionaParametro("BUs do Vota adicionais", std::to_string(parametros.GetNumBUVotaAdicionais()));
+    AdicionaParametro("BUs do RED obrigatórios", std::to_string(parametros.GetNumBUFinalREDObrigat()));
+    AdicionaParametro("BUs do RED adicionais", std::to_string(parametros.GetNumBUFinalREDAdic()));
+    AdicionaParametro("BUs do SA obrigatórios", std::to_string(parametros.GetNumBUFinalSAObrigat()));
+    AdicionaParametro("BUs do SA adicionais", std::to_string(parametros.GetNumBUFinalSAAdic()));
     AdicionaParametro("Aceitar justificativa", parametros.GetAceitarJustificativa() ? std::string("Sim") : std::string("Não"));
     AdicionaParametro("Apresentar partido", parametros.GetApresentarPartido() ? std::string("Sim") : std::string("Não"));
     AdicionaParametro("Imprimir QR Code no BU", parametros.GetImprimirQrCodeNoBU() ? std::string("Sim") : std::string("Não"));
     AdicionaParametro("Registrar mesários", parametros.GetRegistrarMesarios() ? std::string("Sim") : std::string("Não"));
     AdicionaParametro("Pedir ano nascimento", parametros.GetPedeAnoNascimentoEleitor() ? std::string("Sim") : std::string("Não"));
     AdicionaParametro("Tempo desligamento auto",
-                      std::to_string(static_cast<int>(parametros.GetTempoDesligamentoAutomatico())));
+                      std::to_string(parametros.GetTempoDesligamentoAutomatico()));
     AdicionaParametro("Tempo aviso desligamento auto",
-                      std::to_string(static_cast<int>(parametros.GetTempoAvisoDesligamentoAutomatico())));
+                      std::to_string(parametros.GetTempoAvisoDesligamentoAutomatico()));
 }
 
 void CGeradorRelPU::ImprimeRodape()

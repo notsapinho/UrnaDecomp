@@ -9,16 +9,16 @@
 // is inline, declared because the class has no base.
 //
 // 11902 then prints the report through the members below, none of them virtual (the vtable has two slots), all out of
-// line in cgeradorrelpu.cpp: Imprime has no frame of its own (binaryen's inlining of a function with one caller leaves
-// no sign then, a reading); ImprimeTituloJE, ImprimeParametros and ImprimeHorarios each sit in 11902 behind a stack
+// line in cgeradorrelpu.cpp: Imprime leaves no frame and no index, so nothing shows that it existed (its being a
+// function is chosen, below); ImprimeTituloJE, ImprimeParametros and ImprimeHorarios each sit in 11902 behind a stack
 // frame of their own (48, 272 and 448 bytes: binaryen's inlining of a function with one caller); and 11902 calls fn
 // 5596, comum::CGeradorRelVersaoPacoteDados::ImprimeRodape, on this object: ImprimeRodape below is that function's text
 // over this class's builder, which binaryen merges into one body with it, as the target holds one body for both.
 //
 // Chosen: this header's and cgeradorrelpu.cpp's paths (the family's directory and the class's name in lower case), the
 // names AdicionaParametro, Imprime, ImprimeTituloJE (after comum::CGeradorRelVersaoPacoteDados's slot 3, whose title
-// block is of the same shape), ImprimeParametros, ImprimeHorarios and ImprimeRodape and their parameters, the members'
-// being members, the member's name, the access and the destructor's `= default`.
+// block is of the same shape), ImprimeParametros, ImprimeHorarios and ImprimeRodape and their parameters, Imprime's
+// being a function at all, the members' being members, the member's name, the access and the destructor's `= default`.
 
 #include <string>
 

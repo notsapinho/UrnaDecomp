@@ -76,9 +76,9 @@
 #   the general state is read (its GetInst call precedes CAppInfo's in the target); "Sim" and "Não" built as two
 #   std::string, one per arm (a conditional over the two char literals gives one copy from a select, 687 over 2846
 #   with the type's read inline too).
-# - The counts formatted by std::to_string(int) (fn 296, not the unsigned 327): ecourna's cparametrosurna.hpp declares
-#   them uedword, so each is cast to int here, a form that stands for that header's type (unit 104's ImprimeZeresima
-#   holds GetNumZeresimas in an int and tests it signed); the header is ecourna's and not changed here.
+# - The counts formatted by std::to_string(int) (fn 296, not the unsigned 327), with no cast: ecourna's
+#   cparametrosurna.hpp declares the nine getters read here int, changed with this unit since uedword picks 327 (its
+#   comment has the other readers that read them signed); every object that includes the header compiles unchanged.
 # Chosen: the members' names and order (but the measured one above), their being members, the locals' names.
 # The roots' stand-ins for 11902 went: w183_parametros (677's caller) and the sink that kept the vtable, since 11902
 # builds the object.

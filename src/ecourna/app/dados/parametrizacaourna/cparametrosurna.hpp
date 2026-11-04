@@ -12,6 +12,10 @@ namespace ecourna::app::dados {
 // the constructor (fn 5093: scalars stored, the vectors/string/labels taken by value and moved in) and the converter
 // (app/dados/asn/parametrizacaourna/cconversorparametrosurna.cpp, fns 9164/9156); member and enumerator names follow
 // the ASN.1 field names, the enumerators the ENUMERATED values minus one.
+// The nine counts and times that comum::CGeradorRelPU's parameter list prints (in fn 11902) are int: it formats each
+// with std::to_string(int) (fn 296, never the unsigned 327), vota::CReimprimindoZeresima::ImprimeZeresima tests the
+// number of zeresimas `<= 0` signed, and CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061) sign-extends both
+// times. The other counts and times, and the constructor's parameters (fn 5093 stores them alike), are uedword.
 class CParametrosUrna {
 public:
     enum EFormaSuspenderSemVoto {
@@ -78,15 +82,15 @@ public:
 
     EFormaSuspenderSemVoto GetFormaSuspensaoSemVoto() const { return m_formaSuspensaoSemVoto; }
     EFormaSuspenderComVoto GetFormaSuspensaoComVoto() const { return m_formaSuspensaoComVoto; }
-    uedword GetNumZeresimas() const { return m_numZeresimas; }
-    uedword GetNumBUVotaObrigatorios() const { return m_numBUVotaObrigatorios; }
-    uedword GetNumBUVotaAdicionais() const { return m_numBUVotaAdicionais; }
-    uedword GetNumBUFinalREDObrigat() const { return m_numBUFinalREDObrigat; }
-    uedword GetNumBUFinalREDAdic() const { return m_numBUFinalREDAdic; }
+    int GetNumZeresimas() const { return m_numZeresimas; }
+    int GetNumBUVotaObrigatorios() const { return m_numBUVotaObrigatorios; }
+    int GetNumBUVotaAdicionais() const { return m_numBUVotaAdicionais; }
+    int GetNumBUFinalREDObrigat() const { return m_numBUFinalREDObrigat; }
+    int GetNumBUFinalREDAdic() const { return m_numBUFinalREDAdic; }
     uedword GetNumBUParcialREDObrigat() const { return m_numBUParcialREDObrigat; }
     uedword GetNumBUParcialREDAdic() const { return m_numBUParcialREDAdic; }
-    uedword GetNumBUFinalSAObrigat() const { return m_numBUFinalSAObrigat; }
-    uedword GetNumBUFinalSAAdic() const { return m_numBUFinalSAAdic; }
+    int GetNumBUFinalSAObrigat() const { return m_numBUFinalSAObrigat; }
+    int GetNumBUFinalSAAdic() const { return m_numBUFinalSAAdic; }
     uedword GetNumBUParcialSAObrigat() const { return m_numBUParcialSAObrigat; }
     uedword GetNumTentativasHabilitacao() const { return m_numTentativasHabilitacao; }
     uedword GetNumTentativasVerificacao() const { return m_numTentativasVerificacao; }
@@ -100,8 +104,8 @@ public:
     uedword GetTempoDispararSuspensao() const { return m_tempoDispararSuspensao; }
     uedword GetTempoDispararSuspensaoTE() const { return m_tempoDispararSuspensaoTE; }
     uedword GetTempoConfirmacaoVoto() const { return m_tempoConfirmacaoVoto; }
-    uedword GetTempoDesligamentoAutomatico() const { return m_tempoDesligamentoAutomatico; }
-    uedword GetTempoAvisoDesligamentoAutomatico() const { return m_tempoAvisoDesligamentoAutomatico; }
+    int GetTempoDesligamentoAutomatico() const { return m_tempoDesligamentoAutomatico; }
+    int GetTempoAvisoDesligamentoAutomatico() const { return m_tempoAvisoDesligamentoAutomatico; }
     const TVectorTituloRelatorio& GetCabecalho() const { return m_cabecalho; }
     const TVectorTituloRelatorio& GetRodapeZEVOTA() const { return m_rodapeZEVOTA; }
     const TVectorTituloRelatorio& GetRodapeBUVOTA() const { return m_rodapeBUVOTA; }
@@ -127,15 +131,15 @@ public:
 private:
     EFormaSuspenderSemVoto m_formaSuspensaoSemVoto;
     EFormaSuspenderComVoto m_formaSuspensaoComVoto;
-    uedword m_numZeresimas;
-    uedword m_numBUVotaObrigatorios;
-    uedword m_numBUVotaAdicionais;
-    uedword m_numBUFinalREDObrigat;
-    uedword m_numBUFinalREDAdic;
+    int m_numZeresimas;
+    int m_numBUVotaObrigatorios;
+    int m_numBUVotaAdicionais;
+    int m_numBUFinalREDObrigat;
+    int m_numBUFinalREDAdic;
     uedword m_numBUParcialREDObrigat;
     uedword m_numBUParcialREDAdic;
-    uedword m_numBUFinalSAObrigat;
-    uedword m_numBUFinalSAAdic;
+    int m_numBUFinalSAObrigat;
+    int m_numBUFinalSAAdic;
     uedword m_numBUParcialSAObrigat;
     uedword m_numTentativasHabilitacao;
     uedword m_numTentativasVerificacao;
@@ -149,8 +153,8 @@ private:
     uedword m_tempoDispararSuspensao;
     uedword m_tempoDispararSuspensaoTE;
     uedword m_tempoConfirmacaoVoto;
-    uedword m_tempoDesligamentoAutomatico;
-    uedword m_tempoAvisoDesligamentoAutomatico;
+    int m_tempoDesligamentoAutomatico;
+    int m_tempoAvisoDesligamentoAutomatico;
     TVectorTituloRelatorio m_cabecalho;
     TVectorTituloRelatorio m_rodapeZEVOTA;
     TVectorTituloRelatorio m_rodapeBUVOTA;
