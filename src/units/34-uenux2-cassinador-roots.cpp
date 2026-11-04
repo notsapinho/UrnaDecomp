@@ -3,8 +3,8 @@
 // 12098, ledger/callgraph.tsv). Of those the deleting destructor (4694, slot 1), which comes with the vtable that the
 // destructor's vptr store names, vota::CAssinadorVota's destructor (7766, fragment 165) and vota::CSincronizaVota's
 // SincronizaRelatorios, GravaBancoDadosMI, AssinaRDVEBancoDados, SincronizaEstadoGeralVota and SincronizaEstadoGeral
-// (1836, 4657, 4668, 491, 3333, fragment 205) are reconstructed. These two noinline callers stand in for the three others
-// (7174 10590 12098), with
+// (1836, 4657, 4668, 491, 3333, fragment 205) are reconstructed, and so is 10590 (unit 283), which holds
+// SincronizaJustificativa's signing inlined. These two noinline callers stand in for the two others (7174 12098), with
 // different bodies so that
 // binaryen does not merge them into one; they are address-taken from a static constructor.
 // Declared through an asm label with the wasm-level signature (a non-deleting destructor returns `this`); compiled

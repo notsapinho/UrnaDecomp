@@ -35,6 +35,13 @@ public:
     // contexts, after the check of VerificaUrnaDesligando. Its name is chosen from the context's texts ("Gravando o
     // estado geral da urna na MI", "... na MV"); its place after SincronizaEstadoGeralVota is chosen.
     static void SincronizaEstadoGeral();
+    // No target index: binaryen inlined it into its one caller, vota::CPedeAnoNascimento::ProcessInput (fn 10590),
+    // behind a 176-byte frame of its own. After the check of VerificaUrnaDesligando it saves the voting state and
+    // comum::CJustificador's current record to the internal flash and signs file 31 under one context, writes the
+    // database (GravaBancoDadosMI), and saves the state to the external flash under another. Its name is chosen from
+    // the contexts' texts ("Gravando a justificativa na MI", "... na MV"); its place after SincronizaEstadoGeral is
+    // chosen.
+    static void SincronizaJustificativa();
     // No target index: binaryen inlined it into SincronizaRelatorios (fn 1836), its one caller, behind a stack frame of
     // its own. Name chosen from what it does.
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);

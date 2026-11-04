@@ -61,6 +61,11 @@ public:
     // names are chosen.
     const std::string& GetTituloEncerramento() const { return m_tituloEncerramento; }
     void SetTituloEncerramento(const std::string& titulo) { m_tituloEncerramento = titulo; }
+    // The string at +84, the year of birth typed: vota::CPedeAnoNascimento::ProcessInput (fn 10590) assigns it the
+    // text read from its form after calling GetInst, with no call of a member of this class (string::operator='s two
+    // __assign_no_alias, fns 196 and 205, behind the self-assignment test). The setter and its name are chosen; no
+    // reader of +84 is written.
+    void SetAnoNascimentoDigitado(const std::string& ano) { m_texto1 = ano; }
 
 protected:
     void Run() override;

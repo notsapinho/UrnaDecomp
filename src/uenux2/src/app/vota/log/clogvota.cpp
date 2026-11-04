@@ -666,4 +666,22 @@ void CLogVota::LogaDigitalCapturada(uebyte tentativa, uebyte total)
     loga(std::format("Capturada a digital. Tentativa [{}] de [{}]", tentativa, total));
 }
 
+void CLogVota::LogaAnoNascimentoInvalido()
+{
+    const std::string mensagem = "Ano de nascimento inválido";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaEleitorSemIdadeMinima()
+{
+    const std::string mensagem = "Eleitor não tem idade mínima";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaMesarioCancelouEntradaDados()
+{
+    const std::string mensagem = "Mesário cancelou entrada dos dados";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
 } // namespace vota

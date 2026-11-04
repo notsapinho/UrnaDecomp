@@ -1,6 +1,8 @@
 #include "app/vota/operador/justificativa/iiniciajustificativa.h"
 
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/justificativa/cjustificador.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/justificativa/cjustificativaefetuada.h"
@@ -8,7 +10,7 @@
 
 namespace vota {
 
-// (original lines 11-23: content not recovered)
+// (original lines 13-23: content not recovered)
 #line 24
 IIniciaJustificativa::IIniciaJustificativa(IConfirmaJustificativa* confirma) : m_confirma(confirma)
 {
@@ -35,6 +37,16 @@ void IIniciaJustificativa::StartState()
         CJustificativaEfetuada::GetInst().SetRecebida(false);
         m_pNextState = &CJustificativaEfetuada::GetInst();
     }
+}
+
+void JustificaEleitor(ueint16 ano)
+{
+    comum::CJustificador& justificador = comum::CJustificador::GetInst();
+    const std::string& titulo = GetIdentidadeEleitor().GetIdentificador();
+    justificador.Justifica(titulo, ano);
+    comum::CAppInfo::GetInst().GetVota().IncrementaQtdJustificativa();
+    CSincronizaVota::SincronizaJustificativa();
+    CJustificativaEfetuada::GetInst().SetRecebida(true);
 }
 
 } // namespace vota

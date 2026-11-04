@@ -116,12 +116,13 @@ public:
     const std::optional<api::CDateTime>& GetDhFimAquisicao() const { return m_dhFimAquisicao; }
     ueword GetComparecimento() const { return m_comparecimento; }
     ueword GetQtdJustificativa() const { return m_qtdJustificativa; }
+    // Adds one to the count at +54: fn 10590 does so on comum::CAppInfo::GetVota()'s result, with no call of a member
+    // of this class. The accessor and its name are chosen.
+    void IncrementaQtdJustificativa() { ++m_qtdJustificativa; }
     const std::optional<api::CDateTime>& GetDhUltimoVoto() const { return m_dhUltimoVoto; }
     const std::optional<api::CDateTime>& GetDhEmissao() const { return m_dhEmissao; }
     bool GetTecladoTestadoPosConversao() const { return m_tecladoTestadoPosConversao; }
 
-    // (original lines 123-125: content not recovered)
-#line 126
     bool IsFimAquisicaoMarcado() const { return m_dhFimAquisicao.has_value(); }
 
     const api::CDateTime& GetDtHrUltimoVoto() const

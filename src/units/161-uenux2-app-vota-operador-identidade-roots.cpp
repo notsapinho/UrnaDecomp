@@ -52,7 +52,7 @@ __attribute__((noinline)) int CancelaUm()
     return 71;
 }
 
-// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 10209 and 10590 (in the link: 10443,
+// Stands for CPedeIdentidade::GetInst's (fn 652) other target caller, 10209 (in the link: 10590, unit 283's; 10443,
 // unit 161's; 10689, unit 277's list's CEscolheOpcao::ProcessInput; 10447, unit 161's; 2295, the body binaryen merges from the five
 // states' slot 7, 10452 and 10626, units 161, 221, 278, 283 and 277; 10217, 10404, 10435, 10527, 10646 and 10762, units
 // 165, 152, 152, 281, 104 and 119; 10588 and 10624, units 174's and 161's; and 10718, 10721, 10731, 10734 and 10751,

@@ -15,6 +15,10 @@ public:
     explicit CJustificadorDetalhe(ueword ano) : m_ano(ano) {}
     CJustificadorDetalhe(const CJustificadorDetalhe& outro);
 
+    // The year, which CJustificador::SaveCurrentInternal reads from the cursor's record (fn 10590 holds it inlined:
+    // the node's 16-bit word at +40). The accessor and its name are chosen.
+    ueword GetAno() const { return m_ano; }
+
 private:
     ueword m_ano;
 };
