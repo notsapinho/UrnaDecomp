@@ -32,6 +32,19 @@ __attribute__((noinline)) int DadosDaTela(char* dados, const char* geral)
     return dados[16];
 }
 
+} // namespace
+
+// comum::md::estadoaplicacao::CEstadoGeral's constructor from its eight parts (target fn 5637) has one direct caller in
+// the target, fn 11398 (unit 124, in our link), and a table slot, 427, which fn 10205 (not written) alone passes to
+// invoke_iiiiiiiiii (docs/reference/facts/units.md U11's script): its address is the reference the target has. Declared
+// with the object's signature: a constructor returns this.
+extern "C" int w5637_geral(void*, int, unsigned, void*, void*, void*, const void*, void*, void*) __asm__(
+    "_ZN5comum2md15estadoaplicacao12CEstadoGeralC1ENS_11EEstadoUrnaEjNS1_10CDadoLocalENS1_10CDadoCargaE"
+    "NS1_15CAjusteDataHoraERKNS1_20CDadoCorrespondenciaENSt3__212basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEE"
+    "NSA_6vectorIhNSE_IhEEEE");
+
+namespace {
+
 const void* volatile leftovers_sink;
 
 struct SLeftoversRoots {
@@ -39,6 +52,7 @@ struct SLeftoversRoots {
     {
         leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
         leftovers_sink = reinterpret_cast<const void*>(&DadosDaTela);
+        leftovers_sink = reinterpret_cast<const void*>(&w5637_geral);
     }
 } leftovers_roots;
 

@@ -1,8 +1,8 @@
-// Reconstruction's note: of comum::md::estadoaplicacao::CEstadoGeral's members this file holds only GetDadosQRCode
-// (target fn 5636), SetAjusteDataHora (fn 3705) and GetResumoHashVersoesPacotes (fn 3703), chosen names: no record,
-// slot or RTTI names them. Line 147 is the record of RecuperarCertificado (fn 5635, not written) and holds its
-// generated stub's last line; GetDadosQRCode's lines before it and the two other members' after it are a choice
-// (src/units/215-uenux2-api-app-leftovers.mk says what orders them). The constructor (fn 5637) is not written either.
+// Reconstruction's note: of comum::md::estadoaplicacao::CEstadoGeral's members this file holds only the constructor
+// (target fn 5637), GetDadosQRCode (5636), SetAjusteDataHora (3705) and GetResumoHashVersoesPacotes (3703), the last
+// three chosen names: no record, slot or RTTI names them. Line 147 is the record of RecuperarCertificado (fn 5635, not
+// written) and holds its generated stub's last line; the lines of the members before it and after it are a choice
+// (src/units/215-uenux2-api-app-leftovers.mk says what orders them).
 #include "app/comum/dados/md/estadoaplicacao/cestadogeral.h"
 
 #include <cctype>
@@ -12,7 +12,21 @@
 
 namespace comum::md::estadoaplicacao {
 
-// (original lines 15-110: content not recovered)
+CEstadoGeral::CEstadoGeral(EEstadoUrna estadoUrna, uedword idPE, CDadoLocal dadoLocal, CDadoCarga dadoCarga,
+                           CAjusteDataHora ajusteDataHora, const CDadoCorrespondencia& correspondencia,
+                           std::string versao, std::vector<uebyte> hashVersoesPacotes)
+    : m_estadoUrna(estadoUrna),
+      m_idPE(idPE),
+      m_dadoLocal(std::move(dadoLocal)),
+      m_dadoCarga(dadoCarga),
+      m_ajusteDataHora(ajusteDataHora),
+      m_correspondencia(correspondencia),
+      m_versao(std::move(versao)),
+      m_hashVersoesPacotes(std::move(hashVersoesPacotes))
+{
+}
+
+// (original lines 29-110: content not recovered)
 #line 111
 std::vector<std::pair<std::string, std::string>> CEstadoGeral::GetDadosQRCode() const
 {

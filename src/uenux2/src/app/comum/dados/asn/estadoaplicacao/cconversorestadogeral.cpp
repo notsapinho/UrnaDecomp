@@ -1,6 +1,6 @@
-// comum::asn::CConversorEstadoGeral (the reconstruction's note, not TSE's text). ConverteEstadoUrna's throws sit on their
-// records' lines (106 and 110); DesconverteEstadoUrna's records (87 and 91) and DoDesconverte are not written, so their
-// lines stay blank. Where DoConverte starts is a choice. 124-uenux2-app-comum-dados-asn.mk lists what the bytes decide.
+// comum::asn::CConversorEstadoGeral (the reconstruction's note, not TSE's text). DesconverteEstadoUrna's and
+// ConverteEstadoUrna's throws sit on their records' lines (87, 91, 106 and 110); where DoDesconverte and DoConverte
+// start is a choice. 124-uenux2-app-comum-dados-asn.mk lists what the bytes decide and the layout of these lines.
 #include "app/comum/dados/asn/estadoaplicacao/cconversorestadogeral.h"
 
 #include <format>
@@ -9,12 +9,31 @@
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadocarga.h"
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.h"
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadolocal.h"
+#include "app/comum/dados/asn/estadoaplicacao/enumeradoasn.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum::asn {
 
-// (original lines 16-59: content not recovered)
-#line 60
+CConversorEstadoGeral::TDado CConversorEstadoGeral::DoDesconverte(const TEntidade& entidade) const
+{
+    const uedword idPE = entidade.get_idPE().getValue();
+    const EEstadoUrna estadoUrna = DesconverteEstadoUrna(entidade.get_estadoUrna());
+    CConversorAjusteDataHora conversorAjusteDataHora;
+    const md::estadoaplicacao::CAjusteDataHora ajusteDataHora =
+        conversorAjusteDataHora.Desconverte(entidade.get_ajusteDataHora());
+    CConversorDadoLocal conversorDadoLocal;
+    const md::estadoaplicacao::CDadoLocal dadoLocal = conversorDadoLocal.Desconverte(entidade.get_dadoLocal());
+    CConversorDadoCarga conversorDadoCarga;
+    const md::estadoaplicacao::CDadoCarga dadoCarga = conversorDadoCarga.Desconverte(entidade.get_dadoCarga());
+    CConversorDadoCorrespondencia conversorCorrespondencia;
+    const md::estadoaplicacao::CDadoCorrespondencia correspondencia =
+        conversorCorrespondencia.Desconverte(entidade.get_correspondencia());
+    const std::vector<uebyte> hashVersoesPacotes(entidade.get_hashVersoesPacotes().begin(),
+                                                 entidade.get_hashVersoesPacotes().end());
+    const std::string versao = entidade.get_versao();
+    return TDado(estadoUrna, idPE, dadoLocal, dadoCarga, ajusteDataHora, correspondencia, versao, hashVersoesPacotes);
+}
+
 CConversorEstadoGeral::TEntidade CConversorEstadoGeral::DoConverte(const TDado& dado) const
 {
     TEntidade entidade;
@@ -34,7 +53,26 @@ CConversorEstadoGeral::TEntidade CConversorEstadoGeral::DoConverte(const TDado& 
     return entidade;
 }
 
-// (original lines 79-95: content not recovered)
+// (original lines 56-76: content not recovered)
+#line 77
+EEstadoUrna CConversorEstadoGeral::DesconverteEstadoUrna(const ModuloEstadoGeralUrna::EstadoUrna& estado) const
+{
+    switch (estado) {
+        case ModuloEstadoGeralUrna::EstadoUrna::carregada:
+            return eEstadoUrnaCarregada;
+        case ModuloEstadoGeralUrna::EstadoUrna::carregando:
+            return eEstadoUrnaCarregando;
+        case ModuloEstadoGeralUrna::EstadoUrna::testada:
+            return eEstadoUrnaTestada;
+        case ModuloEstadoGeralUrna::EstadoUrna::unknownEnumeration_:
+            throw CUeComumDadosError(EUE_COMUM_DADOS_7917,
+                                     std::format("Valor inválido para estado da urna: {}", estado));
+    }
+
+    throw CUeComumDadosError(EUE_COMUM_DADOS_7918, std::format("Valor inválido para estado da urna: {}", estado));
+}
+
+// (original lines 94-95: content not recovered)
 #line 96
 ModuloEstadoGeralUrna::EstadoUrna CConversorEstadoGeral::ConverteEstadoUrna(const EEstadoUrna estado) const
 {

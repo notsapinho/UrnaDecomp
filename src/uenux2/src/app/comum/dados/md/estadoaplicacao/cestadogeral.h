@@ -16,12 +16,22 @@ namespace comum::md::estadoaplicacao {
 // The urna's state: the fields of ModuloEstadoGeralUrna::EstadoGeralUrna. The offsets come from the constructor (target
 // fn 5637) and comum::asn::CConversorEstadoGeral::DoConverte (fn 11397), which reads the state from +0 (an EEstadoUrna,
 // ConverteEstadoUrna's parameter in its record), idPE from +4, the locality from +8, the load from +32, the clock
-// adjustment from +52, the correspondence from +60, the version from +156 and the packages' hash from +168. Only the
-// layout is recovered, with the getters the bodies read. The member and getter names follow the ASN.1 fields; idPE is
-// unsigned, the std::to_string(unsigned int) GetDadosQRCode (fn 5636) formats it with, and its width the bodies'. The
-// locality's class is cdadolocal.h's, which has this layout.
+// adjustment from +52, the correspondence from +60, the version from +156 and the packages' hash from +168. The layout
+// is recovered, with the constructor and the getters the bodies read. The member and getter names follow the ASN.1
+// fields; idPE is unsigned, the std::to_string(unsigned int) GetDadosQRCode (fn 5636) formats it with, and its width
+// the bodies'. The locality's class is cdadolocal.h's, which has this layout.
 class CEstadoGeral {
 public:
+    // Target fn 5637, out of line in cestadogeral.cpp: the state from its parts, each stored at its member's offset in
+    // the parameters' order. Its one direct caller, comum::asn::CConversorEstadoGeral::DoDesconverte (fn 11398), passes
+    // a copy of each part taken by value and its correspondence's local with no copy; the constructor moves the two
+    // strings (the locality's and the version) and the hash, and copies the correspondence with CDadoCorrespondencia's
+    // copy constructor (fn 1249). The by-value and reference forms are read from those copies and moves; `&&`
+    // parameters with the copies spelled at the call were not measured. The parameter names are chosen.
+    CEstadoGeral(EEstadoUrna estadoUrna, uedword idPE, CDadoLocal dadoLocal, CDadoCarga dadoCarga,
+                 CAjusteDataHora ajusteDataHora, const CDadoCorrespondencia& correspondencia, std::string versao,
+                 std::vector<uebyte> hashVersoesPacotes);
+
     EEstadoUrna GetEstadoUrna() const { return m_estadoUrna; }
     uedword GetIdPE() const { return m_idPE; }
     const CDadoLocal& GetDadoLocal() const { return m_dadoLocal; }

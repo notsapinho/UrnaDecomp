@@ -230,11 +230,6 @@
 // f5610 · 5599 B · unmatched · placement: link order · name unknown
 // void f5610(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 805 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f5637 · 222 B · unmatched · placement: link order · name unknown
-// ? f5637(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 808 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp
 
 // f5649 · 257 B · unmatched · placement: link order · name unknown

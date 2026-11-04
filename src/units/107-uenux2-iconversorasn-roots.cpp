@@ -13,8 +13,8 @@
 //   3737 and 3738 need none: their callers 11381, 11423 and 11452, and 11411, 10270 and 11457, are written. 3799 needs
 //   none: its callers 10271, 10273 and 11587 are written.
 //   2275: 10266 (10271, 10273, 11458, 11587). 5688 needs none: its callers 11359 and 11375 are written.
-//   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
-//   11400 and 11404, are written.
+//   5692, 5691, 5696 and 5697 need none: their callers 11395 and 11398, 11394 and 11397, 11399 and 11403, and 11400 and
+//   11404, are written.
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
 //   5715 and 5716 need none: their callers 11423 and 11452 are written.
 //   5828: 11445 (11373 is written).
@@ -25,13 +25,13 @@
 //
 // The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is
 // reached that way, so the sink is the reference the target has. CConversorSeguranca's went: the three target functions
-// that store its vptr, 10270, 10271 and 11411, are written.
+// that store its vptr, 10270, 10271 and 11411, are written. CConversorDadoLocal's and CConversorDadoCarga's went too:
+// the two target functions that store their vptrs, 11397 and 11398, are written.
 #include <new>
 
 #include "app/comum/asn/iconversorasn.h"
 #include "app/comum/dados/md/candidatura/cdadoscandidato.h"
 #include "app/comum/dados/md/csecaoeleitoral.h"
-#include "app/comum/dados/md/estadoaplicacao/cdadocorrespondencia.h"
 #include "app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.h"
 #include "app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.h"
 #include "app/comum/dados/md/municipiozona/ccomplementomunicipio.h"
@@ -43,7 +43,6 @@
 #include "asn1/modules/ModuloComplementosMunicipios.h"
 #include "asn1/modules/ModuloEleicao.h"
 #include "asn1/modules/ModuloEstadoGeralDefs.h"
-#include "asn1/modules/ModuloEstadoGeralUrna.h"
 #include "asn1/modules/ModuloLocal.h"
 #include "asn1/modules/ModuloProcessoEleitoral.h"
 #include "asn1/modules/ModuloTiposCadastro.h"
@@ -57,8 +56,6 @@ extern const char w107_municipio_vt[] __asm__("_ZTVN5comum3asn19CConversorMunici
 extern const char w107_agregada_vt[] __asm__("_ZTVN5comum3asn31CConversorIdentificacaoAgregadaE");
 extern const char w107_complemento_vt[] __asm__("_ZTVN5comum3asn30CConversorComplementoMunicipioE");
 extern const char w107_abrangencia_vt[] __asm__("_ZTVN5comum3asn21CConversorAbrangenciaE");
-extern const char w107_dadolocal_vt[] __asm__("_ZTVN5comum3asn19CConversorDadoLocalE");
-extern const char w107_dadocarga_vt[] __asm__("_ZTVN5comum3asn19CConversorDadoCargaE");
 }
 
 namespace {
@@ -87,7 +84,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
 {
     using namespace comum::md;
     using namespace comum::md::estadoaplicacao;
-    d = w107_desconverte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
     d = w107_desconverte<ModuloCandidatos::DadosCandidato, CDadosCandidato>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
@@ -113,8 +109,6 @@ struct SIConversorRoots {
         w107_sink_vt = w107_agregada_vt;
         w107_sink_vt = w107_complemento_vt;
         w107_sink_vt = w107_abrangencia_vt;
-        w107_sink_vt = w107_dadolocal_vt;
-        w107_sink_vt = w107_dadocarga_vt;
     }
 } w107_roots;
 

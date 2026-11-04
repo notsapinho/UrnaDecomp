@@ -54,14 +54,30 @@
 # push_back(std::make_pair(tag, value)): a value that is a string member is copied into the make_pair temporary, whose
 # tag the target then reloads after the copy's out-of-line call and measures with strlen, while a computed value's tag
 # is folded (cestadogeral.h lists the tags and their conditions). Evidence for the place: in use band 2 it links between
-# 5637 (the constructor, not written) and 5635 (RecuperarCertificado, record line 147, not written), stretch 804 of
+# 5637 (the constructor, below) and 5635 (RecuperarCertificado, record line 147, not written), stretch 804 of
 # ledger/tu-clusters.tsv (label cestadogeral.cpp), so it is defined before line 147; its lines there are a choice. idPE
 # is formatted with std::to_string(unsigned int) (fn 327), so cestadogeral.h's idPE is uedword now; every other object
 # compiles to the same bytes with the header edits (cmp of each object before and after). Whole link, before steps 7
 # to 9: 104 over 1771 rows, all operand-only. Chosen: the name, its being a member (it reads the members), the locals.
 #
+# comum::md::estadoaplicacao::CEstadoGeral's constructor from its eight parts (target fn 5637, 222 B), matched, in
+# cestadogeral.cpp before GetDadosQRCode, declared in cestadogeral.h: it stores the state and idPE, moves the locality
+# (its string zeroed in the argument), copies the load and the adjustment, copies the correspondence through fn 1249,
+# and moves the version and the hash, at the offsets cestadogeral.h gives, in the parameters' order. Its one direct
+# caller is 11398 (unit 124's CConversorEstadoGeral::DoDesconverte), which copies each part it passes by value and
+# passes its correspondence's local with no copy (cestadogeral.h has the forms). Its table slot 427 is passed to
+# invoke_iiiiiiiiii by fn 10205 alone (not written; docs/reference/facts/units.md U11's script), and a function the
+# table holds keeps its body under one direct call (src/units/README.md "Companion files"): the roots take its address
+# for 10205. The place is a reading: in use band 2 it links between md/rdv/cvotoseleicoesvota.cpp's 5638 and
+# GetDadosQRCode (5636), as cestadogeral.cpp's first function would; a definition in the class was not measured. Its
+# object code as written equals the target's 5637 but the call (wasm-objdump of the object beside pnpm wasm fn's
+# disassembly); whole link before step 8: `score 1 over 91 rows (same 90, replaced 1 [1 operand-only], inserted 0,
+# deleted 0)`, the call of 1249. Step 8 names it by 11398's call vote (`evidence:call by:11398`). Chosen: the parameter
+# names and its lines.
+#
 # 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 5480 (twice) for 5484, 3059 for 5636 (11200, unit
-# 123's, is in the link); 3705's stand-in went, its callers 7160, 7306 and 10710 (units 329, 104, 277) in the link.
+# 123's, is in the link) and 10205 for 5637 (its address); 3705's stand-in went, its callers 7160, 7306 and 10710
+# (units 329, 104, 277) in the link.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
 UENUX2_SRCS += $(LEFTOVERS_UENUX2_SRCS)

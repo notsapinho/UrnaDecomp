@@ -1,11 +1,13 @@
 // Roots: keep the comum::md::estadoaplicacao classes and their converters in the skeleton link the way the target keeps
 // them. Their users are not reconstructed yet.
-// - Three converters are complete, and the target reaches them only through their vtables (fns 11388, 11389, 11392,
-//   11393, 11405, 11406 fill slots 2 and 3), so rooting the vtables keeps the same set. CConversorEstadoGeralGap's
-//   vtable too: its slots 2 and 3 (fns 11394, 11395) are written, and the target reaches them only through that vtable
-//   (table slots 2680 and 2681, no direct caller). CConversorEstadoGeralSA's sink (slots 11392, 11393) went: fn 10089,
-//   the one target function that stores its vptr, is in the link (unit 206's save). Of the Gap's storers, 10112 is in
-//   the link and 7787 is not, so its sink stays.
+// - The target reaches the converters only through their vtables, so rooting a vtable keeps the same set until the
+//   functions that store its vptr are in the link. CConversorEstadoGeralGap's vtable is rooted: its slots 2 and 3 (fns
+//   11394, 11395) are written, and the target reaches them only through that vtable (table slots 2680 and 2681, no
+//   direct caller). Of the Gap's storers, 10112 is in the link and 7787 is not, so its sink stays. The sinks of the
+//   other three went, each once the target functions that store its vptr were in the link: CConversorEstadoGeralSA's
+//   (slots 11392, 11393), whose one storer is fn 10089 (unit 206's save); CConversorLocalidadeEleitoral's (11388,
+//   11389), stored by fns 11399, 11400, 11403 and 11404 (fragment 172); CConversorAjusteDataHora's (11405, 11406),
+//   stored by fns 11397 and 11398 (unit 124).
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
 //   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota stands
@@ -32,8 +34,6 @@
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2 or
 // ASN.1 header. The stand-ins are only address-taken, so binaryen can fold no argument of theirs.
 extern "C" {
-extern const char estadoaplicacao_localidade_vt[] __asm__("_ZTVN5comum3asn29CConversorLocalidadeEleitoralE");
-extern const char estadoaplicacao_ajuste_vt[] __asm__("_ZTVN5comum3asn24CConversorAjusteDataHoraE");
 extern const char estadoaplicacao_gap_vt[] __asm__("_ZTVN5comum3asn24CConversorEstadoGeralGapE");
 void* estadoaplicacao_localidade(void*, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao20CLocalidadeEleitoralC1Ejtt");
 void* estadoaplicacao_sa(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao14CEstadoGeralSAC1ENS_9EEstadoSAEbjtt");
@@ -120,8 +120,6 @@ __attribute__((noinline)) void estadoaplicacao_build_vota(void** dado, void** ar
 struct SEstadoAplicacaoRoots {
     SEstadoAplicacaoRoots()
     {
-        estadoaplicacao_sink = estadoaplicacao_localidade_vt;
-        estadoaplicacao_sink = estadoaplicacao_ajuste_vt;
         estadoaplicacao_sink = estadoaplicacao_gap_vt;
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_localidade);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_sa);
