@@ -92,9 +92,9 @@
 #   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,
 #   CMostraQRCodeCertificado's and this one's here), and 1564,
 #   2888 (unit 37's), 12057, 12059 and 12060 match with 3877. The constructor copies CTelasVota's +36 through
-#   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. The roots stand in for its
-#   target caller 12055 (12034 and 12051 are in the link since, units 156 and 37), and its vtable has no sink:
-#   GetInst stores it.
+#   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. Its three target callers,
+#   12034, 12051 and 12055, are in the link (units 156 and 37), so the roots hold no stand-in for it, and its vtable
+#   has no sink: GetInst stores it.
 # - CReinicioVotacao::ProcessInput (fn 11834): Read(), then CONFIRMA logs and goes to CDefineRotaPosReinicio, BRANCO
 #   logs and goes to CMaisInformacoes with this state; each log a vota::CLogVota member binaryen inlines (GetInst, fn 184,
 #   is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:

@@ -11,6 +11,11 @@
 // GetData is out of line: the vtable lies in the data just before cqrcodeimage.cpp's record @1582044, which is where
 // a key function puts it. So the file emits the vtable, and with it the implicit destructors (fns 10966 and 10964, thunks
 // of the bodies binaryen merges with api::CDataText<std::function<std::string()>>'s, 6060 and 6059).
+//
+// The constructor takes the std::function by value: fns 12040 and 12055 build the object with std::make_shared from a
+// std::function lvalue and copy it (its __clone) after the control block's allocation and before calling fn 3662, then
+// destroy the copy, which a by-value parameter gives inside make_shared and a const reference does not (no copy at
+// all). 3662's own body, a copy of the parameter into +8, is the same either way.
 
 #include <cstdint>
 #include <functional>
@@ -24,7 +29,7 @@ namespace api {
 
 class CQRCodeImage : public IImage {
 public:
-    CQRCodeImage(const TPosition tamanho, const std::function<std::string()>& fonte);
+    CQRCodeImage(const TPosition tamanho, std::function<std::string()> fonte);
 
     std::vector<uint8_t> GetData() const override;
 

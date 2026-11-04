@@ -1,8 +1,8 @@
 // vota::CMostraQRCodeBU and vota::IQRCodeBUDS. Reconstruction notes, not TSE's text: GetQRDSInst (fn 1956, record 31),
-// IQRCodeBUDS's constructor (record 38; inlined into 1956), GeraPartes and CreateInst (inlined into 1956), ProcessInput
-// (fn 12051, record 85), AjustaTela (fn 5982, record 195) and CMostraQRCodeBU's GetInst, constructor and destructor.
-// StartState's record (line 70) keeps its line blank: the member traps in src/units/37-uenux2-iqrcodebuds-pending.cpp.
-// The lines of the functions with no record, and every name the records do not give, are chosen (unit 37's fragment).
+// IQRCodeBUDS's constructor (record 38; inlined into 1956), GeraPartes and CreateInst (inlined into 1956), StartState
+// (fn 12055, record 70) with its three texts (fns 12054, 12053, 12052), ProcessInput (fn 12051, record 85), AjustaTela
+// (fn 5982, record 195) and CMostraQRCodeBU's GetInst, constructor and destructor. The lines of the functions with no
+// record, and every name the records do not give, are chosen (unit 37's fragment).
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 
 #include "api/gui/cinteractiveform.h"
@@ -10,7 +10,9 @@
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/crdvvota.h"
+#include "app/comum/iinterfaceinit.h"
 #include "app/comum/relatorios/cgeradorbuqrcodevota.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/cvotacaostateaudio.h"
 #include "app/vota/eleitor/fimvotacao/caplicacaoencerrada.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodecertificado.h"
@@ -20,8 +22,7 @@ namespace vota {
 
 namespace {
 
-// (original lines 23-25: content not recovered)
-#line 26
+
 IQRCodeBUDS& GetQRDSInst()
 {
     if (!api::CPolySingletonList::has<IQRCodeBUDS>()) {
@@ -57,8 +58,26 @@ CMostraQRCodeBU& CMostraQRCodeBU::GetInst()
 std::unique_ptr<CMostraQRCodeBU> CMostraQRCodeBU::s_inst;
 std::mutex CMostraQRCodeBU::s_mutex;
 
-// (original lines 61-80: content not recovered)
-#line 81
+namespace {
+
+std::string TextoAjuda();
+std::string ConteudoQRCode();
+std::string TextoPagina();
+
+} // namespace
+void CMostraQRCodeBU::StartState()
+{
+    bool ehDemo = api::CPolySingleton<comum::IInterfaceInit>::instance().GetDemoMode();
+    if (ehDemo) {
+        m_pNextState = &CAplicacaoEncerrada::GetInst();
+        return;
+    }
+    GetQRDSInst().Reinicia();
+    m_form = CTelasVota::GetInst().CriaTelaQRCodeBU(TextoAjuda, ConteudoQRCode, TextoPagina);
+    AjustaTela(m_form);
+    m_pNextState = this;
+}
+
 void CMostraQRCodeBU::ProcessInput()
 {
     IQRCodeBUDS& ds = GetQRDSInst();
@@ -96,7 +115,32 @@ void CMostraQRCodeBU::ProcessInput()
     }
 }
 
-// (original lines 118-180: content not recovered)
+namespace {
+
+std::string TextoAjuda()
+{
+    if (GetQRDSInst().GetPartes().size() == 1) {
+        return "O QR code ao lado contém o resultado da votação para esta urna.";
+    }
+    return "O QR code ao lado contém o resultado da votação para esta urna. Use as teclas 3 e 9 para navegar pelas "
+           "partes do BU.";
+}
+
+std::string ConteudoQRCode()
+{
+    const IQRCodeBUDS& ds = GetQRDSInst();
+    return ds.GetPartes().at(ds.GetAtual());
+}
+
+std::string TextoPagina()
+{
+    const IQRCodeBUDS& ds = GetQRDSInst();
+    return std::to_string(ds.GetAtual() + 1) + "/" + std::to_string(ds.GetPartes().size());
+}
+
+} // namespace
+
+// (original lines 143-180: content not recovered)
 #line 181
 void CMostraQRCodeBU::AjustaTela(CFormInterativoTelaVota& tela)
 {

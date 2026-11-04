@@ -66,7 +66,7 @@ std::vector<uint8_t> CQRCodeImage::GetData() const
     return bitmap;
 }
 
-CQRCodeImage::CQRCodeImage(const TPosition tamanho, const std::function<std::string()>& fonte)
+CQRCodeImage::CQRCodeImage(const TPosition tamanho, std::function<std::string()> fonte)
     : m_tamanho(tamanho)
     , m_fonte(fonte)
 {

@@ -9,9 +9,8 @@
 // here; CEsperaRetestar's GetInst (fn 5936), written in cesperaretestar.cpp (138-uenux2-testeteclado.mk has its note).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
-// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots; 12034 and 12051 are in the link, units 156 and 37, and
-// 12055 is pending in unit 37). The noinline stand-in calls it twice for 12055 and adds the results, so its body is no
-// target function's. It goes when 12055 is in the link.
+// (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots, units 156 and 37), all in the link (12055 written, not
+// matching), so it has no stand-in here.
 //
 // vota::testeteclado::CBase's constructor (fn 5948) has two direct callers in the target, 11914 and 7160, which hold
 // CPreZeresima's and CRetomada's constructors inlined (each stores its class's vptr after the call). 11914 is in the
@@ -27,7 +26,6 @@
 extern "C" {
 extern const char cretomada_vt[] __asm__("_ZTVN4vota12testeteclado9CRetomadaE");
 int w5948_cbase(void* objeto) __asm__("_ZN4vota12testeteclado5CBaseC2Ev");
-int w3877_getinst(void) __asm__("_ZN4vota19CAplicacaoEncerrada7GetInstEv");
 int w5947_getinst(void) __asm__("_ZN4vota24CVerificaHorarioZeresima7GetInstEv");
 }
 
@@ -36,11 +34,6 @@ namespace {
 __attribute__((noinline)) int ChamaCBase(void* retomada)
 {
     return w5948_cbase(retomada) + 13;
-}
-
-__attribute__((noinline)) int ChamaAplicacaoEncerrada()
-{
-    return w3877_getinst() + w3877_getinst();
 }
 
 __attribute__((noinline)) int ChamaVerificaHorarioZeresima(int n)
@@ -55,7 +48,6 @@ struct STesteTecladoRoots {
     {
         testeteclado_sink = cretomada_vt;
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaCBase);
-        testeteclado_sink = reinterpret_cast<const void*>(&ChamaAplicacaoEncerrada);
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaVerificaHorarioZeresima);
     }
 } testeteclado_roots;

@@ -60,6 +60,37 @@ public:
 
     CFormInterativoTelaVota GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const;
 
+    // The QR-code BU's screen ("telaQRCodeBU"), which vota::CMostraQRCodeBU::StartState (fn 12055) holds behind a
+    // second stack-pointer prologue (a 208-byte frame), built on each call over three std::functions StartState
+    // passes by value: the help text, the QR code's content and the page "i/n" (table slots 1505, 1506 and 1507, fns
+    // 12054, 12053 and 12052, in the order of its frame's three temporaries). Evidence: the fields, their texts,
+    // names, fonts, colours, positions and order are 12055's code. Readings: that it is CTelasVota's (12055 calls
+    // CTelasVota::GetInst(), fn 407, right before it and drops the result, which the object expression of a member
+    // call whose body reads no state gives), and that it is defined in ctelasvota.cpp (the vtables of what it builds
+    // with std::make_shared, CQRCodeImage's control block @1539236, CDataText<std::function<std::string()>> @1539316
+    // and its block @1539276, CTextFieldMultiLine's block @1539352, lie in the target's data in the run of this
+    // file's, between CTextFieldUpdate's block @1539196 and CriaTelaVisualizacaoCandidato's lambda @1539548, as
+    // cformbuilder.h reads 3058's; and it passes the fonts @474888 and @474896, which FONTE_TITULO and
+    // FONTE_INSTRUCAO_TESTE_TECLADO stand for). In ctelasvota.cpp it calls two external free functions, each held by
+    // 12055 behind a 48-byte frame of its own (so out of line in the object, inlined by binaryen):
+    // AdicionaTextoMultiLinha, a CTextFieldMultiLine over a CDataText of the std::function (alignment 0, colours 2 over
+    // 1), and AdicionaTexto, a CTextField over one (alignment 1); the target's bodies hold the font and the alignment
+    // as constants, which binaryen's dead-argument elimination of the one caller's arguments gives (a reading). It
+    // reads the screen's area through the file-local AreaTela,
+    // which returns CApplication::s_areaTela by value: 12055 copies the area's 8 bytes with one i64.load, which
+    // that by-value copy gives (and so does a default-constructed SRect assigned from it), where a copy-initialized
+    // local, an explicitly copied temporary and a structured binding give three i16 loads (each compiled on a scratch
+    // TU at this file's flags). Its layout values are locals declared after the status header: the target computes them ahead of
+    // their statements (before std::function copies and releases), which those locals give and expressions at the
+    // call do not (measured in the whole link: 756 over 2418 rows with the expressions, 281 over 2368 with the
+    // locals). The fonts {15, 0} and {20, 1} (@475008, @475032) are file constants beside them, as the others are.
+    // Chosen: every name here and in ctelasvota.cpp (after the class's CriaTela* records), the member's being
+    // non-static and const (a static one called through GetInst() is the same reading), the helpers' being free
+    // functions of vota and their parameters, AreaTela, the locals, their types and their lines.
+    // src/units/37-uenux2-iqrcodebuds.mk has what 12055 still differs in.
+    CFormInterativoTelaVota CriaTelaQRCodeBU(std::function<std::string()> ajuda, std::function<std::string()> qrcode,
+                                             std::function<std::string()> pagina) const;
+
     const CFormInterativoTelaVota& GetTelaAplicacaoEncerrada() const { return m_tela4; }
     const CFormInterativoTelaVota& GetTelaAlertaDesligamento() const { return m_tela5; }
     const CFormInterativoTelaVota& GetTelaConfirmaImpressaoZeresima() const { return m_tela6; }

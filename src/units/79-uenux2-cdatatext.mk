@@ -19,7 +19,9 @@
 #                                                (linked from unit 102's roots object)
 #   CDataText<comum::CCandidaturasDSNome>        GetText 12649 (the same), a call of the source's operator, fn 5807 (unit 89),
 #                                                linked from unit 102's roots object
-#   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301
+#   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301, from unit 110's ctelasvota.cpp.o
+#                                                since its builder (CTelasVota::CriaTelaQRCodeBU's adders, for 12055) is
+#                                                written; the roots' stand-in for 12055 went
 #   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
 #   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404
 #   CDataImage<vector<unsigned char> (*)()>      GetData 6330 (a twin of __func<string (*)(), string()>'s slot 6)
@@ -28,7 +30,10 @@
 #                                                the other thunks above join 1566 and 1565
 #   __shared_ptr_emplace<X> D2, D0               12796 12788, 12586 12581, 12309 12306, 12335 12328, 12575 12570, 12294 12292
 #                                                (CDataTextFmt<function<...>>'s, from ctelasvota.cpp.o since its builder is written),
-#                                                12518 12517, 12313 12311; slot 2 of two with std::function, 2967
+#                                                12518 12517, 12313 12311; slot 2 of two with std::function, 2967;
+#                                                12309 12306 and 12313 12311 (CDataText<function<string()>>'s and
+#                                                CQRCodeImage's) link from ctelasvota.cpp.o since 12055's builder is
+#                                                written, the same bytes (they still match)
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times
 # 3661 reads as libc++'s fill insert of a std::vector<unsigned char> (it grows the buffer, fills with the byte the last
@@ -70,11 +75,11 @@
 #   std::snprintf, or 512 for sizeof; `return std::string(texto);`; the destructors declared `= default` in the class;
 #   GetText declared `inline`; CDataText's T as `const T&`; CDataTextFmt's string by value, copied into the member, and
 #   CQRCodeImage's std::function the same way (these three change only the stand-ins' own helpers, allocate_shared and
-#   construct_at); CQRCodeImage's first parameter without `const`; the roots compiled with -fno-strict-aliasing, which was
+#   construct_at; CQRCodeImage's is by value since, for its callers' copies: cqrcodeimage.h); CQRCodeImage's first parameter without `const`; the roots compiled with -fno-strict-aliasing, which was
 #   UENUX2_CXXFLAGS's difference from APP_CXXFLAGS while the tree built at -O2.
 # The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing -std=c++23) and with APP_CXXFLAGS: 131 of the 132
-# functions the two objects share compare equal (133 at APP_CXXFLAGS); what differs is the stand-in TextoFuncao and the
-# allocate_shared it inlines at -O3, so every instance the object emits is the same at the tree's flags (measured while
+# functions the two objects share compare equal (133 at APP_CXXFLAGS); what differed was the stand-in TextoFuncao (gone
+# since, with 12055's builder written) and the allocate_shared it inlined at -O3, so every instance the object emits is the same at the tree's flags (measured while
 # the object also emitted 3661, which GetData's object emits now); 12632's and 12649's GetText, which link from unit
 # 102's roots object, are the same code in both.
 # Forms measured not to:
