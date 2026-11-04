@@ -20,7 +20,7 @@
 //   Add over this key, 5725 (6734, 10590), and the copy of the pair's second member, 3743 (5725, 6734, 10590): 10590
 //   (unit 283, through comum::CJustificador::Justifica) and 5725 are in the link, and a stand-in each stands for 6734.
 //   cjustificador.cpp's object is ahead of this one on the link line, so 5725 is its copy, as in the target (its
-//   record lies in that object's data); fragment 113 says why it does not match.
+//   record lies in that object's data); fragment 113 says why it matches only with strict aliasing there.
 // - CRegistradorMesario::Registra, 5378, has its two call sites in 10337 (unit 135, in the link). Add(KeyType,
 //   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): cregistradormesario.cpp's
 //   object is ahead of this one on the link line, so its copies are the link's; a stand-in here only adds their second

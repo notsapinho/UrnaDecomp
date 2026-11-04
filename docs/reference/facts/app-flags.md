@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` and `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` and `src/app/comum/justificativa/cjustificador.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -424,8 +424,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, written), which holds
   `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
   row of it is an operand row, and with `md/rdv/` or `cvotoscargos.cpp` alone built with `-fno-strict-aliasing` it
-  scores worse, the reloads inserted (unit 197's fragment). Still open: 5725 and
-  5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
+  scores worse, the reloads inserted (unit 197's fragment). 5725 and 5377,
+  one template at one record line, split: 5377 matches from `comparecimentomesario/`, without TBAA, and 5725 from
+  `justificativa/cjustificador.cpp`, with it (below). The sites with no call to
   explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
   (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.
 
@@ -602,6 +603,22 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   The directory's other file, `cvalidamidia.cpp`, was not measured with the flag, so whether TSE's build gave it to
   the file or to `validamidia/` no row says: listing the file is a choice, and its flag a reading of the original
   build's settings like the rest of the split.
+
+  One file of `justificativa/` has it: `cjustificador.cpp`, whose object holds the target's copy of
+  `api::CDataMap<CNumeroInscricaoEleitoral, CJustificadorDetalhe>::Add` (5725, unit 113: its record 1560744 lies among
+  the file's records), instantiated by `comum::CJustificador::Justifica`. Without TBAA the instance reloads `*__child`
+  after `__insert_node_at`'s begin-node store where the target keeps it in a local, the sign above, and 5725 differs
+  (110 over 513 rows, 12 inserted, 8 deleted); with it every row left is an operand row (19 over 501) and 5725 matches
+  (unit 113's fragment). Measured in place on the merged tree at a98e8aac (12578 matches): the compile lines `make -n
+  -C src link APP=<a new directory>` prints (914) differ in that object's alone, by `-fno-strict-aliasing`; the edit
+  recompiles the 866 objects that depend on `src/Makefile`, and of the 1143 link objects 1142 are `cmp`-equal to
+  a98e8aac's, the other the file's; steps 7 to 9 turn 5725 `match`, move no other row and lose none, 12578 to 12579
+  (the census moves no tier; step 8 names 5725 by its record, `srcloc-anchor`, where 10590's `call` named it
+  before), and `make -C src splat` gives the target's sha256. The `callers+content` hand line that named 5725 while
+  it differed went in the same commit: without it the scan, twice, and the splat build are those with it. The
+  directory's other files were not measured with the flag, so whether TSE's build gave it to the file or to
+  `justificativa/` no row says: listing the file is a choice, and its flag a reading of the original build's
+  settings like the rest of the split.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

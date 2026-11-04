@@ -63,18 +63,18 @@
 #     (ld_index 2023 and 2024); the other order is not tried. In the object the mutex has the first .bss segment
 #     (wasm-objdump -x), as 1909908 comes before 1909932 in the target.
 #
-# Not matched: Add(const value_type &) (line 143) for <CNumeroInscricaoEleitoral, CJustificadorDetalhe>, 5725. Its first
-# user on the link line is comum::CJustificador::Justifica in cjustificador.cpp (held by 10590, unit 283), whose
-# object holds the instance, as the target's does: the target's record of it (1560744) lies among cjustificador.cpp's
-# records. At the tree's flags, which keep -fno-strict-aliasing in app/comum/justificativa/, it scores 110 over 513
-# rows (same 403, replaced 90 [89 operand-only], inserted 12, deleted 8), the reload of "Aliasing" below. With that
-# object alone compiled without -fno-strict-aliasing (its compile line from make -n, swapped into a copy of the plain
-# link's command), 5725 scores 19 over 501, every row an operand (two std::format constants and two table slots), and
-# 10590 the same 199 over 1839 as in the plain link. The remainder is that flag, a per-file decision that is the
-# user's (docs/reference/facts/app-flags.md F6), so the body stays written and differs. 10590 calls it, and its name,
-# which that call needs, rests on a callers+content hand line in splat/symbol_addrs.txt (its record and its one
-# caller that can land), which goes when 5725 matches. The roots' AdicionaJustificado stands for 6734, its other
-# target caller.
+# Matched since cjustificador.cpp builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS lists the file, the
+# user's decision: docs/reference/facts/app-flags.md F6): Add(const value_type &) (line 143) for
+# <CNumeroInscricaoEleitoral, CJustificadorDetalhe>, 5725. Its first user on the link line is
+# comum::CJustificador::Justifica in cjustificador.cpp (held by 10590, unit 283), whose object holds the instance, as
+# the target's does: the target's record of it (1560744) lies among cjustificador.cpp's records. With
+# -fno-strict-aliasing, which the rest of app/comum/justificativa/ keeps, it scored 110 over 513 rows (same 403,
+# replaced 90 [89 operand-only], inserted 12, deleted 8), the reload of "Aliasing" below; with that object alone
+# compiled without it (its compile line from make -n, swapped into a copy of the plain link's command) 19 over 501,
+# every row an operand (two std::format constants and two table slots), and 10590 the same 199 over 1839 as in the
+# plain link. Its record names it (evidence:srcloc-anchor); the callers+content hand line that named it while it
+# differed went with the flag (weighed by removal: the scan and the build are the same without it). The roots'
+# AdicionaJustificado stands for 6734, its other target caller.
 #
 # Which inliner: the object keeps Add(value_type), Update, AtualizaMesarioSecao, and __emplace_unique_key_args and
 # __find_equal over the key CComparecimentoMesarioPK, as functions of their own (wasm-objdump -x on the object), and
@@ -87,10 +87,12 @@
 # not: docs/reference/facts/app-flags.md F6 records that split. The roots object compiles at the tree's flags, as every
 # object of this unit does, so that no match rests on a flag its tree lacks. A stand-in that reached Add over this key
 # gave 5725 112 over 513 rows at the tree's flags, with 12 inserted and 8 deleted, against 21 over 501, all operand-only,
-# at APP_CXXFLAGS: only a copy without -fno-strict-aliasing gives the target's rows, the flag is not this unit's to change
-# (how-to step 4, "When only a flag closes the gap"). The roots' stand-in for 6734 reaches the instance at the tree's
-# flags, and the link keeps cjustificador.cpp's copy, an object ahead of the roots. The instances over the key and
-# over CEleitorIdentidade are the tree's too: from an object without the flag 5377 scored 32 over 695 rows with 5 deleted.
+# at APP_CXXFLAGS: only a copy without -fno-strict-aliasing gives the target's rows, and the flag was not this unit's to
+# change (how-to step 4, "When only a flag closes the gap"): it is cjustificador.cpp's, the object whose copy the link
+# keeps, which builds with strict aliasing since (src/Makefile). The roots' stand-in for 6734 reaches the instance at
+# the tree's flags, and the link keeps cjustificador.cpp's copy, an object ahead of the roots. The instances over the
+# key and over CEleitorIdentidade are the tree's too: from an object without the flag 5377 scored 32 over 695 rows with
+# 5 deleted.
 # GetCurrent, Next and 3741 are the same at both flag sets (the rows compared with local numbers and literal offsets
 # masked), so the flags of the roots object decide nothing for them.
 #

@@ -21,7 +21,7 @@
   },
   {
     "key": "uenux2-tbaa",
-    "title": "uenux2, the directories and the files built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota but its ctelasvota.cpp, crelvotautil.cpp, cvotacaostateaudio.cpp, cconferevotoemcargo.cpp and celeitorencontrado.cpp, mock/app/simulador/wasm, comum's carquivossavd.cpp, gravadores' cgeracaoversoescontratos.cpp, validamidia's cfabricaconteudomidiastart.cpp)",
+    "title": "uenux2, the directories and the files built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota but its ctelasvota.cpp, crelvotautil.cpp, cvotacaostateaudio.cpp, cconferevotoemcargo.cpp and celeitorencontrado.cpp, mock/app/simulador/wasm, comum's carquivossavd.cpp, gravadores' cgeracaoversoescontratos.cpp, validamidia's cfabricaconteudomidiastart.cpp, justificativa's cjustificador.cpp)",
     "flags": {
       "c++": "-O3 -fPIC -std=c++23 -DNDEBUG"
     },

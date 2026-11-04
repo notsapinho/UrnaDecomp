@@ -83,8 +83,8 @@
 #   function of its own, a reading of its frame), its name and signature; the names SincronizaJustificativa, Salva and
 #   Existe; the 8800 and 8801 enumerators' names; the switch's form; ueint16, ToInt16's type, for the year and the age
 #   (their signedness is the evidence above, the spelling a choice); every local's name.
-# 5725 differs (unit 113's fragment: a flag of cjustificador.cpp's), and its name, which 10590's call needs, rests on a
-# callers+content hand line in splat/symbol_addrs.txt, whose comment gives its evidence.
+# 5725 matches since cjustificador.cpp builds with strict aliasing (unit 113's fragment), named by its record
+# (evidence:srcloc-anchor); the callers+content hand line that named it while it differed went with that flag.
 #
 # Evidence, each class's header says the rest (RTTI, vtable, statics, the function that holds GetInst inlined):
 # - The pairs' constructors pass IConfirmaJustificativa's (3625) the literals 10635 loads, "está impedido de votar nesta
