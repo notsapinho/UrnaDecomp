@@ -172,7 +172,34 @@ const auto GetKeyboardLayout()
 // void f3064(i32, i32) { ... }
 // </stubs>
 
-// (original lines 1587-3369: content not recovered)
+// (original lines 1587-3340: content not recovered)
+#line 3341
+std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
+    const int opcoes)
+{
+    const std::vector<std::string> linhas = ecourna::api::util::CStringUtils::Split(mensagem, '&');
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    const ueword meio = tamanho / 2;
+    const ueword altura = tamanho;
+    const int passo = meio + altura;
+    const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        builder.AddTextField(linhas[i], api::SPoint(320, inicio + i * passo), api::SFont{tamanho, 0},
+                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    if (opcoes & 1) {
+        AdicionaLocal(builder);
+    }
+    return GetFormulario(builder, "telaNeutra");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
+{
+    return TelaNeutra("Por favor, aguarde...", 35, 0);
+}
+
+// (original lines 3366-3369: content not recovered)
 #line 3370
 namespace {
 
@@ -281,87 +308,6 @@ CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, co
     return it->second.GetTela(tela);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 namespace {
 
 const api::SFont FONTE_LOCAL{15, 0};
@@ -385,31 +331,6 @@ void AdicionaLocal(api::CFormBuilder& builder)
     builder.AddFill(api::SPoint(0, 458), api::SPoint(640, 480), static_cast<api::TColor>(22));
     builder.AddTextField(texto, api::SPoint(320, 460), FONTE_LOCAL, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2),
                          static_cast<api::TColor>(22));
-}
-
-std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const api::TFontSize tamanho,
-    const int opcoes)
-{
-    const std::vector<std::string> linhas = ecourna::api::util::CStringUtils::Split(mensagem, '&');
-    api::CFormBuilder builder;
-    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
-    const ueword meio = tamanho / 2;
-    const ueword altura = tamanho;
-    const int passo = meio + altura;
-    const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;
-    for (size_t i = 0; i < linhas.size(); ++i) {
-        builder.AddTextField(linhas[i], api::SPoint(320, inicio + i * passo), api::SFont{tamanho, 0},
-                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-    }
-    if (opcoes & 1) {
-        AdicionaLocal(builder);
-    }
-    return GetFormulario(builder, "telaNeutra");
-}
-
-std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
-{
-    return TelaNeutra("Por favor, aguarde...", 35, 0);
 }
 
 } // namespace vota

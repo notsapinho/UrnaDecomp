@@ -2243,7 +2243,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2377	ossl_cipher_generic_get_ctx_params	2296	symbol	match	readings: address string	328	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon.o
 2378	ossl_prov_ctx_free	2301	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/providers/common/libcommon-lib-provider_ctx.o
 2379	_ZN7ecourna3api9exception6CErrorC2INS0_7pattern13EPatternErrorEEET_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	2628	symbol	match	readings: address symbol,table slot	123	shape	unknown	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-2380	_ZN4vota10TelaNeutraERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEsi	3971	symbol	match	readings: address string	566	none	app	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+2380	_ZN4vota10TelaNeutraERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEsi	3998	symbol	match	readings: address string	566	none	app	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 2381	ctr_update	2293	symbol	match	readings: address symbol	3322	addr	openssl	1	openssl/O3/providers/implementations/rands/libdefault-lib-drbg_ctr.o
 2382	ossl_prov_drbg_instantiate	2294	symbol	match	readings: address string,address symbol	1085	addr	openssl	1	openssl/O3/providers/implementations/rands/libdefault-lib-drbg.o
 2383	-	-	-	no-candidate	no symbol and no ledger pair	297	none	api	0	-
@@ -2917,7 +2917,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3051	sqlite3_file_control	2112	symbol	match	readings: address symbol,address string	918	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 3052	robust_open	2578	symbol	match	readings: address symbol,address string	383	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 3053	sqlite3_stricmp	2113	symbol	match	readings: address symbol	110	fingerprint	sqlite	1	sqlite/O3pic2/sqlite3.o
-3054	_ZN4vota29AdicionaCabecalhoTesteTecladoERN3api12CFormBuilderE	3993	symbol	match	readings: address string,address same-content	290	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+3054	_ZN4vota29AdicionaCabecalhoTesteTecladoERN3api12CFormBuilderE	3987	symbol	match	readings: address string,address same-content	290	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 3055	sqlite3_hard_heap_limit64	2114	symbol	match	readings: address symbol	133	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 3056	sqlite3_config	2582	symbol	match	readings: address symbol,address string	1347	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 3057	ossl_cipher_var_keylen_set_ctx_params	2973	symbol	match	readings: address string	149	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon.o
@@ -3998,9 +3998,9 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4132	applyNumericAffinity	3417	symbol	match	-	333	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4133	sqlite3_bind_int64	2568	symbol	match	readings: address symbol	100	addr	ecourna	1	sqlite/O3pic2/sqlite3.o
 4134	sqlite3_column_blob	2571	symbol	match	readings: address symbol	187	addr	app	1	sqlite/O3pic2/sqlite3.o
-4135	_ZNK4vota10CTelasVota12GetTelaCargoEhNS_12ETelaVotacaoE	3982	symbol	match	readings: address string,table slot,address srcloc,address symbol	1190	none	ecourna	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4135	_ZNK4vota10CTelasVota12GetTelaCargoEhNS_12ETelaVotacaoE	3971	symbol	match	readings: address string,table slot,address srcloc,address symbol	1190	none	ecourna	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4136	sqlite3BtreeFirst	3429	symbol	match	-	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-4137	_ZNSt3__26__treeINS_12__value_typeIhN4vota11CTelasCargoEEENS_19__map_value_compareIhNS_4pairIKhS3_EENS_4lessIhEELb1EEENS_9allocatorIS8_EEE7destroyEPNS_11__tree_nodeIS4_PvEE	3983	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4137	_ZNSt3__26__treeINS_12__value_typeIhN4vota11CTelasCargoEEENS_19__map_value_compareIhNS_4pairIKhS3_EENS_4lessIhEELb1EEENS_9allocatorIS8_EEE7destroyEPNS_11__tree_nodeIS4_PvEE	3972	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4138	sqlite3OomFault	3430	symbol	match	readings: address string	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4139	sqlite3_result_error_nomem	2573	symbol	match	readings: address string	203	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4140	sqlite3_result_zeroblob64	2574	symbol	match	readings: address string	265	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -4011,11 +4011,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4145	newDatabase	3441	symbol	match	readings: address symbol,table slot	595	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4146	invokeProfileCallback	3443	symbol	match	-	207	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 4147	appendAllPathElements	3445	symbol	match	readings: address symbol,address string,address same-content	820	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-4148	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN4vota12_GLOBAL__N_112SLayoutTeclaEEENS_19__map_value_compareIS7_NS_4pairIKS7_SA_EENS_4lessIS7_EELb1EEENS5_ISF_EEE7destroyEPNS_11__tree_nodeISB_PvEE	3986	symbol	match	-	53	addr	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4148	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN4vota12_GLOBAL__N_112SLayoutTeclaEEENS_19__map_value_compareIS7_NS_4pairIKS7_SA_EENS_4lessIS7_EELb1EEENS5_ISF_EEE7destroyEPNS_11__tree_nodeISB_PvEE	3982	symbol	match	-	53	addr	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4149	sqlite3_str_append	2580	symbol	match	-	71	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4150	sqlite3_soft_heap_limit64	2581	symbol	match	readings: address symbol	213	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4151	sqlite3DeleteTriggerStep	3446	symbol	match	-	135	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-4152	_ZN4vota19AdicionaTelaAguardeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	3998	symbol	match	readings: address same-content,address string	297	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4152	_ZN4vota19AdicionaTelaAguardeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	3989	symbol	match	readings: address same-content,address string	297	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4153	gcm_cipher_internal	4096	symbol	match	readings: address string	921	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_gcm.o
 4154	ccm_cipher_internal	4097	symbol	match	-	615	byte	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_ccm.o
 4155	ossl_prov_ctx_set0_handle	4126	symbol	match	-	14	byte	openssl	1	openssl/O3/providers/common/libcommon-lib-provider_ctx.o
@@ -4024,7 +4024,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4158	ossl_DER_w_RSASSA_PSS_params	4129	symbol	match	readings: address string,address symbol	493	addr	openssl	1	openssl/O3/providers/common/der/libcommon-lib-der_rsa_key.o
 4159	rc4_hmac_md5_set_ctx_params	4099	symbol	match	readings: address string	380	addr	openssl	1	openssl/O3/providers/implementations/ciphers/liblegacy-lib-cipher_rc4_hmac_md5.o
 4160	-	-	-	no-candidate	no symbol and no ledger pair	3713	none	unknown	0	-
-4161	_ZN4vota13AdicionaLocalERN3api12CFormBuilderE	3979	symbol	match	readings: address string,table slot,address same-content	2019	none	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4161	_ZN4vota13AdicionaLocalERN3api12CFormBuilderE	3993	symbol	match	readings: address string,table slot,address same-content	2019	none	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4162	_ZN3api14CPolySingletonINS_13ITextToSpeechEE3setIN9simulador21CWasmNullTextToSpeechEEEvPT_RNS_19TPolySingletonsInfoE	5510	symbol	match	readings: address symbol,table slot	143	shape	simulador	1	app/roots_texttospeech.o
 4163	rc2_set_ctx_params	4100	symbol	match	readings: address string	398	addr	openssl	1	openssl/O3/providers/implementations/ciphers/liblegacy-lib-cipher_rc2.o
 4164	des_cfb64_get_params	4101	symbol	match	-	19	addr	unknown	1	openssl/O3/providers/implementations/ciphers/liblegacy-lib-cipher_des.o
@@ -4067,17 +4067,17 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4201	rsa_adjust	4093	symbol	match	-	15	fingerprint	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-decode_der2key.o
 4202	_ZNSt3__26__loopIcED0Ev	3656	symbol	match	readings: address symbol	75	addr	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 4203	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE18__parse_awk_escapeIPKcEET_S7_S7_PNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE	3657	symbol	match	-	846	shape	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
-4204	ossl_blake2s_final	3972	symbol	match	-	372	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
-4205	blake2s_compress	3973	symbol	match	-	5060	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
-4206	ossl_blake2s_update	3974	symbol	match	-	175	fingerprint	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
-4207	ossl_blake2s_param_init	3975	symbol	match	-	40	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
-4208	ossl_blake2b_final	3976	symbol	match	-	406	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
-4209	blake2b_compress	3977	symbol	match	-	6032	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
-4210	ossl_blake2b_update	3978	symbol	match	-	183	fingerprint	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
+4204	ossl_blake2s_final	3973	symbol	match	-	372	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
+4205	blake2s_compress	3974	symbol	match	-	5060	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
+4206	ossl_blake2s_update	3975	symbol	match	-	175	fingerprint	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
+4207	ossl_blake2s_param_init	3976	symbol	match	-	40	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
+4208	ossl_blake2b_final	3977	symbol	match	-	406	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
+4209	blake2b_compress	3978	symbol	match	-	6032	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
+4210	ossl_blake2b_update	3979	symbol	match	-	183	fingerprint	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
 4211	ossl_blake2b_param_init	3980	symbol	match	-	68	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
 4212	_ZNKSt3__212regex_traitsIcE9transformIPcEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SA_	3658	symbol	match	-	228	none	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
-4213	tdes_ede3_cfb_get_params	3984	symbol	match	-	19	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_tdes_default.o)
-4214	ossl_cipher_cbc_cts_mode_name2id	3985	symbol	match	readings: address symbol,address string	66	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_cts.o)
+4213	tdes_ede3_cfb_get_params	3983	symbol	match	-	19	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_tdes_default.o)
+4214	ossl_cipher_cbc_cts_mode_name2id	3984	symbol	match	readings: address symbol,address string	66	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_cts.o)
 4215	chacha20_poly1305_set_ctx_params	4103	symbol	match	readings: address string	475	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_chacha20_poly1305.o
 4216	ossl_chacha20_dinit	4104	symbol	match	-	73	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_chacha20.o
 4217	chacha20_set_ctx_params	4105	symbol	match	readings: address string	187	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_chacha20.o
@@ -4098,10 +4098,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4232	ec_field_size	4133	symbol	match	-	77	addr	openssl	1	openssl/O3/crypto/sm2/libcrypto-lib-sm2_crypt.o
 4233	ossl_digest_get_approved_nid_with_sha1	4124	symbol	match	readings: address symbol,address string	209	addr	openssl	1	openssl/O3/providers/common/libdefault-lib-securitycheck.o
 4234	ossl_rsa_check_key	4125	symbol	match	readings: address string	172	addr	openssl	1	openssl/O3/providers/common/libdefault-lib-securitycheck.o
-4235	ossl_prov_digest_copy	3987	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
-4236	ossl_prov_cipher_copy	3988	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
+4235	ossl_prov_digest_copy	3985	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
+4236	ossl_prov_cipher_copy	3986	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
 4237	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE26__parse_bracket_expressionIPKcEET_S7_S7_	3659	symbol	match	-	2688	none	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
-4238	X509_SIG_INFO_set	3989	symbol	match	-	30	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-x509_set.o)
+4238	X509_SIG_INFO_set	3988	symbol	match	-	30	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-x509_set.o)
 4239	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE16__push_lookaheadERKS3_bj	3660	symbol	match	readings: address symbol	170	none	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 4240	read_string_inner	4130	symbol	unresolved	self-voted +0x17 i32.const 1927764: read_string_inner.ps = 0x1d6a54 (evidence:vote:5 by:4240) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1427	addr	openssl	1	openssl/O3/crypto/ui/libcrypto-lib-ui_openssl.o
 4241	OPENSSL_sk_sort	4131	symbol	match	-	63	fingerprint	openssl	1	openssl/O3/crypto/stack/libcrypto-lib-stack.o
@@ -6411,7 +6411,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6545	sqlite3_column_count	3428	symbol	match	-	17	byte	ecourna	1	sqlite/O3pic2/sqlite3.o
 6546	sqlite3GetVarint32	5149	symbol	match	-	159	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 6547	valueFromValueList	5150	symbol	match	readings: address string,table slot	485	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-6548	_ZN4vota10CTelasVotaD1Ev	6486	symbol	match	-	1530	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6548	_ZN4vota10CTelasVotaD1Ev	6481	symbol	match	-	1530	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6549	sqlite3_result_error_toobig	3432	symbol	match	readings: address string	182	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 6550	sqlite3_result_text16	3433	symbol	match	-	18	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 6551	sqlite3_result_double	3434	symbol	match	-	58	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -6442,15 +6442,15 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6576	verifyDbFile	5201	symbol	match	readings: address symbol,address string	229	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 6577	unixGetTempname	5202	symbol	match	readings: address symbol,address string	721	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 6578	findReusableFd	5203	symbol	match	readings: address symbol	315	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-6579	_ZNSt3__23mapINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN4vota12_GLOBAL__N_112SLayoutTeclaENS_4lessIS6_EENS4_INS_4pairIKS6_S9_EEEEEC2B8ne210108ESt16initializer_listISE_ERKSB_	6494	symbol	match	-	572	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6579	_ZNSt3__23mapINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN4vota12_GLOBAL__N_112SLayoutTeclaENS_4lessIS6_EENS4_INS_4pairIKS6_S9_EEEEEC2B8ne210108ESt16initializer_listISE_ERKSB_	6486	symbol	match	-	572	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6580	-	-	-	no-candidate	no symbol and no ledger pair	201	none	vota	0	-
 6581	-	-	-	no-candidate	no symbol and no ledger pair	211	none	vota	0	-
 6582	vdbeFreeOpArray	5225	symbol	match	readings: address symbol	305	addr	app	1	sqlite/O3pic2/sqlite3.o
-6583	_ZN4vota31TelaPreparandoDadosEncerramentoEv	6518	symbol	match	readings: address string	398	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6583	_ZN4vota31TelaPreparandoDadosEncerramentoEv	6501	symbol	match	readings: address string	398	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6584	ssl3_cbc_copy_mac	6651	symbol	match	readings: address string	543	addr	openssl	1	openssl/O3/ssl/record/libcommon-lib-tls_pad.o
 6585	ossl_gcm_set_ctx_params	6807	symbol	match	readings: address string	971	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_gcm.o
 6586	gcm_init	6808	symbol	match	readings: address string	192	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_gcm.o
-6587	_ZN4vota19TelaPorFavorAguardeEv	6478	symbol	match	readings: address string	130	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6587	_ZN4vota19TelaPorFavorAguardeEv	6518	symbol	match	readings: address string	130	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6588	ccm_init	6811	symbol	match	readings: address string	183	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_ccm.o
 6589	ossl_ccm_set_ctx_params	6813	symbol	match	readings: address string	777	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_ccm.o
 6590	ossl_cipher_trailingdata	6814	symbol	match	readings: address string	109	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon_block.o
@@ -6539,7 +6539,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6673	CMAC_CTX_free	7260	symbol	match	readings: address string	86	addr	openssl	1	openssl/O3/crypto/cmac/libcrypto-lib-cmac.o
 6674	CMAC_CTX_new	7261	symbol	match	readings: address string	94	addr	openssl	1	openssl/O3/crypto/cmac/libcrypto-lib-cmac.o
 6675	blake2_mac_set_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2s_mac.o)	6477	symbol	match	readings: address string	479	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_mac.o)
-6676	blake2_mac_set_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)	6479	symbol	match	readings: address string	484	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)
+6676	blake2_mac_set_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)	6478	symbol	match	readings: address string	484	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)
 6677	rsa_import_types	6715	symbol	match	readings: address same-content	15	addr	app	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-rsa_kmgmt.o
 6678	-	-	-	no-candidate	no symbol and no ledger pair	192	none	ecourna	0	-
 6679	rsa_gen_set_params	6716	symbol	match	readings: address string	195	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-rsa_kmgmt.o
@@ -6631,8 +6631,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6765	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE20__parse_class_escapeIPKcEET_S7_S7_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPNS_20__bracket_expressionIcS2_EE	5662	symbol	match	-	332	shape	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 6766	md4_internal_init	6801	symbol	match	-	10	fingerprint	openssl	1	openssl/O3/providers/implementations/digests/liblegacy-lib-md4_prov.o
 6767	md4_get_params	6802	symbol	match	-	14	addr	openssl	1	openssl/O3/providers/implementations/digests/liblegacy-lib-md4_prov.o
-6768	ossl_blake2s_init	6480	symbol	match	readings: address symbol	215	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
-6769	ossl_blake2b_init	6481	symbol	match	readings: address symbol	306	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
+6768	ossl_blake2s_init	6479	symbol	match	readings: address symbol	215	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-blake2s_prov.o)
+6769	ossl_blake2b_init	6480	symbol	match	readings: address symbol	306	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-blake2b_prov.o)
 6770	_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE2EEEvv	5663	symbol	match	-	7	shape	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 6771	blake2s256_get_params	6803	symbol	match	-	14	addr	openssl	1	openssl/O3/providers/implementations/digests/libdefault-lib-blake2_prov.o
 6772	tdes_wrap_cipher	6822	symbol	match	readings: address string	616	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_tdes_wrap.o
@@ -6664,10 +6664,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6798	rsa_set_ctx_params@openssl/O3/providers/implementations/asymciphers/libdefault-lib-rsa_enc.o	6850	symbol	match	readings: address string,address symbol	736	addr	openssl	1	openssl/O3/providers/implementations/asymciphers/libdefault-lib-rsa_enc.o
 6799	rsa_init	6851	symbol	match	readings: address string	116	addr	openssl	1	openssl/O3/providers/implementations/asymciphers/libdefault-lib-rsa_enc.o
 6800	ossl_prov_set_macctx	6493	symbol	match	readings: address string	430	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
-6801	ossl_prov_digest_fetch	6495	symbol	match	readings: address string	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
-6802	load_common	6496	symbol	match	readings: address string	143	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
-6803	ossl_bio_prov_init_bio_method	6498	symbol	match	readings: address string,table slot	214	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-6804	ossl_prov_bio_from_dispatch	6499	symbol	unresolved	self-voted +0x3 i32.const 1930512: c_bio_new_file = 0x1d7510 (evidence:vote:2 by:6804) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	484	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+6801	ossl_prov_digest_fetch	6494	symbol	match	readings: address string	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
+6802	load_common	6495	symbol	match	readings: address string	143	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
+6803	ossl_bio_prov_init_bio_method	6497	symbol	match	readings: address string,table slot	214	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+6804	ossl_prov_bio_from_dispatch	6498	symbol	unresolved	self-voted +0x3 i32.const 1930512: c_bio_new_file = 0x1d7510 (evidence:vote:2 by:6804) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	484	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
 6805	base_teardown	6503	symbol	match	-	15	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
 6806	x509_pubkey_ex_new_ex	6854	symbol	match	readings: address string,address symbol	230	addr	openssl	1	openssl/O3/crypto/x509/libcrypto-lib-x_pubkey.o
 6807	_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE11EEEvv	5667	symbol	match	-	7	shape	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
@@ -11571,7 +11571,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11705	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/votaproporcional/cproporcionalbranco.cpp.o	11074	symbol	match	readings: address symbol	10	addr	app	2	app/uenux2/src/app/vota/eleitor/votaproporcional/cproporcionalbranco.cpp.o
 11706	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votaproporcional/cproporcionalbranco.cpp.o	11075	symbol	match	readings: address symbol	12	addr	app	2	app/uenux2/src/app/vota/eleitor/votaproporcional/cproporcionalbranco.cpp.o
 11707	_ZNK4vota19CConfereVotoEmCargoINS_19CProporcionalBrancoELNS_12ETelaVotacaoE4EE16GetProximoEstadoEv	11148	symbol	match	readings: address symbol	26	addr	vota	1	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
-11708	__cxx_global_array_dtor.20	11149	symbol	match	readings: address symbol	12	addr	app	2	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
+11708	__cxx_global_array_dtor.20@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o	11149	symbol	match	readings: address symbol	12	addr	app	2	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
 11709	__cxx_global_array_dtor.18@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o	11151	symbol	match	readings: address symbol	10	addr	app	2	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
 11710	_ZNK4vota17CPedeProporcional11GetMensagemEv	11152	symbol	match	readings: address string	51	none	vota	1	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
 11711	_ZN4vota17CPedeProporcional17ProcessInputAudioEv	11153	symbol	match	readings: address symbol,address string,address srcloc,table slot	811	none	vota	1	app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
@@ -12738,14 +12738,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12872	sqlite3_value_encoding	9384	symbol	match	-	7	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12873	sqlite3_value_type	5168	symbol	match	readings: address symbol	19	fingerprint	sqlite	1	sqlite/O3pic2/sqlite3.o
 12874	sqlite3_value_text16be	5169	symbol	match	-	9	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12875	__cxx_global_array_dtor.19	13357	symbol	match	readings: address symbol	10	none	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+12875	__cxx_global_array_dtor.20@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o	13341	symbol	match	readings: address symbol	10	none	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 12876	sqlite3_value_pointer	5171	symbol	match	-	59	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12877	sqlite3_value_subtype	5172	symbol	match	-	23	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12878	sqlite3_value_int	5173	symbol	match	-	112	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12879	sqlite3_value_double	5174	symbol	match	-	62	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12880	sqlite3_value_bytes16	5175	symbol	match	-	90	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12881	sqlite3_value_bytes	5176	symbol	match	-	90	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12882	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o	13364	symbol	match	readings: address symbol	37	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+12882	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o	13342	symbol	match	readings: address symbol	37	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 12883	sqlite3_clear_bindings	5178	symbol	match	readings: address symbol	177	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12884	sqlite3_expired	5179	symbol	match	-	23	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12885	getPageNormal	9391	symbol	match	readings: address string,address symbol	950	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -14055,8 +14055,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14189	aes_siv_cleanup	13331	symbol	match	-	103	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
 14190	aes_siv_settag	13332	symbol	match	-	35	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
 14191	aes_siv_setspeed	13333	symbol	match	-	17	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
-14192	aes_siv_cipher	13334	symbol	match	-	1212	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
-14193	aes_siv_initkey	13335	symbol	unresolved	self-voted +0x1d0 i32.const 1478704: ossl_siv128_init.zero = 0x169030 (evidence:vote:1 by:14193) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	568	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
+14192	aes_siv_cipher	13335	symbol	match	-	1212	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
+14193	aes_siv_initkey	13336	symbol	unresolved	self-voted +0x1d0 i32.const 1478704: ossl_siv128_init.zero = 0x169030 (evidence:vote:1 by:14193) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	568	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_siv_hw.o)
 14194	aes_256_siv_get_params	14586	symbol	match	-	20	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
 14195	aes256siv_newctx	14587	symbol	match	-	14	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
 14196	aes_192_siv_get_params	14588	symbol	match	-	20	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
@@ -14072,7 +14072,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14206	siv_dupctx	14599	symbol	match	readings: address string	91	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
 14207	aes_siv_freectx	14600	symbol	match	readings: address string	34	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
 14208	aes128siv_newctx	14601	symbol	match	-	14	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_siv.o
-14209	cipher_hw_aes_ocb_generic_initkey	13336	symbol	match	-	88	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_ocb_hw.o)
+14209	cipher_hw_aes_ocb_generic_initkey	13337	symbol	match	-	88	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_ocb_hw.o)
 14210	aes_128_ocb_get_params	14602	symbol	match	-	22	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ocb.o
 14211	aes_128_ocb_newctx	14603	symbol	match	-	10	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ocb.o
 14212	aes_192_ocb_get_params	14604	symbol	match	-	22	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ocb.o
@@ -14093,13 +14093,13 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14227	aes_256_ocb_newctx	14621	symbol	match	-	10	addr	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ocb.o
 14228	cipher_hw_aes_copyctx	14622	symbol	match	-	24	byte	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_hw.o
 14229	cipher_hw_aes_initkey	14623	symbol	match	readings: table slot,address string	155	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_hw.o
-14230	generic_aes_gcm_cipher_update	13337	symbol	match	-	118	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_gcm_hw.o)
-14231	aes_gcm_initkey	13338	symbol	match	readings: table slot	69	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_gcm_hw.o)
+14230	generic_aes_gcm_cipher_update	13338	symbol	match	-	118	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_gcm_hw.o)
+14231	aes_gcm_initkey	13339	symbol	match	readings: table slot	69	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_gcm_hw.o)
 14232	aes256gcm_newctx	14624	symbol	match	readings: address string,address symbol	41	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_gcm.o
 14233	aes192gcm_newctx	14626	symbol	match	readings: address string,address symbol	41	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_gcm.o
 14234	aes_gcm_freectx	14627	symbol	match	readings: address string	16	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_gcm.o
 14235	aes128gcm_newctx	14628	symbol	match	readings: address string,address symbol	41	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_gcm.o
-14236	ccm_generic_aes_initkey	13339	symbol	match	readings: table slot	67	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_ccm_hw.o)
+14236	ccm_generic_aes_initkey	13340	symbol	match	readings: table slot	67	addr	unknown	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_aes_ccm_hw.o)
 14237	aes256ccm_newctx	14629	symbol	match	readings: address string,address symbol	43	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ccm.o
 14238	aes192ccm_newctx	14630	symbol	match	readings: address string,address symbol	43	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ccm.o
 14239	aes_ccm_freectx	14631	symbol	match	readings: address string	16	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_ccm.o
@@ -14161,29 +14161,29 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14295	_ZNKSt3__220__r_anchor_multilineIcE6__execERNS_7__stateIcEE	11811	symbol	match	-	104	byte	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
 14296	rsa_newctx@openssl/O3/providers/implementations/asymciphers/libdefault-lib-rsa_enc.o	14688	symbol	match	readings: address string	36	addr	openssl	1	openssl/O3/providers/implementations/asymciphers/libdefault-lib-rsa_enc.o
 14297	_ZNKSt3__220__l_anchor_multilineIcE6__execERNS_7__stateIcEE	11813	symbol	match	-	114	byte	libc++	1	app/uenux2/src/app/comum/dados/cqrcodeds.cpp.o
-14298	ossl_prov_get_capabilities	6497	symbol	match	readings: address string,address symbol	89	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-capabilities.o)
-14299	bio_core_free	13340	symbol	match	readings: address symbol	41	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14300	bio_core_new	13341	symbol	match	-	11	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14301	bio_core_ctrl	13342	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14302	bio_core_gets	13343	symbol	match	readings: address symbol	35	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14303	bio_core_puts	13344	symbol	match	readings: address symbol	33	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14304	bio_core_read_ex	13345	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14305	bio_core_write_ex	13346	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
-14306	null_query	13347	symbol	match	-	11	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
-14307	null_get_params@openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)	13349	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
+14298	ossl_prov_get_capabilities	6496	symbol	match	readings: address string,address symbol	89	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-capabilities.o)
+14299	bio_core_free	13343	symbol	match	readings: address symbol	41	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14300	bio_core_new	13344	symbol	match	-	11	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14301	bio_core_ctrl	13345	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14302	bio_core_gets	13346	symbol	match	readings: address symbol	35	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14303	bio_core_puts	13347	symbol	match	readings: address symbol	33	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14304	bio_core_read_ex	13348	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14305	bio_core_write_ex	13349	symbol	match	readings: address symbol	37	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-bio_prov.o)
+14306	null_query	13350	symbol	match	-	11	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
+14307	null_get_params@openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)	13351	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
 14308	-	-	-	no-candidate	no symbol and no ledger pair	7	none	openssl	0	-
-14309	ossl_null_provider_init	6500	symbol	unresolved	self-voted +0x3 i32.const 1723152: null_dispatch_table = 0x1a4b10 (evidence:vote:1 by:14309) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	21	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
-14310	legacy_query	13351	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
-14311	legacy_get_params	13352	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
+14309	ossl_null_provider_init	6499	symbol	unresolved	self-voted +0x3 i32.const 1723152: null_dispatch_table = 0x1a4b10 (evidence:vote:1 by:14309) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	21	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-nullprov.o)
+14310	legacy_query	13353	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
+14311	legacy_get_params	13354	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
 14312	-	-	-	no-candidate	no symbol and no ledger pair	7	none	openssl	0	-
-14313	legacy_teardown	13354	symbol	match	-	15	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
-14314	ossl_legacy_provider_init	6501	symbol	unresolved	self-voted +0x3f5 i32.const 1722336: legacy_dispatch_table = 0x1a47e0 (evidence:vote:1 by:14314) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1024	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
-14315	deflt_query	13355	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o)
-14316	deflt_get_params	13356	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o)
+14313	legacy_teardown	13356	symbol	match	-	15	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
+14314	ossl_legacy_provider_init	6500	symbol	unresolved	self-voted +0x3f5 i32.const 1722336: legacy_dispatch_table = 0x1a47e0 (evidence:vote:1 by:14314) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1024	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-legacyprov.o)
+14315	deflt_query	13357	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o)
+14316	deflt_get_params	13358	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o)
 14317	-	-	-	no-candidate	no symbol and no ledger pair	7	none	openssl	0	-
 14318	ossl_default_provider_init	6502	symbol	unresolved	self-voted +0x145 i32.const 1928492: c_gettable_params@openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o) = 0x1d6d2c (evidence:vote:1 by:14318) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	672	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-defltprov.o)
-14319	base_query	13359	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
-14320	base_get_params	13360	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
+14319	base_query	13360	symbol	match	readings: address content-repointed	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
+14320	base_get_params	13361	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
 14321	-	-	-	no-candidate	no symbol and no ledger pair	7	none	openssl	0	-
 14322	ossl_base_provider_init	6504	symbol	unresolved	self-voted +0x24 i32.const 1928484: c_gettable_params@openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o) = 0x1d6d24 (evidence:vote:1 by:14322) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	212	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-baseprov.o)
 14323	x509_pubkey_ex_d2i_ex	14689	symbol	match	readings: address symbol,address string	896	addr	openssl	1	openssl/O3/crypto/x509/libcrypto-lib-x_pubkey.o
@@ -14209,8 +14209,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14343	x509_name_ex_free	14705	symbol	match	readings: table slot,address string	74	addr	openssl	1	openssl/O3/crypto/x509/libcrypto-lib-x_name.o
 14344	X509_NAME_ENTRY_free	14707	symbol	match	readings: address symbol	12	addr	openssl	2	openssl/O3/crypto/x509/libcrypto-lib-x_name.o
 14345	X509_NAME_ENTRY_it	14708	symbol	match	readings: address symbol	7	addr	openssl	2	openssl/O3/crypto/x509/libcrypto-lib-x_name.o
-14346	X509_ATTRIBUTE_free	13362	symbol	match	readings: address symbol	12	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-x_attrib.o)
-14347	X509_ATTRIBUTE_it	13363	symbol	match	readings: address symbol	7	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-x_attrib.o)
+14346	X509_ATTRIBUTE_free	13363	symbol	match	readings: address symbol	12	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-x_attrib.o)
+14347	X509_ATTRIBUTE_it	13364	symbol	match	readings: address symbol	7	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-x_attrib.o)
 14348	X509V3_conf_free	6864	symbol	match	readings: address string	64	addr	openssl	1	openssl/O3/crypto/x509/libcrypto-lib-v3_utl.o
 14349	ui_free_method_data	14710	symbol	match	readings: address string	14	addr	openssl	1	openssl/O3/crypto/ui/libcrypto-lib-ui_util.o
 14350	ui_dup_method_data	14711	symbol	match	readings: address string	45	addr	openssl	1	openssl/O3/crypto/ui/libcrypto-lib-ui_util.o

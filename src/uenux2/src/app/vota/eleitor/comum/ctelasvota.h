@@ -155,8 +155,12 @@ std::shared_ptr<api::CTextBox> AdicionaCaixaTecla(api::CFormBuilder& builder, co
 std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado();
 std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador);
 
-// The zerésima chain's screens, in ctelasvota.cpp after its last record (lines chosen). No record names them; their
-// names, their being free functions of vota with external linkage and their parameters' types and names are chosen.
+// The zerésima chain's screens, in ctelasvota.cpp where the object's code and data orders put them, at lines chosen
+// inside those bounds (src/units/110-uenux2-singletons.mk has the measurements): TelaNeutra and TelaPorFavorAguarde
+// above AdicionaTelaAguarde, since use band 2 puts 6587 ahead of TelaPreparandoDadosEncerramento (6583) and band 3
+// puts 4161 ahead of 4152, the place TelaNeutra's call gives AdicionaLocal; AdicionaLocal's body after GetTelaCargo,
+// since the target holds its font after FONTE_INSTRUCAO_TESTE_TECLADO's. No record names them; their names, their
+// being free functions of vota with external linkage and their parameters' types and names are chosen.
 // - AdicionaLocal (fn 4161): the location line at the foot of a screen. It reloads comum::CLocal (Carrega, fn 5740) and
 //   formats "{}: {:05} - {}     {}: {:04}     {}: {:04}" of the translated <MCSN>, the municipality and its name, <ZCSN>,
 //   the zone, <SCSN> and the section when the data hold a section, else "{}: {:05} - {}     {}: {:04}     {}" with

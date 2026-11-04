@@ -9280,7 +9280,7 @@
 11493 __cxx_global_array_dtor.4@app/uenux2/src/app/comum/dados/crdvvota.cpp.o
 11509 __cxx_global_array_dtor.4@app/uenux2/src/app/comum/dados/chv.cpp.o
 11550 __cxx_global_array_dtor.2@app/uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp.o
-12875 __cxx_global_array_dtor.19
+12875 __cxx_global_array_dtor.20@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 407 _ZN4vota10CTelasVota7GetInstEv
 1073 _ZN5comum3CPE7GetInstEv
 1926 _ZN5comum2md20CValidadorIdentidade7GetInstEv
@@ -11808,7 +11808,7 @@
 6053 byn$mgfn-shared$_ZN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEED2Ev
 10686 _ZN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEED0Ev
 10688 _ZN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEED2Ev
-11708 __cxx_global_array_dtor.20
+11708 __cxx_global_array_dtor.20@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
 11709 __cxx_global_array_dtor.18@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
 11711 _ZN4vota17CPedeProporcional17ProcessInputAudioEv
 11726 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o

@@ -444,11 +444,29 @@
 #   Unit 280's roots read 1281's result for its callers that read it (1543, 5967, 7787, 11902) and give 3869 a second
 #   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
 # ctelasvota.cpp also holds the zerésima chain's screens, free functions of vota that ctelasvota.h declares and
-# describes, after the file's last record (3618, 7787's; lines 3621 on, chosen): vota::AdicionaLocal (target fn 4161),
-# vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587), with the file constant FONTE_LOCAL {15, 0}, which the
-# scan places by its bytes, as FONTE_TITULO (the target's @475008). Measured in the whole link before steps 7 to 9
-# (pnpm wasm score against names.tsv), all operand-only: 4161 56 over 894 rows, 2380 15 over 280, 6587 6 over 53. Step
-# 8 named 2380 by 6587's call, 4161 by 2380's and 6587 by the calls of 11855 and 11991 (unit 104); all three match.
+# describes: vota::AdicionaLocal (target fn 4161), vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587), with
+# the file constant FONTE_LOCAL {15, 0}, which the scan places by its bytes, as FONTE_TITULO (the target's @475008).
+# Measured in the whole link before steps 7 to 9 (pnpm wasm score against names.tsv), all operand-only: 4161 56 over
+# 894 rows, 2380 15 over 280, 6587 6 over 53. Step 8 named 2380 by 6587's call, 4161 by 2380's and 6587 by the calls
+# of 11855 and 11991 (unit 104); all three match.
+# - Their place: the object's two orders bound it, and the lines inside the bounds are chosen (how-to step 3,
+#   docs/reference/facts/placing.md §P4 and §P9).
+#   - Code: in link order use band 2 runs 6587, 6583, 6579, 6548 and band 3 4161, 4152, 4148, 4137, 4135 (names.tsv's
+#     ld_index rises along each). So 6587, which nothing in the file calls, is defined above
+#     TelaPreparandoDadosEncerramento, and 4161 is first mentioned above AdicionaTelaAguarde, by TelaNeutra's call:
+#     TelaNeutra and TelaPorFavorAguarde take lines 3341 to 3364. The run between record 3366 (12272, a lambda of
+#     CriaTelaVisualizacaoCandidato, scanned in libc++'s group, so no stub marks it) and GetInst's 3434 holds the
+#     file's other screen builders in 62 of its 67 lines, so the two sit above 3366.
+#   - Data: clang creates a file constant where the first body that reads it is compiled, in the definitions' order,
+#     not at that function's place in the code (AdicionaLocal's comes from TelaNeutra's call). The target holds the
+#     fonts as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992 and {15, 0} @475008, @474896 being
+#     FONTE_INSTRUCAO_TESTE_TECLADO (a reading: 11805, which holds TelaTesteTeclado, reads it). AdicionaLocal's body
+#     follows GetTelaCargo, and the object holds FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO and
+#     FONTE_LOCAL in that order (wasm-objdump -x -j Data: segments 5, 6, 31, 44). With the body above
+#     AdicionaTelaAguarde, FONTE_LOCAL came first (segment 9, then 12, 13, 38): three pairs against the target's.
+#     FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had before, which 3064 (record 1585,
+#     not written), a reader of @474896, can explain. The fonts after @475008, {35, 0} @475016 and {20, 1} @475032,
+#     want their first readers' bodies after AdicionaLocal's when those are written in this file.
 # - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
 #   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and

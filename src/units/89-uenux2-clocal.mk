@@ -265,14 +265,16 @@
 #   state at +28 (wasm-objdump -d of the try object, tools/round/try-tu.sh --symbols); built in a file-static helper that
 #   clang inlines into it (NomeArquivoLocal, a chosen name), they sit above the state, as an inlined callee's locals do
 #   (how-to step 3), and the object has the target's offsets.
-# - The order is measured on whole links. carregaarquivo.cpp is compiled in this list now, right after clocal.cpp (unit
-#   280's fragment keeps its rules and its notes, and says so): with its object ahead of clocal.cpp's, as unit 280's list
-#   had it, and the two path helpers above Carrega, 5740 scored 205 over 2503 rows (8 inserted, 8 deleted: two of the
-#   reader's locals zeroed ahead of CarregaArquivo's frame where the target zeroes them after its vptr store, and two
-#   pairs of locals swapped); with clocal.cpp's object first and the helpers above Carrega, 331 over 2501 (6 inserted, 10
-#   deleted); with clocal.cpp's object first and Carrega above the helpers, as written, 183 over 2495, all operand-only.
-#   The data agree with the objects' order: clocal.cpp's records (@1559828 to @1559876) lie ahead of the readers' run
-#   (1562844 on).
+# - The order is measured on whole links. carregaarquivo.cpp is compiled in this list now, right after clocal.cpp, a
+#   choice: the data put its object after clocal.cpp's (below), and the target holds ten other .cpp files' records
+#   between the two (crdv.cpp to ccabecalhopacote.cpp: awk -F'\t' '$1>1559876 && $1<1562844 {print $2}'
+#   ledger/source-locations.tsv). Unit 280's fragment keeps its rules and its notes, and says so. With its object
+#   ahead of clocal.cpp's, as unit 280's list had it, and the two path helpers above Carrega, 5740 scored 205 over 2503
+#   rows (8 inserted, 8 deleted: two of the reader's locals zeroed ahead of CarregaArquivo's frame where the target
+#   zeroes them after its vptr store, and two pairs of locals swapped); with clocal.cpp's object first and the helpers
+#   above Carrega, 331 over 2501 (6 inserted, 10 deleted); with clocal.cpp's object first and Carrega above the
+#   helpers, as written, 183 over 2495, all operand-only. The data agree with the objects' order: clocal.cpp's records
+#   (@1559828 to @1559876) lie ahead of the readers' run (1562844 on).
 # - Unit 309's roots stand in for 5740's caller 7787 (4161 is in the link) and for 5741's callers 12105 and 7787.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp src/app/comum/dados/carregaarquivo.cpp \
