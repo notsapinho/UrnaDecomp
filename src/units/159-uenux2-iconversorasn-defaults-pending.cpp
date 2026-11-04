@@ -16,15 +16,12 @@
 //   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: of its 43 callees one, fn 1555,
 //   has no name in splat/symbol_addrs.txt or splat/matched.txt (imports aside); 183 and 412 (unit 32's) have one, and
 //   518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and src/app/roots_iconversorasn.cpp.
-// - comum::asn::CConversorEntidadeHashes::DoConverte (slot 2, fn 10266, 1338 B), not written: md::CEntidadeHashes's
-//   members past +36 are not recovered (unit 160's fragment).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura
 //   on its stack (constructor fn 5712), whose entity type ModuloCandidatos::Candidatura the generated module lacks.
 #include "app/comum/dados/asn/candidatura/cconversorcandidaturas.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversordedo.h"
-#include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
 
@@ -45,11 +42,6 @@ CConversorBiometriaEleitorCifrada::TDado CConversorBiometriaEleitorCifrada::DoDe
 }
 
 CConversorCandidaturas::TDado CConversorCandidaturas::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
-
-CConversorEntidadeHashes::TEntidade CConversorEntidadeHashes::DoConverte(const TDado&) const
 {
     __builtin_trap();
 }

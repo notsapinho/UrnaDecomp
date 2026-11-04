@@ -28,8 +28,9 @@
 # CConversorEleicaoPE's and CConversorDetalheCandidato's: fragment 299 writes their slot 3 (11371, 11375), and
 # cconversoreleicaope.cpp.o and cconversordetalhecandidato.cpp.o emit the vtables and the defaults 11370 and 11374
 # with them; and CConversorEntidadeBU's: fragment 321 writes its slot 2 (10273), and cconversorentidadebu.cpp.o emits
-# the vtable and the default 10272 with it. The roots keep no vtable of CConversorDetalheCandidato and
-# CConversorDetalheConsulta: fn 11373 (fragment
+# the vtable and the default 10272 with it; and CConversorEntidadeHashes's: unit 293's cconversorentidadehashes.cpp
+# writes its slot 2 (10266), and that object emits the vtable and the default 10265 with it. The roots keep no vtable
+# of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment
 # 191's) stores both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367
 # (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores.
 #

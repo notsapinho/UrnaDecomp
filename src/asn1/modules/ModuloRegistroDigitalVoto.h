@@ -721,7 +721,7 @@ public:
     pleito::const_reference get_pleito () const { return *static_cast<pleito::const_pointer>(fields[0]); }
     pleito::reference ref_pleito () { return *static_cast<pleito::pointer>(fields[0]); }
     pleito::reference set_pleito () { return *static_cast<pleito::pointer>(fields[0]); }
-    pleito::reference set_pleito (ASN1::INTEGER::int_type v)
+    pleito::reference set_pleito (pleito::const_reference v)
     { return *static_cast<pleito::pointer>(fields[0]) = v; }
 
     class fase

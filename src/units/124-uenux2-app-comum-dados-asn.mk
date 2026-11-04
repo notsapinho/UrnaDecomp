@@ -69,10 +69,10 @@
 # 172 writes and matches them, and its object emits the class's vtable now.
 # The base's default DoConverte of the two converters that override only DoDesconverte (11380, 11358) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
-# Not written: 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/. The
-# members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437 and 11438, are fragment 140's and unit
-# 13's now: 11482 matches from unit 13's crdvvota.cpp.o, 11437 and 11438 since units 245, 96 and 273, and the fragments
-# say what the others wait for.
+# 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/ and matches from unit
+# 293's cconversorentidadehashes.cpp. The members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437
+# and 11438, are fragment 140's and unit 13's now: 11482 and 11483 match from unit 13's crdvvota.cpp.o, 11437 and 11438
+# since units 245, 96 and 273, and the fragments say what the others wait for or hold.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_ASN124_SRCS := src/app/comum/dados/md/candidatura/cdadoscandidato.cpp \
