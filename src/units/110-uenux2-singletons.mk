@@ -311,9 +311,11 @@
 #   fn 2266, celeitordetalhe.cpp's), adds one to the first of two 16-bit counts it returns through the result's address
 #   when the voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the
 #   false test first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted
-#   eqz); written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its
-#   members' names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are
-#   not written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
+#   eqz); written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). It returns comum::SQtdeAptos
+#   (cgeradorbuqrcode.h), as the RTTI of four std::function<comum::SQtdeAptos()> whose call operator is fn 2881 says (2881
+#   passes its own result's address straight to 2823); the function's name and const are chosen (celeitores.h). Its
+#   callers 11242 and 12110 are not written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, and
+#   2881, fragment 317's, are in the link).
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,
@@ -478,8 +480,7 @@
 # 26:15, EUE_COMUM_DADOS_7876 "Instância já criada"):
 # - Existe (target fn 2788, no record: its name and its line before GetInst are chosen): a lock of s_mutex and the test
 #   of s_instancia, CSubstituidorTitulo::Existe's shape; a member, since it reads the class's statics. In use band 4 it
-#   precedes 2787, as here. Callers 1543, 5586 (unit 123), 11223 and 11902 (unit 176); unit 280's roots stand in for
-#   11223, the one not in the link.
+#   precedes 2787, as here. Callers 1543, 5586 (unit 123), 11223 (unit 287) and 11902 (unit 176), all in the link.
 # - CreateInst (2787): the throw when the instance exists (no lock: the target's body takes none), comum's processo
 #   eleitoral load (3771, unit 280), then a new CPE (204 bytes) with the constructor inlined, which copies the processo
 #   (CPleito's copy constructor, 1281, for each pleito), stores the load's turn at +176 and builds a

@@ -25,6 +25,9 @@ public:
     // The same for the parameters report, which vota::CImpressaoPU::StartState (fn 11902) adds one to inline after
     // printing it. The name and its being defined in the class are chosen.
     void IncrementaNumViasPU() { ++m_numViasPU; }
+    // The same for the voters' list, which vota::CImpressaoListaEleitores::StartState (fn 11908) adds one to inline
+    // after printing it. The name and its being defined in the class are chosen.
+    void IncrementaNumViasEleitores() { ++m_numViasEleitores; }
 
 private:
     uebyte m_numViasEstadoUrna;

@@ -25,8 +25,9 @@
 #   one caller in our link, 11222, is named by its vtable slot, which casts no vote. A callers+content hand line for it
 #   would carry 11222's call and nothing else, and 11222 waits for the literal as well, so there is none.
 #
-# Pending (287-uenux2-cgeradorrelversaopacotedados-pending.cpp says what it waits for): ImprimeTituloJE (11223, slot
-# 3); the slots of its lambda's std::function (vtable @1576316: 11221, 11219, 2881, 11218, 11217) come with it.
+# ImprimeTituloJE (11223, slot 3) and the slots of its lambda's std::function (vtable @1576316: 11221, 11219, 2881,
+# 11218, 11217) are written in cgeradorrelversaopacotedados.cpp and match, with fragment 317 (whose header has the
+# measurements: the helper that prints the process's codes, and comum::CEleitoresAptos); the unit's pending file went.
 # ImprimeRodape (5596, slot 5) is written in cgeradorrelversaopacotedados.cpp, above Imprime (use band 2 puts 5596
 # first), and matches: src/units/296-uenux2-relatorios-impressao.mk has it, with the helpers it calls. Its match line
 # names comum::CGeradorRelPU::ImprimeRodape, the same text over that class's builder, which binaryen merges with it
@@ -65,8 +66,3 @@
 CGERADORRELVERSAOPACOTEDADOS_SRCS := src/app/vota/eleitor/iniciovotacao/auxiliares/ledadosdisponiveiscarga.cpp \
     src/app/comum/relatorios/cgeradorrelversaopacotedados.cpp src/app/comum/relatorios/adicionaparametro.cpp
 UENUX2_SRCS += $(CGERADORRELVERSAOPACOTEDADOS_SRCS)
-# The members not reconstructed: 287-uenux2-cgeradorrelversaopacotedados-pending.cpp gives the vtable trapping bodies,
-# compiled with the class's directory's flags (app/comum/relatorios/ builds without strict aliasing)
-$(ROOT)/$(APP)/287-uenux2-cgeradorrelversaopacotedados-pending.o: $(ROOT)/src/units/287-uenux2-cgeradorrelversaopacotedados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/287-uenux2-cgeradorrelversaopacotedados.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/comum/relatorios/cgeradorrelversaopacotedados.cpp) -c src/units/287-uenux2-cgeradorrelversaopacotedados-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/287-uenux2-cgeradorrelversaopacotedados-pending.o
