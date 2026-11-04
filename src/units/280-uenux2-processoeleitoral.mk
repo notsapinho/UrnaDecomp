@@ -83,19 +83,40 @@
 #
 # Matched: 5706 (114 over 1366 rows before step 8, all operand-only: calls, the table slots of the format buffer and the
 # thrown object's destructor, the packed std::format strings), 5726 (1 over 17), std::vector<CEleicaoPE>::push_back
-# (5777, 13 over 420, from carregaprocessoeleitoral.cpp.o) and 3735 (126 over 1432, all operand-only, the same kinds as
-# 5706's; the first form written). Written and not matched:
+# (5777, 13 over 420, from carregaprocessoeleitoral.cpp.o), 3735 (126 over 1432, all operand-only, the same kinds as
+# 5706's; the first form written) and 5778 (349 over 4644 rows before step 8, all operand-only: calls, data addresses,
+# the thrown errors' destructor slots and the packed std::format strings), with CPleito's constructor (5652, unit 88)
+# and comum::asn::CConversorEleicaoPE's default constructor out of line in cconversoreleicaope.cpp (unit 299's file; no
+# record names it, and binaryen inlines it into 5778). The evidence for that constructor: in the "ce" reader, inside
+# CarregaPleito's loop, the target keeps the converter's address (+60 of the 64-byte frame) in a local from its vptr
+# store on, stored at offset 0, and passes that local to DoDesconverte, where its "ste" reader and the readers of 3771
+# and 5706 store the vptr at offset 60 and compute the address again where they pass it; with the constructor implicit,
+# as the other converters', 5778 scored 461 over 4649 rows (451 operand-only, 5 inserted, 4 deleted), those rows. That
+# such code is binaryen's inlining of a call that takes the converter as `this` is a reading; unit 299's
+# CConversorCargo constructor is out of line on a like sign. Defined `= default` or `{}`, it gives the same object (the
+# two objects are cmp-equal). Chosen: the constructor's declaration, its file and its place there.
+# Written and not matched:
 # - 3771: 1126 over 3025 rows (1019 operand-only, 51 inserted, 56 deleted); the rows left are local numbers and the
 #   order of a few operands, the place of the general state's UF above all (ours computes it before the inner frame, the
-#   target where it reads it). Its scan row is `unresolved` on its call of 5778, which no route names. A
-#   `callers+content` hand line in splat/symbol_addrs.txt names it from the seven std::source_location records only it
-#   loads (cfileasn.h's ReadFromFile and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte,
+#   target where it reads it). Its scan row is `differs` on a local's number (+0x13); it read `unresolved` on its call
+#   of 5778 until 5778 matched. A `callers+content` hand line in splat/symbol_addrs.txt names it from the seven
+#   std::source_location records only it loads (cfileasn.h's ReadFromFile and DecodeObjectFunction for
+#   EntidadeProcessoEleitoral, IConversorASN's Desconverte,
 #   GetPleito2's), which ours loads too: with it CPE::CreateInst (2787, unit 110) matches, without it 2787 is
 #   `unresolved self-voted` on this call.
-# - 5778: 461 over 4649 rows (451 operand-only, 5 inserted, 4 deleted): in one inlined CarregaArquivo the target keeps
-#   the converter's address (+60 of the 64-byte frame) in a local from its vptr store on, ours computes it again where it
-#   passes it; not explained. It also waits for CPleito's constructor (5652, unit 88), which differs.
 # Measured forms (same command, each against the whole link with the other functions as written):
+# - 3771 with LeProcessoEleitoral taking the general state in place of the UF and reading its UF where it is first
+#   passed, with fase and idPE still its arguments: 989 over 3020 rows (46 inserted, 52 deleted). The UF's address is
+#   then computed where the first CarregaPleito call passes it, as the target does, but the upper-casing loop reads the
+#   UF through the state (offsets 12, 19 and 8), where the target reads it through that address (4, 11 and 0), as the
+#   UF parameter gives. With the local numbers masked, what is left beside that is: our copy of the result's address at
+#   the top, where the target copies it before the first CarregaPleito call; two locals the target zeroes before
+#   ReadFromFile(const CFile&)'s 528-byte frame (no loop holds it there), ours none; the order of two operands at
+#   ReadFromFile(const std::string&)'s 480-byte epilogue; and the pleito-2 test, an `i32.eq` with 1 on the optional's
+#   flag in the target, a test of the byte in ours (`dto.TemPleito2() == true` gives the same object as ours). Not
+#   explained, so the UF parameter stays.
+# - 3771 with LeProcessoEleitoral taking the general state alone and reading fase, idPE and the UF itself: 1005 over
+#   3024 (50, 56): fase's and idPE's loads come after its 272-byte prologue, where the target has them before it.
 # - The ".pid" and "cp" names as named strings: with each a temporary of the path's operator/ (moved into the path),
 #   5778 scored 728 over 4676 rows (32 inserted, 48 deleted) and 3771 1399 over 3105 (131 and 153).
 # - 3771's origin is folded: its wasm type has no such parameter, and it passes the constant 0, FLASH_INTERNA, to
