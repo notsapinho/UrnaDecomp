@@ -19,8 +19,8 @@ CEstadoAudio::CEstadoAudio()
     , m_eleitoresCarregados(false)
     , m_modo(MODO_DESATIVADO)
     , m_bancoCarregado(false)
-    , m_campo9(0)
-    , m_campo10(0)
+    , m_teclaEsperada(0)
+    , m_teclaPressionada(0)
 {
 }
 
@@ -37,6 +37,17 @@ void CEstadoAudio::SelecionaModo1()
 void CEstadoAudio::Desativa()
 {
     m_modo = MODO_DESATIVADO;
+}
+
+void CEstadoAudio::SetTeclasTesteTeclado(char esperada, char pressionada)
+{
+    m_teclaEsperada = esperada;
+    m_teclaPressionada = pressionada;
+}
+
+std::pair<char, char> CEstadoAudio::GetTeclasTesteTeclado() const
+{
+    return {m_teclaEsperada, m_teclaPressionada};
 }
 
 } // namespace vota

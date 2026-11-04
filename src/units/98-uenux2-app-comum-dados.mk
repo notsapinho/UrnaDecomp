@@ -87,7 +87,7 @@
 #   ecourna::app::dados::CParametrosUrna), then 2266, then celeitores.cpp's 2265 and 2264: name order puts
 #   celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five
 #   callers: 2823 and 2824 (unit 110's CEleitores::QuantidadeAptos and QuantidadeAptosPorAbrangencia) and 10635 (unit
-#   104) and 11233 (fragment 317's SituacaoEleitor, written) in the link, and 11616, not written, for which the roots'
+#   104) and 11233 (fragment 317's SituacaoEleitor, matched) in the link, and 11616, not written, for which the roots'
 #   SemImpedimentoEmOutro stands. Its name, its being a member (it reads the private impediments) and const are chosen.
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
@@ -108,8 +108,8 @@
 #   when std::filesystem::exists says no, builds an md::CParametro (app/comum/dados/md/eleitor/cparametro.h) from the
 #   identity of the voter's own type, the byte vector and CEleitor::GetOffsetBiometria (celeitor.cpp:79, which 1937
 #   holds behind a frame of its own), and returns comum::CLeitorASN::LeBiometriaEleitor's result
-#   (app/comum/asn/cleitorasn.h, below). Its callers 3614, 3616 and 10316 are not written (unit 98's roots stand in
-#   for them) and 1393, CEleitores::GetCurrentBiometriaEleitor, is (fragment 291), which keeps it written. It matches
+#   (app/comum/asn/cleitorasn.h, below). Its callers 3614 and 10316 are not written (unit 98's roots stand in
+#   for them), 3616 is (unit 319) and 1393, CEleitores::GetCurrentBiometriaEleitor, is (fragment 291), which keeps it written. It matches
 #   from celeitordetalhe.cpp.o at the head of unit 110's list, ahead of carregaarquivo.cpp.o (unit 280's); after it,
 #   at unit 98's place before the file moved, it did not (the forms below). Its name comes from its records
 #   (srcloc-anchor), not from its body.

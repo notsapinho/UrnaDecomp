@@ -317,6 +317,43 @@ public:
     // api::CLoga::loga (fn 433) on +4, severity 1 and 2. Their names, from the messages, and their place are chosen.
     void LogaAnoNascimentoIgualCadastro();
     void LogaAnoNascimentoDiferenteCadastro();
+    // vota::ApresentaFotoEleitor's (fn 3616) logs, each after GetInst behind a frame of its own, so out of line here and
+    // inlined by binaryen into that one caller (no target index): LogaErroCarregarFotoEleitor and
+    // LogaFotoEleitorApresentada ("Erro ao carregar a foto do eleitor", "Foto do eleitor apresentada") are
+    // LogaEleitorEstaVotando's shape, loga (fn 233) of the text's std::string in a 16-byte frame; LogaLarguraFotoInvalida,
+    // LogaAlturaFotoInvalida and LogaQuantidadeCoresFoto ("Largura da foto do eleitor inválida: {} px", "Altura da foto
+    // do eleitor inválida: {} px", "Quantidade de cores não conforme: {} bits por pixel") loga a std::format of one
+    // unsigned argument (type 6) in a 384-byte frame, the caller passing a 16-bit width and height (i32.load16_u) and
+    // an 8-bit count (i32.load8_u), whence the parameters' types. Their names, from the messages, and their place are
+    // chosen.
+    void LogaErroCarregarFotoEleitor();
+    void LogaLarguraFotoInvalida(ueword largura);
+    void LogaAlturaFotoInvalida(ueword altura);
+    void LogaQuantidadeCoresFoto(uebyte bitsPorPixel);
+    void LogaFotoEleitorApresentada();
+    // LogaInicioEncerramento ("Inicio do Encerramento") and LogaEleitorHabilitado ("Eleitor foi habilitado"), held
+    // inlined by vota::CAguardaMensagem::ProcessKey (fn 7481) for the messages 7 and 1, and LogaInspecaoUrnaConfirmada
+    // ("Inspeção da urna confirmada"), by vota::CInspecionaUrna::ProcessInput (fn 11797), are LogaEleitorEstaVotando's
+    // shape: GetInst called before the member's own 16-byte frame opens, loga (fn 233). Each literal is loaded by its
+    // caller alone. Their names, from the messages, and their place here and at the end of clogvota.cpp are chosen.
+    void LogaEleitorHabilitado();
+    void LogaInicioEncerramento();
+    void LogaInspecaoUrnaConfirmada();
+    // LogaTipoHabilitacaoEleitor (vota::CDigitalReconhecida::ProcessInput, fn 10481: "Tipo de habilitação do eleitor
+    // [{}]") and LogaDigitalCapturada (vota::CPedeDigital::ProcessTick, fn 10465: "Capturada a digital. Tentativa [{}]
+    // de [{}]") are held inlined by their one caller behind a 400-byte frame of their own, after its call of GetInst:
+    // loga (fn 233) on std::format's result. The first formats a std::string (argument code 13), the text a
+    // std::map<uebyte, std::string> of two pairs, 1 "biométrica" and 2 "por código", gives for 1 through at(), the map
+    // built and destroyed in the member (fns 3266 and 2499); 10481 passes no argument, so the key is a constant there,
+    // a parameter binaryen's dead-argument elimination would fold (a reading). The second formats two bytes as unsigned
+    // (argument code 6 twice), LogaSolicitaDigital's shape. Their names (from the messages), the parameters, the map's
+    // being a local and its key's type's spelling (the keys are stored with i32.store8), their place here and
+    // LogaDigitalCapturada's, last in clogvota.cpp, are chosen. LogaTipoHabilitacaoEleitor is defined right after
+    // LogaOperadorSelecionou (fn 2502): clang emits the map's destroy (fn 2499) after its first user, and use band 4
+    // puts 2499 between 2502 and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), which follows it
+    // (this object's functions of that band, 2509, 2502, 2499 and 2495, then lie in reverse index order).
+    void LogaTipoHabilitacaoEleitor(uebyte tipo);
+    void LogaDigitalCapturada(uebyte tentativa, uebyte total);
 
 private:
     CLogVota();

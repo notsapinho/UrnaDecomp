@@ -23,8 +23,7 @@ namespace vota {
 // empty body (fn 218); CEleitorNaoEncontrado alone overrides it. StartState (slot 2, fn 10625) shows the form at +12,
 // calls slot 9, then fn 3616, and stays in the state; ProcessInput (slot 7, fn 10624) reads the form and goes to fn
 // 652's state on INPUT_CONFIRMA (9) when the int at +20 is 0, and on INPUT_CORRIGE (5) when it is 1.
-// ProcessInput is written; StartState is pending (src/units/161-uenux2-app-vota-operador-identidade-pending.cpp says
-// what it waits for). The
+// Both are written; fn 3616 is vota::ApresentaFotoEleitor (app/vota/operador/comum/fotoeleitor.h). The
 // destructor is out of line: fn 1257 is a thunk into binaryen's fn 2902 with this class's vptr, and the derived
 // classes' destructors call it (fn 1907, and fn 1689 frees after it).
 // The constructor is fn 1905, out of line (its callers are fn 5424, CEleitorNaoEncontrado::GetInst, and fn 10635, which

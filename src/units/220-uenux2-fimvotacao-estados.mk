@@ -49,10 +49,10 @@
 # declared first; `comum::CAppState()` for the base's 0 (its default argument, EVENTO_NENHUM); the lines of every function (above each file's first record line); the headers' paths,
 # beside the .cpp files the records name.
 #
-# The roots stand in for the GetInst callers not in the link (fns 7160, 7481, 12098 and CGeraBU::StartState 12110) and
-# for the other units' members this unit's paragraphs add whose target callers are not all written: 3054 (fns 11804,
-# 11809; 11805 is unit 217's, written), 5936 (11809, 11812) and api::CDateTime::operator- (5471: fn 13012). Their
-# comments name each.
+# The roots stand in for the GetInst callers not in the link (fns 7160, 12098 and CGeraBU::StartState 12110) and for
+# api::CDateTime::operator- (5471), whose other target caller, fn 13012, is not written. The stand-ins for 3054's
+# callers (fns 11804, 11809) and 5936's (11809, 11812), and the call of CGeraBU's GetInst for fn 7481, went: those
+# callers are in the link. Their comments name each.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 FIMVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/fimvotacao/cgerabu.cpp \
     src/app/vota/eleitor/fimvotacao/cgerarelatorios.cpp \

@@ -45,7 +45,9 @@
 # next state, calls the form's slot 2 (+12), posts 12 to vota::CThreadOperador's queue and goes to
 # vota::CAguardaMensagem::GetInst() (fn 1337), the target's order. Slots 0 and 1 are the shared 244 and 387, and our D2 and
 # D0 merge into them. The path and every member name are chosen (the header says from what). GetInst, inlined into fn
-# 7481, is not written: the constructor calls fn 6557, which has no name.
+# 7481 (unit 104's CAguardaMensagem::ProcessKey), and the constructor, which calls fn 6557
+# (CTelasVota::GetTelaContinuaVotacao), are written in cmostratelacontinuavotacao.cpp; its statics' exit destructors
+# (7239, 7232) match.
 #
 # IConfirmaJustificativa: its D2 (1688) is a thunk into binaryen's fn 2902 with the class's vptr, and with unit 161's 1257
 # and unit 169's 1720 and 1952 our link forms the same body from four thunks. The D0 (2748) calls the D2 and frees `this`
@@ -63,11 +65,16 @@
 # choice that gives the same compare. The three derived classes' slot 0, fn 3626 (`f1688(p0)`), matches from unit 243's
 # CConfirmaJustificativa, whose destructor is out of line.
 #
-# Roots (174-uenux2-app-vota-mensagens-roots.cpp): CMostraTelaContinuaVotacao's vtable. Insert (501) needs no stand-in now: fn 11914, the
-# one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller
-# binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read `score 4 over 39 rows`
-# with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):
-# IConfirmaJustificativa's StartState.
+# No roots: the sink of CMostraTelaContinuaVotacao's vtable went with the roots file, since fn 7481, which holds the
+# class's GetInst and constructor inlined, is in the link (a link without the sink moved no row). Insert (501) needs no
+# stand-in: fn 11914, the one target caller of 501 that passes another priority than 1, is in the link (unit 199);
+# without such a caller binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read
+# `score 4 over 39 rows` with one row deleted, then operand-only).
+# Matched since: IConfirmaJustificativa::StartState (fn 10589, slot 2 of the class and its three derived classes, in
+# iconfirmajustificativa.cpp after the destructor, before ProcessInput: 10589 above 10588 in use band 1): the form's
+# slot 2, vota::ApresentaFotoEleitor (fn 3616, unit 319) and `this` as the next state; 1 over 13 rows before steps 7
+# to 9, the call. Named by its vtable; its call of 3616 holds through 3616's hand line. The -pending.cpp that trapped it
+# went with it.
 #
 # IConfirmaJustificativa::ProcessInput (fn 10588, 1112 B): through Read() (its TU's record of cinteractiveform.h:57) it
 # goes, on CONFIRMA, to CEleitorImpedidoJustificarVotoCPF::GetInst() when the identifier typed is a CPF
@@ -87,9 +94,3 @@ APP_VOTA_MENSAGENS_SRCS := src/app/vota/eleitor/cmostratelacontinuavotacao.cpp \
     src/app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.cpp \
     src/app/vota/operador/justificativa/iconfirmajustificativa.cpp
 UENUX2_SRCS += $(APP_VOTA_MENSAGENS_SRCS)
-APP_VOTA_MENSAGENS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/174-uenux2-app-vota-mensagens-pending.o: $(ROOT)/src/units/174-uenux2-app-vota-mensagens-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/174-uenux2-app-vota-mensagens.mk $(APP_VOTA_MENSAGENS_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/174-uenux2-app-vota-mensagens-pending.cpp -o $(R)
-$(ROOT)/$(APP)/174-uenux2-app-vota-mensagens-roots.o: $(ROOT)/src/units/174-uenux2-app-vota-mensagens-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/174-uenux2-app-vota-mensagens.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/174-uenux2-app-vota-mensagens-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/174-uenux2-app-vota-mensagens-pending.o $(APP)/174-uenux2-app-vota-mensagens-roots.o

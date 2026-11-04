@@ -11,8 +11,9 @@
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
 # name rests on; the member not written is in 150-uenux2-eleitor-estados-pending.cpp with what it waits for.
 #
-# Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name. 3251 matches now, as the
-# __find_equal of md::CVotosCargos' map, which unit 13's InsereCedula brings (unit 197); 2386 is still not written.
+# Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name. 3251 matches now; its
+# match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings, ahead of
+# md::CVotosCargos' map's from unit 13's InsereCedula (unit 197); 2386 is still not written.
 #
 # Written since. CConfirmaVotoSemCandidato's GetInst, its constructor and its two statics: the target holds GetInst,
 # the constructor inlined, in fn 4459 (vota::CEleitorVotando::ChamaEstadoProximoCargo, src/units/197-uenux2-celeitorvotando.mk),

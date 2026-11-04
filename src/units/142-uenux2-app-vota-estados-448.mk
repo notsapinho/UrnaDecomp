@@ -15,8 +15,10 @@
 #   docs/reference/facts/reading.md R5, and fn 448 destroys the members and stores no vptr (R4). Measured on
 #   CUrnaInspecionada: without final the D2 gains the vptr store (55 rows against 50).
 # - The members' offsets and types: the constructors that fns 11797, 2747, 10500, 1150 and 10415 hold inlined (the class
-#   headers list what each stores). Two stay unwritten here: fns 11797 and 10500 call functions with no name
-#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fns 1150 and 2747 are written
+#   headers list what each stores). None stays unwritten here: 10500's is written (below), and so are
+#   CUrnaInspecionada's GetInst and constructor, which 11797 holds, in curnainspecionada.cpp with its statics (exit
+#   destructors 11796 and 11795, matched with 11797, whose cinspecionaurna.cpp this list compiles), and its vtable
+#   sink in the roots went. Fns 1150 and 2747 are written
 #   (below), and so is CPerguntaCodigoSuspensao's GetInst, which 10415 (unit 152's
 #   CPerguntaEleitorVotando::ProcessInput) holds inlined.
 # - The log members: fns 10594 and 10421 call vota::CLogVota::GetInst (fn 184) and then open a stack frame of their own
@@ -164,11 +166,23 @@
 # aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with -fno-strict-aliasing too, the file gives the
 # constructor the same code.
 #
-# A written body that does not match: CPedeAnoNascimentoSemBiometria::StartState (fn 10490) is `differs`. The target
-# stores +4 (the next state) first, then +32 and +28. Each of the six orders of the three statements compiles at the
-# tree's flags with the +4 store last, and the order written here does so at -O1, -O2, -O3, -Os and -Oz, and with and
-# without -fno-strict-aliasing; its IR keeps the source's order, so the wasm code generator moves the store. No form
-# found gives the target's order; the body kept is the plainest one, in the target's order.
+# Matched since: CPedeAnoNascimentoSemBiometria::StartState (fn 10490). The target stores +4 (the next state) first,
+# then +32 and +28. Each of the six orders of the three statements written as assignments compiles at the tree's flags
+# with the +4 store last (the wasm code generator moves it). comum::CAppState::SetNextState (out of line in
+# cappstate.cpp, which binaryen inlines) called first keeps it first: the call clang cannot move a store across, the
+# replay reading of unit 61's fragment. With it, `m_tentativas = 0` then `m_bPrimeira = true` give +32 then +28 (the
+# other order gave them reversed: 6 over 21 rows, 3 inserted, 3 deleted), byte-exact before steps 7 to 9.
+# Matched since: CPedeAnoNascimentoSemBiometria::GetInst with its constructor and the two helpers that build its forms,
+# which have no target function of their own: fn 10500 (unit 239's CNomeEleitor::ProcessInput) holds them inlined, and
+# the statics' exit destructors (10491, s_mutex's; 10492, s_inst's) match through the names 10500's votes give the
+# statics, which they read. The constructor: CAppState's with EVENTO_ENTRADA (2), the vptr, the two forms from one
+# builder slot (+84 of a 96-byte frame), then +32 = 1 and +28 = 0. The first form: CEleitorDadoNomeParaUrna::Text at
+# {1, 1} with "{:2}", GetTextoIdentidadeDigitada at {1, 2}, "Seq:" at {32, 2}, CEleitorDadoSequencial::Text at {40, 2}
+# with "{:04}" on the right, "Digite o ANO de nascimento:" at {1, 3}, vota::AdicionaCampoNumerico(builder, 4, true,
+# {29, 3}), "CORRIGE: cancelar" at {1, 4}, "CONFIRMA: habilitar" at {40, 4} on the right, GetInteractiveForm("", true);
+# the second: the same four fields, "ANO DE NASCIMENTO INCORRETO" at {1, 3}, "CONFIRMA: tentar novamente" at {40, 4} on
+# the right, AddInputControl, GetInteractiveForm("", true). The statics are defined before StartState, their
+# destructors' place in use band 0 (10492, 10491 above 10490). The vtable's sink in the roots went with 10500's landing.
 #
 # Matched since: vota::CPerguntaCodigoSuspensao::ProcessKey (10419, slot 6, in cperguntacodigosuspensao.cpp after
 # ProcessInput, the band's order: 10420 links before 10419). Key 5 goes to CMostraEleitorVotando::GetInst (1150); keys 2
@@ -211,7 +225,17 @@
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 # cpedeanonascimentosembiometria.cpp, this unit's, is compiled in unit 161's list (10489's paragraph above).
-APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
+# cinspecionaurna.cpp, unit 152's, links here ahead of curnainspecionada.cpp, the target data's order (CInspecionaUrna's
+# vtable @1547448 before CUrnaInspecionada's @1547520): fn 11797 (CInspecionaUrna::ProcessInput), which holds
+# CUrnaInspecionada::GetInst inlined, differs in local numbers with the other order (65 over 243 rows, pnpm wasm score in
+# the whole link) and has operand rows only with this one (38 over 243). The move puts cinspecionaurna.cpp.o ahead of
+# four objects whose data the target holds before its vtable (cconfirmavotosemcandidato.cpp,
+# cinstrucaovotacaoacessibilidade.cpp, cvisualizarcandidatos.cpp and ctelascargo.cpp, by their records and vtables) and
+# takes it from behind nineteen whose data the target holds after it, which the link had before it; of the 24 objects
+# it jumps one has no data (validatitulosuspensao.cpp). Counted with each object's vtables, typeinfos and records in
+# .data, their target addresses from the symbol file and the records, against the link map.
+APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/cinspecionaurna.cpp \
+    src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
     src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp \
     src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp \
@@ -221,8 +245,8 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_448_SRCS)
 # with the unit's flags
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-pending.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-pending.cpp -o $(R)
-# nothing reconstructed references two of the classes yet: 142-uenux2-app-vota-estados-448-roots.cpp takes their
-# vtables' addresses, and stands in for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
+# 142-uenux2-app-vota-estados-448-roots.cpp keeps no vtable (every class's constructor is in the link) and stands in
+# for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-roots.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/142-uenux2-app-vota-estados-448-pending.o $(APP)/142-uenux2-app-vota-estados-448-roots.o

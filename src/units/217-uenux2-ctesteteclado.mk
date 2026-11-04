@@ -7,9 +7,51 @@
 # ctextbox.cpp), the destroy of GetKeyboardLayout's map (4148, unit 110's ctelasvota.cpp) and that map's
 # initializer-list constructor (6579, ctelasvota.cpp's instance, matched since that file builds without strict
 # aliasing: src/Makefile's UENUX2_NOTBAA_FILES). Written and not matched (below says what each waits for): StartState
-# (11805); impl::CGeradorTeclasAleatorio::GeraSequencia (11803, slot 2 of its vtable).
-# 217-uenux2-ctesteteclado-pending.cpp traps ProcessInput (11804). The class head says what its layout and declaration
-# rest on; igeradorteclas.h and cgeradorteclasaleatorio.h say what the generator's do.
+# (11805); impl::CGeradorTeclasAleatorio::GeraSequencia (11803, slot 2 of its vtable). The class head says what its
+# layout and declaration rest on; igeradorteclas.h and cgeradorteclasaleatorio.h say what the generator's do.
+#
+# ProcessInput (11804, records :50, :60 and :81), written in ctesteteclado.cpp over its blank record lines: it reads a
+# key from api::CPolySingleton<api::IInputKbd>::instance() (record :50, column 20: `auto& leitor = ` is a chosen
+# spelling of that length) when one is there (IInput::GetKey, inline in api/hwil/iinput.h, its record 86:19), finds the
+# key expected in the screen map (throws vota error 9361 at :60 with "Tecla não encontrada: " and the key when it is
+# not there); on a wrong key it calls CLogVota::LogaFimTesteTecladoSucesso (fn 4511: the target calls it on this
+# path too, its name is unit 119's choice), stores the two keys in vota::CEstadoAudio (SetTeclasTesteTeclado) and goes to
+# vota::testeteclado::CTesteFalhou::GetInst() (held inlined); on the right one it marks its box with
+# api::TEXTSTATUS_DESTAQUE (2), moves to the next key, and at the end logs again and goes to the state +64 holds;
+# otherwise it finds the next key (9362 at :81, the same message) and marks it TEXTSTATUS_PREENCHIDO (1). Operand rows
+# only in the whole link at once (73 over 624, pnpm wasm score; `i32.const 69 ~ 9` twice is __cxa_throw's destructor
+# slot) and matched (srcloc-anchor); the lines between its records and the codes' names are chosen, and so is the
+# function's first line right below StartState's brace (line 50 leaves no room for a blank line above it).
+# StartState (11805) now scores 310 over 4520 rows (302 operand-only, 4 inserted, 4 deleted): ProcessInput's
+# instance() call gives push<IGeradorTeclas>'s frame, as the scratch line below measured.
+#
+# The failure states it reaches, in testeteclado/ (new files, but cerrotestetecladofim.cpp, moved here from unit 97's
+# list), each a singleton whose GetInst and constructor its one caller holds inlined, with its statics' two exit
+# destructors (all matched with their callers):
+# - vota::testeteclado::CTesteFalhou (ctestefalhou.{h,cpp}): GetInst in 11804; ProcessInput (11809, slot 7), on
+#   CONFIRMA to CEsperaRetestar::GetInst() (5936), on CORRIGE to CEnviarManutencao::GetInst(); statics 11811, 11810.
+# - vota::testeteclado::CEnviarManutencao (cenviarmanutencao.{h,cpp}): GetInst in 11809; ProcessInput (11812), on
+#   CONFIRMA to CEsperaRetestar, on CORRIGE to CErroTesteTecladoFim::GetInst(); statics 11814, 11813.
+# - vota::testeteclado::CErroTesteTecladoFim (unit 97's class): GetInst in 11812; statics 11816, 11815.
+# Their screens are ctelasvota.cpp's (TelaTeclaErradaTesteTeclado with its lambda, fn 12903, matched by its table
+# slot from 11804's anchor; TelaEnviarManutencaoTesteTeclado; TelaErroTesteTeclado: ctelasvota.h has them). Their
+# classes' shape is CErroTesteTecladoFim's: slots 0 to 2 and 8 of the three vtables are one body each (785, 1560, 3857,
+# 12061). Evidence: the vtables, the GetInst bodies inlined (sizes, vptrs, the base's argument, the statics'
+# addresses), the br_table of each ProcessInput (CONFIRMA in its first block). The files are in the data's order
+# (CErroTesteTecladoFim's vtable @1546920, CEnviarManutencao's @1546980, CTesteFalhou's @1547056, CTesteTeclado's
+# @1547132), ahead of ctesteteclado.cpp: with cerrotestetecladofim.cpp in unit 97's list (behind cenviarmanutencao.cpp)
+# 11812 differed in local numbers (190 over 471 rows, 176 operand-only, 7 inserted, 7 deleted), and here it has
+# operand rows only; 11804 and 11809 had operand rows only at once. The move jumps 240 objects of the link. Counted
+# with each object's vtables, typeinfos and records in .data (their target addresses from the symbol file and the
+# records, against the link map), it inverts 29 pairs, objects whose data the target holds after the class's and the
+# link before it: cgerabu, cgerarelatorios, ccopiaresultadoparamr, cfinalizaaquisicao, cimprimindobehb, cimprimirbjust
+# and cmostraqrcodebu (fimvotacao/), cfimvotoeleitor, csincronismovotoeleitor, crelvotautil, cqrcodeds,
+# cexibealertadesligamento, cvotacaostateaudio, cestadocomdesligamentoautomatico and fifteen of
+# mock/app/simulador/wasm/ (cwasmclp, cwasmtimer, cwasmtimerscheduler, cwasmlogd, cwasmscreen, cwasmbeep,
+# cwasmwebsound, cwasmscreenmt, cwasmnullprinter, cwasmnullpaper, cwasminputkbd, cwasminputmt, cwasmnullsound,
+# cwasmsystemdatetime, cwasmnulltexttospeech); 183 keep their order, 9 have data on both sides and 19 none. The four
+# testeteclado files are the data's order among themselves. Chosen: the classes' files and every member name, the
+# `switch`es.
 #
 # What StartState holds (pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11805), in order, and where it is written:
 # - CLogVota::GetInst (184), then a 16-byte frame that passes "Inicio do teste de Teclado do TE" to fn 233:
@@ -93,9 +135,8 @@
 #   where the target's, as fn 599's, is at +172) and where l8 + 28, the sequence's result slot, is set. With a call of
 #   api::CPolySingleton<api::IInputKbd>::instance() in a function above line 121 (a scratch line, not kept:
 #   ProcessInput calls that instance, fn 455), push's frame is the target's: 310 over 4520 (302 operand-only, the same
-#   4 and 4); docs/reference/facts/codegen.md C5 has the mechanism. ProcessInput (11804) is not written; its
-#   callee fn 653, api::CInteractiveFormBuilder::AddLabeledInputControl, matches (unit 120). The l8 + 28 rows are not
-#   explained.
+#   4 and 4); docs/reference/facts/codegen.md C5 has the mechanism, and ProcessInput (11804) is that call now (above).
+#   The l8 + 28 rows are not explained.
 # - 11802, the exit destructor of GetInst's mutex (`f150(1837656)`), and 12862, the key vector's, read no-candidate:
 #   no matched function uses either object (StartState uses both, __wasm_call_ctors builds the vector). 12862 is also
 #   `f6071(p0, 1833368, 1833364, 1833360, 4, 1, 12)`, a thunk into the body binaryen merged from it and fn 10879 (not
@@ -133,17 +174,10 @@
 # @1835152, lies below the macro's mutex in .bss), AdicionaCaixaTecla last; api/gui/ctextbox.h and
 # api/gui/cinteractiveform.h moved into ctesteteclado.h, whose members name both, to keep StartState's record lines.
 # Other lines chosen.
-# The roots give fns 940 and 3854 the second call site the target gives them (ProcessInput, 11804, calls both; fn 5982,
-# unit 37's, in the link now, calls 940): binaryen would inline each into StartState, its one caller in our link.
-CTESTETECLADO_SRCS := src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp
+# No roots and no -pending.cpp: fns 940 and 3854 have their second target caller in the link (ProcessInput, 11804,
+# calls both; fn 5982, unit 37's, calls 940), so the stand-ins that gave them one went.
+CTESTETECLADO_SRCS := src/app/vota/eleitor/iniciovotacao/testeteclado/cerrotestetecladofim.cpp \
+    src/app/vota/eleitor/iniciovotacao/testeteclado/cenviarmanutencao.cpp \
+    src/app/vota/eleitor/iniciovotacao/testeteclado/ctestefalhou.cpp \
+    src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp
 UENUX2_SRCS += $(CTESTETECLADO_SRCS)
-# The member not reconstructed: 217-uenux2-ctesteteclado-pending.cpp gives the vtable its trapping body, compiled at
-# the class's flags
-CTESTETECLADO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/217-uenux2-ctesteteclado-pending.o: $(ROOT)/src/units/217-uenux2-ctesteteclado-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/217-uenux2-ctesteteclado.mk $(CTESTETECLADO_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,$(CTESTETECLADO_SRCS)) -c src/units/217-uenux2-ctesteteclado-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/217-uenux2-ctesteteclado-pending.o
-# The stand-ins for the target callers not in the link: 217-uenux2-ctesteteclado-roots.cpp
-$(ROOT)/$(APP)/217-uenux2-ctesteteclado-roots.o: $(ROOT)/src/units/217-uenux2-ctesteteclado-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/217-uenux2-ctesteteclado.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/217-uenux2-ctesteteclado-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/217-uenux2-ctesteteclado-roots.o

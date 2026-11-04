@@ -91,15 +91,15 @@ void CDigitalNaoReconhecida::ProcessInput()
     switch (m_form->Read()) {
     case api::INPUT_CONFIRMA:
         if (CControlaReconhecimento::AtingiuLimiteTentativas()) {
-            m_pNextState = &CVerificaDadoEleitor::GetInst();
+            SetNextState(&CVerificaDadoEleitor::GetInst());
         } else {
             CControlaReconhecimento::AvancaTentativa();
-            m_pNextState = &CPedeDigital::GetInst();
+            SetNextState(&CPedeDigital::GetInst());
         }
         break;
     case api::INPUT_CORRIGE:
         CLogVota::GetInst().LogaHabilitacaoCanceladaReconhecimentoBiometrico();
-        m_pNextState = &CCancelaHabilitacaoEleitor::GetInst();
+        SetNextState(&CCancelaHabilitacaoEleitor::GetInst());
         break;
     default:
         break;

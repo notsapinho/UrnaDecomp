@@ -10,16 +10,18 @@
 #   1391) in band 9, and celeitores.cpp's records come before cjustificador.cpp's. Its name (after
 #   GetCurrentAbrangenciaEleitor's), its const and its line after GetCurrentAbrangenciaEleitor are chosen. It matched
 #   through the scan's content pass (`source` content in step 9's first scan) once 1937 had its name; BiometriasCorrentes
-#   in the roots stands in for the three callers not written (10425, 10465, 10500), two calls on two objects, reading
-#   both results.
+#   in the roots stands in for the caller not written (10425; 10465 and 10500 are in the link), two calls on two
+#   objects, reading both results.
 # - api::CPolySingleton<api::IFingerDetection>::instance (target fn 3615, 2126 B): the header's template (records
-#   cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105, [T = api::IFingerDetection]), whose copy matches from the
-#   roots object, as IFingerMatcher's 1686 does from unit 135's. The target keeps it a body of its own, where binaryen
-#   merged IFingerScanner's and IFingerMatcher's into 6013: `pnpm --silent wasm score ../target/vota_web_wasm.wasm 3615
-#   ../target/vota_web_wasm.wasm 6013` shows the copy of the typeid name built with another allocation and other stores
-#   ("N3api16IFingerDetectionE", 24 characters, against 22), which no merge's parameters cover. Its three callers (10316, 10451, 10465) are not written:
-#   DetectaDigital calls it twice with an empty std::source_location (unit 135's ReconheceDigital does the same). The
-#   head api/hwil/ifingerdetection.h is new and says what its slots rest on.
+#   cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105, [T = api::IFingerDetection]), whose copy matched from the
+#   roots object, as IFingerMatcher's 1686 does from unit 135's, until unit 282's 10465 came into the link: it matches
+#   from cpededigital.cpp.o now, the first object in link order to emit it. The target keeps it a body of its own, where
+#   binaryen merged IFingerScanner's and IFingerMatcher's into 6013: `pnpm --silent wasm score
+#   ../target/vota_web_wasm.wasm 3615 ../target/vota_web_wasm.wasm 6013` shows the copy of the typeid name built with
+#   another allocation and other stores ("N3api16IFingerDetectionE", 24 characters, against 22), which no merge's
+#   parameters cover. Of its three callers (10316, 10451, 10465) the first two are not written: DetectaDigital calls it
+#   twice with an empty std::source_location (unit 135's ReconheceDigital does the same). The head
+#   api/hwil/ifingerdetection.h is new and says what its slots rest on.
 # The roots object compiles at uenux2's flags ($(UENUX2_CXXFLAGS), with -fno-strict-aliasing), since it emits 3615, TSE
 # code that matches. With strict aliasing on, the instance's code is the same: wasm-objdump -d of the function in the
 # two objects, call and global indices masked, gives 154 identical lines.

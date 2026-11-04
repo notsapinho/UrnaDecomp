@@ -119,7 +119,7 @@
 # The four states' statics' exit destructors (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) wait for 10689's
 # match.
 #
-# Not written: CIniciodeCiclo::StartState (7306), unit 104's -pending.cpp.
+# CIniciodeCiclo::StartState (7306) is written since, in ciniciodeciclo.cpp (unit 104's fragment).
 #
 # Chosen, no evidence names them: every file's name and path (beside its class), the helpers' (MontaTela, in each
 # file's anonymous namespace) and locals' names, every data member's name, GetInst's and the constructors' access,

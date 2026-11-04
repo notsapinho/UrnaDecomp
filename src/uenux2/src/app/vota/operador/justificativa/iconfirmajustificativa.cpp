@@ -5,6 +5,7 @@
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "app/vota/euevotaerror.h"
+#include "app/vota/operador/comum/fotoeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/justificativa/celeitorimpedidojustificarvotocpf.h"
 #include "app/vota/operador/justificativa/cpedeanonascimento.h"
@@ -12,7 +13,7 @@
 
 namespace vota {
 
-// (original lines 15-29: content not recovered)
+// (original lines 16-29: content not recovered)
 #line 30
 IConfirmaJustificativa::IConfirmaJustificativa(const std::string& justificativa)
     : comum::CAppState(EVENTO_ENTRADA)
@@ -31,6 +32,13 @@ IConfirmaJustificativa::IConfirmaJustificativa(const std::string& justificativa)
 }
 
 IConfirmaJustificativa::~IConfirmaJustificativa() = default;
+
+void IConfirmaJustificativa::StartState()
+{
+    m_form->Slot2();
+    ApresentaFotoEleitor();
+    m_pNextState = this;
+}
 
 void IConfirmaJustificativa::ProcessInput()
 {

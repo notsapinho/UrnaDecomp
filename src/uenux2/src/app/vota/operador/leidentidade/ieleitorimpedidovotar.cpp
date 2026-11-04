@@ -4,6 +4,7 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "app/vota/operador/comum/fotoeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
@@ -32,6 +33,14 @@ IEleitorImpedidoVotar::IEleitorImpedidoVotar(std::function<std::string()> linha2
 }
 
 IEleitorImpedidoVotar::~IEleitorImpedidoVotar() = default;
+
+void IEleitorImpedidoVotar::StartState()
+{
+    m_form->Slot2();
+    LogaImpedimento();
+    ApresentaFotoEleitor();
+    m_pNextState = this;
+}
 
 void IEleitorImpedidoVotar::ProcessInput()
 {

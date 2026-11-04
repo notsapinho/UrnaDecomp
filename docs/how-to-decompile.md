@@ -1036,7 +1036,7 @@ help is that (unit 88's fragment). Step 9 writes its stub back, unless its group
 none for `app` (2770, unit 84) or for a TSE function the attribution files under a library (5764, whose log text reads
 as a pretty-function name, is `libc++`), and the fragment is then its only note. It stays written, its row as it is,
 when something needs it: a vtable slot whose written body is one remainder off (a trap would only hide it: 10490, unit
-142; one no measured form comes close to is trapped, below), a matched caller, a caller that
+142, matched once a call of the setter gave its store order; one no measured form comes close to is trapped, below), a matched caller, a caller that
 is written and right but does not match yet (3648 over 5477 and 5478, unit 125), or a match that only it brings into
 the link (502's lambda members 11107 to 11109, unit 31). The fragment says what is measured and that the remainder is
 not explained. A caller then holds only on evidence for the callee's name that does not rest on the callee's bytes
@@ -1299,7 +1299,8 @@ or a body of ours has no stub, so yours goes, and a stub-only file whose last st
 stub goes too, although its body is only a trap, and so do the stubs of slots a class's first written member never
 mentions: such a row is still `no-candidate` or `differs` on the `-pending.o`, so the `-pending.cpp` header is the only
 note that the member is left to do (a written body that does not match yet has its note in the fragment: step 5).
-`src/units/README.md` "Pending members" has the rule, the two ways the scan lists a trap (7481, 11486), why a trap is
+`src/units/README.md` "Pending members" has the rule, the two ways the scan lists a trap (7481 until it was written,
+11486), why a trap is
 declared with its record's signature, and what the header names when a stub-only file goes with the stub.
 
 For one function, `pnpm wasm splat-remap` shows the comparison directly;

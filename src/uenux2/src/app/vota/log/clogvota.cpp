@@ -4,16 +4,16 @@
 // Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's seven
 // after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's four after
 // LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two; 277's nine;
-// 119's 2502 and 3258 inside the bounds their bands give, the lines chosen (clogvota.h says which).
+// 119's 2502 and 3258 and 282's LogaTipoHabilitacaoEleitor inside the bounds their bands give (clogvota.h says which).
 #include "app/vota/log/clogvota.h"
 #include <format>
+#include <map>
 #include <memory>
 #include <string>
 
 #include "api/pattern/cpolysingleton.h"
 #include "api/uelog/cloga.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
-
 namespace vota {
 CLogVota::CLogVota() : comum::IEventosLog(static_cast<api::ELogAplicativos>(1)) {}
 
@@ -218,6 +218,12 @@ void CLogVota::LogaOperadorSelecionou(const std::string& opcao)
     loga(std::format("Operador selecionou: {}", opcao));
 }
 
+void CLogVota::LogaTipoHabilitacaoEleitor(uebyte tipo)
+{
+    const std::map<uebyte, std::string> tipos = {{1, "biométrica"}, {2, "por código"}};
+    loga(std::format("Tipo de habilitação do eleitor [{}]", tipos.at(tipo)));
+}
+
 void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
 {
     logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
@@ -369,7 +375,7 @@ void CLogVota::LogaMesarioHabilitouEleitor(const std::string& titulo)
     loga(std::format("Mesário {} habilitou o eleitor", titulo));
 }
 
-// (original lines 372-382: content not recovered)
+// (original lines 378-382: content not recovered)
 #line 383
 void CLogVota::LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento)
 {
@@ -613,6 +619,51 @@ void CLogVota::LogaAnoNascimentoDiferenteCadastro()
 {
     const std::string mensagem = "Ano de nascimento digitado é diferente do cadastro";
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaErroCarregarFotoEleitor()
+{
+    loga("Erro ao carregar a foto do eleitor");
+}
+
+void CLogVota::LogaLarguraFotoInvalida(ueword largura)
+{
+    loga(std::format("Largura da foto do eleitor inválida: {} px", largura));
+}
+
+void CLogVota::LogaAlturaFotoInvalida(ueword altura)
+{
+    loga(std::format("Altura da foto do eleitor inválida: {} px", altura));
+}
+
+void CLogVota::LogaQuantidadeCoresFoto(uebyte bitsPorPixel)
+{
+    loga(std::format("Quantidade de cores não conforme: {} bits por pixel", bitsPorPixel));
+}
+
+void CLogVota::LogaFotoEleitorApresentada()
+{
+    loga("Foto do eleitor apresentada");
+}
+
+void CLogVota::LogaEleitorHabilitado()
+{
+    loga("Eleitor foi habilitado");
+}
+
+void CLogVota::LogaInicioEncerramento()
+{
+    loga("Inicio do Encerramento");
+}
+
+void CLogVota::LogaInspecaoUrnaConfirmada()
+{
+    loga("Inspeção da urna confirmada");
+}
+
+void CLogVota::LogaDigitalCapturada(uebyte tentativa, uebyte total)
+{
+    loga(std::format("Capturada a digital. Tentativa [{}] de [{}]", tentativa, total));
 }
 
 } // namespace vota

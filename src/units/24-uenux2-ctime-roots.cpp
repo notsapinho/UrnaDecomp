@@ -1,8 +1,8 @@
 // Roots: keep api::CTime's constructor from a string (target fn 3643) and CTime::operator-(int) (target fn 3641) in the
 // skeleton link. The target calls each directly, never through the table (ledger/callgraph.tsv): 3643 from 1713, 5475 and
 // 7787, of which 5475 (cdatetime.cpp, unit 125) and 1713 (util.cpp, unit 96) are reconstructed; 3641 from 7160, 7306
-// and 10710, of which 10710 is (unit 277). One noinline caller of 3643 (for 7787, which still waits) and two of 3641
-// (for 7160 and 7306) give
+// and 10710, of which 10710 and 7306 are (units 277 and 104). One noinline caller of 3643 (for 7787, which still waits)
+// and one of 3641 (for 7160; the one for 7306 went) give
 // each more than one call site, so binaryen keeps its body out of line as the target does. The constructor from hours,
 // minutes and seconds (fn 3642) needs no stand-in now:
 // cdatetime.cpp's ConvertFromLocalTime (5476) and operator+= (2233) call it, two of its three target callers (the third is
@@ -26,11 +26,6 @@ __attribute__((noinline)) int HoraAntes(const int* hora, int segundos)
     return w3641_root_0(hora, segundos);
 }
 
-__attribute__((noinline)) int MinutosAntes(const int* hora, int minutos)
-{
-    return w3641_root_0(hora, minutos * 60);
-}
-
 __attribute__((noinline)) int SegundosDoTexto(const void* hora)
 {
     int tempo;
@@ -43,7 +38,6 @@ struct SW3642Roots {
     SW3642Roots()
     {
         w3642_sink = reinterpret_cast<void*>(&HoraAntes);
-        w3642_sink = reinterpret_cast<void*>(&MinutosAntes);
         w3642_sink = reinterpret_cast<void*>(&SegundosDoTexto);
     }
 } w3642_roots;

@@ -149,6 +149,23 @@ public:
     // CTelasVota::GetInst() (fn 407), whose result it drops: a static member called through the instance (as fns 6580
     // and 6581). Its name, its being static and its place in ctelasvota.cpp after the file's last record are chosen
     static std::shared_ptr<api::IForm<api::IScreen>> GetTelaDestinoBUs();
+    // Fn 6557: TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1), the screen
+    // vota::CMostraTelaContinuaVotacao shows and vota::CUrnaInspecionada keeps at +20. Its two callers, those classes'
+    // constructors (inlined with their GetInst into fns 7481 and 11797), call CTelasVota::GetInst() (fn 407) right
+    // before it and drop the result, the reading made for fns 6580 and 6581: a static member called through the
+    // instance. Use band 2 of ctelasvota.cpp.o puts it after the map instance 6579 and before the destructor 6548, so it
+    // is defined between SorteiaTeclasTesteTeclado and ~CTelasVota (ld_index 2806, between 2800 and 2807). Its name and
+    // its being CTelasVota's are chosen.
+    static std::shared_ptr<api::IForm<api::IScreen>> GetTelaContinuaVotacao();
+    // The screens of vota::CInspecionaUrna and vota::CUrnaInspecionada (+12 of each): TelaTextoConfirmaCorrige("Por
+    // favor, inspecione cabina e urna.", "Continuar", std::nullopt) and TelaNeutra("Inspeção terminada.&Siga as
+    // instruções&no terminal do mesário.", 35, 0). Each has one caller, its class's constructor, inlined with GetInst
+    // into fn 7481 and fn 11797, which hold them behind a second stack-pointer prologue right after a call of
+    // CTelasVota::GetInst() whose result they drop: static members called through the instance, out of line in the
+    // object and inlined by binaryen (as GetTelaDestinoBUs). Their names, their being CTelasVota's, and their place
+    // after the file's last record are chosen.
+    static CFormInterativoTelaVota GetTelaInspecionaUrna();
+    static std::shared_ptr<api::IForm<api::IScreen>> GetTelaInspecaoTerminada();
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
@@ -191,6 +208,34 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada();
 std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR();
 std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     std::function<std::string(const std::string&)> fonte);
+// The keyboard test's failure screens, one caller each: the constructors of vota::testeteclado::CTesteFalhou,
+// CEnviarManutencao and CErroTesteTecladoFim, inlined with their GetInst into fns 11804, 11809 and 11812, which hold
+// the screen behind a second stack-pointer prologue (a 64-byte frame) and with no call of CTelasVota::GetInst() before
+// it, so free functions, out of line in the object and inlined by binaryen. Evidence, the bodies: the texts, positions,
+// fonts (@474888 and @474992, FONTE_TITULO and FONTE_AGUARDE) and order.
+// - TelaTeclaErradaTesteTeclado: AdicionaCabecalhoTesteTeclado (fn 3054), "Teste Falhou" at (320, 140), a field over a
+//   function (fn 1191) at (320, 210) whose callback is table slot 1106, fn 12903, a captureless lambda:
+//   std::format("Falha: Esperada {}, pressionada {}") of api::KeyName of the two keys
+//   vota::CEstadoAudio::GetTeclasTesteTeclado returns (its bytes +9 and +10), then the labels of CONFIRMA ('C', "Repetir
+//   teste") and CORRIGE ('D', "Prosseguir") through fn 653, AddInputControl (fn 901) after them, its result dropped,
+//   and "telaTeclaErradaTesteTeclado" through GetFormularioInterativo (fn 576).
+// - TelaEnviarManutencaoTesteTeclado: the header, "Deseja enviar a urna para manutenção?" at (320, 230), the labels
+//   "Repetir teste" and "Enviar para manutenção", AddInputControl and "telaEnviarManutencaoTesteTeclado".
+// - TelaErroTesteTeclado: an api::CFormBuilder, the status header (5), "Erro no teste do teclado" at (320, 140) in the
+//   30-point font, "Por favor, solicite ajuda dos técnicos do TRE" and "para as devidas providências." at (320, 220)
+//   and (320, 260) in the 25-point one, and "telaErroTesteTeclado" through GetFormulario (fn 886). Its three texts are
+//   named char arrays: the target loads them with i64.load align=3, at @475072, @475104 and @475152 (16-byte aligned,
+//   in the run of this file's fonts), which a named array of 16 bytes or more gives (wasm32's large-array alignment,
+//   measured: a 46-byte named const char[] is p2align=4 and loaded align=3, a 15-byte one and a 25-byte literal stay
+//   p2align=0) and a string literal does not (align=0: fn 11812 scored 59 over 464 rows with the literals, every row an
+//   operand, those loads' alignments among them, and 48 over 464 with the arrays). The arrays' names, and their being
+//   file-scope constants of an anonymous namespace (a function-local static array gives the same alignment), are
+//   chosen.
+// The names, their being free functions of vota, the lambda's spelling (a structured binding of the pair) and their
+// place after the file's last record are chosen.
+CFormInterativoTelaVota TelaTeclaErradaTesteTeclado();
+CFormInterativoTelaVota TelaEnviarManutencaoTesteTeclado();
+std::shared_ptr<api::IForm<api::IScreen>> TelaErroTesteTeclado();
 
 // The three screens of vota::CRetirarMR, which its constructor builds into +12, +20 and +28 (inlined with GetInst into fn
 // 2291, each behind a second stack-pointer prologue: one caller each, inlined by binaryen, so out of line in the object,

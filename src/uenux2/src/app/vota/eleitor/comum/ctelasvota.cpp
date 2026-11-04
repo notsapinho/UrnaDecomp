@@ -23,6 +23,7 @@
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/vota/comum/cpreshowformvota.h"
+#include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
 #include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
@@ -30,7 +31,7 @@
 
 namespace vota {
 
-// (original lines 33-290: content not recovered)
+// (original lines 34-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -312,6 +313,11 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
     return gerador.GeraSequencia(TECLAS_TESTE_TECLADO);
 }
 
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaContinuaVotacao()
+{
+    return TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1);
+}
+
 CTelasVota::~CTelasVota() = default;
 
 namespace {
@@ -348,7 +354,7 @@ api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::fu
     return campo;
 }
 
-// (original lines 3509-3529: content not recovered)
+// (original lines 3514-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {
@@ -583,6 +589,66 @@ std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaDestinoBUs()
         }
     }
     return GetFormulario(builder, "telaDestinoBUs");
+}
+
+CFormInterativoTelaVota CTelasVota::GetTelaInspecionaUrna()
+{
+    return TelaTextoConfirmaCorrige("Por favor, inspecione cabina e urna.", "Continuar", std::nullopt);
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaInspecaoTerminada()
+{
+    return TelaNeutra("Inspeção terminada.&Siga as instruções&no terminal do mesário.", 35, 0);
+}
+
+CFormInterativoTelaVota TelaTeclaErradaTesteTeclado()
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaCabecalhoTesteTeclado(builder);
+    builder.AddTextField("Teste Falhou", api::SPoint(320, 140), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(
+        []() {
+            const auto [esperada, pressionada] = CEstadoAudio::GetInst().GetTeclasTesteTeclado();
+            return std::format("Falha: Esperada {}, pressionada {}", api::KeyName(esperada), api::KeyName(pressionada));
+        },
+        api::SPoint(320, 210), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO);
+    builder.AddLabeledInputControl({{'C', "Repetir teste"}, {'D', "Prosseguir"}}, api::CApplication::s_areaTela, false);
+    builder.AddInputControl();
+    return GetFormularioInterativo(builder, "telaTeclaErradaTesteTeclado");
+}
+
+CFormInterativoTelaVota TelaEnviarManutencaoTesteTeclado()
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaCabecalhoTesteTeclado(builder);
+    builder.AddTextField("Deseja enviar a urna para manutenção?", api::SPoint(320, 230), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Repetir teste"}, {'D', "Enviar para manutenção"}}, api::CApplication::s_areaTela,
+                                   false);
+    builder.AddInputControl();
+    return GetFormularioInterativo(builder, "telaEnviarManutencaoTesteTeclado");
+}
+
+namespace {
+
+const char TEXTO_ERRO_TESTE_TECLADO[] = "Erro no teste do teclado";
+const char TEXTO_SOLICITE_AJUDA[] = "Por favor, solicite ajuda dos técnicos do TRE";
+const char TEXTO_DEVIDAS_PROVIDENCIAS[] = "para as devidas providências.";
+
+} // namespace
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaErroTesteTeclado()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField(TEXTO_ERRO_TESTE_TECLADO, api::SPoint(320, 140), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(TEXTO_SOLICITE_AJUDA, api::SPoint(320, 220), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(TEXTO_DEVIDAS_PROVIDENCIAS, api::SPoint(320, 260), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaErroTesteTeclado");
 }
 
 } // namespace vota

@@ -156,6 +156,15 @@ enum EUeVotaError {
     // the value is the code vota::TipoToStr throws (record cinformacaothreadoperador.cpp:40, inlined into target fn
     // 10586); the name is chosen from its message, "Tipo de identidade do eleitor inválido": no evidence names it
     EUE_VOTA_TIPO_IDENTIDADE_INVALIDO = 9409,
+    // the value is the code vota::CControlaReconhecimento::AvancaProximoDedo1x4 (record
+    // ccontrolareconhecimento.cpp:187, inlined into target fn 10465) throws; the name is chosen from its message, "Fim
+    // da verificação 1x4 atingido.": no evidence names it
+    EUE_VOTA_FIM_VERIFICACAO_1X4 = 9399,
+    // the values are the codes vota::testeteclado::CTesteTeclado::ProcessInput (target fn 11804, records
+    // ctesteteclado.cpp:60 and :81) throws, when the key just tested and when the next one is not on the screen; the
+    // names are chosen from their message, "Tecla não encontrada: <tecla>", and that order: no evidence names them
+    EUE_VOTA_TESTE_TECLADO_TECLA_ATUAL_NAO_ENCONTRADA = 9361,
+    EUE_VOTA_TESTE_TECLADO_PROXIMA_TECLA_NAO_ENCONTRADA = 9362,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

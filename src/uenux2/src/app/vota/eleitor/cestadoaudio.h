@@ -9,7 +9,10 @@
 //   8, 9 and 10. Each of the three is a function of its own that stores its constant at +4 and that 4349 calls twice:
 //   out of line here, where no caller of this TU inlines them. Their names are chosen.
 // - +8 is a byte: 7787 tests it and sets it around the block that starts with the literal "uenux.db".
-// - +9 and +10 are bytes: 11804 stores them and 12903 loads them.
+// - +9 and +10 are bytes: the key the keyboard test expected and the key pressed. vota::testeteclado::CTesteTeclado::
+//   ProcessInput (fn 11804) stores the key read at +10 and the expected one (the screen map's char) at +9 when they
+//   differ, and the lambda of the failure screen (fn 12903) copies both into its frame and formats "Falha: Esperada {},
+//   pressionada {}" of their KeyName, +9 first.
 // The object's next members take it as `this`, and neither is written: 6734, which 7787 and 11865 call on it, and 6737,
 // which 11865 calls on it and votaInit reaches through table slot 41, and which reads nothing of it. None of them names
 // the class. Chosen: the class's name, this path, every member's name, the enumerators, and bool for +0, +1 and +8, which
@@ -17,6 +20,7 @@
 
 #include <memory>
 #include <mutex>
+#include <utility>
 
 namespace vota {
 
@@ -36,6 +40,14 @@ public:
     void SelecionaModo1();
     void Desativa();
 
+    // Out of line in cestadoaudio.cpp, one caller each (fns 11804 and 12903), which hold them inlined by binaryen: the
+    // getter's std::pair, returned through the caller's frame, is the copy of +9 and +10 into fn 12903's frame (two
+    // store8 at +30 and +31, then two signed loads), a reading of that shape; inline forms were not measured. The
+    // setter's two stores come out +10 first in fn 11804, as written here (whole-link score: operand rows only). The
+    // names, the pair, the parameters and the members' names are chosen.
+    void SetTeclasTesteTeclado(char esperada, char pressionada);
+    std::pair<char, char> GetTeclasTesteTeclado() const;
+
 private:
     CEstadoAudio();
 
@@ -43,8 +55,8 @@ private:
     bool m_eleitoresCarregados;
     EModo m_modo;
     bool m_bancoCarregado;
-    char m_campo9;
-    char m_campo10;
+    char m_teclaEsperada;
+    char m_teclaPressionada;
 
     static std::unique_ptr<CEstadoAudio> s_inst;
     static std::mutex s_mutex;

@@ -161,8 +161,8 @@
 # 10500, 10512) are in five TUs and all keep the call, so it is in none of them; this file is EhTreinamento's, whose code
 # it holds, and in use band 6 it comes right before fn 1822 (CPolySingleton<IInterfaceSavd>::instance, which
 # VerificaAssinaturaMI is this object's first to mention in our link), so its line is above that function's, with the
-# namespace opened earlier (both readings). The roots stand in for 7306, 10465 and 10500. Before steps 7 to 9, 4 over
-# 19 rows, operand-only.
+# namespace opened earlier (both readings). Before steps 7 to 9, 4 over 19 rows, operand-only. The roots' stand-in
+# went: every caller is in the link, 10512 written, the others matched.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna

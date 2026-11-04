@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -21,10 +22,11 @@ namespace vota {
 // builder's GetForm. The destructor is out of line: the deleting one (fn 765) calls it and frees `this`, and it stores
 // no vptr, as a final class's; 19 states share the two bodies, fns 448 and 765. A singleton: fn 11797 creates the object
 // on first use and keeps it in a static std::unique_ptr (@1837732) under a static std::mutex (@1837708), destroyed at
-// exit by fns 11796 and 11795; the constructor passes comum::CAppState::EVENTO_TECLA (1) to the base's. Not recovered:
-// the constructor, GetInst and the statics (fn 11797, which holds them inlined, calls fn 6557, which has no name, fn
-// 2380, vota::TelaNeutra in ctelasvota.cpp, and 501, api::CPriorityMessageQueue<api::SMessage>::Insert). src/units/142-uenux2-app-vota-estados-448.mk says
-// which of this is evidence and which is chosen.
+// exit by fns 11796 and 11795; the constructor passes comum::CAppState::EVENTO_TECLA (1) to the base's and builds +12
+// and +20 through CTelasVota::GetTelaInspecaoTerminada and GetTelaContinuaVotacao (fn 6557). GetInst and the
+// constructor are written in curnainspecionada.cpp and inlined into fn 11797, their one caller; that GetInst is above
+// the constructor is chosen (the other order gives the same link, sha256 compared).
+// src/units/142-uenux2-app-vota-estados-448.mk says which of this is evidence and which is chosen.
 class CUrnaInspecionada final : public comum::CAppState {
 public:
     virtual ~CUrnaInspecionada() override;
@@ -37,6 +39,9 @@ public:
 
 private:
     CUrnaInspecionada();
+
+    static std::unique_ptr<CUrnaInspecionada> s_inst;
+    static std::mutex s_mutex;
 
     std::shared_ptr<api::IForm<api::IScreen>> m_form;
     std::shared_ptr<api::IForm<api::IScreen>> m_formConfirmacao;

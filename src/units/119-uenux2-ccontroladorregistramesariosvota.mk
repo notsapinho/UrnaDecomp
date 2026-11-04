@@ -66,9 +66,10 @@
 #   LogaDataEleicaoInvalida, held inlined by fns 11871 and 11914 (their fragments have the evidence), and two out of
 #   line that this unit matches: LogaErroEstadoAplicativoDesconhecido (fn 3279, logaErro of "Erro estado do aplicativo
 #   nao conhecido") and LogaFimTesteTecladoSucesso (fn 4511, loga of "Fim do teste de Teclado do TE - Sucesso"),
-#   each 8 over 59 rows, operand-only (pnpm wasm score, whole link), matched by content at step 9. Their target
-#   callers are not written (3279: fn 7160 twice and vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858; 4511:
-#   fn 11804 twice), so the roots stand in for them. They call fns 2282 and 233 out of line, as unit 156's 1127 and
+#   each 8 over 59 rows, operand-only (pnpm wasm score, whole link), matched by content at step 9. Of 3279's target
+#   callers fn 7160, which calls it twice, is not written, so the roots stand in for it (the other,
+#   vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858, is in the link); 4511's, fn 11804, which calls it twice, is
+#   in the link (unit 217), and its stand-in went. They call fns 2282 and 233 out of line, as unit 156's 1127 and
 #   4551 do; their names and their place are chosen.
 # - One more, after LogaFimTesteTecladoSucesso: unit 138's LogaTesteTecladoNaoExecutado, held inlined by fn 11874
 #   (unit 138's fragment has the evidence); its place is chosen.

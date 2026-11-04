@@ -52,10 +52,14 @@
 # place at its first mention, how-to step 3, and the constructor names it), GetInst, the two thunks, the destructors and
 # Update, and every body is the one before but for two record offsets in Update.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# MostraImagem over an image's bytes (no target index): vota::ApresentaFotoEleitor (3616, unit 319) holds, after
+# GetInst and the position, a frame of its own with an api::CFixedImage built from a copy of the bytes, MostraImagem
+# (3836) on it, and its destruction; clang keeps 3836 a call there (cost 440 against 250), and binaryen inlines the
+# overload into its one caller, a reading. Its being an overload, its parameters and its line are chosen.
 CINFOMTLCD_SRCS := src/app/comum/cinfomtlcd.cpp
 UENUX2_SRCS += $(CINFOMTLCD_SRCS)
-# nothing reconstructed reaches the class yet: 153-uenux2-cinfomtlcd-roots.cpp keeps its vtable and stands in for
-# MostraImagem's two callers
+# 153-uenux2-cinfomtlcd-roots.cpp stands in for the constructor's other caller (7787); MostraImagem's two callers are in
+# the link (unit 319's 3616 and 3617)
 $(ROOT)/$(APP)/153-uenux2-cinfomtlcd-roots.o: $(ROOT)/src/units/153-uenux2-cinfomtlcd-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/153-uenux2-cinfomtlcd.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/153-uenux2-cinfomtlcd-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/153-uenux2-cinfomtlcd-roots.o

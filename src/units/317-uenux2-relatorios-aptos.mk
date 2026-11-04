@@ -32,7 +32,8 @@
 #   GetEleitor(), the vector declared first, `!detalhe`, `== true`: wasm-objdump -d of each object). With TemBiometria
 #   defined out of line in md/eleitor/celeitor.cpp (binaryen inlines its two-instruction body at every call: names.tsv
 #   holds no TemBiometria) 11233 scored 40 over 564, all operand-only, and steps 7 to 9 matched it with no row of the
-#   base leaving match. celeitor.{h,cpp} is another stage's claim for that same change, so 11233 waits for it.
+#   base leaving match. That change is unit 157's now (celeitor.cpp), and 11233 matches with no source of its own
+#   changed, so it has left this list.
 # - 10884, DoPrintJob's lambda's call operator: the target calls 5486, CReport::ImprimePartes, which clang inlines into
 #   it here (24 rows inserted); 5486 has no body of ours. Not explained. 5486's other target caller is fn 3654 (the
 #   records creport.cpp:31 and :37 of api::CScopedReportFile, not written); a body clang sees in the lambda's TU is

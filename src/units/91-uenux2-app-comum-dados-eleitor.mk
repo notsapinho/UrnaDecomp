@@ -16,10 +16,14 @@
 #
 # - CBiometriaEleitor::TemDedo (3719, no record): whether the map is there and holds the finger, `m_dedos.has_value() &&
 #   m_dedos->contains(tipo)`. Its body reads the flag at +32 (compared with 1) and then searches the map at +20 for the
-#   key, signed. Its three target callers (3614, 10316, 10465, not written) are GetDedo's three; the roots' DedosPresentes
-#   stands in for them. It scored 0 over 55 rows (byte-exact) before steps 7 to 9 and matches. 3720 and 3719 are
-#   neighbours in band 3, 3720 first in link order, so TemDedo is defined after GetDedo. Its line, between GetDedo and
-#   GetFoto's record (line 115, kept blank), is a choice; so are its name, its const and the `contains` spelling.
+#   key, signed. Its three target callers (3614, 10316, 10465) are GetDedo's three; 10465 (unit 282's) is in the link,
+#   and the roots' DedosPresentes stands in for the other two. It scored 0 over 55 rows (byte-exact) before steps 7 to 9
+#   and matches. 3720 and 3719 are neighbours in band 3, 3720 first in link order, so TemDedo is defined after GetDedo.
+#   Its line, between GetDedo and GetFoto's record, is a choice; so are its name, its const and the `contains` spelling.
+# - CBiometriaEleitor::GetFoto (record line 115, which gives its signature): the photo or CUeComumDadosError 8059 with
+#   the text at 363308 (ledger/strings.tsv) when the optional at +0 is empty; no target index, binaryen inlines it into
+#   its one caller, vota::ApresentaFotoEleitor (3616, unit 319), behind a frame of its own. Its lines but the throw's
+#   are chosen.
 # - CBiometriaEleitor::CriaComum (2799) matches since comum's data classes build with strict aliasing (src/Makefile
 #   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing it differed by one reload of __child
 #   after __tree::__insert_node_at's begin-node store (clang inlines the insert); eight spellings of the insert kept the

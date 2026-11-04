@@ -21,11 +21,6 @@
 // f5376 · 343 B · unmatched · placement: link order · name unknown
 // void f5376(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 755 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
-
-// f5400 · 82 B · unmatched · placement: link order · name unknown
-// void f5400(i32) { ... }
-
 // link-order cluster 756 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown
@@ -87,11 +82,6 @@
 // f5980 · 225 B · unmatched · placement: link order · name unknown
 // void f5980(i32) { ... }
 
-// link-order cluster 899 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
-
-// f6557 · 166 B · unmatched · placement: link order · name unknown
-// void f6557(i32) { ... }
-
 // link-order cluster 907 · uses=2
 
 // f6616 · 490 B · unmatched · placement: link order · name unknown
@@ -139,11 +129,6 @@
 
 // f3916 · 593 B · unmatched · placement: link order · name unknown
 // void f3916(i32, i32, i32) { ... }
-
-// link-order cluster 1060 · uses=4
-
-// f2499 · 57 B · unmatched · placement: link order · name unknown
-// void f2499(i32, i32) { ... }
 
 // link-order cluster 1099 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp
 

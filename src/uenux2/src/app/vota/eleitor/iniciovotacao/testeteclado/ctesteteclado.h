@@ -10,14 +10,16 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/ctextbox.h"
+#include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/cestadocomdesligamentoautomatico.h"
 #include "app/vota/eleitor/cvotacaostateaudio.h"
+#include "app/vota/eleitor/iniciovotacao/testeteclado/ctestefalhou.h"
 
 namespace vota::testeteclado {
 
 // vota::testeteclado::CTesteTeclado (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1547132 [2868,
 // 11806, 11805, 7480, 1661, 218, 425, 11804, 12061, 425]): the keyboard test itself. It overrides StartState (fn 11805,
-// records ctesteteclado.cpp:38 and :42, written) and ProcessInput (fn 11804, records :50, :60 and :81, pending), and the
+// records ctesteteclado.cpp:38 and :42) and ProcessInput (fn 11804, records :50, :60 and :81), and the
 // destructors. The D2 (fn 2868) stores no vptr before it destroys +48, +36 and +28, so the class is final; the D0 (fn
 // 11806) calls the D2 and frees `this`, so the destructor is out of line, declared first as the key function, a choice.
 // A singleton: GetInst (fn 3855) builds the 68-byte object over the base's constructor (fn 1285) with 2
@@ -35,7 +37,8 @@ namespace vota::testeteclado {
 // to this state. Chosen: every member's name, the map's mapped type being a std::pair (the shared_ptr's CTextBox is
 // what StartState calls fn 940 on), size_t for +60, the setter of +64 and its name, GetInst's name and the statics'
 // (unit 104's convention), and this header's path, beside ctesteteclado.cpp. The two api/gui includes are the members'
-// types, here so that ctesteteclado.cpp keeps StartState on its record lines (src/units/217-uenux2-ctesteteclado.mk).
+// types, here so that ctesteteclado.cpp keeps StartState on its record lines (src/units/217-uenux2-ctesteteclado.mk);
+// cestadoaudio.h and ctestefalhou.h, which ProcessInput needs, are here for the same reason, a choice.
 class CTesteTeclado final : public CEstadoComDesligamentoAutomatico {
 public:
     virtual ~CTesteTeclado() override;

@@ -39,8 +39,11 @@ public:
 
     // GetOffsetBiometria throws when the optional is empty (record celeitor.cpp:79). TemBiometria, the test of the
     // optional's flag (+100), and GetBiometria, the byte vector at +80, are what comum::CEleitorDetalhe::GetBiometria
-    // (fn 1937) reads; their names and their being inline are chosen.
-    bool TemBiometria() const { return m_offsetBiometria.has_value(); }
+    // (fn 1937) reads; their names and GetBiometria's being inline are chosen. TemBiometria is out of line in
+    // celeitor.cpp, a reading: vota::CNomeEleitor's fn 10500 tests the flag after a && with `i32.eqz`, the test of a
+    // call's result, where the inline accessor gives `i32.const 1; i32.ne` (measured), and binaryen inlines the
+    // two-instruction body into every caller, so it has no target index. Its line there is chosen.
+    bool TemBiometria() const;
     const std::vector<uebyte>& GetBiometria() const { return m_biometria; }
     const CIndexer& GetOffsetBiometria() const;
     // The date of birth, the string at +68, which md::CEleitorDecorator::GetAnoNascimento (fn 5665) reads through this

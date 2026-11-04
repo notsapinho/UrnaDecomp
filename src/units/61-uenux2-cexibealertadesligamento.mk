@@ -48,11 +48,16 @@
 # member's type is unit 50's api::CDateTime (api/util/cdatetime.h and cdate.h).
 #
 # CAppState::SetNextState, out of line in cappstate.cpp, has no target function: binaryen inlines its one store into
-# every caller. Five states call it for their next-state stores: vota::CEncerramentoAntecipado::ProcessInput (10731) and
-# CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
+# every caller. Eighteen functions call it for their next-state stores (the definition around each call that
+# `/usr/bin/grep -rn 'SetNextState(' src/uenux2/src` lists, cappstate.{h,cpp} aside), seventeen matched and 10512
+# written. Seven are measured here: vota::CEncerramentoAntecipado::ProcessInput (10731)
+# and CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
 # comum::CConfirmaFimRegistroMesarios::ProcessInput (10383), unit 135's; CMesarioRegistrado::StartState (10339), unit
-# 279's. Each matches so and not with the assignment; the bytes ask for the call itself in 10737 alone, and the four
-# others match a replay in which binaryen inlined a call (below). What was measured:
+# 279's; vota::CPedeAnoNascimentoSemBiometria::StartState (10490), unit 142's; vota::CNomeEleitor::HabilitaEleitor
+# (5400), unit 239's. Each matches so and not with the assignment; the bytes ask for the call itself in 10737, 5400 (a
+# store in each arm, as 10737's: below) and 10490 (the next state stored first, ahead of two member stores clang moves
+# it after when it is assigned: unit 142's fragment), and the four others match a replay in which binaryen inlined a
+# call (below). What was measured for the first five:
 # - With the assignment the first four differ in binaryen's local numbers, the target reusing `this`'s local where ours
 #   takes another (10731: `local.tee 0` against our `local.tee 1`); 10731 and 10383 in those alone, 10339 also by two
 #   rows inserted and two deleted, 10710 also in an `i32.or`'s operand order and a store's place. In a replay of the
@@ -80,6 +85,12 @@
 #   10706, 10380, 10337, 10689) on the link before unit 277's list took the data's order, gave a byte-identical module
 #   (sha256): for them the bytes do not decide, and they assign the member, a choice (a reading of why: each already
 #   holds a body binaryen inlines, a one-caller GetInst or helper).
+# - The other eleven, each measured in its own fragment: comum::CRegistrarMesarios's and CMesarioRegistrado's
+#   ProcessInput (10391, 10338, thunks into 6011, above), units 247 and 279; CPedeDigitalMesario::StartState (10318),
+#   unit 135's; vota::CDigitalNaoReconhecida's, CDigitalNaoReconhecidaDecBiometria's and
+#   CDigitalNaoReconhecidaPorTempo's ProcessInput (10473, 10477, 10485), CDigitalReconhecida::ProcessInput (10481) and
+#   CPedeDigital::ProcessTick (10465), unit 282's; CControlaReconhecimento's ProcessInput (10511) and StartState (10512,
+#   written, not matched), unit 161's; vota::CRetirarMR::ProcessInput (12030), unit 156's.
 # Chosen: that the call is a setter (an empty call binaryen inlines gives the first four the same rows; only 10737's two
 # stores need the store in the call), its name, its parameter's name, protected access and its place in cappstate.cpp.
 # Its body is the same bytes as simulador::CWasmNullPrinter::ApplyStyle's (target fn 8365, slot 12 of that class's

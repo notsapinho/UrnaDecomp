@@ -21,6 +21,22 @@
 # block order: that unit's fragment has their evidence; its record, cpedetitulomesario.cpp:33 column 32, takes the same
 # spelling; 186 over 2061 rows before step 9, all operand-only, the statics' addresses, then a match).
 # 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for.
+# vota::CAguardaMensagem::ProcessKey (fn 7481, slot 6) is written in caguardamensagem.cpp, after StartState (its use
+# band 1 puts it below the statics' destructors 7485 and 7482): a switch on the message the operator's thread posts.
+# On 7 it sets the vota state to comum::EAVGERARBU (the store of 59 into comum::CAppInfo::GetVota()'s result), runs
+# CSincronizaVota::SincronizaEstadoGeralVota (fn 491), logs "Inicio do Encerramento" and goes to CGeraBU::GetInst()
+# (fn 6129); on 1 it logs "Eleitor foi habilitado" and goes to CEleitorVotando::GetInst() (fn 3229); on 11, 12 and 14
+# it goes to the GetInst of vota::CIniciodeCiclo (fn 4433), vota::CInspecionaUrna and vota::CMostraTelaContinuaVotacao,
+# the last two held inlined with their constructors (cinspecionaurna.cpp, unit 152's class, and
+# cmostratelacontinuavotacao.cpp, unit 174's). Evidence: the target's br_table on the message less 1 and each block's
+# code; the two log members are clogvota.h's (held inlined after GetInst). Measured in the whole link with pnpm wasm
+# score: the case of 7 first gives the target's block order, 53 over 292 rows, every row an operand (the statics' and
+# vptrs' addresses before step 8); with the cases in ascending order the br_table's first two targets swap, 63 over 298
+# (6 rows inserted, 6 deleted). The order of all five cases (7, 1, 11, 12, 14) is the br_table's: each order compiles to
+# its own table, and only this one gives the target's (five orders compiled at the file's flags). Chosen: the messages
+# as literals (no evidence names them), `break` and the default. Its four statics' exit destructors (7232, 7239, 11799,
+# 11800) match with it: 7481 is the one other target reader of their addresses. The roots' pair for
+# CIniciodeCiclo::GetInst (4433) went: its target callers, 7481 and 11994, are in the link.
 # vota::CQuerReimprimirZeresima landed its head, destructor and statics first, and its GetInst since (below). The
 # heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119
@@ -135,8 +151,9 @@
 #   this directory's flags, each with one store: the early return as written; if/else; the condition negated; a local
 #   next state stored once; a reference to m_pNextState bound first; the queue and the message as named locals of the
 #   else branch; a ternary for the state; and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with
-#   -fexceptions. In the target, fn 5400 (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and
-#   10500) has the same shape, a store in each branch, the second after a Post(1), and fn 10511
+#   -fexceptions. In the target, fn 5400 (vota::CNomeEleitor::HabilitaEleitor, unit 239's, written since with the same two
+#   SetNextState calls; its callers are CNomeEleitor's slots 2 and 7, 10501 and 10500) has the same shape, a store in
+#   each branch, the second after a Post(1), and fn 10511
 #   (vota::CControlaReconhecimento's slot 7) holds the same calls with one store after the join.
 #   CAguardaInicio::ProcessKey (10217, unit 165's), whose switch met the same joining, matches with a call clang cannot
 #   see through in its default case (unit 165's fragment has the forms).
@@ -148,6 +165,18 @@
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
+# - vota::CIniciodeCiclo::StartState (fn 7306, slot 2, in ciniciodeciclo.cpp after the statics): its records
+#   (ciniciodeciclo.cpp:48:23 and :61:13) are AjustaDataHora's, a private member (the record's signature; its access
+#   chosen). One frame holds everything, the next-state store before the epilogue, and clang does not inline
+#   AjustaDataHora (cost 745 against 250, -Rpass=inline), so StartState calls it and binaryen inlines it there, and
+#   AjustaDataHora holds the rest, a reading: CAppInfo::GetInst once; when GetVota()'s state is below EAVVOTAR (`<= 55`),
+#   the demo flag (CPolySingleton<IInterfaceInit>::instance(), line 48, `bool ehDemo = ` at eight spaces, a spelling
+#   chosen of that length) and EhTreinamentoMesario (1823) both read (the target ORs two calls), and if either, the
+#   clock set to the voting's start (CConfiguracaoEleicao +556, GetDataHoraInicioVotacao) less 10 by CTime's operator-,
+#   the delta added to the state's CAjusteDataHora, IAjusteDataHora's Ajusta (line 61) and SincronizaEstadoGeral (3333);
+#   then EAVVOTAR stored and SincronizaEstadoGeralVota (491); then CInicioVotacao::GetInst (2880) as the next state.
+#   Before steps 7 to 9, 21 over 106 rows, operand-only; named by srcloc-anchor. The file needs the Boost include path
+#   (cconfiguracaoeleicao.h, below).
 # - vota::CQuerReimprimirZeresima::GetInst (fn 5940), unit 104's shape, its constructor copying CTelasVota's +244
 #   through ctelasvota.h's GetTelaQuerReimprimirZeresima: 11 over 55 rows, operand-only. Its statics' exit
 #   destructors 11851 and 11850 match with it. The member's pointee is now the getter's, CInteractiveForm<IScreen,
@@ -469,6 +498,8 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindoresumozere
 # StartState builds over CConfiguracaoEleicao's parameters (the same include path)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# and ciniciodeciclo.cpp, whose AjustaDataHora reads the voting's start (the same include path)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/ciniciodeciclo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

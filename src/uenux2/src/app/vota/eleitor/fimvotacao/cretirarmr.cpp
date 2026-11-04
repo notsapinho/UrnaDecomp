@@ -70,7 +70,7 @@ void CRetirarMR::ProcessInput()
     bool ehDemo = api::CPolySingleton<comum::IInterfaceInit>::instance().GetDemoMode();
     api::EInputResult resultado = ehDemo ? m_formDemo->Read() : m_form->Read();
     if (resultado == api::INPUT_CONFIRMA) {
-        m_pNextState = &CEmitirMaisBU::GetInst();
+        SetNextState(&CEmitirMaisBU::GetInst());
     }
 }
 
