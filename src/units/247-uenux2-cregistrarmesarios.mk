@@ -7,8 +7,9 @@
 # (its paragraph below). Paths relative to src/uenux2.
 #
 # Target fns matched: 1255 (comum::TelaRegistroMesarios, the one body of both copies), 11140, 6117 and 886;
-# CRegistrarMesarios::GetInst 3610 with its constructor and its operator's form, StartState 10392, ProcessInput 10391,
-# and its statics' exit destructors 10394 (s_inst) and 10393 (s_mutex).
+# CRegistrarMesarios::GetInst 3610 with its constructor and its operator's form, StartState 10392, ProcessInput 10391
+# and 6011, binaryen's shared body of it and unit 279's CMesarioRegistrado::ProcessInput, of which 10391 and 10338 are
+# thunks, and its statics' exit destructors 10394 (s_inst) and 10393 (s_mutex).
 #
 # Evidence:
 # - 1255: the status header with the fields 7 (fn 502's bits: date and time, mode, battery icon), then two
@@ -122,12 +123,19 @@
 #   controller's slot 24 (LogaConfirmouRegistroMesarios) and going to CPedeTituloMesario::GetInst (2729),
 #   INPUT_CORRIGE (5) through slot 25 (LogaCancelouRegistroMesarios) to CConfirmaFimRegistroMesarios::GetInst (5389),
 #   and the next state stored once after the cases. With both ProcessInput written our link forms the shared body too
-#   (names.tsv's byn$mgfn-shared$ of CRegistrarMesarios::ProcessInput), which scores 29 over 100 rows against 6011, all
-#   operand-only, binaryen's local numbers among them (3 and 4 swapped, not explained; unit 135's 10383 read so until
-#   its next-state stores went through a setter, unit 61's fragment), so 6011 does not match. A hand line in
-#   splat/symbol_addrs.txt names it for its two callers
-#   (callers+content, its comment the evidence); without it, step 9 read both thunks `unresolved` (our merge has no
-#   target function), and with it both match. The case order and the labels' spelling are chosen.
+#   (names.tsv's byn$mgfn-shared$ of CRegistrarMesarios::ProcessInput), and 6011 matches with each case's next state
+#   passed to comum::CAppState::SetNextState (unit 61's), in this file and in unit 279's cmesarioregistrado.cpp alike:
+#   clang sinks each body's two calls into one after the switch (wasm-objdump -d of each object: one call of the setter
+#   in ProcessInput), which binaryen inlines. With the two stores written as assignments in both files the shared body
+#   scored 29 over 100 rows against 6011 (pnpm wasm score), all operand-only, 20 of them binaryen's local numbers (the
+#   target's locals 3 and 4 are ours 4 and 3, and its 0 is our 3 at six rows), as unit 135's 10383 did until its
+#   stores went through the setter (unit 61's fragment); with the setter in both it scores 9 over 100, every row a call
+#   or a data address, then matched at step 9. The
+#   callers+content hand line in splat/symbol_addrs.txt that named 6011 for its two callers while it did not match
+#   went: weighed on copies of the symbol file without it and of the match list without 6011, 10391 and 10338, scanned
+#   twice beside a control over the same match copy, the copy and the control hold the same match rows (12444 and
+#   12444) and splat-build gives the target's sha256 on both. The case order and the labels' spelling are chosen; that
+#   the stores go through the setter is measured, and the setter's name is unit 61's choice.
 # Chosen, no evidence names them: TelaIndagaRegistroMesarios, its being a free function of comum and its declaration in
 # cregistrarmesarios.h; the order of the definitions (destructor, constructor, the form's builder after it, GetInst, the
 # statics, StartState, then ProcessInput below GetControlador's record; the other order of constructor and builder

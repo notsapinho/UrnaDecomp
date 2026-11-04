@@ -12456,3 +12456,5 @@
 12070 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o
 2291 _ZN4vota10CRetirarMR7GetInstEv
 12033 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cretirarmr.cpp.o
+6011 byn$mgfn-shared$_ZN5comum18CRegistrarMesarios12ProcessInputEv
+10734 _ZN4vota21CConfirmaEncerramento12ProcessInputEv

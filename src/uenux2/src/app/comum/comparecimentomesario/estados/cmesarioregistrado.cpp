@@ -75,11 +75,11 @@ void CMesarioRegistrado::ProcessInput()
     switch (m_form->Read()) {
     case api::INPUT_CONFIRMA:
         GetControlador().LogaConfirmouRegistroMesarios();
-        m_pNextState = &CPedeTituloMesario::GetInst();
+        SetNextState(&CPedeTituloMesario::GetInst());
         break;
     case api::INPUT_CORRIGE:
         GetControlador().LogaCancelouRegistroMesarios();
-        m_pNextState = &CConfirmaFimRegistroMesarios::GetInst();
+        SetNextState(&CConfirmaFimRegistroMesarios::GetInst());
         break;
     }
 }

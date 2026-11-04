@@ -69,10 +69,13 @@
 #   where its MergedLoadStoreMotion joins two stores.
 # - Not every state, and for most the bytes do not tell: the same empty call given to all 151 StartState and
 #   ProcessInput bodies of app/uenux2's objects at once, each body then scored on its own in the replay, changes the
-#   rows of 4 of the 136 matched ones (5958, 10391, 11905 and 7377), so those had no such call in the target (a reading)
-#   and assign the member; every other matched state, comum's CTituloMesarioInvalido::StartState 10348 and
-#   IPedeTituloMesario::ProcessInput 10313 among them, keeps its rows with the call and without it, so for those the
-#   bytes leave assignment and setter alike, and they assign the member, a choice. The setter itself, given to the
+#   rows of 4 of the 136 matched ones (5958, 10391, 11905 and 7377), so those had no such call at their head in the
+#   target (a reading); 5958, 11905 and 7377 assign the member, and 10391, a thunk into binaryen's shared body 6011,
+#   rests on two bodies whose next-state stores go through this setter (each body's two calls sunk into one after its
+#   switch), with which 6011 matches (units 247 and 279); every other matched state, comum's
+#   CTituloMesarioInvalido::StartState 10348 and IPedeTituloMesario::ProcessInput 10313 among them, keeps its rows with
+#   the call and without it, so for those the bytes leave assignment and setter alike, and they assign the member, a
+#   choice. The setter itself, given to the
 #   next-state stores of nine more written states of units 277, 152, 135 and 121 (10734, 10740, 10722, 10721, 10713,
 #   10706, 10380, 10337, 10689) on the link before unit 277's list took the data's order, gave a byte-identical module
 #   (sha256): for them the bytes do not decide, and they assign the member, a choice (a reading of why: each already

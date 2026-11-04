@@ -17,6 +17,9 @@
 #   needs CLogVota::LogaEncerramentoAntesDoHorario's log call made through a member (below);
 # - CEncerramentoAntecipado::ProcessInput (10731) and CEncerramentoHorarioInvalido::StartState (10710), with their
 #   next-state stores through comum::CAppState::SetNextState (unit 61's fragment has the measurements);
+# - CConfirmaEncerramento::ProcessInput (10734), named by srcloc-anchor, which holds unit 93's
+#   CEstadoGeralVota::MarcaFimAquisicao behind a 48-byte prologue: it matches with that member's first test through
+#   CEstadoGeralVota::IsFimAquisicaoMarcado, a call clang inlines (unit 93's fragment has the forms measured);
 # - the exit destructors of the statics of those five GetInst's classes, CEncerramentoHorarioInvalido (10711, 10712),
 #   CAguardaEleitoresVotarem (10719, 10720), CTituloEncerramentoInvalido (10729, 10730), CEncerramentoAntecipado (10732,
 #   10733) and CHabilitaAudioManualmente (10752, 10753): each object has two target readers, the slot that holds its
@@ -78,8 +81,9 @@
 #   +4 (73 over 657, operand rows); the call made through a member given the message in one statement, LogaAlertaVota,
 #   defined above it, gives the target's rows, names only, and so does a lambda that captures `this` in its place (the
 #   same module, sha256). The member, its name and its being a member and not a lambda or another helper are chosen.
-# - CConfirmaEncerramento::ProcessInput (10734): 49 over 273 (inserted 2, deleted 2), all in MarcaFimAquisicao (unit
-#   93's fragment has the forms measured), on the whole link with its store of the state through
+# - CConfirmaEncerramento::ProcessInput (10734), before MarcaFimAquisicao's test went through IsFimAquisicaoMarcado: 49
+#   over 273 (inserted 2, deleted 2), all in MarcaFimAquisicao (unit 93's fragment has the forms measured), on the
+#   whole link with its store of the state through
 #   CEstadoGeralVota::SetEstadoVota out of line in cestadogeralvota.cpp (cestadogeralvota.h says what keeps it there);
 #   with the setter written in the class it scores the same 49 over 273, both on the link that also holds unit 156's
 #   CEstadoGeralVota::SetEstadoEncerramento (left out of line) and on an earlier one without it. With the list in the
