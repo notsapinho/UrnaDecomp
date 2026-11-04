@@ -119,9 +119,12 @@ public:
     const std::optional<api::CDateTime>& GetDhUltimoVoto() const { return m_dhUltimoVoto; }
     const std::optional<api::CDateTime>& GetDhEmissao() const { return m_dhEmissao; }
     bool GetTecladoTestadoPosConversao() const { return m_tecladoTestadoPosConversao; }
+    // IsFimAquisicaoMarcado: whether m_dhFimAquisicao holds a date, MarcaFimAquisicao's first test. No record, slot or
+    // text names it: its name, and its being a public member defined in the class, are chosen. A test of its own that
+    // clang inlines is measured (fn 10734, unit 93's fragment): written in MarcaFimAquisicao's body, the test's address
+    // of the optional is reused for the store, which then comes after the flag's reload, against the target's order.
+    bool IsFimAquisicaoMarcado() const { return m_dhFimAquisicao.has_value(); }
 
-    // (original lines 123-127: content not recovered)
-#line 128
     const api::CDateTime& GetDtHrUltimoVoto() const
     {
         if (!m_dhUltimoVoto) {

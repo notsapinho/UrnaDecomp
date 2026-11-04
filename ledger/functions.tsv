@@ -10201,7 +10201,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10335	14	0	app	libc++	-	-	none	-	
 10336	12	0	app	-	skeleton	12130	addr	2	__cxx_global_array_dtor_4898
 10337	1733	0	app	comum	-	-	none	-	
-10338	17	0	app	comum	-	-	none	-	
+10338	17	0	app	comum	skeleton	11905	shape	3	comum::CMesarioRegistrado::ProcessInput()
 10339	254	0	app	comum	-	-	none	-	
 10340	10	0	app	-	skeleton	11306	addr	2	__cxx_global_array_dtor.2_7086
 10341	12	0	app	-	skeleton	11879	addr	2	__cxx_global_array_dtor_5662
@@ -10254,7 +10254,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10388	4789	0	app	comum	-	-	none	-	
 10389	10	0	app	-	skeleton	11849	addr	2	__cxx_global_array_dtor.2_5736
 10390	12	0	app	-	skeleton	12133	addr	2	__cxx_global_array_dtor_4891
-10391	17	0	app	comum	-	-	none	-	
+10391	17	0	app	comum	skeleton	11994	shape	3	comum::CRegistrarMesarios::ProcessInput()
 10392	209	0	app	comum	-	-	none	-	
 10393	10	0	app	-	skeleton	11852	addr	2	__cxx_global_array_dtor.2_5729
 10394	12	0	app	-	skeleton	12397	addr	2	__cxx_global_array_dtor_4097

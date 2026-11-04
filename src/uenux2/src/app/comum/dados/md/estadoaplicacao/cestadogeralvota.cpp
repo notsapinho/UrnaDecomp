@@ -44,7 +44,7 @@ void CEstadoGeralVota::MarcaInicioAquisicao()
 #line 105
 void CEstadoGeralVota::MarcaFimAquisicao()
 {
-    if (m_dhFimAquisicao) {
+    if (IsFimAquisicaoMarcado()) {
         throw CUeComumDadosError(EUE_COMUM_DADOS_8084,
                                  "O fim da aquisição já havia sido registrado");
     }
