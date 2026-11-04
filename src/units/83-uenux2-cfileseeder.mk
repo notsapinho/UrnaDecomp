@@ -4,12 +4,16 @@
 # GetEstadoBiometria, that object coming first in link order), remaining (11429), tell (11428) and resize (3037, the
 # body of IFormFieldBase's SetForm, kept under that name). Slots 0 and 1 are the shared empty destructors (174, 144).
 # With it the 5957 to 5961 enumerators of EUeIoError, the __get_deleter of the __shared_ptr_pointer the target builds
-# around the object (11427, from the roots object), and the ISeeder and ASN1::BufferSeeder changes below.
+# around the object (11427), and the ISeeder and ASN1::BufferSeeder changes below.
 #
-# The unit has no source of its own: the class has no key function and the TUs that build it (the two ReadFromFile
-# instances, fns 11523 and 7787) are not reconstructed, so the roots file emits the vtable and its members (see its
-# header). It compiles with APP_CXXFLAGS, as every roots object does; with uenux2's -fno-strict-aliasing the object's
-# rows are the same for every member of the class (below).
+# The unit has no source of its own, and this fragment is its header comment only: the class has no key function, and
+# the TU that builds it emits the vtable, its members, the typeinfos and the control block. That TU is
+# app/comum/dados/carregaarquivo.cpp's (unit 280's file), whose LeEleitores instantiates api::CPartialFileASN::
+# ReadFromFile for ModuloEleitores::EntidadeEleitores (fn 11523 holds it; src/units/310-uenux2-cconversorentidadeeleitores.mk),
+# where the target's data put this class's vtable and records too (after that instance's record of line 182). The
+# other builder, fn 7787, is not written. A roots file emitted them until then (an unrooted optnone builder and a sink
+# of the two vtables); it went when that builder was in the link. carregaarquivo.cpp.o compiles at uenux2's flags with
+# -fno-strict-aliasing; the members' rows are the same with strict aliasing or without it (below).
 #
 # ISeeder's names. The records of slots 3 to 6 read decodeByte(), decodeBlock(char *, size_t), seek(size_t) and
 # skip(size_t). asn1.h had read(), read(char*, unsigned), seek(unsigned) and skip(unsigned), so its declarations,
@@ -50,9 +54,3 @@
 # 5483, api::CIniKey::operator= (unit 01), turns match with this unit and none of its code changed: its call of
 # CBaseError<EUeIoError>'s constructor was the only vote for that name (210), `unresolved (self-voted)` in the scan
 # (docs/glossary.md), and the five throws here are other callers.
-#
-# Every header the roots file includes is named below ($(UENUX2_HDRS) is set after src/Makefile reads the fragments:
-# here it would be empty). No object of this unit depends on anything else in src/asn1 than its headers.
-$(ROOT)/$(APP)/83-uenux2-cfileseeder-roots.o: $(ROOT)/src/units/83-uenux2-cfileseeder-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/83-uenux2-cfileseeder.mk $(wildcard $(ROOT)/src/uenux2/src/api/io/*.h $(ROOT)/src/uenux2/src/api/io/asn/*.h $(ROOT)/src/ecourna/api/io/*.hpp $(ROOT)/src/ecourna/api/exception/*.hpp $(ROOT)/src/asn1/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/83-uenux2-cfileseeder-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/83-uenux2-cfileseeder-roots.o

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <format>
 #include <functional>
+#include <iterator>
 
 #include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/util.h"
@@ -16,7 +17,7 @@
 
 namespace comum {
 
-// (original lines 19-40: content not recovered)
+// (original lines 20-40: content not recovered)
 #line 41
 std::unique_ptr<CEleitores> CEleitores::s_instance;
 std::mutex CEleitores::s_mutex;
@@ -65,6 +66,31 @@ std::vector<std::string> MontaCaminhos(const std::string& diretorio, const std::
     return caminhos;
 }
 
+std::vector<md::CEleitorDecorator> CEleitores::GetEleitoresEstaticos(const std::string& diretorio)
+{
+    const std::function<std::vector<md::CEleitor>(const std::string&)> leitor = [](const std::string& arquivo) {
+        api::CFile entrada(arquivo, "rb");
+        std::vector<md::CEleitor> eleitores = LeEleitores(entrada);
+        entrada.Close();
+        return eleitores;
+    };
+    const std::vector<std::string> caminhos = MontaCaminhos(diretorio, m_lista2);
+    std::vector<md::CEleitor> eleitores = LeArquivos(caminhos, leitor);
+    const std::vector<std::string> outrosCaminhos = MontaCaminhos(diretorio, m_lista1);
+    const std::vector<md::CEleitor> outros = LeArquivos(outrosCaminhos, leitor);
+    if (!outros.empty()) {
+        eleitores.insert(eleitores.end(), outros.begin(), outros.end());
+    }
+
+    std::vector<md::CEleitorDecorator> decorados;
+    decorados.reserve(eleitores.size());
+    std::transform(eleitores.begin(), eleitores.end(), std::back_inserter(decorados), [this](const md::CEleitor& eleitor) {
+        return md::CEleitorDecorator(eleitor, m_tipoIdentificadorPrincipal);
+    });
+    std::sort(decorados.begin(), decorados.end());
+    return decorados;
+}
+
 std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<std::string>& arquivos)
 {
     const std::function<std::vector<md::CImpedido>(const std::string&)> leitor = [](const std::string& arquivo) {
@@ -73,7 +99,7 @@ std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<s
     return LeArquivos(arquivos, leitor);
 }
 
-// (original lines 96-201: content not recovered)
+// (original lines 121-201: content not recovered)
 #line 202
 // <stubs>
 // f6734 · 6461 B · unmatched · name unknown

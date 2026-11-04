@@ -7,7 +7,9 @@
 # - comum::asn::CVisitanteEleitor (src/app/comum/dados/asn/eleitor/cvisitanteeleitor.{h,cpp}, the path visit's record
 #   names, line 91): its destructor out of line (D2 5698, D0 11408), visit (11407), and the two members of its
 #   std::map<md::CEleitorIdentidade, md::CIndexer> the bodies call, destroy (2806, which calls itself) and
-#   __emplace_unique_key_args (3728), from this object, whose copies the link keeps.
+#   __emplace_unique_key_args (3728), from this object, whose copies the link keeps. Its constructor, out of line in
+#   the same file, has no target function: fn 11523 (unit 310's chain, through carregaarquivo.cpp) holds it, and
+#   src/units/310-uenux2-cconversorentidadeeleitores.mk has its evidence.
 # - std::vector<md::CEleitor>::__swap_out_circular_buffer (5700), an explicit instantiation in the roots.
 #
 # Evidence. 11377: the records (the four throws, codes 8146, 8147, 8167 and 8168 with their messages); the frames
@@ -50,9 +52,10 @@
 # word at +4; md::CIndexer as the type of the two words (a reading, cindexer.h says why); the destructor `= default`
 # ({} gives the same object, docs/reference/facts/reading.md R4).
 #
-# Roots (225-uenux2-comum-asn-converters-roots.cpp, at the tree's flags): CVisitanteEleitor's vtable in a sink, for its
-# constructor inlined into fn 11523 (not written); the instance of 5700 and a stand-in that calls it twice for fn 11411
-# (not written). Each goes when the function it names is in the link.
+# Roots (225-uenux2-comum-asn-converters-roots.cpp, at the tree's flags): the instance of 5700 and a stand-in that calls
+# it twice for fn 11411 (not written), which goes when 11411 is in the link. The sink of CVisitanteEleitor's vtable,
+# which stood for the constructor fn 11523 holds, went when 11523 was written (unit 110's celeitores.cpp, through
+# carregaarquivo.cpp's LeEleitores).
 COMUMASN225_SRCS := src/app/comum/dados/md/processoeleitoral/cdetalheconsulta.cpp \
   src/app/comum/dados/md/processoeleitoral/crespostaconsulta.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversordetalheconsulta.cpp \
@@ -60,7 +63,7 @@ COMUMASN225_SRCS := src/app/comum/dados/md/processoeleitoral/cdetalheconsulta.cp
 UENUX2_SRCS += $(COMUMASN225_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(filter %/asn/processoeleitoral/cconversordetalheconsulta.cpp %/asn/eleitor/cvisitanteeleitor.cpp,$(COMUMASN225_SRCS)),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CVisitanteEleitor's vtable and the 5700 instance with its stand-in: 225-uenux2-comum-asn-converters-roots.cpp, at the
+# The 5700 instance with its stand-in: 225-uenux2-comum-asn-converters-roots.cpp, at the
 # tree's flags, since the instance is TSE-template code whose target copy is a uenux2 object's
 $(ROOT)/$(APP)/225-uenux2-comum-asn-converters-roots.o: $(ROOT)/src/units/225-uenux2-comum-asn-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/225-uenux2-comum-asn-converters.mk $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/225-uenux2-comum-asn-converters-roots.cpp -o $(R)

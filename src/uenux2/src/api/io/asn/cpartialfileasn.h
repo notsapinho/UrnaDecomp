@@ -1,13 +1,15 @@
 // Reconstructed. The target's records name this file and put api::CFileSeeder's throws on lines 52, 75, 88, 94 and 106,
-// all at column 19 (the error's name after `throw` at 12 spaces). Every other line of this file is a choice, and the
-// class api::CPartialFileASN of the records at lines 182, 277 and 285 is not reconstructed.
+// and api::CPartialFileASN's on 182, 277 and 285, all at column 19 (the error's name after `throw` at 12 spaces). Every
+// other line of this file is a choice.
 #pragma once
 
 #include <cstddef>
 #include <cstdio>
 #include <format>
+#include <sstream>
 #include <string>
 
+#include "api/io/cfile.h"
 #include "api/io/eueioerror.h"
 #include "asn1/asn1.h"
 #include "ecourna/api/io/cfile.hpp"
@@ -37,7 +39,7 @@ public:
         return m_arquivo.Eof();
     }
 
-    // (original lines 40-48: content not recovered)
+    // (original lines 42-48: content not recovered)
 #line 49
     virtual unsigned char decodeByte() override
     {
@@ -111,6 +113,58 @@ public:
 private:
     const ecourna::api::io::CFile& m_arquivo;
     size_t m_tamanho;
+};
+
+// Reads an ASN.1 entity from a file with the partial BER decoder, which hands the nodes the visitors' paths name to
+// them as it decodes (records cpartialfileasn.h:182, 277 and 285, which print the two static member templates; target fn
+// 11523 holds their instances for ModuloEleitores::EntidadeEleitores, each behind a frame of its own, and fn 7787 those
+// for ModuloFotosCandidatos::EntidadeFotosCandidatos). That CPartialFileASN is a class, the lines of every statement but
+// the throws and the names of the locals are chosen. What the bodies hold is the targets': ReadFromFile tests that the
+// file is open, builds the seeder over a new CFileSeeder and decodes under the name "ReadFromFile de " + the file's;
+// DecodeObjectFunction sets the coder to the partial BER rule (the 2 it stores), assigns it the visitors, decodes, and
+// throws when decoding fails or the entity is not valid or the coder's log is not empty, a std::stringstream traced and
+// the log formatted into each message.
+class CPartialFileASN {
+public:
+
+    // (original lines 148-177: content not recovered)
+#line 178
+    template <typename T>
+    static T ReadFromFile(const CFile& arquivo, const ASN1::TVectorAbstractVisitor& visitantes)
+    {
+        if (!arquivo.IsOpen()) {
+            throw CUeIoError(EUE_IO_ARQUIVO_PARCIAL_NAO_ABERTO, std::format("O arquivo [{}] não estava aberto", arquivo.GetNome()));
+        }
+
+        ASN1::TSharedSeeder seeder(new CFileSeeder(arquivo));
+        return DecodeObjectFunction<T>(seeder, visitantes, "ReadFromFile de " + arquivo.GetNome());
+    }
+
+    // (original lines 189-266: content not recovered)
+#line 267
+    template <typename T>
+    static T DecodeObjectFunction(ASN1::TSharedSeeder& seeder, const ASN1::TVectorAbstractVisitor& visitantes, const std::string& nome)
+    {
+        ASN1::CoderEnv env;
+        env.set_encodingRule(ASN1::CoderEnv::ber_partial);
+        env.setVisitors(visitantes);
+        T objeto;
+        if (!env.decode(seeder, objeto)) {
+            std::stringstream erro;
+            ASN1::trace_invalid(erro, "", objeto);
+            throw CUeIoError(EUE_IO_CONTEUDO_PARCIAL_NAO_DECODIFICADO, std::format("Conteúdo não foi decodificado para {}:{}", nome, env.getLog()));
+        }
+
+        // (original lines 280-281: content not recovered)
+#line 282
+        if (!objeto.isValid() || !objeto.isStrictlyValid() || !env.getLog().empty()) {
+            std::stringstream erro;
+            ASN1::trace_invalid(erro, "", objeto);
+            throw CUeIoError(EUE_IO_CONTEUDO_PARCIAL_INVALIDO, std::format("Conteúdo inválido para {}:{}", nome, env.getLog()));
+        }
+
+        return objeto;
+    }
 };
 
 } // namespace api

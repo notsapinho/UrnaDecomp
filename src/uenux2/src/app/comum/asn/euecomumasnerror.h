@@ -20,6 +20,9 @@ enum EUeComumAsnError {
     EUE_COMUM_ASN_DODESCONVERTE_NAO_IMPLEMENTADO = 7656,
     EUE_COMUM_ASN_ENTIDADE_BIOMETRIA_INVALIDA = 7658,
     EUE_COMUM_ASN_DOCONVERTE_BIOMETRIA_NAO_IMPLEMENTADO = 7659,
+    // the code of IConversorParcialASN::Desconverte (record iconversorparcialasn.h:52, held by target fn 11523), chosen
+    // from its message, "Entidade deixada em estado inválido: {}"
+    EUE_COMUM_ASN_ENTIDADE_PARCIAL_ESTADO_INVALIDO = 7665,
     EUE_COMUM_ASN_LEITOR_SEEK = 7669,
     EUE_COMUM_ASN_LEITOR_LEITURA = 7670,
     EUE_COMUM_ASN_FORMATO_DATA_INVALIDO = 7671,

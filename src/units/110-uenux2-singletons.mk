@@ -215,14 +215,32 @@
 #   MarcaVotou (lines 456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending
 #   member), which also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
 #   GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is written (below).
-# - Not written. CompleteLoad (6734, records 205, 219, 238) and the static voters' reader (5772, whose lambda's typeinfo
-#   names CEleitores::GetEleitoresEstaticos, with 5771, 5770, 5768, 5769 and the lambda's slots 11521 to 11525) copy an
-#   md::CEleitor through fn 946, which the decorator now gives; they wait for other code. 5772's lambda (its call
-#   operator, 11523) holds comum::asn::IConversorParcialASN::Desconverte (iconversorparcialasn.h:52) and
-#   api::CPartialFileASN's ReadFromFile and DecodeObjectFunction (cpartialfileasn.h:182, 277, 285), none reconstructed,
-#   and calls comum::asn::CConversorEntidadeEleitores's slot 2 (11411, not written) through its vtable. 6734 calls 5772,
-#   2543 (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763,
-#   3765, 5723, 5725, 5763 and 5766, none written.
+# - GetEleitoresEstaticos (5772; the lambda's __func typeinfo, string 500386, names the member and its parameter, no
+#   const), matched with what it instantiates: LeArquivos<md::CEleitor> (5771, out of line with its two calls; the
+#   std::function's address and the list's begin and end are its parameters: clang's promotion of the internal
+#   template's reference to the list, a reading),
+#   vector<CEleitor>'s range insert (5770) and __move_range (5757), CEleitor's move assignment (337), the decorators'
+#   vector's __swap_out_circular_buffer (5768), and std::sort's introsort (5769) with __sort3, __sort4, __sort5 and
+#   __insertion_sort_incomplete (945, 3761, 5755, 5756), over md::CEleitorDecorator's operator<=> (456, unit 91's
+#   celeitordecorator.cpp), and the lambda's __func slots 11521, 11522, 11523 (the call operator), 11524 and 11525. It
+#   reads the lists at +76 and +64 through MontaCaminhos (1936) and LeArquivos, appends the second to the first when it
+#   is not empty, decorates each voter with the type at +100 (the decorator's constructor, out of line in
+#   celeitordecorator.cpp, which binaryen inlined: celeitordecorator.h) and sorts. The lambda opens the file, calls
+#   carregaarquivo.cpp's LeEleitores (unit 280's object) and closes it; 11523 holds the whole partial read, whose
+#   evidence and forms are src/units/310-uenux2-cconversorentidadeeleitores.mk's. Measured on this object's code
+#   (llvm-objdump -d, the function's lines with object-local numbers masked, against the written form): the insert
+#   without the `!outros.empty()` test, 70 lines differ; a range-for with push_back of the decorator for
+#   std::transform into a back_inserter, 166; emplace_back, 413. The written form's frame is the target's: the
+#   decorator temporary and the sort's comparator at +132, above every local of 5772's own (a callee clang inlined,
+#   docs/how-to-decompile.md step 3). Before step 8, 5772 scored 26 over 989 rows, all operand-only (calls and
+#   data). No generated route names 5769 (recursive; its other caller, 5772, is named by nothing either, its callers
+#   not written): a pair-depth0 hand line in splat/symbol_addrs.txt does, whose comment gives the evidence, and 5772
+#   then pairs by content (removed, the line takes 5769 and 5772 out of match and moves nothing else). Chosen: the locals' names, std::transform with a lambda over the other forms measured, its being
+#   private (celeitores.h) and its lines, after MontaCaminhos and before GetEleitoresImpedidos, as band 2's order
+#   (5773, 5772, 5771, 5770, 5767 in link order) allows. The roots' LeEstaticos stands for its callers 6734 and 7787.
+# - Not written. CompleteLoad (6734, records 205, 219, 238) copies an md::CEleitor through fn 946; it calls 5772, 2543
+#   (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763, 3765,
+#   5723, 5725, 5763 and 5766, none written.
 #   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
 #   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
 #
@@ -267,8 +285,8 @@
 #   (celeitordetalhe.cpp:94) and 1934 (CFotos's map), next to 1938 (ccargos.cpp:68) and 1933 (CLocal::GetLocalID),
 #   celeitores.cpp's place in the name order of app/comum/dados/'s objects. No other function of this file is in that
 #   band, so its lines are a choice, above the impediments' reader.
-# The roots' LeImpedidos and MontaListas stand for 5767's callers (6734, 7787) and 1936's (5772, 6734, 7787), and
-# vt_CEleitores for 7787's vptr store.
+# The roots' LeImpedidos and MontaListas stand for 5767's callers (6734, 7787) and 1936's (6734, 7787; 5772 is in the
+# link), LeEstaticos for 5772's (6734, 7787), and vt_CEleitores for 7787's vptr store.
 #
 # CEleitores::QuantidadeHabilitacaoSemBiometria (2822, celeitores.cpp line 640) and CHV's constructor (3754, chv.cpp line
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
