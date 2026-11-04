@@ -171,4 +171,10 @@ std::string FormataAgregadas(const std::string& formato)
     return std::vformat(formato, std::make_format_args(agregadas));
 }
 
+std::string FormataQtdAgregadas(const std::string& formato)
+{
+    const uebyte quantidade = CLocal::GetInst().GetQtdAgregadas();
+    return std::vformat(formato, std::make_format_args(quantidade));
+}
+
 } // namespace comum

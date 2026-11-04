@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
+#include "app/comum/dados/md/estadoaplicacao/eurna.h"
 #include "app/comum/eurnafase.h"
+#include "app/comum/md/cidentificacaosecao.h"
 #include "ecourna/app/dados/parametrizacaourna/ctitulorelatorio.hpp"
 
 namespace api {
@@ -16,6 +18,13 @@ class IForm;
 } // namespace api
 
 namespace comum {
+
+namespace md {
+class CPleito;
+namespace estadoaplicacao {
+class CDadoCorrespondencia;
+} // namespace estadoaplicacao
+} // namespace md
 
 // Reconstruction notes, not TSE's text. comum::CRelUtil: the records of crelutil.cpp name the class and five functions,
 // four of them static members (GetIDCargaFormatado, line 69; IncluiCabecalhoEleicoesMZS, 307; DSCodigoVerificador, 412;
@@ -40,6 +49,22 @@ namespace comum {
 // and its parameters' unsigned int (the format's argument code says unsigned, not the width) are chosen.
 class CRelUtil {
 public:
+    // The header IncluiCabecalhoEleicoesMZS (fn 1543) prints under the municipality and the zone: its record spells the
+    // type, unqualified (const ETipoCabecalho), and fn 1543's switch gives each value's work: 0 the place's and the
+    // section's lines (and the aggregated sections'), 1 the section's number split into "Mesa Receptora" and "Urna", 2
+    // "Urna de contingência" (comum::CGeradorRelVersaoPacoteDados's slot 3, fn 11223, passes 2 for an eUrnaContingencia
+    // urna and 0 otherwise; with 2 the pleito 2 may be printed), and 3 throws "Tipo inválido: {}" with the value, through
+    // a std::formatter of its own (the format's argument code 15, a handle whose table slot, 3047, holds fn 536, the body
+    // comum::SFormatoEnum's handles share). A value past 3 prints nothing there (the target's br_table sends it past
+    // the switch), so no default throws. The enumerators' names, the enum's being nested in CRelUtil and its
+    // formatter's being SFormatoEnum are chosen.
+    enum ETipoCabecalho {
+        eCabecalhoSecao,
+        eCabecalhoMesaReceptora,
+        eCabecalhoContingencia,
+        eCabecalhoInvalido,
+    };
+
     static std::string GetIDCargaFormatado(const std::string& idCarga);
     static void ImprimeTitulos(api::CPaperFormBuilder& builder,
                                const std::vector<ecourna::app::dados::CTituloRelatorio>& titulos, const std::string& uf);
@@ -54,6 +79,42 @@ public:
     static std::string DSCodigoVerificador();
     static std::string GetSeparadorFase(const EUrnaFase fase);
     static void ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias);
+    static void IncluiCabecalhoEleicoesMZS(api::CPaperFormBuilder& builder, const std::string& titulo,
+                                           const TMunicipioID municipio, const TZonaID zona, const TSecaoID secao,
+                                           const std::string& nomeMunicipio, const ETipoCabecalho tipo,
+                                           const bool usaPleito2);
+    // Target fn 1541, no record: "RESUMO DA CORRESPONDÊNCIA" and FormataCodigoCargaResumido (fn 2792) of the
+    // correspondence it is given, in style 2, then a new line. Its six callers are the reports that call
+    // IncluiCabecalhoEleicoesMZS (5977, 11223, 11902, 11908, 12105, 12110); use band 8 puts it right after
+    // ImprimeDataHora (fn 1542) and before csigverifier.cpp's 1540. Its name, its parameter's type and its being a
+    // static member of this class are chosen.
+    static void ImprimeResumoCorrespondencia(api::CPaperFormBuilder& builder,
+                                             const md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
+    // Target fn 2785, no record: GetSeparadorFase (fn 1919) of the phase it is given, centred in style 1. It builds a
+    // CInformacaoEleicao on CConfiguracaoEleicao's parameters (fn 603) that nothing reads, and the separator is
+    // default-constructed and then assigned (the target moves 1919's result from +4 to +16 of its frame). Use band 4
+    // puts it right after GetIDCargaFormatado (fn 2786). Its name, its parameter's type and its being a static member
+    // of this class are chosen.
+    static void ImprimeSeparadorFase(api::CPaperFormBuilder& builder, const EUrnaFase fase);
+
+private:
+    // The two parts of fn 1543 that it holds behind stack frames of their own (240 and 32 bytes), each binaryen's
+    // inlining of a function with one caller: IncluiCabecalhoEleicoes copies CConfiguracaoEleicao's pleito, takes CPE's
+    // pleito 2 instead when its bool says so and that pleito's date is today or earlier, prints it through
+    // IncluiCabecalhoPleito, then prints the names of its elections sorted by their order of printing (the std::sort
+    // whose introsort is fn 5582, with its comparator taking both elections by value) when there are two or more. 1543
+    // passes the bool as its last argument and a contingency header together: the target tests the two joined by an
+    // `and` and then the result (`i32.eqz(i32.and(p7, i32.eq(p6, 2)))`); the test written in IncluiCabecalhoEleicoes
+    // gave `i32.or(i32.eqz(p7), i32.ne(p6, 2))` (1543 216 over 2730 rows, 1 inserted and 1 deleted, against 212 over
+    // 2729, all operand-only, with `pnpm wasm score`). Their names, their parameters and their being
+    // static members of this class (the class's records name only static members) are chosen.
+    static void IncluiCabecalhoEleicoes(api::CPaperFormBuilder& builder, const std::string& titulo,
+                                        const bool usaPleito2);
+    static void IncluiCabecalhoPleito(api::CPaperFormBuilder& builder, const std::string& titulo,
+                                      const md::CPleito& pleito);
 };
 
 } // namespace comum
+
+template <>
+struct std::formatter<comum::CRelUtil::ETipoCabecalho> : comum::SFormatoEnum {};

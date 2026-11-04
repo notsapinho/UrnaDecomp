@@ -73,14 +73,14 @@
 # Roots (280-uenux2-processoeleitoral-roots.cpp): stand-ins for the target callers not reconstructed, each named in its
 # comment, so that each function keeps the call sites the target gives it, and the constructors' results are read where
 # a target caller reads them: 2787 and 3771 drop the returned this of CPleito's copy constructor (1281) and 2787 that of
-# SIdentificacaoArquivo's (5726), while 1543, 5967, 7787 and 11902 read 1281's, 7787 reads 5726's, and 11869 and 11911
+# SIdentificacaoArquivo's (5726), while 1543, 5967, 7787 and 11902 read 1281's (1543 and 11902 are in the link now, unit 123's and 176's), 7787 reads 5726's, and 11869 and 11911
 # read CRelatorioTesteImpressora's (5586; 11911 is written now, unit 296's, and reads it). Without a reader binaryen
 # drops the result: 1281 scored 9 over 215 rows, 5726 3 over 17 and 5586 11 over 99, each with the target's result row
 # deleted; with the readers, 7, 1 and 9, all operand-only. libc++'s vector<CEleicaoPE>::push_back and the version map's
 # __find_equal are called through __asm__ labels with the objects' signatures (wasm-objdump -x), so this file
 # instantiates neither: with one caller each, binaryen inlined push_back into CarregaPleito (no body for 5777) and
 # __find_equal into the hinted insert (3870 scored 270 over 345, 244 inserted); with the stand-ins 3870 scores 2 over
-# 101, 3869 0 over 246, 5777 13 over 420. The stand-ins for 3752 and 5738 (unit 89) and the 5586 readers are here
+# 101, 3869 0 over 246, 5777 13 over 420. The stand-ins for 3752 and 5738 (unit 89; 5738's went once its other caller, 1543, was in the link) and the 5586 readers are here
 # because this unit's chain needs them; unit 123's vtable sink went when 5586 was written. A stand-in goes when every
 # target caller its comment names is in the link.
 PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \

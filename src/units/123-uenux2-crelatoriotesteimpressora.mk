@@ -2,7 +2,9 @@
 # crelatoriotesteimpressora.cpp (the file of its records), the class in crelatoriotesteimpressora.h, its base
 # comum::CImprimirExtratoCarga in cimprimirextratocarga.h with its one out-of-line member in cimprimirextratocarga.cpp, and
 # the callee comum::CRelUtil::GetSeparadorFase in crelutil.cpp (its record's file) with crelutil.h and
-# euecomumrelatorioserror.h, the error it throws; and CRelUtil's GetIDCargaFormatado, IncluiAvisoModoDemonstracao,
+# euecomumrelatorioserror.h, the error it throws; and CRelUtil's IncluiCabecalhoEleicoesMZS (with the std::sort it
+# instantiates and CPleito's copy assignment), ImprimeResumoCorrespondencia, ImprimeSeparadorFase, GetIDCargaFormatado,
+# IncluiAvisoModoDemonstracao,
 # DSCodigoVerificador and FormTituloPartido and the file's internal TituloPartido in crelutil.cpp (below).
 #
 # Matched: the overrides TemHorarioVerao, EhTreinamento, GetHorarioVerao, EstaEmHorarioVerao, GetCorrespondencia,
@@ -121,8 +123,8 @@
 # function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# eight throwers not in the link (the roots file lists them; 942, 2786 and 11181 are in it) and goes with the last, and
-# w123_separador when one of 2785, 11943, 11946, 12105 or 12110 does. w123_copia, which stood for 1249's other callers
+# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 11943,
+# 11946, 12105 and 12110 are in the link (2785 is). w123_copia, which stood for 1249's other callers
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
@@ -186,7 +188,7 @@
 #   CPaperFormBuilder, adds one text field over the slot (AddTextField, fn 604, alignment 0) and returns Build's form
 #   (fn 357). Only crelutil.cpp's TU can take the address of its internal function, so that function is crelutil.cpp's:
 #   FormTituloPartido, a static member of CRelUtil (its name and membership chosen: the class's records name only static
-#   members), defined last in the file. In our link 11182's ld_index (2459) is then below 11181's (2466), the order their
+#   members), defined last in the file. In our link 11182's ld_index is then below 11181's (1543's paragraph, below, has them), the order their
 #   use band (1) asks; the other places were not linked. w123_titulo stands for 11946 and calls it once, so binaryen
 #   inlines it there as in the target; it goes when 11946 lands.
 # - DSCodigoVerificador (fn 11182, record crelutil.cpp:412:27, the default std::source_location of its
@@ -195,11 +197,9 @@
 #   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
 #   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
 #   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
-# IncluiAvisoModoDemonstracao's caller 1543 is not reconstructed (5591 is, unit 296's), nor three of
-# GetIDCargaFormatado's four (5579, 12105, 12110; 11256 is in the link). w123_idcarga stands for those three and
-# w123_demonstracao for 1543:
-# each calls its function twice, as the target's several callers do; each goes when every caller it stands for is in the
-# link.
+# Three of GetIDCargaFormatado's four callers are not reconstructed (5579, 12105, 12110; 11256 is in the link):
+# w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
+# stands for is in the link. IncluiAvisoModoDemonstracao's two callers, 1543 and 5591, are in the link.
 #
 # Four more CRelUtil statics in crelutil.cpp, all matched; their stand-ins are in unit 230's roots, the unit of
 # comum::CSubstituidorTitulo, which the first one uses:
@@ -217,13 +217,14 @@
 #   with CStringUtils::PreencheADireita (fn 1881) followed by CDate::Format("DD/MM/YYYY") (fn 706) of the date, and the
 #   time label so followed by CTime::Format("  hh:mm:ss") (fn 779).
 # Where they are: none has a record. In the use bands they sit among this file's functions: 1542 right after 1543
-# (IncluiCabecalhoEleicoesMZS, record :307) in band 8, 5584 right before 5583 (IncluiAvisoModoDemonstracao) in band 2,
+# (IncluiCabecalhoEleicoesMZS, record :307) in band 8, so ImprimeAberturaFechamento and ImprimeDataHora follow 1543
+# (above), 5584 right before 5583 (IncluiAvisoModoDemonstracao) in band 2,
 # and 3689 and 3688 in band 3 between fn 3691 (comum::CGeradorRelVersaoPacoteDados's D2) and capplication.cpp's 3684
 # (`awk -F'\t' '$1>=3683 && $1<=3691' ledger/ordinals.tsv`). That they are crelutil.cpp's is a reading of those bands and
 # a choice; that 3689 is not csubstituidortitulo.cpp's is a reading: GetInst is a plain function, which clang inlines in
 # its own TU at uenux2's flags (docs/reference/facts/codegen.md C6), and 3689 holds it inlined by binaryen. Their lines
-# (after GetIDCargaFormatado, in the blank run above line 294) are chosen; in our link 3689's ld_index (2932) is below
-# 3688's (2935) and 5584's (2934) below 5583's (2937), as the bands ask.
+# are chosen (ImprimeTitulos after GetIDCargaFormatado; the other two after 1543); in our link 3689's ld_index is below
+# 3688's and 5584's below 5583's, as the bands ask (1543's paragraph, below, has the ld_index values).
 # What the bytes decide: 3689's frame. Written with the lines built in ImprimeTitulos itself, 3689 scored 70 over 796
 # rows, all operand-only, with the map at +20 of the frame where the target has it at +36 and the key's tuple and the
 # insertion's result above it where the target has them below; the lines built in a helper clang inlines
@@ -239,6 +240,67 @@
 # members of CRelUtil (its records name only static members) and that QuebraLinhas is in the anonymous namespace (a
 # static member was not tried), the conditionals for the style and the alignment (a switch was not tried), `continue`
 # for the empty line.
+#
+# IncluiCabecalhoEleicoesMZS (target fn 1543, record crelutil.cpp:307:19, `static void
+# comum::CRelUtil::IncluiCabecalhoEleicoesMZS(api::CPaperFormBuilder &, const std::string &, const TMunicipioID, const
+# TZonaID, const TSecaoID, const std::string &, const ETipoCabecalho, const bool)`) matches, with what it brings:
+# - Its body (pnpm wasm fn ../target/vota_web_wasm.wasm 1543): behind a 240-byte frame of its own,
+#   IncluiCabecalhoEleicoes, which copies CConfiguracaoEleicao's pleito (fn 1281), takes CPE's pleito 2 (fn 1267)
+#   instead through CPleito's implicit copy assignment (fn 5597) when the last argument and a contingency header (2)
+#   come together, CPE is created first if it does not exist (2788, 2787 over CAppInfo::LeGeralInterno, 2273) and the
+#   pleito 2's date is today or earlier (CDate's ==, inline, then operator<=>, 1261: the test of the constructor 5586);
+#   behind a 32-byte frame inside it, IncluiCabecalhoPleito (the demonstration notice, 5583; ImprimeTitulos with the
+#   configuration's header and CLocal's UF, 3689; the title when not empty; "Eleições Comunitárias" for the origin 2;
+#   the configuration's name, the pleito's name and its date as "(DD/MM/YYYY)"); then the pleito's elections copied
+#   (1953), sorted and printed when there are two or more. Back in 1543: the municipality's line "{:<32s} {:05}" over
+#   Traduz("<MLSN>"), the municipality's name centred, the zone's "{:<33s} {:04}" over "<ZLSN>", and a switch on the
+#   header type: 0 the place's line "Local de Votação" (not for a community election) and the section's "<SLSN>", and
+#   with aggregated sections (CLocal::GetQtdAgregadas, 2816) their count, through comum::FormataQtdAgregadas behind a
+#   384-byte frame (clocal.cpp's, unit 89's fragment has it), and FormataAgregadas (5738); 1 "Mesa Receptora" {:03} of
+#   the section over 10 and "Urna" {} of the rest; 2 "Urna de contingência"; 3 the throw, CUeComumRelatoriosError 9086
+#   "Tipo inválido: {}" over the type (argument code 15, a handle: the enum has a formatter, crelutil.h); no default.
+#   Every literal, format, width and alignment is the target's. Before steps 7 to 9 (pnpm wasm score against the plain
+#   link): 212 over 2729 rows, all operand-only, the operands that are no call and no data address being the format
+#   buffer's table slot (148 in the target) and the thrown object's destructor's (69).
+# - The sort: std::sort over the copied std::vector<md::CEleicaoPE> with a lambda that takes both elections by value
+#   (5582 copies both elements at each comparison, pnpm wasm fn ../target/vota_web_wasm.wasm 5582) and compares
+#   CConfiguracaoEleicao::GetInst().GetSituacoesEleicoes(id).GetOrdemImpressao() of the two (fns 187 once, 271 twice,
+#   the byte at +5). This object instantiates libc++'s __introsort (5582), __sort3 (1386), __sort4 (3687), __sort5
+#   (5578), __insertion_sort_incomplete (5577), CEleicaoPE's move assignment (817) and std::swap of two (818), which
+#   match with it; their names mangle the lambda of IncluiCabecalhoEleicoes ($_0).
+# - CPleito's implicit copy assignment (5597) and what it instantiates: the copy of a CEleicaoPE range (5595), CCargo's
+#   copy assignment (5594), CNomesCargo's (3692) and a std::copy of md::CRespostaConsulta (5593), named so by step 8's
+#   pairs. Their target copy lies in use band 2 before cgeradorrelversaopacotedados.cpp's ImprimeRodape (5596), so an
+#   earlier object instantiates it in the target (a reading); this object's copy, at comum's flags, matches. 5597 has
+#   two target callers, 1543 and 11902 (unit 176's, in the link), which keep it out of line.
+# - The forms the bytes decide, each measured with pnpm wasm score: the pleito 2's test written in IncluiCabecalhoEleicoes
+#   gave 216 over 2730 rows (1 inserted, 1 deleted), the target's `and` of the two (crelutil.h says how) 212 over 2729;
+#   with 5597 called once in the link binaryen inlines it into 1543 (1415 over 3800 rows, 1071 inserted), so it needed
+#   its second caller, 11902 (a stand-in until 11902 was written).
+# - Where they are. The record puts the switch's throw on line 307, column 19. The other functions have no record; the
+#   bands order them: in band 2 5583 (IncluiAvisoModoDemonstracao) precedes 5582 (the sort, first mentioned in
+#   IncluiCabecalhoEleicoes) and 5581 (ImprimeSeparadorVia), and in band 8 1543 precedes 1542 (ImprimeDataHora) and
+#   1541 (below). So IncluiAvisoModoDemonstracao, IncluiCabecalhoPleito and IncluiCabecalhoEleicoes precede 1543, and
+#   ImprimeAberturaFechamento and ImprimeDataHora (moved from above line 294) follow it: ImprimeDataHora's first mention
+#   is ImprimeAberturaFechamento's call. In this link's build/out/wasm-map/vota_web/names.tsv, ld_index by target
+#   index: band 2 5584 3211, 5583 3212, 5582 3216, 5581 3228; band 8 1543 3220, 1542 3223, 1541 3224; band 3 3689 3209,
+#   3688 3222; band 4 2786 3208, 2785 3225; band 1 11182 3229, 11181 3234: each higher index has the lower ld_index.
+# - Evidence in the shape: one CLocal::GetInst and one CConfiguracaoEleicao::GetInst call in 1543, right after
+#   IncluiCabecalhoEleicoes (named locals); the two formats of the aggregated-sections branch live to its end (the target
+#   destroys them there, named locals), while the other lines' temporaries die with their statement.
+# - Chosen: the two helpers' names, parameters and membership (crelutil.h); ETipoCabecalho's scope, enumerators and
+#   formatter (crelutil.h); the parameters' and locals' names; IncluiCabecalhoPleito calling ImprimeTitulos without the
+#   UF (5584, which clang inlines here; calling 3689 with CLocal's UF was not linked).
+# - ImprimeResumoCorrespondencia (target fn 1541, no record: "RESUMO DA CORRESPONDÊNCIA" and FormataCodigoCargaResumido,
+#   2792, in style 2, then a new line; 11 over 83 rows, all operand-only) and ImprimeSeparadorFase (fn 2785, no record:
+#   GetSeparadorFase of the phase, centred; 4 over 51, all operand-only), both called by 11902 and by five unwritten
+#   reports (crelutil.h has what places them, the use bands 8 and 4). 2785's CInformacaoEleicao that nothing reads and
+#   its separator assigned after a default construction are the target's frame (+28 and a move from +4 to +16): the
+#   separator initialized from the call gives a 16-byte frame and no move, measured on a probe TU compiled at this
+#   directory's flags (tools/round/try-tu.sh --symbols, then wasm-objdump -d of the object). Their names, their
+#   parameters' types and their being static members are chosen.
+# - Roots: w123_cabecalho stands for 1543's five callers not in the link, w123_rodape for 1541's five and 2785's three;
+#   w123_demonstracao, which stood for 1543 as 5583's caller, went with 1543's landing.
 CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
                                   src/app/comum/relatorios/cimprimirextratocarga.cpp
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)

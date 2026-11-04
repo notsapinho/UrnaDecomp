@@ -50,17 +50,10 @@
 #
 # Not written: CriaCabecalho (fn 5977) and its lambda's slots (2881, 12000 to 12002).
 #
-# Roots: 246-uenux2-crelvotautil-roots.cpp holds the caller stand-in of unit 31's api::CPaperFormBuilder::Show (fn
-# 3671), whose target caller 11902 is not written (5592, unit 287's, and 5591, unit 123's, are in the link); unit 31's
-# fragment has
-# Show's paragraph and
-# says why the stand-in is here (src/units/README.md "Landing a unit" item 2).
+# Roots: none. 246-uenux2-crelvotautil-roots.cpp held the caller stand-in of unit 31's api::CPaperFormBuilder::Show
+# (fn 3671) for its target caller 11902, and went with it once 11902 (unit 176's cimpressaopu.cpp) was in the link
+# beside 5592 (unit 287's) and 5591 (unit 123's); unit 31's fragment has Show's paragraph.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule compiles it and depends on the source and every uenux2 header.
 CRELVOTAUTIL_SRCS := src/app/vota/eleitor/iniciovotacao/crelvotautil.cpp
 UENUX2_SRCS += $(CRELVOTAUTIL_SRCS)
-# unit 31's CPaperFormBuilder::Show has none of its three target callers in the link: 246-uenux2-crelvotautil-roots.cpp
-# stands for them (unit 31's fragment has Show's paragraph)
-$(ROOT)/$(APP)/246-uenux2-crelvotautil-roots.o: $(ROOT)/src/units/246-uenux2-crelvotautil-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/246-uenux2-crelvotautil.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/246-uenux2-crelvotautil-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/246-uenux2-crelvotautil-roots.o

@@ -36,7 +36,8 @@
 # (a helper both members call was not tried); AdicionaParametro's name; CGeradorRelPU's member name; the paths of
 # cgeradorrelpu.{h,cpp}. cgeradorrelpu.h says what the class's data show.
 #
-# CGeradorRelPU's destructors, matched from this unit's roots object: the D2 and D0 (target fns 11901, 11900), each a
+# CGeradorRelPU's destructors, matched first from this unit's roots object and now from unit 176's cimpressaopu.cpp.o
+# (below): the D2 and D0 (target fns 11901, 11900), each a
 # thunk that passes the vptr to a body binaryen merged, 6055 and 6054, whose other callers are RHVoice's
 # RHVoice::dtree::in_list D2 and D0 (9937, 9936; `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 6054` from
 # asmlift-wasm/ lists callers 9936 and 11900). The class has no key function (cgeradorrelpu.h), and its one user, fn
@@ -50,7 +51,37 @@
 # 2 over 5 rows for each thunk, 2 over 65 and 1 over 64 for the bodies, all operand-only. The target's copy is a vota
 # TU's (the vtable lies in CImpressaoPU's data), a directory built with strict aliasing, and the roots compile at
 # UENUX2_CXXFLAGS, with -fno-strict-aliasing: the roots object compiled both ways gives the same D2 and D0
-# (wasm-objdump -d of the two functions: 148 lines in each object, cmp-equal).
+# (wasm-objdump -d of the two functions: 148 lines in each object, cmp-equal). Since 11902 is written, its object, that
+# vota TU, builds the object and emits the vtable and both destructors (names.tsv's object column), the roots' builder
+# and sink went, and the six rows keep `match`.
+#
+# CGeradorRelPU's members for vota::CImpressaoPU::StartState (11902, unit 176's file), in cgeradorrelpu.cpp: Imprime
+# (the title block, the parameters, the footer, then CPaperFormBuilder::Show with the title, the copy's text and true),
+# ImprimeTituloJE (1543 over the local's municipality, zone, section and name with "Parâmetros de urna", the
+# contingency header for an eUrnaContingencia urna and the pleito-2 flag set, a new line, GetIdentificacaoUrna (1942)
+# at the left, CRelUtil::ImprimeDataHora of now with "Data" and "Hora", ImprimeResumoCorrespondencia and
+# ImprimeSeparadorFase, each with a new line), ImprimeParametros (CConfiguracaoEleicao's municipality and pleito and
+# CAppInfo's internal general state; the pleito 2 taken as CRelUtil's IncluiCabecalhoEleicoes takes it, a pleito
+# nothing then reads; ImprimeHorarios; then the parameters, each AdicionaParametro of its label and std::to_string of
+# the count, or "Sim"/"Não"), ImprimeHorarios (the four times of the municipality's schedule, copied first, each as
+# "{} -" of ecourna's FormataHora, 2686, then FormataData, 2687, under an empty label) and ImprimeRodape (5596's text:
+# unit 296's paragraph and unit 287's say why its match line names it). Each but Imprime sits in 11902 behind a stack
+# frame of its own (48, 272 and 448 bytes); 11902 matches (unit 176's fragment). What the bytes decide, measured with
+# pnpm wasm score of 11902 against the plain link:
+# - The definition order: callees before their callers (ImprimeHorarios before ImprimeParametros, Imprime last), 287
+#   over 2778 rows, all operand-only; with Imprime second and ImprimeHorarios after ImprimeParametros, 528 over 2796 (18
+#   inserted, 20 deleted: local numbers, and the municipality's +496 folded into the four loads where the target adds it
+#   once). docs/how-to-decompile.md step 3 says why an order can decide that.
+# - The urna's type read before the title string is built (a named bool), and the municipality's reference taken before
+#   the general state is read (its GetInst call precedes CAppInfo's in the target); "Sim" and "Não" built as two
+#   std::string, one per arm (a conditional over the two char literals gives one copy from a select, 687 over 2846
+#   with the type's read inline too).
+# - The counts formatted by std::to_string(int) (fn 296, not the unsigned 327): ecourna's cparametrosurna.hpp declares
+#   them uedword, so each is cast to int here, a form that stands for that header's type (unit 104's ImprimeZeresima
+#   holds GetNumZeresimas in an int and tests it signed); the header is ecourna's and not changed here.
+# Chosen: the members' names and order (but the measured one above), their being members, the locals' names.
+# The roots' stand-ins for 11902 went: w183_parametros (677's caller) and the sink that kept the vtable, since 11902
+# builds the object.
 #
 # LinhaPartido (fn 11261, no record; its name and its place in the class, after DetalheCandidatoZE, are chosen) is
 # written for unit 296, which says why and what it measures: its one user, fn 12110, passes its address (table slot
@@ -58,10 +89,11 @@
 #
 # Not reconstructed: the other records of cdatasourcesrelatorio.h (TrailerProporcionalPartido 11260,
 # GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981, TrailerMajoritario 11980, CodVerificador 11974);
-# fn 3872, the one user of 11972 and 11973 (no record, a link-order stub in unplaced.cpp); CGeradorRelPU's user,
-# vota::CImpressaoPU's slot 2 (fn 11902).
+# fn 3872, the one user of 11972 and 11973 (no record, a link-order stub in unplaced.cpp).
 RELATORIOS183_SRCS := src/app/comum/relatorios/cgeradorrelpu.cpp
 UENUX2_SRCS += $(RELATORIOS183_SRCS)
+# cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (unit 123 adds the path the same way)
+$(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(RELATORIOS183_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 W183_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 # the callers of this unit's functions are not reconstructed: the roots keep them, at the tree's flags, since the
 # object emits the data sources' instances

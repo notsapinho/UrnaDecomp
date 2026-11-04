@@ -19,16 +19,22 @@
 //   7787 lands.
 // - GetSeparadorFase (slot 20, fn 11183) calls CRelUtil::GetSeparadorFase, fn 1919, which has six callers in the target
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
-//   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
+//   four not reconstructed (11943, 11946, 12105, 12110; 2785 and 11183 are in the link).
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
-//   did into 1919 alone. w123_erro stands for six of the other 13 (11233, 11968, 12110, 1543, 2791, 5967; 11181,
-//   11212, 11214, 3696, 942, 2786 and 3689 are in the link). It passes an empty std::source_location: a default
+//   did into 1919 alone. w123_erro stands for five of the other 13 (11233, 11968, 12110, 2791, 5967; 11181,
+//   11212, 11214, 3696, 942, 2786, 3689 and 1543 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
 //   5579, 11256, 12105, 12110): 11256 is in the link, and w123_idcarga stands for the other three and calls it twice.
-// - CRelUtil::IncluiAvisoModoDemonstracao, fn 5583, has two (awk -F'\t' '$2==5583' ledger/callgraph.tsv: 1543, 5591):
-//   5591 (unit 296's) is in the link, and w123_demonstracao stands for 1543 and calls it twice.
+// - CRelUtil::IncluiCabecalhoEleicoesMZS, fn 1543, has six callers in the target (awk -F'\t' '$2==1543'
+//   ledger/callgraph.tsv: 5977, 11223, 11902, 11908, 12105, 12110); 11902 (unit 176's) is in the link, with one call,
+//   and w123_cabecalho stands for the other five and calls it twice, with the header types and the flag varied as
+//   those callers vary them (0 or 2 and 1, 11223 and 11902; 0 and 0, 5977, 11908, 12110; 0 or 1 and 0, 12105), so that
+//   dead-argument elimination folds none.
+// - CRelUtil::ImprimeResumoCorrespondencia, fn 1541, has the same six callers as 1543 (awk -F'\t' '$2==1541'
+//   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105); 11902
+//   is in the link, and w123_rodape stands for the others and calls each twice.
 // - CRelUtil::FormTituloPartido, which the target holds inlined by binaryen in fn 11946 (vota::CGeraZeresimaBase's slot
 //   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
 //   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181
@@ -82,10 +88,23 @@ __attribute__((noinline)) unsigned w123_idcarga(const std::string& carga, const 
     return comum::CRelUtil::GetIDCargaFormatado(carga).size() + comum::CRelUtil::GetIDCargaFormatado(outra).size() + 123;
 }
 
-__attribute__((noinline)) void w123_demonstracao(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro)
+__attribute__((noinline)) void w123_cabecalho(api::CPaperFormBuilder& builder, const std::string& titulo,
+                                              const std::string& municipio, unsigned tipo)
 {
-    comum::CRelUtil::IncluiAvisoModoDemonstracao(builder);
-    comum::CRelUtil::IncluiAvisoModoDemonstracao(outro);
+    comum::CRelUtil::IncluiCabecalhoEleicoesMZS(builder, titulo, tipo + 123, tipo, tipo + 7, municipio,
+                                                static_cast<comum::CRelUtil::ETipoCabecalho>(tipo), tipo > 1);
+    comum::CRelUtil::IncluiCabecalhoEleicoesMZS(builder, municipio, 123, 7, tipo, titulo,
+                                                comum::CRelUtil::eCabecalhoSecao, false);
+}
+
+__attribute__((noinline)) void w123_rodape(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro,
+                                           const comum::md::estadoaplicacao::CDadoCorrespondencia& correspondencia,
+                                           comum::EUrnaFase fase)
+{
+    comum::CRelUtil::ImprimeResumoCorrespondencia(builder, correspondencia);
+    comum::CRelUtil::ImprimeSeparadorFase(builder, fase);
+    comum::CRelUtil::ImprimeResumoCorrespondencia(outro, correspondencia);
+    comum::CRelUtil::ImprimeSeparadorFase(outro, comum::FASE_OFICIAL);
 }
 
 __attribute__((noinline)) unsigned w123_titulo(unsigned base)
@@ -104,7 +123,9 @@ int (*volatile w123_sink_mapa)(void*, const void*, const void*);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
 unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
-void (*volatile w123_sink_demonstracao)(api::CPaperFormBuilder&, api::CPaperFormBuilder&);
+void (*volatile w123_sink_cabecalho)(api::CPaperFormBuilder&, const std::string&, const std::string&, unsigned);
+void (*volatile w123_sink_rodape)(api::CPaperFormBuilder&, api::CPaperFormBuilder&,
+                                  const comum::md::estadoaplicacao::CDadoCorrespondencia&, comum::EUrnaFase);
 unsigned (*volatile w123_sink_titulo)(unsigned);
 void (*volatile w123_sink_vias)(api::CPaperFormBuilder&, api::CPaperFormBuilder&, unsigned);
 
@@ -116,7 +137,8 @@ struct SRelatorioTesteImpressoraRoots {
         w123_sink_separador = w123_separador;
         w123_sink_erro = w123_erro;
         w123_sink_idcarga = w123_idcarga;
-        w123_sink_demonstracao = w123_demonstracao;
+        w123_sink_cabecalho = w123_cabecalho;
+        w123_sink_rodape = w123_rodape;
         w123_sink_titulo = w123_titulo;
         w123_sink_vias = w123_vias;
     }

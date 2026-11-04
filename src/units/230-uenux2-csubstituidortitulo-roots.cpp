@@ -2,8 +2,8 @@
 // out-of-line functions and unit 123's new CRelUtil members out of line, as the target does (each has more than one
 // direct caller there: awk -F'\t' '$2==<index>' ledger/callgraph.tsv). They declare what they call through __asm__
 // labels with the object's signatures, so the rule needs no header.
-// - w230_titulos stands for fns 1543 and 5579, which call CRelUtil::ImprimeTitulos with the UF (fn 3689); its third
-//   caller, fn 5584, is written (crelutil.cpp).
+// - w230_titulos stands for fn 5579, which calls CRelUtil::ImprimeTitulos with the UF (fn 3689); its other callers,
+//   fns 5584 and 1543, are written (crelutil.cpp).
 // - w230_titulos_local stands for fn 12110, which calls the overload without the UF (fn 5584); its other caller,
 //   fn 5591, is in the link.
 // - w230_abertura stands for fns 12105 and 12110, which call CRelUtil::ImprimeAberturaFechamento (fn 3688).
