@@ -10533,7 +10533,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10667	14	0	app	vota	skeleton	12153	shape	2	vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput()
 10668	17	0	app	libc++	skeleton	10473	addr	1	std::__2::__shared_ptr_pointer<comum::asn::CVisitanteFoto*, std::__2::shared_ptr<comum::asn::CVisitanteFoto>::__shared_ptr_default_delete<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>, std::__2::allocator<comum::asn::CVisitanteFoto>>::__get_deleter(std::type_info const&) const
 10669	193	0	-	vota	-	-	none	-	
-10670	7	0	-	-	skeleton	12289	shape	1	vota::TextoIdentidadeInvalida()
+10670	7	0	-	-	skeleton	12287	shape	1	vota::TextoIdentidadeInvalida()
 10671	10	0	-	-	skeleton	12092	addr	2	__cxx_global_array_dtor.2_5131
 10672	12	0	-	-	skeleton	12150	addr	2	__cxx_global_array_dtor_4931
 10673	27	0	libcxx	libc++	skeleton	12424	addr	1	std::__2::__shared_ptr_emplace<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>::__on_zero_shared()
@@ -10607,7 +10607,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10741	17	0	app	libc++	skeleton	10477	addr	1	std::__2::__shared_ptr_pointer<comum::dao::IComparecimentoMesarioDAO*, std::__2::shared_ptr<api::persistencia::IDAO>::__shared_ptr_default_delete<api::persistencia::IDAO, comum::dao::IComparecimentoMesarioDAO>, std::__2::allocator<comum::dao::IComparecimentoMesarioDAO>>::__get_deleter(std::type_info const&) const
 10742	173	0	app	-	-	-	none	-	
 10743	10	0	app	-	skeleton	12190	addr	2	__cxx_global_array_dtor.2_4811
-10744	12	0	app	-	skeleton	12288	addr	2	__cxx_global_array_dtor_4539
+10744	12	0	app	-	skeleton	12289	addr	2	__cxx_global_array_dtor_4537
 10745	17	0	app	libc++	skeleton	10479	addr	1	std::__2::__shared_ptr_pointer<vota::IAjusteInicial*, std::__2::default_delete<vota::IAjusteInicial>, std::__2::allocator<vota::IAjusteInicial>>::__get_deleter(std::type_info const&) const
 10746	216	0	app	api	-	-	none	-	
 10747	94	0	app	api	skeleton	11711	addr	3	api::CDataTextFmt<api::CTextSource>::~CDataTextFmt()_6241
@@ -11375,7 +11375,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11509	10	0	app	-	skeleton	12283	addr	2	__cxx_global_array_dtor.2_4548
 11510	12	0	app	-	skeleton	13559	addr	2	__cxx_global_array_dtor_2869
 11511	9	0	app	api	skeleton	11232	byte	0	api::ITextToSpeech::SetPitch(unsigned int)
-11512	10	0	app	-	skeleton	12287	addr	2	__cxx_global_array_dtor.2_4540
+11512	10	0	app	-	skeleton	12288	addr	2	__cxx_global_array_dtor.2_4538
 11513	37	0	app	-	skeleton	14022	addr	4	__cxx_global_array_dtor_2760
 11514	6868	1	app	-	-	-	none	-	
 11515	7	0	app	libc++	skeleton	12780	addr	1	std::bad_array_new_length::what() const

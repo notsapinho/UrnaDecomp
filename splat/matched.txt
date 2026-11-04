@@ -12538,3 +12538,6 @@
 10281 __cxx_global_array_dtor@app/uenux2/src/app/comum/gravadores/asn/cassinavotavelbu.cpp.o
 2758 _ZN3api10CasamTodosERKNSt3__26vectorINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEENS5_IS7_EEEESB_
 5464 _ZN3api12CStringUtils13CasaCaractereEcc
+10627 _ZN4vota17CValidaIdentidade10StartStateEv
+10671 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp.o
+10672 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp.o
