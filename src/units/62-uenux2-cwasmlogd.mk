@@ -6,11 +6,12 @@
 #   CBaseError<api::EUeUeLogError, {6950, 7000}> they throw (fn 3601, a thunk into binaryen's shared body 710, named by
 #   the vptr it passes); CWasmLogd's implicit destructors (fns 8318 and 8316), the compiler's code for the class
 #   definition, emitted with the vtable by cwasmlogd.cpp, whose escreve is the key function.
-# - written and `unresolved`: CWasmLogd::escreve (fn 8327, slot 4). It formats "{}|{}|{}", which the target's linker
-#   merged as the tail of "{}|{}|{}|{}|{}|{}|{}" (string 1120, which fns 10273 and 12110 load, and no unit writes them),
-#   so the string_view's end is that string's end, 1140. Our link holds no such string, and the scan cannot place our
-#   end pointer, a pointer to a NUL (`string tail occurs 4098 times`). In a copy of the link with one more object that
-#   holds that literal, `splat-remap` prints `target 8327: IDENTICAL` (operand kinds verified). Its call of fn 5152 is
+# - matched since fragment 321: CWasmLogd::escreve (fn 8327, slot 4). It formats "{}|{}|{}", which the target's linker
+#   merged as the tail of "{}|{}|{}|{}|{}|{}|{}" (string 1120, which fns 10273 and 12110 load), so the string_view's
+#   end is that string's end, 1140. Until a written body held that literal, our link had no such string, and the scan
+#   could not place our end pointer, a pointer to a NUL (`string tail occurs 4098 times`);
+#   comum::asn::CAssinaVotavelBu's CalculaHashVotavel (gravadores/asn/cassinavotavelbu.cpp, inlined into 10273, fragment
+#   321) formats it now, and the row matches with this unit's body unchanged. Its call of fn 5152 is
 #   named by a generated line (unit 141's fragment).
 # The destructors: the class is final (they store no vptr) and they destroy its two members, the std::string at +28 and
 # the std::mutex at +4. The destructor is not out of line: the deleting one holds the base-object body inlined. It is

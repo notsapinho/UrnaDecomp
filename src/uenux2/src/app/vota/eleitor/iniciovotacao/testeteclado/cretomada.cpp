@@ -9,6 +9,23 @@ namespace vota::testeteclado {
 
 CRetomada::~CRetomada() = default;
 
+CRetomada::CRetomada()
+    : m_retomada(0)
+{
+}
+
+CRetomada& CRetomada::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CRetomada());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CRetomada> CRetomada::s_inst;
+std::mutex CRetomada::s_mutex;
+
 CFormInterativoTelaVota CRetomada::GetTela()
 {
     const uedword numeroInternoUrna = comum::CAppInfo::GetInst().GetGeral().GetCorrespondencia().GetNumeroInternoUrna();

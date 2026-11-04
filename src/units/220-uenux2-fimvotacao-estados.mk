@@ -49,7 +49,8 @@
 # declared first; `comum::CAppState()` for the base's 0 (its default argument, EVENTO_NENHUM); the lines of every function (above each file's first record line); the headers' paths,
 # beside the .cpp files the records name.
 #
-# The roots stand in for the GetInst callers not in the link (fns 7160, 12098 and CGeraBU::StartState 12110) and for
+# The roots stand in for the GetInst callers not in the link (fns 12098 and CGeraBU::StartState 12110; 7160, unit
+# 329's, is) and for
 # api::CDateTime::operator- (5471), whose other target caller, fn 13012, is not written. The stand-ins for 3054's
 # callers (fns 11804, 11809) and 5936's (11809, 11812), and the call of CGeraBU's GetInst for fn 7481, went: those
 # callers are in the link. Their comments name each.

@@ -78,10 +78,10 @@ public:
 protected:
     explicit CAppState(int eventos = EVENTO_NENHUM);
 
-    // Stores the next state. Out of line in cappstate.cpp, called where the bytes ask for it (a store in each arm, or
-    // one kept first) or match a replay with a call binaryen inlined (src/units/61-uenux2-cexibealertadesligamento.mk
-    // lists the eighteen callers and what each rests on); the others assign m_pNextState. binaryen inlines it into
-    // every caller: no target function. Its name, parameter's name, access and being a member are chosen.
+    // Stores the next state. Out of line in cappstate.cpp, called where the bytes ask for it (a store in each arm, one
+    // kept first, or loads redone after it) or match a replay with a call binaryen inlined (the nineteen callers and
+    // what each rests on: src/units/61-uenux2-cexibealertadesligamento.mk); the others assign m_pNextState. binaryen
+    // inlines it everywhere: no target function. Its name, parameter's name, access and being a member are chosen.
     void SetNextState(CAppState* pNextState);
 
     CAppState* m_pNextState;

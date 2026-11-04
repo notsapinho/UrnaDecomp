@@ -87,8 +87,8 @@
 # CAssinadorVota of package 120 (fn 1501), CAppInfo::SalvaGeralInterno (unit 109's file; binaryen inlines it behind a
 # 16-byte frame), Assina(25) (fn 1277) and Sync, then SalvaGeralExterno, CopyFile of package 120 to 121 (fn 378) and
 # Sync. That the title is built and not passed is the bytes'; the member's line after SincronizaEstadoGeralVota and its
-# being a static member, as this class's others, are chosen. w205_estado_geral stands for its other callers, 7160 and
-# 7306.
+# being a static member, as this class's others, are chosen. Its other callers, 7160 and 7306 (units 329 and 104), are
+# in the link, and the roots' w205_estado_geral that stood for them went.
 #
 # Not written here: SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (records 290 and 303, in the anonymous
 # namespace), which fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) holds inlined; 6737, which holds

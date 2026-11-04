@@ -17,6 +17,9 @@ class CIdentificacaoVotavel {
 public:
     CIdentificacaoVotavel(TCandidatoID codigo, TPartidoID partido);
 
+    TCandidatoID GetCodigo() const { return m_codigo; }
+    TPartidoID GetPartido() const { return m_partido; }
+
 private:
     TCandidatoID m_codigo;
     TPartidoID m_partido;
@@ -30,12 +33,18 @@ private:
 // copies the 8 bytes it is given and stores 1 at +20. Chosen: the path (rule 4 of docs/how-to-decompile.md step 3, in
 // gravadores/md/ with the BU's data classes), the member names, the count's type (ueword, the type of
 // comum::CGravadorBU::TQtdEleitor, which the record names for the count AcrescentaVotoVotavel passes on), and that the
-// identification is passed by const reference.
+// identification is passed by const reference. The getters are what fn 10273 (CConversorEntidadeBU::DoConverte) reads:
+// the type, the count, the identification's engaged byte (twice) and its code and party; their names are chosen.
 class CVotosVotavel {
 public:
     CVotosVotavel(CVoto::ETipo tipo, TCandidatoID candidato, ueword quantidade);
     CVotosVotavel(CVoto::ETipo tipo, TCandidatoID candidato, ueword quantidade,
         const CIdentificacaoVotavel& identificacao);
+
+    CVoto::ETipo GetTipo() const { return m_tipo; }
+    ueword GetQuantidade() const { return m_quantidade; }
+    bool TemIdentificacao() const { return m_identificacao.has_value(); }
+    const CIdentificacaoVotavel& GetIdentificacao() const { return *m_identificacao; }
 
 private:
     CVoto::ETipo m_tipo;

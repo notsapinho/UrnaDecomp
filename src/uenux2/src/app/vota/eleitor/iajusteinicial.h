@@ -1,13 +1,20 @@
 #pragma once
 
-// vota::IAjusteInicial: the head alone. RTTI of its control block names it; the path is chosen, beside cajusteinicial.cpp, whose record names the class's use. The bytes give a virtual destructor in the first slot: the control block's
-// __on_zero_shared calls the deleting destructor at vtable + 4 (fn 172). No member is reconstructed, so nothing may construct it.
+#include "app/comum/cappstate.h"
+
+// vota::IAjusteInicial, the state the voter's thread starts its machine in. RTTI gives the class, a si_class of
+// comum::CAppState (typeinfo @1534436), and its one implementer, vota::CAjusteInicial (cajusteinicial.h). Its GetInst
+// is the record cajusteinicial.cpp:57 (static IAjusteInicial &vota::IAjusteInicial::GetInst()), which binaryen inlined
+// into its one caller, vota::CThreadEleitor::Run (fn 7061): the poly singleton's instance, CAjusteInicial set as the
+// default when none is registered. It adds no virtual member: CAjusteInicial's vtable is CAppState's with slot 2 its
+// own, and the target has no vtable of this class. The path, beside cajusteinicial.cpp, is chosen; src/units/
+// 329-uenux2-cajusteinicial.mk says what else is.
 
 namespace vota {
 
-class IAjusteInicial {
+class IAjusteInicial : public comum::CAppState {
 public:
-    virtual ~IAjusteInicial() = default;
+    static IAjusteInicial& GetInst();
 };
 
 } // namespace vota

@@ -66,11 +66,10 @@
 #   LogaDataEleicaoInvalida, held inlined by fns 11871 and 11914 (their fragments have the evidence), and two out of
 #   line that this unit matches: LogaErroEstadoAplicativoDesconhecido (fn 3279, logaErro of "Erro estado do aplicativo
 #   nao conhecido") and LogaFimTesteTecladoSucesso (fn 4511, loga of "Fim do teste de Teclado do TE - Sucesso"),
-#   each 8 over 59 rows, operand-only (pnpm wasm score, whole link), matched by content at step 9. Of 3279's target
-#   callers fn 7160, which calls it twice, is not written, so the roots stand in for it (the other,
-#   vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858, is in the link); 4511's, fn 11804, which calls it twice, is
-#   in the link (unit 217), and its stand-in went. They call fns 2282 and 233 out of line, as unit 156's 1127 and
-#   4551 do; their names and their place are chosen.
+#   each 8 over 59 rows, operand-only (pnpm wasm score, whole link), matched by content at step 9. 3279's target
+#   callers, fn 7160 (unit 329), which calls it twice, and vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858),
+#   are in the link, and so is 4511's, fn 11804, which calls it twice (unit 217): both stand-ins went. They call fns
+#   2282 and 233 out of line, as unit 156's 1127 and 4551 do; their names and their place are chosen.
 # - One more, after LogaFimTesteTecladoSucesso: unit 138's LogaTesteTecladoNaoExecutado, held inlined by fn 11874
 #   (unit 138's fragment has the evidence); its place is chosen.
 # - One more after that: unit 217's LogaInicioTesteTeclado, loga of "Inicio do teste de Teclado do TE", held inlined by
@@ -203,9 +202,9 @@
 # line): for key 12 the next state is CPedeIdentidade::GetInst() (fn 652, unit 161). 1 over 10 rows, an operand row,
 # before step 8; matched at step 9, named by its vtable slot.
 #
-# Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
-# slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in. The stand-ins of the CLogVota
-# members are named in their paragraphs.
+# Roots: the controller's vtable sink went: fn 7160, its builder (unit 329), is in the link. CLogVota::GetInst's callers
+# are the slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in. The stand-ins of the
+# CLogVota members are named in their paragraphs.
 #
 # CLogVota::LogaErroPartidoNaoEncontrado (target fn 4550, no record), logaErro (fn 2282) of "Erro partido não
 # encontrado", is out of line, called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName (fn 6954, unit

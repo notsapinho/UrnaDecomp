@@ -65,7 +65,7 @@
 #   Step 8 named 5936 by vptr-anchor and 11826 by its table vote; 11827 and 11828 matched through the content pass. The
 #   std::function's __func members over the pointer (11817, 11819, 11820, 11821, 11822) match from this object. 5936
 #   has two target callers, CTesteFalhou's and CEnviarManutencao's ProcessInput (11809, 11812), in the link since unit
-#   217 wrote them (unit 220's roots' stand-in for them is left to that unit), and this unit's roots no longer keep
+#   217 wrote them (unit 220's roots' stand-in for them went), and this unit's roots no longer keep
 #   CEsperaRetestar's vtable, which GetInst stores.
 #   Chosen: GetInst, s_inst, s_mutex, TextoEspera and their names, the locals, the lines, and the callback's internal
 #   linkage.
@@ -86,8 +86,10 @@
 # - CBase's constructor (fn 5948), in cbase.cpp: the base's constructor with 2 (EVENTO_ENTRADA), +28 cleared, this
 #   class's vptr. It is a function of its own called by fns 11914 and 7160, which hold CPreZeresima's and CRetomada's
 #   constructors inlined (each stores its class's vptr after the call), so it is out of line in a TU of its own; its
-#   line follows its stub's link-order place, a choice. 2 over 12 rows, operand-only. The roots stand in for its two
-#   callers.
+#   line follows its stub's link-order place, a choice. 2 over 12 rows, operand-only. Both callers are in the link
+#   (units 199 and 329), and the roots' stand-in went with 7160. CRetomada's GetInst, constructor and statics are
+#   written in cretomada.cpp since, in CPreZeresima's shape (unit 329's fragment says what 7160 shows of them), and
+#   the roots no longer keep CRetomada's vtable, which that GetInst stores.
 # - CAplicacaoEncerrada's constructor, GetInst (fn 3877) and statics, pointer first below GetInst (unit 104's shape):
 #   with them our link forms fn 1564, binaryen's body for the exit destructors of every static std::unique_ptr whose
 #   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,

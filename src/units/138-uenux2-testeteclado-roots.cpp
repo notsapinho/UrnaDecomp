@@ -1,21 +1,15 @@
 // Roots: keep unit 138's classes in the skeleton link the way the target keeps them.
 //
-// vota::testeteclado::CRetomada is reached only through its vtable: the target's constructor that stores it is inlined
-// into fn 7160, not reconstructed. Taking the vtable's address keeps every slot, vota::testeteclado::CBase's StartState
-// (fn 11875, slot 2) and the destructors among them (fns 1559, 5946). The vtables of vota::CAplicacaoEncerrada,
-// vota::testeteclado::CPreZeresima, vota::CVerificaHorarioZeresima and vota::testeteclado::CEsperaRetestar are stored
-// by code in the link: GetInst (fn 3877), written here; CPreZeresima's GetInst inlined into
+// The vtables of vota::testeteclado::CRetomada, vota::CAplicacaoEncerrada, vota::testeteclado::CPreZeresima,
+// vota::CVerificaHorarioZeresima and vota::testeteclado::CEsperaRetestar are stored by code in the link: CRetomada's
+// GetInst, written here and inlined into vota::CAjusteInicial::StartState (fn 7160, unit 329); CAplicacaoEncerrada's
+// GetInst (fn 3877), written here; CPreZeresima's GetInst inlined into
 // vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); CVerificaHorarioZeresima's GetInst (fn 5947), written
 // here; CEsperaRetestar's GetInst (fn 5936), written in cesperaretestar.cpp (138-uenux2-testeteclado.mk has its note).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
 // (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots, units 156 and 37), all in the link (12055 written, not
 // matching), so it has no stand-in here.
-//
-// vota::testeteclado::CBase's constructor (fn 5948) has two direct callers in the target, 11914 and 7160, which hold
-// CPreZeresima's and CRetomada's constructors inlined (each stores its class's vptr after the call). 11914 is in the
-// link (unit 199); the noinline stand-in calls it once for 7160 and adds an offset to the result, so its body is no
-// target function's. It goes when 7160 is in the link.
 //
 // vota::CVerificaHorarioZeresima::GetInst (fn 5947) has two direct callers in the target, CPreZeresima's slot 11 (fn
 // 5945), written here, and vota::CGeraDadosDinamicos::StartState (fn 11865, pending in unit 199). The noinline stand-in
@@ -24,17 +18,10 @@
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-extern const char cretomada_vt[] __asm__("_ZTVN4vota12testeteclado9CRetomadaE");
-int w5948_cbase(void* objeto) __asm__("_ZN4vota12testeteclado5CBaseC2Ev");
 int w5947_getinst(void) __asm__("_ZN4vota24CVerificaHorarioZeresima7GetInstEv");
 }
 
 namespace {
-
-__attribute__((noinline)) int ChamaCBase(void* retomada)
-{
-    return w5948_cbase(retomada) + 13;
-}
 
 __attribute__((noinline)) int ChamaVerificaHorarioZeresima(int n)
 {
@@ -46,8 +33,6 @@ const void* volatile testeteclado_sink;
 struct STesteTecladoRoots {
     STesteTecladoRoots()
     {
-        testeteclado_sink = cretomada_vt;
-        testeteclado_sink = reinterpret_cast<const void*>(&ChamaCBase);
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaVerificaHorarioZeresima);
     }
 } testeteclado_roots;

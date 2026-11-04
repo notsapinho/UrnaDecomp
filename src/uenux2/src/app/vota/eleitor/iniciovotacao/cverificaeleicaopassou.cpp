@@ -16,7 +16,24 @@
 
 namespace vota {
 
-// (original lines 19-42: content not recovered)
+CVerificaEleicaoPassou::CVerificaEleicaoPassou()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CVerificaEleicaoPassou& CVerificaEleicaoPassou::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CVerificaEleicaoPassou());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CVerificaEleicaoPassou> CVerificaEleicaoPassou::s_inst;
+std::mutex CVerificaEleicaoPassou::s_mutex;
+
+// (original lines 36-42: content not recovered)
 #line 43
 void CVerificaEleicaoPassou::StartState()
 {

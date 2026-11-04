@@ -17,7 +17,6 @@
 //   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
 //   (fn 5867 returns nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
-// - comum::asn::CalculaHashSha512 (fn 3602): fn 10273, CConversorEntidadeBU's slot 2, three times.
 // - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
 //   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
 // - the other WSQ directories of pathwsq.cpp (fns 5819, 5818, 3795, 5817, 5816 and 3794): fns 5821 and 10425 call
@@ -34,7 +33,6 @@
 #include <vector>
 
 #include "app/comum/carquivosresultado.h"
-#include "app/comum/gravadores/asn/util.h"
 #include "app/comum/gravadores/cgravadorutil.h"
 #include "app/comum/gravadores/cgravadorwsq.h"
 #include "app/comum/gravadores/md/cversoesarquivos.h"
@@ -99,12 +97,6 @@ __attribute__((noinline)) int w122_identidade(const void* gravador, const void* 
     return a[0] + b[4];
 }
 
-// stands for fn 10273
-__attribute__((noinline)) int w122_hash(const std::string& texto, const std::string& outro)
-{
-    return static_cast<int>(comum::asn::CalculaHashSha512(texto).size() + comum::asn::CalculaHashSha512(outro).size()) + 23;
-}
-
 // stands for fn 10451 (5374 is written)
 __attribute__((noinline)) int w122_naoregistrado(void* destino)
 {
@@ -127,7 +119,6 @@ __attribute__((noinline)) int w122_wsqdiretorios(void* destinos)
 
 int (*volatile w122_sink_wsqdiretorios)(void*);
 int (*volatile w122_sink_naoregistrado)(void*);
-int (*volatile w122_sink_hash)(const std::string&, const std::string&);
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
@@ -147,7 +138,6 @@ struct SW122Roots {
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
         w122_sink_naoregistrado = w122_naoregistrado;
         w122_sink_wsqdiretorios = w122_wsqdiretorios;
-        w122_sink_hash = w122_hash;
     }
 } w122_roots;
 

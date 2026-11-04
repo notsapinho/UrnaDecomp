@@ -20,7 +20,12 @@
 # a value block: the if/else gives the target's rows (before step 8, `pnpm wasm score` against the plain link: 31 over
 # 132 rows, all operand-only), and no other spelling was tried; `using namespace comum;`, which lets the Assert texts
 # spell the enumerators unqualified; the lines of the body above its records; the header's path beside the .cpp.
-#  Not written: GetInst, its statics and the constructor (the base's with 0), inlined into fn 7160, not written.
+#  GetInst, its statics and the constructor (the base's with 0), unit 104's shape, whose names they take (chosen):
+# binaryen inlines GetInst into its one target caller, vota::CAjusteInicial::StartState (fn 7160, unit 329), which
+# frees the old object with no call through the vtable, as ours does. The statics' exit destructors are 12024 (the
+# mutex's, @1833964) and 12025 (the pointer's, @1833988): 7160 alone reads those addresses among target functions, so
+# their names wait for its match (src/units/329-uenux2-cajusteinicial.mk). Since 7160 is in the link the state's
+# builder is too, and the roots file that kept its vtable went.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVERIFICAQTDBUSADICIONAIS_SRCS := src/app/vota/eleitor/fimvotacao/cverificaqtdbusadicionais.cpp
@@ -28,8 +33,3 @@ UENUX2_SRCS += $(CVERIFICAQTDBUSADICIONAIS_SRCS)
 # The TU reaches CConfiguracaoEleicao's CParametrosUrna, whose CHorariosUrna includes Boost (unit 156 gives
 # citemmenu.cpp the same path)
 $(ROOT)/$(APP)/uenux2/$(CVERIFICAQTDBUSADICIONAIS_SRCS).o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# Nothing reconstructed builds the state: 185-uenux2-cverificaqtdbusadicionais-roots.cpp keeps its vtable, the way the
-# target reaches its slots
-$(ROOT)/$(APP)/185-uenux2-cverificaqtdbusadicionais-roots.o: $(ROOT)/src/units/185-uenux2-cverificaqtdbusadicionais-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/185-uenux2-cverificaqtdbusadicionais.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/185-uenux2-cverificaqtdbusadicionais-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/185-uenux2-cverificaqtdbusadicionais-roots.o

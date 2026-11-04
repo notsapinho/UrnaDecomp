@@ -78,3 +78,24 @@ int urna_roots_iconversorasn(int a)
     [[clang::noinline]] lido &= urna_decodifica(a + 16, a + 4, a + 8, a + 20, false);
     return a + lido;
 }
+
+// comum's IConversorASN<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>::Converte, which binaryen inlines
+// into its one target caller, comum::asn::CConversorEntidadeBU::DoConverte (fn 10273, unit 321), where its frame opens.
+// The target's copy is not the converter's object's: its record (1556668, iconversorasn.h:56) lies with Desconverte's
+// (1556684) after app/comum/asn/util.cpp's records and the vtables that object emits, a deferred instance of that
+// object (a reading of the data order; no function of util.cpp that uses the cargo code's converter is recovered).
+// app/comum/asn/util.cpp's object (unit 96) links after cconversorentidadebu.cpp's in our link, and no earlier object
+// instantiates the member.
+// Measured in the whole link (pnpm wasm score against the target): with the copy from cconversorentidadebu.cpp's own
+// object, 10273 folds the converter's address into the vtable load where the target keeps it in a local, and the
+// locals after it are numbered otherwise (831 over 5399 rows, 21 inserted and 22 deleted); with the copy from this
+// object, ahead of the trees, 10273 differs in operands only and matches. Why the copy's place decides is a reading
+// (binaryen inlines the copy into 10273 and optimizes them in module order). It goes when an object ahead of
+// cconversorentidadebu.cpp's on the link line instantiates the member. The instance also brings a weak copy of libc++'s
+// basic_ostringstream<char>::str() const & (match 230), and the link takes 230 from this object, ahead of
+// app/uenux2/src/app/comum/dados/asn/municipiozona/cconversorcomplementomunicipio.cpp.o, whose copy it took without
+// the instance (splat/scan.tsv's object column).
+#include "app/comum/asn/cconversorcodigocargoconsulta.h"
+
+template ModuloTiposEleitorais::CodigoCargoConsulta
+comum::asn::IConversorASN<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>::Converte(const unsigned char&) const;

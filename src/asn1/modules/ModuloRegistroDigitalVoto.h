@@ -686,23 +686,9 @@ private:
 // ModuloRegistroDigitalVoto::HistoricoCodigosCarga   // SYNTHESIZED name (field ['historicoCodigosCarga', 'historicoCodigosCarga'])
 //
 
-class HistoricoCodigosCarga : public ASN1::SEQUENCE_OF<ASN1::GeneralString>
-{
-    typedef ASN1::SEQUENCE_OF<ASN1::GeneralString> Inherited;
-protected:
-    typedef Inherited::InfoType InfoType;
-    HistoricoCodigosCarga(const void* info) : Inherited(info) {}
-public:
-    HistoricoCodigosCarga(size_type n=0) : Inherited(n) {}
-    HistoricoCodigosCarga(size_type n, const ASN1::GeneralString& val) : Inherited(n, val) {}
-    HistoricoCodigosCarga(const_iterator first, const_iterator last) : Inherited(first, last) {}
-    HistoricoCodigosCarga(const HistoricoCodigosCarga& that) : Inherited(that) {}
-    HistoricoCodigosCarga * clone() const
-    { return static_cast<HistoricoCodigosCarga*> (Inherited::clone()); }
-    static bool equal_type(const ASN1::AbstractData& type)
-    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-    static const InfoType theInfo;
-}; // end class HistoricoCodigosCarga
+// the target has no class of its own here: SEQUENCE_OF<GeneralString>'s template theInfo and vtable are what fn 10273
+// uses (its vtable is the one RTTI names, 1560540); the name stays as the fields spell it
+typedef ASN1::SEQUENCE_OF<ASN1::GeneralString> HistoricoCodigosCarga;
 
 //
 // ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto

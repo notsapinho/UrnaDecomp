@@ -8,28 +8,22 @@
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
 //   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
 // - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record
-//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written (fn 781 is named now, unit
-//   161's; 2799 matches since md/ builds with strict aliasing, and 5708, which it calls too, from unit 166's tree
-//   root).
+//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written: every callee has a name
+//   (fn 781 unit 161's; 2799 matches since md/ builds with strict aliasing, and 5708, which it calls too, from unit
+//   166's tree root), and it waits for three out-of-line md::CBiometriaEleitor constructors
+//   (md/eleitor/cbiometriaeleitor.{h,cpp}), which build its result.
 // - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
-//   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: fn 183 and others have no name
-//   (412 has one since, unit 32's; 518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and
-//   src/app/roots_iconversorasn.cpp).
+//   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: of its 43 callees one, fn 1555,
+//   has no name in splat/symbol_addrs.txt or splat/matched.txt (imports aside); 183 and 412 (unit 32's) have one, and
+//   518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and src/app/roots_iconversorasn.cpp.
 // - comum::asn::CConversorEntidadeHashes::DoConverte (slot 2, fn 10266, 1338 B), not written: md::CEntidadeHashes's
 //   members past +36 are not recovered (unit 160's fragment).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura
 //   on its stack (constructor fn 5712), whose entity type ModuloCandidatos::Candidatura the generated module lacks.
-// - comum::asn::CConversorEntidadeBU::DoConverte (slot 2, fn 10273, 12196 B, records
-//   gravadores/asn/cconversorentidadebu.cpp:87 to :299, a stub-only file that went with its stub), not written: it
-//   builds the whole BU entity from md::CEntidadeBU, whose members from +160 on are not recovered (centidadebu.h), with
-//   CConversorEntidadeBU's static ConverteTipoVoto and ConverteTipoCargo, the file's anonymous Cria* helpers and
-//   comum::asn::CAssinaVotavelBu::Assinar (record gravadores/asn/cassinavotavelbu.cpp:89) inlined, and calls fn
-//   3603, the GetInst of an empty singleton with its statics at 1909976 and 1910000, which nothing else calls.
 #include "app/comum/dados/asn/candidatura/cconversorcandidaturas.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversordedo.h"
-#include "app/comum/gravadores/asn/cconversorentidadebu.h"
 #include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
@@ -56,11 +50,6 @@ CConversorCandidaturas::TDado CConversorCandidaturas::DoDesconverte(const TEntid
 }
 
 CConversorEntidadeHashes::TEntidade CConversorEntidadeHashes::DoConverte(const TDado&) const
-{
-    __builtin_trap();
-}
-
-CConversorEntidadeBU::TEntidade CConversorEntidadeBU::DoConverte(const TDado&) const
 {
     __builtin_trap();
 }

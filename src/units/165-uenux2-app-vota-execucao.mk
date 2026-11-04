@@ -176,9 +176,10 @@
 # folds the tests into one select and tests the byte with `i32.const 1; i32.and`: in the whole link that form read 4
 # over 20 rows (2 inserted, the `& 1`). So PararSolicitado is public (it was protected, a choice) and TemContexto is
 # new in cthreadvota.h; both are inline, and their names, TemContexto's being defined in the class and the if's
-# spelling are chosen. pnpm wasm score before step 8: 2 over 18 rows, the two calls. 4349 has no generated name (its
-# callers are vtable names, which cast no vote): a callers+content hand line of splat/symbol_addrs.txt names it, and
-# without it 7823 reads unresolved on that call (fragment 234 has the line's measurement).
+# spelling are chosen. pnpm wasm score before step 8: 2 over 18 rows, the two calls. 4349 had no generated name (its
+# callers are vtable names, which cast no vote), and a callers+content hand line named it, without which 7823 read
+# unresolved on that call; since its other caller, CThreadEleitor::Run (7061, unit 116), matches, step 8 names it by
+# Run's call and the hand line went (fragment 234 has both measurements).
 #
 # The same bytes, measured in the whole link with pnpm wasm score against the target function:
 # - LimpaBufferInput's loop: `for (size_t i = 0; i < n; i++)` (written) and `for (int i = 0; i != n; i++)` both give

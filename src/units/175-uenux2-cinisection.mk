@@ -31,8 +31,10 @@
 # give the same object (wasm-objdump -d of the object, local and relocation numbers masked). cinikey.cpp's object
 # defines the same functions with the same code before and after the constructors (the same comparison).
 #
-# SetKey's calls of the map's find and hinted __find_equal score as the target's 163 and 1346, the bodies matched as the
-# std::map<std::string, unsigned short> instances, and step 9 renamed no match line.
+# SetKey's calls of the map's find and hinted __find_equal score as the target's 163 and 1346, the bodies matched as
+# twins (they compare only the key): std::map<std::string, std::string>'s find (roots_boost.o) and, since the Boost
+# probe's std::map<std::string, unsigned short> copy left the link, std::set<std::string>'s hinted __find_equal
+# (roots_set.o). Step 9 renamed no match line when this unit landed.
 #
 # Roots: 175-uenux2-cinisection-roots.cpp stands in for 5480, which is not written.
 CINISECTION_SRCS := src/api/io/cinisection.cpp

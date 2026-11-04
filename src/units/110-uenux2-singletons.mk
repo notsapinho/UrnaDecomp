@@ -348,8 +348,8 @@
 # - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721, all in the link) is the same search with false for no rule
 #   and the rule's EhValida (fn 3723) else. It matches; unit 178's stand-ins for 10721 went once 10721 (unit 277) was in
 #   the link.
-# - TiposValidos has no index of its own: vota::CValidaIdentidade::StartState (fn 10627, unit 278's, written and not
-#   matched) holds it inlined by binaryen behind a 16-byte frame, after its call of GetInst (fn 1926): the types of the
+# - TiposValidos has no index of its own: vota::CValidaIdentidade::StartState (fn 10627, unit 278's, matched) holds it
+#   inlined by binaryen behind a 16-byte frame, after its call of GetInst (fn 1926): the types of the
 #   rules whose EhValida (fn 3723) accepts the number, pushed in the rules' order through push_back(&&) (fn 543). Written
 #   with std::views::filter, after EhValida, a chosen line: unit 278's fragment has the loop forms measured. Its name, its
 #   result type and its being a member (it reads the rules) are chosen.

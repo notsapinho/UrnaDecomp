@@ -9,11 +9,12 @@
 // line goes when every target caller it stands for is in the link, and stays while some still wait, the callers already
 // in the link in parentheses (src/units/README.md "Companion files"). The target callers each pair stands for:
 //
-// 6037: 7160 (12077 is in the link); 5984: 7160, 12134; 5983:
-// 7160, 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and
-// 11858 are in the link); 1280: 11869, 11881 (11834, 11838, 11848, 11902, 11905, 11908, 11911 and 11927 are in the
-// link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the link); 5383: 10316 (10313 is in the link); 1897: 10425 (10404 and 10419,
-// units 152 and 142, are in the link). The pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and
+// 5984: 12134 (7160 is in the link); 5983: 12105 (7160 is in the link); 1280: 11869, 11881 (11834, 11838, 11848,
+// 11902, 11905, 11908, 11911 and 11927 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896
+// is in the link); 5383: 10316 (10313 is in the link); 1897: 10425 (10404 and 10419, units 152 and 142, are in the
+// link). The pairs for 6037, 5973, 3865 and 3864 went: their target callers, 7160 (vota::CAjusteInicial::StartState,
+// unit 329) and 12077, 11939, 11870 and 11871, and 11848 and 11858, are in the link. The pairs for 5942 and 5941 went:
+// their target callers, 11848 with 11852 and
 // with 11845, are in the link; so did 5943's, whose callers 11834 and 11855 are, 5342's, whose callers 10737 and 10791
 // are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of comum::CRegistrarMesarios's and
 // CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers 12023, 12030 and 12077 are, 1337's,
@@ -31,12 +32,8 @@
 // nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 int w1337_getinst(void) __asm__("_ZN4vota16CAguardaMensagem7GetInstEv");
-int w6037_getinst(void) __asm__("_ZN4vota15CGravaResultado7GetInstEv");
 int w5984_getinst(void) __asm__("_ZN4vota29CImprimirBUOutrasObrigatorias7GetInstEv");
 int w5983_getinst(void) __asm__("_ZN4vota9CInicioBU7GetInstEv");
-int w5973_getinst(void) __asm__("_ZN4vota19CImprimindoZeresima7GetInstEv");
-int w3865_getinst(void) __asm__("_ZN4vota15CInicioZeresima7GetInstEv");
-int w3864_getinst(void) __asm__("_ZN4vota30CReinicioComparecimentoMesario7GetInstEv");
 int w1280_getinst(int) __asm__("_ZN4vota16CMaisInformacoes7GetInstEPN5comum9CAppStateE");
 int w5954_getinst(void) __asm__("_ZN4vota31CMenuFiltrarCandidatosPorNumero7GetInstEv");
 int w2288_getinst(void) __asm__("_ZN4vota25CMenuVisualizarCandidatos7GetInstEv");
@@ -49,12 +46,8 @@ namespace {
 __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
 {
     int total = 0;
-    total += w6037_getinst() + w6037_getinst();
     total += w5984_getinst() + w5984_getinst();
     total += w5983_getinst() + w5983_getinst();
-    total += w5973_getinst() + w5973_getinst();
-    total += w3865_getinst() + w3865_getinst();
-    total += w3864_getinst() + w3864_getinst();
     total += w1280_getinst(0) + w1280_getinst(n);
     total += w5954_getinst() + w5954_getinst();
     total += w2288_getinst() + w2288_getinst();

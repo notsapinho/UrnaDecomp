@@ -58,7 +58,7 @@
 #     of characters is equal or passes CasaCaractere (5464) one way or the other. CasaRegex: FindRegex (2199) over the
 #     pattern after its 7 bytes, its start compared with npos, behind a 16-byte stack frame of its own (binaryen's
 #     work). CasaCaractere: '#' a digit, '?' a letter, a digit, '-' or '_', '@' isalpha (fn 2314, a call), else false;
-#     the letter-or-digit test is read as musl's isalnum inlined (splat/symbol_addrs.txt names no isalnum: a reading).
+#     the letter-or-digit test is musl's isalnum inlined, as the match shows (splat/symbol_addrs.txt names no isalnum).
 #
 # Forms measured. Frame layouts on scratch objects at the tree's flags (build/docker-build.sh em++ -O3 -fPIC -std=c++23
 # -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -c on a copy of the source), each function's store sequence
@@ -80,8 +80,16 @@
 #   the loop, and `padroes.size() == 0` (the end loaded first, as the target does; `empty()` loads the begin first).
 #   The name test (CasaPadrao) external: the target reads the moved name through a local holding frame+16, which a
 #   function clang leaves out of line and binaryen inlines gives; a static one, inlined by clang, reads the frame.
-# - 5464: '?' as isalnum (musl's, which the target holds inlined); written as the two ranges it reads as 8-bit
-#   compares. ConteudoIncializacao's test through a switch in a helper (IndependeDoTurno) compiles to the target's
+#   In the whole link with 5464 matching (pnpm wasm score after make -C src link-map, each variant's object removed
+#   before its make): the names walked with a const_iterator whose end is read at each test, 7 over 257 rows, every one
+#   a call or a data address (a range-for, which reads the end once, 79 over 260); the "#regex#" tests through
+#   std::string::compare, the two std::string_view taken after them (taken first and compared, 35 over 269); each pair
+#   of characters read into two const locals and compared pattern first (the name first, 17 over 261; no locals, 44
+#   over 264 pattern first and 44 over 265 name first). The source declares the name's local first; declared the
+#   other way round they give the same wasm (one sha256).
+# - 5464: '?' as isalnum (musl's, which the target holds inlined); the cases in the order '#', '@', '?' give the
+#   target's br_table, '#', '?', '@' 13 over 54 rows (6 inserted, 6 deleted) in the whole link. ConteudoIncializacao's
+#   test through a switch in a helper (IndependeDoTurno) compiles to the target's
 #   bit mask 1341440.
 # - 11172: written with the turn tested first, `turno != TURNO_1 && turno != TURNO_2 && (aplicativo == eAplicativo07
 #   || ... || aplicativo == eAplicativo15)`, clang's code (the object, wasm-objdump -d, before binaryen) tests 16 and
@@ -98,12 +106,27 @@
 # held: a TU emits the format code first) and it matches by its record (srcloc-anchor); its mutex's exit destructor
 # (11165), matched by the scan's content pass, its operand the mutex GetInst's match names; slots 4, 5, 6, 7 and 9
 # (11171, 11170, 11169, 11168, 11166, named by vtable, 11171 by pair-addr); ConteudoValido (2784) and ValidaConteudo
-# (5572), named by their callers' calls (5572's call of CasamTodos, fn 2758, names 2758, and slot 8, 11167, now calls
-# it too, twice, at aligned sites: 2758's own body scores 101 over 278, below); the map's tree destroy (3685,
+# (5572), named by their callers' calls (5572's call of CasamTodos, fn 2758, named 2758, and slot 8, 11167, calls
+# it too, twice, at aligned sites; 2758 matches now, below); the map's tree destroy (3685,
 # pair-addr); CasaRegex (5465), with FindRegexPosition inlined, matched by the content pass (its one target caller is
 # 2758, ours CasamTodos); slot 8 (11167, named by vtable), with DiretorioContemApenas inlined: 43 over 609 rows, every
 # one operand-only and none outside calls and data addresses, before step 8, and splat-remap --no-kinds printed
-# IDENTICAL.
+# IDENTICAL; CasaCaractere (5464, pair-fingerprint) and CasamTodos (2758, pair-addr). 5464 needed isalnum to keep one
+# call site in our link, as in the target: musl's ispunct calls isalnum too, and the Boost tree root's probe kept
+# ispunct through boost::char_separator<char>::operator(), which time_from_string's and from_simple_string's parsers
+# reach and the target does not hold: it has none of the lowercase month names their month map holds (`strings -n 3
+# target/vota_web_wasm.wasm | /usr/bin/grep -c -E '^(jan|feb|sep|january|february|september)$'` prints 0), and no
+# census pair names those functions. With those two calls out of tools/libs/boost/probe.cpp our
+# CasaCaractere holds isalnum inlined; with them, and the cases in the order above, 17 over 52 rows (4 inserted, 13
+# deleted). Written by hand, the letter-or-digit test would copy the library's arithmetic (how-to step 3). 2758's
+# forms are above; its earlier ones: two std::string_view compared first, `101 over 278`; an index loop over the
+# strings, `144 over 325`; std::equal, `129 over 300`. Steps 7 to 9 on that link: 2758 and 5464 turn `match`, 1346's
+# line is renamed to its std::set<std::string> twin (the probe's std::map<std::string, unsigned short> copy left the
+# link), and one other row moves, 11420, `differs` to `no-candidate`: its census pair was the probe's static destructor
+# __cxx_global_array_dtor.31, whose operand step 8 read as boost's month_map, while the target's 11420 destroys an
+# object that only it and __wasm_call_ctors address (1839016), so one the program's constructors build, not a
+# function-local static as month_map is (a reading).
+# docs/reference/facts/libraries.md B7's 1.89.0 column reads the same with either probe.
 # Not matched, written, and what each waits for (pnpm wasm score after link-map):
 # - Valida (11172), differs, `116 over 1019 rows (116 operand-only, 0 inserted, 0 deleted)`: the forms above; its
 #   rows that are no call or data address are the std::format string's packed address (an i64, twice), two small
@@ -129,15 +152,6 @@
 #   sha256), then in place on the whole tree with the file in the list: 5571 matches, no other row moves, none is
 #   lost (12251 to 12252). Its callers match all the same, as its name comes from their calls (5572 and slot 9, both
 #   matched).
-# - CasamTodos (2758), `101 over 278 rows (56 operand-only, 21 inserted, 14 deleted)` with CasaPadrao over two
-#   std::string_view (its first form, an index loop over the strings, `144 over 325`; std::equal, `129 over 300`):
-#   its row reads unresolved on CasaCaractere, which has no target function name.
-# - CasaCaractere (5464), no-candidate, `30 over 58 rows (10 inserted, 19 deleted)`: our link calls isalnum, which the
-#   target holds inlined. musl's ispunct calls isalnum too, and our link keeps ispunct through
-#   boost::char_separator<char>::operator() (src/app/roots_boost.o), which the target does not hold, so isalnum keeps
-#   two call sites in our link and one in the target. 5464 waits, a prediction not measured, for that tree root not to
-#   keep the separator; the
-#   alpha-or-digit test written by hand would copy the library's arithmetic (how-to step 3).
 # - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h): named now by
 #   Valida's call vote (`call by:11172`), and the word (.data, -1) still has no target name.
 #

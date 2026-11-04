@@ -12,7 +12,8 @@
 # Two more are described here:
 # - vota::CLogVota::LogaQuantidade (fn 3268, a chosen name), in app/vota/log/clogvota.cpp (unit 119's file; the CLogVota
 #   members' notes sit in the fragments that add them, as clogvota.h says);
-# - the hand line of splat/symbol_addrs.txt that names fn 4349, CThreadEleitor::ProcessaEventos (unit 116's), for 7823.
+# - the hand line of splat/symbol_addrs.txt that named fn 4349, CThreadEleitor::ProcessaEventos (unit 116's), for 7823,
+#   until a generated line caught up with it (below).
 # All four match.
 #
 # LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, unit 116's; the roots'
@@ -31,9 +32,12 @@
 # same object, the member's and that function's bodies compared with their names masked after try-tu.sh --symbols);
 # the parameter's type, std::pair<std::string, uint64_t> (the bytes give a string at +0 and a 64-bit word at +16).
 #
-# The hand line for 4349 (callers+content, below the marker). 4349 has no generated name: its two target callers,
-# CThreadEleitor's Run (7061, slot 2, a trap here) and 7823 (slot 7), are named by vtable, which casts no vote
-# (docs/reference/splat.md section 2). Without the line, step 9 read 7823 `unresolved`,
+# The hand line for 4349 (callers+content, below the marker), which went once CThreadEleitor's Run (7061, unit 116)
+# matched: step 8 names 4349 by Run's call since (`evidence:call by:7061`; Run is named by its records), and with that
+# hand line alone out of a copy of the symbol file, two scans beside a control moved no row and splat-build on the
+# copies gave the target's sha256, so it went. Before that 4349 had no generated name: its two target callers, Run (slot
+# 2, then a trap) and 7823 (slot 7), are named by vtable, which casts no vote (docs/reference/splat.md section 2).
+# Without the line, step 9 read 7823 `unresolved`,
 # `ours +0x1d call 3692: _ZN4vota14CThreadEleitor15ProcessaEventosEv has no target function`, with every other row as
 # before; with it, 7823 matches and 4349's row goes from no-candidate to unresolved, on the debug wrapper 2072 its body
 # calls (unit 116's fragment). The line leads with 4349's own body, read without the match: it opens with the two

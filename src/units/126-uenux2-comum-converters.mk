@@ -12,6 +12,8 @@
 #   (@1555680 to @1555712) and app/comum/md/cidpacote.cpp's (@1555844 on). The one function with records in
 #   cideleitoral.cpp, 11437, does not load the vptr; the target functions that do, 10273, 11373 and 11445, are the converter's users, and none has a record in
 #   that file. So the directory is a choice between the band and the data;
+# - its users 11373 (fragment 191) and 10273 (fragment 321) are in the link and store the vptr, which keeps the vtable;
+#   the roots that kept it while no user was written went with 10273;
 # - the file name is the class's in lower case (rule 4), and DoConverte and DoDesconverte are defined out of line, which
 #   makes DoConverte the key function and this .cpp the object that emits the vtable: a choice, as the members' order is.
 #
@@ -32,8 +34,3 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CONVERSORES_126_SRCS := src/app/comum/asn/cconversorcodigocargoconsulta.cpp
 UENUX2_SRCS += $(CONVERSORES_126_SRCS)
-# the converter's users are not reconstructed yet: 126-uenux2-comum-converters-roots.cpp keeps its vtable the way the
-# target reaches it
-$(ROOT)/$(APP)/126-uenux2-comum-converters-roots.o: $(ROOT)/src/units/126-uenux2-comum-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/126-uenux2-comum-converters.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/126-uenux2-comum-converters-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/126-uenux2-comum-converters-roots.o

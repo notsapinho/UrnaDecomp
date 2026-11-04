@@ -14,10 +14,11 @@
 //   16);
 // - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
 // - SincronizaRelatorios (fn 1836): callers 11943, 11946, 12105 (three times) and 12110, the slot 2 of four vota states.
-// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 22 are in the link: 5972, 7306, 10710, 10734, 10797,
+// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 23 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
 //   11830, 11855, 11902, 11905, 11908 (written, unit 176), 11911, 11920, 11924, 11927, 11931, 11940, 11991, 12031,
 //   12034, 12065, 12077 and 12081.
-// - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 (unit 104, in the link) and 10710 (unit 277, in the link).
+// - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 and 10710 (units 329, 104 and 277), all in the link: its
+//   stand-in went.
 // - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
 //   pending file, and 10226 (CThreadMonitor::Run, unit 116's, matched).
 #include "app/vota/comum/csincronizavota.h"
@@ -73,21 +74,13 @@ __attribute__((noinline)) int w205_desligando(int passo)
     return passo + 5;
 }
 
-// stands for SincronizaEstadoGeralVota's (fn 491's) 9 target callers that are not in the link (the list above names
-// the 22 that are)
+// stands for SincronizaEstadoGeralVota's (fn 491's) 8 target callers that are not in the link (the list above names
+// the 23 that are)
 __attribute__((noinline)) int w205_estado(int vezes)
 {
     vota::CSincronizaVota::SincronizaEstadoGeralVota();
     vota::CSincronizaVota::SincronizaEstadoGeralVota();
     return vezes * 7;
-}
-
-// stands for fn 7160, SincronizaEstadoGeral's (fn 3333's) target caller that is not in the link (10710 and 7306 are:
-// units 277 and 104)
-__attribute__((noinline)) int w205_estado_geral(int passo)
-{
-    vota::CSincronizaVota::SincronizaEstadoGeral();
-    return passo + 11;
 }
 
 const void* volatile w205_sink;
@@ -102,7 +95,6 @@ struct SW205Roots {
         w205_sink = reinterpret_cast<const void*>(&w205_relatorios);
         w205_sink = reinterpret_cast<const void*>(&w205_desligando);
         w205_sink = reinterpret_cast<const void*>(&w205_estado);
-        w205_sink = reinterpret_cast<const void*>(&w205_estado_geral);
     }
 } w205_roots;
 

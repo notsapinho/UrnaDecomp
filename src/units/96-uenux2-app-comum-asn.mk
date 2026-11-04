@@ -55,7 +55,8 @@
 #   DesconverteHoraJE) and their lines are chosen, from DesconverteDataHoraJE's record and their callers (1080: the
 #   converters 10273, 10276, 10291, 11390, 11399 and 11589; 3802: 11385 twice and 11394). The formatted strings are
 #   named locals: the target frees each format's literal string before the next call. Fragment 172 has the converters
-#   and what was measured; 96-uenux2-app-comum-asn-roots.cpp's utils_converte stands for the callers not written.
+#   and what was measured; ConverteDataHoraJE's callers are all written (10273 is fragment 321's), so the roots stand
+#   in for none of them.
 # - 731, the base's default DoConverte and DoDesconverte merged, and 11418, IConversorBiometriaASN's default DoConverte,
 #   need -O3, the tree's level since the measurement below (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
 #   bytes. In a body that is only such a throw, the object at -O2 keeps libc++'s search of the format string for a brace

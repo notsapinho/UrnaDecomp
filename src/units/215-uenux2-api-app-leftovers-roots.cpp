@@ -3,24 +3,7 @@
 // instantiates nothing.
 
 // comum::md::estadoaplicacao::CEstadoGeral::SetAjusteDataHora (target fn 3705) has three direct callers in the target,
-// fns 7160, 7306 and 10710, of which 10710 (unit 277) and 7306 (unit 104) are in our link. binaryen inlines a function
-// with one call site, so this one stands for 7160, with a body that differs from every target function; the other,
-// for 7306, went.
-extern "C" void w3705_ajuste(void*, const void*) __asm__(
-    "_ZN5comum2md15estadoaplicacao12CEstadoGeral17SetAjusteDataHoraERKNS1_15CAjusteDataHoraE");
-
-namespace {
-
-__attribute__((noinline)) int AjustaDuasVezes(char* geral, int delta)
-{
-    int ajuste[2] = {2, delta};
-    w3705_ajuste(geral, ajuste);
-    ajuste[1] += delta;
-    w3705_ajuste(geral + 8, ajuste);
-    return ajuste[0];
-}
-
-} // namespace
+// fns 7160, 7306 and 10710, all in our link (units 329, 104 and 277): its stand-ins went.
 
 // api::TerminaComBarraInvertida (target fn 5484) has one direct caller in the target, fn 5480, which calls it twice
 // and is not in our link. This stand-in calls it twice too.
@@ -54,7 +37,6 @@ const void* volatile leftovers_sink;
 struct SLeftoversRoots {
     SLeftoversRoots()
     {
-        leftovers_sink = reinterpret_cast<const void*>(&AjustaDuasVezes);
         leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
         leftovers_sink = reinterpret_cast<const void*>(&DadosDaTela);
     }

@@ -48,22 +48,49 @@
 #     them. Building the area with SRect::Normalized stores it as one 64-bit word; std::min and std::max in
 #     emplace_back's arguments narrow the corner once (no mask), and so do x and l as int or ueword with them (one
 #     mask or none).
-# - CabeEmUmaLinha (10972) 52 over 280 rows. Its one difference is how the available width is grouped: the target
-#   computes `1 - 2 * margem` once, from the 2 * margem the height test uses, and the width as `(1 - 2m + right) - (left
-#   + seta + recuo)`, where ours is `(right + 1) - (left + recuo + 2m)`. Not the target's grouping, by the optimized IR
-#   (`-S -emit-llvm`): the width through Width() or right - left + 1, as int or TPosition, its terms in ten orders or
-#   grouped in parentheses, the two side terms in one variable, margem and recuo before the loop, the area read first in
-#   the loop. In the whole link: the two side terms as if statements 81 over 294; a margin taken off each side as two
-#   TPosition edges 44 over 283; `right - left + 1 - margem - seta - margem - recuo` builds 1 - 2m first, but from a
-#   second 2 * margem as a multiply by 65534 or-ed with 1, 64 over 288. The remainder is not explained.
-# - CabeProporcional (10971) 665 over 1295 rows: the target builds its areas by the same loop as Divide (the same two
-#   masks), but building them in place here takes the function to 726 over 1260, so it keeps SRect::Normalized, and
-#   the rest of the function differs. Draw 1196 over 5696 rows: with api::SPoint's constructor (primitives.h) the text
-#   point Recalcula computes is stored at +80 as one i32.store of x | y << 16, where the target stores y at +82 and x
-#   at +80 with two i32.store16, as the aggregate SPoint gave (Draw 1162 over 5684 rows then; pnpm wasm score and
-#   pnpm wasm fn on a link of each). Their remainder is not explained. They stay written:
-#   Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the table slots of 10972 and 10971
-#   re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's slot).
+# - CabeEmUmaLinha (10972) 23 over 274 rows (same 251, replaced 12 [9 operand-only], inserted 6, deleted 5), with the
+#   two side terms added into one TPosition, `lados`: in the target's loop the indent is added to seta and 2 * margem
+#   kept apart (`seta + (i != n - 1 ? recuo : 0)`), where the terms subtracted one by one gave `seta + 2 * margem`
+#   hoisted out of the loop and 52 over 280. Its one difference left is where `+ 1` and `- 2 * margem` go: the target
+#   computes `1 - 2 * margem` once, after the first height test, from the 2 * margem that test uses, and the width as
+#   `(1 - 2m + right) - (left + lados)`; ours is `right - (2m + left + lados) + 1`. -mllvm -print-after-all on the TU's
+#   compile line shows ReassociatePass building `(1 - 2m) + right` and LICM hoisting `1 - 2m`, then InstCombine folding
+#   it back into `right + 1`; and the backend alone (the TU's line with -Xclang -disable-llvm-passes, on the IR edited
+#   by hand) gives a sum that adds the 1 last for each shape tried, `(1 - 2m) + right` written in the IR included. So, a
+#   reading, the target's `1 - 2m` is a value InstCombine left as it was, as it leaves one with a second use. No source
+#   form read on the optimized IR keeps it as the target does: `1 - 2 * margem` written as an int local or in place
+#   folds into the sum, and as a TPosition local it stays, but zero-extended and computed before the loop (64 over 289
+#   in the whole link); and margem, alturaUtil or recuo before the loop, 2 * margem as a TPosition of its own, the area
+#   by value or read before the height test, the width as right - left + 1 or with a margin taken off each edge, or the
+#   margins moved to the text's side of the comparison keep no `1 - 2m`. In the whole link, before `lados`: the two side
+#   terms as if statements 81 over 294; a margin taken off each side as two TPosition edges 44 over 283; `right - left +
+#   1 - margem - seta - margem - recuo` builds 1 - 2m first, but from a second 2 * margem as a multiply by 65534 or-ed
+#   with 1, 64 over 288. The remainder is not explained.
+# - CabeProporcional (10971) 558 over 1261 rows (same 703, replaced 216 [155 operand-only], inserted 131, deleted 211),
+#   with two forms that give its frame and its order (that the original was written so is a reading): the text's
+#   width and height declared at the top and set to 0 in the loop, as CabeEmUmaLinha's are (the target's frame holds
+#   them at +14 and +12 and the font at +0, as CabeEmUmaLinha's does; declared in the loop they were at +6 and +4 and
+#   the font at +8, 626 over 1269); and the margin, the height test and the indent computed in the loop after
+#   GetFontMetrics (the target computes them after the first call), which before the loop read 665 over 1295. The target
+#   builds its areas by the same loop as Divide (the same two masks), but building them in place here took the function
+#   to 726 over 1260, so it keeps SRect::Normalized, and the rest of the function differs. The remainder is not
+#   explained.
+# - Draw (5504) 259 over 5481 rows (same 5222, replaced 159 [153 operand-only], inserted 42, deleted 58), from 1196 over
+#   5696, with three forms, measured one on another at 99aac87a (this file and the headers it includes from api/gui/ are
+#   the same since) and together again on this link: Recalcula's text point built from two TPosition locals in the
+#   segment's braces, SPoint(x, y), which stores y at +82 and x at +80 as the target does (1162 over 5684; the named
+#   SPoint copied into the braces stored one i32 of x | y << 16, and `{x, y}` gives the same link as SPoint(x, y));
+#   CriaContorno's 28 path commands pushed as temporaries, push_back(SPathCommand(...)), which store all seven fields
+#   from +48 down in the fast path as the target does, where emplace_back stored +24 ... +0 and then +32, +40, +48 in
+#   both paths (318 over 5536); and one DrawText call after the two arms of `i < m_passoAtual`, its colour chosen as a
+#   `const TColor*` in each arm, where the target loads it from a selected member address (one call per arm read 318).
+#   What is left, not explained (a masked diff of pnpm wasm fn's folded readouts): the font size's floor of 10, a max on
+#   the sign-extended size in the target and `altura < 17 ? 10 : ...` in ours; m_font's store, one i64.store of size | 1
+#   << 32 at +80 in the target, an i32.store at +84 and an i32.store16 at +80 in ours; the place of margem's max(1, size
+#   / 4) and of one f64.add; and the text's emptiness, which the target tests in each arm before the merge and ours
+#   after it. They stay written: Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the
+#   table slots of 10972 and 10971 re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's
+#   slot).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)

@@ -225,11 +225,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
-
-// f5464 · 110 B · unmatched · placement: link order · name unknown
-// ? f5464(i32, i32) { ... }
-
 // link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
 
 // f5610 · 5599 B · unmatched · placement: link order · name unknown
@@ -311,11 +306,6 @@
 
 // f6601 · 504 B · unmatched · placement: link order · name unknown
 // void f6601(i32, i32) { ... }
-
-// link-order cluster 969 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/asn/util.cpp
-
-// f3603 · 15 B · unmatched · placement: link order · name unknown
-// ? f3603() { ... }
 
 // link-order cluster 1000 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp
 

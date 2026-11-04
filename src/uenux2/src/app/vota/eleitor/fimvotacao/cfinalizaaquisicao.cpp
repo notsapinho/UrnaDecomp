@@ -7,6 +7,23 @@
 
 namespace vota {
 
+CFinalizaAquisicao::CFinalizaAquisicao()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CFinalizaAquisicao& CFinalizaAquisicao::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CFinalizaAquisicao());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CFinalizaAquisicao> CFinalizaAquisicao::s_inst;
+std::mutex CFinalizaAquisicao::s_mutex;
+
 void CFinalizaAquisicao::StartState()
 {
     m_pNextState = &CAguardaMensagem::GetInst();

@@ -10,6 +10,18 @@ namespace vota {
 
 CIdentidadeInvalida::~CIdentidadeInvalida() = default;
 
+CIdentidadeInvalida& CIdentidadeInvalida::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CIdentidadeInvalida());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CIdentidadeInvalida> CIdentidadeInvalida::s_inst;
+std::mutex CIdentidadeInvalida::s_mutex;
+
 namespace {
 
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTela()
@@ -31,18 +43,6 @@ CIdentidadeInvalida::CIdentidadeInvalida()
     , m_form(MontaTela())
 {
 }
-
-CIdentidadeInvalida& CIdentidadeInvalida::GetInst()
-{
-    std::lock_guard<std::mutex> trava(s_mutex);
-    if (!s_inst) {
-        s_inst.reset(new CIdentidadeInvalida());
-    }
-    return *s_inst;
-}
-
-std::unique_ptr<CIdentidadeInvalida> CIdentidadeInvalida::s_inst;
-std::mutex CIdentidadeInvalida::s_mutex;
 
 std::string TextoIdentidadeInvalida()
 {
