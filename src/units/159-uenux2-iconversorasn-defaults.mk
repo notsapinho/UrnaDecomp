@@ -14,7 +14,11 @@
 #   11439 and CConversorCandidaturas 11444, and slot 3, DoDesconverte, of CConversorHistoricoVotoImpresso 10275 and of
 #   CConversorEntidadeHashes 10265 (its head is gravadores/asn/cconversorentidadehashes.h, over unit 136's
 #   md::CEntidadeHashes; RTTI names the class and its base, fn 5367 stores its vptr, and the header's path is chosen,
-#   the directory its data class's and its link neighbours' records', docs/reference/facts/placing.md P3);
+#   the directory its data class's and its link neighbours' records', docs/reference/facts/placing.md P3) and of
+#   CConversorEntidadeBU 10272 (its head is gravadores/asn/cconversorentidadebu.h, beside the .cpp its records name,
+#   over md::CEntidadeBU, whose head gravadores/md/centidadebu.h recovers from fn 10273: with those members the default
+#   returns the TDado in memory, the target's (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, not
+#   written, is the one target function that stores its vptr, which the roots stand in for);
 # and 11418, IConversorBiometriaASN's default DoConverte, slot 2 of CConversorBiometriaEleitorCifrada. All of them come
 # from the headers' code; the pending object emits this fragment's classes' vtables, and the defaults with them, except
 # CConversorHistoricoVotoImpresso's and CConversorFotoCandidato's: fragment 172 writes their own slots (10276, 11440),
@@ -52,10 +56,8 @@
 # gravadores/asn/cconversorhistoricovotoimpresso.h (beside its link neighbour CConversorEntidadeBU, whose records are in
 # gravadores/asn/cconversorentidadebu.cpp) and the md heads beside it. The others sit beside the .cpp their records name.
 #
-# Pending: each class's own slot (this fragment's -pending.cpp names what each waits for). Not written: 10272, the
-# inherited DoDesconverte of CConversorEntidadeBU, waits for md::CEntidadeBU's layout: with an empty head for the class,
-# the default returned the empty TDado in nothing and took the wasm type (i32 i32)->(), where the target's 10272 is
-# (i32 i32 i32)->() (fragment 172 has the measurement); 11446, CConversorCandidatura's inherited DoConverte, whose
+# Pending: each class's own slot (this fragment's -pending.cpp names what each waits for). Not written: 11446,
+# CConversorCandidatura's inherited DoConverte, whose
 # entity ModuloCandidatos::Candidatura the
 # generated module lacks (its typeinfo name is the string 11446 passes); with it 5712 (CConversorCandidatura's
 # constructor, whose vptr store names the class), 11448 and 5710, and 11445, which stays a trap.

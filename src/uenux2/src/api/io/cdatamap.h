@@ -101,6 +101,11 @@ public:
         return it == m_registros.end() ? nullptr : &it->second;
     }
 
+    // The records themselves, read-only: comum::MontaVotosCargos (target fn 3819) walks comum::CPartidos' map from its
+    // first node (+0) to its end node (+4) with no cursor. The name, the const reference and its being the base's
+    // member are chosen, as Existe's.
+    const Container& GetRegistros() const { return m_registros; }
+
 protected:
     Container m_registros;
     typename Container::iterator m_corrente;

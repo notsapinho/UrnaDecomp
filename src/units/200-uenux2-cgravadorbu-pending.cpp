@@ -2,11 +2,12 @@
 // GravaResultado, fn 11629 (slot 7, 15903 B, records cgravadorbu.cpp:484 and :485, with those of LeChavePublica and
 // MontaEntidadeBU, lines 542 to 636, inlined into it), is the class's first out-of-line virtual member, so its vtable
 // (@1554132) is emitted here, and with it the implicit destructors of slots 0 and 1 (fns 5857, 11628), the compiler's
-// code for the class definition in app/comum/gravadores/cgravadorbu.h. GravaResultado calls fns 3819 (which calls
-// AcrescentaVotoVotavel, fn 3820, written in cgravadorbu.cpp at its record's line 221), 3818 (FiltraCargos, written
-// there after it), 2853, 3817, 3824, 3735, 3815 and 2724 (written), and it waits for: 3819 (unnamed, not written) and
-// 1555 (a std::string copy kept out of line, called by 2725, 11419, 11616 and 11629, none written, so nothing names it);
-// md::CEntidadeBU (records centidadebu.cpp:159 to :177, ValidaCriacao, inlined into it; no class of ours) and the
+// code for the class definition in app/comum/gravadores/cgravadorbu.h. GravaResultado calls fns 3819
+// (comum::MontaVotosCargos, which calls AcrescentaVotoVotavel, fn 3820, written in cgravadorbu.cpp at its record's line
+// 221), 3818 (FiltraCargos, written there after them), 2853, 3817, 3824, 3735, 3815 and 2724 (written), and it waits
+// for: 1555 (a std::string copy kept out of line, called by 2725, 11419, 11616 and 11629, none written, so nothing
+// names it); md::CEntidadeBU (records centidadebu.cpp:159 to :177, ValidaCriacao, inlined into it; centidadebu.h has
+// the head of its layout only) and the
 // writer of its entity through comum::asn::CConversorEntidadeBU (its Converte record iconversorasn.h:56 and
 // CodeObjectFunction's cfileasn.h:161 and :171 for ModuloBoletimUrna::EntidadeBoletimUrna, inlined into it; the
 // converter's DoConverte, fn 10273, not written), LeChavePublica and MontaEntidadeBU (its records, inlined), the

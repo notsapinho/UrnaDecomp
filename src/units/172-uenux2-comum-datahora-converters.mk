@@ -79,10 +79,10 @@
 #   frees each format's literal string before the next call). No other form was measured.
 #
 # Not matched, and what each waits for (the lane's other rows are in the fragments that hold their classes):
-# - 10272, CConversorEntidadeBU's inherited DoDesconverte: md::CEntidadeBU's layout. An empty head as the base's data
-#   type gave the default the wasm type (i32 i32)->() (the empty result is returned in nothing), where the target's is
-#   (i32 i32 i32)->(), and a whole body, not a thunk into fn 731; no member of the class is recovered (its records are
-#   centidadebu.cpp's, lines 159 to 206, held by fns 11629 and 10273).
+# - 10272, CConversorEntidadeBU's inherited DoDesconverte, waited for md::CEntidadeBU's layout: an empty head as the
+#   base's data type gave the default the wasm type (i32 i32)->() (the empty result is returned in nothing), where the
+#   target's is (i32 i32 i32)->(), and a whole body, not a thunk into fn 731. It matches since centidadebu.h has the
+#   head of the layout (fragment 159).
 # - 1713 stays `unresolved self-voted` on ModuloTiposEleitorais::HoraJE::theInfo (1913248): its one other reader is
 #   the static initializer 14478; DataJE's now has 3802 too.
 #
