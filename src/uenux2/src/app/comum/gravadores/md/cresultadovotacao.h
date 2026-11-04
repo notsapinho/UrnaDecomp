@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "app/comum/dados/md/processoeleitoral/ccargo.h"
 #include "app/comum/gravadores/md/cvotoscargo.h"
 #include "ecourna/api/uetypes.hpp"
 
@@ -17,10 +18,16 @@ namespace comum::md {
 // __emplace_back_slow_path (fn 3817): it copies the new element's vector (fn 1556) and moves the old ones' (their three
 // words taken, the source's zeroed). Chosen: the path, beside cvotosvotavel.h; the words' types beyond their widths, the constructor's parameter
 // types beyond what it stores, and every member and parameter name, after ModuloBoletimUrna::ResultadoVotacao's fields
-// tipoCargo, qtdComparecimento and totaisVotosCargo, in their order.
+// tipoCargo, qtdComparecimento and totaisVotosCargo, in their order. The getters are what fn 10273
+// (CConversorEntidadeBU::DoConverte) reads, the type as the md::CCargo::ETipo that ConverteTipoCargo's record takes;
+// their names are chosen.
 class CResultadoVotacao {
 public:
     CResultadoVotacao(uedword tipoCargo, ueword qtdComparecimento, const std::vector<CVotosCargo>& totaisVotosCargo);
+
+    CCargo::ETipo GetTipoCargo() const { return static_cast<CCargo::ETipo>(m_tipoCargo); }
+    ueword GetQtdComparecimento() const { return m_qtdComparecimento; }
+    const std::vector<CVotosCargo>& GetTotaisVotosCargo() const { return m_totaisVotosCargo; }
 
 private:
     uedword m_tipoCargo;

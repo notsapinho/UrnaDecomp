@@ -248,15 +248,6 @@ const ModuloRegistroDigitalVoto::Eleicoes::InfoType ModuloRegistroDigitalVoto::E
     ModuloRegistroDigitalVoto::Eleicoes::selectionNames
 };
 
-const ModuloRegistroDigitalVoto::HistoricoCodigosCarga::InfoType ModuloRegistroDigitalVoto::HistoricoCodigosCarga::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ASN1::GeneralString::theInfo,
-    0
-};
-
 const void* ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto::fieldInfos[5] = {
     &pleito::value_type::theInfo,
     &fase::value_type::theInfo,

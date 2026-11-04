@@ -11,7 +11,8 @@
 #                        and libc++'s instances over Visitante: 3476, 5049, 5050, 5058; the global destructor 8851
 #   DataFree.cxx         the OpenData visitors (5034), the GeneralizedTime visitor (8749), freeData, inside 2182
 #   CoderEnv.cxx         decode(seeder, val) (5060), and decode(first, size, val, defered), inside 679
-#   the roots object     SEQUENCE_OF<GeneralString>: operator= (5731) and the D0 (859)
+#   asn1.h's templates   SEQUENCE_OF<GeneralString>: operator= (5731) and the D0 (859), which the roots file builds; the
+#                        link takes them from earlier objects (below)
 # 9161 and 9182, ecourna's and a module's, match with 516's name: their bodies are unit 09's and unit 04's. 3323, std::stoi,
 # is libc++'s, named here for 1519. 7867, messages<wchar_t>::do_get, is libc++'s, released: a caller these exclusions took
 # away let its callee's name settle.
@@ -91,8 +92,10 @@
 #   two conditional strings are not an if over two assignments, and the rest's reset is not one ternary: each gives other
 #   rows. 1519 with early returns, and checkFields' three range tests apart, give the same rows.
 #
-# The roots file: 859 and 5731 are template instances from the roots object. At APP_CXXFLAGS and at UENUX2_CXXFLAGS the object's
-# functions are the same but __split_buffer<AbstractData*>::emplace_back, which the link takes from ecourna's object.
+# The roots file: its CopiaNomes instantiates 5731 and, through the vtable it stores, 859, and the link keeps earlier
+# objects' copies (splat/scan.tsv's object column: 5731 cconversorentidadebu.cpp.o's, 859
+# cconversorsecaoeleitoral.cpp.o's). At APP_CXXFLAGS and at UENUX2_CXXFLAGS the object's functions are the same but
+# __split_buffer<AbstractData*>::emplace_back, which the link takes from ecourna's object.
 #
 # splat/symbol_addrs.txt holds hand edits for this unit: 3323 and defaultVisitors, each with what it rests on. 2650's and
 # 3552's went once both matched and step 8 named them (unit 229's fragment has the removal check).

@@ -222,15 +222,6 @@ const ModuloBoletimUrna::TotalVotosVotavel::InfoType ModuloBoletimUrna::TotalVot
     "TotalVotosVotavel"
 };
 
-const ModuloBoletimUrna::TotalVotosCargo::votosVotaveis::value_type::InfoType ModuloBoletimUrna::TotalVotosCargo::votosVotaveis::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloBoletimUrna::TotalVotosVotavel::theInfo,
-    0
-};
-
 const void* ModuloBoletimUrna::TotalVotosCargo::fieldInfos[3] = {
     &codigoCargo::value_type::theInfo,
     &ordemImpressao::value_type::theInfo,
@@ -263,15 +254,6 @@ const ModuloBoletimUrna::TotalVotosCargo::InfoType ModuloBoletimUrna::TotalVotos
     "TotalVotosCargo"
 };
 
-const ModuloBoletimUrna::ResultadoVotacao::totaisVotosCargo::value_type::InfoType ModuloBoletimUrna::ResultadoVotacao::totaisVotosCargo::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloBoletimUrna::TotalVotosCargo::theInfo,
-    0
-};
-
 const void* ModuloBoletimUrna::ResultadoVotacao::fieldInfos[3] = {
     &tipoCargo::value_type::theInfo,
     &qtdComparecimento::value_type::theInfo,
@@ -302,15 +284,6 @@ const ModuloBoletimUrna::ResultadoVotacao::InfoType ModuloBoletimUrna::Resultado
     &ModuloBoletimUrna::ResultadoVotacao::defaultTag,
     ModuloBoletimUrna::ResultadoVotacao::fieldNames,
     "ResultadoVotacao"
-};
-
-const ModuloBoletimUrna::ResultadoVotacaoPorEleicao::resultadosVotacao::value_type::InfoType ModuloBoletimUrna::ResultadoVotacaoPorEleicao::resultadosVotacao::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloBoletimUrna::ResultadoVotacao::theInfo,
-    0
 };
 
 const void* ModuloBoletimUrna::ResultadoVotacaoPorEleicao::fieldInfos[7] = {
@@ -376,24 +349,6 @@ const ModuloBoletimUrna::EntidadeBoletimUrna::dadosSecaoSA::value_type::InfoType
     2, 2,
     NULL,
     ModuloBoletimUrna::EntidadeBoletimUrna::dadosSecaoSA::value_type::selectionNames
-};
-
-const ModuloBoletimUrna::EntidadeBoletimUrna::resultadosVotacaoPorEleicao::value_type::InfoType ModuloBoletimUrna::EntidadeBoletimUrna::resultadosVotacaoPorEleicao::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloBoletimUrna::ResultadoVotacaoPorEleicao::theInfo,
-    0
-};
-
-const ModuloBoletimUrna::EntidadeBoletimUrna::historicoVotoImpresso::value_type::InfoType ModuloBoletimUrna::EntidadeBoletimUrna::historicoVotoImpresso::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloBoletimUrna::HistoricoVotoImpresso::theInfo,
-    0
 };
 
 const void* ModuloBoletimUrna::EntidadeBoletimUrna::fieldInfos[11] = {
