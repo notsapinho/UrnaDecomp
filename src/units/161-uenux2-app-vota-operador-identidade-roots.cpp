@@ -15,7 +15,6 @@
 //   GetInst, which vota::CValidaIdentidade::StartState (10627, unit 278's) holds.
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
-//   CControlaReconhecimento::PrimeiraTentativa (fn 5403, called twice by 10465),
 //   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
 //   10430, and the ones the stand-in's comment names are in the link). A stand-in goes when the target callers it names
 //   are in splat/matched.txt or written in the link.
@@ -30,6 +29,8 @@
 // in the link.
 // The stand-ins for AtingiuLimiteVerificacoes (5404), AtingiuLimiteTentativas and AvancaTentativa (5405, 5406) went:
 // their callers 10447 and 10448 (unit 161) and 10473 and 10485 (unit 282) are in the link.
+// The stand-in for CControlaReconhecimento::PrimeiraTentativa (5403) went: its one target caller, 10465 (unit 282's),
+// which calls it twice, is in the link.
 // The stand-ins differ in their bytes, from each other and from every target function. Compiled with APP_CXXFLAGS.
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
@@ -42,12 +43,6 @@ namespace {
 
 using vota::CControlaReconhecimento;
 using vota::CLogVota;
-
-// Stands for 10465, which calls PrimeiraTentativa twice.
-__attribute__((noinline)) int PrimeiraDuasVezes()
-{
-    return CControlaReconhecimento::PrimeiraTentativa() + 2 * CControlaReconhecimento::PrimeiraTentativa();
-}
 
 // Stands for 10451.
 __attribute__((noinline)) int CancelaUm()
@@ -79,7 +74,6 @@ const void* volatile w161_sink;
 struct SW161Roots {
     SW161Roots()
     {
-        w161_sink = reinterpret_cast<const void*>(&PrimeiraDuasVezes);
         w161_sink = reinterpret_cast<const void*>(&CancelaUm);
         w161_sink = reinterpret_cast<const void*>(&PedeIdentidade);
         w161_sink = reinterpret_cast<const void*>(&ControlaReconhecimento);

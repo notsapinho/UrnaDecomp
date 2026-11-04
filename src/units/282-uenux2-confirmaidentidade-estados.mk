@@ -17,7 +17,15 @@
 # - CPedeDigital::GetInst (2740, vptr-anchor) with its statics' exit destructors (10471, s_mutex's; 10472, s_inst's),
 #   StartState (10468, records 115, 120 and 125) and ObtemEstadoPosReconhecimentoBiometrico (5397, record 234), which
 #   holds CDigitalReconhecida's and CDigitalNaoReconhecida's GetInst inlined, with their statics' exit destructors
-#   (10483 and 10484; 10475 and 10476, a thunk into 2903, unit 152's fragment has it).
+#   (10483 and 10484; 10475 and 10476, a thunk into 2903, unit 152's fragment has it);
+# - the ProcessInput of the three not-recognized states (10473, 10477, 10485), whose next-state stores call
+#   comum::CAppState::SetNextState (cappstate.h): with the stores, 13 over 78, 10 over 72 and 13 over 78 rows, the input
+#   field's pointer in local 1 where the target keeps local 0; with the calls, 11 over 78, 8 over 72 and 11 over 78,
+#   names only (pnpm wasm score on the whole link), and step 9 matches them;
+# - CDigitalReconhecida::ProcessInput (10481) and CPedeDigital::ProcessTick (10465), below, with what they hold:
+#   CDigitalNaoReconhecidaPorTempo's GetInst and constructor (no target function: 10465 holds them inlined) and its
+#   statics' exit destructors (10487, s_mutex's; 10488, s_inst's), which match through the names 10465's votes give;
+#   2223, std::map<uebyte, int>'s __tree::destroy, cpededigital.cpp.o's instance; 6269, musl's log2f (below).
 #
 # Evidence, each read in the target (`pnpm wasm fn` of each function):
 # - The classes: RTTI and their vtables, @1591104 [244, 387, 1718, 7480, 1661, 218, 425, 10508, 425], @1591176 [... 1718
@@ -120,15 +128,6 @@
 # Written and not matched, and what each waits for:
 # - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
 #   numbers (the queue's address in local 2 where the target reuses local 0, the same difference as 10511's, unit 161).
-# - The ProcessInput of CDigitalNaoReconhecida, CDigitalNaoReconhecidaDecBiometria and CDigitalNaoReconhecidaPorTempo
-#   (10473, 10477, 10485): `differs`, 13 over 78, 10 over 72 and 13 over 78 rows, every row an operand, the calls, the
-#   records and two local numbers: the target keeps the input field's pointer in local 0 once `this` is pushed for the
-#   store after the switch, ours in local 1. The same remainder as 10731 (unit 277) had before it called
-#   CAppState::SetNextState (unit 61), with which it matches: a form to measure here; in our link 10415 (unit 152), a
-#   body binaryen inlines callees into, takes local 0 as the target does, and
-#   app/comum/dados/md/estadoaplicacao/cestadogeralvota.h measures such a move of local numbers for SetEstadoVota. Not
-#   explained: neither form measured here gives local 0 (the switch as written, and the three files linked ahead of the
-#   objects of the functions they call, a scratch link).
 # CInformaEleitorPodeVotar::GetInst (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the
 # link: before, 5410's name had 5399's own call as its one vote and 5399 read `unresolved self-voted`.
 #
@@ -151,10 +150,71 @@
 #   destructors 10480 and 10479 match); else the attempt's text into +12, "Score: {}" into +20 when +11 says so (as
 #   10482 does), LogaTentativaReconhecimentoDedo and the form at +28 shown. 92 over 1148 rows, operand-only. The
 #   function's lines from 73 put the record's call at line 82, and ProcessInput after it (the band: 10474 before 10473).
-# CDigitalNaoReconhecidaDecBiometria's GetInst and constructor are written in its file (its notes in its header);
-# CDigitalNaoReconhecidaPorTempo's are declared only: 10465 holds them inlined.
-# Pending (282-uenux2-confirmaidentidade-estados-pending.cpp says what each waits for):
-# CDigitalReconhecida::ProcessInput (10481) and CPedeDigital::ProcessTick (10465).
+# CDigitalNaoReconhecidaDecBiometria's GetInst and constructor are written in its file (its notes in its header), and
+# so are CDigitalNaoReconhecidaPorTempo's, which 10465 holds inlined: GetInst in the singleton form, the constructor
+# (behind a 96-byte frame there) passing EVENTO_ENTRADA, std::make_shared<std::string>("Tentativa x de x") at +12 and
+# the form at +20 from an anonymous-namespace helper clang inlines: AddLed(LED_OPERACAO_0), AddBeep(1),
+# CEleitorDadoNomeParaUrna::Text with "{:2}" at {1, 1}, "Eleitor(a) não reconhecido(a)" centred at {20, 2}, a
+# CTextSource over +12 with "%s" centred at {20, 3}, "CORRIGE: cancelar" at {1, 4}, "CONFIRMA: retornar" at {40, 4} on
+# the right, AddInputControl, GetInteractiveForm("", true). Its statics are defined before StartState (band 1: 10488 and
+# 10487 above 10486).
+#
+# CDigitalReconhecida::ProcessInput (10481, slot 7), matched: on CONFIRMA (Read() inlined, its record
+# cinteractiveform.h:57 @1591712), CHabilitaAudioEleitor::GetInst as the next state when IsAudioAtivado says so, else
+# the post of 1 to CThreadEleitor's queue and CMostraEleitorVotando::GetInst (SetNextState in both arms, 10511's form);
+# then impl::IInformacaoThreadOperador's slot 13 (SetBiometriaEleitor; iinformacaothreadoperador.h reads slots 9 to 15)
+# and CLogVota::LogaTipoHabilitacaoEleitor(1) (clogvota.cpp), which the target holds behind a 400-byte frame: a
+# std::map<uebyte, std::string> {{1, "biométrica"}, {2, "por código"}} built from an initializer list (the hinted
+# insert 3266, called twice), its at(1) formatted into "Tipo de habilitação do eleitor [{}]", and the map destroyed
+# (2499); the `#include <map>` that member needs takes the place of clogvota.cpp's blank line before `namespace vota {`,
+# so its records keep their lines. 34 over 421 rows before steps 7 to 9, operand-only. Its callees needed two things:
+# 3266's target copy is one a
+# uenux2 object builds without strict aliasing (it loads a pointer again after a store), which
+# clogvota.cpp's copy, under app/vota/, does not give (15 over 101 rows, 5 deleted) and an instance at UENUX2_CXXFLAGS
+# does (2 over 101, the calls), so src/app/roots_set.cpp holds that instance (its comment says for whom); and 2499, a
+# recursive map destroy whose one other caller is not written and whose caller here casts no vote, takes a
+# callers+content hand line in splat/symbol_addrs.txt. The key type (one byte: the pairs' keys are i32.store8 stores),
+# the member's name and parameter, and the direct call of slot 13 where a free wrapper (iinformacaothreadoperador.h)
+# gives the same code, are chosen.
+#
+# CPedeDigital::ProcessTick (10465, slot 8), matched: on a tick that is none of its three it returns; on the first in
+# the first attempt or the second in a later one (CControlaReconhecimento::PrimeiraTentativa, 5403, called twice), it
+# stops the ticks (PararTicks) and goes to CDigitalNaoReconhecidaPorTempo::GetInst; on the third, after the detection,
+# scanner and urna singletons (records 162 to 164), it takes up to three captures from the scanner's slot 4 (each
+# checked against slot 0's size), keeps one at once on the urna models 2009, 2010, 2020 and 2022 (IUrna::Modelo, called
+# before each compare) and otherwise keeps the one of highest entropy (CalculaEntropia) above 4, returning on one below;
+# then, when the detection's slot 2 accepts it, it shows the second form, logs LogaDigitalCapturada (clogvota.cpp) and
+# runs VerificaDigitalTreinamento in the mesarios' training or else, after InvertColors (models up to 2019) and
+# VerticalFlip, unit 307's CConversorWsq, a std::make_shared copy of its result, RegistraDigitalCapturada and
+# VerificaDigital; each path ends in ObtemEstadoPosReconhecimentoBiometrico (5397) and SetQualidadeCapturada. Before
+# steps 7 to 9, 162 over 1992 rows, operand-only (pnpm wasm score on the whole link); step 9 then read it `unresolved
+# self-voted` on s_qualidadeCapturada, which matches with that word's callers+content hand line (10425 reads it). The
+# forms the bytes asked for, each measured on the whole link:
+# - CalculaEntropia a function of its own with external linkage in cpededigital.cpp: the target holds it behind a
+#   16-byte frame, binaryen's inlining into its one caller (an internal one clang would inline: a reading); it takes the
+#   shared_ptr by reference, since the target reloads the vector through it after the counting loop, and returns
+#   `-soma` (the target adds each p * log2(p) and negates once). Its name, its being free and its line are chosen;
+# - musl's log2f (6269) has two target callers, 10316 and 10465, and with 10465 its one caller binaryen inlined it, so
+#   unit 282's roots call it for 10316 (with that and the next form together, 995 over 2258 rows became 352 over 2059);
+# - the best image kept by `imagem = api::TSharedImageVector(captura)`: the copy-assignment `imagem = captura` there
+#   stays a call of libc++'s operator= (wasm-objdump -d of the object: one call, and none with the temporary), which
+#   keeps the image in the frame where the target holds it in locals and calls the out-of-line ~shared_ptr (424) of a
+#   temporary instead. The temporary is a form chosen for those bytes; the first branch's plain assignment is inlined
+#   either way;
+# - api::IFingerMatcher::Slot3 returning an int the call drops (the target's `(i32 i32 i32)->(i32)` and `drop`), and
+#   DigitalReconhecidaTreinamento building the four sums in order (the target loads each sixth after the test before
+#   it; with the sums first, all four loads came first): together, 352 over 2059 became 335 over 2044;
+# - DigitalReconhecidaTreinamento reading the voter's number itself (the target reads it after the matcher's instance),
+#   and GetMinuciasDedoCorrente's copy made in one expression, so that both temporaries are destroyed after it (the
+#   target copies before it destroys them): together, 174 over 1998 (6 inserted, 4 deleted);
+# - that copy a std::vector<api::SXYT>, the CDedo's vector through its copy constructor, which zeroes the result before
+#   it reads the source as the target does, where a std::vector<uebyte> built from the two pointers reads them first:
+#   162 over 1992, operand-only. This needs md::CDedo::GetMinucias (cdedo.h);
+# - unit 307's stand-ins for the callers of 2224, 2742 and 1379 that are not written (unit 307's roots say which).
+# VerificaDigital and VerificaDigitalTreinamento's lines put their instance calls on records 262 and 279 (column 25
+# inside the loop, 21 in the function), and the three ProcessTick's on 162 to 164 (the variables' names' lengths give
+# the columns 27, 26 and 23); the other lines of the three are chosen. ObtemDuasVezes, the roots' stand-in for 10465's
+# two calls of 5397, went with it, and so did the sink of CDigitalNaoReconhecidaPorTempo's vtable.
 #
 # cdigitalreconhecida.cpp's, cdigitalnaoreconhecida.cpp's and cpededigital.cpp's names and directory are their records'.
 # The other files' directory is a reading of the data: their vtables lie among confirmaidentidade/'s records
@@ -193,13 +253,9 @@ UENUX2_SRCS += $(CONFIRMAIDENTIDADE_ESTADOS_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalreconhecida.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 282-uenux2-confirmaidentidade-estados-pending.cpp gives the vtables trapping bodies,
-# compiled with the unit's flags.
-$(ROOT)/$(APP)/282-uenux2-confirmaidentidade-estados-pending.o: $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/282-uenux2-confirmaidentidade-estados-pending.cpp -o $(R)
-# Two of the GetInst and ObtemEstadoPosReconhecimentoBiometrico have no caller reconstructed, and three classes'
-# constructors are not in the link: 282-uenux2-confirmaidentidade-estados-roots.cpp stands in for those callers and
-# keeps those vtables.
+# Every slot of these classes is written: the -pending.cpp that trapped CDigitalReconhecida::ProcessInput and
+# CPedeDigital::ProcessTick went with them. Two callees have a caller not reconstructed (5399's 10451, 6269's 10316):
+# 282-uenux2-confirmaidentidade-estados-roots.cpp stands in for those callers; it keeps no vtable.
 $(ROOT)/$(APP)/282-uenux2-confirmaidentidade-estados-roots.o: $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/282-uenux2-confirmaidentidade-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/282-uenux2-confirmaidentidade-estados-pending.o $(APP)/282-uenux2-confirmaidentidade-estados-roots.o
+override EXTRA_OBJS += $(APP)/282-uenux2-confirmaidentidade-estados-roots.o

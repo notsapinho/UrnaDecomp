@@ -167,11 +167,11 @@
 #   is measured: CORRIGE first (with a `default: break;`) moves the blocks, `31 over 88 rows (... inserted 3, deleted
 #   3)`. Its StartState (10385) stays an assignment, matched as written: the replay of unit 61's fragment with an empty
 #   call binaryen inlines leaves 10385's bytes as they are, so they do not tell the two forms apart.
-# - 10318, CPedeDigitalMesario::StartState: the target's 257 bytes, row for row, but for binaryen's local numbers (`42
-#   over 106 rows (... [13 operand-only], inserted 12, deleted 12)`: the frame and the record's address are locals 3 and 2
-#   in the target, 2 and 3 here, and the last call's result takes the address's local there and the other results'
-#   here). The same score with instance<IFingerScanner>'s copy in an object linked ahead of cregistradormesario.cpp.o
-#   (a scratch link), where the target's band puts 816. Not explained; its slot needs it, so it stays written.
+# - 10318, CPedeDigitalMesario::StartState, matched since its next-state store calls comum::CAppState::SetNextState
+#   (cappstate.h): with the store, the target's 257 bytes row for row but for binaryen's local numbers (`42 over 106
+#   rows (... [13 operand-only], inserted 12, deleted 12)`: the frame and the record's address are locals 3 and 2 in the
+#   target, 2 and 3 here); with the call, 15 over 94, names only (pnpm wasm score on the whole link), and step 9 matches
+#   it (`evidence:srcloc-anchor`).
 # - 10319, CNomeMesariosUrnaDS::Text: a whole body where the target's is a thunk into fn 6008, the shared body with
 #   cdigitalmesarionaoreconhecida.cpp's 10323, which is not in our link (10316, pending, holds it). Against 6008 ours
 #   scored 346 over 704 rows (226 inserted), the voter's md::CEleitorDecorator copied in place where 6008 calls fn 946;

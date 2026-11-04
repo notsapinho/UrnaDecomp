@@ -135,11 +135,6 @@
 // f3916 · 593 B · unmatched · placement: link order · name unknown
 // void f3916(i32, i32, i32) { ... }
 
-// link-order cluster 1060 · uses=4
-
-// f2499 · 57 B · unmatched · placement: link order · name unknown
-// void f2499(i32, i32) { ... }
-
 // link-order cluster 1099 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp
 
 // f2789 · 738 B · unmatched · placement: link order · name unknown

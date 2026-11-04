@@ -62,9 +62,9 @@
 # - CEleitorNaoEncontrado: its destructor is out of line. With the implicit one, its deleting destructor frees what the
 #   D2 returns, `4 over 7 rows (same 3, replaced 2 [1 operand-only], inserted 0, deleted 2)` against 1689; defaulted in
 #   its .cpp, 1689 and 1907 score operand rows only and match (docs/reference/facts/reading.md R5).
-# - The .bss byte's name: splat/symbol_addrs.txt's hand line cites StartState (10512), which clears it, 10465, which
-#   reads it and increments it, and 10425, which reads it; its generated line is AvancaTentativa's own vote, so without
-#   the hand line 5406 is `unresolved self-voted`.
+# - The .bss byte's name: its generated line is AvancaTentativa's own vote (`vote:1 by:5406`), and since unit 282's 10465
+#   matched, which reads it and increments it, it holds without the callers+content hand line it had (a scan and
+#   splat-build without that line and without 5406's and 10465's match lines keep every match), which went.
 #
 # IEleitorImpedidoVotar's destructor (1257): the target's is a thunk into binaryen's fn 2902 with the class's vptr, a
 # body the target forms from four thunks (1257, 1688, 1720 and 1952). It matches with unit 169's 1720 and 1952 in the
@@ -137,13 +137,29 @@
 # the link are unit 282's 10474 and 10486, which drop the result, and unit 239's 10500, which reads it; the roots stand
 # in for 10425, which drops it. Before steps 7 to 9, 12 over 42 rows, operand-only. With it in the link, 5399 (unit
 # 282's CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
-# CControlaReconhecimento::StartState (10512) is written and not matched: 60 over 216 rows. The target keeps each arm's
-# next-state store, form call and CPedeDigital::GetInst call apart (two stores of `this`, two of 2740's result), where
-# our link joins them into one store of a block's value; not explained. And the five words from @1908712, which it
-# fills in the mesarios' training, have 10512 as their only reader in the link (`/usr/bin/grep -rlE 'i32\.const
-# 1908712($|[^0-9])' build/out/splat/pieces/asm` prints 10512 alone; 10465 reads +4 to +16), so their name is
-# self-voted until fn 10465 is in the link. The scan reads it `unresolved` on an earlier operand,
-# s_tentativaRegistrada, a .data word of 1 that content cannot place and that no vote names while the bodies differ.
+# CControlaReconhecimento::StartState (10512) is written and not matched: `unresolved self-voted` on
+# s_eleitoresTreinamento (@1908712), the first of the five training words, which no target function but 10512 reads or
+# writes (`/usr/bin/grep -rlE 'i32\.const 1908712($|[^0-9])' build/out/splat/pieces/asm` prints 10512 alone), so its
+# name has 10512's own vote only and no hand line may give it (docs/reference/splat.md, "No circular evidence"). Every
+# other operand resolves, s_tentativaRegistrada through a callers+content hand line (10465 and 10425 read it; content
+# cannot place a word of 1): `pnpm wasm splat-remap` on it prints `IDENTICAL` (it applies no self-vote rule), and `pnpm
+# wasm score` 33 over 209 rows, operand-only. Matches rest on its votes: 10517, s_digitalRegistrada's exit destructor,
+# whose name 10512 alone votes (`evidence:vote:2 by:10512`), and 10518, s_digitalCapturada's, whose name it votes with
+# 10465 (unit 282). The forms, each measured on the whole link:
+# - the next-state stores: SetNextState (cappstate.h) in three arms and `m_pNextState = this` in the arm without
+#   biometry. The target keeps both arms' `m_form->Slot2(); this` apart; with four plain stores clang joins all four
+#   into one (61 over 217, the base's), with four setter calls it sinks the two calls of SetNextState(this) into one
+#   (59 over 218, with the words still one array). A call in one arm and a store in the other is the form measured that
+#   keeps them apart; which arm
+#   holds the store is a choice (not measured the other way round);
+# - the arm without biometry first, `!TemBiometria() || !TemDedos()`: the target lays that arm's code before the one
+#   that goes to CPedeDigital::GetInst (the condition written positively, 46 over 216);
+# - md::CEleitor::TemBiometria out of line (unit 157's change, the form fn 10500 needs too): the target tests the
+#   flag at +100 as a call's result (`i32.load8_u; if` after binaryen's inlining) where the inline accessor gives
+#   `i32.const 1; i32.eq` (35 over 211, two rows);
+# - the five training words five statics (ccontrolareconhecimento.h has the store order);
+# - `s_tentativa = 1; s_verificacao = 1;`: clang emits these two constant stores in the reverse of the source's order
+#   (wasm-objdump -d of the object, both orders), and the target stores 0x184690 first.
 # Its callees match: 1823
 # (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, this object's instance, named by its
 # census pair, `evidence:pair-addr`), 1393 and 2740; it reads the map's size through api::CDataMap::GetQuantidade
@@ -172,13 +188,13 @@
 # cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp (@1596216 to @1599416).
 #
 # Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
-# - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
-#   CONFIRMA it calls LimpaBiometria (3621) and goes to CHabilitaAudioEleitor::GetInst (2743) when IsAudioAtivado (2746)
-#   says so, else posts 1 to CThreadEleitor's queue and goes to CMostraEleitorVotando::GetInst (1150). 12 over 84 rows,
-#   all operand-only: the calls, the record and binaryen's local numbers, the queue's address in local 1 where the
-#   target reuses local 0 (`differs +0x86 target +0x85 local.tee 0 | ours +0x85 local.tee 1`). The same as a ternary
-#   with the post in a comma expression (12 over 84); with the condition negated and the arms swapped, 18 over 88 (4
-#   inserted, 3 deleted). Not explained; unit 282's 3883 differs the same way. Its slot keeps it written.
+# - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records),
+#   matched since its two next-state stores call comum::CAppState::SetNextState (cappstate.h): on CONFIRMA it calls
+#   LimpaBiometria (3621) and goes to CHabilitaAudioEleitor::GetInst (2743) when IsAudioAtivado (2746) says so, else
+#   posts 1 to CThreadEleitor's queue and goes to CMostraEleitorVotando::GetInst (1150). With the two stores, 12 over 84
+#   rows, operand-only, the queue's address in local 1 where the target reuses local 0; with the calls, 10 over 84,
+#   names only (`pnpm wasm score`, whole link), and it matches (step 9). Unit 282's 3883 differs the same way and its
+#   sources are not this unit's.
 # - vota::MontaTelaEleitorPodeVotar (5410, a free function by choice; name chosen), the form both
 #   CControlaReconhecimento::GetInst (1256) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
 #   fill +12 with: AddLed(LED_OPERACAO_0), AddBeep(1), "ELEITOR(A) PODE VOTAR" at {1, 1}, "Assinar o caderno de votação

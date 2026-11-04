@@ -22,12 +22,22 @@ namespace vota {
 int CControlaReconhecimento::s_tentativa = 1;
 int CControlaReconhecimento::s_verificacao = 1;
 int CControlaReconhecimento::s_tentativaRegistrada = 1;
+comum::md::CDedo::TipoDedo CControlaReconhecimento::s_dedosVerificacao[10] = {
+    static_cast<comum::md::CDedo::TipoDedo>(1), static_cast<comum::md::CDedo::TipoDedo>(6),
+    static_cast<comum::md::CDedo::TipoDedo>(2), static_cast<comum::md::CDedo::TipoDedo>(7),
+    static_cast<comum::md::CDedo::TipoDedo>(3), static_cast<comum::md::CDedo::TipoDedo>(4),
+    static_cast<comum::md::CDedo::TipoDedo>(5), static_cast<comum::md::CDedo::TipoDedo>(8),
+    static_cast<comum::md::CDedo::TipoDedo>(9), static_cast<comum::md::CDedo::TipoDedo>(10)};
 uebyte CControlaReconhecimento::s_indiceDedo = 0;
 std::vector<uebyte> CControlaReconhecimento::s_digitalCapturada;
 std::vector<uebyte> CControlaReconhecimento::s_digitalRegistrada;
 std::string CControlaReconhecimento::s_dedoRegistrado;
 ueword CControlaReconhecimento::s_qualidadeCapturada = 0;
-int CControlaReconhecimento::s_faixasTreinamento[5] = {};
+int CControlaReconhecimento::s_eleitoresTreinamento = 0;
+int CControlaReconhecimento::s_faixaTentativa1 = 0;
+int CControlaReconhecimento::s_faixaTentativa2 = 0;
+int CControlaReconhecimento::s_faixaTentativa3 = 0;
+int CControlaReconhecimento::s_faixaTentativa4 = 0;
 
 CControlaReconhecimento::~CControlaReconhecimento() = default;
 
@@ -52,8 +62,8 @@ std::mutex CControlaReconhecimento::s_mutex;
 
 void CControlaReconhecimento::StartState()
 {
-    s_verificacao = 1;
     s_tentativa = 1;
+    s_verificacao = 1;
     s_indiceDedo = 0;
     s_tentativaRegistrada = 1;
     s_digitalCapturada.clear();
@@ -61,30 +71,30 @@ void CControlaReconhecimento::StartState()
     const bool treinamento = EhTreinamentoMesario();
     comum::CEleitores& eleitores = comum::CEleitores::GetInst();
     if (treinamento) {
-        s_faixasTreinamento[0] = eleitores.GetQuantidade();
-        const int faixa = s_faixasTreinamento[0] / 6;
-        s_faixasTreinamento[1] = faixa;
-        s_faixasTreinamento[2] = faixa;
-        s_faixasTreinamento[3] = faixa;
-        s_faixasTreinamento[4] = faixa;
+        s_eleitoresTreinamento = eleitores.GetQuantidade();
+        const int faixa = s_eleitoresTreinamento / 6;
+        s_faixaTentativa1 = faixa;
+        s_faixaTentativa2 = faixa;
+        s_faixaTentativa3 = faixa;
+        s_faixaTentativa4 = faixa;
         const int sequencial = comum::CEleitores::GetInst().GetCurrent()->GetEleitor().GetSequencial();
-        if (sequencial > faixa * 5 && sequencial <= s_faixasTreinamento[0]) {
+        if (sequencial > faixa * 5 && sequencial <= s_eleitoresTreinamento) {
             m_form->Slot2();
-            m_pNextState = this;
+            SetNextState(this);
         } else {
-            m_pNextState = &CPedeDigital::GetInst();
+            SetNextState(&CPedeDigital::GetInst());
         }
-    } else if (eleitores.GetCurrent()->GetEleitor().TemBiometria() &&
-               comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().TemDedos()) {
-        m_pNextState = &CPedeDigital::GetInst();
-    } else {
+    } else if (!eleitores.GetCurrent()->GetEleitor().TemBiometria() ||
+               !comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().TemDedos()) {
         CLogVota::GetInst().LogaEleitorNaoPossuiBiometria();
         m_form->Slot2();
         m_pNextState = this;
+    } else {
+        SetNextState(&CPedeDigital::GetInst());
     }
 }
 
-// (original lines 87-99: content not recovered)
+// (original lines 97-99: content not recovered)
 #line 100
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTelaEleitorPodeVotar()
 {
@@ -106,10 +116,10 @@ void CControlaReconhecimento::ProcessInput()
     if (m_form->Read() == api::INPUT_CONFIRMA) {
         LimpaBiometria();
         if (IsAudioAtivado()) {
-            m_pNextState = &CHabilitaAudioEleitor::GetInst();
+            SetNextState(&CHabilitaAudioEleitor::GetInst());
         } else {
             CThreadEleitor::GetInst().GetMensagens().Post(1);
-            m_pNextState = &CMostraEleitorVotando::GetInst();
+            SetNextState(&CMostraEleitorVotando::GetInst());
         }
     }
 }
@@ -137,12 +147,14 @@ void CControlaReconhecimento::AvancaVerificacao()
 }
 
 
-
-
-
-
-
-
+void CControlaReconhecimento::AvancaProximoDedo1x4()
+{
+    if (s_indiceDedo != 4) {
+        ++s_indiceDedo;
+    } else {
+        throw CUeVotaError(EUE_VOTA_FIM_VERIFICACAO_1X4, "Fim da verificação 1x4 atingido.");
+    }
+}
 
 bool CControlaReconhecimento::AtingiuLimiteTentativas()
 {
@@ -164,6 +176,45 @@ bool CControlaReconhecimento::PrimeiraTentativa()
 uebyte CControlaReconhecimento::GetLimiteTentativas()
 {
     return comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetNumTentativasHabilitacao();
+}
+
+std::vector<api::SXYT> CControlaReconhecimento::GetMinuciasDedoCorrente()
+{
+    if (!comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().TemDedo(s_dedosVerificacao[s_indiceDedo])) {
+        return {};
+    }
+    return comum::CEleitores::GetInst()
+        .GetCurrentBiometriaEleitor()
+        .GetDedo(s_dedosVerificacao[s_indiceDedo])
+        .GetMinucias();
+}
+
+bool CControlaReconhecimento::DigitalReconhecidaTreinamento()
+{
+    const ueword sequencial = comum::CEleitores::GetInst().GetCurrent()->GetEleitor().GetSequencial();
+    int limite = s_faixaTentativa1;
+    if (sequencial <= limite && s_tentativa == 1) {
+        return true;
+    }
+    int inicio = limite;
+    limite += s_faixaTentativa2;
+    if (sequencial > inicio && sequencial <= limite && s_tentativa == 2) {
+        return true;
+    }
+    inicio = limite;
+    limite += s_faixaTentativa3;
+    if (sequencial > inicio && sequencial <= limite && s_tentativa == 3) {
+        return true;
+    }
+    inicio = limite;
+    limite += s_faixaTentativa4;
+    return sequencial > inicio && sequencial <= limite && s_tentativa == 4;
+}
+
+void CControlaReconhecimento::RegistraDigitalCapturada(const std::vector<uebyte>& digital)
+{
+    s_digitalCapturada = digital;
+    s_tentativaRegistrada = s_tentativa;
 }
 
 } // namespace vota

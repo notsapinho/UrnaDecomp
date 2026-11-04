@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "app/comum/cappstate.h"
+#include "app/comum/dados/md/eleitor/cdedo.h"
 
 namespace api {
 class IScreenMT;
@@ -40,18 +41,26 @@ namespace vota {
 // record 187, adds 1 to it while it is not 4 and otherwise throws EUeVotaError 9399 ("Fim da verificação 1x4
 // atingido."); fn 10465 also tests it against 4 at +0xe62, a `br_if` out of a loop, and fns 10465 and 10425 read the
 // word at @1590944 + 4 * byte, a table whose words are 1, 6, 2, 7, 3, 4, 5, 8, 9, 10. So it is an unsigned byte
-// counter (each read is i32.load8_u), not a flag; uebyte, the tree's spelling of that type, is a choice.
+// counter (each read is i32.load8_u), not a flag; uebyte, the tree's spelling of that type, is a choice. The table is
+// s_dedosVerificacao, the fingers in the order of the verification: it lies in .data after the three words and before
+// the vtable (@1590984), which reads as this object's data; 10465 passes its words as the comum::md::CDedo::TipoDedo of
+// CBiometriaEleitor::TemDedo and GetDedo. Its being one array, a static member, not const (a reading: a const one would
+// be read-only data, apart from the words), its element type and its name are chosen.
 // StartState also clears two std::vector<uebyte> in .bss (@1908672 and @1908684, its end set to its begin; fns 10425,
 // 10451, 10465 and 3614 copy them byte for byte, 10465 assigns the first through
 // vector<unsigned char>::__assign_with_size, fn 1681) and, in the training of the mesarios, fills five words from
 // @1908712: the number of voters, then a sixth of it four times; fn 10465 adds the four up, one more each round.
 // Between them lie a std::string (@1908696, which fns 3614 and 10425 copy) and a 16-bit word (@1908708, stored by 10465
-// with i32.store16 and read by 10425). Their exit destructors, 10518, 10517 and 10516, sit in use band 1 before
-// s_inst's and s_mutex's (10515, 10514), so the file defines them in that order, before GetInst's statics. Whether the
-// five words are one object (an array here, a choice) the bodies do not decide: 10465 reads +4 to +16 of it and only
-// 10512 the first. Their being static members, private, their types where the bodies give only a width, and their
-// names are chosen: s_indiceDedo from the byte's role, s_tentativaRegistrada from 10465's copy; the others' names are
-// not read from their readers' roles.
+// with i32.store16 and read by 10425: the score 10425 passes CEleitorDadosHabilitacaoBiometrica's constructor). Their
+// exit destructors, 10518, 10517 and 10516, sit in use band 1 before s_inst's and s_mutex's (10515, 10514), so the file
+// defines them in that order, before GetInst's statics. The five words are five objects: StartState stores the four
+// sixths in increasing address order (+4, +8, +12, +16 of the first), which five statics give, where one array or one
+// struct of five ints gives the reverse order, +16 down to +4 (each measured, wasm-objdump -d of the object); 10465
+// reads the four, 10512 alone the first. Their being static members, private, their types where the bodies give only a
+// width, and their names are chosen: s_indiceDedo from the byte's role, s_tentativaRegistrada from 10465's copy,
+// s_qualidadeCapturada from 10425's use, s_eleitoresTreinamento and s_faixaTentativa1 to 4 from StartState's division
+// and 10465's test of each sum with the attempt number 1 to 4; the others' names are not read from their readers'
+// roles.
 // src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is chosen.
 class CControlaReconhecimento final : public comum::CAppState {
 public:
@@ -80,6 +89,28 @@ public:
     // every caller (measured: no function of its own in the link). Its name, its being a static member and its place are
     // chosen.
     static uebyte GetLimiteTentativas();
+    // The members vota::CPedeDigital::ProcessTick (fn 10465) reaches the statics through, each held inlined there.
+    // AvancaProximoDedo1x4 is the record's (line 187, column 15: the throw's), behind the 16-byte frame of its
+    // message's std::string: out of line here, binaryen inlined it into its one caller. GetMinuciasDedoCorrente is the
+    // 64-byte frame of 10465's loop over the fingers: CEleitores::GetCurrentBiometriaEleitor's object asked TemDedo,
+    // then, when the finger is there, a second one's GetDedo, whose CDedo's minutiae vector is copied into the result
+    // (the copy constructor's code, the result's zeroing before the source's loads) before either temporary is
+    // destroyed, the empty result otherwise; the frame says out of line in another TU than its caller, binaryen's
+    // inlining (a reading). DigitalReconhecidaTreinamento is 10465's test, in the training of the mesarios, of the
+    // voter's sequential number (its low 16 bits, i32.load16_u) against the running sums of the four sixths, each with
+    // its attempt number; it calls nothing but CEleitores::GetInst and GetCurrent, and its place in this TU is chosen
+    // like its being out of line. RegistraDigitalCapturada is 10465's assignment of the digital into s_digitalCapturada
+    // (the vector's operator=, its self-assignment test and __assign_with_size, fn 1681) and of the attempt into
+    // s_tentativaRegistrada. GetIndiceDedo and SetQualidadeCapturada read and write the byte and the 16-bit word,
+    // inline here. The names, their being static members, the result and parameter types where the bodies give a width,
+    // the inline ones' being inline and the out-of-line ones' lines at the end of ccontrolareconhecimento.cpp are
+    // chosen.
+    static void AvancaProximoDedo1x4();
+    static uebyte GetIndiceDedo() { return s_indiceDedo; }
+    static std::vector<api::SXYT> GetMinuciasDedoCorrente();
+    static bool DigitalReconhecidaTreinamento();
+    static void RegistraDigitalCapturada(const std::vector<uebyte>& digital);
+    static void SetQualidadeCapturada(ueword qualidade) { s_qualidadeCapturada = qualidade; }
 
 private:
     CControlaReconhecimento();
@@ -90,12 +121,17 @@ private:
     static int s_tentativa;
     static int s_verificacao;
     static int s_tentativaRegistrada;
+    static comum::md::CDedo::TipoDedo s_dedosVerificacao[10];
     static uebyte s_indiceDedo;
     static std::vector<uebyte> s_digitalCapturada;
     static std::vector<uebyte> s_digitalRegistrada;
     static std::string s_dedoRegistrado;
     static ueword s_qualidadeCapturada;
-    static int s_faixasTreinamento[5];
+    static int s_eleitoresTreinamento;
+    static int s_faixaTentativa1;
+    static int s_faixaTentativa2;
+    static int s_faixaTentativa3;
+    static int s_faixaTentativa4;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };

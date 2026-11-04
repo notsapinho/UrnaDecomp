@@ -156,6 +156,10 @@ enum EUeVotaError {
     // the value is the code vota::TipoToStr throws (record cinformacaothreadoperador.cpp:40, inlined into target fn
     // 10586); the name is chosen from its message, "Tipo de identidade do eleitor inválido": no evidence names it
     EUE_VOTA_TIPO_IDENTIDADE_INVALIDO = 9409,
+    // the value is the code vota::CControlaReconhecimento::AvancaProximoDedo1x4 (record
+    // ccontrolareconhecimento.cpp:187, inlined into target fn 10465) throws; the name is chosen from its message, "Fim
+    // da verificação 1x4 atingido.": no evidence names it
+    EUE_VOTA_FIM_VERIFICACAO_1X4 = 9399,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

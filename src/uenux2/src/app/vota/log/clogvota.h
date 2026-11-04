@@ -331,6 +331,18 @@ public:
     void LogaAlturaFotoInvalida(ueword altura);
     void LogaQuantidadeCoresFoto(uebyte bitsPorPixel);
     void LogaFotoEleitorApresentada();
+    // LogaTipoHabilitacaoEleitor (vota::CDigitalReconhecida::ProcessInput, fn 10481: "Tipo de habilitação do eleitor
+    // [{}]") and LogaDigitalCapturada (vota::CPedeDigital::ProcessTick, fn 10465: "Capturada a digital. Tentativa [{}]
+    // de [{}]") are held inlined by their one caller behind a 400-byte frame of their own, after its call of GetInst:
+    // loga (fn 233) on std::format's result. The first formats a std::string (argument code 13), the text a
+    // std::map<uebyte, std::string> of two pairs, 1 "biométrica" and 2 "por código", gives for 1 through at(), the map
+    // built and destroyed in the member (fns 3266 and 2499); 10481 passes no argument, so the key is a constant there,
+    // a parameter binaryen's dead-argument elimination would fold (a reading). The second formats two bytes as unsigned
+    // (argument code 6 twice), LogaSolicitaDigital's shape. Their names (from the messages), the parameters, the map's
+    // being a local and its key's type's spelling (the keys are stored with i32.store8), and their place here and at
+    // the end of clogvota.cpp are chosen.
+    void LogaTipoHabilitacaoEleitor(uebyte tipo);
+    void LogaDigitalCapturada(uebyte tentativa, uebyte total);
 
 private:
     CLogVota();
