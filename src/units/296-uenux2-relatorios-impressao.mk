@@ -45,7 +45,9 @@
 #   increments (cnumviasimpressasrelatorios.h's IncrementaNumViasEstadoUrna, a name chosen), 491 and CMaisInformacoes.
 # - 5596 prints the separator (1156) twice around the load's code (2252, over CAppInfo::GetGeral's correspondencia),
 #   then "Ver: {}" over api::CStringUtils::GetVersionNumber (1539) of the version literal. It is defined above Imprime:
-#   in use band 2 of ledger/ordinals.tsv 5596 is above 5592, so its ld_index must be lower.
+#   in use band 2 of ledger/ordinals.tsv 5596 is above 5592, so its ld_index must be lower. Since unit 183's
+#   comum::CGeradorRelPU::ImprimeRodape, the same text, links (cgeradorrelpu.cpp sorts first), binaryen keeps that
+#   copy for both, and 5596's match line names it (a rename, splat-match).
 # - 2772 returns its first parameter (a constructor's this) and zeroes the vector at +0 first. MontaImagem's records,
 #   35:15 ("Criação de QRCode com texto vazio.", code 4949) and 49:15 (the width test, code 4951, both unsigned), fix
 #   their lines; the record's text shows neither `static` nor `const`: declared static, check_srcloc.py --strict listed
@@ -95,7 +97,8 @@
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
 # Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 5591's caller 11869 (11911 is in the link) and for 2792's
-# callers 1541, 3059 and 7787 (5591 is in the link), and for 2273's callers 1543, 5740, 11223, 11902 and 12110. 11261's
+# callers 3059 and 7787 (5591 and 1541 are in the link), and for 2273's callers 5740, 11223 and 12110 (1543 and 11902
+# are in the link). 11261's
 # address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
 # api::CQRCodeGuard's constructor, went.
 RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp src/api/gui/cqrcodeimagepaper.cpp

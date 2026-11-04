@@ -1,19 +1,19 @@
-# Unit 234: no source of its own. Its roots file stands for the unwritten target callers of the functions this unit
+# Unit 234: no source of its own. Its roots file stood for the unwritten target callers of the functions this unit
 # adds to landed units' sources (src/units/README.md "Landing a unit" item 2), each of which that unit's fragment
-# describes in a paragraph of its own, with its evidence, its choices and its score:
+# describes in a paragraph of its own, with its evidence, its choices and its score; every stand-in went once its
+# callers were in the link, and the roots file with the last:
 # - unit 35, app/comum/iinterfaceinit.cpp: comum::FormataTamanho (target fn 1947, a chosen name), a size formatter,
 #   whose stand-in went once its three target callers were in the link (3268, 10226 and 5896, unit 35's);
 # - unit 04, ecourna's app/dados/asn/datahoraasn.cpp: ecourna::app::dados::asn::FormataHora (fn 2686, a chosen name
-#   and file), the time of day of a boost::posix_time::ptime;
+#   and file), the time of day of a boost::posix_time::ptime, whose stand-in went once its one target caller,
+#   vota::CImpressaoPU::StartState (11902, unit 176's), was in the link;
 # - unit 165, app/vota/cexecucaovotacooperativa.cpp: vota::CExecucaoVotaCooperativa::ProcessaEntradaEleitor (fn 7823,
 #   slot 7), which needs no stand-in: the class's vtable is in the link.
 # Two more are described here:
 # - vota::CLogVota::LogaQuantidade (fn 3268, a chosen name), in app/vota/log/clogvota.cpp (unit 119's file; the CLogVota
 #   members' notes sit in the fragments that add them, as clogvota.h says);
 # - the hand line of splat/symbol_addrs.txt that names fn 4349, CThreadEleitor::ProcessaEventos (unit 116's), for 7823.
-# All four match. The roots compile at APP_CXXFLAGS and declare what they call through asm labels: they emit no TSE
-# code, so no match rests on their flags. The census pairs no target function with a stand-in (step 7's command). Each
-# stand-in's comment names the target callers it stands for; it goes when they are all in the link.
+# All four match.
 #
 # LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, unit 116's; the roots'
 # Quantidades stood for it until it was in the link, and went), calls
@@ -40,6 +40,3 @@
 # tests 7823 makes, holds ProcessarMensagens and ProcessarEntrada under two stack frames, the second with the record at
 # 1534648 (cthreadeleitor.cpp:134) that no other target function loads, and ours scores 35 over 632 rows against it
 # (33 operand-only and 2 deleted, the target's `i32.const 1; i32.eq` of one test of +8).
-$(ROOT)/$(APP)/234-uenux2-app-monitor-callers-roots.o: $(ROOT)/src/units/234-uenux2-app-monitor-callers-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/234-uenux2-app-monitor-callers.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/234-uenux2-app-monitor-callers-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/234-uenux2-app-monitor-callers-roots.o

@@ -40,19 +40,6 @@
 // f5485 · 110 B · unmatched · placement: link order · name unknown
 // ? f5485(i32) { ... }
 
-// link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
-
-// f5578 · 5092 B · unmatched · placement: link order · name unknown
-// void f5578(i32, i32, i32, i32, i32) { ... }
-
-// f5577 · 7625 B · unmatched · placement: link order · name unknown
-// ? f5577(i32, i32) { ... }
-
-// link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
-
-// f5582 · 96893 B · unmatched · placement: link order · name unknown
-// void f5582(i32, i32, i32, i32) { ... }
-
 // link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f5723 · 22 B · unmatched · placement: link order · name unknown
@@ -99,11 +86,6 @@
 // f3651 · 232 B · unmatched · placement: link order · name unknown
 // void f3651(i32, i32) { ... }
 
-// link-order cluster 992 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp
-
-// f3687 · 3817 B · unmatched · placement: link order · name unknown
-// void f3687(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
 
 // f3757 · 406 B · unmatched · placement: link order · name unknown
@@ -143,11 +125,6 @@
 // f2234 · 493 B · unmatched · placement: link order · name unknown
 // ? f2234(i32, i32) { ... }
 
-// link-order cluster 1245 · uses=9 · neighbours' file uenux2/src/api/gui/cframedtext.cpp
-
-// f1386 · 6360 B · unmatched · placement: link order · name unknown
-// void f1386(i32, i32, i32) { ... }
-
 // link-order cluster 1247 · uses=9 · neighbours' file uenux2/src/app/comum/dados/md/candidatura/ccandidatura.cpp
 
 // f1392 · 608 B · unmatched · placement: link order · name unknown
@@ -157,14 +134,6 @@
 
 // f1397 · 107 B · unmatched · placement: link order · name unknown
 // void f1397(i32, i32) { ... }
-
-// link-order cluster 1298 · uses=17
-
-// f818 · 355 B · unmatched · placement: link order · name unknown
-// void f818(i32, i32) { ... }
-
-// f817 · 350 B · unmatched · placement: link order · name unknown
-// void f817(i32, i32) { ... }
 
 // link-order cluster 1332 · uses=37
 

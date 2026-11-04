@@ -8,7 +8,7 @@
 //   api::CMTFormBuilder::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
-//   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586, and a stand-in for 1543, ...),
+//   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586 and 1543, unit 176's 11902, and a stand-in for the others),
 //   CDateTime::ConvertFromLocalTime (fn 5476: 1000 and 11862, in the link, no stand-in), CDateTime(time_t) (fn 1000: Now, 5472,
 //   5473, 10870, 10401 and 10402, and a stand-in for 11914, ...), CDateTime::Now (fn 479, 33 target callers: 11198, and
 //   two stand-ins for the others), ConvertToLocalTime (fn 1381: unit 101's Ajusta, 10875, 10403, and a stand-in for
@@ -16,7 +16,7 @@
 //   5959, 10566 and 11825 are in the link: two stand-ins), std::to_string(long long) (fn 4658: ConvertFromLocalTime and
 //   unit 152's 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller 7787
 //   calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
-//   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two
+//   comum::md::CHorarioVerao::Contem, 1543, 11902, and a stand-in for the others), CDateTime's (fn 759, 15 target callers: two
 //   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others) and CDate's operator-
 //   (fn 3648, callers 654, 11861, 11862: 654, CTradutorFrase::Traduz, and 11861 and 11862, CPreZeresima's
 //   GetEstadoSemTeste and GetTela (unit 138), are in the link, no stand-in).

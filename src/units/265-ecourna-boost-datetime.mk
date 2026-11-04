@@ -69,11 +69,11 @@
 # unit 04's datahoraasn.cpp, as that unit chose. In this object FormataData comes first: 2687's higher index needs the
 # lower ld_index in one band and one object (build/out/wasm-map/vota_web/names.tsv). The date overload's place is free.
 #
-# The roots: stand-ins for the unwritten callers of 2687 (vota::CImpressaoPU::StartState, 11902, a trap in unit 176) and
-# 2685 (fn 7787), two calls each (265-ecourna-boost-datetime-roots.cpp says which stands for which).
+# The roots: a stand-in for the unwritten caller of 2685 (fn 7787), with two calls. 2687's one target caller,
+# vota::CImpressaoPU::StartState (11902, unit 176's), is in the link, and its stand-in went with it.
 BOOST_DATETIME_SRCS := api/security/conversaodatahora.cpp
 ECOURNA_SRCS += $(BOOST_DATETIME_SRCS)
-# nothing in the skeleton calls the two formatters: 265-ecourna-boost-datetime-roots.cpp stands for their callers
+# nothing in the skeleton calls ConverteDataHoraSemSeparador: 265-ecourna-boost-datetime-roots.cpp stands for its caller
 $(ROOT)/$(APP)/265-ecourna-boost-datetime-roots.o: $(ROOT)/src/units/265-ecourna-boost-datetime-roots.cpp $(ROOT)/src/Makefile \
     $(ROOT)/src/units/265-ecourna-boost-datetime.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/265-ecourna-boost-datetime-roots.cpp -o $(R)

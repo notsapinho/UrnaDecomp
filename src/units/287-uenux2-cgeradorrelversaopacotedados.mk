@@ -28,7 +28,9 @@
 # Pending (287-uenux2-cgeradorrelversaopacotedados-pending.cpp says what it waits for): ImprimeTituloJE (11223, slot
 # 3); the slots of its lambda's std::function (vtable @1576316: 11221, 11219, 2881, 11218, 11217) come with it.
 # ImprimeRodape (5596, slot 5) is written in cgeradorrelversaopacotedados.cpp, above Imprime (use band 2 puts 5596
-# first), and matches: src/units/296-uenux2-relatorios-impressao.mk has it, with the helpers it calls.
+# first), and matches: src/units/296-uenux2-relatorios-impressao.mk has it, with the helpers it calls. Its match line
+# names comum::CGeradorRelPU::ImprimeRodape, the same text over that class's builder, which binaryen merges with it
+# (unit 183's cgeradorrelpu.cpp links first).
 #
 # Evidence beyond the class header's:
 # - AdicionaParametro is out of line in another TU than ImprimeVersoesPacotes. 11222 holds it behind a 32-byte frame of
