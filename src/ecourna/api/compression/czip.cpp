@@ -164,4 +164,17 @@ void CZip::AtualizaProgresso(ueqword atual, ueqword total, const std::string& ar
     }
 }
 
+CZip::CZip(const std::filesystem::path& arquivo, const std::map<std::filesystem::path, std::filesystem::path>& arquivos,
+    ENivelCompressao nivel)
+    : m_arquivo(arquivo.string()), m_zip(nullptr), m_nivel(nivel), m_modo(EModoAbertura::CRIAR)
+{
+    CreateZipFile();
+    try {
+        Add(arquivos);
+    } catch (...) {
+        SafeClose();
+        throw;
+    }
+}
+
 } // namespace ecourna::api::compression
