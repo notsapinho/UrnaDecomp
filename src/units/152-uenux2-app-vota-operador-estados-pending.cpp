@@ -4,7 +4,8 @@
 // no name (ledger/callgraph.tsv against splat/symbol_addrs.txt). Fn 501, which it calls, matches now
 // (api::CPriorityMessageQueue<api::SMessage>::Insert, named by its callers' calls:
 // src/units/269-uenux2-cmessagequeue-insert.mk):
-// - vota::CInspecionaUrna::ProcessInput (fn 11797, slot 7): fns 2380 and 6557.
+// - vota::CInspecionaUrna::ProcessInput (fn 11797, slot 7): fn 6557 (2380, vota::TelaNeutra in ctelasvota.cpp, is
+//   named since).
 #include "app/vota/eleitor/cinspecionaurna.h"
 #include "app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.h"
 

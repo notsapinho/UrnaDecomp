@@ -3,7 +3,12 @@
 #include <format>
 #include <mutex>
 
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cpath.h"
+#include "app/comum/dados/asn/cconversorlocal.h"
+#include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "app/comum/nomearquivo/cnomearquivo.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
@@ -56,7 +61,7 @@ bool CLocal::EhExterior() const
     return GetUF() == "ZZ";
 }
 
-// (original lines 59-76: content not recovered)
+// (original lines 64-76: content not recovered)
 #line 77
 TZonaID CLocal::GetZonaID() const
 {
@@ -150,9 +155,50 @@ void CLocal::VerificaEhSecao(const std::string& funcao) const
     }
 }
 
+md::TVectorIdentificacaoAgregada CLocal::GetTodasSecoes() const
+{
+    const bool ehSecao = EhSecao("GetTodasSecoes");
+    md::TVectorIdentificacaoAgregada secoes;
+    if (ehSecao) {
+        const md::CSecaoEleitoral secao = m_local->GetSecao();
+        secoes.push_back(md::CIdentificacaoAgregada(secao.GetIdentificacao().GetSecao(), secao.GetTipo()));
+        const md::TVectorIdentificacaoAgregada agregadas = secao.GetAgregadas();
+        secoes.insert(secoes.end(), agregadas.begin(), agregadas.end());
+    }
+    return secoes;
+}
+
+void CLocal::Carrega()
+{
+    const std::string arquivo = GetPathArquivoLocal();
+    m_local.reset(new md::CLocal(CarregaArquivo<asn::CConversorLocal>(arquivo)));
+}
+
+std::string GetPathArquivoLocal()
+{
+    return (CPath::GetPathEstatico(FLASH_INTERNA) / GetNomeArquivoLocal()).string();
+}
+
+static std::string NomeArquivoLocal(uedword municipio, ueword zona, ueword secao)
+{
+    return CNomeArquivo::NomeArquivoLocal(municipio, zona, secao, "lo", "dat");
+}
+
+std::string GetNomeArquivoLocal()
+{
+    const md::estadoaplicacao::CEstadoGeral geral = CAppInfo::GetGeralInterno();
+    const md::estadoaplicacao::CLocalidadeEleitoral& secao = geral.GetDadoLocal().GetSecaoCarga();
+    return NomeArquivoLocal(secao.GetMunicipio(), secao.GetZona(), secao.GetSecao());
+}
+
 bool CLocal::TemSecao() const
 {
     return m_local->TemSecao();
+}
+
+bool CLocal::TemContingencia() const
+{
+    return m_local->TemContingencia();
 }
 
 std::string FormataAgregadas(const std::string& formato)

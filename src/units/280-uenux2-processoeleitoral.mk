@@ -63,6 +63,11 @@
 #     ModuloTiposEcoUrna::Carga's vtable and typeinfo and IConversorASN<IdentificadorGeradorMidia, ...>'s Converte and
 #     Deconverte records (fns 3734 and 3733, matched from other objects): code of this object no function here
 #     accounts for, not identified.
+#   - ModuloLocal::Local's (records @1563320 to @1563436, after ModuloFederacoes' and before ProcessoEleitoral's):
+#     CarregaArquivo<asn::CConversorLocal>, first among the explicit instantiations as the run orders it, which
+#     comum::CLocal::Carrega (fn 5740, unit 89's clocal.cpp) holds behind its 64-byte frame (the converter's vptr at
+#     +60), the md::CLocal it returns built in the memory Carrega allocates first. 5740 matches; unit 89's fragment has
+#     the order of the two objects it needed.
 #   The run's other readers are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
 # functions' being free functions of comum (they read no class's state), their lines and these paths;
@@ -104,11 +109,13 @@
 # because this unit's chain needs them; unit 123's vtable sink went when 5586 was written. w280_informacao stands for
 # 3735's caller 11629 (11587 and 11626 are in the link). A stand-in goes when every target caller its comment names is
 # in the link.
+# carregaarquivo.cpp, this unit's file, is compiled in unit 89's list, after clocal.cpp: 5740 needs clocal.cpp's object
+# ahead of it (unit 89's fragment has the measurement). Its include paths stay here.
 PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \
-  src/app/comum/nomearquivo/sidentificacaoarquivo.cpp \
-  src/app/comum/dados/carregaarquivo.cpp
+  src/app/comum/nomearquivo/sidentificacaoarquivo.cpp
 UENUX2_SRCS += $(PROCESSOELEITORAL_280_SRCS)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(PROCESSOELEITORAL_280_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # ecourna's converter headers, which carregaarquivo.cpp includes for CarregaArquivoEcourna's instance, include the
 # generated ASN.1 modules by their bare names
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules

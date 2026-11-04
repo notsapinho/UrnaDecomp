@@ -8,8 +8,7 @@
 //   written (fragment 172, units 305 and 160), and the stand-in stands for 11629. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
 //   its one target caller, calls it twice.
 // CEleitor::ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
-// comum::asn::CConversorLocal (vtable @1561988; fns 11451 and 11452) is reached through its vtable only, whose
-// vptr fn 5740 stores (not written): this TU takes the vtable's address, which keeps both slots. The stand-ins
+// The stand-ins
 // differ in their operators, so binaryen merges none of them. The target's wasm types keep every parameter of these
 // functions, so no argument is the same constant at both call sites of a stand-in, and dead-argument elimination folds
 // nothing in. Declared through asm labels with the object's signatures (a constructor returns this); address-taken from
@@ -22,7 +21,6 @@ int w5668(int, int, int, int, int, int, int, int, int, int, int) __asm__(
     "_ZN5comum2md8CEleitorC1EitRKNSt3__26vectorINS0_18CEleitorIdentidadeENS2_9allocatorIS4_EEEENS1_20ENecessidadeEspecialERKNS2_12basic_stringIcNS2_11char_traitsIcEENS5_IcEEEESH_RKNS0_24CTransferenciaTemporariaESH_RKNS3_IhNS5_IhEEEERKNS0_8CIndexerE");
 int w2802(int, int, int, int, int, int) __asm__(
     "_ZN5comum2md6CCargaC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKN3api9CDateTimeESA_RKN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
-extern const char w157_local_vt[] __asm__("_ZTVN5comum3asn15CConversorLocalE");
 }
 
 namespace {
@@ -57,7 +55,6 @@ struct SRoots157 {
         w157_sink = reinterpret_cast<const void*>(&Eleitores);
         w157_sink = reinterpret_cast<const void*>(&EleitoresBiometria);
         w157_sink = reinterpret_cast<const void*>(&Cargas);
-        w157_sink = w157_local_vt;
     }
 } w157_roots;
 

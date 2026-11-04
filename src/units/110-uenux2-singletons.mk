@@ -443,6 +443,25 @@
 #   matched (7, 4, 2 and 0 rows, all operand-only).
 #   Unit 280's roots read 1281's result for its callers that read it (1543, 5967, 7787, 11902) and give 3869 a second
 #   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
+# ctelasvota.cpp also holds the zerésima chain's screens, free functions of vota that ctelasvota.h declares and
+# describes, after the file's last record (3618, 7787's; lines 3621 on, chosen): vota::AdicionaLocal (target fn 4161),
+# vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587), with the file constant FONTE_LOCAL {15, 0}, which the
+# scan places by its bytes, as FONTE_TITULO (the target's @475008). Measured in the whole link before steps 7 to 9
+# (pnpm wasm score against names.tsv), all operand-only: 4161 56 over 894 rows, 2380 15 over 280, 6587 6 over 53. Step
+# 8 named 2380 by 6587's call, 4161 by 2380's and 6587 by the calls of 11855 and 11991 (unit 104); all three match.
+# - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
+#   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
+#   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and
+#   11797, and they stand in for 6557, 7787 and 11797.
+# - 2380's last parameter is an int tested by its low bit: as a bool the object tests it bare where the target has
+#   `i32.const 1; i32.and` (a probe of both forms at the file's flags; in the link 2380 then scored 17 over 280, the two
+#   rows deleted). Four forms of the positions were compared in the object, between AddStatusHeader's call and the loop
+#   (wasm-objdump -d of the try object): the start and the step as ueword expressions of size / 2 and size, the step a
+#   named ueword or summed in the loop, gave the additions in another association or the step masked to 16 bits;
+#   `const int passo = meio + altura;` before `const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;`
+#   gives the target's sequence (meio + ((-n * size) + (size / -4 & 65535)) + 240, the step unmasked).
+# - The three include lines this needs (clocal.h, ctradutorfrase.h, cstringutils.hpp) took blank lines above line 291.
+#
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

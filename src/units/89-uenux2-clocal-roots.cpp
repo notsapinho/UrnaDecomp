@@ -51,11 +51,11 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 1543, 2725, 4160, 4161, 5579, 5977, 6599, 7787, 10500, 11223, 11242, 11902, 11908,
+// Stands for fn 401's callers: 1543, 2725, 4160, 5579, 5977, 6599, 7787, 10500, 11223, 11242, 11902, 11908,
 // 12071, 12098, 12105, 12110, 12134 (5584, CRelUtil's ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798,
 // CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's IPedeTituloMesario::ProcessInput, 11188, unit 123's, 5591, unit
-// 296's, 5604, unit 155's written Gera, 10689, CEscolheOpcao::ProcessInput, and 10699, 10700 and 10701, unit 277's
-// texts, are in the link).
+// 296's, 5604, unit 155's written Gera, 10689, CEscolheOpcao::ProcessInput, 10699, 10700 and 10701, unit 277's
+// texts, and 4161, vota::AdicionaLocal in unit 110's ctelasvota.cpp, are in the link).
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
@@ -96,7 +96,7 @@ __attribute__((noinline)) void EhSecoes(int a, int b, int f)
 }
 // Stands for fn 1933's callers 1543, 2725, 7787, 11242 and 12098 (11188, unit 123's, is in the link).
 __attribute__((noinline)) int LocaisID(int a, int b) { return (w1933(a) << 2) - w1933(b); }
-// Stands for fn 5739's callers 2725 and 4161, neither in the link.
+// Stands for fn 5739's caller 2725 (4161, vota::AdicionaLocal in unit 110's ctelasvota.cpp, is in the link).
 __attribute__((noinline)) int TemSecoes(int a, int b) { return w5739(a) * 5 + w5739(b); }
 __attribute__((noinline)) int Infos(int a, int b, int c, int d, int e, int f)
 {

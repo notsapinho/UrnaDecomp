@@ -1,10 +1,12 @@
 # uenux2 four iniciovotacao states no landed file holds, in app/vota/eleitor/iniciovotacao/:
 # - vota::CDefineRotaPreVotacao (cdefinerotaprevotacao.{h,cpp}): NeedChangeState (slot 3, target fn 11994); its slots 2
 #   and 7 are vota::CDefineRotaPosReinicio's bodies (fns 3243 and 5974, unit 104), which binaryen merges with ours; its
-#   GetInst, constructor and statics, written in unit 104's shape and compared with nothing: GetInst's one target
-#   caller, fn 11991, which holds it inlined, is pending in unit 104, so our link drops GetInst, and the statics' exit
-#   destructors 11996 and 11995, in the link, have no voter but themselves (no-candidate). CVerificaEleicaoPassou's are
-#   left unwritten instead (below): either way is a choice the bytes do not decide;
+#   GetInst, constructor and statics, written in unit 104's shape: GetInst's one target caller, fn 11991
+#   (vota::CImprimindoZeresima::StartState, unit 104's, matched), holds it inlined by binaryen, as ours does, and the
+#   statics' exit destructors 11995 and 11996 (s_mutex's and s_inst's) match from this object since, the objects named
+#   by 11991's votes, which their own matches use in turn (docs/reference/splat.md "No circular evidence": a .bss name
+#   one body votes for holds through its static destructor's match). CVerificaEleicaoPassou's are left unwritten
+#   instead (below): either way is a choice the bytes do not decide;
 # - vota::CInicioVotacao (ciniciovotacao.{h,cpp}): GetInst (fn 2880), with its constructor inlined by binaryen, and its
 #   statics' exit destructors (11990, 11989); the destructor is the shared fns 448 and 765;
 # - vota::CVerificaEleicaoPassou (cverificaeleicaopassou.{h,cpp}, its records :56 and :70): StartState (fn 11914), with

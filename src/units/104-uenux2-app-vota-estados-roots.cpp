@@ -12,10 +12,10 @@
 // 4433: 7481 (11994 is in the link); 6037: 7160 (12077 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983:
 // 7160, 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and
 // 11858 are in the link); 1280: 11869, 11881, 11902, 11908 (11834, 11838, 11848, 11905, 11911 and 11927 are in the
-// link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the link); 5943: 11855 (11834 is in the
-// link); 1536: 10489, 10500 (6015, 10466, 10473, 10477, 10485 and 10593 are in the link); 5383: 10316 (10313 is in
+// link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the link); 1536: 10489, 10500 (6015, 10466, 10473, 10477, 10485 and 10593 are in the link); 5383: 10316 (10313 is in
 // the link); 1897: 10425 (10404 and 10419, units 152 and 142, are in the link). The
-// pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and with 11845, are in the link; so did 5342's,
+// pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and with 11845, are in the link; so did 5943's,
+// whose callers 11834 and 11855 are, 5342's,
 // whose callers 10737 and 10791 are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of
 // comum::CRegistrarMesarios's and CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers
 // 12023, 12030 and 12077 are, 1337's, whose callers 4449, 6058, 7198, 7221, 11794, 11987, 11988 and 11994 are, and
@@ -41,7 +41,6 @@ int w3864_getinst(void) __asm__("_ZN4vota30CReinicioComparecimentoMesario7GetIns
 int w1280_getinst(int) __asm__("_ZN4vota16CMaisInformacoes7GetInstEPN5comum9CAppStateE");
 int w5954_getinst(void) __asm__("_ZN4vota31CMenuFiltrarCandidatosPorNumero7GetInstEv");
 int w2288_getinst(void) __asm__("_ZN4vota25CMenuVisualizarCandidatos7GetInstEv");
-int w5943_getinst(void) __asm__("_ZN4vota22CDefineRotaPosReinicio7GetInstEv");
 int w1536_getinst(void) __asm__("_ZN4vota26CCancelaHabilitacaoEleitor7GetInstEv");
 int w5383_getinst(void) __asm__("_ZN5comum18CGestorDadoMesario7GetInstEv");
 int w1897_getinst(void) __asm__("_ZN4vota20CSincronismoOperador7GetInstEv");
@@ -63,7 +62,6 @@ __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
     total += w1280_getinst(0) + w1280_getinst(n);
     total += w5954_getinst() + w5954_getinst();
     total += w2288_getinst() + w2288_getinst();
-    total += w5943_getinst() + w5943_getinst();
     total += w1536_getinst() + w1536_getinst();
     total += w5383_getinst() + w5383_getinst();
     total += w1897_getinst() + w1897_getinst();

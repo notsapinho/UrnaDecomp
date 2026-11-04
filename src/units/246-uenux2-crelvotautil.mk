@@ -12,8 +12,8 @@
 #   Build (fn 357) and slot 2 of the form it returns (fn 12005's body); CLp::Imprime (fn 3875) with the three; then the
 #   std::function's, the CSubReport's (inlined: the vptr store and the member frees) and the builder's destruction.
 #   pnpm wasm score against the link: 12 over 220 rows, operand-only.
-# - Its target callers are fns 11842 (unit 169), 11848 twice (unit 104) and 11991 (pending in unit 104), so the link
-#   gives it three call sites and it needs no stand-in.
+# - Its target callers are fns 11842 (unit 169), 11848 twice and 11991 (unit 104), so the link gives it four call
+#   sites and it needs no stand-in.
 # - CSubReport's linkonce copies (its vtable, D2 12014, D0 12013, slots 2 to 7) come from this object now, which links
 #   before csubreport.cpp's (fragment 246 sorts before 57; the object column of build/out/wasm-map/vota_web/names.tsv),
 #   as the target keeps the copies of CRelVotaUtil's object (src/uenux2/src/api/gui/csubreport.h).

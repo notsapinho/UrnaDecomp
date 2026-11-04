@@ -76,6 +76,12 @@ std::string CNomeArquivo::NomeArquivoSecao(EUrnaFase fase, uedword pleito, const
            FormataNumero(zona, 4) + FormataNumero(secao, 4) + ("-" + tipo) + "." + extensao;
 }
 
+std::string CNomeArquivo::NomeArquivoLocal(uedword municipio, uedword zona, uedword secao, const std::string& tipo,
+    const std::string& extensao)
+{
+    return FormataNumero(municipio, 5) + FormataNumero(zona, 4) + FormataNumero(secao, 4) + ("-" + tipo) + "." + extensao;
+}
+
 } // namespace comum
 
 // <stubs>

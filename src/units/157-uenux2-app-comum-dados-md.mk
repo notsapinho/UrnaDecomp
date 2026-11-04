@@ -85,7 +85,8 @@ UENUX2_SRCS += $(DADOS_MD157_SRCS)
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(DADOS_MD157_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # the classes' users are not reconstructed yet: 157-uenux2-app-comum-dados-md-roots.cpp gives each function the call
-# sites the target gives it
+# sites the target gives it. Its sink of comum::asn::CConversorLocal's vtable went: unit 89's CLocal::Carrega (fn 5740),
+# which holds CarregaArquivo<CConversorLocal> and its vptr store, is in the link.
 $(ROOT)/$(APP)/157-uenux2-app-comum-dados-md-roots.o: $(ROOT)/src/units/157-uenux2-app-comum-dados-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/157-uenux2-app-comum-dados-md.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/157-uenux2-app-comum-dados-md-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/157-uenux2-app-comum-dados-md-roots.o

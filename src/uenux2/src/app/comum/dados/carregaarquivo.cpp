@@ -2,16 +2,18 @@
 // (carregaarquivo.h), and CLeitorASN::LeBiometriaEleitor (app/comum/asn/cleitorasn.h). No record names this file: the
 // target's data put the records of these instances' templates and of LeBiometriaEleitor's in one object, a run of
 // entity readers (src/units/280-uenux2-processoeleitoral.mk). The order of the processo eleitoral's three instances is
-// chosen; the places of the others follow that run's order: LeBiometriaEleitor's records lie between the EleicaoPE
+// chosen; the places of the others follow that run's order: the CConversorLocal instance's records (@1563320 to
+// @1563436) lie before the processo eleitoral's (@1563464), LeBiometriaEleitor's records lie between the EleicaoPE
 // instance's and the CabecalhoPacote instance's, the CConversorImpedido instance's after LeBiometriaEleitor's, and the
 // CConversorInformacaoMidia instance's after CabecalhoPacote's. For LeBiometriaEleitor, at the head or at the end of
-// the file the object's code is the same (src/units/98-uenux2-app-comum-dados.mk); the two others were measured only
+// the file the object's code is the same (src/units/98-uenux2-app-comum-dados.mk); the three others were measured only
 // at these places.
 #include "app/comum/dados/carregaarquivo.h"
 
 #include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/cleitorasn.h"
 #include "app/comum/asn/legravaentidade.h"
+#include "app/comum/dados/asn/cconversorlocal.h"
 #include "app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
@@ -30,6 +32,8 @@ typename CONVERSOR::TDado CarregaArquivo(const std::string& arquivo)
     CONVERSOR conversor;
     return conversor.Desconverte(api::CFileASN::ReadFromFile<typename CONVERSOR::TEntidade>(arquivo));
 }
+
+template md::CLocal CarregaArquivo<asn::CConversorLocal>(const std::string& arquivo);
 
 template md::CProcessoEleitoralDTO CarregaArquivo<asn::CConversorProcessoEleitoral>(const std::string& arquivo);
 template std::vector<md::CSituacoesEleicoes> CarregaArquivo<asn::CConversorSituacoesEleicoes>(const std::string& arquivo);
