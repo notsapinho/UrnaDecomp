@@ -14,22 +14,14 @@
 //   52-byte element into a temporary and finds no room in the vector: a push_back of an rvalue, and the element
 //   CComparecimentoMesario, are readings of the layout (src/units/186-uenux2-chasharquivo.mk).
 //   w186_comparecimentos stands for 11616 and makes the same two calls.
-// - CBaseError<comum::EUeComumReconhecimentoBiometricoError, SErrorLimits{9000, 9050}>'s constructor (target fn 5369, a
-//   thunk into binaryen's 710). Its one caller in the target, 2725 (CControlaArmazenamentoDeImagens' static functions,
-//   not reconstructed), throws it twice, with codes 9000 and 9001, a message it builds and the records at
-//   ccontrolaarmazenamentodeimagens.cpp:117 and :135. w186_erro stands for 2725 and throws it twice too, with the codes
-//   9000 and 9001 and the message and the source_location from its own parameters: no argument is one constant at both
-//   calls, which dead-argument elimination would fold into the constructor (measured: with std::source_location() at
-//   both throws, 5369 scores 50 over 54 rows, the location folded into a (i32 i32 i32)->(i32) body), and no default
-//   argument makes a record on this file's lines. One message gets a suffix, a choice so that the two throws differ in more than the code (not
-//   measured without it); the object holds two calls of the constructor (wasm-objdump -d).
-#include <source_location>
+// (CBaseError<comum::EUeComumReconhecimentoBiometricoError, SErrorLimits{9000, 9050}>'s constructor, fn 5369, needs no
+// stand-in now: its one target caller, 2725, unit 293's, is in the link and throws it twice, with codes 9000 and 9001,
+// two messages and the records at ccontrolaarmazenamentodeimagens.cpp:117 and :135, so no argument is one constant.)
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
-#include "app/comum/reconhecimentobiometrico/euecomumreconhecimentobiometricoerror.h"
 
 extern "C" {
 int w3600_root_0(int, int, int) __asm__(
@@ -52,28 +44,16 @@ __attribute__((noinline)) unsigned w186_comparecimentos(std::vector<comum::md::C
     return mesarios.size() + 186;
 }
 
-__attribute__((noinline)) void w186_erro(int vazio, const std::string& mensagem, std::source_location local)
-{
-    if (vazio) {
-        throw comum::CUeComumReconhecimentoBiometricoError(comum::EUE_COMUM_RECONHECIMENTO_BIOMETRICO_ARQUIVO_VAZIO,
-                                                           mensagem + "w186", local);
-    }
-    throw comum::CUeComumReconhecimentoBiometricoError(comum::EUE_COMUM_RECONHECIMENTO_BIOMETRICO_ARQUIVO_NAO_EXISTE,
-                                                       mensagem, local);
-}
-
 int (*volatile w186_sink_hash)(int, int, int);
 unsigned (*volatile w186_sink_comparecimentos)(std::vector<comum::md::CComparecimentoMesario>&,
                                                const comum::md::CComparecimentoMesario&,
                                                const comum::md::CComparecimentoMesario&);
-void (*volatile w186_sink_erro)(int, const std::string&, std::source_location);
 
 struct SW186Roots {
     SW186Roots()
     {
         w186_sink_hash = w186_hash;
         w186_sink_comparecimentos = w186_comparecimentos;
-        w186_sink_erro = w186_erro;
     }
 } w186_roots;
 

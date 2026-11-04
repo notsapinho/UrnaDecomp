@@ -5,31 +5,26 @@
 // stores the vptr (`/usr/bin/grep -rlE 'i32\.const <vptr>($|[^0-9])' build/out/splat/pieces/asm`): fns 5389 and 5386
 // for CConfirmaFimRegistroMesarios and CLimiteMesariosRegistradosAtingido, fn 10313 (IPedeTituloMesario::ProcessInput)
 // for CTituloMesarioVazio, CTituloMesarioInvalido, CTituloMesarioJaRegistrado and CPedeDigitalMesario, fn 10316
-// (CPedeDigitalMesario::ProcessTick) for CDigitalMesarioNaoReconhecida. 5389, 5386 and 10313 are written and in the
-// link, so only CDigitalMesarioNaoReconhecida's vtable is rooted here: that keeps every slot in the table, which is how
-// the target reaches StartState and ProcessInput. CEncerraRegistroMesarios needs no root: its constructor is written,
+// (CPedeDigitalMesario::ProcessTick) for CDigitalMesarioNaoReconhecida. 5389, 5386, 10313 and 10316 are written and in
+// the link, so no vtable is rooted here: their constructors keep every slot in the table, which is how the target
+// reaches the states' StartState and ProcessInput. CEncerraRegistroMesarios needs no root: its constructor is written,
 // inlined into GetInst (fn 5388), which the two ProcessInput slots that end the registration call.
 //
-// The vtable is declared through an asm label; ReconheceDigital instantiates api::CPolySingleton<
-// api::IFingerMatcher>::instance, a landed header's template, whose copy matches from this object (fn 1686). So this
-// TU compiles at uenux2's flags for the directory, not APP_CXXFLAGS: no match rests on a flag the tree lacks (the
-// fragment has the strict-aliasing measurement).
+// ReconheceDigital instantiates api::CPolySingleton<api::IFingerMatcher>::instance, a landed header's template, whose
+// copy (fn 1686) the link takes from an earlier object now (cpededigitalmesario.cpp.o, at the same flags). This TU
+// compiles at uenux2's flags for the directory, not APP_CXXFLAGS: no match rests on a flag the tree lacks (the fragment
+// has the strict-aliasing measurement).
 #include <source_location>
 
 #include "api/hwil/ifingermatcher.h"
 #include "api/pattern/cpolysingleton.h"
 
-extern "C" {
-extern const char cdigitalmesarionaoreconhecida_vt[] __asm__("_ZTVN5comum29CDigitalMesarioNaoReconhecidaE");
-}
-
 namespace {
 
-// Stands for the target callers of api::CPolySingleton<api::IFingerMatcher>::instance (fn 1686) not written: 3614,
-// 5372 and 10316 (CPedeDigitalMesario::ProcessTick, pending here) (10465, 10474 and 10482, unit 282's, are in the
-// link). It
-// calls the instance twice, so the copy stays out of line, with an empty std::source_location where the callers'
-// default argument makes a record of their own (unit 100's w100_usa does the same).
+// Stands for the target callers of api::CPolySingleton<api::IFingerMatcher>::instance (fn 1686) not written: 3614 and
+// 5372 (10316, 10465, 10474 and 10482, units 135 and 282, are in the link). It calls the instance twice, so the copy
+// stays out of line, with an empty std::source_location where the callers' default argument makes a record of their
+// own (unit 100's w100_usa does the same).
 __attribute__((noinline)) int ReconheceDigital()
 {
     const std::source_location local;
@@ -44,7 +39,6 @@ struct SMesarioEstadosRoots {
     SMesarioEstadosRoots()
     {
         mesario_estados_sink = reinterpret_cast<const void*>(&ReconheceDigital);
-        mesario_estados_sink = cdigitalmesarionaoreconhecida_vt;
     }
 } mesario_estados_roots;
 

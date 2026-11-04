@@ -104,8 +104,12 @@
 #   cappinfosingleton.cpp.o) puts it after cgravadorwsq.cpp.o and so not in cpath.cpp. Its directory is a choice:
 #   gravadores/, beside the band's left neighbour; appinfo/, beside the right one, fits as well. Its name
 #   pathwsq.cpp, the functions' names, the turn overloads, their being free functions of comum and their order (the
-#   bands' 5819, 5818, 5817, 5816 and 3795, 3794, 3793) are chosen. 5815 ("registrado/", internal) is not written: its callers 3614 and
-#   5382 are not in the link, and 2298 forms without it.
+#   bands' 5819, 5818, 5817, 5816 and 3795, 3794, 3793) are chosen.
+# - GetPathWsqRegistrado (fn 5815, "registrado/" on the internal flash, the same form), a thunk into 2298 as the
+#   target's: its callers are 3614, not written, and 5382 (unit 135's match), so a roots stand-in gives it its second
+#   call site, and it matches (`3 over 6 rows`, operand-only, before step 8). Its external twin,
+#   GetPathWsqRegistradoExterno, has no index: 5382 holds it inlined behind its 32-byte frame, its one caller. Both are
+#   after GetPathWsqNaoRegistrado, at the end of pathwsq.cpp, and their names are chosen.
 # - 9531 (vector<std::filesystem::path>::__init_with_size<const path*, const path*>, 5821's only user of its table slot
 #   6150) comes from icompressor.cpp.o with Add(path). Its match line named vector<std::string>'s instance from
 #   app_dados_asn_datahoraasn.cpp.o, a twin until now: with both in the link, they differ in one table slot (each its own
@@ -114,8 +118,8 @@
 #   roots_coderenv.cpp's instantiation of it gives our link that copy first, 5585 against it reads 8 over 69 rows,
 #   operand-only (5585 stays unresolved: its callees 11180 and 11177 have no name), and 9531's line now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
 #   step 10, "A symbol that stays while its body moves").
-# - The roots stand in for the other target callers of the directories (fns 10425 and 5382), so binaryen keeps them out
-#   of line as the target does; 3793's stand-in for 10451 stays.
+# - The roots stand in for the other target callers of the directories (fn 10425; 5382 is in the link, unit 135), so
+#   binaryen keeps them out of line as the target does; 3793's stand-in for 10451 stays, and 5815's for 3614.
 #
 # comum::CGravadorVersoesArquivos::GravaResultado (target fn 11582, slot 7, the class's key function, which unit 136's
 # pending object trapped), in cgravadorversoesarquivos.cpp: the class's name in lower case, chosen, in

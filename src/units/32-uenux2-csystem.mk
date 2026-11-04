@@ -152,9 +152,10 @@
 # ../target/vota_web_wasm.wasm 4677 <our link> <its index>`): libc's statfs (3972, musl's __statfs, which statvfs calls)
 # was inlined into it, as statvfs is, our link's one caller of statfs. The target keeps statfs out of line: 2725
 # (comum::CControlaArmazenamentoDeImagens, records at ccontrolaarmazenamentodeimagens.cpp 73 to 152) and 5371 (the
-# "me{:06}.wsq" writer), neither written, call it on a path's c_str() (ledger/callgraph.tsv). The roots' LivreEmDois
-# stands for those two, one call each; with it 4677 reads `4 over 228 rows`, all operand-only, and 3972 `1 over 11`, and
-# the scan matched 3972 (pair-addr), 4677, 5453 and 5454 (census pairs). Its helper
+# "me{:06}.wsq" writer) call it on a path's c_str() (ledger/callgraph.tsv). The roots' LivreEmDois stood for those two,
+# one call each; with it 4677 read `4 over 228 rows`, all operand-only, and 3972 `1 over 11`, and the scan matched 3972
+# (pair-addr), 4677, 5453 and 5454 (census pairs). Both are written now (units 293 and 214), so the stand-in went, and
+# the four still match. Its helper
 # std::filesystem::detail::capture_errno (845) matches since it is in our link.
 # GetMemInfo (5463, no record, a chosen name) returns the number on the line of /proc/meminfo that holds the field it
 # is given; its one caller, 10226 (vota::CThreadMonitor's slot 2, unit 116's), passes

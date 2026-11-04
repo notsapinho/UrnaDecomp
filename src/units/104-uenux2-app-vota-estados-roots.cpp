@@ -11,17 +11,16 @@
 //
 // 5984: 12134 (7160 is in the link); 5983: 12105 (7160 is in the link); 1280: 11869, 11881 (11834, 11838, 11848,
 // 11902, 11905, 11908, 11911 and 11927 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896
-// is in the link); 5383: 10316 (10313 is in the link); 1897: 10425 (10404 and 10419, units 152 and 142, are in the
-// link). The pairs for 6037, 5973, 3865 and 3864 went: their target callers, 7160 (vota::CAjusteInicial::StartState,
-// unit 329) and 12077, 11939, 11870 and 11871, and 11848 and 11858, are in the link. The pairs for 5942 and 5941 went:
-// their target callers, 11848 with 11852 and
-// with 11845, are in the link; so did 5943's, whose callers 11834 and 11855 are, 5342's, whose callers 10737 and 10791
-// are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of comum::CRegistrarMesarios's and
+// is in the link); 1897: 10425 (10404 and 10419, units 152 and 142, are in the link). The pairs for 6037, 5973, 3865
+// and 3864 went: their target callers, 7160 (vota::CAjusteInicial::StartState, unit 329) and 12077, 11939, 11870 and
+// 11871, and 11848 and 11858, are in the link. The pairs for 5942 and 5941 went: their target callers, 11848 with 11852
+// and with 11845, are in the link; so did 5943's, whose callers 11834 and 11855 are, 5342's, whose callers 10737 and
+// 10791 are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of comum::CRegistrarMesarios's and
 // CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers 12023, 12030 and 12077 are, 1337's,
 // whose callers 4449, 6058, 7198, 7221, 11794, 11987, 11988 and 11994 are, 5428's, whose callers 10217 and 10734
 // are, 5421's, whose callers 10626 and 10627 (unit 278's) are, 5985's, whose callers 12065 and 12068 are, 1536's,
-// whose callers 10500 (unit 239's), 6015, 10466, 10473, 10477, 10485, 10489 and 10593 are, and 4433's, whose callers
-// 7481 (vota::CAguardaMensagem::ProcessKey) and 11994 are.
+// whose callers 10500 (unit 239's), 6015, 10466, 10473, 10477, 10485, 10489 and 10593 are, 4433's, whose callers
+// 7481 (vota::CAguardaMensagem::ProcessKey) and 11994 are, and 5383's, whose callers 10313 and 10316 are.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.
@@ -37,7 +36,6 @@ int w5983_getinst(void) __asm__("_ZN4vota9CInicioBU7GetInstEv");
 int w1280_getinst(int) __asm__("_ZN4vota16CMaisInformacoes7GetInstEPN5comum9CAppStateE");
 int w5954_getinst(void) __asm__("_ZN4vota31CMenuFiltrarCandidatosPorNumero7GetInstEv");
 int w2288_getinst(void) __asm__("_ZN4vota25CMenuVisualizarCandidatos7GetInstEv");
-int w5383_getinst(void) __asm__("_ZN5comum18CGestorDadoMesario7GetInstEv");
 int w1897_getinst(void) __asm__("_ZN4vota20CSincronismoOperador7GetInstEv");
 }
 
@@ -51,7 +49,6 @@ __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
     total += w1280_getinst(0) + w1280_getinst(n);
     total += w5954_getinst() + w5954_getinst();
     total += w2288_getinst() + w2288_getinst();
-    total += w5383_getinst() + w5383_getinst();
     total += w1897_getinst() + w1897_getinst();
     return total;
 }

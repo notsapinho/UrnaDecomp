@@ -4,9 +4,9 @@
 // (@1554132) is emitted here, and with it the implicit destructors of slots 0 and 1 (fns 5857, 11628), the compiler's
 // code for the class definition in app/comum/gravadores/cgravadorbu.h. GravaResultado calls fns 3819
 // (comum::MontaVotosCargos, which calls AcrescentaVotoVotavel, fn 3820, written in cgravadorbu.cpp at its record's line
-// 221), 3818 (FiltraCargos, written there after them), 2853, 3817, 3824, 3735, 3815 and 2724 (written), and it waits
-// for: 1555 (a std::string copy kept out of line, called by 2725, 11419, 11616 and 11629, none written, so nothing
-// names it); md::CEntidadeBU's constructor and ValidaCriacao (records centidadebu.cpp:159 to :177, inlined into it;
+// 221), 3818 (FiltraCargos, written there after them), 2853, 3817, 3824, 3735, 3815, 2724 (written) and 1555
+// (std::filesystem::path::string() out of line, matched since unit 293's 2725 calls it), and it waits for:
+// md::CEntidadeBU's constructor and ValidaCriacao (records centidadebu.cpp:159 to :177, inlined into it;
 // centidadebu.h has the layout, fragment 321's, and no constructor) and the
 // writer of its entity through comum::asn::CConversorEntidadeBU (its Converte record iconversorasn.h:56 and
 // CodeObjectFunction's cfileasn.h:161 and :171 for ModuloBoletimUrna::EntidadeBoletimUrna, inlined into it; the

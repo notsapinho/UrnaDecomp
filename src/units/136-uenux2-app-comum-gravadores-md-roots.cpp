@@ -8,11 +8,11 @@
 // - comum::md::CUrna's constructors (fns 2854 and 2855): fns 10284, 11587, 11626 and 11629; 10284, 11626 (unit 160) and
 //   11587 (unit 305) are written, the stand-in is for 11629;
 // - comum::md::CEnvelopeGenerico's constructors (fns 3821 and 5861): fns 2725, 10270 and 11629, and fns 10270 and
-//   11629; 10270 is written (unit 160), the stand-in is for the others (5860's callers, 10270 and 11626, are both
+//   11629; 10270 (unit 160) and 2725 (unit 293) are written, the stand-in is for 11629 (5860's callers, 10270 and 11626, are both
 //   written);
 // - comum::md::CEntidadeHashes::ValidaCriacao (fn 5855): fn 11620 calls it twice;
 // - comum::md::CUrna's implicit destructor (fn 1394): fns 2725, 10270, 11587, 11626 and 11629; 10270, 11626 (unit
-//   160) and 11587 (unit 305) are written, the stand-in is for the others. It returns `this`, which 10270 frees
+//   160), 11587 (unit 305) and 2725 (unit 293) are written, the stand-in is for 11629. It returns `this`, which 10270 frees
 //   (`f136(f1394(l7))`), so the stand-in deletes its two objects. Unit 160's igravadorenvelope.cpp.o emits that inline
 //   destructor ahead of this object, and the link keeps its copy; this object compiles with the tree's flags
 //   (UENUX2_CXXFLAGS, the fragment's rule) all the same.
@@ -67,7 +67,7 @@ __attribute__((noinline)) int w136_urna(void* a, void* b, void* c, void* d, comu
     return 5;
 }
 
-// stands for fns 2725 and 11629
+// stands for fn 11629 (2725 is written)
 __attribute__((noinline)) long w136_envelope(void* a, void* b, void* e, void* f,
     const comum::md::CCabecalhoEntidade& cabecalho, comum::EUrnaFase fase, comum::TMunicipioID municipio,
     comum::TZonaID zona, const std::optional<comum::TLocalID>& local, comum::TSecaoID secao,
@@ -84,7 +84,7 @@ __attribute__((noinline)) long w136_envelope(void* a, void* b, void* e, void* f,
             conteudo, tipoUrna));
 }
 
-// stands for fns 2725 and 11629
+// stands for fn 11629 (2725 is written)
 __attribute__((noinline)) int w136_destroi_urna(comum::md::CUrna* urna, comum::md::CUrna* outra)
 {
     delete urna;

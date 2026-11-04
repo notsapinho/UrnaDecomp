@@ -66,8 +66,8 @@
 # the scores of both orders).
 # comum::CLocal::GetLocalID (fn 1933; the name is its literal's, "GetLocalID", the reading of these literals below): it
 # calls VerificaEhSecao with that literal and returns the place's id, the word at +16 of md::CLocal::GetSecao() (the
-# CIdentificacaoSecao at +4, its TLocalID at +12). Of its six callers, 1543 and 11188 (unit 123's) are in the link and
-# 2725, 7787, 11242 and 12098 are not written; the roots' LocaisID stands for those four. It has no record; its line, after UrnaBiometrica, is a choice.
+# CIdentificacaoSecao at +4, its TLocalID at +12). Of its six callers, 1543 and 11188 (unit 123's) and 2725 (unit 293's)
+# are in the link and 7787, 11242 and 12098 are not written; the roots' LocaisID stands for those three. It has no record; its line, after UrnaBiometrica, is a choice.
 # comum::CLocal::EhExterior has no target index of its own: unit 71's IPedeTituloMesario::ProcessInput (fn 10313) holds
 # it inlined by binaryen, a 16-byte frame of its own opened after CLocal::GetInst's call, which is what keeps it out of
 # line here. It passes "EhExterior" to VerificaLido (the literal @85932, which no other target function loads), then
@@ -244,9 +244,9 @@
 # - comum::CLocal::TemSecao (5739, 10 B, a name chosen from md::CLocal::TemSecao, which it returns): the byte at +120
 #   of the data (the section optional's flag) read with no VerificaLido, the target's two loads. No record names it;
 #   in use band 2 it sits between VerificaEhSecao (5742) and FormataAgregadas (5738), the place it has in the file.
-#   Its callers are 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's notes), not written, for which the roots'
-#   TemSecoes stands, and 4161 (vota::AdicionaLocal, unit 110's ctelasvota.cpp), written since. It matches (`pnpm wasm
-#   score` BYTE-EXACT against the whole link).
+#   Its callers are 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's) and 4161 (vota::AdicionaLocal, unit
+#   110's ctelasvota.cpp), both in the link, so the roots' stand-in for 2725 went. It matches (`pnpm wasm score`
+#   BYTE-EXACT against the whole link).
 # - comum::FormataQtdAgregadas (no index; its name and parameter chosen, its being a free function too): the count of the
 #   aggregated sections put into the format it is given at its one "{:04}" (std::vformat over one unsigned). Fn 1543
 #   (comum::CRelUtil::IncluiCabecalhoEleicoesMZS, unit 123's) holds it behind a 384-byte stack frame of its own, with

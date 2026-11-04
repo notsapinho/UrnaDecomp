@@ -2,7 +2,7 @@
 // reconstructed yet, and every function below has direct callers in the target and no table slot
 // (ledger/callgraph.tsv), so each noinline stand-in gives it two call sites and binaryen keeps its body out of line:
 //   CCabecalhoEntidade's constructor (fn 1945), called once each by fns 2725, 11587, 11588, 11620, 11626 and 11629
-//   (11587 and 11626 are written, units 305 and 160);
+//   (11587, 11626 and 2725 are written, units 305, 160 and 293);
 //   CCarga's constructor (fn 2802), called once each by fns 10290, 11587, 11626 and 11629: 10290, 11587 and 11626 are
 //   written (fragment 172, units 305 and 160), and the stand-in stands for 11629. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
 //   its one target caller, calls it twice.

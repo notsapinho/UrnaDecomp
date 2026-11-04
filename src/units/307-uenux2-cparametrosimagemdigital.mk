@@ -29,8 +29,9 @@
 # pointer right below CParametrosImagemDigital's, and band 1 links their exit destructors first (10522 and 10521 above
 # 10520 and 10519); the file's local destructor names moved with them (CParametrosImagemDigital's are now
 # __cxx_global_array_dtor.4 and .6, the match lines of 10520 and 10519 edited to them). Their callers that are not
-# written (2224's 3614, 5372 and 10316; 2742's 2725, 10316 and 10451; ConverteParaWsq's 10316 and 10451) have stand-ins
-# in the roots, since binaryen inlines a function its link calls once; they go when those callers are in the link.
+# written (2224's 3614 and 5372; 2742's and ConverteParaWsq's 10451: 10316 and 2725, units 135 and 293, are written
+# now) have stand-ins in the roots, since binaryen inlines a function its link calls once; they go when those callers
+# are in the link. The header's vota::CConversorWsq::PreparaWsq, inline, is unit 293's: 2725 holds it.
 CPARAMETROSIMAGEMDIGITAL_SRCS := src/app/vota/operador/confirmaidentidade/cparametrosimagemdigital.cpp
 UENUX2_SRCS += $(CPARAMETROSIMAGEMDIGITAL_SRCS)
 # The roots declare what they call through an asm label, so they include no header; compiled with APP_CXXFLAGS.
