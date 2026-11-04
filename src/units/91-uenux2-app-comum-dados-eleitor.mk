@@ -140,6 +140,13 @@
 # 5664 and 5663 celeitordinamico.cpp's, and the eleitor directory links in name order), its being the decorator's
 # member a choice (celeitordecorator.h). Its two target callers, 10443 and 10489, are in the link (units 161 and 142),
 # so no stand-in gives it call sites.
+# CBiometriaEleitor's three constructors (cbiometriaeleitor.cpp, lines 37 to 50, chosen) are fragment 335's: fn 11422
+# holds them inlined by binaryen, the photo and fingers' and the fingers' behind 32-byte frames of their own (each
+# copies the vector for CriaComum's by-value parameter there), the photo's frameless. Their forms are read from 11422:
+# m_foto copied from the CFoto or left empty, m_dedos built from a temporary std::map the frame destroys (fn 781)
+# or left empty, m_erroDecifracao 0, then CriaComum (2799, four call sites in 11422). Their parameters' being const
+# references (no caller copy) is evidence; `explicit` and the order of their declarations are chosen. The roots'
+# CriaComum pair stays, as fragment 335 says.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
 COMUM_ELEITOR_MD_SRCS := src/app/comum/dados/md/eleitor/celeitordinamico.cpp src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp src/app/comum/dados/md/eleitor/celeitordecorator.cpp

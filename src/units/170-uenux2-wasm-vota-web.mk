@@ -200,9 +200,8 @@
 # fragment has the evidence). At the base 2736, 2741, 2744 and 3884 were `no-candidate`, and 5395, 5398 and 5407 read
 # `differs` on that constant (`git show 36dda756:splat/scan.tsv`).
 # And 5496, vector<unsigned char>'s __assign_with_size, this TU's -Oz copy: RecebeMensagem (10949) calls it through
-# assign, and 170-uenux2-wasm-vota-web-roots.cpp stands for its other target caller, 5702 (ecourna's, not written), so
-# that binaryen keeps it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls 5496
-# through an asm label.
+# assign, and so does its other target caller, 5702 (fragment 335's comum::asn::DesconverteMinucias), so binaryen keeps
+# it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls has<T> through asm labels.
 $(ROOT)/$(APP)/170-uenux2-wasm-vota-web-roots.o: $(ROOT)/src/units/170-uenux2-wasm-vota-web-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/170-uenux2-wasm-vota-web.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/170-uenux2-wasm-vota-web-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/170-uenux2-wasm-vota-web-roots.o

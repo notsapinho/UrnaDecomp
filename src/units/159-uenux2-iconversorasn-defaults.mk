@@ -61,6 +61,10 @@
 # entity ModuloCandidatos::Candidatura the
 # generated module lacks (its typeinfo name is the string 11446 passes); with it 5712 (CConversorCandidatura's
 # constructor, whose vptr store names the class), 11448 and 5710, and 11445, which stays a trap.
+# CConversorDedo's, CConversorBiometriaEleitor's and CConversorBiometriaEleitorCifrada's own slots (11416, 11422, 11419)
+# are fragment 335's: those objects emit the three vtables and the defaults 11415, 11421 and 11418 with them, which match
+# from there, and the pending file no longer traps them; the roots keep neither class's vtable now that 11422 and 11419
+# store their vptrs.
 #
 # No source of its own: the defaults are the headers' code, emitted with each converter's vtable.
 # the converters' own slots that are not written: 159-uenux2-iconversorasn-defaults-pending.cpp traps them and emits

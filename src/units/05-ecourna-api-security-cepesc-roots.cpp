@@ -12,7 +12,6 @@ int cepesc_cipheredout_ctor2(int, int, int) __asm__("_ZN7ecourna3api6cepesc12CCi
 int cepesc_cipheredout_ctor3(int, int, int, int) __asm__("_ZN7ecourna3api6cepesc12CCipheredOutC2ERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_RKNS1_9CInfoSaltE");
 int cepesc_plaintext_ctor(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_NS3_10shared_ptrINS1_9CInfoSaltEEE");
 int cepesc_plaintext_ctor_salt(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_RKNS1_9CInfoSaltE");
-int cepesc_cipheredin_ctor(int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc11CCipheredInC2EhhhRKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_RKNS1_9CInfoSaltE");
 int cepesc_plaintext_ctor_wsq(int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_");
 void keyloader_decipher(int, int, int) __asm__("_ZN7ecourna3api8security10CKeyLoader19DecipherKeyIfNeededIN19ModuloEnvelopeChave13EntidadeChaveEEENSt3__26vectorIhNS6_9allocatorIhEEEERKT_");
 }
@@ -29,7 +28,6 @@ struct SCepescRoots {
         cepesc_sink = reinterpret_cast<void*>(&cepesc_cipheredout_ctor3);
         cepesc_sink = reinterpret_cast<void*>(&cepesc_plaintext_ctor);
         cepesc_sink = reinterpret_cast<void*>(&cepesc_plaintext_ctor_salt);
-        cepesc_sink = reinterpret_cast<void*>(&cepesc_cipheredin_ctor);
         cepesc_sink = reinterpret_cast<void*>(&keyloader_decipher);
     }
 } cepesc_roots;

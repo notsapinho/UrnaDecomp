@@ -11,7 +11,7 @@
 //   into 9770, its one caller then (measured while this file held 9770). encodeBER is protected, so the call goes
 //   through an __asm__ label.
 // - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290, all three out of line in our link and
-//   calling it (1681 from roots_vector.cpp, unit 11; 5496 with unit 170's roots standing for its other caller, 5702),
+//   calling it (1681 from roots_vector.cpp, unit 11; 5496, whose other caller 5702 is fragment 335's, in the link),
 //   so nothing here calls it. A call of it stood here while 1681 was not in the link: without it then, binaryen inlined
 //   3656 into 5290 (47 over 158 rows).
 #include <vector>
