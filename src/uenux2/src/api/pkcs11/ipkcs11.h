@@ -6,12 +6,12 @@
 // bodies use the instance: comum::CGeradorBUQRCode::RetornaBlocoAssinado (inlined into fn 5604) calls slot 23 (+92),
 // slot 6 (+24) with a std::vector<uebyte> by reference, which returns an object of at least 20 bytes whose vector at +8
 // the caller copies, 8-aligned in comum::asn::CAssinaVotavelBu::Assinar's frame (the 8 bytes at its head one 64-bit
-// word here: two 32-bit words put it 4 bytes higher, unit 321's fragment), and slot 24 (+96); fn 10273, which holds comum::asn::CAssinaVotavelBu::Assinar (record 1597332),
-// calls slots 23, 6 and 24 the same way; CEstadoGeral::RecuperarCertificado (fn 5635, record 1574772) calls slot 23
-// and then slot 10 (+40). The members are declared up to slot 24 with pure bodies; slot 6 is named from its role (5604
-// prints what it returns as the boletim's " ASSI:{}" field, and Assinar's name agrees), the others after their slots
-// (slot 10's role in 5635 is not followed). The destructor in slots 0 and 1, the result's type and every name are
-// chosen, and so is this path.
+// word here: two 32-bit words put it 4 bytes higher, unit 321's fragment), and slot 24 (+96); fn 10273, which holds
+// comum::asn::CAssinaVotavelBu::Assinar (record 1597332), calls slots 23, 6 and 24 the same way;
+// CEstadoGeral::RecuperarCertificado (fn 5635, record 1574772) calls slot 23 and then slot 10 (+40). The members are
+// declared up to slot 24 with pure bodies; slot 6 is named from its role (5604 prints what it returns as the boletim's
+// " ASSI:{}" field, and Assinar's name agrees), the others after their slots (slot 10's role in 5635 is not followed).
+// The destructor in slots 0 and 1, the result's type and every name are chosen, and so is this path.
 
 #include <vector>
 

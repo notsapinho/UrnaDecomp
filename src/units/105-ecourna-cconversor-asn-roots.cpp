@@ -1,7 +1,7 @@
 // Roots: keep the converters of unit 105 in the skeleton link the way the target keeps them. The users of the outermost
 // four are not reconstructed yet (7787 for federations, parametrization and the municipalities' configuration, 5366,
-// which stores the vptr and which 11616 calls, for the voter-register result); the attendance detail's, 10273, is in the
-// link (fragment 321), and its vptr store keeps that vtable. In the
+// which stores the vptr and which 11616 calls, for the voter-register result); the attendance detail's, 10273, is in
+// the link (fragment 321), and its vptr store keeps that vtable. In the
 // target each vtable is data whose slots put DoConverte and DoDeconverte in the table, and the inner converters are
 // locals of the outer ones, so rooting these vtables keeps the same set. Declared through asm labels, so this TU needs no
 // ecourna or ASN.1 header and instantiates nothing.

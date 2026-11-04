@@ -287,16 +287,19 @@
 # reads nothing of the class), the log member's name and its place in clogvota.cpp, and the switch's spelling.
 #
 # CIdentidadeInvalida::GetInst and its constructor have no target index: vota::CValidaIdentidade::StartState (10627,
-# unit 278's, written and not matched) holds them inlined, the one store of the vptr (1588384). They are written in
+# unit 278's, matched) holds them inlined, the one store of the vptr (1588384). They are written in
 # cidentidadeinvalida.cpp with the statics (s_inst @1905364, s_mutex @1905340) and the form's text function,
 # vota::TextoIdentidadeInvalida (10670, `f3623(p0)`: the identifier typed, passed by its table slot 3860): the form is
 # AddBeep(2), "Identidade:" at {1, 1}, 10670's text at {13, 1}, "Número errado" at {1, 2}, "CORRIGE: retornar" at
 # {1, 4}, AddInputControl and GetInteractiveForm("", true), built in the member list by a helper (fn 301 writes into the
 # member). In band 1, 10672 and 10671 (the statics' exit destructors, the pointer's first) lie above 10670 and 10670
 # above StartState (10669): the statics are defined, the pointer first, before 10670, and 10670 before StartState,
-# external, since clang defers an internal function to the end of the TU. 10670 matches (its census pair, `shape`); the
-# exit destructors wait for 10627's match (unit 278's fragment). Chosen: the names, 10670's being a free function of
-# vota, the helper's name and its anonymous namespace, and the constructor's and GetInst's lines above the statics.
+# external, since clang defers an internal function to the end of the TU. 10670 matches (its census pair, `shape`), and
+# the exit destructors 10672 and 10671 by content with 10627, whose anchor names the statics (unit 278's fragment). What
+# each order needs (measured): the band order the form helper and the constructor below the statics (10670's first
+# use is the constructor's form), the storage order GetInst above them (the mutex 24 bytes below the pointer), the
+# destructors' order s_inst defined before s_mutex; that the original's file was laid out so is a reading. Chosen: the
+# names, 10670's being a free function of vota, the helper's name and its anonymous namespace.
 #
 # CIdentidadeInvalida::ProcessInput (10667, slot 7) is written in cidentidadeinvalida.cpp: `f2295(p0, 5, <its Read()
 # record>)`, a thunk into the body binaryen merges from five states' slot 7 that go to CPedeIdentidade::GetInst's state

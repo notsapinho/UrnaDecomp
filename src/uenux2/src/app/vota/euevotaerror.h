@@ -171,10 +171,10 @@ enum EUeVotaError {
     // "Estado nao conhecido = {}", and the class: no evidence names them
     EUE_VOTA_AJUSTE_INICIAL_ESTADO_ENCERRAMENTO_DESCONHECIDO = 9303,
     EUE_VOTA_AJUSTE_INICIAL_ESTADO_DESCONHECIDO = 9304,
-    // the values are the codes vota::CAjusteInicial::ValidaTemposDesligamento throws (records cajusteinicial.cpp:74, :79
-    // and :84, inlined into target fn 7160); the names are chosen from their messages, "Tempo limite de uso de bateria
-    // interna inválido", "Tempo de aviso de desligamento por uso da bateria interna inválido" and "Tempo de aviso de
-    // desligamento não pode ser maior que o tempo para desligar a urna": no evidence names them
+    // the values are the codes vota::CAjusteInicial::ValidaTemposDesligamento throws (records cajusteinicial.cpp:74,
+    // :79 and :84, inlined into target fn 7160); the names are chosen from their messages, "Tempo limite de uso de
+    // bateria interna inválido", "Tempo de aviso de desligamento por uso da bateria interna inválido" and "Tempo de
+    // aviso de desligamento não pode ser maior que o tempo para desligar a urna": no evidence names them
     EUE_VOTA_TEMPO_LIMITE_BATERIA_INTERNA_INVALIDO = 9405,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_INVALIDO = 9406,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_MAIOR_QUE_LIMITE = 9407,

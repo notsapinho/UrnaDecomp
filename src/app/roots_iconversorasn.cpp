@@ -79,9 +79,9 @@ int urna_roots_iconversorasn(int a)
     return a + lido;
 }
 
-// comum's IConversorASN<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>::Converte, which binaryen inlines into
-// its one target caller, comum::asn::CConversorEntidadeBU::DoConverte (fn 10273, unit 321), where its frame opens. The
-// target's copy is not the converter's object's: its record (1556668, iconversorasn.h:56) lies with Desconverte's
+// comum's IConversorASN<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>::Converte, which binaryen inlines
+// into its one target caller, comum::asn::CConversorEntidadeBU::DoConverte (fn 10273, unit 321), where its frame opens.
+// The target's copy is not the converter's object's: its record (1556668, iconversorasn.h:56) lies with Desconverte's
 // (1556684) after app/comum/asn/util.cpp's records and the vtables that object emits, a deferred instance of that
 // object (a reading of the data order; no function of util.cpp that uses the cargo code's converter is recovered).
 // app/comum/asn/util.cpp's object (unit 96) links after cconversorentidadebu.cpp's in our link, and no earlier object

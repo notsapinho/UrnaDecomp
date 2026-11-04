@@ -2,8 +2,8 @@
 // are records of the target, so their positions in this file are fixed:
 //   3605  ConverteSerialFlash     records at lines 26 and 31, column 15
 //   3604  DesconverteSerialFlash  record at line 54, column 15
-// The SHA-512 helper util.h declares (CalculaHashSha512, fn 3602) is in cassinavotavelbu.cpp, where the target's data
-// place it (cassinavotavelbu.h).
+// The SHA-512 helper util.h declares (CalculaHashSha512, fn 3602) is in cassinavotavelbu.cpp: the target's data place
+// it in a window whose one record is that file's (cassinavotavelbu.h; that it is its object's is a reading).
 
 #include "app/comum/gravadores/asn/util.h"
 

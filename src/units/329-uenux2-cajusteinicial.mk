@@ -1,12 +1,14 @@
 # uenux2 vota::CAjusteInicial and vota::IAjusteInicial (app/vota/eleitor/cajusteinicial.{h,cpp}, the header new, and
 # iajusteinicial.h): IAjusteInicial::GetInst (record cajusteinicial.cpp:57; no target index: binaryen inlines it into
 # its one caller, vota::CThreadEleitor::Run, fn 7061, unit 116's), CAjusteInicial's constructor and its slot 2,
-# StartState (target fn 7160, 5220 B), with what 7160 holds behind frames of their own: the four members the records
-# name (ValidaTemposDesligamento, :74, :79, :84; InicioVota, :170, :178; LimpaMidiaResultado, :191; AjustaDataHora,
-# :220, :245) and two free functions with no record (CriaControladorRegistraMesarios here, AbreDiretorio in
-# cthreadeleitor.cpp); the GetInst, constructor and statics of the four states 7160 holds inlined, written in their own
-# units' files (vota::CFinalizaAquisicao, unit 223; CVerificaQtdBUsAdicionais, unit 185; CVerificaEleicaoPassou, unit
-# 199; testeteclado::CRetomada, unit 138); five EUeVotaError codes (app/vota/euevotaerror.h, chosen names).
+# StartState (target fn 7160, 5220 B), with what 7160 holds inlined: the four members the records name, behind
+# frames of their own (ValidaTemposDesligamento, :74, :79, :84; InicioVota, :170, :178; LimpaMidiaResultado, :191;
+# AjustaDataHora, :220, :245), and two free functions with no record, CriaControladorRegistraMesarios here, behind a
+# frame of its own, and AbreDiretorio in cthreadeleitor.cpp, with none (it lies in LimpaMidiaResultado's 80-byte
+# frame; the null test after it gives another TU); the GetInst, constructor and statics of the four states 7160 holds
+# inlined, written in their own units' files (vota::CFinalizaAquisicao, unit 223; CVerificaQtdBUsAdicionais, unit 185;
+# CVerificaEleicaoPassou, unit 199; testeteclado::CRetomada, unit 138); five EUeVotaError codes
+# (app/vota/euevotaerror.h, chosen names).
 #
 # The source compiles in unit 116's list (CTHREADS_SRCS), ahead of cthreadeleitor.cpp, the target data's order:
 # cajusteinicial.cpp's records (@1534280 to @1534408) lie between csincronismovotoeleitor.cpp's and cthreadeleitor.cpp's

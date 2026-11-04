@@ -33,11 +33,11 @@ private:
     void AjustaDataHora();
 };
 
-// Two functions StartState holds behind frames of their own with no record, so their names, their being free
-// functions of vota and their files are chosen (unit 329's fragment says from what). CriaControladorRegistraMesarios
-// reads the poly singletons' info and then builds vota::CControladorRegistraMesariosVota and sets it as the
-// comum::IControladorRegistraMesarios, in that order; AbreDiretorio returns a directory reader that
-// LimpaMidiaResultado tests for null, so it is another TU's (cthreadeleitor.cpp's).
+// Two functions StartState holds with no record: their names, their being free functions of vota and their files are
+// chosen (unit 329's fragment says from what). CriaControladorRegistraMesarios, behind a frame of its own, reads the
+// poly singletons' info, then builds vota::CControladorRegistraMesariosVota and sets it as the
+// comum::IControladorRegistraMesarios. AbreDiretorio has no frame (it lies in LimpaMidiaResultado's 80-byte one) and
+// returns a directory reader LimpaMidiaResultado tests for null: another TU's (cthreadeleitor.cpp, chosen).
 void CriaControladorRegistraMesarios();
 api::CDirReader* AbreDiretorio(const std::string& caminho);
 

@@ -15,9 +15,9 @@ std::string DesconverteSerialFlash(const std::vector<char>& serial);
 
 // The SHA-512 digest of a string's bytes (target fn 3602): comum::asn::CAssinaVotavelBu's three hash members call it,
 // and binaryen inlines them into CConversorEntidadeBU's slot 2 (fn 10273), which so holds its three calls. No record
-// names it. It is defined in cassinavotavelbu.cpp, with its callers, where the target's data place the CSha512 control
-// block it builds (cassinavotavelbu.h). Its declaration in this header, its name, its being a free function and its
-// parameter's name are chosen.
+// names it. It is defined in cassinavotavelbu.cpp, with its callers: the target's data place the CSha512 control block
+// it builds in a window whose one record is that file's (cassinavotavelbu.h; a reading that it is that object). Its
+// declaration in this header, its name, its being a free function and its parameter's name are chosen.
 std::vector<uebyte> CalculaHashSha512(const std::string& texto);
 
 } // namespace comum::asn

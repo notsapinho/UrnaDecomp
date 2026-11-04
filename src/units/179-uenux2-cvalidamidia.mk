@@ -58,7 +58,7 @@
 #     of characters is equal or passes CasaCaractere (5464) one way or the other. CasaRegex: FindRegex (2199) over the
 #     pattern after its 7 bytes, its start compared with npos, behind a 16-byte stack frame of its own (binaryen's
 #     work). CasaCaractere: '#' a digit, '?' a letter, a digit, '-' or '_', '@' isalpha (fn 2314, a call), else false;
-#     the letter-or-digit test is read as musl's isalnum inlined (splat/symbol_addrs.txt names no isalnum: a reading).
+#     the letter-or-digit test is musl's isalnum inlined, as the match shows (splat/symbol_addrs.txt names no isalnum).
 #
 # Forms measured. Frame layouts on scratch objects at the tree's flags (build/docker-build.sh em++ -O3 -fPIC -std=c++23
 # -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -c on a copy of the source), each function's store sequence
@@ -85,7 +85,8 @@
 #   a call or a data address (a range-for, which reads the end once, 79 over 260); the "#regex#" tests through
 #   std::string::compare, the two std::string_view taken after them (taken first and compared, 35 over 269); each pair
 #   of characters read into two const locals and compared pattern first (the name first, 17 over 261; no locals, 44
-#   over 264 pattern first and 44 over 265 name first). The two locals' declaration orders give one wasm (one sha256).
+#   over 264 pattern first and 44 over 265 name first). The source declares the name's local first; declared the
+#   other way round they give the same wasm (one sha256).
 # - 5464: '?' as isalnum (musl's, which the target holds inlined); the cases in the order '#', '@', '?' give the
 #   target's br_table, '#', '?', '@' 13 over 54 rows (6 inserted, 6 deleted) in the whole link. ConteudoIncializacao's
 #   test through a switch in a helper (IndependeDoTurno) compiles to the target's
@@ -113,7 +114,9 @@
 # IDENTICAL; CasaCaractere (5464, pair-fingerprint) and CasamTodos (2758, pair-addr). 5464 needed isalnum to keep one
 # call site in our link, as in the target: musl's ispunct calls isalnum too, and the Boost tree root's probe kept
 # ispunct through boost::char_separator<char>::operator(), which time_from_string's and from_simple_string's parsers
-# reach and the target does not hold (no census pair). With those two calls out of tools/libs/boost/probe.cpp our
+# reach and the target does not hold: it has none of the lowercase month names their month map holds (`strings -n 3
+# target/vota_web_wasm.wasm | /usr/bin/grep -c -E '^(jan|feb|sep|january|february|september)$'` prints 0), and no
+# census pair names those functions. With those two calls out of tools/libs/boost/probe.cpp our
 # CasaCaractere holds isalnum inlined; with them, and the cases in the order above, 17 over 52 rows (4 inserted, 13
 # deleted). Written by hand, the letter-or-digit test would copy the library's arithmetic (how-to step 3). 2758's
 # forms are above; its earlier ones: two std::string_view compared first, `101 over 278`; an index loop over the

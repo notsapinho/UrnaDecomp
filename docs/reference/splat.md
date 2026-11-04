@@ -181,7 +181,7 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   land until it matches. When the line carries every caller it
   names (each a `vtable` name whose row needs this name), those callers align the call site and count for nothing
   else: the comment leads with the callee's own rows, read without the match, and says the callers fall without the
-  line (4349's). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
+  line (3883's). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
   content to stand on and often no aligned call: its line leads with the target functions other than the match that
   read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what it
   does there (a compare with a value above 1, an increment, an index), since those uses also give the member's type
@@ -361,8 +361,8 @@ Two rules guard the evidence:
   it. A function name voted only by the match's own call or table operand holds
   only if another holding match calls it or has a constant the target reads as its table slot. The rule reads the
   line's `by:` list, so it fires only on a line that has one (§2): a `call` name whose voter is a pair the propagation
-  loop formed has no list and passes the build however few voters it has (2758 under 5572), which a reviewer weighs
-  ("Reviewing a match"). A constant
+  loop formed has no list and passes the build however few voters it has (2758 under 5572, until 2758 matched),
+  which a reviewer weighs ("Reviewing a match"). A constant
   the target keeps as an integer does not count, even when it equals the function's slot in our table, so a
   unit that shifts our table cannot make or break a match. Two new matches can each be the other's holding match
   when their votes come from two target bodies (two call sites, or two slots of the function) that are pairs
@@ -738,7 +738,8 @@ a variant with the committed symbol file", has the command and `CSystem::Replace
 Two generated names the build does not weigh, a reviewer does. A callee of a new match named `call` with no `by:`
 list (§3): `awk -F'\t' '$2==<callee>' ledger/callgraph.tsv` lists its target callers, and when no other is matched,
 the review with `--symbols` on a copy without the callee's line shows whether the match leans on it (5572 fails
-without 2758's), which the fragment says: the name holds through the match's alignment until a second caller lands.
+without 2758's until 2758 matched), which the fragment says: the name holds through the match's alignment until a
+second caller lands.
 A data name whose one voter is a written body that is no match (`unresolved` on another name): the build checks
 neither that body's bytes nor its votes, so `pnpm wasm splat-remap <target> <plain> sym:<its symbol> --against
 <its index>` must print `IDENTICAL`, and the fragment names the matches that rest on its votes (a scan without its

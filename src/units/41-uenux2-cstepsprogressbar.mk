@@ -67,13 +67,14 @@
 #   1 - margem - seta - margem - recuo` builds 1 - 2m first, but from a second 2 * margem as a multiply by 65534 or-ed
 #   with 1, 64 over 288. The remainder is not explained.
 # - CabeProporcional (10971) 558 over 1261 rows (same 703, replaced 216 [155 operand-only], inserted 131, deleted 211),
-#   with two forms its frame and its order show: the text's width and height declared at the top and set to 0 in the
-#   loop, as CabeEmUmaLinha's are (the target's frame holds them at +14 and +12 and the font at +0, as CabeEmUmaLinha's
-#   does; declared in the loop they were at +6 and +4 and the font at +8, 626 over 1269); and the margin, the height
-#   test and the indent computed in the loop after GetFontMetrics (the target computes them after the first call), which
-#   before the loop read 665 over 1295. The target builds its areas by the same loop as Divide (the same two masks), but
-#   building them in place here took the function to 726 over 1260, so it keeps SRect::Normalized, and the rest of the
-#   function differs. The remainder is not explained.
+#   with two forms that give its frame and its order (that the original was written so is a reading): the text's
+#   width and height declared at the top and set to 0 in the loop, as CabeEmUmaLinha's are (the target's frame holds
+#   them at +14 and +12 and the font at +0, as CabeEmUmaLinha's does; declared in the loop they were at +6 and +4 and
+#   the font at +8, 626 over 1269); and the margin, the height test and the indent computed in the loop after
+#   GetFontMetrics (the target computes them after the first call), which before the loop read 665 over 1295. The target
+#   builds its areas by the same loop as Divide (the same two masks), but building them in place here took the function
+#   to 726 over 1260, so it keeps SRect::Normalized, and the rest of the function differs. The remainder is not
+#   explained.
 # - Draw (5504) 259 over 5481 rows (same 5222, replaced 159 [153 operand-only], inserted 42, deleted 58), from 1196 over
 #   5696, with three forms, measured one on another at 99aac87a (this file and the headers it includes from api/gui/ are
 #   the same since) and together again on this link: Recalcula's text point built from two TPosition locals in the

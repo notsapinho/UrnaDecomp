@@ -49,8 +49,8 @@
 #   (api::CTime::Format, fn 779, with "h" and "mm"), "Aguarde o horário de início da votação" at {1, 1}, "Votação a
 #   partir das " at {1, 2}, the hour with "h", or with "h", the minutes and "min" (147602, a literal of its own) when the
 #   minutes are not "00", at {22, 2}, "Hora atual: " at {1, 3}, the clock at {13, 3} (AddClock, fn 728), and moves
-#   GetInteractiveForm("", true) (fn 301) into +20. 60 over 910 rows, operand-only. Of its four target callers, 7306
-#   is pending, and the roots stand in for it; 11858 and 11848 (unit 104) and 11920 (unit 169) are in the link.
+#   GetInteractiveForm("", true) (fn 301) into +20. 60 over 910 rows, operand-only. Its four target callers, 7306,
+#   11858 and 11848 (unit 104) and 11920 (unit 169), are in the link, and the roots' stand-in for it went.
 # - 5945's and 11914's GetInst of other classes, and 3279 and 4511: unit 138's and 119's fragments.
 #
 # Written since, measured the same way:

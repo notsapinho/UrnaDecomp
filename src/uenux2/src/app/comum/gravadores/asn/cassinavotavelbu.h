@@ -5,9 +5,9 @@
 // object: fn 3603, which comum::asn::CConversorEntidadeBU::DoConverte (fn 10273) calls before each hash it computes and
 // before Assinar, dropping its result, is GetInst, one of the four thunks of fn 2900 that allocate one byte and keep it
 // in a static std::unique_ptr (at 1910000) under a static std::mutex (at 1909976), as comum::CLogComum::GetInst does
-// (clogcomum.h), with the constructor and the destructor out of line as there. Every member is defined in
-// cassinavotavelbu.cpp, with the SHA-512 helper CalculaHashSha512 (util.h). The target's data place the statics and
-// the helper in that object, and GetInst and the hash members go with them:
+// (clogcomum.h), with the constructor and the destructor out of line as there (chosen). Every member is defined in
+// cassinavotavelbu.cpp, with the SHA-512 helper CalculaHashSha512 (util.h): the target's data place the statics and the
+// helper in a window whose one record is that file's, and GetInst and the hash members go with them:
 // - The target's function table runs object by object in link-line order, as its records do: slots 4405 and 4406 hold
 //   ccontroladorreconhecimetomesario.cpp's statics' exit destructors (its records at 1595796), 4432 and 4433
 //   cconversorcorrespresultado.cpp's vtable slots (records from 1596184), 4455 and 4456 cconversortipoapuracaosa.cpp's

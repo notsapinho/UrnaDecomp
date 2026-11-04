@@ -647,8 +647,8 @@ public:
     class votosVotaveis
     {
     public:
-        // the target has no class of its own here: SEQUENCE_OF<TotalVotosVotavel>'s template theInfo and vtable are what
-        // fn 10273 uses
+        // the target has no class of its own here: SEQUENCE_OF<TotalVotosVotavel>'s template theInfo and vtable are
+        // what fn 10273 uses
         typedef ASN1::SEQUENCE_OF<ModuloBoletimUrna::TotalVotosVotavel> value_type;
 
         typedef value_type&        reference;
@@ -1140,8 +1140,8 @@ public:
     class resultadosVotacaoPorEleicao
     {
     public:
-        // the target has no class of its own here: SEQUENCE_OF<ResultadoVotacaoPorEleicao>'s template theInfo and vtable are what
-        // fn 10273 uses
+        // the target has no class of its own here: SEQUENCE_OF<ResultadoVotacaoPorEleicao>'s template theInfo and
+        // vtable are what fn 10273 uses
         typedef ASN1::SEQUENCE_OF<ModuloBoletimUrna::ResultadoVotacaoPorEleicao> value_type;
 
         typedef value_type&        reference;
@@ -1171,8 +1171,8 @@ public:
     class historicoVotoImpresso
     {
     public:
-        // the target has no class of its own here: SEQUENCE_OF<HistoricoVotoImpresso>'s template theInfo and vtable are what
-        // fn 10273 uses
+        // the target has no class of its own here: SEQUENCE_OF<HistoricoVotoImpresso>'s template theInfo and vtable are
+        // what fn 10273 uses
         typedef ASN1::SEQUENCE_OF<ModuloBoletimUrna::HistoricoVotoImpresso> value_type;
 
         typedef value_type&        reference;

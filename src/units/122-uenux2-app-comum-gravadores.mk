@@ -13,9 +13,10 @@
 #   cconversortipoapuracaosa.cpp's, so after util.cpp's object (cassinavotavelbu.h has the slots and the records).
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
-#   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
-#   matched under the symbol of std::map<std::string, unsigned short>'s, a twin: the two compare only the key) comes
-#   from the tree root app/roots_boost.o, whose byte-identical instance is ahead of that object's in the link.
+#   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346)
+#   matches under the symbol of std::set<std::string>'s, a twin (the two compare only the key), from the tree root
+#   app/roots_set.o (splat/scan.tsv's object column), since the Boost probe's std::map<std::string, unsigned short>
+#   copy, which matched before it, left the link.
 # - comum::IGravador's constructor (fn 1396) with IResultado's (record iresultado.cpp:40) inlined by binaryen, written
 #   in iresultado.cpp and matched at the tree's -O3 (below); comum::CGravadorWSQ's constructor (target fn 3796) with
 #   ValidaTipoBiometria (record cgravadorwsq.cpp:73) inlined by clang; comum::CGravadorRCSecao::CriaIdentidadeEleitor

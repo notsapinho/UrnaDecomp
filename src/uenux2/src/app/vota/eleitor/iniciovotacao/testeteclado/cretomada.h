@@ -15,11 +15,11 @@ namespace vota::testeteclado {
 // with 1, where a bool would be tested (a reading, not measured): uebyte and the member's name are chosen. The
 // destructor is out of line: the deleting one (fn 5946) is CPreZeresima's body. A singleton: GetInst, inlined by
 // binaryen into its one caller, vota::CAjusteInicial::StartState (fn 7160), builds the 40-byte object over CBase's
-// constructor (fn 5948) with +36 cleared, keeps it in a static std::unique_ptr (@1834996, destroyed at exit by fn 11833)
-// under a static std::mutex (@1834972, by fn 11832), and deletes the old object with a direct call of the D2 (fn 1559,
-// CBase's body, which slot 0 holds) and no call through the vtable: final (a final destructor alone would allow the same
-// call, a reading not measured, so final on the class is chosen, as CPreZeresima's). CPreZeresima's shape, whose names
-// GetInst and the statics take (chosen).
+// constructor (fn 5948) with +36 cleared, keeps it in a static std::unique_ptr (@1834996, destroyed at exit by fn
+// 11833) under a static std::mutex (@1834972, by fn 11832), and deletes the old object with a direct call of the D2 (fn
+// 1559, CBase's body, which slot 0 holds) and no call through the vtable: final (a final destructor alone would allow
+// the same call, a reading not measured, so final on the class is chosen, as CPreZeresima's). CPreZeresima's shape,
+// whose names GetInst and the statics take (chosen).
 class CRetomada final : public CBase {
 public:
     virtual ~CRetomada() override;

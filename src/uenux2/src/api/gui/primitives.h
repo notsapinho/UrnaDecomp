@@ -24,11 +24,11 @@ struct SPoint {
     // `return SPoint(...)` through it, where the aggregate needed a temporary assigned to a named result. Of the 611
     // objects compiled with it and without it, five differ (cinteractiveformbuilder.cpp's, cformbuilder.cpp's,
     // cstepsprogressbar.cpp's, cvalidaidentidade.cpp's and unit 31's roots), and no match left
-    // (src/units/120-uenux2-iform.mk). It moves two written functions that do not match:
-    // vota::CValidaIdentidade::StartState (fn 10627, unit 278) reads its options' numbers before it stores the
-    // point's x, as the target does, 149 over 1740 rows -> 144 over 1739; api::CStepsProgressBar::Draw (fn 5504, unit
-    // 41) stores the text point Recalcula computes as one 32-bit word, where the target has the two 16-bit stores the
-    // aggregate gives, 1162 over 5684 rows -> 1196 over 5696 (pnpm wasm score). The parameter names and constexpr are
+    // (src/units/120-uenux2-iform.mk). It moved two written functions that did not match:
+    // vota::CValidaIdentidade::StartState (fn 10627, unit 278, matched since) reads its options' numbers before it
+    // stores the point's x, as the target does, 149 over 1740 rows -> 144 over 1739; api::CStepsProgressBar::Draw (fn
+    // 5504, unit 41) stored the text point Recalcula computes as one 32-bit word where the target has two 16-bit
+    // stores, 1162 over 5684 -> 1196 over 5696 (two since: unit 41's fragment). The parameter names and constexpr are
     // chosen; the defaulted constructor keeps SPoint{} and a default-constructed point all zero
     constexpr SPoint(TPosition x_, TPosition y_)
         : x(x_)

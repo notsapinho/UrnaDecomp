@@ -3,9 +3,9 @@
 // so its line is fixed; where it starts is a choice. Assinar has no index of its own: binaryen inlines it into its one
 // caller, held by CConversorEntidadeBU::DoConverte (fn 10273), where it opens a frame. The class's other members are
 // here too, with CalculaHashSha512 (fn 3602, util.h): the target's data place GetInst's statics and CalculaHashSha512
-// in this object, and the hash members must share CalculaHashSha512's TU (cassinavotavelbu.h gives both). GetInst (fn
-// 3603) precedes its statics, the form unit 111's fragment measures, and CalculaHashSha512, as their use band orders
-// them; the order of the rest, and their place above Assinar, are chosen.
+// in a window whose one record is this file's (a reading), and the hash members must share CalculaHashSha512's TU
+// (cassinavotavelbu.h gives both). GetInst (fn 3603) precedes its statics, the form unit 111's fragment measures, and
+// CalculaHashSha512, as their use band orders them; the rest's order and place above Assinar are chosen.
 
 #include "app/comum/gravadores/asn/cassinavotavelbu.h"
 

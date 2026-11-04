@@ -65,7 +65,7 @@
 #   Step 8 named 5936 by vptr-anchor and 11826 by its table vote; 11827 and 11828 matched through the content pass. The
 #   std::function's __func members over the pointer (11817, 11819, 11820, 11821, 11822) match from this object. 5936
 #   has two target callers, CTesteFalhou's and CEnviarManutencao's ProcessInput (11809, 11812), in the link since unit
-#   217 wrote them (unit 220's roots' stand-in for them is left to that unit), and this unit's roots no longer keep
+#   217 wrote them (unit 220's roots' stand-in for them went), and this unit's roots no longer keep
 #   CEsperaRetestar's vtable, which GetInst stores.
 #   Chosen: GetInst, s_inst, s_mutex, TextoEspera and their names, the locals, the lines, and the callback's internal
 #   linkage.
