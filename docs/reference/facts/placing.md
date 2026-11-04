@@ -299,7 +299,9 @@ records' declarations as above. A head a body returns or passes by value is not 
 class's layout, so an empty class comes back in nothing and a class of one scalar as that scalar (§R3 of
 [reading.md](reading.md)). `comum::asn::CConversorEntidadeBU`'s inherited `DoDesconverte` (10272, `(i32 i32 i32)->()`)
 lost its result pointer with `md::CEntidadeBU` declared `class CEntidadeBU {};`, scored `179 over 183` rows and no
-longer merged into 731; such a member waits for the class's layout (fragments 159 and 172 say so).
+longer merged into 731. Such a member waits for enough of the layout to give its signature, not for all of it: with a
+head of three members (the entity header at +0, the phase at +20, the urna at +24), any layout returned in memory,
+10272 matches (fragment 159 says so).
 
 **A stub-only file.** A file the evidence names that does not exist yet holds its stubs only, written from line 2
 on, not at their records' lines ([src/README.md](../../../src/README.md) "Stubs"). `--strip` leaves next to nothing of

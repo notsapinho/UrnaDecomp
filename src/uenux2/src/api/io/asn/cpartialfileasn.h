@@ -116,14 +116,14 @@ private:
 };
 
 // Reads an ASN.1 entity from a file with the partial BER decoder, which hands the nodes the visitors' paths name to
-// them as it decodes (records cpartialfileasn.h:182, 277 and 285, which print the two static member templates; target fn
-// 11523 holds their instances for ModuloEleitores::EntidadeEleitores, each behind a frame of its own, and fn 7787 those
-// for ModuloFotosCandidatos::EntidadeFotosCandidatos). That CPartialFileASN is a class, the lines of every statement but
-// the throws and the names of the locals are chosen. What the bodies hold is the targets': ReadFromFile tests that the
-// file is open, builds the seeder over a new CFileSeeder and decodes under the name "ReadFromFile de " + the file's;
-// DecodeObjectFunction sets the coder to the partial BER rule (the 2 it stores), assigns it the visitors, decodes, and
-// throws when decoding fails or the entity is not valid or the coder's log is not empty, a std::stringstream traced and
-// the log formatted into each message.
+// them as it decodes (records cpartialfileasn.h:182, 277 and 285, which print the two static member templates; target
+// fn 11523 holds their instances for ModuloEleitores::EntidadeEleitores, each behind a frame of its own, and fn 7787
+// those for ModuloFotosCandidatos::EntidadeFotosCandidatos). Its being a class is the records' (they print `static`);
+// `class` over `struct`, the lines of every statement but the throws and the names of the locals are chosen. What the
+// bodies hold is the targets': ReadFromFile tests that the file is open, builds the seeder over a new CFileSeeder and
+// decodes under the name "ReadFromFile de " + the file's; DecodeObjectFunction sets the coder to the partial BER rule
+// (the 2 it stores), assigns it the visitors, decodes, and throws when decoding fails or the entity is not valid or the
+// coder's log is not empty, a std::stringstream traced and the log formatted into each message.
 class CPartialFileASN {
 public:
 

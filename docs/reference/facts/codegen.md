@@ -820,10 +820,11 @@ for f in _Z2IfR1Si _Z2SwR1Si; do printf '%s: ' $f; wasm-objdump -d $P/arms2.o | 
 # _Z2SwR1Si: 3
 ```
 
-So read the arms' contents before spending links on the shape. What keeps 10737's two stores apart in the target is a
-call in each arm that binaryen inlines afterwards: clang does not join two calls of an out-of-line setter, and with
-`comum::CAppState::SetNextState` (out of line in `cappstate.cpp`) called in both arms the row matches. Unit 61's
-fragment has the measurements, and the replay of the link's own `wasm-opt -Oz` (§C4) that first showed it.
+So read the arms' contents before spending links on the shape. What keeps 10737's two stores apart in the target is
+explained by a call in each arm that binaryen inlines afterwards (a reading: the form that matches; no frame or record
+shows the call): clang does not join two calls of an out-of-line setter, and with `comum::CAppState::SetNextState` (out
+of line in `cappstate.cpp`) called in both arms the row matches. Unit 61's fragment has the measurements, and the replay
+of the link's own `wasm-opt -Oz` (§C4) that first showed it.
 
 ## C14. A condition's test order
 

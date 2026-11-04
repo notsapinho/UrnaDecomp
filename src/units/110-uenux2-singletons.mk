@@ -473,8 +473,9 @@
 #   are in the link) and give 3869 a second
 #   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
 # ctelasvota.cpp also holds the zerésima chain's screens, free functions of vota that ctelasvota.h declares and
-# describes: vota::AdicionaLocal (target fn 4161), vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587), with
-# the file constant FONTE_LOCAL {15, 0}, which the scan places by its bytes, as FONTE_TITULO (the target's @475008).
+# describes: vota::AdicionaLocal (target fn 4161), vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587),
+# AdicionaLocal reading the file constant FONTE_VERSAO {15, 0}, which CTelasVota::CriaTelaQRCodeBU reads too (one
+# constant, as the target holds one, @475008) and which the scan places by its bytes, as FONTE_TITULO.
 # Measured in the whole link before steps 7 to 9 (pnpm wasm score against names.tsv), all operand-only: 4161 56 over
 # 894 rows, 2380 15 over 280, 6587 6 over 53. Step 8 named 2380 by 6587's call, 4161 by 2380's and 6587 by the calls
 # of 11855 and 11991 (unit 104); all three match.
@@ -490,12 +491,14 @@
 #     not at that function's place in the code (AdicionaLocal's comes from TelaNeutra's call). The target holds the
 #     fonts as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992 and {15, 0} @475008, @474896 being
 #     FONTE_INSTRUCAO_TESTE_TECLADO (a reading: 11805, which holds TelaTesteTeclado, reads it). AdicionaLocal's body
-#     follows GetTelaCargo, and the object holds FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO and
-#     FONTE_LOCAL in that order (wasm-objdump -x -j Data: segments 5, 6, 31, 44). With the body above
-#     AdicionaTelaAguarde, FONTE_LOCAL came first (segment 9, then 12, 13, 38): three pairs against the target's.
-#     FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had before, which 3064 (record 1585,
-#     not written), a reader of @474896, can explain. The fonts after @475008, {35, 0} @475016 and {20, 1} @475032,
-#     want their first readers' bodies after AdicionaLocal's when those are written in this file.
+#     follows GetTelaCargo, ahead of TelaTextoConfirmaCorrige's and CTelasVota::CriaTelaQRCodeBU's, and the object holds
+#     FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and
+#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53). With the body above
+#     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
+#     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
+#     before, which 3064 (record 1585, not written), a reader of @474896, can explain. The fonts after @475008, {35, 0}
+#     @475016 and {20, 1} @475032, follow it as the target holds them: their first readers' bodies,
+#     TelaTextoConfirmaCorrige's and CriaTelaQRCodeBU's, come after AdicionaLocal's in that order.
 # - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
 #   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and

@@ -601,7 +601,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -842,6 +842,15 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
     `__fields_bool` too, below the marker of `splat/symbol_addrs.txt`; taken out one at a time, `__fields_integral`'s
     line takes five of the six with it, and `__fields_bool`'s all six at the splat build, which then refuses 9868 as
     self-voted (unit 253's fragment).
+25. **4929, 9353 and 3498, by the host of the string `"o"` in our link's tail merge.** 7-Zip's `FindPropIdExact` (4929)
+    and boost's `lookup_default_collate_name` (9353) and `cpp_regex_traits_implementation<char>::lookup_collatename`
+    (3498) read a 2-byte `"o"`. The target holds `"o\0"` at more places than the scan's 4096 copies, so each row reads
+    our `"o"` through the string our link merged it into: the tail of `"Por favor oriente o eleitor a procurar o"`
+    (@142758; `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 4929` prints `142797 (+39 into 142758)`, its last
+    `o`), which `cdadoeleitornaoconfere.cpp` and `cinformaanonascimentoerrado.cpp` bring into the link (both in unit
+    161's list). wasm-ld's tail merge puts a suffix on the first string, in reversed order, that ends with it, and that
+    literal is the first in both modules, the only text string of the target that ends in `" o"`. A form that drops the
+    literal from both files, or a string of ours that is no target's and sorts below it, takes the three rows out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

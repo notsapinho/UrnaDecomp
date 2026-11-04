@@ -3768,15 +3768,15 @@ namespace ASN1 {
 
     bool decode(const char* first, size_t size, AbstractData& val, bool defered);
     bool decode(const ASN1_STD shared_ptr<ISeeder>& seeder, AbstractData& val);
-    /** What decode(seeder, val) reads and writes (fn 5060): the visitors it hands the partial decoder, which
-        api::CPartialFileASN::DecodeObjectFunction (target fn 11523 holds it inlined) copies from its list with a direct
-        call of fn 5704, vector::__assign_with_size, and the log it leaves, which that reader copies out by value to test
-        and to format. 5704 is a uenux2 copy apart from this library's own instance (3476, the assign over __wrap_iter
-        that BERDecoderPartial's setVisitors makes, which fns 679, 5060 and 8824 call), so its iterators are another type.
-        Measured on the whole link: an assign over begin() and end() makes 3476's symbol in the uenux2 object, which links
-        first, and 679, 3476, 5058, 5059 and 5060 leave match; the vector's copy assignment keeps libc++'s self-assignment
-        test, which 11523 lacks; an assign over the list's two pointers gives 11523's direct call. The members' names and
-        that the pointers come from data() are chosen. */
+    /** What decode(seeder, val) reads and writes (fn 5060), the visitors it hands the partial decoder, which
+        api::CPartialFileASN::DecodeObjectFunction (11523 holds it inlined) copies from its list with a direct call of
+        5704, vector::__assign_with_size, and the log it leaves, which that reader copies out by value, to test and
+        format. 5704 is a uenux2 copy apart from this library's own instance (3476, the assign over __wrap_iter that
+        BERDecoderPartial's setVisitors makes, which 679, 5060 and 8824 call); our link keeps one copy per symbol, so
+        the uenux2 call is over another iterator type (a reading). Measured on the whole link: an assign over begin()
+        and end() makes 3476's symbol in the uenux2 object, which links first, and 679, 3476, 5058, 5059 and 5060 leave
+        match; the vector's copy assignment keeps libc++'s self-assignment test, which 11523 lacks; an assign over the
+        list's two pointers gives 11523's direct call. The names and that the pointers come from data() are chosen. */
     void setVisitors(const BERDecoderPartial::Visitantes& visitors_)
     {
       visitors.assign(visitors_.data(), visitors_.data() + visitors_.size());

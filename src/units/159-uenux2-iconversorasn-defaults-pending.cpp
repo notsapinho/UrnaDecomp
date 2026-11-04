@@ -8,8 +8,9 @@
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
 //   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
 // - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record
-//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written: fn 781 has no name (2799
-//   matches since md/ builds with strict aliasing, and 5708, which it calls too, from unit 166's tree root).
+//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written (fn 781 is named now, unit
+//   161's; 2799 matches since md/ builds with strict aliasing, and 5708, which it calls too, from unit 166's tree
+//   root).
 // - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
 //   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: fn 183 and others have no name
 //   (412 has one since, unit 32's; 518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and

@@ -34,7 +34,11 @@
 #   out, and the second also fires when that log is not empty.
 # The partial reader's records, its control blocks' vtables and CFileSeeder's records lie in the entity readers' run of
 # the target's data (unit 280's fragment), between the Candidatos reader's records and LeBiometriaEleitor's: so
-# carregaarquivo.cpp's object instantiates them, and LeEleitores is defined there, before LeBiometriaEleitor.
+# carregaarquivo.cpp's object instantiates them, and LeEleitores is defined there, before LeBiometriaEleitor. Inside
+# that stretch the target puts the visitor's control block's vtable and typeinfo first (@1564316, @1564344, ahead of the
+# entity's typeinfo @1564356), and ours puts them after the entity's vtable (wasm-objdump -x -j Data of
+# carregaarquivo.cpp.o: the entity's typeinfo is segment 156, its vtable 194, the block's vtable and typeinfo 195 and
+# 196): the file holds, and the form's first reference to the block comes later than the original's.
 #
 # Measured forms (each object compiled alone at its file's flags and read with llvm-objdump -d; the whole link scored):
 # - LeEleitores: a converter named in it and the entity built from Desconverte over a visitor temporary stores the vptr
@@ -48,11 +52,12 @@
 #   2175 rows (measured with an earlier setVisitors, the copy assignment).
 #
 # Chosen, no evidence names them: LeEleitores, CarregaArquivoParcial and Prepara (names, and their being a free
-# function, a template pair and the visitor's static member), setVisitors and getLog and the typedefs' places in
-# asn1.h, CPartialFileASN's being a class, the error enumerators (from their messages), every local's name and every
-# line of the headers but the throws'. The record lines are the targets'; the classes' file paths are the records'
-# (cpartialfileasn.h, iconversorparcialasn.h) or rule 1 to 4 of how-to step 3 (the converter's head beside its .cpp,
-# CEntidadeEleitores in md/eleitor/, as the converter's directory mirrors).
+# function, a template pair and the visitor's static member), setVisitors and getLog and the typedefs' places in asn1.h,
+# CPartialFileASN's being a `class` rather than a `struct` (that it is a class the records give: they print `static`),
+# the error enumerators (from their messages), every local's name and every line of the headers but the throws'. The
+# record lines are the targets'; the classes' file paths are the records' (cpartialfileasn.h, iconversorparcialasn.h) or
+# rule 1 to 4 of how-to step 3 (the converter's head beside its .cpp, CEntidadeEleitores in md/eleitor/, as the
+# converter's directory mirrors).
 #
 # Not reconstructed: CConversorEntidadeEleitores::DoDesconverte (slot 2, target fn 11411, 7299 B), a trap in
 # 310-uenux2-cconversorentidadeeleitores-pending.cpp, whose header says what the target's body holds; it is the class's

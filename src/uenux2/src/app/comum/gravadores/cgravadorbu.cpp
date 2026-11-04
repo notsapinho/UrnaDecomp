@@ -3,19 +3,19 @@
 // above it are blank, the original's content not recovered, and where the function starts is a choice. The file's other
 // records (lines 484, 485, 542, 552, 560 and 636) belong to GravaResultado (fn 11629, slot 7), which holds
 // LeChavePublica and MontaEntidadeBU inlined and is not written (src/units/200-uenux2-cgravadorbu-pending.cpp).
-// Target fn 3819 (no record) follows AcrescentaVotoVotavel, written here as MontaVotosCargos with the five functions it
+// Target fn 3819 (no record) follows AcrescentaVotoVotavel, written here as MontaVotosCargos with the six functions it
 // holds inlined: GravaResultado calls it three times, once per vector FiltraCargos returns, with the map at +284, the
 // object at +196 (a CRdv: 3819 calls its slots 3, 4, 8, 9 and 10), CCandidaturas::GetInst() and CPartidos::GetInst().
 // Per cargo it builds the votes of each votable (the nominal votes of the candidates, or of a consulta's answers,
-// through the RDV's slot 3, then its blank and null votes, slots 9 and 8; the party votes of a proportional cargo,
-// slot 4; the null votes of a cargo with no candidate, slot 10) and pushes an md::CVotosCargo with the byte the map
-// holds for the cargo (map::at). MontaVotosVotaveis and MontaVotosNominais each run behind a frame of their own inside 3819, and
-// VotosRespostas's result is built apart and moved into MontaVotosNominais's, so the three are read as external
+// through the RDV's slot 3, then its blank and null votes, slots 9 and 8; the party votes of a proportional cargo, slot
+// 4; the null votes of a cargo with no candidate, slot 10) and pushes an md::CVotosCargo with the byte the map holds
+// for the cargo (map::at). MontaVotosVotaveis and MontaVotosNominais each run behind a frame of their own inside 3819,
+// and VotosRespostas's result is built apart and moved into MontaVotosNominais's, so the three are read as external
 // functions binaryen inlines into their one caller each (docs/how-to-decompile.md step 3), a reading; VotosNumeros,
 // VotosCandidatos and AcrescentaVotosSemCandidato are file-local, which clang inlines, a choice that gives the target's
 // code (src/units/200-uenux2-cgravadorbu.mk lists what was measured). Their names, their being free functions of comum
-// (none reads class state; AcrescentaVotoVotavel is public for them, a choice), their parameter types (references
-// where 3819 receives addresses) and the locals' names are chosen.
+// (none reads class state; AcrescentaVotoVotavel is public for them, a choice), their parameter types (references where
+// 3819 receives addresses) and the locals' names are chosen.
 // FiltraCargos (target fn 3818, no record) follows them: GravaResultado calls it three times, over the cargos of each
 // election (CConfiguracaoEleicao::GetCargos, fn 3775) with the types MAJORITARIO, PROPORCIONAL and CONSULTA, and it
 // copies the cargos of that type (the word at +4) into a vector it reserves for all of them first. In use band 3 it

@@ -26,8 +26,8 @@ void CAguardaMensagem::ProcessKey(uebyte)
     __builtin_trap();
 }
 
-// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callee with no
-// name: 1823 (491 and 3333 are named now, unit 205).
+// CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61: every callee is
+// named now (491 and 3333, unit 205; 1823, unit 168).
 void CIniciodeCiclo::StartState()
 {
     __builtin_trap();

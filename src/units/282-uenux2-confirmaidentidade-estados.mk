@@ -121,7 +121,8 @@
 # - The ProcessInput of CDigitalNaoReconhecida, CDigitalNaoReconhecidaDecBiometria and CDigitalNaoReconhecidaPorTempo
 #   (10473, 10477, 10485): `differs`, 13 over 78, 10 over 72 and 13 over 78 rows, every row an operand, the calls, the
 #   records and two local numbers: the target keeps the input field's pointer in local 0 once `this` is pushed for the
-#   store after the switch, ours in local 1. The same remainder as unit 277's 10731; in our link 10415 (unit 152), a
+#   store after the switch, ours in local 1. The same remainder as 10731 (unit 277) had before it called
+#   CAppState::SetNextState (unit 61), with which it matches: a form to measure here; in our link 10415 (unit 152), a
 #   body binaryen inlines callees into, takes local 0 as the target does, and
 #   app/comum/dados/md/estadoaplicacao/cestadogeralvota.h measures such a move of local numbers for SetEstadoVota. Not
 #   explained: neither form measured here gives local 0 (the switch as written, and the three files linked ahead of the

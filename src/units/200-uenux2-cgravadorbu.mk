@@ -51,7 +51,7 @@
 #   over 312 rows and 3816 2 over 243, operand-only, every operand a call's. It is the first form written; std::copy_if
 #   with a lambda was not tried.
 # - comum::MontaVotosCargos (fn 3819, no record, a chosen name) in cgravadorbu.cpp between AcrescentaVotoVotavel and
-#   FiltraCargos, the use band's order (3820, 3819, 3818), with the five functions it holds inlined (cgravadorbu.cpp's
+#   FiltraCargos, the use band's order (3820, 3819, 3818), with the six functions it holds inlined (cgravadorbu.cpp's
 #   header says what each does and what is chosen), and md::CVotosCargo's constructor, which it holds inlined too, in
 #   md/cvotoscargo.cpp (cvotoscargo.h says why it is out of line; the file's place in the list below is chosen). The
 #   libc++ code it holds (the copy assignment and the range insert of a std::vector<md::CVotosVotavel>, the push_back
@@ -83,6 +83,9 @@
 #   md/cvotoscargo.cpp after cgravadorbu.cpp in the list gave the same score as before it (482 over 1983, at the state
 #   of the second bullet's first number), and cgravadorbu.cpp built with strict aliasing gave 196 over 1969 for 3819
 #   (at the 40 state, a measurement only: the tree's flags stand).
+#   The helpers' being free functions of comum is how-to "Names no evidence gives" (they read no class state);
+#   static members of CGravadorBU are the other form that rule allows, which would leave AcrescentaVotoVotavel
+#   private, and a static member compiles as a free function does but for its name (a reading, not measured).
 # Measured in this link before step 8 (pnpm wasm score against the target): 3820 23 over 332 rows, 1944 4 over 137,
 # 3824 1 over 30, 1556 4 over 109, 3817 9 over 388, every one operand-only; every operand of 1944, 3824, 1556 and 3817 a
 # call's or a data address, and of 3820 those and the packed format string's address and two constants that are table

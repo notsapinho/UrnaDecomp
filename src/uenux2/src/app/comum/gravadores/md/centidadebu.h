@@ -15,7 +15,7 @@ namespace comum::md {
 // IConversorASN<ModuloTiposResultadosEcoUrna::Urna, md::CUrna>::Converte); CUrna's 136 bytes end at +160. The members
 // follow ModuloBoletimUrna::EntidadeBoletimUrna's first fields (cabecalho, fase, urna); their names are chosen. The
 // members from +160 on (fn 10273 reads further up to +286) and the constructor are not recovered, so nothing may
-// construct the class.
+// construct the class. The header's path, beside centidadebu.cpp in the directory its records name, is chosen.
 class CEntidadeBU {
 private:
     CCabecalhoEntidade m_cabecalho;

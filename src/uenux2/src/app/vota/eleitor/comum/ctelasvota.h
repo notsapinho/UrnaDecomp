@@ -220,8 +220,8 @@ CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const
 //   "CONTINGÊNCIA" when they hold a contingency urn (the string literal passed as such: packed argument type 13 with its
 //   address and 12), else nothing; then a fill from (0, 458) to (640, 480) in colour 22 and the text at (320, 460),
 //   centred, 2 over 22, in the font {15, 0} the target holds at @475008 and passes by address, which 3059, 6599, 7787,
-//   12040 and 12055 read too: a file constant of ctelasvota.cpp (a reading, as for FONTE_TITULO). Callers: fns 2380,
-//   6601 and 7787.
+//   12040 and 12055 read too: ctelasvota.cpp's FONTE_VERSAO, which CriaTelaQRCodeBU reads as well (a reading, as for
+//   FONTE_TITULO). Callers: fns 2380, 6601 and 7787.
 // - TelaNeutra (fn 2380): the message's lines (CStringUtils::Split on '&'), each centred at x 320 in the font of the size
 //   it is given, the first at 240 + size / 2 - lines * size - size / 4 and the next ones a size and a half apart, over
 //   the status header (5), then the location line when bit 0 of its last parameter is set, named "telaNeutra"

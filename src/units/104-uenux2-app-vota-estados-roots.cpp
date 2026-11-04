@@ -12,14 +12,14 @@
 // 4433: 7481 (11994 is in the link); 6037: 7160 (12077 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983:
 // 7160, 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and
 // 11858 are in the link); 1280: 11869, 11881, 11908 (11834, 11838, 11848, 11902, 11905, 11911 and 11927 are in the
-// link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the link); 1536: 10489, 10500 (6015, 10466, 10473, 10477, 10485 and 10593 are in the link); 5383: 10316 (10313 is in
-// the link); 1897: 10425 (10404 and 10419, units 152 and 142, are in the link). The
-// pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and with 11845, are in the link; so did 5943's,
-// whose callers 11834 and 11855 are, 5342's,
-// whose callers 10737 and 10791 are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of
-// comum::CRegistrarMesarios's and CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers
-// 12023, 12030 and 12077 are, 1337's, whose callers 4449, 6058, 7198, 7221, 11794, 11987, 11988 and 11994 are, and
-// 5428's, whose callers 10217 and 10734 are, and 5421's, whose callers 10626 and 10627 (unit 278's) are.
+// link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the link); 1536: 10500 (6015, 10466, 10473,
+// 10477, 10485, 10489 and 10593 are in the link); 5383: 10316 (10313 is in the link); 1897: 10425 (10404 and 10419,
+// units 152 and 142, are in the link). The pairs for 5942 and 5941 went: their target callers, 11848 with 11852 and
+// with 11845, are in the link; so did 5943's, whose callers 11834 and 11855 are, 5342's, whose callers 10737 and 10791
+// are, 2729's, whose callers 2895, 10317, 10383 and 6011 (the body of comum::CRegistrarMesarios's and
+// CMesarioRegistrado's ProcessInput, units 247 and 279) are, 3879's, whose callers 12023, 12030 and 12077 are, 1337's,
+// whose callers 4449, 6058, 7198, 7221, 11794, 11987, 11988 and 11994 are, and 5428's, whose callers 10217 and 10734
+// are, and 5421's, whose callers 10626 and 10627 (unit 278's) are.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.

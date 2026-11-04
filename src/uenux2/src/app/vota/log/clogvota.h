@@ -321,10 +321,10 @@ public:
 private:
     CLogVota();
 
-    // api::CLoga::loga (fn 433) with +4 and severity 2, for LogaEncerramentoAntesDoHorario, its one caller: defined in
-    // clogvota.cpp, where clang inlines it (wasm-objdump -d of the object), so it has no target function. That the
-    // call goes through a member, and the member's name, are chosen (the forms measured are in
-    // src/units/277-uenux2-app-vota-operador-outrasopcoes.mk).
+    // api::CLoga::loga (fn 433) with +4 and severity 2 for LogaEncerramentoAntesDoHorario, its one caller, in
+    // clogvota.cpp, where clang inlines it (wasm-objdump -d): no target function. Not comum::IEventosLog::logaAlerta
+    // (fn 1398), the same body, which the target keeps out of line (8 callers) where 10706 holds 433 inline. The call
+    // through a member and its name are chosen (src/units/277-uenux2-app-vota-operador-outrasopcoes.mk has the forms).
     void LogaAlertaVota(const std::string& mensagem);
 };
 
