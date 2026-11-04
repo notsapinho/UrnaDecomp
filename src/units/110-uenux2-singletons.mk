@@ -365,8 +365,8 @@
 # md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265) and the find (1703) keep their bytes under the
 # new types, and step 9 renamed both match lines to the new symbols. The names, the file and the lines (after the
 # destructor, the CEleitorIdentidade overload first) are chosen; the named local for the identity is measured
-# (celeitores.h). The roots' LocalizaEleitores stands for 2264's caller not in the link, 3616 (5385 and 10631 are, unit
-# 104's, and so are 10789 and 10790, unit 119's slots 14 and 13).
+# (celeitores.h). Its callers are all in the link: 3616 (unit 319's), 5385 (unit 214's), 10631 (unit 104's), 10789
+# and 10790 (unit 119's slots 14 and 13), so the roots' LocalizaEleitores, which stood for 3616, went.
 #
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws

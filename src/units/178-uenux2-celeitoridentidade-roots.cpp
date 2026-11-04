@@ -6,8 +6,8 @@
 //   unit 50; 11407, fragment 225; 10313, unit 71; 10337, unit 135), and the first five, 11407, 10313 and 10337 pass the
 //   type as a constant or a column's value; the stand-ins stay for the two that wait (10425, 11411), which pass it as a
 //   variable.
-// - FormataIdentidade (fn 2798): callers 3616, 10420 (in the link, unit 142, which passes the type as the constant 1)
-//   and 10631 (in the link, unit 104); the stand-ins stay for 3616.
+// - FormataIdentidade (fn 2798): callers 3616 (unit 319), 10420 (unit 142, which passes the type as the constant 1)
+//   and 10631 (unit 104), all in the link: its stand-ins went.
 // - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50), 10420 (unit 142's validatitulosuspensao.cpp,
 //   binaryen-inlined there), 10313 (unit 71) and 10721 (unit 277), all in the link: its stand-ins went.
 // - IRegraIdentidade::EhValida (fn 3723): callers 2803 and 10627 (vota::CValidaIdentidade's slot 2, unit 278's, which

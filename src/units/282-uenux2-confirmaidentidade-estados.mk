@@ -114,10 +114,8 @@
 #
 # Matched since: CInformaAnoDesabilitadoDemo::GetInst, its constructor and form, which have no target function of their
 # own: fn 10500 (unit 239's CNomeEleitor::ProcessInput) holds them inlined, and the statics' exit destructors (10505,
-# s_mutex's; 10506, s_inst's) match through the names 10500's votes give the statics. cinformaanodesabilitadodemo.cpp
-# is compiled in unit 239's list, ahead of cnomeeleitor.cpp, for 10500's locals (unit 239's fragment has the
-# measurement); the move renamed 3883's merge name to its new first member (byn$mgfn-shared$ of
-# CInformaAnoDesabilitadoDemo::ProcessInput), which its hand line follows, and left 10496, 10504 and 10508 matched.
+# s_mutex's; 10506, s_inst's) match through the names 10500's votes give the statics. 10500 needs this file's object
+# ahead of cnomeeleitor.cpp's, so this list compiles unit 239's two files after it (below).
 #
 # Written and not matched, and what each waits for:
 # - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
@@ -172,9 +170,17 @@
 # ObtemEstadoPosReconhecimentoBiometrico (`digitais`, whose length puts each record's column at 22); the lines of the
 # functions with no record (each file's head comment says which); cpededigital.cpp's StartState statements between its
 # records' lines.
-# cinformaanodesabilitadodemo.cpp stays this unit's and is compiled in unit 239's list, ahead of cnomeeleitor.cpp,
-# whose fn 10500 holds its GetInst inlined (src/units/239-uenux2-cnomeeleitor.mk has the measurement).
+# This list also compiles unit 239's cnomeeleitor.cpp and cnomeeleitorauxiliares.cpp, after
+# cinformaanodesabilitadodemo.cpp and before cinformaeleitorpodevotar.cpp, the order of the classes' vtables in the
+# target's data (@1591104, @1591176, CNomeEleitor's @1591248, @1591352): unit 239's fn 10500 holds
+# CInformaAnoDesabilitadoDemo::GetInst inlined and reads 172 over 1736 rows, all operand rows, with this file's object
+# ahead of cnomeeleitor.cpp's, 335 over 1748 the other way (src/units/239-uenux2-cnomeeleitor.mk has the measurement
+# and the four pairs of objects the move inverts). 3883's merge name stays CInformaBioDesabilitadaDemo's, the first of
+# the three in link order.
 CONFIRMAIDENTIDADE_ESTADOS_SRCS := src/app/vota/operador/confirmaidentidade/cinformabiodesabilitadademo.cpp \
+    src/app/vota/operador/confirmaidentidade/cinformaanodesabilitadodemo.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitor.cpp \
+    src/app/vota/operador/confirmaidentidade/cnomeeleitorauxiliares.cpp \
     src/app/vota/operador/confirmaidentidade/cinformaeleitorpodevotar.cpp \
     src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecidaportempo.cpp \
     src/app/vota/operador/confirmaidentidade/cdigitalreconhecida.cpp \

@@ -48,11 +48,14 @@
 # member's type is unit 50's api::CDateTime (api/util/cdatetime.h and cdate.h).
 #
 # CAppState::SetNextState, out of line in cappstate.cpp, has no target function: binaryen inlines its one store into
-# every caller. Five states call it for their next-state stores: vota::CEncerramentoAntecipado::ProcessInput (10731) and
-# CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
+# every caller. Seven functions call it for their next-state stores: vota::CEncerramentoAntecipado::ProcessInput (10731)
+# and CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
 # comum::CConfirmaFimRegistroMesarios::ProcessInput (10383), unit 135's; CMesarioRegistrado::StartState (10339), unit
-# 279's. Each matches so and not with the assignment; the bytes ask for the call itself in 10737 alone, and the four
-# others match a replay in which binaryen inlined a call (below). What was measured:
+# 279's; vota::CPedeAnoNascimentoSemBiometria::StartState (10490), unit 142's; vota::CNomeEleitor::HabilitaEleitor
+# (5400), unit 239's. Each matches so and not with the assignment; the bytes ask for the call itself in 10737, 5400 (a
+# store in each arm, as 10737's: below) and 10490 (the next state stored first, ahead of two member stores clang moves
+# it after when it is assigned: unit 142's fragment), and the four others match a replay in which binaryen inlined a
+# call (below). What was measured for the first five:
 # - With the assignment the first four differ in binaryen's local numbers, the target reusing `this`'s local where ours
 #   takes another (10731: `local.tee 0` against our `local.tee 1`); 10731 and 10383 in those alone, 10339 also by two
 #   rows inserted and two deleted, 10710 also in an `i32.or`'s operand order and a store's place. In a replay of the

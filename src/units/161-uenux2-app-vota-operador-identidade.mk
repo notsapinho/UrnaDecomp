@@ -134,10 +134,10 @@
 # the target's does; that the call is a statement of the constructor's body is chosen. The statics are defined after
 # the file statics StartState clears and before StartState, as band 1 orders their exit destructors (10518, 10517 and
 # 10516, then 10515 and 10514, then 10512: `awk -F'\t' '$1>=10511 && $1<=10518' ledger/ordinals.tsv`). Its callers in
-# the link are unit 282's 10474 and 10486, which drop the result; the roots stand in for 10425 and 10500, the reader
-# 10500 among them. Before steps 7 to 9, 12 over 42 rows, operand-only. With it in the link, 5399 (unit 282's
-# CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
-# CControlaReconhecimento::StartState (10512) is written and not matched: 61 over 217 rows. The target keeps each arm's
+# the link are unit 282's 10474 and 10486, which drop the result, and unit 239's 10500, which reads it; the roots stand
+# in for 10425, which drops it. Before steps 7 to 9, 12 over 42 rows, operand-only. With it in the link, 5399 (unit
+# 282's CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
+# CControlaReconhecimento::StartState (10512) is written and not matched: 60 over 216 rows. The target keeps each arm's
 # next-state store, form call and CPedeDigital::GetInst call apart (two stores of `this`, two of 2740's result), where
 # our link joins them into one store of a block's value; not explained. And the five words from @1908712, which it
 # fills in the mesarios' training, have 10512 as their only reader in the link (`/usr/bin/grep -rlE 'i32\.const

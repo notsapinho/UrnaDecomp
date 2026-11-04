@@ -21,7 +21,9 @@
 //   are in splat/matched.txt or written in the link.
 // - vota::CControlaReconhecimento::GetInst (fn 1256): its target callers are 10425, 10474, 10486 and 10500; 10474 and
 //   10486 (unit 282's) are in the link and drop the result, as 10425 does, while 10500 (unit 239's, in the link) stores
-//   it as its next state. The stand-in stands for 10425 and reads the result, as 10500 does.
+//   it as its next state. The stand-in stands for 10425 and drops the result, as 10425 does: its read of the result
+//   stood for 10500, a real reader in the link now, so it went (src/units/README.md "Companion files"), measured with
+//   steps 6 to 10: every match row stays, 1256's among them.
 // The call of CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097) went: its target callers 10500, 10443, 10447,
 // 10489 and 10626 are in the link.
 // The stand-in for vota::MontaTelaEleitorPodeVotar (5410) went: its callers 1256 (this unit's) and 5399 (unit 282's) are
@@ -65,10 +67,11 @@ __attribute__((noinline)) int PedeIdentidade()
     return w161_pede_identidade() + 89;
 }
 
-// Stands for 10425.
+// Stands for 10425, which drops the result.
 __attribute__((noinline)) int ControlaReconhecimento()
 {
-    return reinterpret_cast<const char*>(&CControlaReconhecimento::GetInst())[9] + 161;
+    CControlaReconhecimento::GetInst();
+    return 161;
 }
 
 const void* volatile w161_sink;

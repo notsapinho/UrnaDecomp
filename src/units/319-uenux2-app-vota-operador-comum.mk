@@ -1,6 +1,6 @@
 # uenux2 vota operador comum: the voter's photo on the operator's LCD (app/vota/operador/comum/fotoeleitor.{h,cpp} and
 # infofoto.{h,cpp}): vota::MostraFotoIndisponivel (target fn 3617, matched) and vota::ApresentaFotoEleitor (3616,
-# written, `no-candidate`: below), with MostraEleitorSemBiometria, ValidaFotoEleitor and LeInfoFoto, which 3616 holds
+# written, `differs`: below), with MostraEleitorSemBiometria, ValidaFotoEleitor and LeInfoFoto, which 3616 holds
 # inlined. Paths relative to src/uenux2.
 #
 # Evidence:
