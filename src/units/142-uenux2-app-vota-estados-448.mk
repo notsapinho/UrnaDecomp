@@ -15,8 +15,10 @@
 #   docs/reference/facts/reading.md R5, and fn 448 destroys the members and stores no vptr (R4). Measured on
 #   CUrnaInspecionada: without final the D2 gains the vptr store (55 rows against 50).
 # - The members' offsets and types: the constructors that fns 11797, 2747, 10500, 1150 and 10415 hold inlined (the class
-#   headers list what each stores). Three stay unwritten here: fns 11797, 10500 and 10415 call functions with no name
-#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fns 1150 and 2747 are written (below).
+#   headers list what each stores). Two stay unwritten here: fns 11797 and 10500 call functions with no name
+#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fns 1150 and 2747 are written
+#   (below), and so is CPerguntaCodigoSuspensao's GetInst, which 10415 (unit 152's
+#   CPerguntaEleitorVotando::ProcessInput) holds inlined.
 # - The log members: fns 10594 and 10421 call vota::CLogVota::GetInst (fn 184) and then open a stack frame of their own
 #   (docs/reference/facts/reading.md R10) that builds the message and calls api::CLoga::loga (fn 433) on CLogVota's +4,
 #   or comum::IEventosLog::loga (fn 233), as unit 119's four Loga members do.
@@ -146,7 +148,7 @@
 #   the header defines it in its class, and keeps the four calls when it is defined out of line, in another TU or in the
 #   caller's (docs/reference/facts/codegen.md C6).
 # - Placement, by how-to step 3's rule 2: in its use band (uses 4, ledger/ordinals.tsv) 2733 links after 2735,
-#   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (no name), and before
+#   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (CEleitorDemorando::GetInst, unit 152's), and before
 #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 (stretch 1080 of ledger/tu-clusters.tsv, labelled that file).
 #   In the data the one recorded file between those ends is this one (record @1593044), and the lower end is
 #   aguardaeleitor's too: so the directory is app/vota/operador/aguardaeleitor/, against the class's namespace. The file
@@ -176,6 +178,17 @@
 # the first block and 13 to the last. With 2, 5, 13, 11 over 38 rows (3 inserted, 3 deleted); as written, 5 over 35,
 # operand rows only, and a match (pnpm wasm score before steps 7 to 9).
 #
+# Matched since: vota::CPerguntaCodigoSuspensao::GetInst, inlined into 10415 (unit 152's fragment has its rows), with
+# its statics' exit destructors (10422, s_mutex's; 10423, s_inst's), named by 10415's votes. The constructor, behind a
+# 64-byte frame of its own: CAppState's with EVENTO_TECLA | EVENTO_ENTRADA (3), the forms at +12 and +20, each from a
+# helper clang inlines whose builders share one frame slot (+52): AddClock({33, 1}), "Informe seu título para" at {1,
+# 1}, "suspender a votação" at {1, 2}, "CORRIGE: retornar" at {1, 4}, "CONFIRMA: suspender" at {40, 4} on the right,
+# AdicionaCampoNumerico(builder, 12, true, {1, 3}) (fn 1151), GetInteractiveForm("", true); then AddClock({33, 1}),
+# "Título inválido para" at {1, 1}, "suspender a votação" at {1, 2}, GetInteractiveForm("", true); +28 cleared after
+# both (the member list's order). The vtable's sink in the roots went: this constructor stores the vptr. Chosen: the
+# helpers' names, their anonymous namespace, the statics' lines before StartState (10423 and 10422 above 10421 in use
+# band 1).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
@@ -188,8 +201,8 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_448_SRCS)
 # with the unit's flags
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-pending.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-pending.cpp -o $(R)
-# nothing reconstructed references the five classes yet: 142-uenux2-app-vota-estados-448-roots.cpp takes their vtables'
-# addresses, and stands in for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
+# nothing reconstructed references two of the classes yet: 142-uenux2-app-vota-estados-448-roots.cpp takes their
+# vtables' addresses, and stands in for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-roots.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/142-uenux2-app-vota-estados-448-pending.o $(APP)/142-uenux2-app-vota-estados-448-roots.o

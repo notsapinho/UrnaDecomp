@@ -21,10 +21,12 @@ namespace vota {
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read(), record cinteractiveform.h:57 @1587980). Slots 0 and 1
 // are fns 244 and 387, the out-of-line destructors 49 final states share: a std::shared_ptr at +12, the form, is all
 // they release. A singleton: GetInst creates the 20-byte object under a static std::mutex (@1905256) and keeps it in a
-// static std::unique_ptr (@1905280); binaryen inlines it into its one caller, vota::CEscolheOpcao::ProcessInput (fn
-// 10689, pending), so GetInst, the constructor (whose three fields are the texts of fns 10701, 10700 and 10699, passed
-// by table slot) and the statics are declared and not written here: they wait for that caller. The member names are
-// chosen. src/units/277-uenux2-app-vota-operador-outrasopcoes.mk says which of this is evidence and which is chosen.
+// static std::unique_ptr (@1905280). Its one caller, vota::CEscolheOpcao's ConfirmaOpcao (inlined into fn 10689),
+// holds it inlined with the constructor behind a 64-byte frame of its own, so it has no target function: written in
+// ccontadoresbiometria.cpp, it has that one call site in our link too. The constructor builds the form from three
+// texts passed by table slot (fns 10701, 10700 and 10699, defined there), right-aligned at column 35 of lines 1 to 3,
+// "CORRIGE: retornar" and the input control. The member names are chosen.
+// src/units/277-uenux2-app-vota-operador-outrasopcoes.mk says which of this is evidence and which is chosen.
 class CContadoresBiometria final : public comum::CAppState {
 public:
     virtual ~CContadoresBiometria() override;

@@ -36,9 +36,9 @@ __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(
 // Stands for fn 903's callers 7160 and 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566, unit
 // 104's 12082 and 12081 and unit 277's 10710 are linked).
 __attribute__((noinline)) int VotasConst(int a, int b) { return w903(a, 51) * w903(b, 51); }
-// Stands for fn 697's callers: 6737, 7174, 10209, 10440, 10501 (unit 199's 11994, unit 142's 1150, unit 50's 10569,
-// unit 197's 3229, unit 138's 11835, unit 161's 10680, 652 and 10677, unit 121's 2753, unit 277's 10706 and 10722, and
-// unit 104's 11924 and unit 156's 12077 are linked).
+// Stands for fn 697's callers: 6737, 7174, 10209, 10501 (unit 199's 11994, unit 142's 1150, unit 50's 10569, unit
+// 197's 3229, unit 138's 11835, unit 161's 10680, 652 and 10677, unit 121's 2753, unit 277's 10706 and 10722, unit
+// 104's 11924, unit 156's 12077 and unit 152's 10440 are linked).
 __attribute__((noinline)) int Treinamentos() { return w697() | (w697() << 1); }
 // Stands for fn 3788's callers: 7787, 12098, 12110.
 __attribute__((noinline)) void Codigos(int a, int b, int c)
@@ -49,8 +49,8 @@ __attribute__((noinline)) void Codigos(int a, int b, int c)
 // Stands for fn 2841's callers 11242, 12105 (two calls) and 12110, which pass the turn they read (not a constant).
 __attribute__((noinline)) int Votos(int a, int t) { return w2841(a, t) + 2 * w2841(a + 4, t ^ 1); }
 
-// Stands for fn 819's callers: 2543, 7787, 11260, 11629, 11976 (11213, 11255, 3820, 6954, 11181, 5922, 11261, 11683,
-// 11711 and 5604, unit 155's written Gera, are in the link).
+// Stands for fn 819's callers: 7787, 11260, 11629, 11976 (11213, 11255, 3820, 6954, 11181, 5922, 11261, 11683, 11711,
+// 5604, unit 155's written Gera, and 2543, unit 98's, are in the link).
 __attribute__((noinline)) int Partidos() { return w819() + 7 * w819(); }
 // Stands for fn 2819's callers: 7787, 12520, 12641.
 __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "api/gui/capplicationcontext.h"
 #include "app/comum/cappstate.h"
@@ -18,12 +19,13 @@ namespace vota {
 // 10466, 10465]): the operator's screen that reads the voter's fingerprint. It overrides the destructors (slots 0 and 1,
 // fns 2739 and 10469), StartState (slot 2, fn 10468, records cpededigital.cpp:115, 120 and 125), FinishState (slot 5,
 // fn 10467, records 131 and 132), ProcessInput (slot 7, fn 10466) and ProcessTick (slot 8, fn 10465, records 162 to
-// 164); StartState, FinishState and ProcessTick are pending (src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp
-// says what each waits for). A singleton: fn 2740 creates the 84-byte object on first use and keeps it in a static
-// std::unique_ptr (@1909064); the constructor, inlined there, passes comum::CAppState::EVENTO_ENTRADA |
-// comum::CAppState::EVENTO_TICK (6) to the base's and stores what the layout below holds. Not recovered: the
-// constructor, GetInst (fn 2740, whose direct callees all have names now) and the members the records
-// name at lines 234, 262 and 279 (ObtemEstadoPosReconhecimentoBiometrico, VerificaDigital, VerificaDigitalTreinamento).
+// 164); ProcessTick is pending (src/units/282-uenux2-confirmaidentidade-estados-pending.cpp says what it waits for). A
+// singleton: GetInst (fn 2740) creates the 84-byte object on first use under a static std::mutex (@1909040, destroyed
+// at exit by fn 10471) and keeps it in a static std::unique_ptr (@1909064, by fn 10472); the constructor, inlined
+// there behind a frame of its own, passes comum::CAppState::EVENTO_ENTRADA | comum::CAppState::EVENTO_TICK (6) to the
+// base's and stores what the layout below holds. ObtemEstadoPosReconhecimentoBiometrico is the member its record names
+// (cpededigital.cpp:234, fn 5397), out of line with two calls from ProcessTick; the members the records name at lines
+// 262 and 279 (VerificaDigital, VerificaDigitalTreinamento) are held inlined by ProcessTick and not written.
 //
 // The destructor is out of line: the deleting one (fn 10469) calls it, drops its result and frees `this`
 // (docs/how-to-decompile.md step 5). It destroys, in this order, the api::CApplicationContext at +32 (a call of its
@@ -31,9 +33,9 @@ namespace vota {
 //
 // The layout: +11, +12 and +13 three bytes, each the id vota::CThreadVota::AddStoppedTick (fn 807) returns on
 // vota::CThreadOperador for 30000, 15000 and 50 ms, the first in the base's tail padding; +16 and +24 two forms, each
-// from api::CMTFormBuilder::GetInteractiveForm (fn 301), and ProcessInput reads the first; +32 the context
-// api::CriaContextoAplicacao (fn 3682) builds with the kind 2. The member names are chosen; the bytes' type is the type
-// of AddStoppedTick's result.
+// from api::CMTFormBuilder::GetInteractiveForm (fn 301): ProcessInput reads the first, StartState shows it, and the
+// second is "Por favor, aguarde."; +32 the context api::CriaContextoAplicacao (fn 3682) builds with the kind 2. The
+// member names are chosen; the bytes' type is the type of AddStoppedTick's result.
 class CPedeDigital final : public comum::CAppState {
 public:
     virtual ~CPedeDigital() override;
@@ -51,11 +53,16 @@ public:
 private:
     CPedeDigital();
 
+    void ObtemEstadoPosReconhecimentoBiometrico(const bool reconhecido);
+
+    static std::unique_ptr<CPedeDigital> s_inst;
+    static std::mutex s_mutex;
+
     uebyte m_tickLeitura;
     uebyte m_tickTimeout;
     uebyte m_tickVerificacao;
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
-    std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_formErro;
+    std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_formAguarde;
     api::CApplicationContext m_contexto;
 };
 

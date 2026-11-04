@@ -119,6 +119,9 @@
 # the two locals, from a TCargoID local holding cargo + 1, and from an iterator loop for the structured binding.
 # Pushing a named local differs only in calling push_back(const unsigned int&) for push_back(unsigned int&&).
 # The includes it needed (ccargos.h, cstringutils.hpp) took two of the blank lines above GetInst's record line.
+# comum::ChaveResposta, in crespostas.cpp after Busca: with ccandidaturas.cpp's ChaveCandidatura (unit 89) the body
+# binaryen keeps as target fn 1939, whose match line names ChaveResposta since crespostas.cpp links first, as for 1273.
+# comum::VerificaVotos (11514, unit 98) calls the two; unit 98's fragment has the measurement and the choices.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
 #   since.
@@ -218,7 +221,8 @@
 #   operator, 11523) holds comum::asn::IConversorParcialASN::Desconverte (iconversorparcialasn.h:52) and
 #   api::CPartialFileASN's ReadFromFile and DecodeObjectFunction (cpartialfileasn.h:182, 277, 285), none reconstructed,
 #   and calls comum::asn::CConversorEntidadeEleitores's slot 2 (11411, not written) through its vtable. 6734 calls 5772,
-#   2543 (over 2834 and 11514, not written) and 1551, 1692, 2826, 3763, 3765, 5723, 5725, 5763 and 5766, none written.
+#   2543 (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763,
+#   3765, 5723, 5725, 5763 and 5766, none written.
 #   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
 #   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
 #
@@ -251,12 +255,11 @@
 #   lines are a choice, after LocalizaEleitor. Being private is chosen. Its __func's slots (vtable @1559564: 11520,
 #   11519, 11517, 11516 and 11515, the clones, the call operator, target and target_type; the others are the shared
 #   174, 144, 218 and 355) come from this object: 2 over 8, 1 over 5, 1 over 11 and 1 over 3 rows, operand-only, data
-#   and calls. The call operator, 11517, scores 169 over 1604 rows, operand-only, 35 of them local numbers: locals 5
-#   and 6 swap from the first Position() result of ReadFromFile(const CFile &) on, the instructions the same. Our
-#   object keeps the two ReadFromFile instances and DecodeObjectFunction out of line after the call operator, and
-#   binaryen inlines them into it (none is in names.tsv); reading: the order binaryen inlines them in, which
-#   docs/reference/facts/codegen.md C4 measures, and which here only the TU's order of template instances could move.
-#   No source form was tried. It stays written (the lambda is 5767's), its row differs.
+#   and calls. The lambda calls CarregaArquivo<asn::CConversorImpedido> (unit 280's carregaarquivo.cpp: the target's
+#   data put this read's records in the entity readers' run, which unit 280 reads as that file's object), which binaryen
+#   inlines into the call operator, 11517: unit 280's fragment has that evidence and the scores (with the read written
+#   in the lambda, 35 rows of local numbers differed: locals 5 and 6 swapped from the first Position() result of
+#   ReadFromFile(const CFile &) on).
 # - comum::MontaCaminhos (1936; name, namespace and external linkage are chosen): the directory prepended to each
 #   name, after a reserve. 6 over 181 rows, operand-only, calls and data. This file is a reading the data support, more
 #   than a choice: its target callers are 5772, 6734 and 7787, which holds CEleitores::StaticLoad's records 395 and
@@ -271,10 +274,20 @@
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
 # - 2822 walks the base CDataMap's map at +4 and counts the records whose detail holds dynamic data (the optional's flag
 #   at +192), whose GetDinamico() (1271, called twice) has tipo_habilitacao 0 (+36) and estado_comparecimento 3 (+32),
-#   and returns the count's low 16 bits. Its callers (10699, 11242, 12098, 12110, not written) pass
+#   and returns the count's low 16 bits. Its callers (10699, unit 277's, written; 11242, 12098 and 12110, not) pass
 #   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
 #   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
+# - 2821 and 1935, CEleitores::QuantidadeHabilitacaoBiometrica and QuantidadeHabilitacaoBiografica: the same count for
+#   the kinds of enabling 1 and 2 (md::CEleitorDinamico's HabilitaPorBiometria and HabilitaPorMesario store them). The
+#   target holds each as a 9-byte thunk of one body binaryen merged, fn 6034 (135 B), which takes the kind as its second
+#   parameter (2821 passes 1, 1935 passes 2); 2822 keeps a body of its own: it tests the kind with a br_if on the loaded
+#   word itself, no compare (a reading of why binaryen leaves it out of the merge).
+#   Written as 2822 is, they form the same merge in our link: 6034 matches as the byn$mgfn-shared$ body named after
+#   QuantidadeHabilitacaoBiometrica (the first member in link order), 2821 and 1935 by step 8's pair-addr names. Their
+#   callers 10701 and 10700 (unit 277's) are in the link and call one each; unit 216's roots stand for the others. In
+#   celeitores.cpp after 2822, a choice their bands allow (2821 follows 2822 in band 4, 1935 follows MontaCaminhos,
+#   1936, in band 6); their names are chosen from the texts 10701 and 10700 format.
 # - 2823, CEleitores::QuantidadeAptos (celeitores.cpp, the lines just above 2822's, a choice; band 4 runs 2824, 2823,
 #   2822): it walks the same map and, for each record whose detail has no impediment (CEleitorDetalhe::SemImpedimento,
 #   fn 2266, celeitordetalhe.cpp's), adds one to the first of two 16-bit counts it returns through the result's address

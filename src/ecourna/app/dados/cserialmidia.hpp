@@ -14,6 +14,11 @@ public:
     // The serial as hexadecimal text (fn 9257, used by app/dados/asn/midias/cconversordadosgeracaomidia.cpp).
     std::string ToString() const;
 
+    // The serial's bytes: comum::IGravadorEnvelope's builder (inlined into uenux2's target fn 11626) passes the member
+    // at +32 of a CInformacaoMidia, this class's vector, to CStringUtils::BytesToHexString itself, not ToString. The
+    // name is chosen.
+    const std::vector<uebyte>& GetSerial() const { return m_serial; }
+
 private:
     static bool ValidaSerial(const std::string& serial);
 

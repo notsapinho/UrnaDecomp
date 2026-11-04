@@ -90,9 +90,10 @@
 # CValidaIdentidade's vtable and typeinfo (@1589064, @1589108) lie between CProcuraEleitor's (@1589008) and
 # IEleitorImpedidoVotar's (@1589136), leidentidade/ objects.
 #
-# Roots: the two states' vtables (for 10451), and stand-ins for two members other units' sources hold: unit 221's
-# CRegistraDigitalOperador::GetInst, for its caller 10443, and unit 161's CVerificaDadoEleitor::GetInst, for its four
-# callers 10447, 10473, 10477 and 10485. Each of those units' fragments says so.
+# Roots: the two states' vtables (for 10451), and a stand-in for a member another unit's source holds: unit 221's
+# CRegistraDigitalOperador::GetInst, for its caller 10443 (that unit's fragment says so). The one for unit 161's
+# CVerificaDadoEleitor::GetInst went: its four callers, 10447 (unit 161) and 10473, 10477 and 10485 (unit 282), are in
+# the link.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_VALIDAIDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cvalidaidentidade.cpp \

@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "api/gui/cinteractiveform.h"
+#include "api/gui/cmtformbuilder.h"
 #include "api/util/csystem.h"
 #include "app/comum/dados/md/cvalidadoridentidade.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
@@ -18,10 +19,56 @@
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
+#include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
 namespace vota {
 
 CPerguntaCodigoSuspensao::~CPerguntaCodigoSuspensao() = default;
+
+namespace {
+
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTela()
+{
+    api::CMTFormBuilder builder;
+    builder.AddClock(api::SPoint{33, 1});
+    builder.AddTextField("Informe seu título para", api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("suspender a votação", api::SPoint{1, 2}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("CORRIGE: retornar", api::SPoint{1, 4}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("CONFIRMA: suspender", api::SPoint{40, 4}, api::ALINHAMENTO_DIREITA);
+    AdicionaCampoNumerico(builder, 12, true, api::SPoint{1, 3});
+    return builder.GetInteractiveForm("", true);
+}
+
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTelaTituloInvalido()
+{
+    api::CMTFormBuilder builder;
+    builder.AddClock(api::SPoint{33, 1});
+    builder.AddTextField("Título inválido para", api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("suspender a votação", api::SPoint{1, 2}, api::ALINHAMENTO_ESQUERDA);
+    return builder.GetInteractiveForm("", true);
+}
+
+} // namespace
+
+CPerguntaCodigoSuspensao::CPerguntaCodigoSuspensao()
+    : comum::CAppState(EVENTO_TECLA | EVENTO_ENTRADA)
+    , m_form(MontaTela())
+    , m_formConfirmacao(MontaTelaTituloInvalido())
+    , m_bLido(false)
+{
+}
+
+CPerguntaCodigoSuspensao& CPerguntaCodigoSuspensao::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPerguntaCodigoSuspensao());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CPerguntaCodigoSuspensao> CPerguntaCodigoSuspensao::s_inst;
+std::mutex CPerguntaCodigoSuspensao::s_mutex;
 
 void CPerguntaCodigoSuspensao::StartState()
 {

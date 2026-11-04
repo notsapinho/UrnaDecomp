@@ -36,7 +36,12 @@ CCandidaturas::Container::iterator CCandidaturas::Localiza(TCargoID cargo, TCand
     return it;
 }
 
-// (original lines 62-84: content not recovered)
+uedword ChaveCandidatura(md::TCargoID cargo, TCandidatoID candidato)
+{
+    return cargo * 1000000 + candidato;
+}
+
+// (original lines 67-84: content not recovered)
 #line 85
 const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
 {

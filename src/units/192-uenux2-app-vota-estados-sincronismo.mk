@@ -1,71 +1,40 @@
-# uenux2 vota states no landed file holds: vota::CSincronismoEleitor (app/vota/eleitor/csincronismoeleitor.{h,cpp}) and
-# vota::CPedeDigital (app/vota/operador/confirmaidentidade/cpededigital.{h,cpp}). Paths relative to src/uenux2.
+# uenux2 vota state no landed file holds: vota::CSincronismoEleitor (app/vota/eleitor/csincronismoeleitor.{h,cpp}).
+# Paths relative to src/uenux2. vota::CPedeDigital (app/vota/operador/confirmaidentidade/cpededigital.{h,cpp}) was this
+# unit's too: its file is in unit 282's list now, after the files of the two classes whose GetInst its fn 5397 holds
+# inlined (that fragment measures the order), and its matches (2739, 10469, 10466, 10467), their notes, its pending
+# ProcessTick and the roots it needs went with it.
 #
 # Target functions matched:
 #   vota::CSincronismoEleitor::StartState (slot 2)             7178
 #   vota::CSincronismoEleitor::ProcessKey (slot 6)              7181
 #   the exit destructors of s_inst and s_mutex                  7195, 7187
-#   vota::CPedeDigital's destructor and deleting destructor     2739, 10469
-#   vota::CPedeDigital::ProcessInput (slot 7)                   10466
-# Pending, trapped in 192-uenux2-app-vota-estados-sincronismo-pending.cpp (its header says what each waits for):
-# CPedeDigital's StartState (10468) and ProcessTick (10465).
-# Matched since: CPedeDigital::FinishState (10467, slot 5) at its records (cpededigital.cpp:131 and :132, column 5, each
-# the start of a CPolySingleton<api::IFingerScanner>::instance() call that takes the default argument): the scanner's
-# slot 7 with 0, its slot 6, then api::CApplication::s_contextos.Pop of the context at +32 (5553), as unit 197's
-# CEleitorVotando pops its own; 7 over 46 rows, all operand-only, before steps 7 to 9.
 # CSincronismoEleitor's GetInst, statics and constructor are in csincronismoeleitor.cpp, the constructor out of line
 # (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is
 # written and not matched (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.
-# Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740, which calls functions with no name or that
-# no form has matched. The roots keep CPedeDigital's vtable by its address (the roots' header); CSincronismoEleitor's
-# vptr store is in the link, inlined into FinalizaEleitor, so its vtable's stand-in went (the link without it moves no
-# row into or out of match).
+# No roots: CSincronismoEleitor's vptr store is in the link, inlined into FinalizaEleitor, so its vtable's stand-in
+# went (the link without it moves no row into or out of match).
 #
 # Evidence:
 # - CSincronismoEleitor::StartState posts 13 to the operator's queue (the queue's inline Post: Insert, fn 501, with
 #   priority 1 and the queue's address in the message), sets m_pNextState, resets vota::CTelasVota's progress bar at
 #   +180 to its +28 (api::CProgressBar::SetValor, fn 3667, with GetLimiteInferior) and shows the form at +172 (slot 2),
 #   through ctelasvota.h's GetBarraSincronismo and GetTelaSincronismo. Insert of a temporary message gives the same
-#   function (measured: both `4 over 43 rows`, every row a call's or an address's operand); Post is written, as for
-#   the operador states' messages (fragment 152 has the case where only Post gives the target's frame).
+#   function (measured: both `4 over 43 rows`, every row a call's or an address's operand); Post is written, as for the
+#   operador states' messages (fragment 152 has the case where only Post gives the target's frame).
 # - CSincronismoEleitor::ProcessKey sets m_pNextState (+4) to this and, on the key 5 when
 #   vota::impl::ISincronismoVotoEleitor::GetInst().Sincroniza() (slot 2) returns true, to vota::CFimVotoEleitor's
 #   GetInst. It holds both GetInsts inlined, the interface's with its default instance and the state's with its
 #   constructor, and calls the executable TU's has<T> and push<T> thunks (2741, 5398): fragment 241 writes those
 #   classes, and its fragment has their evidence. The bare 5 is the key, as CPerguntaEleitorVotando::ProcessKey
 #   (fragment 152) compares it; the `&&` in one if is a choice.
-# - CPedeDigital: 84 bytes (fn 2740 allocates them and passes EVENTO_ENTRADA | EVENTO_TICK, 6, to the base's
-#   constructor); its destructor is out of line, 10469 being `f2739(p0); drop; f136(p0)` (docs/reference/facts/reading.md
-#   R5), and final, 2739 storing no vptr first (R4): it calls api::CApplicationContext's destructor (fn 1468) for +32 and
-#   releases +24 and +16. ProcessInput is CInteractiveForm<IScreenMT, IInputMT>::Read() on the form at +16 (its record,
-#   cinteractiveform.h:57 @1592168), and on INPUT_CORRIGE (5) vota::CLogVota's
-#   LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495) and vota::CCancelaHabilitacaoEleitor::GetInst (fn 1536).
-#   cpededigital.h has the layout and the bytes it rests on.
 #
-# Paths and lines. cpededigital.cpp is the file the class's records name (StartState's lines 115, 120 and 125,
-# FinishState's 131 and 132, ProcessTick's 162 to 164, three private members' 234, 262 and 279); every record line
-# stays blank. The destructor (line 105) and ProcessInput (line 137) have no record: their lines are a choice, in their
-# use band's order (10469, the deleting destructor, links before StartState's 10468 and FinishState's 10467, and
-# ProcessInput's 10466 after them and before ProcessTick's 10465). No record names CSincronismoEleitor: its file is
-# chosen, the class's name in lower case under app/vota/eleitor/, where its vtable (@1534076) and typeinfo lie in the
-# data between cfimvotoeleitor.cpp's record (1534048) and csincronismovotoeleitor.cpp's (1534132), in that directory's
-# name order; the end of either neighbour's object fits the data too.
+# Paths and lines. No record names CSincronismoEleitor: its file is chosen, the class's name in lower case under
+# app/vota/eleitor/, where its vtable (@1534076) and typeinfo lie in the data between cfimvotoeleitor.cpp's record
+# (1534048) and csincronismovotoeleitor.cpp's (1534132), in that directory's name order; the end of either neighbour's
+# object fits the data too.
 #
-# Chosen, no evidence names them: the data members' names (the bytes' type is AddStoppedTick's result's), the form's
-# second member's pointee, every local's name, and the declaration order of the virtual members: CPedeDigital's
-# destructor is declared first, so that cpededigital.cpp emits its vtable, and CSincronismoEleitor, whose destructor is
-# implicit, has StartState first, so that csincronismoeleitor.cpp emits its (how-to step 3).
-APP_VOTA_ESTADOS_SINCRONISMO_SRCS := src/app/vota/eleitor/csincronismoeleitor.cpp \
-    src/app/vota/operador/confirmaidentidade/cpededigital.cpp
+# Chosen, no evidence names them: every local's name, and the declaration order of the virtual members:
+# CSincronismoEleitor, whose destructor is implicit, has StartState first, so that csincronismoeleitor.cpp emits its
+# vtable (how-to step 3).
+APP_VOTA_ESTADOS_SINCRONISMO_SRCS := src/app/vota/eleitor/csincronismoeleitor.cpp
 UENUX2_SRCS += $(APP_VOTA_ESTADOS_SINCRONISMO_SRCS)
-
-# The pending traps, at the unit's flags; the rule depends on every header of both trees (src/units/README.md "What a
-# fragment holds" item 3).
-ESTADOS_SINCRONISMO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/192-uenux2-app-vota-estados-sincronismo-pending.o: $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo.mk $(ESTADOS_SINCRONISMO_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp -o $(R)
-
-# The roots: CPedeDigital's vtable's address (asm labels only, no header).
-$(ROOT)/$(APP)/192-uenux2-app-vota-estados-sincronismo-roots.o: $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/192-uenux2-app-vota-estados-sincronismo-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/192-uenux2-app-vota-estados-sincronismo-pending.o $(APP)/192-uenux2-app-vota-estados-sincronismo-roots.o

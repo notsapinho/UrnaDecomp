@@ -3,11 +3,12 @@
 #   destructor (fns 2732, 10411, slots 0 and 1) and FinishState (10408, slot 5), which stops its tick through
 #   vota::CThreadOperador::GetInst() (fn 270) and CThreadVota::StopTick (fn 422) and clears the byte at +24; StartState
 #   (10409, slot 2), ProcessInput (10407, slot 7) and ProcessTick (10405, slot 8), and the members they call: the text's
-#   update, AtualizaMensagem (3612), DisparaSinalizacaoSonora (5392, the record's name, csuspensaoautomaticaeleitor.cpp:89
-#   being its lambda's line) with std::thread's __thread_proxy over that lambda (10410), and the destroy of the local
-#   std::map StartState builds (3613);
-# - vota::CPerguntaEleitorVotando::ProcessKey (5394, slot 6, one body with vota::CEleitorDemorando's slot 6, a class our
-#   link does not hold) and vota::CHabilitaAudioEleitor::ProcessInput (10523, slot 7);
+#   update, AtualizaMensagem (3612), DisparaSinalizacaoSonora (5392, the record's name,
+#   csuspensaoautomaticaeleitor.cpp:89 being its lambda's line) with std::thread's __thread_proxy over that lambda
+#   (10410), and the destroy of the local std::map StartState builds (3613);
+# - vota::CPerguntaEleitorVotando::ProcessKey (5394, slot 6, one body with vota::CEleitorDemorando's slot 6; the match
+#   line names CEleitorDemorando's, the first in link order, below) and vota::CHabilitaAudioEleitor::ProcessInput
+#   (10523, slot 7);
 # - vota::CDesabilitaAudioEleitor::ProcessInput (10435, slot 7): when the form reads CONFIRMA, Post(10) on
 #   CThreadEleitor's queue (316, 501), usleep(300) (3966) while vota::CEstadoAudio::GetInst() (509) says the audio is
 #   active, CLogVota's LogaAudioDesativadoFimVotacao (4529) and CPedeIdentidade::GetInst() (652, unit 161) as the next
@@ -61,10 +62,10 @@
 #   no other record): a copy of the identity typed's text (vota::GetIdentidadeEleitor, 1535; the identity, a temporary,
 #   is destroyed at once), then, through Justificou, a helper of the file's anonymous namespace that clang inlines,
 #   comum::CJustificador::GetInst() (1391) and api::CDataMap's Find, inlined, over a CNumeroInscricaoEleitoral (1241)
-#   built from the text: the map's find (3741, a call) and the cursor at +12 set when it finds the voter. Found, it clears
-#   CJustificativaEfetuada's +28 through SetRecebida(false) on that class's GetInst() (2747, unit 142) and goes to
-#   CJustificativaEfetuada::GetInst(); not found, to m_confirma. The helper is measured (pnpm wasm score before steps 7
-#   to 9): written in StartState, the identity's temporary takes the frame slot below the text's copy, +8 against the
+#   built from the text: the map's find (3741, a call) and the cursor at +12 set when it finds the voter. Found, it
+#   clears CJustificativaEfetuada's +28 through SetRecebida(false) on that class's GetInst() (2747, unit 142) and goes
+#   to CJustificativaEfetuada::GetInst(); not found, to m_confirma. The helper is measured (pnpm wasm score before steps
+#   7 to 9): written in StartState, the identity's temporary takes the frame slot below the text's copy, +8 against the
 #   target's +24 (27 over 101 rows, ten of them frame offsets), and so with the text taken through a helper instead;
 #   through Justificou, 10 over 101, no frame offset among them. 3741 now comes from this object, which links ahead of
 #   unit 113's roots (their stand-in for 10587's search went). Chosen: the helper's name and linkage, the local's name.
@@ -97,33 +98,29 @@
 #   of api::CInteractiveForm<api::IScreen, api::IInputKbd>::Read() (cinteractiveform.h:57 @1547504), where the operator
 #   states' slots 7 load the <api::IScreenMT, api::IInputMT> one; cinspecionaurna.h types +12 so.
 #
-# Not reconstructed, and what each waits for (callees with no name: ledger/callgraph.tsv against
-# splat/symbol_addrs.txt):
-# - the GetInst of the other states and its constructor, which build the forms through fn 395 (the MT builder's input
-#   control) or 1151 (unit 121's): the one inlined into 10440 (CSuspensaoAutomaticaEleitor's) and the others' callers.
-#   10440 has every direct callee named now.
+# Not reconstructed: vota::CInspecionaUrna's GetInst and constructor, inlined into its callers, which are not written.
 #
 # GetInst written (each holds its constructor inlined behind a frame of its own, matched with its two static
 # destructors; the statics are defined before StartState, as the destructors' use band 1 sits above StartState's slot):
 # - vota::CDesabilitaAudioEleitor::GetInst (5393; statics' destructors 10438 and 10437): the form from an
 #   anonymous-namespace helper, initialized in the member list (301's result address is the member's, with no zeroing of
-#   it before): AddBuzz(51, 10), AddClock({33, 1}), "Retire o fone de ouvido da urna" at {1, 2}, "CONFIRMA" at {40, 4} on
-#   the right, AddInputControl, GetInteractiveForm("", true). Before steps 7 to 9 every differing row was the two
+#   it before): AddBuzz(51, 10), AddClock({33, 1}), "Retire o fone de ouvido da urna" at {1, 2}, "CONFIRMA" at {40, 4}
+#   on the right, AddInputControl, GetInteractiveForm("", true). Before steps 7 to 9 every differing row was the two
 #   statics' addresses (pnpm wasm score: 28 over 283, all operand-only).
 # - vota::CHorarioVotacaoTerminou::GetInst (5430; 10761 and 10760): the form built in the constructor's body and
 #   assigned (the member's two words zeroed before the vptr store, 301's result swapped in): AddBeep(2), "Horario de
 #   votacao terminou!" at {1, 1}, "Favor encerrar a urna!" at {1, 2}, "CORRIGE" at {1, 4}, AddInputControl,
 #   GetInteractiveForm("", true). 35 over 412 rows, all operand-only, the statics.
 # The two forms are the target's: the member-list helper where 301 writes into the member, the assignment where the
-# member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. Their target callers are
-# not reconstructed (10209 for 5393, 10689 for 5430; 5393's other, 10430, is: unit 71, and so is 5430's, 10677: unit
-# 161): the roots stand in
-# for them, and the vtable sinks for these two classes went.
+# member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. 5393's target caller
+# 10209 is not reconstructed (its other, 10430, is: unit 71): the roots stand in for it. 5430's two, 10677 (unit 161)
+# and 10689 (CEscolheOpcao::ProcessInput, unit 277's list), are in the link, so its stand-in went. The vtable sinks for
+# these two classes went.
 # - vota::CPerguntaFilaEleitorVazia::GetInst (5426; 10716 and 10717), written with unit 277's states: the form from a
-#   member-list helper (AddClock({33, 1}), "Todas as pessoas presentes já votaram?" at {1, 2}, "CORRIGE: não" at {1,
-#   4}, "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true)); named by vptr-anchor
-#   and matched, its statics by its votes. Its one caller, 10706 (unit 277's), calls it twice, so no stand-in and no
-#   vtable sink.
+#   member-list helper (AddClock({33, 1}), "Todas as pessoas presentes já votaram?" at {1, 2}, "CORRIGE: não" at {1, 4},
+#   "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true)); named by vptr-anchor and
+#   matched, its statics by its votes. Its one caller, 10706 (unit 277's), calls it twice, so no stand-in and no vtable
+#   sink.
 # - the pending slots: the -pending.cpp header lists them.
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):
@@ -132,26 +129,26 @@
 #   that hold its address and the thread's tick map's (the signs of a callee's parameters). So InicializaTick, a private
 #   member (name chosen), holds the map's copy (api::CTickManager::GetEstadoTicks, out of line in unit 02's
 #   ctickmanager.cpp, inlined by binaryen in turn), its find and either a new stopped tick of 1000 ms or a stop of the
-#   active one; the caller compares the map's byte with 1, which reads as no bool (api::CTickManager::EEstadoTick, chosen).
-#   Written in StartState, the body read `181 over 302 rows`; with GetEstadoTicks out of line (and the find's test
-#   negated, its arms swapped), `105 over 281 rows`; with InicializaTick out of line too, as written, `10 over 262 rows`,
-#   operand rows only, and it matches. The destroy (3613) is
-#   recursive and has one caller besides itself, so no vote names it: a callers+content hand line does, on that caller
-#   and the aligned call; 10409 and 3613 match through it. The map's mapped type in its symbol is chosen.
+#   active one; the caller compares the map's byte with 1, which reads as no bool (api::CTickManager::EEstadoTick,
+#   chosen). Written in StartState, the body read `181 over 302 rows`; with GetEstadoTicks out of line (and the find's
+#   test negated, its arms swapped), `105 over 281 rows`; with InicializaTick out of line too, as written, `10 over 262
+#   rows`, operand rows only, and it matches. The destroy (3613) is recursive and has one caller besides itself, so no
+#   vote names it: a callers+content hand line does, on that caller and the aligned call; 10409 and 3613 match through
+#   it. The map's mapped type in its symbol is chosen.
 # - In ProcessTick the stores of +24 and +16 come out in the reverse of the source's order, and StartState's pair is
-#   written the same way, each in the order that gives the target's: ProcessTick with the stores swapped read `14 over 82 rows (same 68,
-#   replaced 6 [6 operand-only], inserted 4, deleted 4)`, and with them as written `7 over 78`, operand rows only.
+#   written the same way, each in the order that gives the target's: ProcessTick with the stores swapped read `14 over
+#   82 rows (same 68, replaced 6 [6 operand-only], inserted 4, deleted 4)`, and with them as written `7 over 78`,
+#   operand rows only.
 # - The messages go through the queue's inline Post (api/ipc/cmessagequeue.h), whose own local is the message: written
-#   as Insert of a temporary, ProcessInput (10407) read `16 over 88 rows`, operand rows only but frame slots swapped: the
-#   target keeps Read()'s std::source_location at +4 and the message at +8, ours at +12 and +4; with Post, 11 over 88,
-#   names only.
-#   StartState's Post (3) and CHabilitaAudioEleitor's Posts are written so too.
+#   as Insert of a temporary, ProcessInput (10407) read `16 over 88 rows`, operand rows only but frame slots swapped:
+#   the target keeps Read()'s std::source_location at +4 and the message at +8, ours at +12 and +4; with Post, 11 over
+#   88, names only. StartState's Post (3) and CHabilitaAudioEleitor's Posts are written so too.
 # - DisparaSinalizacaoSonora: `std::thread([] { ... }).detach();` on line 89, which puts the lambda's
 #   CPolySingleton<api::IScreenMT>::instance() call at column 22, its record's; the lambda buzzes the MT screen (slot 6,
-#   Buzz, 50 and 3). Ours keeps the member out of line, with std::thread's constructor inlined in it, and it matches 5392,
-#   whose wasm type has no parameter; whether the target's 5392 is that member or the constructor is not in its bytes (a
-#   reading, not measured the other way). AtualizaMensagem (3612, name chosen) builds "Suspensão automática em " +
-#   std::to_string(+16) + " segundo..."/" segundos..." into +36's string, the literal built first.
+#   Buzz, 50 and 3). Ours keeps the member out of line, with std::thread's constructor inlined in it, and it matches
+#   5392, whose wasm type has no parameter; whether the target's 5392 is that member or the constructor is not in its
+#   bytes (a reading, not measured the other way). AtualizaMensagem (3612, name chosen) builds "Suspensão automática em
+#   " + std::to_string(+16) + " segundo..."/" segundos..." into +36's string, the literal built first.
 # - CHabilitaAudioEleitor::ProcessInput reads the form, asks vota::impl::IInformacaoThreadOperador's slot 5
 #   (IsAudioAtivadoCadastro) and on CONFIRMA clears the operator's audio flag (5415), posts 8 or 9 and then 1 to the
 #   eleitor's queue, goes to CMostraEleitorVotando::GetInst (1150, unit 142's) and, when the record's audio is on, logs
@@ -181,11 +178,76 @@
 #   CMostraEleitorVotando::GetInst (1150); while the byte at +24 is set, key 13 clears it, sets CSincronismoOperador's
 #   +11 through SetSincronizado (a setter added to app/vota/operador/csincronismooperador.h, name chosen) and goes to
 #   that state, and key 2 clears it and goes to CPedeIdentidade::GetInst (652). The cases are written 13 first: the
-#   br_table sends key 13 to the first block. With case 2 first, 12 over 47 rows (3 inserted, 3 deleted); as written,
-#   6 over 44, operand rows only, and a match.
+#   br_table sends key 13 to the first block. With case 2 first, 12 over 47 rows (3 inserted, 3 deleted); as written, 6
+#   over 44, operand rows only, and a match.
+#
+# vota::CEleitorDemorando (app/vota/operador/aguardaeleitor/celeitordemorando.{h,cpp}, new) and the GetInst its slots
+# hold inlined:
+# - Matched: CEleitorDemorando::GetInst (2734, vptr-anchor), whose one target caller, CMostraEleitorVotando::ProcessKey
+#   (10425, unit 142's trap), the roots stand in for, with its statics' exit destructors (10441, s_mutex's; 10442,
+#   s_inst's, a thunk into 2903, below); StartState (10440) and ProcessInput (10439, vptr-anchors); ProcessKey (5394,
+#   one body with CPerguntaEleitorVotando's, the match line renamed to CEleitorDemorando's, the survivor now that
+#   celeitordemorando.cpp links first); CPerguntaEleitorVotando::GetInst, inlined into 10439, with its statics' exit
+#   destructors (10417, 10418) and its ProcessInput (10415, vptr-anchor); CSuspensaoAutomaticaEleitor::GetInst, inlined
+#   into 10440, with its statics' exit destructors (10412, 10414); and CPerguntaCodigoSuspensao::GetInst (unit 142's
+#   file), inlined into 10415, with 10422 and 10423.
+# - GetInst (2734): the project's singleton, a 36-byte object, the constructor inlined behind a 96-byte frame of its
+#   own: CAppState's with EVENTO_TECLA | EVENTO_ENTRADA (3), +11 cleared, std::make_shared<std::string> of "votou/não
+#   votou" (+12) and of "nome abreviado" (+20), a reference added to each for the helper that takes both by value (clang
+#   inlines it), and the form at +28: AddLed(LED_OPERACAO_1), AddBuzz(51, 10), "O eleitor está demorando" at {1, 1}, a
+#   CTextSource over +12 with "%s" at {1, 2} (fn 1152), one over +20 at {1, 3} (fn 5409, the alignment folded),
+#   "CONFIRMA" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true).
+# - StartState (10440): in voter training (comum::CAppInfo::EhTreinamentoEleitor, fn 697) the next state is
+#   CSuspensaoAutomaticaEleitor's GetInst, with this class's +11 copied into that class's +11 (SetVotou, a setter whose
+#   name is chosen); else +12's text becomes "Votou parcialmente" or "Não votou" by +11,
+#   CLogVota::LogaEleitorSemAtividade (held inlined, unit 119's file) logs the parameters' GetTempoDispararSuspensao as
+#   a byte, `this` is the next state, +20's text becomes CThreadOperador's GetTextoEleitor and the form's slot 2 shows
+#   it. The text is written as an if and two assignments: one path calls basic_string's __assign_external (fn 276) and
+#   the other stores the short literal in place, which a constant length gives each path; the conditional expression
+#   CSuspensaoAutomaticaEleitor's StartState uses gives one call over a select (measured, pnpm wasm score: 156 over 817
+#   rows, 36 deleted; as written, 59 over 817, operand-only).
+# - ProcessInput (10439) goes to CPerguntaEleitorVotando::GetInst on CONFIRMA. That GetInst: the 20-byte object, its
+#   constructor behind a 64-byte frame, CAppState's with 3, the form at +12: AddLed(LED_OPERACAO_1), AddBuzz(51, 10),
+#   GetTextoIdentidadeDigitada (slot 3907) at {1, 1}, "O eleitor ainda está votando?" at {1, 2}, "CORRIGE: não" at {1,
+#   4}, "CONFIRMA: sim" at {40, 4} on the right, AddInputControl, GetInteractiveForm("", true).
+# - CSuspensaoAutomaticaEleitor's GetInst (in 10440): the 56-byte object, its constructor behind a 96-byte frame,
+#   CAppState's with 7, +11 cleared, +12 AddStoppedTick(1000), +16 10, +24 cleared, std::make_shared<std::string> of
+#   "votou/não votou" (+28) and "contagem regressiva" (+36), both passed by value to the form's helper: AddLed(1),
+#   CTextSources over +36 and +28 with "%s" at {1, 1} and {1, 2}, "CORRIGE: Cancelar" at {40, 3} on the right,
+#   AddInputControl, GetInteractiveForm("", true).
+# - CPerguntaEleitorVotando::ProcessInput (10415), in the target's block order: CORRIGE logs "Eleitor não está votando"
+#   (logaAlerta) and goes to CPerguntaCodigoSuspensao::GetInst, CONFIRMA logs "Eleitor está votando" (loga), posts 4 to
+#   CThreadEleitor's queue and goes to CMostraEleitorVotando::GetInst (1150). Each log is a CLogVota member binaryen
+#   inlines after the call of GetInst (unit 119's file); as two free functions in clogvota.cpp that call GetInst
+#   themselves it read 87 over 894 rows (2 inserted, 2 deleted, GetInst after the frame); as written, 85 over 892,
+#   operand-only.
+# - Before steps 7 to 9 (pnpm wasm score on this link): 2734 42 over 527, 10439 43 over 453, 10440 59 over 817, 10415 85
+#   over 892 rows, all operand-only (the statics, calls, records and table slots).
+# - The order measured (docs/reference/facts/codegen.md C4): binaryen inlines CPerguntaEleitorVotando's GetInst into
+#   10439 and CSuspensaoAutomaticaEleitor's into 10440, and the target links celeitordemorando's object before both
+#   (CEleitorDemorando's vtable, 1592784, before 1593192 and 1593264). With celeitordemorando.cpp linked after this list
+#   (in a fragment of its own, which sorts after this one), 10439 read 189 over 458 rows (inserted 5, deleted 6, local
+#   numbers) and 10440 130 over 817 (local numbers too); ahead of it, 43 over 453 and 59 over 817, operand-only. So it
+#   heads this list.
+# - The directory, aguardaeleitor/, is a choice (docs/reference/facts/placing.md P5): CEleitorDemorando's vtable
+#   (@1592784) lies between CVerificaDadoEleitor's (@1592712, confirmaidentidade/, unrecorded) and
+#   CDesabilitaAudioEleitor's (@1592856, aguardaeleitor/, unrecorded), among unrecorded vtables from
+#   confirmaidentidade/cregistradigitaloperador.cpp's records (@1592596) to aguardaeleitor/cmostraeleitorvotando.cpp's
+#   (@1593044); the class's slots go to aguardaeleitor/'s states. The file name is the class name in lower case.
+# - 2903, the body binaryen keeps once for four classes' unique_ptr exit destructors (target callers 10434, 10442, 10476
+#   and 12033): our link forms it from three, 10434 (unit 71's CEleitorVotouNaoVotou), 10442 and 10476 (unit 282's
+#   CDigitalNaoReconhecida), and matches it under the merge's name, byn$mgfn-shared$ of the first member in link order
+#   (celeitordemorando.cpp's); 10434, which read no-candidate before, matches with it (unit 71's row:
+#   docs/reference/facts/splat.md S10 lists the group).
+# Chosen, no evidence names them: CEleitorDemorando's members' names, bool for +11, the helpers' names and their
+# anonymous namespace (where clang inlines them), SetVotou, the statics' lines before StartState (their exit
+# destructors, s_inst's first, link above the slots in use band 1: 10442 and 10441 above 10440, 10418 and 10417 above
+# 10416, and 10414 and 10412 above CSuspensaoAutomaticaEleitor's D0 10411, so its statics are defined before its
+# destructor), and every line of celeitordemorando.cpp.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp \
+APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/celeitordemorando.cpp \
+    src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp \
     src/app/vota/operador/aguardaeleitor/cperguntaeleitorvotando.cpp \
     src/app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.cpp \
     src/app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.cpp \
@@ -194,6 +256,9 @@ APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/csuspensa
     src/app/vota/operador/outrasopcoes/cperguntafilaeleitorvazia.cpp \
     src/app/vota/eleitor/cinspecionaurna.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
+# celeitordemorando.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (an
+# include path, not a flag)
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/aguardaeleitor/celeitordemorando.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 152-uenux2-app-vota-operador-estados-pending.cpp gives the vtables trapping bodies,
 # compiled with the unit's flags
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-pending.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

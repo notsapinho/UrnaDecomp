@@ -84,13 +84,28 @@
 #   key too, and 2295 matches under that merge's name
 #   (`byn$mgfn-shared$_ZN4vota23CHorarioVotacaoTerminou12ProcessInputEv`, the first member in link order).
 #
-# Not written, and what each waits for:
-# - vota::CEscolheOpcao::ProcessInput (10689), which holds the GetInst of CIniciaFinalizacao, CConfirmaAudio,
-#   CHabilitacaoAudioNaoPermitida and CContadoresBiometria inlined: unit 121's -pending.cpp says what it waits for.
-#   Those four GetInst, their constructors and statics are declared and not defined; their statics' exit destructors
-#   (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) and the text functions their forms pass by slot (10742;
-#   10699, 10700, 10701) wait with it. The roots sink the four vtables until then.
-# - CIniciodeCiclo::StartState (7306): unit 104's -pending.cpp.
+# For vota::CEscolheOpcao::ProcessInput (10689, unit 121's, written and not matched: that fragment has the
+# measurement), which holds them inlined: the GetInst, constructor, form and statics of CIniciaFinalizacao,
+# CConfirmaAudio, CHabilitacaoAudioNaoPermitida and CContadoresBiometria, written in their files as the matched
+# CConfirmaEncerramento's are (no target function of their own; in 10689 the last three constructors open frames of
+# 64, 48 and 64 bytes that hold their form's builder too: MontaTela in the anonymous namespace, one frame for both, as
+# unit 247's fragment measures for that linkage). With them, matched
+# by the content pass, the texts their forms pass by table slot, free functions of namespace vota defined after the
+# statics: CContadoresBiometria's TextoHabilitacaoBiometrica, TextoHabilitacaoBiografica and
+# TextoHabilitacaoSemBiometria (10701, 10700, 10699, slots 3818 to 3820: "n.a." when comum::CLocal::UrnaBiometrica is
+# false, else "{:04}" of comum::CEleitores' count of that kind of enabling, formatted into "Habilitação biométrica: {}"
+# and the two others), and CConfirmaAudio's TextoConfirmaAudio (10742, slot 3757: "Deseja realmente desativar o
+# áudio?" or "... ativar o áudio?" by IsAudioAtivadoMesario, two returns, the target's two fixed copies). In band 1 each
+# file's statics' destructors come first, then the texts, then the slots (10705, 10704, 10701 to 10699, 10698;
+# 10744, 10743, 10742, 10740), the order they are defined in, which names.tsv's ld_index gives our link too. The four
+# vtable sinks went with this unit's roots file:
+# 10689's constructors store the four vptrs. Their names, the texts' being free functions, the texts' form (a local
+# set to "n.a." and overwritten when UrnaBiometrica holds; no other form was measured) and the GetInst's form are
+# chosen.
+# The four states' statics' exit destructors (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) wait for 10689's
+# match.
+#
+# Not written: CIniciodeCiclo::StartState (7306), unit 104's -pending.cpp.
 #
 # Chosen, no evidence names them: every file's name and path (beside its class), the helpers' (MontaTela, in each
 # file's anonymous namespace) and locals' names, every data member's name, GetInst's and the constructors' access,
@@ -99,7 +114,9 @@
 # being a free function, each function's line (no record but 10718's and 10710's, whose lines the files keep), and the
 # local next state in CIniciaFinalizacao::StartState (the bytes ask for one store, which a local gives).
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. Last in the list,
+# unit 121's cescolheopcao.cpp: its ProcessInput (10689) holds the GetInst of four of this list's classes, and links
+# after their objects as the target's data have it (unit 121's fragment has the measurement and keeps the file's notes).
 APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS := src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp \
     src/app/vota/operador/outrasopcoes/cpedetituloencerramento.cpp \
     src/app/vota/operador/outrasopcoes/ctituloencerramentoinvalido.cpp \
@@ -110,12 +127,8 @@ APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS := src/app/vota/operador/outrasopcoes/cinici
     src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp \
     src/app/vota/operador/outrasopcoes/chabilitaaudiomanualmente.cpp \
     src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp \
-    src/app/vota/operador/outrasopcoes/ccontadoresbiometria.cpp
+    src/app/vota/operador/outrasopcoes/ccontadoresbiometria.cpp \
+    src/app/vota/operador/outrasopcoes/cescolheopcao.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_OUTRASOPCOES_SRCS)
 # comum::CConfiguracaoEleicao's header reaches ecourna's chorariosurna.hpp, which includes Boost.Date_Time
-$(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp src/app/vota/operador/outrasopcoes/cpedetituloencerramento.cpp src/app/vota/operador/outrasopcoes/cencerramentohorarioinvalido.cpp)): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# nothing reconstructed references four of the states' vtables: 277-uenux2-app-vota-operador-outrasopcoes-roots.cpp
-# takes their addresses
-$(ROOT)/$(APP)/277-uenux2-app-vota-operador-outrasopcoes-roots.o: $(ROOT)/src/units/277-uenux2-app-vota-operador-outrasopcoes-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/277-uenux2-app-vota-operador-outrasopcoes.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/277-uenux2-app-vota-operador-outrasopcoes-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/277-uenux2-app-vota-operador-outrasopcoes-roots.o
+$(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp src/app/vota/operador/outrasopcoes/cpedetituloencerramento.cpp src/app/vota/operador/outrasopcoes/cencerramentohorarioinvalido.cpp src/app/vota/operador/outrasopcoes/cescolheopcao.cpp)): UENUX2_CXXFLAGS += -I$(BOOST_HDR)

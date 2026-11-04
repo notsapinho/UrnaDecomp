@@ -247,9 +247,9 @@
 # last in the file (it is the file's only function with 3 uses in ledger/ordinals.tsv, so no band neighbour orders it).
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
-# the callers of the unit's members are not reconstructed, but for 502 (AddStatusHeader, here), which calls 3058 and
-# 202, and 2243, which calls 3678: 31-uenux2-cformbuilder-roots.cpp gives each member the calls it has in the target,
-# and says which they stand for
+# 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
+# the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678); 728,
+# 941, 5409 and 5419 have every target caller in the link and no call there
 $(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/util/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/31-uenux2-cformbuilder-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/31-uenux2-cformbuilder-roots.o

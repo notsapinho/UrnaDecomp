@@ -1,28 +1,32 @@
-// Roots: api::CDataMap<KeyType, RecordType> (api/io/cdatamap.h), a class template whose users are not reconstructed yet,
-// instantiated as the target's records spell it and reached the way the target reaches it. The bodies are the template's
-// instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's flags, so no
-// match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
+// Roots: api::CDataMap<KeyType, RecordType> (api/io/cdatamap.h), a class template whose users are not reconstructed
+// yet, instantiated as the target's records spell it and reached the way the target reaches it. The bodies are the
+// template's instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's
+// flags, so no match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
 // -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplied, 1283, 3697, 3741 and
 // 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
 // 3697 and 5611 come from the first objects on the link line to instantiate them: 1283 from crelutil.cpp's (for unit
-// 123's TituloPartido, 11181), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes from iiniciajustificativa.cpp's object (unit 152), whose StartState, 10587, holds Find inlined. Each function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
+// 123's TituloPartido, 11181), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes from
+// iiniciajustificativa.cpp's object (unit 152), whose StartState, 10587, holds Find inlined. Each function here has two
+// call sites or more, as each has in the target, so binaryen keeps it out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7, all in the link: 2268, 2838, 5604, 6999, 11254, 11972
-//   and 11973), 1283 (9: 5604, 11181, 11213, 11255 and 11261 are in the link), 3125 (4, all in the link). All four in the link are
-//   what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
+//   and 11973), 1283 (9: 5604, 11181, 11213, 11255 and 11261 are in the link), 3125 (4, all in the link). All four in
+//   the link are what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset,
+//   32 or 20.
 // - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105; 11206 is in the link), 5611 (5604 and
 //   11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
 //   written Gera) in the link; those over the parties' map stay for 1283's callers.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590; 10587 is in the link), through Find, and the copy of the
-//   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
+//   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real
+//   caller (the fragment says why).
 // - CRegistradorMesario::Registra, 5378, has its two call sites in 10337 (unit 135, in the link). Add(KeyType,
 //   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): cregistradormesario.cpp's
 //   object is ahead of this one on the link line, so its copies are the link's; a stand-in here only adds their second
 //   call site.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
-//   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade, int>
-//   stands for the callers not written (2225 and 2264 are, units 50 and 110, and 3728, fragment 225), and binaryen merges
-//   the copies.
+//   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade,
+//   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, and 3728, fragment 225), and binaryen
+//   merges the copies.
 // - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
 //   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387 and 10368 are in the link), its counts
@@ -78,7 +82,8 @@ __attribute__((noinline)) int CarregaUm(api::CDataMap<comum::md::CComparecimento
 }
 
 // Stands for 3614 and 10842 (2225 and 2264 are in the link), which search and insert in other trees of this key.
-__attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa, const comum::md::CEleitorIdentidade& eleitor)
+__attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa,
+                                           const comum::md::CEleitorIdentidade& eleitor)
 {
     if (mapa.find(eleitor) != mapa.end()) {
         return 17;
@@ -88,7 +93,8 @@ __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidad
 }
 
 // Stands for 10590's search.
-__attribute__((noinline)) bool Justifica(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
+__attribute__((noinline)) bool Justifica(TMapaJustificados& mapa,
+                                         const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
 {
     return mapa.Find(numero) != nullptr;
 }

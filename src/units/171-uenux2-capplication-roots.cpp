@@ -7,8 +7,8 @@
 //   of line.
 // - InitApplication (fn 11159) is the table slot main (fn 10307, unit 170) passes to invoke_viiii, so it needs no line
 //   here.
-// - PushContext (fn 3684) has InitApplication's code and unit 197's StartState (fn 7377) among its callers in our link;
-//   w171_empilha stands for the other, fn 10468.
+// - PushContext (fn 3684) needs none: its target callers, InitApplication's code, unit 197's StartState (fn 7377) and
+//   vota::CPedeDigital::StartState (fn 10468, unit 282), are in the link.
 // - CriaContexto from a kind and three strings (fn 676) and api::CApplicationContextGuard's destructor (fn 675, unit
 //   193) have the same ten direct callers in the target (491 1277 3333 4657 4682 10590 12098 12105 12110 12134), of
 //   which 1277 (comum::CAssinador::Assina, unit 34), 491, 3333, 4657 and 4682 (unit 205) are reconstructed: w171_guarda
@@ -21,7 +21,6 @@
 //   are in the link).
 extern "C" {
 void w5566_root_0() __asm__("_ZN3api12CApplication21EnterLoopDoingNothingEv");
-void w171_empilha_c(void* contexto) __asm__("_ZN3api12CApplication11PushContextENS_19CApplicationContextE");
 void w171_guarda_c(void* guarda, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api12CApplication12CriaContextoEiNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_");
 int w171_guarda_d(void* guarda) __asm__("_ZN3api24CApplicationContextGuardD1Ev");
@@ -44,12 +43,6 @@ __attribute__((noinline)) int AguardaDuasVezes(int a)
     w5566_root_0();
     w5566_root_0();
     return a * 5;
-}
-
-__attribute__((noinline)) int w171_empilha(char* bloco)
-{
-    w171_empilha_c(bloco + 20);
-    return bloco[7] - 1;
 }
 
 __attribute__((noinline)) int w171_guarda(char* bloco, int tipo)
@@ -96,7 +89,6 @@ struct SW5566Roots {
     {
         w5566_sink = reinterpret_cast<void*>(&AguardaUmaVez);
         w5566_sink = reinterpret_cast<void*>(&AguardaDuasVezes);
-        w5566_sink = reinterpret_cast<void*>(&w171_empilha);
         w5566_sink = reinterpret_cast<void*>(&w171_guarda);
         w5566_sink = reinterpret_cast<void*>(&w171_guardas);
         w5566_sink = reinterpret_cast<void*>(&w171_contexto);

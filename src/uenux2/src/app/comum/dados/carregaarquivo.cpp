@@ -1,10 +1,12 @@
-// The reconstruction's notes, not TSE's text: CarregaArquivo and its instances (carregaarquivo.h), and
-// CLeitorASN::LeBiometriaEleitor (app/comum/asn/cleitorasn.h). No record names this file: the target's data put the
-// records of these instances' templates and of LeBiometriaEleitor's in one object, a run of entity readers
-// (src/units/280-uenux2-processoeleitoral.mk). The order of the explicit instantiations is chosen; LeBiometriaEleitor's
-// place among them follows that run's order (its records lie between the EleicaoPE instance's and the
-// CabecalhoPacote instance's); at the head or at the end of the file the object's code is the same
-// (src/units/98-uenux2-app-comum-dados.mk).
+// The reconstruction's notes, not TSE's text: CarregaArquivo and CarregaArquivoEcourna and their instances
+// (carregaarquivo.h), and CLeitorASN::LeBiometriaEleitor (app/comum/asn/cleitorasn.h). No record names this file: the
+// target's data put the records of these instances' templates and of LeBiometriaEleitor's in one object, a run of
+// entity readers (src/units/280-uenux2-processoeleitoral.mk). The order of the processo eleitoral's three instances is
+// chosen; the places of the others follow that run's order: LeBiometriaEleitor's records lie between the EleicaoPE
+// instance's and the CabecalhoPacote instance's, the CConversorImpedido instance's after LeBiometriaEleitor's, and the
+// CConversorInformacaoMidia instance's after CabecalhoPacote's. For LeBiometriaEleitor, at the head or at the end of
+// the file the object's code is the same (src/units/98-uenux2-app-comum-dados.mk); the two others were measured only
+// at these places.
 #include "app/comum/dados/carregaarquivo.h"
 
 #include "api/io/asn/cfileasn.h"
@@ -12,10 +14,13 @@
 #include "app/comum/asn/legravaentidade.h"
 #include "app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
+#include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversoreleicaope.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversorprocessoeleitoral.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversorsituacoeseleicoes.h"
+#include "app/comum/dados/md/eleitor/cimpedido.h"
 #include "app/comum/dados/md/eleitor/cparametro.h"
+#include "ecourna/app/dados/asn/midias/cconversorinformacaomidia.hpp"
 
 namespace comum {
 
@@ -36,6 +41,18 @@ md::CBiometriaEleitor CLeitorASN::LeBiometriaEleitor(const std::string& arquivo,
         arquivo, parametro, parametro.GetOffset(), "LeBiometriaEleitor(" + parametro.GetIdentidade().GetIdentificador() + ")");
 }
 
+template std::vector<md::CImpedido> CarregaArquivo<asn::CConversorImpedido>(const std::string& arquivo);
+
 template md::CCabecalhoPacote CarregaArquivo<asn::CConversorCabecalhoPacote>(const std::string& arquivo);
+
+template <typename CONVERSOR>
+typename CONVERSOR::TDado CarregaArquivoEcourna(const std::string& arquivo)
+{
+    CONVERSOR conversor;
+    return conversor.Deconverte(api::CFileASN::ReadFromFile<typename CONVERSOR::TEntidade>(arquivo));
+}
+
+template ecourna::app::dados::CInformacaoMidia
+CarregaArquivoEcourna<ecourna::app::dados::asn::CConversorInformacaoMidia>(const std::string& arquivo);
 
 } // namespace comum

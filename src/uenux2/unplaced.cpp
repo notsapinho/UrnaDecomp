@@ -6,21 +6,6 @@
 // <stubs>
 // component vota
 
-// link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
-
-// f10440 · 1876 B · unmatched · placement: link order · name unknown
-// void f10440(i32) { ... }
-
-// link-order cluster 295 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdigitalnaoreconhecidadecbiometria.cpp
-
-// f10478 · 633 B · unmatched · placement: link order · name unknown
-// void f10478(i32) { ... }
-
-// link-order cluster 297 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdigitalnaoreconhecidaportempo.cpp
-
-// f10486 · 919 B · unmatched · placement: link order · name unknown
-// void f10486(i32) { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -107,11 +92,6 @@
 // f5980 · 225 B · unmatched · placement: link order · name unknown
 // void f5980(i32) { ... }
 
-// link-order cluster 871 · uses=2
-
-// f6113 · 446 B · unmatched · placement: link order · name unknown
-// void f6113(i32, i32, i32, i32) { ... }
-
 // link-order cluster 899 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 
 // f6557 · 166 B · unmatched · placement: link order · name unknown
@@ -155,11 +135,6 @@
 // f6958 · 863 B · unmatched · placement: link order · name unknown
 // void f6958(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 938 · uses=3
-
-// f3258 · 17 B · unmatched · placement: link order · name unknown
-// void f3258(i32, i32) { ... }
-
 // link-order cluster 994 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp
 
 // f3695 · 135 B · unmatched · placement: link order · name unknown
@@ -187,16 +162,6 @@
 
 // f2499 · 57 B · unmatched · placement: link order · name unknown
 // void f2499(i32, i32) { ... }
-
-// link-order cluster 1061 · uses=4
-
-// f2502 · 15 B · unmatched · placement: link order · name unknown
-// void f2502(i32, i32) { ... }
-
-// link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
-
-// f2734 · 1228 B · unmatched · placement: link order · name unknown
-// ? f2734() { ... }
 
 // link-order cluster 1099 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp
 
@@ -426,12 +391,6 @@
 
 // f3819 · 3993 B · unmatched · placement: link order · name unknown
 // void f3819(i32, i32, i32, i32, i32, i32) { ... }
-
-// f3818 · 659 B · unmatched · placement: link order · name unknown
-// void f3818(i32, i32, i32) { ... }
-
-// f3815 · 278 B · unmatched · placement: link order · name unknown
-// void f3815(i32) { ... }
 
 // link-order cluster 1050 · uses=3
 

@@ -8,6 +8,8 @@
 extern "C" {
 int w216_1391() __asm__("_ZN5comum13CJustificador7GetInstEv");
 int w216_2822(int) __asm__("_ZNK5comum10CEleitores33QuantidadeHabilitacaoSemBiometriaEv");
+int w216_2821(int) __asm__("_ZNK5comum10CEleitores31QuantidadeHabilitacaoBiometricaEv");
+int w216_1935(int) __asm__("_ZNK5comum10CEleitores31QuantidadeHabilitacaoBiograficaEv");
 void w216_5746(int, int, int, int) __asm__("_ZN5comum23VerificaFotoCandidaturaERKNS_2md12CCandidaturaEhRKNS_6CFotosE");
 void w216_5747(int, int, int, int) __asm__("_ZN5comum24VerificaCargoCandidaturaERKNS_2md12CCandidaturaERKNSt3__23mapIhNS0_6CCargoENS4_4lessIhEENS4_9allocatorINS4_4pairIKhS6_EEEEEERNS4_20__map_const_iteratorINS4_21__tree_const_iteratorINS4_12__value_typeIhS6_EEPNS4_11__tree_nodeISK_PvEElEEEE");
 int w216_3754(int, int) __asm__("_ZN5comum3CHVC1ERKNS_2md22CHorarioVeraoMunicipioE");
@@ -21,8 +23,11 @@ const void* volatile w216_sink;
 // Stands for fn 1391's callers (comum::CJustificador::GetInst): 5971, 6734, 10590, 11616, 12105 (unit 138's 11835,
 // unit 152's 10587 and unit 119's 10797 are in the link).
 __attribute__((noinline)) int Justificadores() { return w216_1391() - 11 * w216_1391(); }
-// Stands for fn 2822's callers: 10699, 11242, 12098, 12110.
+// Stands for fn 2822's callers 11242, 12098 and 12110 (10699, unit 277's, is in the link).
 __attribute__((noinline)) int HabilitadosSemBiometria(int a) { return 5 * w216_2822(a) + w216_2822(a + 4); }
+// Stands for the callers of fn 2821 (11242, 12098, 12110) and fn 1935 (11242, 12098, 12105, 12110) not in the link
+// (10701 and 10700, unit 277's, are): one call each, with theirs two call sites.
+__attribute__((noinline)) int HabilitadosPorTipo(int a) { return w216_2821(a) - 3 * w216_1935(a + 8); }
 // Stands for fn 5746's two calls in fn 7787, which pass the holder's 0 and a substitute's order.
 __attribute__((noinline)) void FotosCandidatura(int r, int c, int o, int f)
 {
@@ -47,6 +52,7 @@ struct S216Roots {
     {
         w216_sink = reinterpret_cast<const void*>(&Justificadores);
         w216_sink = reinterpret_cast<const void*>(&HabilitadosSemBiometria);
+        w216_sink = reinterpret_cast<const void*>(&HabilitadosPorTipo);
         w216_sink = reinterpret_cast<const void*>(&FotosCandidatura);
         w216_sink = reinterpret_cast<const void*>(&CargosCandidatura);
         w216_sink = reinterpret_cast<const void*>(&ConstroiHV);

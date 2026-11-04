@@ -19,7 +19,8 @@
 #   temporary and DTPL's lvalue are two instances of one body), and the pair's constructor from two string literals
 #   (1348, 3 over 120).
 # - CConversorDetalheCandidato::DoDesconverte (11375, 78 over 1218) and the move of a std::vector<md::CCargo>'s
-#   elements, std::__uninitialized_allocator_relocate (3816, 2 over 243), from cconversoreleicaope.cpp.o.
+#   elements, std::__uninitialized_allocator_relocate (3816, 2 over 243), from cconversoreleicaope.cpp.o then; the copy
+#   the link keeps is unit 200's cgravadorbu.cpp.o's since that unit wrote 3818 (FiltraCargos), its other caller.
 # Written, `unresolved`: CConversorEleicaoPE::DoDesconverte (11371, 84 over 1509), on the address of "impressão" at
 # +0xad3 (`an address of ours: string tail occurs 4098 times`): the target's is the tail of "em caso de falha na
 # impressão" (123919, ledger/strings.tsv), which only fn 7787 (not written) loads. With a scratch object that keeps that
@@ -86,8 +87,9 @@
 #   operand-only: the target reloads the entity's fields pointer after the converter is built, which a call there forces
 #   (our reading: binaryen inlined that call). The optional idEleicaoPleito2 read as a ternary gives the same wasm as
 #   the if (sha256 compared). The form of ValidaNome's test (empty or longer than 38) and the three ValidaOrdem calls'
-#   order follow the target's code. Without the roots' stand-in for fn 3818, 3816 has one caller and binaryen inlines
-#   it: 742 over 1806 (297 inserted, 55 deleted, with the range-for loops).
+#   order follow the target's code. Without a second caller of 3816 (the roots' stand-in for fn 3818
+#   then, unit 200's FiltraCargos since), binaryen inlines it: 742 over 1806 (297 inserted, 55 deleted, with the
+#   range-for loops).
 # - Chosen: cconversoreleicaope.cpp's path, both functions' lines but the records', the lambdas, the locals' names, the
 #   constructors' parameters, and CDetalheCandidato's constructor being inline. CEleicaoPE's and CConversorCargo's
 #   being out of line is not chosen: the measurements above decide it.
@@ -95,9 +97,9 @@
 # Roots (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp): stand-ins for target callers not in our link, each going
 # when they are: QRCodeTela for fn 3059 (the constructor, so 1300 keeps two call sites, and SetOrigem); ConteudoQRCode
 # for fn 12553 (operator()); ParDeTextos for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant first
-# argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted); CargosRealocados for fn 3818
-# (3816). The census pairs no target function with a stand-in (step 7's check). Stand-ins of other units that my rows
-# end went (fragments 88, 107, 124 and 232 say which).
+# argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted). CargosRealocados, for fn 3818
+# (3816's other caller), went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's
+# check). Stand-ins of other units that my rows end went (fragments 88, 107, 124 and 232 say which).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CQRCODEDS_SRCS := src/app/comum/dados/cqrcodeds.cpp
 CONVERSORES299_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.cpp \

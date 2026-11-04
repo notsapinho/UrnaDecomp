@@ -7,6 +7,10 @@
 # ValidaCriacao once in each path. Read from 11452 (md/clocal.h has the forms); 11452 is in the link and matches with
 # both inlined by binaryen, as in the target (unit 296's fragment).
 #
+# comum::ChaveCandidatura, in ccandidaturas.cpp after Localiza: with crespostas.cpp's ChaveResposta (unit 110) the body
+# binaryen keeps as target fn 1939, which comum::VerificaVotos (11514, unit 98) calls. Unit 98's fragment has the
+# measurement and the choices.
+#
 # Names and files from records: md::CLocal::GetSecao (target fn 943) and ValidaCriacao (5673); comum::CLocal::VerificaLido
 # (782), GetSecaoID (1078) and VerificaEhSecao (5742); md::CInfoMunicipio::GetHorarioVerao (3725) and ValidaCriacao (5675);
 # md::CComplementoMunicipio::GetHorarioVerao (2795) and ValidaCriacao (5647); md::CHorarioVeraoMunicipio::ValidaCriacao

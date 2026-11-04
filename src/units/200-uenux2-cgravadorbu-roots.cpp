@@ -16,6 +16,9 @@
 // - comum::CGravadorBU::AcrescentaVotoVotavel (fn 3820), a private static member: its one target caller is fn 3819
 //   (not written, unnamed), which calls it three times, with the vote types 2 and 1. w200_votos calls it twice through
 //   an asm label, with those two types and varying the candidate, so dead-argument elimination folds no argument.
+// - comum::FiltraCargos (fn 3818), a free function of cgravadorbu.cpp: its one target caller, 11629, calls it three
+//   times, with the types 0, 1 and 2. w200_filtra calls it twice through an asm label (the result's address first),
+//   with a type it is given and that type plus one, into buffers it is given.
 #include <cstddef>
 #include <vector>
 
@@ -26,6 +29,8 @@ extern "C" {
 extern const char w200_vt_bu[] __asm__("_ZTVN5comum11CGravadorBUE");
 void w200_acrescenta(void*, int, int, int, const void*) __asm__(
     "_ZN5comum11CGravadorBU21AcrescentaVotoVotavelERNSt3__26vectorINS_2md13CVotosVotavelENS1_9allocatorIS4_EEEENS3_5CVoto5ETipoEjtRKNS3_6CCargoE");
+void w200_filtra_cargos(void*, const void*, int) __asm__(
+    "_ZN5comum12FiltraCargosERKNSt3__26vectorINS_2md6CCargoENS0_9allocatorIS3_EEEENS3_5ETipoE");
 }
 
 namespace {
@@ -59,6 +64,13 @@ __attribute__((noinline)) void w200_votos(void* votos, int candidato, int quanti
     w200_acrescenta(votos, 1, candidato >> 4, quantidade, outroCargo);
 }
 
+// stands for fn 11629
+__attribute__((noinline)) void w200_filtra(void* filtrados, void* outros, const void* cargos, int tipo)
+{
+    w200_filtra_cargos(filtrados, cargos, tipo);
+    w200_filtra_cargos(outros, cargos, tipo + 1);
+}
+
 std::size_t (*volatile w200_sink_resultados)(const std::vector<comum::md::CResultadoVotacaoPorEleicao>&,
     const std::vector<comum::md::CResultadoVotacaoPorEleicao>&);
 
@@ -66,6 +78,8 @@ std::size_t (*volatile w200_sink_votacao)(std::vector<comum::md::CResultadoVotac
     const std::vector<comum::md::CVotosCargo>&);
 
 void (*volatile w200_sink_votos)(void*, int, int, const void*, const void*);
+
+void (*volatile w200_sink_filtra)(void*, void*, const void*, int);
 
 const void* volatile w200_sink_vt;
 
@@ -76,6 +90,7 @@ struct SW200Roots {
         w200_sink_resultados = w200_resultados;
         w200_sink_votacao = w200_votacao;
         w200_sink_votos = w200_votos;
+        w200_sink_filtra = w200_filtra;
     }
 } w200_roots;
 

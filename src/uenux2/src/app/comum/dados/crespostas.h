@@ -32,4 +32,10 @@ private:
     static std::unique_ptr<CRespostas> s_instancia;
 };
 
+// An answer's key in the base's map, the post times 1000000 plus the number, as Busca computes it. With
+// ChaveCandidatura (ccandidaturas.h) it is target fn 1939: binaryen keeps one body for the two in our link, and that
+// the target held two functions as well is a reading of comum::VerificaVotos' five calls (unit 98's fragment has the
+// measurement). Its name, its being a free function and its file are chosen.
+uedword ChaveResposta(md::TCargoID cargo, TCandidatoID numero);
+
 } // namespace comum

@@ -199,7 +199,8 @@
 # before step 8; matched at step 9, named by its vtable slot.
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
-# slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
+# slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in. The stand-ins of the CLogVota
+# members are named in their paragraphs.
 #
 # CLogVota::LogaErroPartidoNaoEncontrado (target fn 4550, no record), logaErro (fn 2282) of "Erro partido não
 # encontrado", is out of line, called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName (fn 6954, unit
@@ -219,6 +220,15 @@
 # (DescartaVotos, 4449; unit 197). The members added after the file's line 361, which no record orders, sit below
 # LogaEleitorImpedido: its record is line 432, under the gap of lines 362 to 382, and lines added above that gap would
 # move it.
+#
+# CLogVota::LogaOperadorSelecionou and LogaMesarioHabilitouEleitor (2502 and 3258; clogvota.h says where each sits in
+# clogvota.cpp and why): each formats its string argument into its message and logs it through loga (fn 233). The
+# target holds each as a thunk of one body binaryen merged, fn 6113 (446 B), which takes the message's end and begin:
+# 2502 passes "Operador selecionou: {}", 3258 "Mesário {} habilitou o eleitor". With both in our link it forms the same
+# merge, and 6113 (the byn$mgfn-shared$ body named after LogaOperadorSelecionou), 2502 and 3258 match by the content
+# pass. 2502's one target caller, vota::CEscolheOpcao::ProcessInput (10689, unit 121's, written), is in the link and calls
+# it four times; 3258's, vota::CRegistraDigitalOperador::ProcessTick (10451), is not written, and this unit's roots
+# stand for it (LogaHabilitacoes, three calls, as 10451 makes). Their names are chosen from their messages.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
