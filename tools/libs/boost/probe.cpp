@@ -78,18 +78,22 @@ EMSCRIPTEN_KEEPALIVE int probe_signals(int x) {
 EMSCRIPTEN_KEEPALIVE int probe_datetime(const char *text) {
   using namespace boost::posix_time;
   using namespace boost::gregorian;
-  ptime t = time_from_string(text);
-  date d = from_simple_string(text);
-  date d2 = from_undelimited_string(text);
+  // no time_from_string or from_simple_string: both split their text with boost::char_separator<char>
+  // (date_time/time_parsing.hpp, date_parsing.hpp), whose operator() holds a call of ispunct, and ledger/functions.tsv
+  // pairs no target function with that operator or with ispunct; musl's ispunct calls isalnum, so with them isalnum
+  // keeps a second call site in the app link, where its one target caller, api::CStringUtils::CasaCaractere (fn 5464),
+  // holds it inlined (measured: src/units/179-uenux2-cvalidamidia.mk). from_undelimited_string splits with
+  // offset_separator, whose token_iterator constructor (fn 5838) matches from this probe.
+  date d = from_undelimited_string(text);
   ptime now = second_clock::local_time();
   ptime u = microsec_clock::universal_time();
   // no gregorian date in iso_extended format: the target's ymd_to_string in that format has one caller, ecourna's
   // CSqlStatement::SetDateTime (fn 9422), which holds it inlined; a call here would give it a second in the app link
   // (src/units/265-ecourna-boost-datetime.mk)
-  std::string out = to_simple_string(t) + to_iso_string(d) + to_simple_string(u.time_of_day());
-  time_duration diff = now - t;
-  date_duration dd = d - d2;
-  return (int)out.size() + (int)diff.total_seconds() + (int)dd.days() + (int)d.day_of_week() + (int)t.date().year();
+  std::string out = to_simple_string(now) + to_iso_string(d) + to_simple_string(u.time_of_day());
+  time_duration diff = now - u;
+  date_duration dd = now.date() - d;
+  return (int)out.size() + (int)diff.total_seconds() + (int)dd.days() + (int)d.day_of_week() + (int)now.date().year();
 }
 
 EMSCRIPTEN_KEEPALIVE int probe_lexical(const char *text) {

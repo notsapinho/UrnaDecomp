@@ -225,11 +225,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
-
-// f5464 · 110 B · unmatched · placement: link order · name unknown
-// ? f5464(i32, i32) { ... }
-
 // link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
 
 // f5610 · 5599 B · unmatched · placement: link order · name unknown
