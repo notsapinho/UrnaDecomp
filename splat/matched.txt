@@ -12542,3 +12542,7 @@
 10671 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp.o
 10672 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp.o
 7061 _ZN4vota14CThreadEleitor3RunEv
+3977 pthread_mutexattr_init
+10254 _ZN3api11CPosixMutexC2Ev
+10869 _ZN3api22CDefaultGenericFactoryINS_8ISyncCtlENS_11CPosixMutexEE6CreateEv
+12936 pthreadMutexAlloc
