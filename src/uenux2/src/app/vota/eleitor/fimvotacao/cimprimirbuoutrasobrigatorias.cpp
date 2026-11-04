@@ -51,7 +51,7 @@ void CImprimirBUOutrasObrigatorias::StartState()
     ASSERT(appInfo.GetVota().GetQtdBU() <= qtdBuObrigatorio, api::EUA_IMPRIMIRBUOUTRASOBRIGATORIAS_QTDBU_EXCEDENTES);
     while (appInfo.GetVota().GetQtdBU() < qtdBuObrigatorio) {
         if (CSincronizaVota::s_urnaDesligando) {
-            break;
+            return;
         }
         const std::shared_ptr<api::IForm<api::IScreen>> tela = CTelasVota::GetInst().GetTelaDestinoBUs();
         tela->Slot2();

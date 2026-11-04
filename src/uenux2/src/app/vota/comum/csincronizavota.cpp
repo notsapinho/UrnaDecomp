@@ -22,7 +22,7 @@
 
 namespace vota {
 
-std::atomic<bool> CSincronizaVota::s_urnaDesligando = false;
+bool CSincronizaVota::s_urnaDesligando = false;
 
 void CSincronizaVota::MarcaUrnaDesligando()
 {

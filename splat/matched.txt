@@ -12324,3 +12324,6 @@
 12075 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobehb.cpp.o
 12076 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobehb.cpp.o
 13023 _ZZN4vota10CTelasVota17GetTelaDestinoBUsEvEN3$_08__invokeEv
+12065 _ZN4vota29CImprimirBUOutrasObrigatorias10StartStateEv
+12069 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o
+12070 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o

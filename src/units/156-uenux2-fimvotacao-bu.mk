@@ -90,7 +90,7 @@
 # steps 7 to 9 matched it:
 # - vota::CImprimindoBU::ImprimeBU (fn 2890, records cimprimindobu.cpp 111:22 and 114:79, `static void
 #   vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`), public: four target slots call it (12077 and 12078 here,
-#   12065 and 12081 in unit 104); 12065 is written now (unit 104, not matched), and the roots' stand-in for it went. It
+#   12065 and 12081 in unit 104); 12065 is in the link now (unit 104, matched), and the roots' stand-in for it went. It
 #   takes
 #   CPolySingleton<api::IPaperRelatorios>'s instance (fn 905) at :111:22 (the 21 characters ` auto& impresso = ` before
 #   the call, a chosen spelling of that length, as in unit 104's creimprimindozeresima.cpp:51), asserts the vote's BU
@@ -129,7 +129,10 @@
 #   base's, stores the vptr 1542684 and builds +12, +20 and +28 from TelaRetireMR, TelaLacreTampa and TelaMRModoDemo,
 #   free functions of unit 110's ctelasvota.cpp (ctelasvota.h says what each shows and why that file) that binaryen
 #   inlines, each behind a stack-pointer prologue of its own (frames of 64, 64 and 80 bytes, as the target's). Matched
-#   with it: 12032, the exit destructor of s_mutex (@1833908, `f150(1833908)`), through the content pass. Not matched:
+#   with it: 12032, the exit destructor of s_mutex (@1833908, `f150(1833908)`), through the content pass. Its operand
+#   re-points through s_mutex's name, which only 2291's vote gives (`evidence:vote:1 by:2291`), so 12032 rests on
+#   2291's written body, whose re-pointed bytes are the target's (`pnpm wasm splat-remap <target> <ours>
+#   sym:_ZN4vota10CRetirarMR7GetInstEv --against 2291` prints IDENTICAL; reference/splat.md section 3). Not matched:
 #   2291 is `unresolved self-voted` on s_inst (@1833932, `evidence:vote:4 by:2291`): its one other target reader is
 #   12033, the static's exit destructor, which calls fn 2903, the std::unique_ptr reset binaryen keeps once for the
 #   states whose destructor is fn 1284; 2903's other callers (10434, 10442 and 10476) are not in this tree, so our link

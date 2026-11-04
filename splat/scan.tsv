@@ -11928,12 +11928,12 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12062	_ZN4vota9CInicioBU10StartStateEv	14882	symbol	match	readings: address symbol	189	none	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/ciniciobu.cpp.o
 12063	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/ciniciobu.cpp.o	14884	symbol	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/ciniciobu.cpp.o
 12064	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/ciniciobu.cpp.o	14887	symbol	match	readings: address symbol	12	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/ciniciobu.cpp.o
-12065	_ZN4vota29CImprimirBUOutrasObrigatorias10StartStateEv	14892	symbol	unresolved	ours +0x612 i32.const 1769804: an address of ours: _ZN4vota14CImprimirBJust6s_instE (.bss) has no target symbol	1790	none	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o
+12065	_ZN4vota29CImprimirBUOutrasObrigatorias10StartStateEv	14892	symbol	match	readings: address symbol,address string,address same-content,table slot,address srcloc	1790	none	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o
 12066	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o	14894	symbol	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o
 12067	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o	14898	symbol	match	readings: address symbol	12	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp.o
 12068	_ZN4vota14CImprimirBJust10StartStateEv	11647	symbol	match	readings: address symbol,address srcloc,address string,table slot	1001	none	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o
-12069	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
-12070	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
+12069	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o	11648	symbol	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o
+12070	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o	11649	symbol	match	readings: address symbol	12	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimirbjust.cpp.o
 12071	_ZN4vota14CImprimindoBim10StartStateEv	14904	symbol	match	readings: address symbol,address srcloc,address string,table slot	1074	none	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o
 12072	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o	14906	symbol	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o
 12073	__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o	14916	symbol	match	readings: address symbol	12	none	app	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp.o

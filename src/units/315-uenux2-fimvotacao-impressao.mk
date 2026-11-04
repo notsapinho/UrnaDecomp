@@ -5,8 +5,8 @@
 #   104's CImprimindoBim::StartState), the constructor and the statics, whose exit destructors 12075 and 12076 match;
 # - vota::CImprimirBJust: StartState (fn 12068, records cimprimirbjust.cpp 51:87 and 52:107), which holds the private
 #   imprimeBJust (record :69:29) behind a 144-byte prologue, matched; GetInst (inlined into fn 12065, unit 104's
-#   CImprimirBUOutrasObrigatorias::StartState, not matched), the constructor and the statics (exit destructors 12069,
-#   12070: they wait for 12065's match, which names the objects).
+#   CImprimirBUOutrasObrigatorias::StartState, matched), the constructor and the statics, whose exit destructors 12069
+#   and 12070 match (12065's match names the objects).
 #  Evidence: the vtables (@1541428 and @1541636: slots 0 and 1 the bodies the states with no data member share, 174 and
 # 144, slot 2 the StartState); the vptr stores 1541436 and 1541644, the base's constructor with 0 and the .bss words
 # (@1833680 and @1833656, @1833736 and @1833712) in the inlining callers; the records' function names (`void

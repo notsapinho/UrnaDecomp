@@ -15,7 +15,7 @@ namespace vota {
 // std::mutex (@1833740, by fn 12066). The constructor passes 0 to the base's. src/units/104-uenux2-app-vota-estados.mk
 // says which of this is evidence and which is chosen. StartState (fn 12065, records cimprimirbuoutrasobrigatorias.cpp
 // 50, 53 and 57) prints the BU's mandatory copies, each under CTelasVota::GetTelaDestinoBUs, and goes to
-// vota::CImprimirBJust, vota::CImprimindoBim or vota::CRetirarMR; written, not matched (the fragment has the rows).
+// vota::CImprimirBJust, vota::CImprimindoBim or vota::CRetirarMR, unless the urna is shutting down; matched.
 class CImprimirBUOutrasObrigatorias final : public comum::CAppState {
 public:
     static CImprimirBUOutrasObrigatorias& GetInst();
