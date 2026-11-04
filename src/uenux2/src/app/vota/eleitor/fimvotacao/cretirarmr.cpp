@@ -8,6 +8,7 @@
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/vota/comum/csincronizavota.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
 #include "app/vota/log/clogvota.h"
 
@@ -15,9 +16,29 @@ using namespace comum;
 
 namespace vota {
 
+CRetirarMR::CRetirarMR()
+    : comum::CAppState(EVENTO_ENTRADA),
+      m_formRetirar(TelaRetireMR()),
+      m_form(TelaLacreTampa()),
+      m_formDemo(TelaMRModoDemo())
+{
+}
+
 CRetirarMR::~CRetirarMR() = default;
 
-// (original lines 20-48: content not recovered)
+CRetirarMR& CRetirarMR::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CRetirarMR());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CRetirarMR> CRetirarMR::s_inst;
+std::mutex CRetirarMR::s_mutex;
+
+// (original lines 41-48: content not recovered)
 #line 49
 void CRetirarMR::StartState()
 {
@@ -65,8 +86,3 @@ bool CRetirarMR::AguardaRetiradaMR()
 }
 
 } // namespace vota
-
-// <stubs>
-// f2291 · 3426 B · unmatched · placement: link order · name unknown
-// ? f2291() { ... }
-// </stubs>

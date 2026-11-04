@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <string>
 
 // vota::CSincronizaVota: the copies of the voting application's files between the internal and the external flash, and
@@ -40,11 +41,18 @@ public:
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);
 
     // The byte at 1832936 that VerificaUrnaDesligando tests: 14 target functions read it (`== 1`, `& 1` or a bare test)
-    // and fn 3336, its one store, sets it to 1. That it is a bool is a choice that fits every read; no reader tests it in
-    // a loop, which would tell a bool from a byte (docs/reference/facts/reading.md R14). Its name, its owner and that it
-    // is public are chosen. Its place in .bss, just before vota::CAguardaMensagem's statics (app/vota/eleitor/), fits an
-    // object of app/vota/comum/.
-    static bool s_urnaDesligando;
+    // and fn 3336, its one store, sets it to 1. That it is a bool is a choice that fits every read (no reader compares it
+    // with another value). Its name, its owner and that it is public are chosen. Its place in .bss, just before
+    // vota::CAguardaMensagem's statics (app/vota/eleitor/), fits an object of app/vota/comum/.
+    // Not a plain bool: vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065) tests it first in a loop whose guard
+    // and back edge test only the BU count, and clang hoists a plain bool's load (a safe load) into both. Measured in
+    // the whole link with `pnpm wasm score`: with a plain bool 107 over 788 rows (the flag tested on the guard and the
+    // back edge); with std::atomic<bool> or volatile bool 96 over 779 (the back edge the target's; the guard's block
+    // nesting is not), the two giving the same module. Of the 585 objects the header edit rebuilds, volatile bool
+    // changes fn 12065's alone (the readers 12077, 12078 and 12081, matched, compile byte-identical), and
+    // std::atomic<bool> csincronizavota.cpp.o as well, which links to volatile bool's module, so its 3336 and
+    // VerificaUrnaDesligando keep their code. std::atomic<bool> over volatile bool is a choice.
+    static std::atomic<bool> s_urnaDesligando;
 };
 
 } // namespace vota

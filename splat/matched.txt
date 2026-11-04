@@ -12317,3 +12317,10 @@
 6581 _ZN4vota10CTelasVota27GetTelaTesteTecladoOpcionalEv
 11831 _ZN4vota12testeteclado9CRetomada7GetTelaEv
 11862 _ZN4vota12testeteclado12CPreZeresima7GetTelaEv
+12032 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cretirarmr.cpp.o
+12068 _ZN4vota14CImprimirBJust10StartStateEv
+12071 _ZN4vota14CImprimindoBim10StartStateEv
+12074 _ZN4vota15CImprimindoBEHB10StartStateEv
+12075 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobehb.cpp.o
+12076 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobehb.cpp.o
+13023 _ZZN4vota10CTelasVota17GetTelaDestinoBUsEvEN3$_08__invokeEv

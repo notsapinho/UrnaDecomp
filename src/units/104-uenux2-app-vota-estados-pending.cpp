@@ -45,21 +45,6 @@ void CGravaResultado::StartState()
     __builtin_trap();
 }
 
-// CImprimindoBim::StartState: fn 12071 (1074 B), records cimprimindobim.cpp:50, cimprimindobim.cpp:51,
-// cimprimindobim.cpp:66, callees with no name: 185, 187, 261, 401, 463, 1127, 2291 (1487 and 1488 are unit 168's).
-void CImprimindoBim::StartState()
-{
-    __builtin_trap();
-}
-
-// CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
-// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 2291 (491 is named now (unit 205)); the
-// others have names (3701 unit 93's, 1880 unit 00's, 2890 unit 156's, 502 unit 31's, 886 unit 165's).
-void CImprimirBUOutrasObrigatorias::StartState()
-{
-    __builtin_trap();
-}
-
 // CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
 // callees with no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's; 2882
 // is unit 246's).

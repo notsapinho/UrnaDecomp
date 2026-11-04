@@ -13,7 +13,12 @@ namespace vota {
 // object with no call through the vtable. A singleton: GetInst (fn 5985, a thunk into binaryen's fn 764) keeps the
 // object in a static std::unique_ptr (@1833708, destroyed at exit by fn 12073) under a static std::mutex (@1833684, by
 // fn 12072). The constructor passes 0 to the base's. src/units/104-uenux2-app-vota-estados.mk says which of this is
-// evidence and which is chosen.
+// evidence and which is chosen. StartState (fn 12071, records cimprimindobim.cpp 50 and 51) asserts the vote's and the
+// closing's states, prints the board members' report (ImprimeRelatorio, record cimprimindobim.cpp:66, `void
+// vota::CImprimindoBim::ImprimeRelatorio()`, out of line in the object: fn 12071 holds it behind a second
+// stack-pointer prologue; its being private is chosen) and goes to vota::CImprimindoBEHB, outside the demonstration mode
+// on a biometric urna (comum::CInformacaoEleicao::EhModoDemonstracao, fn 2286, and comum::CLocal::UrnaBiometrica, fn
+// 820, CLocal::GetInst called first), else to vota::CRetirarMR.
 class CImprimindoBim final : public comum::CAppState {
 public:
     static CImprimindoBim& GetInst();
@@ -22,6 +27,8 @@ public:
 
 private:
     CImprimindoBim();
+
+    void ImprimeRelatorio();
 
     static std::mutex s_mutex;
     static std::unique_ptr<CImprimindoBim> s_inst;

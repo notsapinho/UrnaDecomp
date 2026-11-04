@@ -46,6 +46,12 @@ enum EUeAssertError {
     // 45 characters for each name, chosen to that length
     EUA_VERIFICAQTDBUSADICIONAIS_ESTADO_ENCERRADA = 3461,
     EUA_VERIFICAQTDBUSADICIONAIS_ENCERRAMENTO_FIM = 3462,
+    // vota::CImprimindoBim::StartState (fn 12071, records cimprimindobim.cpp 50:87 and 51:107): the texts "Assert
+    // (vota.GetEstadoVota() == EAVENCERRADA)" and "Assert (vota.GetEstadoEncerramento() == EAEIMPRIMIROBRIGATORIABU)".
+    // With the invocations indented four columns and the codes qualified api::, the columns leave 32 characters for each
+    // name, chosen to that length
+    EUA_IMPRIMINDOBIM_ESTADOINVALIDO = 3463,
+    EUA_IMPRIMINDOBIM_ENCERRINVALIDO = 3464,
     // vota::CImprimindoBU::StartState (fn 12078, records cimprimindobu.cpp 70:87 and 71:70): the texts "Assert
     // (vota.GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (vota.GetQtdBU() == 0)". With the invocations indented four
     // columns and the codes qualified api::, the columns leave 31 characters for each name, chosen to that length
@@ -55,6 +61,19 @@ enum EUeAssertError {
     // numVia - 1)". With the invocation indented four columns and the code qualified api::, the column leaves 28
     // characters for the name, chosen to that length
     EUA_IMPRIMINDOBU_QTD_BU_VIAS = 3467,
+    // vota::CImprimirBJust::StartState (fn 12068, records cimprimirbjust.cpp 51:87 and 52:107): the texts of
+    // CImprimindoBim's two, the columns leaving 32 characters for each name, chosen to that length
+    EUA_IMPRIMIRBJUST_ESTADOINVALIDO = 3468,
+    EUA_IMPRIMIRBJUST_ENCERRINVALIDO = 3469,
+    // vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065, records cimprimirbuoutrasobrigatorias.cpp 50:117, 53:64
+    // and 57:116): the texts "Assert (appInfo.GetVota().GetEstadoVota() == EAVENCERRADA)", "Assert
+    // (appInfo.GetVota().GetEstadoEncerramento() == EAEIMPRIMIROBRIGATORIABU)" and "Assert (appInfo.GetVota().GetQtdBU()
+    // <= qtdBuObrigatorio)". With the first and third invocations indented four columns, the second's column less than
+    // its condition's length, so that it closes on a line of its own with the code there indented eight columns, and the
+    // codes qualified api::, the columns leave 49, 50 and 49 characters for the names, chosen to those lengths
+    EUA_IMPRIMIRBUOUTRASOBRIGATORIAS_VOTANAOENCERRADA = 3470,
+    EUA_IMPRIMIRBUOUTRASOBRIGATORIAS_ENCERRAMENTO_ERRO = 3471,
+    EUA_IMPRIMIRBUOUTRASOBRIGATORIAS_QTDBU_EXCEDENTES = 3472,
     // vota::CLimiteCopiasBUAtingido::StartState (fn 12027, record climitecopiasbuatingido.cpp 37:56): the text "Assert
     // (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)". The column is less than the condition's
     // length, so the invocation closes on a line of its own: with the code there indented eight columns and qualified
@@ -79,6 +98,10 @@ enum EUeAssertError {
     // characters for the names, chosen to those lengths
     EUA_VERIFICAHORARIOZERESIMA_ESTADO_INICIAL = 3481,
     EUA_VERIFICAHORARIOZERESIMA_ESTADO_INVALIDO = 3482,
+    // vota::CImprimindoBEHB::StartState (fn 12074, records cimprimindobehb.cpp 45:88 and 46:108): the texts of
+    // CImprimindoBim's two, the columns leaving 33 characters for each name, chosen to that length
+    EUA_IMPRIMINDOBEHB_ESTADOINVALIDO = 3484,
+    EUA_IMPRIMINDOBEHB_ENCERRINVALIDO = 3485,
 };
 
 using CUeAssertError = ecourna::api::exception::CBaseError<EUeAssertError, ecourna::api::exception::SErrorLimits{3400, 4200}>;
