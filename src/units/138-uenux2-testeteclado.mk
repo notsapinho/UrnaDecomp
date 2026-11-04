@@ -75,9 +75,9 @@
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 is written and matched since too, in unit 156;
-# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12040; 12038, ProcessInput, matches since in unit
-#   156, and 12051, ProcessInput, in unit 37): callees with no name (455 has one since unit 237, 576 since unit 165, 502
-#   since unit 220); CTesteTeclado is unit 217's;
+# - CMostraQRCodeCertificado's StartState (12040; its ProcessInput, 12038, matches since in unit 156, and
+#   CMostraQRCodeBU's slots are unit 37's: 12051 matches, 12055 is written): callees with no name (455 has one since
+#   unit 237, 576 since unit 165, 502 since unit 220, 653 since unit 120); CTesteTeclado is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv

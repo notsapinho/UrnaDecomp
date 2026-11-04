@@ -78,7 +78,7 @@ public:
 
     time_t ConvertToLocalTime() const;
     // public: vota::testeteclado::CPreZeresima::GetTela (target fn 11862) calls it (fn 5476) on its member with
-    // ISystemDateTime's time, outside the class
+    // ISystemDateTime's time, outside the class (public rather than a friend of that class is chosen)
     void ConvertFromLocalTime(time_t tempo);
     void operator+=(int segundos);
     void operator+=(const std::chrono::seconds& segundos);

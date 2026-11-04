@@ -58,7 +58,10 @@
 #   second 2 * margem as a multiply by 65534 or-ed with 1, 64 over 288. The remainder is not explained.
 # - CabeProporcional (10971) 665 over 1295 rows: the target builds its areas by the same loop as Divide (the same two
 #   masks), but building them in place here takes the function to 726 over 1260, so it keeps SRect::Normalized, and
-#   the rest of the function differs. Draw 1162 over 5684 rows. Their remainder is not explained. They stay written:
+#   the rest of the function differs. Draw 1196 over 5696 rows: with api::SPoint's constructor (primitives.h) the text
+#   point Recalcula computes is stored at +80 as one i32.store of x | y << 16, where the target stores y at +82 and x
+#   at +80 with two i32.store16, as the aggregate SPoint gave (Draw 1162 over 5684 rows then; pnpm wasm score and
+#   pnpm wasm fn on a link of each). Their remainder is not explained. They stay written:
 #   Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the table slots of 10972 and 10971
 #   re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's slot).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

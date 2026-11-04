@@ -51,16 +51,16 @@
 #   "{}-{}" of each option's number and name at {1, number + 1}, AddLed(0), "ESCOLHA O TIPO:" at {24, 4},
 #   AdicionaCampoNumerico(builder, 1, false, {40, 4}) (fn 1151), "CORRIGE: retornar" at {1, 4},
 #   GetInteractiveForm("", true)), then the form's slot 2. Measured with pnpm wasm score in the whole link, before
-#   steps 7 to 9: `149 over 1740 rows (same 1591, replaced 121 [118 operand-only], inserted 10, deleted 18)`. Two
-#   places differ, neither explained. (1) In the case of more types the target loads the vector's end and begin again
-#   after its store of m_pNextState, for the copy; ours keeps the switch's values (wasm-objdump -d of
+#   steps 7 to 9, while api::SPoint was an aggregate: `149 over 1740 rows (same 1591, replaced 121 [118 operand-only],
+#   inserted 10, deleted 18)`. Two places differed, neither explained. (1) In the case of more types the target loads
+#   the vector's end and begin again after its store of m_pNextState, for the copy; ours keeps the switch's values
+#   (wasm-objdump -d of
 #   cvalidaidentidade.cpp.o: clang's code, before binaryen). The same object built without strict aliasing
 #   (UENUX2_NOTBAA_FILES with this file, on the make command line, a scratch link) keeps them too: `157 over 1745`. (2)
 #   In MontaTelaOpcoes's loop the target reads the option's number for the point after the formatted text and before
-#   it stores the point's x, ours after that store. With api::SPoint given a constructor of its two coordinates (an
-#   -iquote overlay of api/gui/primitives.h for this object only) the loop reads as the target's: `144 over 1739 rows
-#   (same 1595, replaced 120 [117 operand-only], inserted 9, deleted 15)`, (1) left. primitives.h is not this unit's
-#   file and every api/gui user includes it, so that is a lead, not landed. TiposValidos's loop is the target's with
+#   it stores the point's x, ours after that store. SPoint's constructor of its two coordinates (api/gui/primitives.h,
+#   landed with fn 653, unit 120) puts the loop in the target's order: `144 over 1739 rows (same 1595, replaced 120
+#   [117 operand-only], inserted 9, deleted 15)`, (1) left. TiposValidos's loop is the target's with
 #   std::views::filter (find the first rule that accepts, push, find from the next); a range-for with an if read
 #   `211 over 1742`. Its trap and the pending file went.
 # - 5420 builds a std::map<int, std::pair<std::string, ETipoIdentificadorEleitor>>: per type of its by-value vector,

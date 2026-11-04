@@ -203,7 +203,8 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
 // api::CApplication::s_areaTela itself: through GetAreaTela 653 kept the area as a parameter (213 over 654 rows,
 // measured), a call binaryen inlines only after it folds constant parameters (a reading of its passes' order). Defined after GetTelaCargo in
 // ctelasvota.cpp with its SFont {35, 0} (@475016; 3059, 3074 and 7787 load it too), places chosen (no record); the
-// names and the references are chosen
+// names, the references and its being a free function of vota are chosen (the file's recorded builders, records
+// 1536640-1536768, are static CTelasVota members)
 CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
                                                  const std::optional<std::string>& corrige);
 

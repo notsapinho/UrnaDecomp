@@ -133,8 +133,10 @@ public:
     // the same, called by api::CInteractiveFormBuilder::AddLabeledInputControl (target fn 653) alone: 653 holds this code
     // behind a second prologue, the twin of fn 2243 above, so it was a function of its own with 653 as its one caller
     // when binaryen inlined it, and one that duplicate-function-elimination had not joined with 2243 before that
-    // (docs/reference/facts/tool-traps.md X1): it differed in the object. That difference, the label first, and the
-    // name are chosen; the colours as two more parameters 653 passes gives the same 653 (src/units/120-uenux2-iform.mk)
+    // (docs/reference/facts/tool-traps.md X1): it differed in the object. That difference, the label first, the name,
+    // and its being CFormBuilder's, in cformbuilder.cpp after 2243, are chosen (KeyName, fn 744, is api/hwil/iinput.h's
+    // inline, so the code pins no TU but that it is not 653's); the colours as two more parameters 653 passes gives the
+    // same 653 (src/units/120-uenux2-iform.mk)
     void AddKeyLabel(const std::string& rotulo, char tecla, ETextAlignment alinhamento);
 
     std::shared_ptr<IForm<IScreen>> GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome);

@@ -80,9 +80,10 @@
 #
 # 3678 and 2243, AddLabeledKey over a key's name and over a key, and 2782, AddTextFieldMultiLine, match; the scan's
 # content pass names each (source `content`), as no vote reaches them. Their target callers are screens, none written
-# but 653 (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the roots say which
-# stand-in stands for which. Each measured in the link (`pnpm wasm score`, and `pnpm wasm splat-remap`, which reads
-# 3678 and 2782 IDENTICAL, and 2243 unresolved on its one call, of 3678, whose name only that match gives):
+# but 653 and 12055 (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the
+# roots say which stand-in stands for which. Each measured in the link (`pnpm wasm score`, and `pnpm wasm
+# splat-remap`, which reads 3678 and 2782 IDENTICAL, and 2243 unresolved on its one call, of 3678, whose name only that
+# match gives):
 # - 3678 passes 5544 the screen's area, api::CApplication::s_areaTela (capplication.h lists its readers), through
 #   CApplication::GetAreaTela, out of line in capplication.cpp, which binaryen inlines into it. With 3678 naming the
 #   static itself, our link folds 5544's area parameter, which the target keeps: 5544, matched, then scores 96 over
@@ -95,11 +96,14 @@
 # - 2243 is KeyName (744, api/hwil/iinput.h) and a call of 3678; 744's copy now links from this object, still matching.
 #   653 (unit 120) holds that code behind a second prologue: AddKeyLabel, written after 2243, which only 653 calls and
 #   binaryen inlines there (cformbuilder.h says why it is a function apart from 2243; unit 120's fragment has the
-#   measurements). Which of the two is the 3-parameter AddLabeledKey and which the other is chosen.
+#   measurements). Which of the two is the 3-parameter AddLabeledKey and which the other is chosen, and so are
+#   AddKeyLabel's class, file and place after 2243 (KeyName is api/hwil/iinput.h's inline: the code pins no TU but
+#   that it is not 653's).
 # - 2782 has AddTextField's shape over the CTextFieldMultiLine constructor (5498, unit 14). Its CFixedText control
 #   block's vptr, 1578304, is the one 202 and 1265 store; its CTextFieldMultiLine control block's, 1539360, which only
 #   2782, 12055 and that block's members 12298 and 12300 hold, is no neighbour of it, so the target's copy of that block
-#   is another object's (a reading). 12298 and 12300 now link from this object, still matching.
+#   is another object's (a reading). 12298 and 12300 link from ctelasvota.cpp.o now (its AdicionaTextoMultiLinha makes
+#   that block too), still matching.
 # - The three are defined after GetLabeledKeyPos, by their use bands (docs/how-to-decompile.md step 3, "The order of
 #   two members", on build/out/wasm-map/vota_web/names.tsv's ld_index): 3678 links after AddRect (band 3), 2243 after
 #   AddFill and AddLine (band 5), 2782 after AddDoubleLineField and 3058 (band 4), which AddStatusHeader mentions

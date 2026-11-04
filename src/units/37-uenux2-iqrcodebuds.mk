@@ -33,7 +33,7 @@
 # - StartState (fn 12055, record 70, `differs`, named by its vtable slot): the demo-mode test (CAplicacaoEncerrada
 #   next), IQRCodeBUDS's index reset, the screen from CTelasVota::CriaTelaQRCodeBU (ctelasvota.h has its evidence and
 #   choices), the form moved into +28, AjustaTela, `this` next. In the whole link (pnpm wasm score, default depth) it is
-#   281 over 2368 rows (same 2087, replaced 255 [252 operand-only], inserted 11, deleted 15). What differs: the target
+#   279 over 2368 rows (same 2089, replaced 253 [250 operand-only], inserted 11, deleted 15). What differs: the target
 #   computes the screen's height, the area's bottom + 1, into a local of its own and subtracts 48, 27 and 115 from it
 #   (CONFIRMA's and Continuar's rows, the help text's bottom); clang folds that into bottom - 47, - 26 and - 114 for
 #   every form of the height compiled (a TPosition, int, unsigned or uint16_t local, the area's copy with its bottom
@@ -41,7 +41,8 @@
 #   where two of the area's fields are kept (a stack value against a local) and the locals' numbers; not explained
 #   apart from the height. Measured on the way, in the whole link: the area read as one local copy (three i16 loads)
 #   732 over 2421; through AreaTela's by-value copy (the target's one i64.load) 756 over 2418; with the layout values
-#   as locals declared ahead of their statements 284 over 2370, and 281 over 2368 with the version's row one too.
+#   as locals declared ahead of their statements 284 over 2370, and 281 over 2368 with the version's row one too; 279
+#   with the version label's text the target's "Versão: " (in Latin-1: two i64.const rows, the label's characters).
 #   The locals declared before or after the status header give the same link (sha256 compared), and so does the height
 #   as a uint16_t or a TPosition. CQRCodeImage's constructor takes its std::function by value since (cqrcodeimage.h
 #   says why): fn 3662's match line follows the symbol (a rename) and its body is unchanged.
