@@ -117,14 +117,6 @@
 // f6557 · 166 B · unmatched · placement: link order · name unknown
 // void f6557(i32) { ... }
 
-// link-order cluster 900 · uses=2
-
-// f6581 · 211 B · unmatched · placement: link order · name unknown
-// void f6581(i32) { ... }
-
-// f6580 · 201 B · unmatched · placement: link order · name unknown
-// void f6580(i32) { ... }
-
 // link-order cluster 902 · uses=2
 
 // f6587 · 130 B · unmatched · placement: link order · name unknown

@@ -4,10 +4,12 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveformbuilder.h"
 #include "api/hwil/iurna.h"
@@ -19,7 +21,7 @@
 
 namespace vota {
 
-// (original lines 22-290: content not recovered)
+// (original lines 24-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -242,6 +244,16 @@ std::mutex CTelasVota::s_mutex;
 
 const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
 
+CFormInterativoTelaVota CTelasVota::GetTelaTesteTecladoOpcional()
+{
+    return TelaTextoConfirmaCorrige("Quer testar o teclado?", "Testar", "Não testar");
+}
+
+CFormInterativoTelaVota CTelasVota::GetTelaTesteTecladoObrigatorio()
+{
+    return TelaTextoConfirmaCorrige("Por favor, teste o teclado", "Testar", std::nullopt);
+}
+
 std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado()
 {
     api::CInteractiveFormBuilder builder;
@@ -266,7 +278,7 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
 
 CTelasVota::~CTelasVota() = default;
 
-// (original lines 3465-3529: content not recovered)
+// (original lines 3475-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {
@@ -276,6 +288,31 @@ CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, co
                            std::format("Nao existe o conjunto de telas associado ao cargo id {}", cargo));
     }
     return it->second.GetTela(tela);
+}
+
+namespace {
+
+const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
+
+} // namespace
+
+CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
+                                                 const std::optional<std::string>& corrige)
+{
+    api::CInteractiveFormBuilder builder;
+    std::vector<std::pair<char, std::string>> teclas;
+    if (confirma) {
+        teclas.emplace_back('C', *confirma);
+    }
+    if (corrige) {
+        teclas.emplace_back('D', *corrige);
+    }
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField(texto, api::SPoint(320, 200), FONTE_TEXTO_CONFIRMA_CORRIGE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddInputControl();
+    builder.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaTextoConfirmaCorrige");
 }
 
 } // namespace vota

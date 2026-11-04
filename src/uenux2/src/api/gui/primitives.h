@@ -13,6 +13,23 @@ enum TColor : int {};
 struct SPoint {
     TPosition x = 0;
     TPosition y = 0;
+
+    SPoint() = default;
+
+    // the point of two coordinates, a constructor rather than the aggregate's initialization. Evidence: the target
+    // evaluates both coordinates before it stores the first, where SPoint(x, y) of the aggregate stores x before it
+    // computes y. Measured in the whole link: in api::CInteractiveFormBuilder::AddLabeledInputControl (target fn 653)
+    // the line's first point loads area.bottom before area.left with this constructor and after it without, the one
+    // row that is no operand in 653's score without it; api::CFormBuilder::GetLabeledKeyPos (fn 5544) matches with
+    // `return SPoint(...)` through it, where the aggregate needed a temporary assigned to a named result. Of the 596
+    // objects the tree rebuilt with it, four changed (cformbuilder.cpp's, cstepsprogressbar.cpp's, cvalidaidentidade.cpp's
+    // and unit 31's roots), and no match left (src/units/120-uenux2-iform.mk). The parameter names and constexpr are
+    // chosen; the defaulted constructor keeps SPoint{} and a default-constructed point all zero
+    constexpr SPoint(TPosition x_, TPosition y_)
+        : x(x_)
+        , y(y_)
+    {
+    }
 };
 
 struct SRect {

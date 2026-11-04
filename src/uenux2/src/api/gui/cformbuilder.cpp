@@ -12,6 +12,7 @@
 //   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
 //         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
 //   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
+//   -     AddKeyLabel              2243's code, which only 653 calls and holds inlined (cformbuilder.h says why)
 //   2782  AddTextFieldMultiLine    over a CFixedText. The three come after GetLabeledKeyPos (the fragment says why)
 // FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 and 3678 each pass twice, and no other target function
 // reads; its name and its being a constant of this file are chosen. GeraNome has no target function: binaryen inlined it
@@ -178,7 +179,7 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
     return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
 }
 
-// (original lines 181-289: content not recovered)
+// (original lines 182-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {
@@ -221,8 +222,8 @@ void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
     }
 }
 
-// (original lines 334-347: content not recovered)
-#line 348
+// (original lines 334-351: content not recovered)
+#line 352
 /**
  * Posição do rótulo de uma tecla desenhada em @p area: junto à borda esquerda,
  * junto à direita ou no centro, conforme @p alinhamento, e acima da base,
@@ -232,19 +233,15 @@ void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
  */
 SPoint CFormBuilder::GetLabeledKeyPos(const SRect& area, ETextAlignment alinhamento, TPosition deslocamento)
 {
-    SPoint posicao;
     switch (alinhamento) {
     case ALINHAMENTO_ESQUERDA:
-        posicao = SPoint(area.left + MARGEM_ESQUERDA, area.bottom + deslocamento - DISTANCIA_BASE);
-        return posicao;
+        return SPoint(area.left + MARGEM_ESQUERDA, area.bottom + deslocamento - DISTANCIA_BASE);
     case ALINHAMENTO_CENTRO: {
         const TPosition largura = area.right - area.left + 1;
-        posicao = SPoint(area.left + largura / 2, area.bottom + deslocamento - DISTANCIA_BASE);
-        return posicao;
+        return SPoint(area.left + largura / 2, area.bottom + deslocamento - DISTANCIA_BASE);
     }
     case ALINHAMENTO_DIREITA:
-        posicao = SPoint(area.right - MARGEM_DIREITA, area.bottom + deslocamento - DISTANCIA_BASE);
-        return posicao;
+        return SPoint(area.right - MARGEM_DIREITA, area.bottom + deslocamento - DISTANCIA_BASE);
     }
 
     throw CUeGuiError(EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO, std::format("Alinhamento desconhecido ({})", static_cast<int>(alinhamento)));
@@ -260,6 +257,11 @@ void CFormBuilder::AddLabeledKey(const std::string& tecla, const std::string& ro
 }
 
 void CFormBuilder::AddLabeledKey(char tecla, const std::string& rotulo, ETextAlignment alinhamento)
+{
+    AddLabeledKey(KeyName(tecla), rotulo, alinhamento);
+}
+
+void CFormBuilder::AddKeyLabel(const std::string& rotulo, char tecla, ETextAlignment alinhamento)
 {
     AddLabeledKey(KeyName(tecla), rotulo, alinhamento);
 }

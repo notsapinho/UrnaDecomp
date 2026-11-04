@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -98,6 +99,15 @@ public:
     // the first when no voter has voted yet, the second otherwise; the names chosen, as for the others
     const CFormInterativoTelaVota& GetTelaAguardaEleitor() const { return m_tela16; }
     const CFormInterativoTelaVota& GetTelaAguardaProximoEleitor() const { return m_tela17; }
+    // fns 6580 and 6581: the keyboard test's screens that vota::testeteclado::CRetomada's and CPreZeresima's GetTela (fns
+    // 11831, 11862) show, built on each call by TelaTextoConfirmaCorrige (below) over "Por favor, teste o teclado" and
+    // the key CONFIRMA alone, and over "Quer testar o teclado?" with CORRIGE too. Their callers call GetInst and drop
+    // its result, which a static member called through it gives; as non-static members the result stayed in a local
+    // (11831 11 over 43 rows, 11862 11 over 53, measured in the link). That they are CTelasVota's and their names are
+    // chosen. Defined in ctelasvota.cpp before TelaTesteTeclado, 6581 first: use band 2 of the object puts them after
+    // TelaPreparandoDadosEncerramento (fn 6583) and before the map instance 6579 and the destructor (6548)
+    static CFormInterativoTelaVota GetTelaTesteTecladoObrigatorio();
+    static CFormInterativoTelaVota GetTelaTesteTecladoOpcional();
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
@@ -154,5 +164,16 @@ std::shared_ptr<api::CTextBox> AdicionaCaixaTecla(api::CFormBuilder& builder, co
                                                   api::SFont fonte, api::SPoint tamanho);
 std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado();
 std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador);
+
+// Fn 2376 (callers 6580, 6581, 7481 and 7787): a status header, the text centred at (320, 200) in a 35-point font,
+// the form's control field and, through api::CInteractiveFormBuilder::AddLabeledInputControl (fn 653), the labels of
+// CONFIRMA ('C') and CORRIGE ('D') for each label given, named "telaTextoConfirmaCorrige" by GetFormularioInterativo.
+// Its arguments are the text and two std::optional<std::string> its callers build (an engaged flag at +12). It passes
+// api::CApplication::s_areaTela itself: through GetAreaTela 653 kept the area as a parameter (213 over 654 rows,
+// measured), a call binaryen inlines only after it folds constant parameters (a reading of its passes' order). Defined after GetTelaCargo in
+// ctelasvota.cpp with its SFont {35, 0} (@475016; 3059, 3074 and 7787 load it too), places chosen (no record); the
+// names and the references are chosen
+CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
+                                                 const std::optional<std::string>& corrige);
 
 } // namespace vota
