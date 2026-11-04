@@ -2,7 +2,7 @@
 // comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>> in the skeleton link the way the target keeps them.
 // - CGeradorBU's one user is fn 12110 (vota::CGeraBU's slot 2, not reconstructed), which builds the object, stores its
 //   vptr (@1575164, vtable @1575156) and calls the D2 (fn 3698) directly. Taking the vtable's address keeps the slots in
-//   the table: the D0 (fn 11258), which calls the D2, and the traps of 139-uenux2-cgeradorbu-pending.cpp. The D2 is in
+//   the table: the D0 (fn 11258), which calls the D2, and the base's three slots (fns 11253-11255). The D2 is in
 //   the table too, so its one direct caller here, the D0, leaves it a body of its own, as binaryen keeps a function the
 //   table holds (docs/reference/facts/tool-traps.md X1); no stand-in calls it. The bases' D2s (fns 5612, 5609) each have
 //   one caller, the derived D2, and a slot of their class's vtable, which the D2s store.
