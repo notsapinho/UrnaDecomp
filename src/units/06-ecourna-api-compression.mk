@@ -52,10 +52,10 @@
 # slot-call cache's tracked pointers (9563, with 9560, 9561 and 9562) and of a lock's garbage (9572), and, for
 # icompressor.cpp.o's, sp_counted_impl_p<signal_impl>::dispose (9519). Measured on whole links (steps 6 to 10, gains and
 # losses by index against 34125a18, every other change of the root and the probe in place), each left out alone: with
-# the probe's two disconnect calls back, 5202 9537 9570 9578 9583 9585 do not match (and 9538 reads unresolved again;
-# either call alone makes roots_boost.o define disconnect: wasm-objdump -x -j linking); without dec_slot_refcount's
-# line, 9572 9575; without erase's, 9579; without the tracked pointers' reserve_impl, 9560 9561 9562 9563; without the
-# garbage's, 9572; without dispose's, 9519. No variant loses a row of 34125a18. Not landed:
+# the probe's two disconnect calls back, 5202 9537 9570 9578 9583 9585 do not match (and 9538, unmatched then, read
+# unresolved again; either call alone makes roots_boost.o define disconnect: wasm-objdump -x -j linking); without
+# dec_slot_refcount's line, 9572 9575; without erase's, 9579; without the tracked pointers' reserve_impl, 9560 9561
+# 9562 9563; without the garbage's, 9572; without dispose's, 9519. No variant loses a row of 34125a18. Not landed:
 # throw_exception<bad_function_call> (9571) declared extern as well adds 5197 5198 5199 5200 9566 9567 9569 and takes
 # 9537, 9583 and 9585 out of match (9571 then reads no-candidate, 2223 and 9378 unresolved, and 9334 differs where it
 # read no-candidate); 9577 (slot_call_iterator_t's dereference) stays unresolved self-voted on 9571, whose only name
@@ -92,16 +92,23 @@
 # (src/app/roots_cbasetype.cpp's when this was measured, app/comum/dados/cqrcodeds.cpp's object's now) each forms a
 # same-shape pair with ours (pnpm wasm fingerprint --depth 0), so the vptr anchors nothing (docs/reference/splat.md,
 # `vptr-anchor`).
-# DoAdd (9538) is written and does not match: 582 rows over 2643, the 561 replaced all
-# operand-only, 7 inserted and 14 deleted, measured after unit 206 gave CFile's destructor the catch DoAdd holds
-# inlined. Its callees in the target 891 and 1053 pair with libc++'s system_category
-# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564
-# (CFile's destructor, out of line) matches since unit 206 (3334, libc++'s posix_stat, matches too), 4679 (ErrorHandler<unsigned long long>::report) matches since unit
-# 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
-# self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
-# 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular
-# evidence"). With CZip::AtualizaProgresso (9537) matched, DoAdd reads `differs` at its stack frame (800 bytes in the
-# target, 784 in ours: the scan's detail), with the same score as above, measured again with these changes.
+# DoAdd (9538) matches. Two of its forms the target's bytes decide, each measured in the whole link (pnpm wasm score):
+# - The loop's buffer has an owner: the target frees it on the unwind path of RawRead and zipWriteInFileInZip (a null
+#   test and fn 136, the free the normal path calls too, in the pad after the loop), which a new[]/delete[] pair does
+#   not. The owner is a std::unique_ptr<char[]> from std::make_unique<char[]>, which value-initializes the bytes as
+#   new char[TAMANHO_BUFFER]() did (the memory.fill). With the raw pointer: 582 over 2643 (7 inserted, 14 deleted);
+#   with the unique_ptr: 518 over 2636, all operand rows, the frame 784 bytes for the target's 800.
+# - The time_point_cast result is a named local (ultimaModificacao, a chosen name): the target keeps it in a slot of
+#   its own (+336, between dataHora at +328 and informacoes at +348), where a temporary in dataHora's initializer
+#   shared a later temporary's slot; named, every frame offset is the target's (274 over 2636: call operands, data
+#   addresses, four packed std::format strings among them, and table slots), and step 9 matches the row.
+# Chosen: the buffer's type spelled out and const, the local's `auto` and const, and <memory> among the includes (the
+# TU compiles without it too). Its callees 891 and 1053 (libc++'s system_category and generic_category) and localtime
+# (6270) stay unresolved rows, each on a .bss word only it reads in the target (system_category's guard 1926461,
+# generic_category's 1926460, localtime's buffer 1932496: grep of the split's pieces; docs/reference/splat.md section
+# 3, "No circular evidence"); the symbol file names all three (`call`, `pair-addr`), which is what DoAdd's calls
+# need. 3564 (CFile's destructor, whose catch DoAdd holds inlined: unit 206), 3334 (libc++'s posix_stat) and 4679
+# (ErrorHandler<unsigned long long>::report, whose other target caller is 5571, unit 179) match.
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

@@ -30,10 +30,11 @@ CConversorComparecimentoMesario::TDado CConversorComparecimentoMesario::DoDeconv
         entidade.estadoColetaDigital_isPresent() ? DeconverteEstadoColetaDigital(entidade.get_estadoColetaDigital())
                                                  : CComparecimentoMesario::EstadoColetaDigitalNaoInformado;
 
-    return CComparecimentoMesario(identificacaoMesario, dataHoraColeta, estadoColetaDigital);
+    CComparecimentoMesario comparecimento(identificacaoMesario, dataHoraColeta, estadoColetaDigital);
+    return comparecimento;
 }
 
-// (original lines 36-51: content not recovered)
+// (original lines 37-51: content not recovered)
 #line 52
 ModuloResultadoUrnaCadastro::EstadoColetaDigital CConversorComparecimentoMesario::ConverteEstadoColetaDigital(
     CComparecimentoMesario::EEstadoColetaDigital estado) const

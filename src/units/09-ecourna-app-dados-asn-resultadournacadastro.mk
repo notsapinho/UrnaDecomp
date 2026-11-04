@@ -12,6 +12,17 @@
 # declared first in the function, the result in a named local and a named CHabilitacaoBiometrica each keep the invoke
 # (wasm-objdump -d -r of the object); the call is direct only with no converter object to destroy, which no form of this
 # function tried gives.
+# CConversorComparecimentoMesario::DoDeconverte (9106) and CConversorEstadoComparecimento::DoDeconverte (9081) match,
+# each with a form the target's landing pads decide, measured in the whole link (pnpm wasm score) and on the object:
+# - 9106 returns its result through a named local (comparecimento, a chosen name). With `return
+#   CComparecimentoMesario(...)` the object lays the constructor's normal path out right after the call and its landing
+#   pad later, where the target has the pad first (47 over 225, 4 rows inserted and 13 deleted); with the named local,
+#   24 over 221, all operand rows. The IR puts the calls on the same four pads either way. The name, its type spelled as
+#   the class, and the local's not being const are choices: TDado and const give the same object function.
+# - 9081 holds its second habilitacaoBiometrica_isPresent() test in a named bool (temHabilitacaoBiometrica, a chosen
+#   name) before the if. The target gives that test and the last return's constructor a landing pad of their own (16
+#   pads in all); the test written in the condition shares the first test's pad (15, 119 over 813, 5 rows deleted);
+#   named, 106 over 813, all operand rows. Why the source tests the field a second time is not known.
 DADOS_RUC_ASN_SRCS := app/dados/asn/resultadournacadastro/cconversorapresentacaofotoeleitor.cpp \
                  app/dados/asn/resultadournacadastro/cconversorcomparecimentomesario.cpp \
                  app/dados/asn/resultadournacadastro/cconversorestadocomparecimento.cpp \

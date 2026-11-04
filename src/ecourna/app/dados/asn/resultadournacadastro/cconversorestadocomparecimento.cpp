@@ -57,7 +57,8 @@ CConversorEstadoComparecimento::TDado CConversorEstadoComparecimento::DoDeconver
                                              "Eleitor que votou não possui informações sobre habilitação por áudio.");
     }
 
-    if (entidade.habilitacaoBiometrica_isPresent()) {
+    const bool temHabilitacaoBiometrica = entidade.habilitacaoBiometrica_isPresent();
+    if (temHabilitacaoBiometrica) {
         CConversorHabilitacaoBiometrica conversorHabilitacaoBiometrica;
         const CHabilitacaoBiometrica habilitacaoBiometrica =
             conversorHabilitacaoBiometrica.Deconverte(entidade.get_habilitacaoBiometrica());
@@ -75,7 +76,6 @@ CConversorEstadoComparecimento::TDado CConversorEstadoComparecimento::DoDeconver
     }
     return TDado(identificacaoEleitor, situacaoComparecimento);
 }
-
 
 ModuloResultadoUrnaCadastro::SituacaoComparecimentoEleitor CConversorEstadoComparecimento::ConverteEstadoComparecimento(
     TDado::ESituacaoComparecimento situacao) const
