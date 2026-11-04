@@ -3,7 +3,8 @@
 //
 // The adders: the target calls each directly from the screens that build a form. Each pair of stand-ins stands for
 // those not in the link (TelaA's and TelaB's lists still name 1255, comum::TelaRegistroMesarios, unit 247, 2376,
-// vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, and 12055, CMostraQRCodeBU::StartState, unit 37, which are),
+// vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, 2291, vota::CRetirarMR::GetInst, unit 156, 12055,
+// CMostraQRCodeBU::StartState, unit 37, and 12065, CImprimirBUOutrasObrigatorias::StartState, unit 104, which are),
 // and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
 // vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's
 // callers vary varies here, or binaryen would fold it. A call goes when every target caller of its adder is in the

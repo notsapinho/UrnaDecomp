@@ -441,7 +441,7 @@
 #   takes Boost's include path (below), and the four new includes took blank lines of the run after `namespace vota {`.
 # 13023 matches through the content pass (`readings: table slot,address string`): its one target reference is 12065's
 # slot 1101 (12065 matched, unit 104), and our link's lambda is the function our 12065 passes. Measured before
-# steps 7 to 9, with pnpm wasm score: 2291 123 over 1449 rows, operand-only (unit 156).
+# steps 7 to 9, with pnpm wasm score: 2291 123 over 1449 rows, operand-only; it matches with 12033 (unit 156).
 # Chosen: the names (from the forms' names), the free functions' being of vota and GetTelaDestinoBUs's being a static
 # CTelasVota member (its caller drops GetInst()'s result, as a static member called through it gives; a non-static one
 # was not measured), the callback's being a lambda (no record or symbol names fn 13023), the local names and the order.

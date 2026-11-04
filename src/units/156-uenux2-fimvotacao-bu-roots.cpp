@@ -1,7 +1,7 @@
 // Roots: keep the vtables of comum's four menu items (@1550780 to @1550888) in the skeleton link the way the target
 // reaches their slots: only through the vtable, which the classes' constructors store. vota::CRetirarMR's vtable
-// (@1542676) needs no line now: its constructor is inlined into its GetInst (fn 2291), which the print states' StartState
-// (fns 12065, 12068, 12071 and 12074) call.
+// (@1542676) needs no line now: its constructor is inlined into its GetInst (fn 2291), which the print states'
+// StartState (fns 12065, 12068, 12071 and 12074) call.
 // vota::CMostraQRCodeCertificado's vtable (@1542480) needs no line: its GetInst is inlined into
 // CMostraQRCodeBU::ProcessInput (fn 12051, unit 37), which stores its vptr. vota::CQuerImprimirBU's vtable needs no
 // line: its GetInst is inlined into CInicioBU::StartState (fn 12062, unit 104), which stores its vptr.

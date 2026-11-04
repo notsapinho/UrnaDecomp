@@ -121,7 +121,8 @@
 # - vota::CLogVota::LogaImprimindoRelatorio (fn 1127) takes its copy number as uebyte, not unsigned int: every target
 #   caller that passes a computed number masks it to 8 bits (11852, 11855 and 11991 their loop counter `& 255`, 12065
 #   and 12081 a byte plus one `& 255`), which a byte parameter gives the callers; the body is the same, and the match
-#   line moved to the new symbol (`...ERelatoriosUEEh`). The roots' label follows it.
+#   line moved to the new symbol (`...ERelatoriosUEEh`). The roots' stand-in for its callers went: all ten are in
+#   the link.
 #
 # - vota::CRetirarMR::GetInst (fn 2291, 3426 B; target callers 7160 and the print states' StartState 12065, 12068, 12071
 #   and 12074, units 104 and 315), in cretirarmr.cpp above StartState's records (lines chosen), unit 104's shape with
@@ -132,12 +133,12 @@
 #   with it: 12032, the exit destructor of s_mutex (@1833908, `f150(1833908)`), through the content pass. Its operand
 #   re-points through s_mutex's name, which only 2291's vote gives (`evidence:vote:1 by:2291`), so 12032 rests on
 #   2291's written body, whose re-pointed bytes are the target's (`pnpm wasm splat-remap <target> <ours>
-#   sym:_ZN4vota10CRetirarMR7GetInstEv --against 2291` prints IDENTICAL; reference/splat.md section 3). Not matched:
-#   2291 is `unresolved self-voted` on s_inst (@1833932, `evidence:vote:4 by:2291`): its one other target reader is
-#   12033, the static's exit destructor, which calls fn 2903, the std::unique_ptr reset binaryen keeps once for the
-#   states whose destructor is fn 1284; 2903's other callers (10434, 10442 and 10476) are not in this tree, so our link
-#   inlines that reset into 12033's copy (`pnpm wasm disasm` of ours: no call), and nothing but 2291 votes for the name. Both wait
-#   for those callers.
+#   sym:_ZN4vota10CRetirarMR7GetInstEv --against 2291` prints IDENTICAL; reference/splat.md section 3). 2291 matches
+#   with 12033, the exit destructor of s_inst (@1833932, `evidence:vote:4 by:2291`), the name's one other target
+#   reader: 12033 calls fn 2903, the std::unique_ptr reset binaryen keeps once for the states whose destructor is fn
+#   1284, and pairs by content since 2903's other callers (10434, 10442 and 10476, units 71, 152 and 282) are in the
+#   link, which then keeps that reset once for all four; 12033 is then the second holder 2291's self-vote needs. With
+#   12033 the reset's one caller, our link inlined it there, and 2291 read `unresolved self-voted` (splat.md S10).
 # Written since too, measured the same way (pnpm wasm score on the whole link, before steps 7 to 9):
 # - vota::CQuerImprimirBU::ProcessInput (fn 12034): Read() on the form (record cinteractiveform.h:57); on
 #   api::INPUT_CORRIGE (5) the vote's state EAVENCERRADA (64) through comum::CAppInfo::GetInst().GetVota() (fns 185,

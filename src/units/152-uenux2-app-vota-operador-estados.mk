@@ -237,10 +237,10 @@
 #   confirmaidentidade/cregistradigitaloperador.cpp's records (@1592596) to aguardaeleitor/cmostraeleitorvotando.cpp's
 #   (@1593044); the class's slots go to aguardaeleitor/'s states. The file name is the class name in lower case.
 # - 2903, the body binaryen keeps once for four classes' unique_ptr exit destructors (target callers 10434, 10442, 10476
-#   and 12033): our link forms it from three, 10434 (unit 71's CEleitorVotouNaoVotou), 10442 and 10476 (unit 282's
-#   CDigitalNaoReconhecida), and matches it under the merge's name, byn$mgfn-shared$ of the first member in link order
-#   (celeitordemorando.cpp's); 10434, which read no-candidate before, matches with it (unit 71's row:
-#   docs/reference/facts/splat.md S10 lists the group).
+#   and 12033): our link forms it from all four, 10434 (unit 71's CEleitorVotouNaoVotou), 10442 (CEleitorDemorando's),
+#   10476 (unit 282's CDigitalNaoReconhecida) and 12033 (unit 156's CRetirarMR), and matches it under the merge's name,
+#   byn$mgfn-shared$ of the first member in link order (celeitordemorando.cpp's); 10434 and 12033, which read
+#   no-candidate before, match with it (unit 71's row: docs/reference/facts/splat.md S10 lists the group).
 # Chosen, no evidence names them: CEleitorDemorando's members' names, bool for +11, the helpers' names and their
 # anonymous namespace (where clang inlines them), SetVotou, the statics' lines before StartState (their exit
 # destructors, s_inst's first, link above the slots in use band 1: 10442 and 10441 above 10440, 10418 and 10417 above

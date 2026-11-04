@@ -19,7 +19,8 @@
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
 //   5874 (unit 160's), 11630 to 11632, 6041 and 11579 (unit 122's) are in the link.
 // - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 6035, 6036, 7174, 7787, 12098; 1836 and 4657 (unit
-//   205's), 2890 (unit 156's), 11630 to 11634 (unit 122's), 11835 (unit 138's) and 11852 (unit 104's) are in the link.
+//   205's), 2890 (unit 156's), 11630 to 11634 (unit 122's), 11835 (unit 138's), 11852, 11855, 11991 and 12071 (unit
+//   104's) and 12068 and 12074 (unit 315's) are in the link.
 // - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451; 2298 and 3898 (unit 122's pathwsq.cpp) are in the link.
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,

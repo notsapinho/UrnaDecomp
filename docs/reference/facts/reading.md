@@ -33,7 +33,8 @@ stores can be an argument of the source (R18 is the same pass seen from the call
       ;; function 5890 (i32 i32)->() locals(i32 i32 i32 i32 i32 i64) body@0x30b794 size 717 instrs 310
 
 Unit 26 writes `comum::CSigVerifier`'s constructor (1540) with the `ESavdAplic` parameter the target folded, and
-its roots callers pass the constant, so the source invents no enumerator for it (`src/units/26-uenux2-csigverifier-roots.cpp`).
+its callers pass the constant, `static_cast<comum::ESavdAplic>(1)`, so the source invents no enumerator for it
+(`src/uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp`, the first of its seven callers).
 
 A test of the folded argument goes with it, and its throw's record stays in the data with no function loading it
 (column 6 empty in `ledger/source-locations.tsv`). `cidentificacaosecao.cpp:33:19` and

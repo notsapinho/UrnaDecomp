@@ -14,8 +14,8 @@
 //   16);
 // - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
 // - SincronizaRelatorios (fn 1836): callers 11943, 11946, 12105 (three times) and 12110, the slot 2 of four vota states.
-// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 15 are in the link: 5972, 10710, 10734, 10797, 11830,
-//   11905, 11920, 11924, 11927, 11931, 11940, 12031, 12034, 12077 and 12081.
+// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 20 are in the link: 5972, 10710, 10734, 10797, 11830,
+//   11855, 11902, 11905, 11911, 11920, 11924, 11927, 11931, 11940, 11991, 12031, 12034, 12065, 12077 and 12081.
 // - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 and 10710 (unit 277, in the link).
 // - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
 //   pending file, and 10226 (CThreadMonitor::Run, unit 116's, matched).
@@ -72,8 +72,8 @@ __attribute__((noinline)) int w205_desligando(int passo)
     return passo + 5;
 }
 
-// stands for SincronizaEstadoGeralVota's (fn 491's) 16 target callers that are not in the link (the list above names
-// the 15 that are)
+// stands for SincronizaEstadoGeralVota's (fn 491's) 11 target callers that are not in the link (the list above names
+// the 20 that are)
 __attribute__((noinline)) int w205_estado(int vezes)
 {
     vota::CSincronizaVota::SincronizaEstadoGeralVota();
