@@ -6,7 +6,8 @@
 # IsMRPresenteSemHabilitar and IsMRMontadoSemHabilitar (2862, 5897, 137:15, 148:15: thunks into binaryen's body 6046,
 # which those two form), DesmontarMRSemDesabilitar (3832, 184:15, 188:15), EnviarMensagemThrowVoid (3833, 731:15, 737:15),
 # GetDemoMode (729, 753:15, 757:15) with __shared_ptr_pointer<bool*, ...>::__get_deleter (11644), and HabilitarMR (2863,
-# a chosen name) with DesabilitarMR (a chosen name, no target function: binaryen inlines it into 7160). With them the
+# a chosen name) with DesabilitarMR (a chosen name, no target function: binaryen inlines it into 7160, unit 329's, as
+# ours does since that unit wrote 7160 and the roots' stand-in for it went). With them the
 # class header (src/app/comum/iinterfaceinit.h) and the out-of-line constructor, which no target function holds (binaryen
 # inlined it into its one caller, fn 8302). DesligarUrna (5894, records 522:18, 527:15, 531:15) was added after the unit
 # landed, once unit 111 gave fn 837 (CPolySingleton<IEventosLog>::instance) and fn 233 (IEventosLog::loga) their
@@ -30,8 +31,9 @@
 # 2200, of each file's content), written as TamanhoMR, a free function of this file declared in iinterfaceinit.h.
 # Chosen: TamanhoMR's name, its being a free function and its int result; the locals' names; the lines of
 # DispositivoMR (627 to 639) and GetSerialNumberMR (848 to 884) around their records and TamanhoMR's after them; the
-# switch's case order. Its two target callers, 7160 and 12134, are not reconstructed: 35-uenux2-iinterfaceinit-roots.cpp
-# gives it two call sites. The scan matched it by its records (srcloc-anchor), with no hand line.
+# switch's case order. Of its two target callers, 7160 is in the link (unit 329) and 12134 is not reconstructed:
+# 35-uenux2-iinterfaceinit-roots.cpp stands for 12134. The scan matched it by its records (srcloc-anchor), with no hand
+# line.
 # LogDiskInfo (record 285:15), added since, has no target index: binaryen inlines it into its one caller, fn 10226
 # (vota::CThreadMonitor::Run, unit 116's), behind a 32-B stack frame of its own. It sends message
 # 19, throws code 7277 with "Resposta nula" when the answer is empty (euecomumerror.h) and, when its first word is not 0,

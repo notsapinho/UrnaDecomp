@@ -5,8 +5,8 @@
 #   (vota::CImprimindoZeresima::StartState, unit 104's, matched), holds it inlined by binaryen, as ours does, and the
 #   statics' exit destructors 11995 and 11996 (s_mutex's and s_inst's) match from this object since, the objects named
 #   by 11991's votes, which their own matches use in turn (docs/reference/splat.md "No circular evidence": a .bss name
-#   one body votes for holds through its static destructor's match). CVerificaEleicaoPassou's are left unwritten
-#   instead (below): either way is a choice the bytes do not decide;
+#   one body votes for holds through its static destructor's match). CVerificaEleicaoPassou's are written since too
+#   (below);
 # - vota::CInicioVotacao (ciniciovotacao.{h,cpp}): GetInst (fn 2880), with its constructor inlined by binaryen, and its
 #   statics' exit destructors (11990, 11989); the destructor is the shared fns 448 and 765;
 # - vota::CVerificaEleicaoPassou (cverificaeleicaopassou.{h,cpp}, its records :56 and :70): StartState (fn 11914), with
@@ -17,8 +17,11 @@
 #   (11867, 11866).
 # The class heads say what each layout rests on; 199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp names the
 # slot left (CGeraDadosDinamicos::StartState 11865) and what it waits for; CInicioVotacao's StartState 11988 and
-# ProcessTick 11987 are written since (below). Not written: CVerificaEleicaoPassou's GetInst and statics, inlined
-# into fn 7160, not written.
+# ProcessTick 11987 are written since (below). CVerificaEleicaoPassou's GetInst, constructor and statics are
+# written since in unit 104's shape, whose names they take (chosen): binaryen inlines GetInst into its one target
+# caller, fn 7160 (vota::CAjusteInicial::StartState, unit 329), and the statics' exit destructors 11915 and 11916 wait
+# for that match (unit 329's fragment). The roots' line that keeps the class's vtable stood for 7160 and goes at the
+# landing that merges unit 329 (another branch changed that roots file).
 #
 # Evidence, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv before
 # steps 7 to 9 matched it:

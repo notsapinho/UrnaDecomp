@@ -1,9 +1,11 @@
 # uenux2 vota::CThreadEleitor, CThreadOperador, CThreadMonitor and the heads they need: the three threads' singletons and
 # destructors, vota::CMessageEleitor and CMessageOperador, api::CMessageInterface, CThreadVota's D2, the 12-byte singleton
 # of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst; CThreadOperador::Run, CThreadEleitor::ProcessaEventos
-# and the debug wrapper of api/util/uedebug.h they call; CThreadMonitor::Run (its paragraph below),
+# and the debug wrapper of api/util/uedebug.h they call; CThreadEleitor::Run (its paragraph below); CThreadMonitor::Run
+# (its paragraph below),
 # with the members it holds inlined, CMonitoraAlimentacao's GetInst and VerificaAlimentacao and CLogVota's five, and its
-# std::async state. The sources are the six named below, four in CTHREADS_SRCS, clogvota.cpp (unit 119's file) at the
+# std::async state. The sources are the six named below, four in CTHREADS_SRCS (which also compiles unit 329's
+# cajusteinicial.cpp, ahead of cthreadeleitor.cpp: unit 329's fragment says why), clogvota.cpp (unit 119's file) at the
 # head of unit 104's list, ahead of cthreadmonitor.cpp (Run's paragraph says why), and cthreadoperador.cpp in unit 197's
 # list (its bullet says why); the headers are api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface,
 # Vazia), api/ipc/cthread.h
@@ -32,8 +34,9 @@
 #   __execute 8057 and __sub_wait 8058, future_error's destructor and constructor 8060 and 8061, the future category's
 #   message and name 8062 and 8063, and std::exception_ptr's destructor 3367 (libc++.a's).
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
-# Not matched, and why: CThreadVota's slots 3 and 4 and CThreadEleitor's slot 2 are traps, listed in the -pending.cpp
-# with what they wait for. ProcessaEventos 4349 is written and reads unresolved on 2072 (below), and the two debug
+# Not matched, and why: CThreadVota's slots 3 and 4 are traps, listed in the -pending.cpp with what they wait for.
+# CThreadEleitor's slot 2, Run (7061), is written (its paragraph below). ProcessaEventos 4349 is written and reads
+# unresolved on 2072 (below), and the two debug
 # wrappers 3593 and 2072 read unresolved on their words (below). CThreadMonitor's slot 2, Run (10226), matches since unit 35 wrote
 # MontarMRSemHabilitar (5896), the other caller of its debug wrapper 5895 (its paragraph); with it 10230,
 # CMonitoraAlimentacao::s_mutex's exit destructor (it destroys 1911544, the mutex that Run's inlined GetInst locks at
@@ -119,11 +122,27 @@
 #   word, which nothing in the target but the thunk touches, so no vote and no hand line names it
 #   (docs/reference/splat.md section 3, "No circular evidence").
 #
+# CThreadEleitor::Run (7061, slot 2, 4119 B; no record of its own: its records are those of
+# vota::IAjusteInicial::GetInst, cajusteinicial.cpp:57, and of the poly singleton code GetInst holds) takes
+# IAjusteInicial::GetInst() (unit 329's cajusteinicial.cpp, inlined by binaryen: its one target caller), builds the
+# context over it (fn 3844) and starts that state (slot 2), then loops until Stop: ProcessaEventos (4349), Stop's test,
+# Yield (m_pImpl's slot 5) and, when the pass handled nothing, api::CSystem::Dorme(50), csystem.h's emscripten_sleep
+# under s_dorme. GetInst's inlined `new CAjusteInicial` stores that class's vptr, so Run keeps its vtable and slot 2 (fn
+# 7160) in the link. Measured (pnpm wasm score against the plain link, names.tsv after make -C src link-map): with
+# CAjusteInicial's constructor implicit, 146 over 1744 rows, 1 inserted and 1 deleted, the target keeping operator new's
+# pointer and storing the vptr through the base constructor's returned this; with the constructor out of line in
+# cajusteinicial.cpp, 144 over 1743, every row an operand, with cajusteinicial.cpp in unit 329's list or ahead of
+# cthreadeleitor.cpp in this one. Chosen: the locals' names, `processou` declared in the loop, and Run's place in the
+# file, after ProcessaEventos (in the uses-1 band 7122, 7116, 7070, 7061 and 7030 run in reverse link order, which the
+# file's order gives: names.tsv's ld_index). Step 8 names Run by its records (srcloc-anchor) and step 9 matches it.
+#
 # CThreadEleitor::ProcessaEventos (4349, written, differs): one pass over the messages, the input and the ticks, false
-# when there is no context or Stop was asked. Its callers are CThreadEleitor's Run (7061), a trap, for which the roots
-# file stands, and CExecucaoVotaCooperativa's slot 7 (7823, unit 165's file, matched), both named by vtable, which casts
-# no vote: a callers+content hand line of splat/symbol_addrs.txt names 4349 for 7823 (fragment 234 has its
-# measurement), and its row reads unresolved on the debug wrapper 2072. Evidence: two stack frames binaryen inlined, 80 bytes
+# when there is no context or Stop was asked. Its callers are CThreadEleitor's Run (7061, written in cthreadeleitor.cpp,
+# below) and CExecucaoVotaCooperativa's slot 7 (7823, unit 165's file, matched), both named by vtable. Since Run
+# matches, step 8 names 4349 by Run's call (`evidence:call by:7061`; Run is named by its records, srcloc-anchor), and
+# the callers+content hand line that named it for 7823 went (fragment 234 says how it was weighed). Its row reads
+# unresolved on the debug wrapper 2072. The roots' stand-in for 7061 went when Run was written. Evidence: two stack
+# frames binaryen inlined, 80 bytes
 # (ProcessarMensagens, whose name is its logs' "%s", read as __func__ as above) and 16 (ProcessarEntrada, the record cthreadeleitor.cpp:134:20, the
 # start of CPolySingleton<api::IInputKbd>::instance()); the message loop's first pass is peeled, which `processou`
 # false only there gives; messages 0 and 6 stop, 8, 9 and 10 set CEstadoAudio's mode (fns 6745, 6743, 4195); the ticks'
@@ -238,7 +257,7 @@
 #   link-map), and the scan matches Run.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
-CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

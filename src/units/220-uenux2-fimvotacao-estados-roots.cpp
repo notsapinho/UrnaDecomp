@@ -16,15 +16,10 @@ namespace {
 
 volatile int w220_n;
 
-// Stands for fn 7160, which calls the GetInst of vota::CGeraBU (fn 6129), vota::CCopiaResultadoParaMR (fn 6174) and
-// vota::CGeraRelatorios (fn 6084), each once.
-__attribute__((noinline)) int ChamaEstadosEncerramento(int n)
-{
-    return w220_gerabu_getinst() + w220_copiaresultado_getinst() * 3 + w220_gerarelatorios_getinst() * 5 + n;
-}
-
-// Stands for the other caller of each GetInst: fn 7481 (CGeraBU's), CGravaResultado::StartState (fn 12098,
-// CCopiaResultadoParaMR's) and CGeraBU::StartState (fn 12110, pending here, CGeraRelatorios's).
+// Stands for the other caller of the GetInst of vota::CGeraBU (fn 6129), vota::CCopiaResultadoParaMR (fn 6174) and
+// vota::CGeraRelatorios (fn 6084), whose first, vota::CAjusteInicial::StartState (fn 7160, unit 329), is in the link:
+// fn 7481 (CGeraBU's), CGravaResultado::StartState (fn 12098, CCopiaResultadoParaMR's) and CGeraBU::StartState (fn
+// 12110, pending here, CGeraRelatorios's).
 __attribute__((noinline)) int ChamaEstadosEncerramentoOutros(int n)
 {
     return w220_gerarelatorios_getinst() * 7 + w220_copiaresultado_getinst() + w220_gerabu_getinst() * 11 + n;
@@ -57,7 +52,6 @@ __attribute__((noinline)) int DiferencaDatas(int a, int b)
 struct SW220Roots {
     SW220Roots()
     {
-        w220_n = ChamaEstadosEncerramento(w220_n);
         w220_n = ChamaEstadosEncerramentoOutros(w220_n);
         w220_n = CabecalhosTesteTeclado(w220_n);
         w220_n = ChamaEsperaRetestar(w220_n);

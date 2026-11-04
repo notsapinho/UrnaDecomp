@@ -11,13 +11,16 @@
 #   vota::CThreadOperador's queue (fn 270 + 36, Post inlined, Insert fn 501): 6058's order. Written so, our link forms
 #   the same merge, named after 11917 (unit 104's object comes first), and `pnpm wasm score` against the link reads
 #   12113 `1 over 5 rows`, 11917 `1 over 5` and 6058 `3 over 29`, all operand-only; steps 7 to 9 match the three.
-# - fn 7160 (vota::CAjusteInicial, not written) holds GetInst inlined: under the static std::mutex @1833444 it allocates
-#   12 bytes when the static std::unique_ptr @1833468 is empty, passes 0 to the base's constructor (fn 224), stores the
-#   vptr and frees the old object with no call through the vtable (final, unit 104's shape). The statics' exit
-#   destructors are 12114 (the mutex's) and 12115 (the pointer's).
+# - fn 7160 (vota::CAjusteInicial::StartState, unit 329) holds GetInst inlined: under the static std::mutex @1833444 it
+#   allocates 12 bytes when the static std::unique_ptr @1833468 is empty, passes 0 to the base's constructor (fn 224),
+#   stores the vptr and frees the old object with no call through the vtable (final, unit 104's shape). The statics'
+#   exit destructors are 12114 (the mutex's) and 12115 (the pointer's).
 #
-# Not written: GetInst, the constructor and the statics, which only fn 7160 uses; they are declared in the class head
-# (a choice), and the statics' destructors 12114 and 12115 wait with fn 7160.
+# GetInst, the constructor and the statics are written in cfinalizaaquisicao.cpp in unit 104's shape, whose names they
+# take (chosen), the constructor out of line as there; binaryen inlines GetInst into fn 7160, its one target caller.
+# Only 7160 reads the statics' addresses among target functions, so their names, and the destructors 12114 and 12115,
+# wait for its match (src/units/329-uenux2-cajusteinicial.mk). Since 7160 is in the link the state's builder is too, and
+# the roots file that kept the vtable went.
 #
 # Chosen: the path, the file name (the class's in lower case) and the header beside it, by how-to step 3's rules 2 and
 # 4: the vtable and typeinfo (@1540308, @1540352) lie between fimvotacao/ccopiaresultadoparamr.cpp's records (@1540116 to
@@ -30,7 +33,3 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CFINALIZAAQUISICAO_SRCS := src/app/vota/eleitor/fimvotacao/cfinalizaaquisicao.cpp
 UENUX2_SRCS += $(CFINALIZAAQUISICAO_SRCS)
-# nothing reconstructed stores the class's vptr yet: 223-uenux2-cfinalizaaquisicao-roots.cpp takes the vtable's address
-$(ROOT)/$(APP)/223-uenux2-cfinalizaaquisicao-roots.o: $(ROOT)/src/units/223-uenux2-cfinalizaaquisicao-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/223-uenux2-cfinalizaaquisicao.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/223-uenux2-cfinalizaaquisicao-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/223-uenux2-cfinalizaaquisicao-roots.o

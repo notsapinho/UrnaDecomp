@@ -156,6 +156,19 @@ enum EUeVotaError {
     // the value is the code vota::TipoToStr throws (record cinformacaothreadoperador.cpp:40, inlined into target fn
     // 10586); the name is chosen from its message, "Tipo de identidade do eleitor inválido": no evidence names it
     EUE_VOTA_TIPO_IDENTIDADE_INVALIDO = 9409,
+    // the values are the codes vota::CAjusteInicial::InicioVota throws (records cajusteinicial.cpp:170 and :178,
+    // inlined into target fn 7160) when the vote is closed and its closing state is none it knows, and when the vote's
+    // state is none it knows; the names are chosen from their messages, "Estado encerramento nao conhecido = {}" and
+    // "Estado nao conhecido = {}", and the class: no evidence names them
+    EUE_VOTA_AJUSTE_INICIAL_ESTADO_ENCERRAMENTO_DESCONHECIDO = 9303,
+    EUE_VOTA_AJUSTE_INICIAL_ESTADO_DESCONHECIDO = 9304,
+    // the values are the codes vota::CAjusteInicial::ValidaTemposDesligamento throws (records cajusteinicial.cpp:74, :79
+    // and :84, inlined into target fn 7160); the names are chosen from their messages, "Tempo limite de uso de bateria
+    // interna inválido", "Tempo de aviso de desligamento por uso da bateria interna inválido" and "Tempo de aviso de
+    // desligamento não pode ser maior que o tempo para desligar a urna": no evidence names them
+    EUE_VOTA_TEMPO_LIMITE_BATERIA_INTERNA_INVALIDO = 9405,
+    EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_INVALIDO = 9406,
+    EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_MAIOR_QUE_LIMITE = 9407,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

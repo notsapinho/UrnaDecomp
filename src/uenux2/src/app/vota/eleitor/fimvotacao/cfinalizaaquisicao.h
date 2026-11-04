@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <mutex>
+
 #include "app/comum/cappstate.h"
 
 namespace vota {
@@ -10,8 +13,7 @@ namespace vota {
 // 7160 (vota::CAjusteInicial, records cajusteinicial.cpp) holds GetInst inlined, which keeps the object in a static
 // std::unique_ptr (@1833468, destroyed at exit by fn 12115) under a static std::mutex (@1833444, by fn 12114), allocates
 // 12 bytes, passes 0 to the base's constructor, stores the vptr and frees the old object with no call through the
-// vtable (final). GetInst and the constructor are declared, not defined: nothing written calls them, and their statics
-// wait with fn 7160. src/units/223-uenux2-cfinalizaaquisicao.mk says which of this is evidence and which is chosen.
+// vtable (final). src/units/223-uenux2-cfinalizaaquisicao.mk says which of this is evidence and which is chosen.
 class CFinalizaAquisicao final : public comum::CAppState {
 public:
     static CFinalizaAquisicao& GetInst();
@@ -20,6 +22,9 @@ public:
 
 private:
     CFinalizaAquisicao();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CFinalizaAquisicao> s_inst;
 };
 
 } // namespace vota

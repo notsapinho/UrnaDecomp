@@ -12,7 +12,7 @@
 // written, and DiretorioVazio stands for the one not written, 12134. ZeroFill is called by 2760
 // (RemoveFile) and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
 // RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice: RemoveDois gives it two call
-// sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
+// sites and stands for 6737 (1487 and 7160 are in the link, units 168 and 329).
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
 // 5874, 6737, 7174, 11630, 11631, 11632 and 12098); 5873, 5874, 11630, 11631 and 11632 are in the link (units 160 and
 // 122), and so are vota::CSincronizaVota's 1836, 3333, 4657, 4682 and 4687 (fragment 205): CopiaDuas stands for the

@@ -6,9 +6,6 @@
 //   callers are in the link.
 // - CEstadoAudio::GetInst (fn 509, 17 callers): its real callers here are unit 97's 7028 and 1455, 7198 (unit 241),
 //   7377 (197), 10430 (71), 10539 (142) and this unit's 4349, and two stand-ins stand for the other ten.
-// - CThreadEleitor::ProcessaEventos (fn 4349): of its two target callers, vota::CExecucaoVotaCooperativa's slot 7 (fn
-//   7823, unit 165) is in the link and CThreadEleitor's Run (fn 7061, this unit's pending file) is a trap, so
-//   EventosEleitor stands for 7061 and calls it twice.
 // - libc++'s std::__assoc_sub_state::set_value() (target fn 4771, from libc++.a's future.o): its two target callers are
 //   the __execute of CThreadMonitor::SaiPorVotacaoSuspensa's std::async state (fn 10224, cthreadmonitor.cpp's) and
 //   fn 11151, the same member of another std::async state (5568's, api::CApplication::ShowExceptionMsg, not written):
@@ -34,12 +31,6 @@ __attribute__((noinline)) int ValorDoAudio()
     return vota::CEstadoAudio::GetInst().Ativo() ? 3 : 5;
 }
 
-__attribute__((noinline)) int EventosEleitor()
-{
-    vota::CThreadEleitor& eleitor = vota::CThreadEleitor::GetInst();
-    return eleitor.ProcessaEventos() + 2 * eleitor.ProcessaEventos();
-}
-
 __attribute__((noinline)) int ConcluiEstado(void* estado)
 {
     w4771_root_0(estado);
@@ -53,7 +44,6 @@ struct SW116Roots {
     {
         w116_sink = reinterpret_cast<const void*>(&ParaOperadorEMonitor);
         w116_sink = reinterpret_cast<const void*>(&ValorDoAudio);
-        w116_sink = reinterpret_cast<const void*>(&EventosEleitor);
         w116_sink = reinterpret_cast<const void*>(&ConcluiEstado);
     }
 } w116_roots;
