@@ -10533,7 +10533,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10667	14	0	app	vota	skeleton	12156	shape	2	vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput()
 10668	17	0	app	libc++	skeleton	10501	addr	1	std::__2::__shared_ptr_pointer<comum::asn::CVisitanteFoto*, std::__2::shared_ptr<comum::asn::CVisitanteFoto>::__shared_ptr_default_delete<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>, std::__2::allocator<comum::asn::CVisitanteFoto>>::__get_deleter(std::type_info const&) const
 10669	193	0	-	vota	-	-	none	-	
-10670	7	0	-	-	skeleton	12287	shape	1	vota::TextoIdentidadeInvalida()
+10670	7	0	-	-	skeleton	12285	shape	1	vota::TextoIdentidadeInvalida()
 10671	10	0	-	-	skeleton	12143	addr	2	__cxx_global_array_dtor.2_4919
 10672	12	0	-	-	skeleton	12154	addr	2	__cxx_global_array_dtor_4897
 10673	27	0	libcxx	libc++	skeleton	12423	addr	1	std::__2::__shared_ptr_emplace<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>::__on_zero_shared()
@@ -10599,7 +10599,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10733	12	0	app	-	skeleton	12274	addr	2	__cxx_global_array_dtor.6
 10734	648	0	app	vota	-	-	none	-	
 10735	10	0	app	-	skeleton	12214	addr	2	__cxx_global_array_dtor.2_4730
-10736	12	0	app	-	skeleton	12286	addr	2	__cxx_global_array_dtor_4522
+10736	12	0	app	-	skeleton	12287	addr	2	__cxx_global_array_dtor_4520
 10737	79	0	app	vota	skeleton	14901	shape	5	vota::CFimAquisicaoVotos::StartState()
 10738	10	0	app	-	skeleton	12222	addr	2	__cxx_global_array_dtor.2_4696
 10739	12	0	app	-	skeleton	13200	addr	2	__cxx_global_array_dtor_3021
@@ -11088,7 +11088,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11222	1130	0	-	comum	-	-	none	-	
 11223	2163	0	-	comum	-	-	none	-	
 11224	13	0	-	comum	skeleton	11859	addr	2	comum::CGeradorRelVersaoPacoteDados::~CGeradorRelVersaoPacoteDados()_5778
-11225	10	0	-	-	skeleton	12285	addr	2	__cxx_global_array_dtor.2_4523
+11225	10	0	-	-	skeleton	12286	addr	2	__cxx_global_array_dtor.2_4521
 11226	37	0	-	-	skeleton	13527	addr	4	__cxx_global_array_dtor_2881
 11227	17	0	libcxx	libc++	skeleton	10548	addr	2	std::__2::__shared_ptr_emplace<ecourna::api::security::CTrng, std::__2::allocator<ecourna::api::security::CTrng>>::~__shared_ptr_emplace()_9131
 11228	14	0	libcxx	libc++	skeleton	10531	addr	1	std::__2::__shared_ptr_emplace<boost::dynamic_bitset<unsigned char, std::__2::allocator<unsigned char>>, std::__2::allocator<boost::dynamic_bitset<unsigned char, std::__2::allocator<unsigned char>>>>::~__shared_ptr_emplace()

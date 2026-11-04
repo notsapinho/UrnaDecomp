@@ -96,7 +96,8 @@ bool CabeEmUmaLinha(IScreen& screen, const std::vector<std::string>& passos, con
         }
         const SRect& area = areas[i];
         const TPosition recuo = tamanho * seta / std::max<TPosition>(1, altura);
-        const TPosition disponivel = area.Width() - 2 * margem - (i > 0 ? seta : 0) - (i != n - 1 ? recuo : 0);
+        const TPosition lados = (i > 0 ? seta : 0) + (i != n - 1 ? recuo : 0);
+        const TPosition disponivel = area.Width() - 2 * margem - lados;
         if (static_cast<TPosition>(largura - fonte.size / 3) > disponivel) {
             return false;
         }
@@ -108,6 +109,8 @@ bool CabeProporcional(IScreen& screen, const std::vector<std::string>& passos, c
                       int seta, int espaco, std::vector<SRect>& areas)
 {
     const size_t n = passos.size();
+    TPosition largura;
+    TPosition alturaTexto;
     if (n == 0) {
         areas.clear();
         return false;
@@ -121,17 +124,17 @@ bool CabeProporcional(IScreen& screen, const std::vector<std::string>& passos, c
     const SFont fonte{tamanho, 1};
     std::vector<TPosition> minimos(n);
     std::vector<TPosition> pesos(n, 1);
-    const TPosition margem = std::max<TPosition>(1, tamanho / 4);
-    const TPosition alturaUtil = altura - 2 * margem;
-    const TPosition recuo = tamanho * seta / std::max<TPosition>(1, altura);
     TPosition soma = 0;
     for (size_t i = 0; i < n; ++i) {
-        TPosition largura = 0;
-        TPosition alturaTexto = 0;
+        alturaTexto = 0;
+        largura = 0;
         screen.GetFontMetrics(largura, alturaTexto, fonte, passos[i]);
+        const TPosition margem = std::max<TPosition>(1, tamanho / 4);
+        const TPosition alturaUtil = altura - 2 * margem;
         if (static_cast<TPosition>(alturaTexto - fonte.size / 5) > alturaUtil) {
             return false;
         }
+        const TPosition recuo = tamanho * seta / std::max<TPosition>(1, altura);
         const TPosition extra = (i > 0 ? seta : 0) + (i < n - 1 ? recuo : 0) + 2 * margem;
         const TPosition texto = largura - fonte.size / 3;
         minimos[i] = std::max<TPosition>(std::max<TPosition>(extra + 1, 2 * seta), extra + texto);
@@ -212,48 +215,50 @@ std::vector<SPathCommand> CriaContorno(const SRect& area, bool primeiro, bool ul
     const double esquerda = area.left;
     std::vector<SPathCommand> contorno;
     if (primeiro && ultimo) {
-        contorno.emplace_back(SPathCommand::MOVE_TO, esquerda + raio, topo);
-        contorno.emplace_back(SPathCommand::ARC, esquerda, topo, diametro, diametro, 90, 90);
+        contorno.push_back(SPathCommand(SPathCommand::MOVE_TO, esquerda + raio, topo));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, esquerda, topo, diametro, diametro, 90, 90));
         const double base = topo + altura;
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda, base - raio);
-        contorno.emplace_back(SPathCommand::ARC, esquerda, base - diametro, diametro, diametro, 180, 90);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda, base - raio));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, esquerda, base - diametro, diametro, diametro, 180, 90));
         const double direita = esquerda + largura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - raio, base);
-        contorno.emplace_back(SPathCommand::ARC, direita - diametro, base - diametro, diametro, diametro, 270, 90);
-        contorno.emplace_back(SPathCommand::LINE_TO, direita, topo + raio);
-        contorno.emplace_back(SPathCommand::ARC, direita - diametro, topo, diametro, diametro, 0, 90);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - raio, base));
+        contorno.push_back(
+            SPathCommand(SPathCommand::ARC, direita - diametro, base - diametro, diametro, diametro, 270, 90));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita, topo + raio));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, direita - diametro, topo, diametro, diametro, 0, 90));
         contorno.emplace_back(Fecha());
     } else if (primeiro) {
-        contorno.emplace_back(SPathCommand::MOVE_TO, esquerda + raio, topo);
-        contorno.emplace_back(SPathCommand::ARC, esquerda, topo, diametro, diametro, 90, 90);
+        contorno.push_back(SPathCommand(SPathCommand::MOVE_TO, esquerda + raio, topo));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, esquerda, topo, diametro, diametro, 90, 90));
         const double base = topo + altura;
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda, base - raio);
-        contorno.emplace_back(SPathCommand::ARC, esquerda, base - diametro, diametro, diametro, 180, 90);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda, base - raio));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, esquerda, base - diametro, diametro, diametro, 180, 90));
         const double direita = esquerda + largura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - SETA, base);
-        contorno.emplace_back(SPathCommand::LINE_TO, direita, topo + altura * 0.5);
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - SETA, topo);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - SETA, base));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita, topo + altura * 0.5));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - SETA, topo));
         contorno.emplace_back(Fecha());
     } else if (ultimo) {
-        contorno.emplace_back(SPathCommand::MOVE_TO, esquerda, topo);
+        contorno.push_back(SPathCommand(SPathCommand::MOVE_TO, esquerda, topo));
         const double direita = esquerda + largura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - raio, topo);
-        contorno.emplace_back(SPathCommand::ARC, direita - diametro, topo, diametro, diametro, 90, -90);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - raio, topo));
+        contorno.push_back(SPathCommand(SPathCommand::ARC, direita - diametro, topo, diametro, diametro, 90, -90));
         const double base = topo + altura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita, base - raio);
-        contorno.emplace_back(SPathCommand::ARC, direita - diametro, base - diametro, diametro, diametro, 0, -90);
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda, base);
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda + SETA, topo + altura * 0.5);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita, base - raio));
+        contorno.push_back(
+            SPathCommand(SPathCommand::ARC, direita - diametro, base - diametro, diametro, diametro, 0, -90));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda, base));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda + SETA, topo + altura * 0.5));
         contorno.emplace_back(Fecha());
     } else {
-        contorno.emplace_back(SPathCommand::MOVE_TO, esquerda, topo);
+        contorno.push_back(SPathCommand(SPathCommand::MOVE_TO, esquerda, topo));
         const double direita = esquerda + largura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - SETA, topo);
-        contorno.emplace_back(SPathCommand::LINE_TO, direita, topo + altura * 0.5);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - SETA, topo));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita, topo + altura * 0.5));
         const double base = topo + altura;
-        contorno.emplace_back(SPathCommand::LINE_TO, direita - SETA, base);
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda, base);
-        contorno.emplace_back(SPathCommand::LINE_TO, esquerda + SETA, topo + altura * 0.5);
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, direita - SETA, base));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda, base));
+        contorno.push_back(SPathCommand(SPathCommand::LINE_TO, esquerda + SETA, topo + altura * 0.5));
         contorno.emplace_back(Fecha());
     }
     return contorno;
@@ -261,7 +266,7 @@ std::vector<SPathCommand> CriaContorno(const SRect& area, bool primeiro, bool ul
 
 } // namespace
 
-// (original lines 264-424: content not recovered)
+// (original lines 269-424: content not recovered)
 #line 425
 // <stubs>
 // f13550 · 2118 B · unmatched · name unknown
@@ -301,9 +306,9 @@ void CStepsProgressBar::Recalcula(IScreen& screen) const
         const TPosition topo = topoArea + margem;
         const TPosition alturaUtil = std::max<TPosition>(topo, area.bottom - margem) - topo + 1;
         const TPosition folga = (alturaUtil - alturaTexto) / 2;
-        const SPoint posicao{static_cast<TPosition>(area.left + margem + (i > 0 ? SETA : 0)),
-                             static_cast<TPosition>(topo + std::max<TPosition>(0, folga))};
-        m_segmentos.push_back({CriaContorno(area, i == 0, i == n - 1), posicao, texto});
+        const TPosition x = area.left + margem + (i > 0 ? SETA : 0);
+        const TPosition y = topo + std::max<TPosition>(0, folga);
+        m_segmentos.push_back({CriaContorno(area, i == 0, i == n - 1), SPoint(x, y), texto});
     }
     m_recalcular = false;
 }
@@ -317,19 +322,18 @@ void CStepsProgressBar::Draw(IScreen& screen) const
     for (size_t i = 0; i < m_segmentos.size(); ++i) {
         const SSegmento& segmento = m_segmentos[i];
         screen.DrawPath(segmento.contorno, m_corBorda, 1);
+        const TColor* corTexto;
         if (i < m_passoAtual) {
             screen.FillPath(segmento.contorno, m_corFundoFeito);
-            if (!segmento.texto.empty()) {
-                screen.DrawText(segmento.posicaoTexto, CFixedText(segmento.texto), m_font, m_corTextoFeito,
-                                static_cast<TColor>(0));
-            }
+            corTexto = &m_corTextoFeito;
         } else {
             const bool atual = i == m_passoAtual;
             screen.FillPath(segmento.contorno, atual ? m_corFundoAtual : m_corFundoPendente);
-            if (!segmento.texto.empty()) {
-                screen.DrawText(segmento.posicaoTexto, CFixedText(segmento.texto), m_font,
-                                atual ? m_corTextoAtual : m_corTextoPendente, static_cast<TColor>(0));
-            }
+            corTexto = atual ? &m_corTextoAtual : &m_corTextoPendente;
+        }
+        if (!segmento.texto.empty()) {
+            screen.DrawText(segmento.posicaoTexto, CFixedText(segmento.texto), m_font, *corTexto,
+                            static_cast<TColor>(0));
         }
     }
 }

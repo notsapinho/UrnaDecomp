@@ -77,16 +77,16 @@ void CValidaIdentidade::StartState()
         comum::md::CValidadorIdentidade::GetInst().TiposValidos(identidade);
     switch (tipos.size()) {
     case 0:
-        m_pNextState = &CIdentidadeInvalida::GetInst();
+        SetNextState(&CIdentidadeInvalida::GetInst());
         break;
     case 1:
         CLogVota::GetInst().loga(
             std::format("Identificador digitado pelo mesário foi: ({})", MontaOpcoesIdentidade(tipos)[1].first));
         SetTipoIdentidadeDigitada(tipos[0]);
-        m_pNextState = &CProcuraEleitor::GetInst();
+        SetNextState(&CProcuraEleitor::GetInst());
         break;
     default:
-        m_pNextState = this;
+        SetNextState(this);
         m_identidades = MontaOpcoesIdentidade(tipos);
         m_form = MontaTelaOpcoes(m_identidades);
         m_form->Slot2();
