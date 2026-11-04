@@ -80,8 +80,8 @@ protected:
 
     // Stores the next state. Out of line in cappstate.cpp, called where the bytes ask for it (a store in each arm, or
     // one kept first) or match a replay with a call binaryen inlined (src/units/61-uenux2-cexibealertadesligamento.mk
-    // measures each); the others assign m_pNextState, a choice the bytes leave open for all but four. binaryen inlines
-    // it into every caller: no target function. Its name, parameter's name, access and being a member are chosen.
+    // lists the eighteen callers and what each rests on); the others assign m_pNextState. binaryen inlines it into
+    // every caller: no target function. Its name, parameter's name, access and being a member are chosen.
     void SetNextState(CAppState* pNextState);
 
     CAppState* m_pNextState;

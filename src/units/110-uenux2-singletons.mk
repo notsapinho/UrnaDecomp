@@ -412,8 +412,8 @@
 # their members (12287, 12290, 12291, the block's 12294 and 12292, and 12316, 12314 of api::CTextFieldUpdate's block)
 # link from this object now,
 # ahead of the objects that gave them before (79's roots and unit 31's cformbuilder.cpp), with the same bytes.
-# 3054's other target callers: 11805 is written (unit 217, below), 11804 and 11809 are not, and unit 220's roots stand
-# in for them.
+# 3054's other target callers are in the link: 11805 is written (unit 217, below), 11804 and 11809 match, and unit
+# 220's stand-in for them went.
 # The three include lines this needs (<functional>, api/gui/cformbuilder.h, app/vota/comum/cpreshowformvota.h) took
 # blank lines above line 291. cformbuilder.h brings iform.h, so the TU now also initializes api::CFormStack<IScreen>'s
 # guarded statics, and its own static's exit destructor (12875) took another local suffix: step 9 renamed that match
@@ -537,7 +537,11 @@
 # - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
 #   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
 #   and TelaErroTesteTeclado (over three named char arrays, ctelasvota.h says why): one caller each, which holds it
-#   inlined; after the file's last record, their lines chosen. cestadoaudio.h is included for the lambda's
+#   inlined; after the file's last record, their lines chosen. Use band 1 is not the file's order there
+#   (docs/reference/facts/placing.md P9, third case): 12903 (ld_index 2838) and 13023, GetTelaDestinoBUs's lambda
+#   (2834), link after CTelasVota's statics' exit destructors 12882 and 12875 (2808, 2809), and their place after the
+#   file's last record cannot move above the statics' definition past the fonts and the recorded screens: four pairs
+#   read inverted. cestadoaudio.h is included for the lambda's
 #   CEstadoAudio::GetTeclasTesteTeclado, in place of a blank line above the first record.
 # - 2380's last parameter is an int tested by its low bit: as a bool the object tests it bare where the target has
 #   `i32.const 1; i32.and` (a probe of both forms at the file's flags; in the link 2380 then scored 17 over 280, the two

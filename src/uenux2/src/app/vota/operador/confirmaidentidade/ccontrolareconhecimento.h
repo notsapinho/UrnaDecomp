@@ -53,11 +53,12 @@ namespace vota {
 // Between them lie a std::string (@1908696, which fns 3614 and 10425 copy) and a 16-bit word (@1908708, stored by 10465
 // with i32.store16 and read by 10425: the score 10425 passes CEleitorDadosHabilitacaoBiometrica's constructor). Their
 // exit destructors, 10518, 10517 and 10516, sit in use band 1 before s_inst's and s_mutex's (10515, 10514), so the file
-// defines them in that order, before GetInst's statics. The five words are five objects: StartState stores the four
-// sixths in increasing address order (+4, +8, +12, +16 of the first), which five statics give, where one array or one
-// struct of five ints gives the reverse order, +16 down to +4 (each measured, wasm-objdump -d of the object); 10465
-// reads the four, 10512 alone the first. Their being static members, private, their types where the bodies give only a
-// width, and their names are chosen: s_indiceDedo from the byte's role, s_tentativaRegistrada from 10465's copy,
+// defines them in that order, before GetInst's statics. Five statics give the target's store order, measured on 10512
+// (which does not match): StartState stores the four sixths in increasing address order (+4, +8, +12, +16 of the
+// first), where one array or one struct of five ints gives the reverse, +16 down to +4 (wasm-objdump -d of the object
+// each way). Their being five objects is a reading: nothing in the bodies marks where one ends, and 10465 reads the
+// four either way (10512 alone the first). Their being static members, private, their types where the bodies give only
+// a width, and their names are chosen: s_indiceDedo from the byte's role, s_tentativaRegistrada from 10465's copy,
 // s_qualidadeCapturada from 10425's use, s_eleitoresTreinamento and s_faixaTentativa1 to 4 from StartState's division
 // and 10465's test of each sum with the attempt number 1 to 4; the others' names are not read from their readers'
 // roles.

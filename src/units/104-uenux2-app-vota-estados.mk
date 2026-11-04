@@ -32,10 +32,11 @@
 # code; the two log members are clogvota.h's (held inlined after GetInst). Measured in the whole link with pnpm wasm
 # score: the case of 7 first gives the target's block order, 53 over 292 rows, every row an operand (the statics' and
 # vptrs' addresses before step 8); with the cases in ascending order the br_table's first two targets swap, 63 over 298
-# (6 rows inserted, 6 deleted). Chosen: the order of the other cases (ascending), the messages as literals (no evidence
-# names them), `break` and the default. Its four statics' exit destructors (7232, 7239, 11799, 11800) match with it:
-# 7481 is the one other target reader of their addresses. The roots' pair for CIniciodeCiclo::GetInst (4433) went: its
-# target callers, 7481 and 11994, are in the link.
+# (6 rows inserted, 6 deleted). The order of all five cases (7, 1, 11, 12, 14) is the br_table's: each order compiles to
+# its own table, and only this one gives the target's (five orders compiled at the file's flags). Chosen: the messages
+# as literals (no evidence names them), `break` and the default. Its four statics' exit destructors (7232, 7239, 11799,
+# 11800) match with it: 7481 is the one other target reader of their addresses. The roots' pair for
+# CIniciodeCiclo::GetInst (4433) went: its target callers, 7481 and 11994, are in the link.
 # vota::CQuerReimprimirZeresima landed its head, destructor and statics first, and its GetInst since (below). The
 # heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119

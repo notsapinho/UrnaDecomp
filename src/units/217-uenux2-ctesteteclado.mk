@@ -40,8 +40,18 @@
 # addresses), the br_table of each ProcessInput (CONFIRMA in its first block). The files are in the data's order
 # (CErroTesteTecladoFim's vtable @1546920, CEnviarManutencao's @1546980, CTesteFalhou's @1547056, CTesteTeclado's
 # @1547132), ahead of ctesteteclado.cpp: with cerrotestetecladofim.cpp in unit 97's list (behind cenviarmanutencao.cpp)
-# 11812 differed in local numbers (201 over 471 rows, 7 inserted, 7 deleted), and here it has operand rows only;
-# 11804 and 11809 had operand rows only at once. Chosen: the classes' files and every member name, the `switch`es.
+# 11812 differed in local numbers (190 over 471 rows, 176 operand-only, 7 inserted, 7 deleted), and here it has
+# operand rows only; 11804 and 11809 had operand rows only at once. The move jumps 240 objects of the link. Counted
+# with each object's vtables, typeinfos and records in .data (their target addresses from the symbol file and the
+# records, against the link map), it inverts 29 pairs, objects whose data the target holds after the class's and the
+# link before it: cgerabu, cgerarelatorios, ccopiaresultadoparamr, cfinalizaaquisicao, cimprimindobehb, cimprimirbjust
+# and cmostraqrcodebu (fimvotacao/), cfimvotoeleitor, csincronismovotoeleitor, crelvotautil, cqrcodeds,
+# cexibealertadesligamento, cvotacaostateaudio, cestadocomdesligamentoautomatico and fifteen of
+# mock/app/simulador/wasm/ (cwasmclp, cwasmtimer, cwasmtimerscheduler, cwasmlogd, cwasmscreen, cwasmbeep,
+# cwasmwebsound, cwasmscreenmt, cwasmnullprinter, cwasmnullpaper, cwasminputkbd, cwasminputmt, cwasmnullsound,
+# cwasmsystemdatetime, cwasmnulltexttospeech); 183 keep their order, 9 have data on both sides and 19 none. The four
+# testeteclado files are the data's order among themselves. Chosen: the classes' files and every member name, the
+# `switch`es.
 #
 # What StartState holds (pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11805), in order, and where it is written:
 # - CLogVota::GetInst (184), then a 16-byte frame that passes "Inicio do teste de Teclado do TE" to fn 233:

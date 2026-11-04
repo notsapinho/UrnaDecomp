@@ -7,10 +7,10 @@
 //   cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's records). TamanhoDoNome calls it
 //   and stands for 7787; it is optnone, so that clang does not inline it there. SomaDosNomes, which stood for 12903 with
 //   two calls, went. The copy the
-//   link keeps is cformbuilder.cpp.o's, the first in link order (the scan's object column). This object compiles at the uenux2 tree's flags (the
-//   fragment's rule), so its copy is compiled as the tree's own users compile theirs, but for -fno-strict-aliasing,
-//   which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same without it (wasm-objdump -d
-//   of the object compiled both ways).
+//   link keeps is ctelasvota.cpp.o's, the first in link order (the scan's object column). This object compiles at the
+//   uenux2 tree's flags (the fragment's rule), so its copy is compiled as the tree's own users compile theirs, but for
+//   -fno-strict-aliasing, which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same
+//   without it (wasm-objdump -d of the object compiled both ways).
 // - api::CSynchronizer::GetInst (target fn 600) is called directly by 14 target functions (378, 491, 1487 and others):
 //   CSystem::CopyFile (378, unit 32), vota::CSincronizaVota's SincronizaRelatorios and GravaBancoDadosMI (1836, 4657,
 //   unit 205), 1487 and 1488 (vota/comum/votadefs.cpp, unit 168) and 491 (SincronizaEstadoGeralVota, unit 205) are

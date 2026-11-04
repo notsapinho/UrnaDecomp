@@ -18,6 +18,8 @@
 # 307-uenux2-cparametrosimagemdigital-roots.cpp stands in for the other three and reads the result, so that binaryen
 # keeps both the function and its result.
 #
+# 2742 and unit 282's 10465, with 10465's callee 2223, hold each other: 2742's and 2223's names are `call by:10465`
+# only, and splat-build without either match line refuses 10465 as self-voted, so the three land or leave together.
 # Also in this file, each matched (step 9): vota::CParametrosImagemDigital::ExtraiTemplate (fn 2224) and
 # vota::CConversorWsq, the 1-byte singleton of fn 2742 (its GetInst, a thunk into binaryen's shared body 2900, as our
 # link forms it too), with its statics' exit destructors (10521, s_mutex's; 10522, s_inst's) and its ConverteParaWsq,

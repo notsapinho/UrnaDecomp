@@ -10,8 +10,8 @@
 //   link, the stand-in stays for the other two, not written.
 // - vota::EhTreinamentoMesario (fn 1823; callers 7306, 10465, 10474, 10478, 10500, 10512): its stand-in went, every
 //   caller in the link: 10512 (unit 161, written), 10465, 10474 and 10478 (unit 282), 7306 (unit 104) and 10500.
-// - vota::AdicionaSeparador (fn 1387; callers 11908, 11946, 12105, 12110, none written), with the two alignments they
-//   pass, 0 and 2, so that dead-argument elimination keeps the parameter.
+// - vota::AdicionaSeparador (fn 1387; callers 11908, written, 11946, 12105, 12110, not written), with the alignments
+//   they pass, 0 and 2, so that dead-argument elimination keeps the parameter.
 // - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450; callers 7061, unit 116's trap, and the static
 //   initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop what it returns). The instance
 //   is the header's template, emitted here first: no object before this one instantiates it.

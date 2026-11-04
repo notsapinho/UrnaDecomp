@@ -208,10 +208,10 @@
 # went when unit 104 wrote 7481 (7428 and 11754 were in the link; Registra, which stood for 11754's RegistraVoto calls,
 # went before), Abrange for GetAbrangencia's
 # (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 12098 and 12110; 5604 is in the link), Converte
-# for 5681's (fn 11349) and Procura for 3251's (fns 2386 and 3266). Precisa and Inicia, which stood for 7352 and 7377,
-# went with them, and Suspende, which stood for suspenderEleitor's (fn 4442) calls of AdicionaVoto, the five loggers and
-# FinalizaEleitor, with 4442. GetInst's constructor stores the vptr, the target's one reference to the vtable, so no
-# root takes it.
+# for 5681's (fn 11349) and Procura for 3251's (fn 2386; 3266 is in the link, src/app/roots_set.cpp). Precisa and
+# Inicia, which stood for 7352 and 7377, went with them, and Suspende, which stood for suspenderEleitor's (fn 4442)
+# calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442. GetInst's constructor stores the vptr, the
+# target's one reference to the vtable, so no root takes it.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
 # g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's members' names, SVotoCargo and its members' names,

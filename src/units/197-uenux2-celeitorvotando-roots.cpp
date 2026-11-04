@@ -16,7 +16,8 @@
 // - The std::map<SCargoInfo, CVotos> copy of comum::md::CVotosCargos::InsereCedula (held by fn 4454) calls
 //   __emplace_hint_unique_key_args (fn 5681), which calls __find_equal (fn 3251). 5681's other target caller is
 //   fn 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte), 3251's are fns 2386 (vota::CTelasCargo's
-//   constructor) and 3266, none written: Converte stands for 11349 and Procura for 2386 and 3266.
+//   constructor), not written, and 3266 (src/app/roots_set.cpp's, in the link): Converte stands for 11349 and Procura
+//   for 2386.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -62,7 +63,7 @@ __attribute__((noinline)) void Converte(char* mapa, const char* no)
     celeitorvotando_sink = resultado[4] ? mapa : no;
 }
 
-// stands for fns 2386 and 3266
+// stands for fn 2386 (3266, 3251's other caller, is in the link)
 __attribute__((noinline)) int Procura(char* mapa, const char* chave)
 {
     void* pai = nullptr;

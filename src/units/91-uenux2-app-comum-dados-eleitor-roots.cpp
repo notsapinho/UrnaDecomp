@@ -5,9 +5,9 @@
 // - The CEleitorDinamicoDAO constructor (fn 3768): three direct callers in the target (5761, 6734, 7174), which use the
 //   returned `this`, so the two stand-ins use it too.
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers), CBiometriaEleitor::GetDedo (fn 3720, three),
-//   TemDedo (fn 3719, three: 3614, 10316 and 10465, none in the link) and CriaComum (fn 2799, one caller with four call
-//   sites, 11422): one stand-in each with two call sites keeps each out of line, and no argument is the same constant at
-//   both, so dead-argument elimination folds nothing in.
+//   TemDedo (fn 3719, three: 3614 and 10316, not in the link, and 10465, unit 282's) and CriaComum (fn 2799, one caller
+//   with four call sites, 11422): one stand-in each with two call sites keeps each out of line, and no argument is the
+//   same constant at both, so dead-argument elimination folds nothing in.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.
 // - std::vector<CEleitorDinamico>'s instances that RecuperarTodos's push_back brings: its slow path (fn 5759) calls
 //   construct_at (fn 5760), __uninitialized_allocator_relocate (fn 3759) and __split_buffer's destructor (fn 3758), each

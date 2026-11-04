@@ -40,10 +40,10 @@
 #   target's type lacks); dropping it, as both target callers do, 3 over 67, operands only, and dotlockLock 4 over 54
 #   (5 over 55 with the stand-in that read it: a drop after the call).
 #
-# fn 2725 is not written. It calls fn 2742 (`f2900(1908612, 1908636)`, the GetInst of a 1-byte singleton no evidence
-# names, merged into CLogComum::GetInst's body 2900) and drops the result, and 2742's other callers (10316, 10451,
-# 10465) are not written either, so a name for 2742 would rest on 2725's vote alone, which the build refuses as
-# self-voted (a reading of docs/reference/splat.md "No circular evidence"). Its other callee with no body of ours is
+# fn 2725 is not written. It calls fn 2742 (`f2900(1908612, 1908636)`, the GetInst of a 1-byte singleton, merged into
+# CLogComum::GetInst's body 2900) and drops the result. 2742 has a name since unit 282's 10465 is in the link: it
+# matches as unit 307's vota::CConversorWsq::GetInst (`call by:10465`), its other callers (10316, 10451) not written, so
+# 2725 no longer waits for a name of its callee there. Its other callee with no body of ours is
 # 1555 (49 B: an out-of-line copy of the std::string at +0 of its argument, which both of 2725's throw paths call on
 # the key file's path; 11419, 11616 and 11629 call it too). Its callees 5739, 5168 and 2724 are written in units 89,
 # 05 and 160.

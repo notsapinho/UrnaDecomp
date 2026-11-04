@@ -26,12 +26,13 @@
 # 258`, all operand-only (pnpm wasm score on the whole link, and on a whole-link try of the roots object against the
 # header in an -iquote overlay). The keys are spelled as character literals, a choice: the target holds only their
 # values. The target's copy reads as cinstrucaovotacaoacessibilidade.cpp's object's (its record 1533820 follows that
-# file's records), which is not reconstructed; until it is, a copy of ours stands in: cformbuilder.cpp.o's (unit 31,
-# whose 2243 calls KeyName), the first object in link order to emit one, and the roots object's after it.
+# file's records), which is not reconstructed; until it is, a copy of ours stands in: ctelasvota.cpp.o's (unit 110's,
+# whose lambda 12903 calls KeyName), the first object in link order to emit one (link.cmd 88), then cformbuilder.cpp.o's
+# (unit 31, whose 2243 calls it, 399) and the roots object's (771).
 API154_SRCS := src/api/util/csynchronizer.cpp
 UENUX2_SRCS += $(API154_SRCS)
-# KeyName is a header's inline code and of its five callers (fns 653, 1455, 2243, 7787 and 12903) 2243 (unit 31, whose
-# object's copy the link keeps), 1455 (unit 97), 653 (unit 120) and 12903 (unit 110's ctelasvota.cpp) are
+# KeyName is a header's inline code and of its five callers (fns 653, 1455, 2243, 7787 and 12903) 2243 (unit 31),
+# 1455 (unit 97), 653 (unit 120) and 12903 (unit 110's ctelasvota.cpp, whose object's copy the link keeps) are
 # reconstructed: 154-uenux2-api-roots.cpp calls it for the other one, 7787, and
 # calls GetInst and the constructor, whose callers are not reconstructed either.
 # The roots object compiles at the uenux2 tree's flags, not APP_CXXFLAGS, so no match rests on a flag the tree lacks

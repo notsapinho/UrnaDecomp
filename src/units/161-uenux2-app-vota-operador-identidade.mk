@@ -118,7 +118,7 @@
 #
 # Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
 # CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
-# CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465, pending), whose line stays blank.
+# CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465) is written since 10465 is (below).
 # Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState, written, below), 10676 (written,
 # below).
 # Matched since: vota::IEleitorImpedidoVotar::StartState (fn 10625, slot 2 of the base and its six derived classes, in

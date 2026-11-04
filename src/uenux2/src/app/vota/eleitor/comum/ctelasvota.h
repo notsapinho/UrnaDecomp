@@ -225,9 +225,12 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
 //   30-point font, "Por favor, solicite ajuda dos técnicos do TRE" and "para as devidas providências." at (320, 220)
 //   and (320, 260) in the 25-point one, and "telaErroTesteTeclado" through GetFormulario (fn 886). Its three texts are
 //   named char arrays: the target loads them with i64.load align=3, at @475072, @475104 and @475152 (16-byte aligned,
-//   in the run of this file's fonts), which a named array of 16 bytes or more gives (wasm32's large-array alignment, a
-//   reading) and a string literal does not (align=0: fn 11812 scored 59 over 464 rows with the literals, every row an
-//   operand, those loads' alignments among them, and 48 over 464 with the arrays). The arrays' names are chosen.
+//   in the run of this file's fonts), which a named array of 16 bytes or more gives (wasm32's large-array alignment,
+//   measured: a 46-byte named const char[] is p2align=4 and loaded align=3, a 15-byte one and a 25-byte literal stay
+//   p2align=0) and a string literal does not (align=0: fn 11812 scored 59 over 464 rows with the literals, every row an
+//   operand, those loads' alignments among them, and 48 over 464 with the arrays). The arrays' names, and their being
+//   file-scope constants of an anonymous namespace (a function-local static array gives the same alignment), are
+//   chosen.
 // The names, their being free functions of vota, the lambda's spelling (a structured binding of the pair) and their
 // place after the file's last record are chosen.
 CFormInterativoTelaVota TelaTeclaErradaTesteTeclado();

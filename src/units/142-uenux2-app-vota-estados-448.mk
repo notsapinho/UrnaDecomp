@@ -229,9 +229,11 @@
 # vtable @1547448 before CUrnaInspecionada's @1547520): fn 11797 (CInspecionaUrna::ProcessInput), which holds
 # CUrnaInspecionada::GetInst inlined, differs in local numbers with the other order (65 over 243 rows, pnpm wasm score in
 # the whole link) and has operand rows only with this one (38 over 243). The move puts cinspecionaurna.cpp.o ahead of
-# five objects whose data the target holds before its vtable (cconversorsecaoeleitoral.cpp, cconfirmavotosemcandidato.cpp,
+# four objects whose data the target holds before its vtable (cconfirmavotosemcandidato.cpp,
 # cinstrucaovotacaoacessibilidade.cpp, cvisualizarcandidatos.cpp and ctelascargo.cpp, by their records and vtables) and
-# takes it behind sixteen whose data the target holds after it, which the link had before it.
+# takes it from behind nineteen whose data the target holds after it, which the link had before it; of the 24 objects
+# it jumps one has no data (validatitulosuspensao.cpp). Counted with each object's vtables, typeinfos and records in
+# .data, their target addresses from the symbol file and the records, against the link map.
 APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/cinspecionaurna.cpp \
     src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \

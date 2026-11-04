@@ -93,7 +93,8 @@
 #   default every caller here leaves, it matches, with the background a parameter too or a constant of the body: the two
 #   give one plain link (sha256 c3f8a83f01c01a68... both). Both parameters is the choice.
 # - With both positions and the second field temporaries, 3678's frame is the target's.
-# - 2243 is KeyName (744, api/hwil/iinput.h) and a call of 3678; 744's copy now links from this object, still matching.
+# - 2243 is KeyName (744, api/hwil/iinput.h) and a call of 3678; 744's copy linked from this object until unit 110's
+#   ctelasvota.cpp.o, ahead of it in link order, gave one (12903 calls KeyName), still matching.
 #   653 (unit 120) holds that code behind a second prologue: AddKeyLabel, written after 2243, which only 653 calls and
 #   binaryen inlines there (cformbuilder.h says why it is a function apart from 2243; unit 120's fragment has the
 #   measurements). Which of the two is the 3-parameter AddLabeledKey and which the other is chosen, and so are

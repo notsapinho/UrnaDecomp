@@ -26,6 +26,9 @@
 #   CDigitalNaoReconhecidaPorTempo's GetInst and constructor (no target function: 10465 holds them inlined) and its
 #   statics' exit destructors (10487, s_mutex's; 10488, s_inst's), which match through the names 10465's votes give;
 #   2223, std::map<uebyte, int>'s __tree::destroy, cpededigital.cpp.o's instance; 6269, musl's log2f (below).
+#   10465 and its callees 2742 (unit 307's) and 2223 hold each other: the two callees' names are `call by:10465` only,
+#   and splat-build without 2742's or 2223's match line refuses 10465 as self-voted, so the three land or leave
+#   together.
 #
 # Evidence, each read in the target (`pnpm wasm fn` of each function):
 # - The classes: RTTI and their vtables, @1591104 [244, 387, 1718, 7480, 1661, 218, 425, 10508, 425], @1591176 [... 1718
@@ -154,7 +157,7 @@
 # so are CDigitalNaoReconhecidaPorTempo's, which 10465 holds inlined: GetInst in the singleton form, the constructor
 # (behind a 96-byte frame there) passing EVENTO_ENTRADA, std::make_shared<std::string>("Tentativa x de x") at +12 and
 # the form at +20 from an anonymous-namespace helper clang inlines: AddLed(LED_OPERACAO_0), AddBeep(1),
-# CEleitorDadoNomeParaUrna::Text with "{:2}" at {1, 1}, "Eleitor(a) n„o reconhecido(a)" centred at {20, 2}, a
+# CEleitorDadoNomeParaUrna::Text with "{:2}" at {1, 1}, "Eleitor(a) n√£o reconhecido(a)" centred at {20, 2}, a
 # CTextSource over +12 with "%s" centred at {20, 3}, "CORRIGE: cancelar" at {1, 4}, "CONFIRMA: retornar" at {40, 4} on
 # the right, AddInputControl, GetInteractiveForm("", true). Its statics are defined before StartState (band 1: 10488 and
 # 10487 above 10486).
@@ -164,8 +167,8 @@
 # the post of 1 to CThreadEleitor's queue and CMostraEleitorVotando::GetInst (SetNextState in both arms, 10511's form);
 # then impl::IInformacaoThreadOperador's slot 13 (SetBiometriaEleitor; iinformacaothreadoperador.h reads slots 9 to 15)
 # and CLogVota::LogaTipoHabilitacaoEleitor(1) (clogvota.cpp), which the target holds behind a 400-byte frame: a
-# std::map<uebyte, std::string> {{1, "biomÈtrica"}, {2, "por cÛdigo"}} built from an initializer list (the hinted
-# insert 3266, called twice), its at(1) formatted into "Tipo de habilitaÁ„o do eleitor [{}]", and the map destroyed
+# std::map<uebyte, std::string> {{1, "biom√©trica"}, {2, "por c√≥digo"}} built from an initializer list (the hinted
+# insert 3266, called twice), its at(1) formatted into "Tipo de habilita√ß√£o do eleitor [{}]", and the map destroyed
 # (2499); the `#include <map>` that member needs takes the place of clogvota.cpp's blank line before `namespace vota {`,
 # so its records keep their lines. 34 over 421 rows before steps 7 to 9, operand-only. Its callees needed two things:
 # 3266's target copy is one a
