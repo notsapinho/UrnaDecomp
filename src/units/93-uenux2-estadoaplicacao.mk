@@ -54,8 +54,8 @@
 #
 # CEstadoGeralVota::IncrementaQtdBU (fn 3701, cestadogeralvota.cpp, a chosen name and line) matches byte for byte: one
 # more on the byte at +8, m_qtdBU, of the object fn 12065 gets from comum::CAppInfo::GetVota (fn 261); its callers
-# (vota states' slots 12065, 12077, 12081) are not all written: 12077 and 12081 are in the link (units 156 and 104),
-# and 93-uenux2-estadoaplicacao-roots.cpp stands for 12065. Fragment 172
+# (vota states' slots 12065, 12077, 12081) are in the link (units 104 and 156), and the roots' stand-in for 12065 went.
+# Fragment 172
 # writes CConversorEstadoGeralVota (11390, 11391) and CConversorDadoCorrespondencia (11399, 11400) over this unit's
 # CEstadoGeralVota and CDadoCorrespondencia, and the converters' callers of 5628 and 5630.
 #

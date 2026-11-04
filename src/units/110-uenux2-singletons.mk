@@ -422,6 +422,30 @@
 # them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
 # lines (3370 to 3430, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
 #
+# ctelasvota.cpp also holds, after the file's last record (3618, CInfoEleitorAudioHabilitado::LarguraMaxima's, kept
+# blank; lines and order chosen), the screens of the end of the vote that four functions hold inlined:
+# - TelaRetireMR, TelaLacreTampa and TelaMRModoDemo, free functions of vota that ctelasvota.h declares, which
+#   vota::CRetirarMR's constructor builds into +12, +20 and +28 (inlined into its GetInst, fn 2291, unit 156's), each
+#   behind a stack-pointer prologue of its own (64, 64 and 80 bytes): no index of their own, one caller each. They take
+#   FONTE_TITULO and FONTE_AGUARDE, the file's constants (the target's 2291 passes @474888 and @474992, the addresses
+#   4152 and 6583 pass); the key vectors are braced lists, built in place: `{{'C', "Continuar"}}` and
+#   `{{'C', "Prosseguir"}}`, whose short strings the target stores as immediates.
+# - CTelasVota::GetTelaDestinoBUs, a static member: vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065, unit
+#   104's) holds it behind an 80-byte prologue right after CTelasVota::GetInst() (fn 407), whose result it drops, as
+#   6580's and 6581's callers do. It splits CConfiguracaoEleicao's parameters' GetTelaEmissaoBU (+260 of the object fn
+#   187 returns) at '\n' (ecourna's CStringUtils::Split, fn 1880) and adds each non-empty line at x 10, 25 apart from
+#   y 275, in the {20, 0} font the keyboard test's instruction takes (@474896, FONTE_INSTRUCAO_TESTE_TECLADO); its copy
+#   number is a function slot (table slot 1101, fn 13023), a captureless lambda converted to `std::string (*)()`, whose
+#   static invoker returns std::format("Via nº {}", ...) over the const comum::CAppInfo::GetVota's BU count plus 1 as a
+#   uebyte (fn 903; the format's argument code 6, an unsigned). The include of app/comum/dados/cconfiguracaoeleicao.h
+#   takes Boost's include path (below), and the four new includes took blank lines of the run after `namespace vota {`.
+# 13023 matches through the content pass (`readings: table slot,address string`): its one target reference is 12065's
+# slot 1101 (12065 matched, unit 104), and our link's lambda is the function our 12065 passes. Measured before
+# steps 7 to 9, with pnpm wasm score: 2291 123 over 1449 rows, operand-only (unit 156).
+# Chosen: the names (from the forms' names), the free functions' being of vota and GetTelaDestinoBUs's being a static
+# CTelasVota member (its caller drops GetInst()'s result, as a static member called through it gives; a non-static one
+# was not measured), the callback's being a lambda (no record or symbol names fn 13023), the local names and the order.
+#
 # CEleitores::GetCurrentAbrangenciaEleitor (record celeitores.cpp:497, 7847, "Não posicionado no eleitor
 # corretamente"): vota::CEleitorVotando's StartState (fn 7377, unit 197) holds it behind a 32-byte prologue, on the
 # object CEleitores::GetInst() returns (fn 326, called before), and it reads the current record through GetInst's
@@ -516,6 +540,10 @@ SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/c
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
+# ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
+# reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the
+# same)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the callers are not reconstructed yet: 110-uenux2-singletons-roots.cpp reaches them the way the target does
 $(ROOT)/$(APP)/110-uenux2-singletons-roots.o: $(ROOT)/src/units/110-uenux2-singletons-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/110-uenux2-singletons.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/110-uenux2-singletons-roots.cpp -o $(R)

@@ -73,25 +73,10 @@ __attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { 
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
 // our link that these stand for: ToUpper's copying form (5156), 6592, and table slot 29,
-// which the executable TU's code takes; Split (1880), 12065 (654, 2380, 3689, 5869 and 11377 are in the link);
-// the copying Replace (2677), 3651 and api::CProgressBar::Draw
-// (10977) (3689 is in the link). Split is called through its label, so that this object, ahead of
-// src/app/roots_vector.o on the link line, instantiates none of std::vector<std::string>'s destruction.
-extern "C" void urna_divide(void* partes, const std::string& valor, char separador) __asm__(
-    "_ZN7ecourna3api4util12CStringUtils5SplitERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEc");
+// which the executable TU's code takes; the copying Replace (2677), 3651 and api::CProgressBar::Draw
+// (10977) (3689 is in the link). Split's (1880) went: its callers 654, 2380, 3689, 5869, 11377 and 12065 are in the
+// link.
 __attribute__((noinline)) std::string UsaMaiusculasB(const std::string& s) { return "b" + CStringUtils::ToUpper(s); }
-__attribute__((noinline)) int UsaDivideA(const std::string& s)
-{
-    int partes[3];
-    urna_divide(partes, s, '|');
-    return partes[1] - partes[0];
-}
-__attribute__((noinline)) int UsaDivideB(const std::string& s)
-{
-    int partes[3];
-    urna_divide(partes, s + "|", ';');
-    return partes[2];
-}
 __attribute__((noinline)) std::string UsaSubstituiA(const std::string& s) { return CStringUtils::Replace(s, "a", "b") + "c"; }
 __attribute__((noinline)) std::string UsaSubstituiB(const std::string& s) { return "d" + CStringUtils::Replace(s, s, "e"); }
 __attribute__((noinline)) int UsaBase64A(const SComResumo& v)
@@ -126,7 +111,6 @@ int urna_roots_ecourna(int a)
     out += UsaPreencheCopiaA(s) + UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasB(out) + UsaSubstituiA(s) + UsaSubstituiB(out);
-    acc += UsaDivideA(s) + UsaDivideB(out);
     std::string (*maiusculas)(const std::string&) = &CStringUtils::ToUpper;
     acc += reinterpret_cast<uintptr_t>(maiusculas);
     return static_cast<int>(acc) + static_cast<int>(out.size());

@@ -40,10 +40,11 @@ public:
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);
 
     // The byte at 1832936 that VerificaUrnaDesligando tests: 14 target functions read it (`== 1`, `& 1` or a bare test)
-    // and fn 3336, its one store, sets it to 1. That it is a bool is a choice that fits every read; no reader tests it in
-    // a loop, which would tell a bool from a byte (docs/reference/facts/reading.md R14). Its name, its owner and that it
-    // is public are chosen. Its place in .bss, just before vota::CAguardaMensagem's statics (app/vota/eleitor/), fits an
-    // object of app/vota/comum/.
+    // and fn 3336, its one store, sets it to 1. That it is a bool is a choice that fits every read. One reader tests it
+    // in a loop, vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065), once per pass at the loop's head, and
+    // returns when it is set; its type does not decide that loop: a plain bool gives the target's, and std::atomic<bool>
+    // compiles 12065 to the same object. Its name, its owner and that it is public are chosen. Its place in .bss, just
+    // before vota::CAguardaMensagem's statics (app/vota/eleitor/), fits an object of app/vota/comum/.
     static bool s_urnaDesligando;
 };
 

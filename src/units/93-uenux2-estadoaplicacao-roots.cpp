@@ -9,12 +9,11 @@
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
 //   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota stands
-//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), CEstadoGeralVota::IncrementaQtdBU (fn 3701,
-//   12065, 12077 and 12081: estadoaplicacao_use_qtdbu stands for 12065; 12077 and 12081 are in the link, units 156 and
-//   104), GetFaseChar (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's
+//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), GetFaseChar (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's
 //   DefineHistoricoCarga and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and CCabecalhoQRCodeBuilder's
 //   constructor (fn 5624, 1956 and 12110: estadoaplicacao_build_qrcode) have none, so one stand-in that calls each
-//   twice. CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their
+//   twice. CEstadoGeralVota::IncrementaQtdBU's stand-in (fn 3701) went: its target callers 12065, 12077 and 12081 are
+//   in the link (units 104 and 156). CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their
 //   two call sites each in their one target caller, DoConverte or DoDesconverte (fns 11394, 11395), which are written.
 //   The same for CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (fns 5621, 5620, 5618, 1956 and
 //   12110 each: estadoaplicacao_use_local, which varies every argument so binaryen folds none). Fn 1956 is in the link
@@ -46,7 +45,6 @@ void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQ
 void estadoaplicacao_idurna(void*, unsigned) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder12DefineIdUrnaEj");
 void estadoaplicacao_secao(void*, unsigned short) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder11DefineSecaoEt");
 void estadoaplicacao_zona(void*, unsigned short) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder10DefineZonaEt");
-void estadoaplicacao_qtdbu(void*) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVota15IncrementaQtdBUEv");
 void* estadoaplicacao_vota(void*, int, int, int, void*, void*, void*, int, int, void*, int, void*, void*, int) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVotaC1ENS_11EEstadoVotaENS_19EEstadoEncerramentoEhNSt3__28optionalIjEENS6_IN3api9CDateTimeEEESA_ttSA_bNS1_27CNumViasImpressasRelatoriosESA_b");
 void* estadoaplicacao_corresp(void*, int, void*, void*, void*, void*, void*, void*) __asm__("_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC1EjNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEN3api9CDateTimeES9_NS1_20CLocalidadeEleitoralENS3_6vectorIhNS7_IhEEEEN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
 void* estadoaplicacao_gap(void*, void*, int, int, int, int, int, int, void*, void*, void*) __asm__("_ZN5comum2md15estadoaplicacao15CEstadoGeralGapC1ENSt3__26vectorINS1_20CDadoCorrespondenciaENS3_9allocatorIS5_EEEENS_15EUrnaAplicativoES9_bbbbNS1_27CNumViasImpressasRelatoriosESA_NS3_8optionalIN3api5CDateEEE");
@@ -113,12 +111,6 @@ __attribute__((noinline)) void* estadoaplicacao_build_qrcode(char* a, char* b)
     return estadoaplicacao_qrcode(b + 8);
 }
 
-__attribute__((noinline)) void estadoaplicacao_use_qtdbu(char* a, char* b)
-{
-    estadoaplicacao_qtdbu(a);
-    estadoaplicacao_qtdbu(b + 4);
-}
-
 __attribute__((noinline)) void estadoaplicacao_build_vota(void** dado, void** args, int* v)
 {
     estadoaplicacao_vota(dado[0], v[0], v[1], v[2], args[0], args[1], args[2], v[3], v[4], args[3], v[5], args[4], args[5], v[6]);
@@ -140,7 +132,6 @@ struct SEstadoAplicacaoRoots {
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_idcarga);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_local);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_vota);
-        estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_qtdbu);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_qrcode);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_corresp);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_gap);

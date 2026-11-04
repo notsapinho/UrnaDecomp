@@ -96,6 +96,10 @@
 # most members here call,
 # is unit 95's, matched with strict aliasing in its TU (that fragment has the measurement); its name comes
 # from the calls of 1501 and 1836 (step 8's `call by:1501,1836`).
+#
+# s_urnaDesligando is a plain bool (csincronizavota.h): vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065,
+# unit 104) tests it in a loop, at the loop's head only, and returns when it is set. That return, not the flag's type,
+# gives the target's loop: std::atomic<bool> compiles 12065 to the same object.
 CSINCRONIZAVOTA_SRCS := src/api/hwil/euedesligandoerror.cpp src/app/vota/comum/csincronizavota.cpp
 UENUX2_SRCS += $(CSINCRONIZAVOTA_SRCS)
 # nothing in the link calls most of these functions yet: 205-uenux2-csincronizavota-roots.cpp gives each its call sites.
