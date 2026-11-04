@@ -10,8 +10,8 @@
 #              them.
 #   matched    5465 CasaRegex, added for unit 179 (src/units/179-uenux2-cvalidamidia.mk has its evidence and choices),
 #              over ecourna's CStringUtils::FindRegexPosition (unit 00's file), which binaryen inlines into it.
-#   written    5464 CasaCaractere, added with it, `no-candidate`: it waits, a prediction, for isalnum to keep one
-#              call site (unit 179).
+#   matched    5464 CasaCaractere, added with it, once isalnum kept one call site in our link, as in the target
+#              (unit 179 has the measurement, the Boost probe's change that gives it and the cases' order).
 #   matched    3646 JuntaTags: "chave:valor" of each pair of a std::vector<std::pair<std::string, std::string>>, joined
 #              by spaces, the last space dropped (pop_back), for comum::CQRCodeDS (fragment 299) and vota::CGeraBU's
 #              slot 2 (12110) and 12039. The target builds the text in a local and moves it into the result before

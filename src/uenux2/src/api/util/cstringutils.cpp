@@ -62,10 +62,10 @@ bool CStringUtils::CasaCaractere(char mascara, char caractere)
     switch (mascara) {
     case '#':
         return isdigit(caractere);
-    case '?':
-        return isalnum(caractere) || caractere == '-' || caractere == '_';
     case '@':
         return isalpha(caractere);
+    case '?':
+        return isalnum(caractere) || caractere == '-' || caractere == '_';
     default:
         return false;
     }

@@ -550,20 +550,22 @@ void CSystem::ZeroFill(const std::string& arquivo)
 
 bool CasaPadrao(const std::string& nome, const std::string& padrao)
 {
-    const std::string_view textoNome(nome);
-    const std::string_view textoPadrao(padrao);
-    if (textoNome.compare(0, 7, "#regex#") == 0) {
+    if (nome.compare(0, 7, "#regex#") == 0) {
         return CStringUtils::CasaRegex(nome, padrao);
     }
-    if (textoPadrao.compare(0, 7, "#regex#") == 0) {
+    if (padrao.compare(0, 7, "#regex#") == 0) {
         return CStringUtils::CasaRegex(padrao, nome);
     }
+    const std::string_view textoNome(nome);
+    const std::string_view textoPadrao(padrao);
     if (textoNome.size() != textoPadrao.size()) {
         return false;
     }
     for (size_t i = 0; i < textoNome.size(); ++i) {
-        if (textoNome[i] != textoPadrao[i] && !CStringUtils::CasaCaractere(textoPadrao[i], textoNome[i]) &&
-            !CStringUtils::CasaCaractere(textoNome[i], textoPadrao[i])) {
+        const char caractereNome = textoNome[i];
+        const char caracterePadrao = textoPadrao[i];
+        if (caracterePadrao != caractereNome && !CStringUtils::CasaCaractere(caracterePadrao, caractereNome) &&
+            !CStringUtils::CasaCaractere(caractereNome, caracterePadrao)) {
             return false;
         }
     }
@@ -589,8 +591,8 @@ bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::st
     if (nomes.empty() || padroes.size() == 0) {
         return false;
     }
-    for (const std::string& nome : nomes) {
-        if (std::find_if(padroes.begin(), padroes.end(), CCasaNome(nome)) == padroes.end()) {
+    for (std::vector<std::string>::const_iterator nome = nomes.begin(); nome != nomes.end(); ++nome) {
+        if (std::find_if(padroes.begin(), padroes.end(), CCasaNome(*nome)) == padroes.end()) {
             return false;
         }
     }

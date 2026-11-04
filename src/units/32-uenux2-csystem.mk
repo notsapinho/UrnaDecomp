@@ -248,8 +248,8 @@
 # 32-bit type. They give GetMemInfo its two call sites in our link, where the roots' MedeEspaco stood for 10226 until
 # 10226 was written (unit 116); with it in the link, MedeEspaco and its calls of 5454, 5453 and 5463 went.
 # api::CasamTodos (2758) and CasaPadrao (no index: binaryen inlines it into 2758), with the predicate CCasaNome of
-# csystem.cpp's anonymous namespace, added since for unit 179's comum::impl::ValidaConteudo (5572): every chosen name,
-# the form each was measured in and what 2758 waits for are in src/units/179-uenux2-cvalidamidia.mk. They follow
+# csystem.cpp's anonymous namespace, added since for unit 179's comum::impl::ValidaConteudo (5572): every chosen name
+# and the forms each was measured in (2758 matches) are in src/units/179-uenux2-cvalidamidia.mk. They follow
 # ZeroFill in the file: in band 4, 2758 links after GetFileSize (2759), csystem.cpp's last function there.
 # api::TrocaExtensao (target fn 5461; no record: its name, its being a free function and its namespace are chosen, as
 # GetFileName's are), the last function of csystem.cpp: a path with the extension after its last '.' replaced, called
