@@ -152,7 +152,7 @@
 #   unit 296's), and it tests CInformacaoEleicao::EhModoDemonstracao as GetSeparadorFase does. It adds the
 #   demonstration-mode line, centred in style 1, and two blank lines: 10 over 69, all operand-only. Its name, its lines
 #   and its being a static member are chosen.
-# - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
+# - ImprimeSeparadorVia (fn 5581, no record), on lines 348 to 353 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
 #   5581`), builds std::format's result for "-------------- {:02} / {:02} ---------------" (the 44-byte literal at
 #   378206, which no other target function loads: `/usr/bin/grep -rlE 'i32\.const 378206($|[^0-9])'
 #   build/out/splat/pieces/asm`) over its second and third arguments, both of argument code 6, unsigned (the i64 198

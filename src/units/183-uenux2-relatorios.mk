@@ -6,7 +6,8 @@
 # Matched:
 # - DetalheCandidatoZE (target fn 11973, record cdatasourcesrelatorio.h:152:80) and DetalheCandidato (11972, no record),
 #   from the roots object until fn 3872, their one user (table slots 1635 and 1636), was written (unit 325's, in
-#   crelvotautil.cpp): they match from that object now, its instances at the same flags, and the roots' two lines went.
+#   iniciovotacao/cgeradorresumozeresima.cpp): they match from that object now, built with strict aliasing
+#   (src/app/vota/), with the same scores, and the roots' two lines went.
 # - CGeradorRelPU::AdicionaParametro (677), in cgeradorrelpu.cpp.
 # - With this unit's literal in the link, three written bodies of other units match too: comum's FormataNumero (fn
 #   1161, unit 131), CDataText<comum::CRespostasDSNumero>::GetText (12621, the row unit 121's fragment describes) and
@@ -90,7 +91,7 @@
 #
 # Not reconstructed: the other records of cdatasourcesrelatorio.h (TrailerProporcionalPartido 11260,
 # GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981, TrailerMajoritario 11980, CodVerificador 11974);
-# fn 3872, the one user of 11972 and 11973, is unit 325's (vota::CRelVotaUtil::CriaDetalheCandidato).
+# fn 3872, the one user of 11972 and 11973, is unit 325's (vota::CriaDetalheCandidato).
 RELATORIOS183_SRCS := src/app/comum/relatorios/cgeradorrelpu.cpp
 UENUX2_SRCS += $(RELATORIOS183_SRCS)
 # cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (unit 123 adds the path the same way)

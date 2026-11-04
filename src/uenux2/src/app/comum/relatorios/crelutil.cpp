@@ -259,8 +259,15 @@ void CRelUtil::ImprimeSeparadorFase(api::CPaperFormBuilder& builder, const EUrna
     builder.AddTextField(separador, static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_CENTRO);
 }
 
-// (original lines 348-381: content not recovered)
-#line 382
+void CRelUtil::ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias)
+{
+    builder.AddTextField(std::format("-------------- {:02} / {:02} ---------------", via, totalVias),
+                         static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+}
+
+// (original lines 355-388: content not recovered)
+#line 389
 std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormRodapeZeresima(
     const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,
     const md::estadoaplicacao::CDadoCorrespondencia& correspondencia)
@@ -280,13 +287,6 @@ std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormRodapeZeresima(
     builder.AddNewLine(20);
     builder.AddCut();
     return builder.Build();
-}
-
-void CRelUtil::ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias)
-{
-    builder.AddTextField(std::format("-------------- {:02} / {:02} ---------------", via, totalVias),
-                         static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
-    builder.AddNewLine(1);
 }
 
 std::string CRelUtil::DSCodigoVerificador()

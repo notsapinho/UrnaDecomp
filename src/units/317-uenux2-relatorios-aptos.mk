@@ -9,8 +9,9 @@
 #
 # Matched: CEleitoresAptos's constructor (1922) and Formata (1921); the call operator four lambdas share (2881; our
 # link's such lambdas give one body, and the match's name is binaryen's pick of the first in link order: ImprimeTituloJE's
-# at first, vota::CRelVotaUtil::CriaCabecalho's since unit 325 wrote it in crelvotautil.cpp, whose object links ahead) and the __func slots of ImprimeTituloJE's lambda (11217, 11218, 11219,
-# 11221) and of MontaCabecalho's (11229 to 11232); 11223; CReport's constructor (2259); DoPrintJob's lambda's slots
+# at first, vota::CRelVotaUtil::CriaCabecalho's since unit 325 wrote it in crelvotautil.cpp, whose object links ahead)
+# and the __func slots of ImprimeTituloJE's lambda (11217, 11218, 11219, 11221) and of MontaCabecalho's (11229 to
+# 11232); 11223; CReport's constructor (2259); DoPrintJob's lambda's slots
 # 10882, 10883, 10885 and 10886; CabecalhoEleitores (11234). Scores before steps 7 to 9 (pnpm wasm score against this
 # link's names.tsv): 1922 0 over 39 rows and 2259 0 over 27 (byte-exact), 1921 27 over 592, 11223 81 over 945, 11234 13
 # over 356, the slots 1 or 2 rows each, all operand-only.
@@ -75,8 +76,9 @@
 #   it with no data before them. Written: one file after creport.cpp in the list for DoPrintJob, Imprime and 3654, its
 #   name (creportprinter.cpp, which sorts after creport.cpp) chosen; the other layout tried, 3654 and ImprimePartes each
 #   in a file of their own with DoPrintJob in creport.cpp, gave 3654 the same 12 over 181 (5486 alone in a file of its
-#   own had scored 0 over 27 and 10884 0 over 5 before), so two new files against one decided it. DoPrintJob is the RTTI's (`api::(anonymous namespace)::DoPrintJob(api::CReport const&, std::string
-#   const&, std::string const&)`); in 11908 its frame copies the two strings for CSubReport's by-value parameters and
+#   own had scored 0 over 27 and 10884 0 over 5 before), so two new files against one decided it. DoPrintJob is the
+#   RTTI's (`api::(anonymous namespace)::DoPrintJob(api::CReport const&, std::string const&, std::string const&)`);
+#   in 11908 its frame copies the two strings for CSubReport's by-value parameters and
 #   frees the copies before CLp::Imprime, so the sub-report is a named local.
 # - The voters' list (cgeradorrellistaeleitores.{h,cpp}): MontaCabecalho is the lambda's RTTI's; SituacaoEleitor the
 #   record's; the other helpers' names (MontaTitulos, MontaEleitores, MontaLegenda, MontaRodape, CabecalhoEleitores) and

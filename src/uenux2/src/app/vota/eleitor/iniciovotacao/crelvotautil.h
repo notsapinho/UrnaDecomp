@@ -25,13 +25,6 @@ public:
     // The heading of the zeresima reports (fn 5977): the lambda's RTTI names it (typeinfo 1543360,
     // vota::CRelVotaUtil::CriaCabecalho(const std::string &)::$_0, no const). Its callers are fns 11943 and 11946.
     static std::shared_ptr<api::IForm<api::IPaper>> CriaCabecalho(const std::string& titulo);
-    // Fns 3873 and 3872, no record: a form of one text field from comum::CCargoDSLabelRelatorio::HeaderDetalheZE (table
-    // slot 1634) and an empty line in style 1, and one of a field from CDataSourcesRelatorio<CRdvVota, CEleitores>'s
-    // DetalheCandidato or DetalheCandidatoZE (slots 1636 and 1635, the second for a 0 argument). Their callers are fn
-    // 11946 (3873 three times, 3872 twice, with 0) and fn 12110 (3872). Their names, the parameter's bool and their
-    // being members of this class in this file are chosen.
-    static std::shared_ptr<api::IForm<api::IPaper>> CriaCabecalhoDetalheZE();
-    static std::shared_ptr<api::IForm<api::IPaper>> CriaDetalheCandidato(bool comVotos);
 };
 
 } // namespace vota

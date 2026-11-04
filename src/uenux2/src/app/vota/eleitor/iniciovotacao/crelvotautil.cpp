@@ -7,12 +7,9 @@
 #include "api/hwil/clp.h"
 #include "api/util/cdatetime.h"
 #include "app/comum/appinfo/cappinfo.h"
-#include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/celeitores.h"
 #include "app/comum/dados/clocal.h"
-#include "app/comum/dados/crdvvota.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeral.h"
-#include "app/comum/relatorios/cdatasourcesrelatorio.h"
 #include "app/comum/relatorios/celeitoresaptos.h"
 #include "app/comum/relatorios/cgeradorbuqrcode.h"
 #include "app/comum/relatorios/crelutil.h"
@@ -46,23 +43,6 @@ std::shared_ptr<api::IForm<api::IPaper>> CRelVotaUtil::CriaCabecalho(const std::
     comum::CRelUtil::ImprimeDataHora(builder, agora, "Data", "Hora");
     builder.AddNewLine(1);
     comum::CRelUtil::ImprimeResumoCorrespondencia(builder, geral.GetCorrespondencia());
-    return builder.Build();
-}
-
-std::shared_ptr<api::IForm<api::IPaper>> CRelVotaUtil::CriaCabecalhoDetalheZE()
-{
-    api::CPaperFormBuilder builder;
-    builder.AddTextField(comum::CCargoDSLabelRelatorio::HeaderDetalheZE, api::ALINHAMENTO_ESQUERDA);
-    builder.AddTextField("", static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
-    return builder.Build();
-}
-
-std::shared_ptr<api::IForm<api::IPaper>> CRelVotaUtil::CriaDetalheCandidato(bool comVotos)
-{
-    using DataSources = comum::CDataSourcesRelatorio<comum::CRdvVota, comum::CEleitores>;
-    api::CPaperFormBuilder builder;
-    builder.AddTextField(comVotos ? DataSources::DetalheCandidato : DataSources::DetalheCandidatoZE,
-                         api::ALINHAMENTO_ESQUERDA);
     return builder.Build();
 }
 

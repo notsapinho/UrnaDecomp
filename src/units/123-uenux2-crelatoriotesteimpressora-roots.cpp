@@ -32,8 +32,8 @@
 // - CRelUtil::IncluiCabecalhoEleicoesMZS, fn 1543, has six callers in the target (awk -F'\t' '$2==1543'
 //   ledger/callgraph.tsv: 5977, 11223, 11902, 11908, 12105, 12110); 11902 (unit 176's), 11223 (unit 287's) and 11908
 //   (unit 176's) are in the link, with one call each, as is 5977 (unit 325's), and w123_cabecalho stands for 12105 and
-//   12110 and calls it twice, with the header types and the flag varied as those callers vary them (0 or 2 and 1, 11223 and 11902; 0 and 0, 5977,
-//   11908, 12110; 0 or 1 and 0, 12105), so that dead-argument elimination folds none.
+//   12110 and calls it twice, with the header types and the flag varied as those callers vary them (0 or 2 and 1,
+//   11223 and 11902; 0 and 0, 5977, 11908, 12110; 0 or 1 and 0, 12105), so that dead-argument elimination folds none.
 // - CRelUtil::ImprimeResumoCorrespondencia, fn 1541, has the same six callers as 1543 (awk -F'\t' '$2==1541'
 //   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105);
 //   11902, 11223, 11908 and 5977 (unit 325's) are in the link, and w123_rodape stands for the others (12105 and 12110 for

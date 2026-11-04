@@ -6,8 +6,8 @@
 extern "C" void w1047(int, int, int) __asm__("_ZN4vota8CLogVota20LogaGerandoRelatorioEN5comum13ERelatoriosUEEb");
 extern "C" void w5977(int, int) __asm__(
     "_ZN4vota12CRelVotaUtil13CriaCabecalhoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-extern "C" void w3873(int) __asm__("_ZN4vota12CRelVotaUtil22CriaCabecalhoDetalheZEEv");
-extern "C" void w3872(int, int) __asm__("_ZN4vota12CRelVotaUtil20CriaDetalheCandidatoEb");
+extern "C" void w3873(int) __asm__("_ZN4vota22CriaCabecalhoDetalheZEEv");
+extern "C" void w3872(int, int) __asm__("_ZN4vota20CriaDetalheCandidatoEb");
 extern "C" void w5579(int, int, int, int) __asm__(
     "_ZN5comum8CRelUtil18FormRodapeZeresimaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_"
     "6vectorIN7ecourna3app5dados16CTituloRelatorioENS5_ISE_EEEERKNS_2md15estadoaplicacao20CDadoCorrespondenciaE");
@@ -32,8 +32,8 @@ __attribute__((noinline)) int Cabecalhos(char* formularios, char* titulo)
     return formularios[1] + titulo[11];
 }
 
-// Stands for fn 11946, which calls vota::CRelVotaUtil::CriaCabecalhoDetalheZE (fn 3873) three times and
-// CriaDetalheCandidato (fn 3872) twice with 0, and for fn 12110, the other caller of 3872; neither is written.
+// Stands for fn 11946, which calls vota::CriaCabecalhoDetalheZE (fn 3873) three times and vota::CriaDetalheCandidato
+// (fn 3872) twice with 0, and for fn 12110, the other caller of 3872; neither is written.
 __attribute__((noinline)) int Detalhes(char* formularios, int comVotos)
 {
     w3873(reinterpret_cast<int>(formularios));

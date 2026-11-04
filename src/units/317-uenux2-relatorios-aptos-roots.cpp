@@ -31,7 +31,7 @@ __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
 }
 
 // Stands for fns 11943, 11946 and 12105, the target callers of api::GeraArquivoRelatorio (fn 3654), not written. The
-// first argument is the std::string the function takes by value, the second the report.
+// first argument is the address of the std::string the function takes as a const reference, the second the report.
 __attribute__((noinline)) int ArquivosRelatorios(char* arquivos, char* relatorio)
 {
     w3654(reinterpret_cast<int>(arquivos), reinterpret_cast<int>(relatorio));

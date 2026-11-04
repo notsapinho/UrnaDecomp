@@ -51,7 +51,7 @@
 # Written since, in this file, by unit 325 (whose fragment has their evidence): CriaCabecalho (fn 5977) and its lambda's
 # slots (11999 to 12002; its call operator, 2881, is the body four lambdas share, whose match line now names this
 # lambda's: binaryen keeps the first twin in link order, and this object links ahead of unit 287's
-# cgeradorrelversaopacotedados.cpp.o), CriaCabecalhoDetalheZE (3873) and CriaDetalheCandidato (3872).
+# cgeradorrelversaopacotedados.cpp.o).
 #
 # Roots: none. 246-uenux2-crelvotautil-roots.cpp held the caller stand-in of unit 31's api::CPaperFormBuilder::Show
 # (fn 3671) for its target caller 11902, and went with it once 11902 (unit 176's cimpressaopu.cpp) was in the link
