@@ -121,8 +121,8 @@ candidate are not placed by anything yet.
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
 | `match` | 12,377 | 3,680,564 | matched |
-| `differs` | 384 | 153,159 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 490 | 578,189 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `differs` | 383 | 153,149 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 491 | 578,199 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 1,092 | 1,471,991 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -181,7 +181,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `byte` | 1,335 | 1,335 | 0 | 0 | 0 |
 | `fingerprint` | 622 | 621 | 0 | 1 | 0 |
-| `addr` | 7,709 | 7,449 | 134 | 125 | 1 |
+| `addr` | 7,709 | 7,449 | 133 | 126 | 1 |
 | `shape` | 1,111 | 1,065 | 33 | 13 | 0 |
 | `none` | 3,566 | 1,907 | 217 | 351 | 1,091 |
 <!-- /status:tiers -->

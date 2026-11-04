@@ -140,8 +140,9 @@
 # self-voted until fn 10465 is in the link. The scan reads it `unresolved` on an earlier operand,
 # s_tentativaRegistrada, a .data word of 1 that content cannot place and that no vote names while the bodies differ.
 # Its callees match: 1823
-# (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, this object's instance, named by a
-# caller's vote), 1393 and 2740; it reads the map's size through api::CDataMap::GetQuantidade (chosen name, inline).
+# (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, this object's instance, named by its
+# census pair, `evidence:pair-addr`), 1393 and 2740; it reads the map's size through api::CDataMap::GetQuantidade
+# (chosen name, inline).
 # vota::CVerificaDadoEleitor::ProcessInput (10443), matched: on CONFIRMA the first entry's text, the log
 # LogaDadoDigitadoIncompleto when it has three characters or fewer, else std::stoul (4661) against
 # md::CEleitorDecorator::GetAnoNascimento (5665, unit 91) of the current voter, LogaDadoDigitadoConfere and
@@ -151,10 +152,19 @@
 # over 1163 rows, operand-only. The typed year is read into a local before the compare, as the target calls std::stoul
 # before GetAnoNascimento, and CLogVota::GetInst is called in each arm, which clang hoists to after the compare's
 # operands, where the target has it (the form the same compare of fn 10489 measures, unit 142's fragment).
-# cinformaanonascimentoerrado.cpp is listed in unit 142 now, ahead of cpedeanonascimentosembiometria.cpp: 10489 holds
-# CInformaAnoNascimentoErrado's GetInst and needs that order (unit 142's fragment has the scores); the class's notes
-# stay here and in its header, and its GetInst, constructor and statics (exit destructors 10495, 10494, matched) are
-# written in its file.
+# CInformaAnoNascimentoErrado's GetInst, constructor and statics (exit destructors 10495, 10494, matched) are written
+# in its file. The list below also compiles unit 142's cpedeanonascimentosembiometria.cpp, right after
+# cinformaanonascimentoerrado.cpp: its 10489 holds that GetInst inlined and matches with the callee's object first,
+# the two classes' order in the target's data (unit 142's fragment has the scores). Two placings give that order, and
+# on whole links both give 10489 93 over 854 and the splat build the target's sha256 with every match:
+# cinformaanonascimentoerrado.cpp moved into unit 142's list ahead of cpedeanonascimentosembiometria.cpp inverts 31
+# object pairs the base had in the data's order (82553 inverted pairs in the whole link); this one inverts 10 (82511;
+# the base's link, 82533), each object moving past the same 54 others. Pairs are read from each object's vtable and
+# typeinfo addresses in splat/symbol_addrs.txt, through the link map. The 10: cpedeanonascimentosembiometria.cpp
+# (@1591496 to @1591540) now after aguardaeleitor/'s cmostraeleitorvotando.cpp and cperguntacodigosuspensao.cpp (unit
+# 142's), celeitordemorando.cpp, csuspensaoautomaticaeleitor.cpp, cperguntaeleitorvotando.cpp and
+# cdesabilitaaudioeleitor.cpp (@1592784 to @1593308), and comum/gravadores/asn/'s cconversorversoesarquivos.cpp,
+# cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp (@1596216 to @1599416).
 #
 # Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
@@ -344,6 +354,8 @@ APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeide
     src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp \
     src/app/vota/operador/leidentidade/ieleitorimpedidovotar.cpp \
     src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp \
+    src/app/vota/operador/confirmaidentidade/cinformaanonascimentoerrado.cpp \
+    src/app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.cpp \
     src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp \
     src/app/vota/operador/confirmaidentidade/cverificadadoeleitor.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_IDENTIDADE_SRCS)

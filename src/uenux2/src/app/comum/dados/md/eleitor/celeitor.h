@@ -45,7 +45,9 @@ public:
     // The date of birth, the string at +68, which md::CEleitorDecorator::GetAnoNascimento (fn 5665) reads through this
     // accessor out of line (celeitor.cpp): no target index, binaryen inlines its one call, and 5665 keeps its `this +
     // 68` unfolded after its own prologue, where an inline accessor gives the loads' offsets folded (72, 79: measured).
-    // Its name, the member's (m_dataNascimento, read from 5665's use) and its line are chosen.
+    // Its name and its line are chosen. The member is the target's: CConversorEntidadeEleitores' slot 2 (fn 11411)
+    // copies EleitorUrna's dataNascimento (field 4, src/asn1/modules/ModuloEleitores.h) and passes it as the string
+    // the constructor (fn 5668) stores at +68.
     const std::string& GetDataNascimento() const;
 
 private:

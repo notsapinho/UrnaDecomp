@@ -47,8 +47,8 @@
 # (@1552104, @1553632) holds records of 19 files, ieventoslog.cpp's (@1552880) among them, and clogvota.cpp's
 # (@1532800) lie outside it: that rules out clogvota.cpp only, and with the class above it is IEventosLog's, in this
 # file. No other function of the file is in its band, so its place in the file, above the constructor, is a choice.
-# One caller is in the link, unit 119's slot 28 (10774, which matches at the tree's -O3); the roots file stands in for
-# the other seven. The census pairs it (`shape`), and step 9 matches it by that pair.
+# All eight callers are in the link (unit 119's slot 28, 10774, matches at the tree's -O3; 10512, unit 161's, came
+# last), so the roots stand in for none. The census pairs it (`shape`), and step 9 matches it by that pair.
 #
 # Written, not matching, and what each waits for:
 # - 6045 and 5876 match at the tree's -O3; at -O2 they were `differs` and `no-candidate`. Their literals are 43 and 40
@@ -62,7 +62,8 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - not reconstructed: 5372 (needs 1903 and 2224; 816 and 1686 match since unit 135's IFingerMatcher stand-in),
+# - not reconstructed: 5372 (needs 2224; 816 and 1686 match since unit 135's IFingerMatcher stand-in, 1903 since
+#   unit 307),
 #   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
 #
 # Inlining, by who did it. clang: EhModoDemonstracao into the seven members (one frame, restored after the member's load)
