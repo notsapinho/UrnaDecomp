@@ -573,4 +573,46 @@ void CLogVota::LogaEleitorEstaVotando()
     loga("Eleitor está votando");
 }
 
+void CLogVota::LogaTimeoutReconhecimentoDedo(uebyte tentativa, uebyte total)
+{
+    loga(std::format("Timeout de reconhecimento do dedo. Tentativa [{}] de [{}]", tentativa, total));
+}
+
+void CLogVota::LogaTentativaReconhecimentoDedo(uebyte tentativa, uebyte total)
+{
+    loga(std::format("Número de tentativas de reconhecimento do dedo. Tentativa [{}] de [{}]", tentativa, total));
+}
+
+void CLogVota::LogaEleitorNaoPossuiBiometria()
+{
+    logaAlerta("O eleitor não possui biometria");
+}
+
+void CLogVota::LogaDadoDigitadoIncompleto()
+{
+    loga("Dado digitado está incompleto");
+}
+
+void CLogVota::LogaDadoDigitadoConfere()
+{
+    loga("Dado digitado confere");
+}
+
+void CLogVota::LogaDadoDigitadoNaoConfere()
+{
+    loga("Dado digitado não confere");
+}
+
+void CLogVota::LogaAnoNascimentoIgualCadastro()
+{
+    const std::string mensagem = "Ano de nascimento digitado é igual ao do cadastro";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaAnoNascimentoDiferenteCadastro()
+{
+    const std::string mensagem = "Ano de nascimento digitado é diferente do cadastro";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
 } // namespace vota

@@ -34,7 +34,11 @@ public:
 
     void Reset() { m_corrente = m_registros.begin(); }
 
-    // (original lines 37-94: content not recovered)
+    // The number of records, the map's size: vota::CControlaReconhecimento::StartState (fn 10512) reads that word of
+    // comum::CEleitores's map (CEleitores's +12) in place. Its name and its being a member here are chosen.
+    size_t GetQuantidade() const { return m_registros.size(); }
+
+    // (original lines 41-94: content not recovered)
 #line 95
     RecordType* GetCurrent() const
     {

@@ -105,8 +105,9 @@
 # given 0, then slot 6); with comum::CPedeDigitalMesario::FinishState (10315, unit 135) it forms binaryen's 6012, as in
 # the target, and the three match.
 # Pending (221-uenux2-app-comum-constructors-pending.cpp says what it waits for): ProcessTick (10451);
-# BiometriaMesarioPresenteNosEleitores (3614) is declared and not written. The stand-in for 5396's other caller (10443)
-# and the vtable sinks of the two states 10451 holds inlined are in unit 278's roots, beside those states' classes.
+# BiometriaMesarioPresenteNosEleitores (3614) is declared and not written. GetInst (5396) needs no stand-in: its two
+# target callers, 10458 (unit 278) and 10443 (unit 161), are in the link. The vtable sinks of the two states 10451 holds
+# inlined are in unit 278's roots, beside those states' classes.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_CONSTRUCTORS_SRCS := src/app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp \

@@ -189,10 +189,30 @@
 # helpers' names, their anonymous namespace, the statics' lines before StartState (10423 and 10422 above 10421 in use
 # band 1).
 #
+# CPedeAnoNascimentoSemBiometria::ProcessInput (10489), matched: the reading of its first form in the private member
+# LeAnoDigitado (a chosen name), which binaryen inlines behind its 16-byte frame, and of the second in ProcessInput's
+# own frame; LeAnoDigitado holds CInformaAnoNascimentoErrado's GetInst, constructor and form inlined (written in
+# cinformaanonascimentoerrado.cpp, its statics' exit destructors 10495 and 10494 matched) and two CLogVota members
+# (unit 119's file), over md::CEleitorDecorator::GetAnoNascimento (5665, unit 91) and std::stoul (4661). Measured with
+# pnpm wasm score in the whole link: the counter at +28 an int, 102 over 858 rows (its `<= 1` compiled as a signed
+# `<= 0`, where the target compares the incremented value with 1 unsigned); unsigned, 98 over 857; with
+# CLogVota::GetInst called in each arm instead of once into a local before the compare, 95 over 855 (the target calls it
+# after the year's read, where clang hoists the arms' calls), with a local tee in the inlined GetInst left; with this
+# file linked right after cinformaanonascimentoerrado.cpp (unit 161's, which linked after it), 93 over 854,
+# operand-only. The target's data put CInformaAnoNascimentoErrado's vtable (@1591424) before
+# CPedeAnoNascimentoSemBiometria's (@1591496): the callee's object first is that order (docs/reference/facts/codegen.md
+# C4). So unit 161's list compiles this file, right after cinformaanonascimentoerrado.cpp; unit 161's fragment has the
+# two placings measured and the 10 object pairs this one inverts. With the move no row left `match` (step 9's join
+# against the base).
+# Its form brings "Por favor oriente o eleitor a procurar o" (142758, 40 bytes), whose last character is where the
+# target keeps the string "o": 7-Zip's FindPropIdExact (4929) loads 142797, and boost's lookup_default_collate_name's
+# names table (@1618944, fn 9353's) holds it in its word 112. With the literal in the link both matched, and with
+# 9353's name lookup_collatename (3498, `unresolved self-voted` before). Those matches are their libraries' bodies'.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# cpedeanonascimentosembiometria.cpp, this unit's, is compiled in unit 161's list (10489's paragraph above).
 APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
-    src/app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.cpp \
     src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp \
     src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp \
     src/app/vota/operador/aguardaeleitor/validatitulosuspensao.cpp

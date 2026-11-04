@@ -58,6 +58,16 @@ public:
     // callers keep the call, which their file (celeitores.cpp) would inline, so it is out of line in another TU (a
     // reading); this file, the name and the parameters' names and types are chosen.
     ETipoAbrangencia GetAbrangencia(const std::string& uf, uedword municipio) const;
+    // Target fn 5665: the year of birth, CStringUtils::ToDWord (fn 1523) of the first four characters of the date of
+    // birth (CEleitor::GetDataNascimento, the string at +68; a std::string of up to 4 built in place, then freed). Its
+    // callers, vota::CVerificaDadoEleitor::ProcessInput (fn 10443) and vota::CPedeAnoNascimentoSemBiometria::ProcessInput
+    // (fn 10489), compare it with the year the operator types and log "Ano de nascimento digitado é igual ao do
+    // cadastro" or "... diferente do cadastro", which is the evidence for the string's role. Its file is a reading: in
+    // use band 2 it comes right after celeitor.cpp's constructors (fns 5668, 5667, 5666) and before celeitordinamico.cpp's
+    // (5664, 5663), and the eleitor directory's objects link in name order; out of celeitor.cpp, its call of the
+    // accessor stays a call that binaryen inlines, the target's unfolded `+ 68`. No record names it: its name, its being
+    // a const member of the decorator and its uedword result (ToDWord's) are chosen.
+    uedword GetAnoNascimento() const;
     // fn 456, the order GetEleitoresEstaticos's std::sort calls (its five callers are the sort's helpers, 945, 3761,
     // 5755, 5756 and 5769, which call it and compare its sign-extended byte with 0): both voters' identities at their
     // own type (the

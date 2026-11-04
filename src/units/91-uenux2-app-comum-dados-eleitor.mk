@@ -127,6 +127,16 @@
 # constructor above GetIdentidadePorTipo's record, operator<=> last); 456 has no record and its band says nothing of
 # the file.
 #
+# md::CEleitorDecorator::GetAnoNascimento (fn 5665, celeitordecorator.cpp, after GetAbrangencia), matched (a census
+# pair): CStringUtils::ToDWord of the first four characters of the date of birth, read through
+# md::CEleitor::GetDataNascimento (celeitor.cpp, unit 157's file), an accessor out of line that binaryen inlines into
+# its one call, so 5665 keeps `this + 68` unfolded after its prologue as the target's does. Measured: as a CEleitor
+# member in celeitor.cpp reading the member in place, 10 over 77 rows (the loads at offsets 72 and 79 from `this`,
+# folded); as written, 2 over 75, operand-only. Its file is a reading of use band 2 (5668, 5667, 5666 are celeitor.cpp's,
+# 5664 and 5663 celeitordinamico.cpp's, and the eleitor directory links in name order), its being the decorator's
+# member a choice (celeitordecorator.h). Its two target callers, 10443 and 10489, are in the link (units 161 and 142),
+# so no stand-in gives it call sites.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
 COMUM_ELEITOR_MD_SRCS := src/app/comum/dados/md/eleitor/celeitordinamico.cpp src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp src/app/comum/dados/md/eleitor/celeitordecorator.cpp
 COMUM_ELEITOR_DAO_SRCS := src/app/comum/dados/dao/celeitordinamicodao.cpp src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp

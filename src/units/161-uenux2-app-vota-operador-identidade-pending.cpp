@@ -4,30 +4,11 @@
 // What each waits for is a callee with no body here (ledger/callgraph.tsv against splat/matched.txt and
 // splat/symbol_addrs.txt); fn 652, which one of them calls, matches now:
 //
-// - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
-//   fns 781 and 1823 (and 1393 and 2740, which match: unit 110's celeitores.cpp and unit 282's cpededigital.cpp).
-// - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396
-//   (CRegistraDigitalOperador::GetInst, unit 221), 4661, 2097 and 5665, which has no body here (a voter's year of
-//   birth, the first four characters of the string at +68 of the voter's record), and it holds
-//   vota::CDadoEleitorNaoConfere's GetInst and constructor inlined (the one store of that vptr, 1592648) with its two
-//   forms, and three CLogVota members this tree lacks.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
-#include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
-#include "app/vota/operador/confirmaidentidade/cverificadadoeleitor.h"
 #include "app/vota/operador/leidentidade/ieleitorimpedidovotar.h"
 
 namespace vota {
-
-void CControlaReconhecimento::StartState()
-{
-    __builtin_trap();
-}
-
-void CVerificaDadoEleitor::ProcessInput()
-{
-    __builtin_trap();
-}
 
 void IEleitorImpedidoVotar::StartState()
 {

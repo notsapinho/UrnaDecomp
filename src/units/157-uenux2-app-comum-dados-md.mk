@@ -76,6 +76,11 @@
 # and 11629, for which 157-uenux2-app-comum-dados-md-roots.cpp's Cargas stands; with 10290 alone binaryen inlined it
 # there (fragment 172).
 #
+# md::CEleitor::GetDataNascimento (no target index), out of line in celeitor.cpp after the constructors, for unit 91's
+# md::CEleitorDecorator::GetAnoNascimento (5665), which needs the call binaryen inlines (unit 91's fragment has the
+# measurement); with it the string at +68 is named m_dataNascimento, the voter's date of birth fn 11411 passes the
+# constructor there (celeitor.h), a change of names only, and the constructors' parameter with it.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_MD157_SRCS := src/app/comum/md/ccabecalhoentidade.cpp \
   src/app/comum/dados/md/eleitor/celeitor.cpp \

@@ -1,16 +1,17 @@
 // The reconstruction's note, not TSE's text: the constructor from a CEleitor (no target function: fn 5772 holds it;
-// its lines, above line 39, are chosen), GetIdentidadePorTipo (fn 708, record at line 39), GetAbrangencia (fn 3721, no
-// record: its line, after line 39, is chosen) and operator<=> (fn 456, no record: its line, last, is chosen).
+// its lines, above line 39, are chosen), GetIdentidadePorTipo (fn 708, record at line 39); GetAbrangencia (fn 3721),
+// GetAnoNascimento (fn 5665) and operator<=> (fn 456, last) have no record: their lines, after line 39, are chosen.
 #include "app/comum/dados/md/eleitor/celeitordecorator.h"
 
 #include <algorithm>
 #include <format>
 
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum::md {
 
-// (original lines 13-24: content not recovered)
+// (original lines 14-24: content not recovered)
 #line 25
 CEleitorDecorator::CEleitorDecorator(const CEleitor& eleitor, ecourna::app::dados::ETipoIdentificadorEleitor tipoIdentificador)
     : CEleitor(eleitor), m_tipoIdentificador(tipoIdentificador)
@@ -35,6 +36,11 @@ ETipoAbrangencia CEleitorDecorator::GetAbrangencia(const std::string& uf, const 
         return ABRANGENCIA_MUNICIPAL;
     }
     return m_transferencia.GetUF() == uf ? ABRANGENCIA_ESTADUAL : ABRANGENCIA_FEDERAL;
+}
+
+uedword CEleitorDecorator::GetAnoNascimento() const
+{
+    return ecourna::api::util::CStringUtils::ToDWord(GetDataNascimento().substr(0, 4));
 }
 
 std::strong_ordering CEleitorDecorator::operator<=>(const CEleitorDecorator& outro) const
