@@ -1,15 +1,16 @@
-// The reconstruction's note, not TSE's text: GetIdentidadePorTipo (fn 708, record at line 39) and GetAbrangencia (fn
-// 3721, no record: its line, after line 39, is chosen).
+// The reconstruction's note, not TSE's text: GetIdentidadePorTipo (fn 708, record at line 39), GetAbrangencia (fn
+// 3721) and GetAnoNascimento (fn 5665), which have no record: their lines, after line 39, are chosen.
 #include "app/comum/dados/md/eleitor/celeitordecorator.h"
 
 #include <algorithm>
 #include <format>
 
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum::md {
 
-// (original lines 12-30: content not recovered)
+// (original lines 13-30: content not recovered)
 #line 31
 CEleitorIdentidade CEleitorDecorator::GetIdentidadePorTipo(ecourna::app::dados::ETipoIdentificadorEleitor tipo) const
 {
@@ -28,6 +29,11 @@ ETipoAbrangencia CEleitorDecorator::GetAbrangencia(const std::string& uf, const 
         return ABRANGENCIA_MUNICIPAL;
     }
     return m_transferencia.GetUF() == uf ? ABRANGENCIA_ESTADUAL : ABRANGENCIA_FEDERAL;
+}
+
+uedword CEleitorDecorator::GetAnoNascimento() const
+{
+    return ecourna::api::util::CStringUtils::ToDWord(GetDataNascimento().substr(0, 4));
 }
 
 } // namespace comum::md

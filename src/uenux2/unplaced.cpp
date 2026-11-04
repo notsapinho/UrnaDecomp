@@ -64,11 +64,6 @@
 // f5634 · 2021 B · unmatched · placement: link order · name unknown
 // void f5634(i32, i32, i32) { ... }
 
-// link-order cluster 812 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/eleitor/celeitor.cpp
-
-// f5665 · 144 B · unmatched · placement: link order · name unknown
-// ? f5665(i32) { ... }
-
 // link-order cluster 840 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/cversoesarquivos.cpp
 
 // f5869 · 402 B · unmatched · placement: link order · name unknown
@@ -197,11 +192,6 @@
 
 // f2369 · 11 B · unmatched · placement: link order · name unknown
 // void f2369(i32) { ... }
-
-// link-order cluster 1169 · uses=6
-
-// f1823 · 39 B · unmatched · placement: link order · name unknown
-// ? f1823() { ... }
 
 // link-order cluster 1219 · uses=7
 

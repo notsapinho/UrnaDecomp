@@ -293,6 +293,30 @@ public:
     void LogaEleitorSemAtividade(uebyte segundos);
     void LogaEleitorNaoEstaVotando();
     void LogaEleitorEstaVotando();
+    // LogaTimeoutReconhecimentoDedo (vota::CDigitalNaoReconhecidaPorTempo::StartState, fn 10486: "Timeout de
+    // reconhecimento do dedo. Tentativa [{}] de [{}]") and LogaTentativaReconhecimentoDedo
+    // (vota::CDigitalNaoReconhecida::StartState, fn 10474: "Número de tentativas de reconhecimento do dedo. Tentativa
+    // [{}] de [{}]") are LogaSolicitaDigital's shape: GetInst called and both bytes read (i32.load8_u) before the
+    // member's own stack frame opens, argument code 6 twice, loga (fn 233). LogaEleitorNaoPossuiBiometria
+    // (vota::CControlaReconhecimento::StartState, fn 10512: "O eleitor não possui biometria") is
+    // LogaEleitorNaoEstaVotando's, logaAlerta (fn 1398) in a 16-byte frame of its own after GetInst. Their names, from
+    // the messages, and their place are chosen.
+    void LogaTimeoutReconhecimentoDedo(uebyte tentativa, uebyte total);
+    void LogaTentativaReconhecimentoDedo(uebyte tentativa, uebyte total);
+    void LogaEleitorNaoPossuiBiometria();
+    // LogaDadoDigitadoIncompleto, LogaDadoDigitadoConfere and LogaDadoDigitadoNaoConfere
+    // (vota::CVerificaDadoEleitor::ProcessInput, fn 10443: "Dado digitado está incompleto", "Dado digitado confere",
+    // "Dado digitado não confere") are LogaEleitorEstaVotando's shape, loga (fn 233) in a 16-byte frame of its own
+    // after GetInst. Their names, from the messages, and their place are chosen.
+    void LogaDadoDigitadoIncompleto();
+    void LogaDadoDigitadoConfere();
+    void LogaDadoDigitadoNaoConfere();
+    // LogaAnoNascimentoIgualCadastro and LogaAnoNascimentoDiferenteCadastro (vota::CPedeAnoNascimentoSemBiometria's
+    // ProcessInput, fn 10489, after GetInst: "Ano de nascimento digitado é igual ao do cadastro", "... diferente do
+    // cadastro") are LogaIdentificadorDigitadoMesario's shape: the text's std::string in a 16-byte frame of its own and
+    // api::CLoga::loga (fn 433) on +4, severity 1 and 2. Their names, from the messages, and their place are chosen.
+    void LogaAnoNascimentoIgualCadastro();
+    void LogaAnoNascimentoDiferenteCadastro();
 
 private:
     CLogVota();

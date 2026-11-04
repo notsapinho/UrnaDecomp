@@ -119,8 +119,42 @@
 # Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
 # CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465, pending), whose line stays blank;
-# the slots the -pending.cpp traps, with what each waits for. Rows of these classes left for later: 10512
-# (CControlaReconhecimento's StartState), 10443 and 10625 (pending), 10676 (written, below).
+# the slot the -pending.cpp traps (10625), with what it waits for. Rows of these classes left for later: 10512
+# (CControlaReconhecimento's StartState, written, below), 10625 (pending), 10676 (written, below).
+#
+# vota::CControlaReconhecimento's constructor and GetInst (target fn 1256, named by vptr-anchor) in
+# ccontrolareconhecimento.cpp, in the tree's singleton form (the constructor kept out of line by clang and inlined by
+# binaryen into GetInst, its one caller), with its statics' exit destructors (10515, s_inst's; 10514, s_mutex's),
+# matched. The constructor calls vota::CParametrosImagemDigital::GetInst (fn 1903, unit 307) and drops its result, as
+# the target's does; that the call is a statement of the constructor's body is chosen. The statics are defined after
+# the file statics StartState clears and before StartState, as band 1 orders their exit destructors (10518, 10517 and
+# 10516, then 10515 and 10514, then 10512: `awk -F'\t' '$1>=10511 && $1<=10518' ledger/ordinals.tsv`). Its callers in
+# the link are unit 282's 10474 and 10486, which drop the result; the roots stand in for 10425 and 10500, the reader
+# 10500 among them. Before steps 7 to 9, 12 over 42 rows, operand-only. With it in the link, 5399 (unit 282's
+# CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
+# CControlaReconhecimento::StartState (10512) is written and not matched: 61 over 217 rows. The target keeps each arm's
+# next-state store, form call and CPedeDigital::GetInst call apart (two stores of `this`, two of 2740's result), where
+# our link joins them into one store of a block's value; not explained. And the five words from @1908712, which it
+# fills in the mesarios' training, have 10512 as their only reader in the link (`/usr/bin/grep -rlE 'i32\.const
+# 1908712($|[^0-9])' build/out/splat/pieces/asm` prints 10512 alone; 10465 reads +4 to +16), so their name is
+# self-voted until fn 10465 is in the link. The scan reads it `unresolved` on an earlier operand,
+# s_tentativaRegistrada, a .data word of 1 that content cannot place and that no vote names while the bodies differ.
+# Its callees match: 1823
+# (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, this object's instance, named by a
+# caller's vote), 1393 and 2740; it reads the map's size through api::CDataMap::GetQuantidade (chosen name, inline).
+# vota::CVerificaDadoEleitor::ProcessInput (10443), matched: on CONFIRMA the first entry's text, the log
+# LogaDadoDigitadoIncompleto when it has three characters or fewer, else std::stoul (4661) against
+# md::CEleitorDecorator::GetAnoNascimento (5665, unit 91) of the current voter, LogaDadoDigitadoConfere and
+# CRegistraDigitalOperador::GetInst (5396), or LogaDadoDigitadoNaoConfere and CDadoEleitorNaoConfere::GetInst (its
+# constructor and two forms inlined: cdadoeleitornaoconfere.h; its statics' exit destructors 10450 and 10449 match); on
+# CORRIGE LogaHabilitacaoCanceladaConfirmacaoDado (2097) and CPedeIdentidade::GetInst (652). Before steps 7 to 9, 123
+# over 1163 rows, operand-only. The typed year is read into a local before the compare, as the target calls std::stoul
+# before GetAnoNascimento, and CLogVota::GetInst is called in each arm, which clang hoists to after the compare's
+# operands, where the target has it (the form the same compare of fn 10489 measures, unit 142's fragment).
+# cinformaanonascimentoerrado.cpp is listed in unit 142 now, ahead of cpedeanonascimentosembiometria.cpp: 10489 holds
+# CInformaAnoNascimentoErrado's GetInst and needs that order (unit 142's fragment has the scores); the class's notes
+# stay here and in its header, and its GetInst, constructor and statics (exit destructors 10495, 10494, matched) are
+# written in its file.
 #
 # Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
@@ -131,7 +165,7 @@
 #   with the post in a comma expression (12 over 84); with the condition negated and the arms swapped, 18 over 88 (4
 #   inserted, 3 deleted). Not explained; unit 282's 3883 differs the same way. Its slot keeps it written.
 # - vota::MontaTelaEleitorPodeVotar (5410, a free function by choice; name chosen), the form both
-#   CControlaReconhecimento::GetInst (1256, not written) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
+#   CControlaReconhecimento::GetInst (1256) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
 #   fill +12 with: AddLed(LED_OPERACAO_0), AddBeep(1), "ELEITOR(A) PODE VOTAR" at {1, 1}, "Assinar o caderno de votação
 #   antes de" at {1, 2}, "votar" at {1, 3} (the tail of "CONFIRMA: votar", built in place), "CONFIRMA: prosseguir" at
 #   {1, 4} on the right, api::CMTFormBuilder::AddInputControl(4) (unit 31's file, inlined by binaryen behind its own
@@ -139,8 +173,7 @@
 #   5406). 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted): the target copies the builder's address into
 #   another local before the inlined AddInputControl (`local.get 3; local.set 2`), ours does not; with the make_shared
 #   in 5410 itself, 276 over 577; with a parameterless AddInputControl over make_shared<...>(), 219 over 563. Not
-#   explained. The roots' TelaPodeVotar stands for 1256, its second caller. Since 5399's call is the only vote for its
-#   name, 5399 reads `unresolved self-voted` until 5410 matches or 1256 is in the link.
+#   explained. Its second caller, 1256, is in the link, and the roots' stand-in for it went.
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
 # its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the
@@ -311,7 +344,6 @@ APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeide
     src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp \
     src/app/vota/operador/leidentidade/ieleitorimpedidovotar.cpp \
     src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp \
-    src/app/vota/operador/confirmaidentidade/cinformaanonascimentoerrado.cpp \
     src/app/vota/operador/confirmaidentidade/cdadoeleitornaoconfere.cpp \
     src/app/vota/operador/confirmaidentidade/cverificadadoeleitor.cpp
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_IDENTIDADE_SRCS)
@@ -323,8 +355,8 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitornaoencontrado.c
 # compiled with the unit's flags
 $(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-pending.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/161-uenux2-app-vota-operador-identidade-pending.cpp -o $(R)
-# nothing reconstructed references the eight classes or calls the members the roots stand for: the roots file
-# (161-uenux2-app-vota-operador-identidade-roots.cpp) takes the vtables' addresses and gives those members call sites
+# nothing reconstructed calls the members the roots stand for: the roots file
+# (161-uenux2-app-vota-operador-identidade-roots.cpp) gives those members call sites
 $(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-roots.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/log/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/log/*.h $(ROOT)/src/uenux2/src/api/uelog/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/161-uenux2-app-vota-operador-identidade-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/161-uenux2-app-vota-operador-identidade-pending.o $(APP)/161-uenux2-app-vota-operador-identidade-roots.o

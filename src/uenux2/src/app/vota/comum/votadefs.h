@@ -47,6 +47,15 @@ void RemoveArquivoImprimindo();
 // the tree's spelling of the same test (comum::CAppInfo::EhTreinamentoEleitor, CRelatorioTesteImpressora::EhTreinamento).
 bool EhTreinamento();
 
+// Target fn 1823: the training of the mesarios, the load's training phase (EhTreinamento, which clang holds inlined here,
+// fn 1485 elsewhere) when the voters' training is off (CEstadoGeralVota's byte at +72, GetTreinamentoEleitor), the test
+// RegistraMesarios writes in place. Its six callers (fns 7306, 10465, 10474, 10478, 10500, 10512), in five TUs, all keep
+// the call. A reading of where it sits: EhTreinamento's code is inlined in it, which clang does in EhTreinamento's own
+// TU, and in use band 6 it comes right before fn 1822 (CPolySingleton<IInterfaceSavd>::instance), the linkonce copy
+// this object's VerificaAssinaturaMI is the first to mention in our link; so it is defined above that function. No
+// record, slot or string names it: its name, its being a free function of namespace vota and its file are chosen.
+bool EhTreinamentoMesario();
+
 // Target fn 1387: a line of 38 '-' added to a report with IPaper's style 1, aligned as the caller says (11946 and 12110
 // pass 0, 11908 and 12105 pass 2). Four vota states' slot 2 call it (11908, 11946, 12105, 12110). No record names
 // it; its name, its being a free function and its file are chosen.

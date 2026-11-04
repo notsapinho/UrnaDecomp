@@ -113,9 +113,6 @@
 #   unit 192's lists csincronismoeleitor.cpp alone. The move left 2739, 10466, 10467 and 10469 matched.
 #
 # Written and not matched, and what each waits for:
-# - CInformaEleitorPodeVotar::GetInst (5399): `unresolved self-voted` on 5410's name, whose one vote is 5399's own call
-#   (`evidence:call by:5399`); 5410 is written and differs (unit 161's fragment has the rows), and 1256, its other
-#   target caller, is not written. It matches once 5410 matches or 1256 is in the link.
 # - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
 #   numbers (the queue's address in local 2 where the target reuses local 0, the same difference as 10511's, unit 161).
 # - CInformaAnoDesabilitadoDemo::GetInst, its constructor and form have no target function of their own: 10500 holds
@@ -129,10 +126,32 @@
 #   app/comum/dados/md/estadoaplicacao/cestadogeralvota.h measures such a move of local numbers for SetEstadoVota. Not
 #   explained: neither form measured here gives local 0 (the switch as written, and the three files linked ahead of the
 #   objects of the functions they call, a scratch link).
+# CInformaEleitorPodeVotar::GetInst (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the
+# link: before, 5410's name had 5399's own call as its one vote and 5399 read `unresolved self-voted`.
+#
+# The StartState of the three not-recognized states, matched (pnpm wasm score before steps 7 to 9, then step 9):
+# - CDigitalNaoReconhecidaPorTempo's (10486): `this` as the next state; "Tentativa {} de {}" formatted into +12's string
+#   from CControlaReconhecimento::GetInst().GetTentativa() and GetInst().GetLimiteTentativas() (the target calls GetInst
+#   before each read and drops its result; ccontrolareconhecimento.h says why both are static members and the second
+#   is out of line), both unsigned (argument code 6 twice); CLogVota's LogaTimeoutReconhecimentoDedo (unit 119's file);
+#   the form at +20 shown. 26 over 397 rows, operand-only.
+# - CDigitalNaoReconhecidaDecBiometria's (10478): `this`, the form shown, then LogaErroDecifracaoBiometria (a chosen
+#   name, in the class's file, external, kept out of line by clang and inlined by binaryen behind its 432-byte frame),
+#   which holds TemErroDecifracaoBiometria (a chosen name, inlined by clang) and logs "Erro ao decifrar a biometria do
+#   eleitor - Código ({})" through comum::IEventosLog::logaErro (2282) in one expression, the code formatted through
+#   its enum's handle (cbiometriaeleitor.h). With a named CBiometriaEleitor and the message in a local, 38 over 285 rows
+#   (the format argument's copy in another frame slot and CLogVota::GetInst called after the format, where the target
+#   calls it before the second GetCurrentBiometriaEleitor); in one expression, 21 over 284, operand-only.
+# - CDigitalNaoReconhecida's (10474, record :82 column 22, the line of its instance call): `this`; when
+#   TemErroDecifracaoBiometria (behind a 48-byte frame: binaryen's inlining of this TU's one call) says so,
+#   CDigitalNaoReconhecidaDecBiometria::GetInst, with its constructor and form behind an 80-byte frame (its statics' exit
+#   destructors 10480 and 10479 match); else the attempt's text into +12, "Score: {}" into +20 when +11 says so (as
+#   10482 does), LogaTentativaReconhecimentoDedo and the form at +28 shown. 92 over 1148 rows, operand-only. The
+#   function's lines from 73 put the record's call at line 82, and ProcessInput after it (the band: 10474 before 10473).
+# CDigitalNaoReconhecidaDecBiometria's GetInst and constructor are written in its file (its notes in its header);
+# CDigitalNaoReconhecidaPorTempo's are declared only: 10465 holds them inlined.
 # Pending (282-uenux2-confirmaidentidade-estados-pending.cpp says what each waits for):
-# CDigitalReconhecida::ProcessInput (10481), the StartState of the three not-recognized states (10474, 10478, 10486) and
-# CPedeDigital::ProcessTick (10465). CDigitalNaoReconhecidaDecBiometria's and CDigitalNaoReconhecidaPorTempo's GetInst
-# and constructors are declared only: 10474 and 10465 hold them inlined.
+# CDigitalReconhecida::ProcessInput (10481) and CPedeDigital::ProcessTick (10465).
 #
 # cdigitalreconhecida.cpp's, cdigitalnaoreconhecida.cpp's and cpededigital.cpp's names and directory are their records'.
 # The other files' directory is a reading of the data: their vtables lie among confirmaidentidade/'s records

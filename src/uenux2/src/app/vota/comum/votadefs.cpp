@@ -21,11 +21,17 @@
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/informacao/cinformacaoeleicao.h"
 
-// (original lines 24-97: content not recovered)
-#line 98
+// (original lines 24-89: content not recovered)
+#line 90
 namespace vota {
 
+bool EhTreinamentoMesario()
+{
+    return EhTreinamento() && !comum::CAppInfo::GetInst().GetVota().GetTreinamentoEleitor();
+}
 
+// (original lines 97-100: content not recovered)
+#line 101
 void VerificaAssinaturaMI(const std::string& arquivo)
 {
     auto& iSavd = api::CPolySingleton<comum::IInterfaceSavd>::instance();
