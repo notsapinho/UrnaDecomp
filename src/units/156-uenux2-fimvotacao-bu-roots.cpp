@@ -31,8 +31,8 @@ namespace {
 const void* volatile w156_sink;
 volatile int w156_n;
 
-// Stands for the printing states' slots that call CLogVota::LogaImprimindoRelatorio (fn 1127) and still wait: 11855,
-// 11991, 12065, 12068, 12071 and 12074 (11852, unit 104's, and 12077, 12078 and 12081 are in the link), each with a
+// Stands for the printing states' slots that call CLogVota::LogaImprimindoRelatorio (fn 1127) and still wait: 12065,
+// 12068, 12071 and 12074 (11852, 11855 and 11991, unit 104's, and 12077, 12078 and 12081 are in the link), each with a
 // report and a copy number of its own.
 __attribute__((noinline)) int ImprimeRelatorios(int n)
 {

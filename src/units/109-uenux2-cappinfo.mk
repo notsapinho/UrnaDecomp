@@ -128,6 +128,11 @@
 # - 291, 457, 261, 903: !estado or !estado.has_value(); *estado or estado.value().
 # - 1553: the local or the same expression in the switch; a conditional or an if over a local.
 # - 697: the if or one return with &&. 3788: const CDadoCorrespondencia& or const auto&.
+# CAppInfo::GetGeralInterno (no index, a chosen name), inline in cappinfo.h for comum::CLocal's loader (5740, unit 89),
+# which holds it with no frame of its own: m_geral copied through GetGeral (291) when set and the word at +528 is 0, else
+# LeGeralInterno (2273) called. Written out of line in cappinfo.cpp first, clang inlined 2273 into it (a 16-byte frame
+# and CServicoEstadoGeral's two calls among 5740's inserted rows, where the target calls 2273); inline in the header, 2273
+# stays a call and 5740 matches. cappinfo.h says what is chosen.
 CAPPINFO_SRCS := src/app/comum/appinfo/cappinfo.cpp src/app/comum/appinfo/cappinfosingleton.cpp \
   src/app/comum/dados/md/estadoaplicacao/cestadogeralgap.cpp src/app/comum/dados/cfotos.cpp \
   src/app/comum/dados/cpartidos.cpp

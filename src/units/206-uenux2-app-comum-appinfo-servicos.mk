@@ -103,8 +103,8 @@
 #   over a const std::string first, DecodeObjectFunction's, the same body. The vtable sinks of CConversorEstadoGeral
 #   (unit 124) and CConversorEstadoGeralSA (unit 93) went: 3791 and 3592, and 10089, the target's storers of their
 #   vptrs, are in the link.
-# - Stubs: 5825, 5740, 5706, 5778 and 3735 (other entities' readers; 5706, 5778 and 3735 are unit 280's and 5825 unit
-#   305's, written since) lost
+# - Stubs: 5825, 5740, 5706, 5778 and 3735 (other entities' readers; 5706, 5778 and 3735 are unit 280's, 5825 unit
+#   305's and 5740 unit 89's, written since) lost
 #   theirs, whose records are
 #   cfileasn.h's reader lines, which hold code now (docs/reference/facts/placing.md P1).
 #

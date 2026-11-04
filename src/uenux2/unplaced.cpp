@@ -97,11 +97,6 @@
 // f6557 · 166 B · unmatched · placement: link order · name unknown
 // void f6557(i32) { ... }
 
-// link-order cluster 902 · uses=2
-
-// f6587 · 130 B · unmatched · placement: link order · name unknown
-// void f6587(i32) { ... }
-
 // link-order cluster 907 · uses=2
 
 // f6616 · 490 B · unmatched · placement: link order · name unknown
@@ -378,11 +373,6 @@
 
 // f3797 · 82 B · unmatched · placement: link order · name unknown
 // void f3797(i32, i32) { ... }
-
-// link-order cluster 1050 · uses=3
-
-// f4161 · 2019 B · unmatched · placement: link order · name unknown
-// void f4161(i32) { ... }
 
 // link-order cluster 1064 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 

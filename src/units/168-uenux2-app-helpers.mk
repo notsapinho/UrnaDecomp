@@ -113,7 +113,7 @@
 # its own around the existence test (api::CSystem::ExistFile, fn 412, on the same path), a function binaryen inlined
 # into its one caller (docs/reference/facts/reading.md R10), ExisteArquivoImprimindo, out of line here (votadefs.cpp.o
 # keeps it, `wasm-objdump -x -j Function`), and when the file exists removes it (CSystem::RemoveFile, fn 2760) and syncs.
-# Seven printing functions call both, 2890 and 11852 (units 156 and 104, in the link) and 11855, 11991, 12068, 12071,
+# Seven printing functions call both, 2890, 11852, 11855 and 11991 (units 156 and 104, in the link) and 12068, 12071,
 # 12074.
 # Scores before step 8 (`pnpm wasm score`): 1488 18 over 190 rows, 1487 25 over 280, all operand-only. Each path is
 # `(GetPathRootSemSA(FLASH_INTERNA) / "dinamico/imprimindo").string()`: the temporaries the target builds and destroys

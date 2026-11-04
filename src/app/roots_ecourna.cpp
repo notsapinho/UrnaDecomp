@@ -73,7 +73,7 @@ __attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { 
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
 // our link that these stand for: ToUpper's copying form (5156), 6592, and table slot 29,
-// which the executable TU's code takes; Split (1880), 2380 and 12065 (654, 3689, 5869 and 11377 are in the link);
+// which the executable TU's code takes; Split (1880), 12065 (654, 2380, 3689, 5869 and 11377 are in the link);
 // the copying Replace (2677), 3651 and api::CProgressBar::Draw
 // (10977) (3689 is in the link). Split is called through its label, so that this object, ahead of
 // src/app/roots_vector.o on the link line, instantiates none of std::vector<std::string>'s destruction.

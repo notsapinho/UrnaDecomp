@@ -11,11 +11,9 @@
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
-#include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
-#include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -60,14 +58,6 @@ void CImprimirBUOutrasObrigatorias::StartState()
     __builtin_trap();
 }
 
-// CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
-// callees with no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's; 2882
-// is unit 246's).
-void CImprimindoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
 // CMaisInformacoes::StartState: fn 11897 (182 B), callee with no name: 6599.
 void CMaisInformacoes::StartState()
 {
@@ -100,13 +90,6 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
 // name: 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576, 653 and 1279 have names).
 void CMenuVisualizarCandidatos::StartState()
-{
-    __builtin_trap();
-}
-
-// CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
-// no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's).
-void CReimprimindoResumoZeresima::StartState()
 {
     __builtin_trap();
 }

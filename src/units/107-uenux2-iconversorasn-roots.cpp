@@ -17,7 +17,8 @@
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
 //   5715 and 5716 need none: their callers 11423 and 11452 are written.
 //   5828: 11445 (11373 is written).
-// w107_dados gives a constructor its second call site, each stands for: 5672 5741, 3823 2725 and 11629. 3712 needs none:
+// w107_dados gives a constructor its second call site, and stands for: 3823 2725 and 11629. 5672's call went: its callers
+// 5741 and 11455 are written. 3712 needs none:
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
 //
@@ -50,7 +51,6 @@
 #include "asn1/modules/ModuloTiposResultadosEcoUrna.h"
 
 extern "C" {
-int w5672(void*, int, int) __asm__("_ZN5comum2md22CIdentificacaoAgregadaC1EtNS_17ETipoLocalVotacaoE");
 int w3823(void*, int, int, const void*) __asm__("_ZN5comum2md10CSegurancaC1EhhRKNSt3__26vectorIhNS2_9allocatorIhEEEE");
 int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE");
 extern const char w107_municipio_vt[] __asm__("_ZTVN5comum3asn19CConversorMunicipioE");
@@ -104,7 +104,7 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
 
 __attribute__((noinline)) int w107_dados(char* d, int a, int b, const char* e)
 {
-    return w5672(d + 32, a + 1, b + 2) + w3823(d + 64, b, a, e + 16);
+    return w3823(d + 64, b, a, e + 16);
 }
 
 char* (*volatile w107_sink)(char*, const char*);

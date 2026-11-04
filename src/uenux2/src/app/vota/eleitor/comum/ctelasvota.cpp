@@ -17,14 +17,17 @@
 #include "api/gui/ctextfieldmultiline.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/comum/dados/clocal.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
 #include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace vota {
 
-// (original lines 27-290: content not recovered)
+// (original lines 30-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -174,7 +177,34 @@ const auto GetKeyboardLayout()
 // void f3064(i32, i32) { ... }
 // </stubs>
 
-// (original lines 1587-3369: content not recovered)
+// (original lines 1587-3340: content not recovered)
+#line 3341
+std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
+    const int opcoes)
+{
+    const std::vector<std::string> linhas = ecourna::api::util::CStringUtils::Split(mensagem, '&');
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    const ueword meio = tamanho / 2;
+    const ueword altura = tamanho;
+    const int passo = meio + altura;
+    const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        builder.AddTextField(linhas[i], api::SPoint(320, inicio + i * passo), api::SFont{tamanho, 0},
+                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    if (opcoes & 1) {
+        AdicionaLocal(builder);
+    }
+    return GetFormulario(builder, "telaNeutra");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
+{
+    return TelaNeutra("Por favor, aguarde...", 35, 0);
+}
+
+// (original lines 3366-3369: content not recovered)
 #line 3370
 namespace {
 
@@ -325,6 +355,25 @@ CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, co
                            std::format("Nao existe o conjunto de telas associado ao cargo id {}", cargo));
     }
     return it->second.GetTela(tela);
+}
+
+void AdicionaLocal(api::CFormBuilder& builder)
+{
+    comum::CLocal& local = comum::CLocal::GetInst();
+    local.Carrega();
+    std::string texto;
+    if (local.TemSecao()) {
+        texto = std::format("{}: {:05} - {}     {}: {:04}     {}: {:04}", comum::md::CTradutorFrase::Traduz("<MCSN>"),
+                            local.GetMunicipio(), local.GetNomeMunicipio(), comum::md::CTradutorFrase::Traduz("<ZCSN>"),
+                            local.GetZonaID(), comum::md::CTradutorFrase::Traduz("<SCSN>"), local.GetSecaoID());
+    } else if (local.TemContingencia()) {
+        texto = std::format("{}: {:05} - {}     {}: {:04}     {}", comum::md::CTradutorFrase::Traduz("<MCSN>"),
+                            local.GetMunicipio(), local.GetNomeMunicipio(), comum::md::CTradutorFrase::Traduz("<ZCSN>"),
+                            local.GetZonaID(), "CONTINGÊNCIA");
+    }
+    builder.AddFill(api::SPoint(0, 458), api::SPoint(640, 480), static_cast<api::TColor>(22));
+    builder.AddTextField(texto, api::SPoint(320, 460), FONTE_VERSAO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(22));
 }
 
 namespace {

@@ -47,7 +47,7 @@
 #   EleicaoPE and CabecalhoPacote instances as the run orders their records (@1563740, @1564660, @1565368). It has no
 #   index of its own; unit 98's fragment has its class's and its name's evidence, its forms and their scores. With it,
 #   each other function of this object is the same with the object-local numbers masked, and 5706, 3771 and 5778 score
-#   as below. Chosen: this file's name and path, which no record gives. Two more of the run's readers are here, each
+#   as below. Chosen: this file's name and path, which no record gives. Four more of the run's readers are here, each
 #   where the run orders its records:
 #   - ModuloImpedidos::EntidadeImpedidos' (records @1564800 to @1564916, after LeEntidadeBiometria's and before the
 #     FotosCandidatos reader's, fn 7787's): CarregaArquivo<asn::CConversorImpedido>, which the lambda of
@@ -70,6 +70,11 @@
 #     src/units/310-uenux2-cconversorentidadeeleitores.mk has its evidence and forms. From this object match 5704 and
 #     5703 (the visitors' vector's __assign_with_size and copy loop) and the members of CFileSeeder (unit 83) and of
 #     the two control blocks (11427, 11435: unit 102), which this object now emits.
+#   - ModuloLocal::Local's (records @1563320 to @1563436, after ModuloFederacoes' and before ProcessoEleitoral's):
+#     CarregaArquivo<asn::CConversorLocal>, first among the explicit instantiations as the run orders it, which
+#     comum::CLocal::Carrega (fn 5740, unit 89's clocal.cpp) holds behind its 64-byte frame (the converter's vptr at
+#     +60), the md::CLocal it returns built in the memory Carrega allocates first. 5740 matches; unit 89's fragment has
+#     the order of the two objects it needed.
 #   The run's other readers are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
 # functions' being free functions of comum (they read no class's state), their lines and these paths;
@@ -111,11 +116,13 @@
 # because this unit's chain needs them; unit 123's vtable sink went when 5586 was written. w280_informacao stands for
 # 3735's caller 11629 (11587 and 11626 are in the link). A stand-in goes when every target caller its comment names is
 # in the link.
+# carregaarquivo.cpp, this unit's file, is compiled in unit 89's list, after clocal.cpp: 5740 needs clocal.cpp's object
+# ahead of it (unit 89's fragment has the measurement). Its include paths stay here.
 PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \
-  src/app/comum/nomearquivo/sidentificacaoarquivo.cpp \
-  src/app/comum/dados/carregaarquivo.cpp
+  src/app/comum/nomearquivo/sidentificacaoarquivo.cpp
 UENUX2_SRCS += $(PROCESSOELEITORAL_280_SRCS)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(PROCESSOELEITORAL_280_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # ecourna's converter headers, which carregaarquivo.cpp includes for CarregaArquivoEcourna's instance, include the
 # generated ASN.1 modules by their bare names
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules

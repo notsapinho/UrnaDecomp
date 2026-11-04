@@ -12,8 +12,13 @@ namespace vota {
 // bytes, and slots 0 and 1 hold the destructors the states with no member share (fns 174 and 144). final: fn 764
 // deletes the old object with no call through the vtable. A singleton: GetInst (fn 5942, a thunk into binaryen's fn
 // 764) keeps the object in a static std::unique_ptr (@1834800, destroyed at exit by fn 11857) under a static
-// std::mutex (@1834776, by fn 11856). The constructor passes 0 to the base's. src/units/104-uenux2-app-vota-estados.mk
-// says which of this is evidence and which is chosen.
+// std::mutex (@1834776, by fn 11856). The constructor passes 0 to the base's. StartState (fn 11855) shows
+// TelaPorFavorAguarde's screen (fn 6587), prints the summary, sets the vota state to EAVZERESIMAIMPRESSA, saves it
+// (CSincronizaVota::SincronizaEstadoGeralVota, fn 491) and goes to vota::CDefineRotaPosReinicio (fn 5943); it holds
+// ImprimeResumoZeresima, the record's name (creimprimindoresumozeresima.cpp:60, `void
+// vota::CReimprimindoResumoZeresima::ImprimeResumoZeresima()`, no `static` and no `virtual`), after a stack prologue of
+// its own: out of line, inlined by binaryen into its one caller; its access is chosen.
+// src/units/104-uenux2-app-vota-estados.mk says which of this is evidence and which is chosen.
 class CReimprimindoResumoZeresima final : public comum::CAppState {
 public:
     static CReimprimindoResumoZeresima& GetInst();
@@ -22,6 +27,8 @@ public:
 
 private:
     CReimprimindoResumoZeresima();
+
+    void ImprimeResumoZeresima();
 
     static std::mutex s_mutex;
     static std::unique_ptr<CReimprimindoResumoZeresima> s_inst;

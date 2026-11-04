@@ -372,6 +372,22 @@
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
 # app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).
+# vota::CReimprimindoResumoZeresima::StartState (target fn 11855) and vota::CImprimindoZeresima::StartState (11991),
+# trapped in this unit's pending file until now, are written in their classes' files with the printers they hold:
+# creimprimindoresumozeresima.cpp's ImprimeResumoZeresima (record :60) and cimprimindozeresima.cpp's ImprimeZeresima and
+# ImprimeResumoZeresima (records :77 and :104), each record the default std::source_location of
+# api::CPolySingleton<api::IPaperRelatorios>::instance() at column 22, in CReimprimindoZeresima's shape (11852): the
+# records' lines are evidence, the other lines chosen. Measured before steps 7 to 9 (pnpm wasm score against
+# names.tsv), all operand-only: 11855 50 over 566 rows, 11991 104 over 1109. Both match, named by their records.
+# - Both show vota::TelaPorFavorAguarde's screen (fn 6587, unit 110's ctelasvota.cpp) through its slot 2, print, set the
+#   vota state to EAVZERESIMAIMPRESSA (54) and save it (fn 491). 11855 then goes to CDefineRotaPosReinicio (GetInst, fn
+#   5943), whose stand-in pair in this unit's roots went: its callers 11834 and 11855 are in the link. 11991 first cuts
+#   the paper (fn 2882) and tests vota::CSincronizaVota::s_urnaDesligando after each step (written as early returns;
+#   nested ifs not measured), then goes to CDefineRotaPreVotacao, whose GetInst (unit 199's) binaryen inlines into it as
+#   in the target; that GetInst's statics' exit destructors, 11995 and 11996, match with it (unit 199's fragment).
+# - The summary's label "resumo da zerésima" is the target's tail of 7787's "[2] para imprimir somente o resumo da
+#   zerésima" (@227531, +28); the scan places our literal at that tail (`address string`).
+# - Both files reach Boost through cconfiguracaoeleicao.h, as creimprimindozeresima.cpp does (the lines below).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -410,6 +426,9 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # celeitorencontrado.cpp includes it too, for the set StartState copies (the same include path)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitorencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# and so do cimprimindozeresima.cpp and creimprimindoresumozeresima.cpp, whose printers read the number of copies
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

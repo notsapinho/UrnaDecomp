@@ -208,4 +208,33 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
 CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
                                                  const std::optional<std::string>& corrige);
 
+// The zerésima chain's screens, in ctelasvota.cpp where the object's code and data orders put them, at lines chosen
+// inside those bounds (src/units/110-uenux2-singletons.mk has the measurements): TelaNeutra and TelaPorFavorAguarde
+// above AdicionaTelaAguarde, since use band 2 puts 6587 ahead of TelaPreparandoDadosEncerramento (6583) and band 3
+// puts 4161 ahead of 4152, the place TelaNeutra's call gives AdicionaLocal; AdicionaLocal's body after GetTelaCargo,
+// since the target holds its font after FONTE_INSTRUCAO_TESTE_TECLADO's. No record names them; their names, their
+// being free functions of vota with external linkage and their parameters' types and names are chosen.
+// - AdicionaLocal (fn 4161): the location line at the foot of a screen. It reloads comum::CLocal (Carrega, fn 5740) and
+//   formats "{}: {:05} - {}     {}: {:04}     {}: {:04}" of the translated <MCSN>, the municipality and its name, <ZCSN>,
+//   the zone, <SCSN> and the section when the data hold a section, else "{}: {:05} - {}     {}: {:04}     {}" with
+//   "CONTINGÊNCIA" when they hold a contingency urn (the string literal passed as such: packed argument type 13 with its
+//   address and 12), else nothing; then a fill from (0, 458) to (640, 480) in colour 22 and the text at (320, 460),
+//   centred, 2 over 22, in the font {15, 0} the target holds at @475008 and passes by address, which 3059, 6599, 7787,
+//   12040 and 12055 read too: a file constant of ctelasvota.cpp (a reading, as for FONTE_TITULO). Callers: fns 2380,
+//   6601 and 7787.
+// - TelaNeutra (fn 2380): the message's lines (CStringUtils::Split on '&'), each centred at x 320 in the font of the size
+//   it is given, the first at 240 + size / 2 - lines * size - size / 4 and the next ones a size and a half apart, over
+//   the status header (5), then the location line when bit 0 of its last parameter is set, named "telaNeutra"
+//   (GetFormulario, fn 886). The target tests that bit with `i32.const 1; i32.and`, which a bool parameter does not
+//   give (it is tested bare: a probe compiled at the tree's flags), so the parameter is an integer; its callers pass 0
+//   (6587, 11797) and 1 (6557). The positions' 16-bit values and the step held in an int are the forms that give the
+//   target's arithmetic (variants compared in the object; src/units/110-uenux2-singletons.mk). Callers: 6557, 6587, 7787
+//   and 11797.
+// - TelaPorFavorAguarde (fn 6587): TelaNeutra("Por favor, aguarde...", 35, 0). Callers: 11855 and 11991, the zerésima
+//   printing states.
+void AdicionaLocal(api::CFormBuilder& builder);
+std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
+    const int opcoes);
+std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde();
+
 } // namespace vota

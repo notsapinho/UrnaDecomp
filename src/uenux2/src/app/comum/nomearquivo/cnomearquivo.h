@@ -25,13 +25,18 @@ std::string NomeArquivoPE(EUrnaFase fase, uedword idPE, const std::string& tipo,
 // number's width: the phase's letter, a 5-digit number and the UF, for NomeArquivoSecao a 5-digit and two 4-digit
 // numbers more, then "-" and the type, "." and the extension. Fns 3744, 3771 and 5740 call those helpers inside a second
 // stack frame, which reads as three more builders of this file that binaryen inlined into their only caller
-// (reading.md R10); 3771's is NomeArquivoPE above, and 3744's and 5740's are not reconstructed, so not declared. That the class has no other member is not known.
+// (reading.md R10); 3771's is NomeArquivoPE above, 5740's NomeArquivoLocal (a 112-byte frame: a 5-digit and two 4-digit
+// numbers, "-" and the type, "." and the extension, the parts NomeArquivoSecao ends with), and 3744's is not
+// reconstructed, so not declared. NomeArquivoLocal's name, its being a static member and its parameters' types are
+// chosen, as the others'. That the class has no other member is not known.
 class CNomeArquivo {
 public:
     static std::string NomeArquivoUF(EUrnaFase fase, uedword pleito, const std::string& uf, const std::string& tipo,
         const std::string& extensao);
     static std::string NomeArquivoSecao(EUrnaFase fase, uedword pleito, const std::string& uf, uedword municipio,
         uedword zona, uedword secao, const std::string& tipo, const std::string& extensao);
+    static std::string NomeArquivoLocal(uedword municipio, uedword zona, uedword secao, const std::string& tipo,
+        const std::string& extensao);
 };
 
 // The election's part of a section's file name: the phase, the processo eleitoral's id and the state, at +0, +4 and +8,
