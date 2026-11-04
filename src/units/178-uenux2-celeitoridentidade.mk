@@ -43,16 +43,18 @@
 # file. The constructor's second formatting is written as Normaliza on the member, since 566 calls 3510 and 3512 on p0
 # itself; no other spelling of it was tried.
 #
-# FormataIdentificador (fn 1924; callers 10586, unit 50's vota::GetTextoIdentidadeDigitada, 11233 and 12105): a copy of
-# the identity's text, then by its type (the br_table on type - 1): CPF (2) inserts "-" at 9, "." at 6 and "." at 3, the
-# título (1) " " at 8 and 4, each with basic_string::insert(pos, const char*, 1) (fn 499) and the result copied out of the
-# returned reference, the free identifier (3) moves the copy out, and any other type returns an empty string. The
-# separators are tails of other literals in the target ("{} -", "...'{}'.", ",\n  "). Its name, its being a free
-# function of comum::md beside FormataIdentidade, its file and its line are chosen; no other spelling was tried.
+# FormataIdentificador (fn 1924; callers 10586, unit 50's vota::GetTextoIdentidadeDigitada, 11233, fragment 317's
+# SituacaoEleitor, and 12105): a copy of the identity's text, then by its type (the br_table on type - 1): CPF (2)
+# inserts "-" at 9, "." at 6 and "." at 3, the título (1) " " at 8 and 4, each with basic_string::insert(pos, const
+# char*, 1) (fn 499) and the result copied out of the returned reference, the free identifier (3) moves the copy out,
+# and any other type returns an empty string. The separators are tails of other literals in the target ("{} -",
+# "...'{}'.", ",\n  "). Its name, its being a free function of comum::md beside FormataIdentidade, its file and its line
+# are chosen; no other spelling was tried.
 #
 # Roots (178-uenux2-celeitoridentidade-roots.cpp): of the five functions' target callers some are in the link (six of
-# 566's, 2803's 2225, and 1924's 10586) and the others are not reconstructed, so the file gives each function two call
-# sites (the roots header says which callers each stands for); 3723's two (2803 and unit 278's 10627) are in the link,
+# 566's, 2803's 2225, and 1924's 10586 and 11233) and the others are not reconstructed, so the file gives each function
+# two call sites (the roots header says which callers each stands for); 3723's two (2803 and unit 278's 10627) are in
+# the link,
 # and its stand-in went; the two Valida get none, since the
 # target inlines each into its one caller and ours has that one call too. FormataIdentificador has one caller in the
 # link, 10586, and DuasFormatacoesIdentificador stands for the other two.

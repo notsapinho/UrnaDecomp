@@ -5,7 +5,9 @@
 # to, vota::CImpressaoEstadoUrna, CImpressaoListaEleitores, CImpressaoVersaoPacotes and CImpressaoPU: their GetInst and
 # constructors, which fn 11896 holds inlined, and their statics, whose exit-time destructors match (11913 and 11912,
 # 11910 and 11909, 11907 and 11906, 11904 and 11903, each pointer's first). The class heads say what each layout rests
-# on; 176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp names every slot left and what it waits for.
+# on. CImpressaoListaEleitores::StartState (fn 11908) is written in cimpressaolistaeleitores.cpp, over fragment 317's
+# comum::ImprimeListaEleitores, and does not match yet (src/units/317-uenux2-relatorios-aptos.mk has the measurement);
+# its trap and the unit's pending file went with it.
 # CImpressaoZeresimaTardia's constructor, GetInst, statics and ProcessInput are written since (below).
 # CConfirmaRegerarZeresima's constructor, GetInst and statics are written, unit 104's shape, and
 # vota::CReinicioVotacao::StartState (fn 11835, unit 138) holds GetInst inlined: the new of 20 bytes, the base's
@@ -41,10 +43,10 @@
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
 # convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
-# defined; StartState as the key function of the four CImpressao* states, so the pending object emits one of their
-# vtables and cimpressaoversaopacotes.cpp, cimpressaoestadourna.cpp and cimpressaopu.cpp the other three; LogaMesarioIndagadoHorarioUrna's
-# name, from its message, and its place in clogvota.cpp, after LogaApresentadaTelaReinicioVotacao. The paths, by how-to
-# step 3's rules (no record names these classes' files), each header beside its .cpp and named after the class (rule 4):
+# defined; StartState as the key function of the four CImpressao* states, so each class's .cpp emits its vtable;
+# LogaMesarioIndagadoHorarioUrna's name, from its message, and its place in clogvota.cpp, after
+# LogaApresentadaTelaReinicioVotacao. The paths, by how-to step 3's rules (no record names these classes' files), each
+# header beside its .cpp and named after the class (rule 4):
 # - cconfirmaregerarzeresima.cpp in iniciovotacao/ (rule 2): its vtable and typeinfo follow vota::CRegerarZeresima's in
 #   the data with nothing between (@1546492 to @1546608), and its statics' destructors follow CRegerarZeresima's slot 10
 #   (fn 11841) in link order and precede vota::CReinicioVotacao's (11837). The directory's data run from
@@ -115,8 +117,3 @@ APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/iniciovotaca
     src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaopu.cpp \
     src/app/vota/eleitor/iniciovotacao/cconfirmaregerarzeresima.cpp
 UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS)
-# The members not reconstructed: 176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp gives the vtables
-# trapping bodies, compiled with the unit's flags
-$(ROOT)/$(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o: $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o

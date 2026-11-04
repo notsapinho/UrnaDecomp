@@ -106,8 +106,9 @@
 #   GetNomeMunicipio follows GetSecaoID, the order of their band, 1078 then 1077, by how-to step 3 "What a record's place
 #   says". That is a judgement: a call of GetSecaoID in unwritten code earlier in the file would give the same order with
 #   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
-#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 11223 and 11908 have no record, so they
-#   cannot be ruled out (11902 is written, in vota's cimpressaopu.cpp; 4161, written since, is ctelasvota.cpp's code,
+#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 11223 and 11908, which have no record, are
+#   written since in other files (comum's cgeradorrelversaopacotedados.cpp, unit 287's, and vota's
+#   cimpressaolistaeleitores.cpp, unit 176's), as 11902 is (vota's cimpressaopu.cpp) and 4161 (ctelasvota.cpp's code,
 #   unit 110's).
 # - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
 #   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a

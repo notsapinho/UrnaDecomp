@@ -69,8 +69,5 @@
 # header.
 CWASMCLP_SRCS := mock/app/simulador/wasm/cwasmclp.cpp
 UENUX2_SRCS += $(CWASMCLP_SRCS)
-# GetInst and Imprime have two of their three target callers in the link (fns 2882 and 3671, units 246 and 31):
-# 219-uenux2-cwasmclp-roots.cpp stands for the third, fn 11908, not written
-$(ROOT)/$(APP)/219-uenux2-cwasmclp-roots.o: $(ROOT)/src/units/219-uenux2-cwasmclp-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/219-uenux2-cwasmclp.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/219-uenux2-cwasmclp-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/219-uenux2-cwasmclp-roots.o
+# GetInst and Imprime have their three target callers in the link (fns 2882 and 3671, units 246 and 31, and 11908,
+# unit 176's, through fragment 317's api::CReport), so the unit has no roots

@@ -29,7 +29,7 @@
 #
 # Forms that give the same bytes, measured with the object-local numbers masked (docs/how-to-decompile.md step 3):
 # - !a || !b against !(a && b) in both checks of the header, and `TEntidade entidade = DoConverte(dado);` against
-#   `TEntidade entidade(DoConverte(dado));`: over the roots object, 0 of 134 functions differ;
+#   `TEntidade entidade(DoConverte(dado));`: over the roots object, 0 of its 134 functions then differ;
 # - `default: break;` before the throw after the switch in CConversorAbrangencia::DoConverte, against no default;
 # - idCriptografia < 1 against == 0 in CSeguranca's constructor, and m_idTipoArquivo and m_idCriptografia against the
 #   parameters in its first two tests. m_chave.empty() in the third differs, so the parameter there is evidence;
@@ -37,10 +37,10 @@
 #   i32.extend16_s at each call, in both. int is a choice;
 # - the local reference `chave` in CConversorSeguranca::DoDesconverte against the getter called twice;
 # - `&&` against `? :` in CConversorMunicipio::DoDesconverte's last argument.
-# The roots object compiles with APP_CXXFLAGS. With -fno-strict-aliasing, the tree's flag, 9 of its 134 functions differ:
-# six of libc++'s __format_* functions for floating point, __handle_replacement_field's lambda, __parser::__parse_type
-# and __estimate_column_width_grapheme_clustering. None is matched from this object, and none is an IConversorASN member
-# or str(): the instances that match are the same under the tree's flags.
+# The roots object compiles with APP_CXXFLAGS. With -fno-strict-aliasing, the tree's flag, 9 of its 116 functions
+# differ: six of libc++'s __format_* functions for floating point, __handle_replacement_field's lambda,
+# __parser::__parse_type and __estimate_column_width_grapheme_clustering. None is matched from this object, and none is
+# an IConversorASN member or str(): the instances that match are the same under the tree's flags.
 #
 # Forms measured to differ, so what is written is evidence:
 # - CAbrangencia's constructor keeps uf.empty() in a local (`semUF`): three uf.empty() give 115 over 382 rows, and the

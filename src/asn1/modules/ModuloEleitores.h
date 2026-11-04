@@ -445,6 +445,54 @@ private:
 }; // end class DomicilioEleitoral
 
 //
+// ModuloEleitores::NecessidadeEspecial   // the field 'necessidade' of EleitorUrna; RTTI names the class
+// (ledger/classes.json), whose vptr CConversorEntidadeEleitores's slot 2 (fn 11411) stores in its copy of the field
+//
+
+class NecessidadeEspecial : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    NecessidadeEspecial(const void* info) : Inherited(info) {}
+public:
+    NecessidadeEspecial() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        semNecessidade = 1,
+        necessitaAudio
+    };
+
+    bool is_semNecessidade() const { return value == semNecessidade; }
+    void set_semNecessidade() { value = semNecessidade; }
+
+    bool is_necessitaAudio() const { return value == necessitaAudio; }
+    void set_necessitaAudio() { value = necessitaAudio; }
+
+    NecessidadeEspecial(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    NecessidadeEspecial & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const NecessidadeEspecial &rhs) const { return value == rhs.value; }
+    bool operator != (const NecessidadeEspecial &rhs) const { return value != rhs.value; }
+
+    void swap (NecessidadeEspecial & that) { Inherited::swap(that); }
+    NecessidadeEspecial * clone() const
+    { return static_cast<NecessidadeEspecial*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class NecessidadeEspecial
+
+//
 // ModuloEleitores::EleitorUrna
 //
 
@@ -470,27 +518,9 @@ public:
     class identificacaoEleitor
     {
     public:
-        //
-        // ModuloEleitores::EleitorUrna::identificacaoEleitor::value_type
-        //
-
-        class value_type : public ASN1::SEQUENCE_OF<ModuloTiposEleitorais::IdentificadorEleitor>
-        {
-            typedef ASN1::SEQUENCE_OF<ModuloTiposEleitorais::IdentificadorEleitor> Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type(size_type n=0) : Inherited(n) {}
-            value_type(size_type n, const ModuloTiposEleitorais::IdentificadorEleitor& val) : Inherited(n, val) {}
-            value_type(const_iterator first, const_iterator last) : Inherited(first, last) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
+        // the target has no class of its own here: CConversorEntidadeEleitores's slot 2 (fn 11411) copies the field and
+        // stores SEQUENCE_OF<IdentificadorEleitor>'s vptr (1567008)
+        typedef ASN1::SEQUENCE_OF<ModuloTiposEleitorais::IdentificadorEleitor> value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -763,53 +793,7 @@ public:
     class necessidade
     {
     public:
-        //
-        // ModuloEleitores::EleitorUrna::necessidade::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                semNecessidade = 1,
-                necessitaAudio
-            };
-
-            bool is_semNecessidade() const { return value == semNecessidade; }
-            void set_semNecessidade() { value = semNecessidade; }
-
-            bool is_necessitaAudio() const { return value == necessitaAudio; }
-            void set_necessitaAudio() { value = necessitaAudio; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
-
+        typedef ModuloEleitores::NecessidadeEspecial value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -819,7 +803,7 @@ public:
     necessidade::const_reference get_necessidade () const { return *static_cast<necessidade::const_pointer>(fields[7]); }
     necessidade::reference ref_necessidade () { return *static_cast<necessidade::pointer>(fields[7]); }
     necessidade::reference set_necessidade () { return *static_cast<necessidade::pointer>(fields[7]); }
-    necessidade::reference set_necessidade (necessidade::value_type::NamedNumber v)
+    necessidade::reference set_necessidade (ModuloEleitores::NecessidadeEspecial::NamedNumber v)
     { return *static_cast<necessidade::pointer>(fields[7]) = v; }
 
     class biometria

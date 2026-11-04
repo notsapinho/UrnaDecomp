@@ -19,17 +19,24 @@ namespace comum::md {
 // 16-bit ones at +24 and +26 (the identificacao's municipioZona's two fields and its secao), a std::optional of the
 // 16-byte CSeguranca at +28 (its flag at +44: 1 with the entity's seguranca, through fn 3730, else 0) and a std::vector
 // of 104-byte CEleitor at +48 (fn 946 per voter); and from fn 11523, which destroys it in that order's reverse (the
-// voters, then the optional) after copying the voters out. The member and getter names, the types of the three words
-// (comum's section aliases, of those widths), the constructor's parameter order (the members') and its being inline are
-// chosen.
+// voters, then the optional) after copying the voters out.
+// The constructors: 11411 builds the entity in each arm of its last test, with the seguranca (the optional engaged by a
+// copy of the CSeguranca 3730 returned, then that temporary freed) and without it (the optional's two bytes cleared),
+// each arm the whole construction with the voters copied one by one. The two are out of line, in centidadeeleitores.cpp
+// (another TU than their caller), a reading of the measurement: the target keeps, in both arms, the store of the
+// voters' vector's end before the copy loop, which a body clang compiled apart keeps and binaryen then inlines into its
+// one caller; with the two defined in this class, clang inlines the one without seguranca and drops that store there
+// (the whole link's score shows the three missing instructions); one constructor in the class over a const
+// std::optional<CSeguranca>&, called in both arms, stays a call in each (-Rpass-missed=inline: cost 310, threshold
+// 250).
+// The member and getter names, the types of the three words (comum's section aliases, of those widths), the
+// constructors' parameter order (the members'), their being two and this file's path for them are chosen.
 class CEntidadeEleitores {
 public:
     CEntidadeEleitores(const CCabecalhoEntidade& cabecalho, TMunicipioID municipio, TZonaID zona, TSecaoID secao,
-        const std::optional<CSeguranca>& seguranca, const std::vector<CEleitor>& eleitores)
-        : m_cabecalho(cabecalho), m_municipio(municipio), m_zona(zona), m_secao(secao), m_seguranca(seguranca),
-          m_eleitores(eleitores)
-    {
-    }
+        const CSeguranca& seguranca, const std::vector<CEleitor>& eleitores);
+    CEntidadeEleitores(const CCabecalhoEntidade& cabecalho, TMunicipioID municipio, TZonaID zona, TSecaoID secao,
+        const std::vector<CEleitor>& eleitores);
 
     const CCabecalhoEntidade& GetCabecalho() const { return m_cabecalho; }
     TMunicipioID GetMunicipio() const { return m_municipio; }

@@ -48,7 +48,10 @@
 # candidates build with strict aliasing, which 12006 and 12007 say this TU did not have, so the file is listed in
 # UENUX2_NOTBAA_FILES whichever directory holds it.
 #
-# Not written: CriaCabecalho (fn 5977) and its lambda's slots (2881, 12000 to 12002).
+# Not written: CriaCabecalho (fn 5977) and its lambda's slots (12000 to 12002; its call operator, 2881, is the body four
+# lambdas share, matched under the name of CGeradorRelVersaoPacoteDados::ImprimeTituloJE's lambda, fragment 317: our
+# link's two such lambdas, ImprimeTituloJE's and MontaCabecalho's, give one body, and binaryen keeps the first in link
+# order, unit 287's cgeradorrelversaopacotedados.cpp.o).
 #
 # Roots: none. 246-uenux2-crelvotautil-roots.cpp held the caller stand-in of unit 31's api::CPaperFormBuilder::Show
 # (fn 3671) for its target caller 11902, and went with it once 11902 (unit 176's cimpressaopu.cpp) was in the link

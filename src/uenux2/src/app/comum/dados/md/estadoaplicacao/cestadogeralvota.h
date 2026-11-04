@@ -120,8 +120,10 @@ public:
     const std::optional<api::CDateTime>& GetDhEmissao() const { return m_dhEmissao; }
     bool GetTecladoTestadoPosConversao() const { return m_tecladoTestadoPosConversao; }
 
-    // (original lines 123-127: content not recovered)
-#line 128
+    // (original lines 123-125: content not recovered)
+#line 126
+    bool IsFimAquisicaoMarcado() const { return m_dhFimAquisicao.has_value(); }
+
     const api::CDateTime& GetDtHrUltimoVoto() const
     {
         if (!m_dhUltimoVoto) {

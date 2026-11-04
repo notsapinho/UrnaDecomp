@@ -80,16 +80,14 @@ public:
     ueword QuantidadeHabilitacaoBiografica() const;
     // fn 2823: the records with no impediment (CEleitorDetalhe::SemImpedimento, fn 2266), counted apart by whether the
     // voter is on a temporary transfer (md::CEleitorDecorator's word at +48, which IsTTE tests): two 16-bit counts the
-    // body returns through the result's address, the first for the voters with no transfer. Its callers are fns 652
-    // (whose vota::MontaTelaVotacao, inlined by binaryen, adds the two), 2881, 11242 and 12110, the last three not
-    // reconstructed.
-    // Band 4 puts it between slot 0 (fn 2824) and QuantidadeHabilitacaoSemBiometria (fn 2822). The struct, its members'
-    // names, the function's name and its const are chosen.
-    struct SQuantidadeAptos {
-        ueword m_semTransferencia;
-        ueword m_comTransferencia;
-    };
-    SQuantidadeAptos QuantidadeAptos() const;
+    // body returns through the result's address, the first for the voters with no transfer. It returns a SQtdeAptos
+    // (cgeradorbuqrcode.h): RTTI types four std::function<comum::SQtdeAptos()> whose call operator is fn 2881, and 2881
+    // passes its own result's address straight to 2823 (`f2823(p0, f326())`), where a result of another type would take
+    // a temporary and a copy (a reading). Its callers are fns 652 (whose vota::MontaTelaVotacao, inlined by binaryen,
+    // adds the two), 2881, 11242 and 12110.
+    // Band 4 puts it between slot 0 (fn 2824) and QuantidadeHabilitacaoSemBiometria (fn 2822). The function's name and
+    // its const are chosen.
+    SQtdeAptos QuantidadeAptos() const;
     void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
     // The unsigned word at +104, a count of the voters who voted (a reading of its readers): fn 12098
     // (vota::CGravaResultado's slot 2) compares it with comum::CRdvVota::Comparecimento() (fn 1269),

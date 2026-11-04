@@ -26,9 +26,10 @@
 #              Whole link, before steps 7 to 9: 8 over 320 rows, all operand-only. The roots stand for 12039 and 12110.
 # Chosen: the parameter's and the locals' names; 7025's local constant in the .cpp, as
 # app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp names a code the shared header lacks
-# (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line within
-# what its record leaves free. Of its six target callers, 5579, 11908, 12105 and 12110 are not in our link (5596, unit
-# 296's, and 5604, unit 155's written Gera, are): 196-uenux2-api-util-cstringutils-roots.cpp stands for them.
+# (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line
+# within what its record leaves free. Of its six target callers, 5579, 12105 and 12110 are not in our link (5596, unit
+# 296's, 5604, unit 155's written Gera, and 11908, unit 176's, are): 196-uenux2-api-util-cstringutils-roots.cpp stands
+# for them.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTRINGUTILS_UENUX2_SRCS := src/api/util/cstringutils.cpp
 UENUX2_SRCS += $(CSTRINGUTILS_UENUX2_SRCS)

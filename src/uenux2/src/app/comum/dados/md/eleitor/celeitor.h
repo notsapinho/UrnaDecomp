@@ -22,11 +22,12 @@ namespace comum::md {
 // and the optional empty and fn 5668 copies both from its last two parameters. comum::md::CEleitorDecorator
 // (celeitordecorator.h) derives from it. The constructors' parameter types are the widths and the copies the bodies
 // make, but for the first one's signedness, which no width tells: its `int` (the `i` in 5666's and 5668's symbols)
-// against `uedword` is chosen; every member and parameter name, the enum's lack of enumerators and the vector's element
+// against `uedword` is chosen; every member and parameter name, the enumerators' names (their values are the 0 and 1
+// ConverteNecessidadeEspecial gives ModuloEleitores' semNecessidade and necessitaAudio) and the vector's element
 // type are chosen, and so is the data members' being protected, which lets the decorator's accessors read them.
 class CEleitor {
 public:
-    enum ENecessidadeEspecial : int;
+    enum ENecessidadeEspecial : int { SEM_NECESSIDADE, NECESSITA_AUDIO };
 
     CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdentidade>& identidades,
         ENecessidadeEspecial necessidadeEspecial, const std::string& nome, const std::string& nomeSocial,

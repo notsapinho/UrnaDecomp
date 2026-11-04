@@ -2,8 +2,8 @@
 
 // comum::EUeComumDadosError, SErrorLimits{7800, 8600}: the typeinfo of CBaseError<comum::EUeComumDadosError, ...> gives
 // the enum's name, namespace and limits (vptr 1528096, target fn 170 passes it). The values are every code the target
-// passes to fn 170. No evidence names an enumerator, so each name is chosen and only says its value; the path is chosen
-// too, beside app/comum/dados/euerdverror.h.
+// passes to fn 170, and 8069, which none passes (its note below). No evidence names an enumerator, so each name is
+// chosen and only says its value; the path is chosen too, beside app/comum/dados/euerdverror.h.
 
 #include "ecourna/api/exception/cbaseerror.hpp"
 
@@ -276,6 +276,10 @@ enum EUeComumDadosError {
     EUE_COMUM_DADOS_8168 = 8168,
     EUE_COMUM_DADOS_8183 = 8183,
     EUE_COMUM_DADOS_8185 = 8185,
+    // No call of fn 170 passes 8069: md::CTransferenciaTemporaria's constructor from the kind throws it in a test that
+    // is gone from the target (its record, ctransferenciatemporaria.cpp:25, is loaded by no function); that binaryen
+    // folded the test away is a reading (ctransferenciatemporaria.h). The code is chosen, next to that file's 8070.
+    EUE_COMUM_DADOS_8069 = 8069,
 };
 
 using CUeComumDadosError =
