@@ -2,10 +2,10 @@
 // not reconstructed. Each function has direct callers in the target and gets two call sites here, which vary what the
 // callers vary, so dead-argument elimination folds nothing in:
 // - CEleitorIdentidade's constructor (fn 566): 13 direct callers, which use the returned `this`, so the stand-ins use it
-//   too. Eleven are in the link (3766, 11542, 10401 and 10402, unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225,
-//   unit 50; 11407, fragment 225; 10313, unit 71; 10337, unit 135), and the first five, 11407, 10313 and 10337 pass the
-//   type as a constant or a column's value; the stand-ins stay for the two that wait (10425, 11411), which pass it as a
-//   variable.
+//   too. Twelve are in the link (3766, 11542, 10401 and 10402, unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225,
+//   unit 50; 11407, fragment 225; 10313, unit 71; 10337, unit 135; 11411, unit 310), and the first five, 11407, 10313,
+//   10337 and 11411 pass the type as a constant or a column's value; the stand-ins stay for the one that waits, 10425
+//   (which passes the constant 1).
 // - FormataIdentidade (fn 2798): callers 3616, 10420 (in the link, unit 142, which passes the type as the constant 1)
 //   and 10631 (in the link, unit 104); the stand-ins stay for 3616.
 // - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50), 10420 (unit 142's validatitulosuspensao.cpp,

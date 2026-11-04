@@ -165,15 +165,6 @@ const ModuloEleitores::DomicilioEleitoral::InfoType ModuloEleitores::DomicilioEl
     "DomicilioEleitoral"
 };
 
-const ModuloEleitores::EleitorUrna::identificacaoEleitor::value_type::InfoType ModuloEleitores::EleitorUrna::identificacaoEleitor::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloTiposEleitorais::IdentificadorEleitor::theInfo,
-    0
-};
-
 const ModuloEleitores::EleitorUrna::nome::value_type::InfoType ModuloEleitores::EleitorUrna::nome::value_type::theInfo = {
     ASN1::AbstractString::create,
     0x0000001b,
@@ -222,13 +213,13 @@ const ModuloEleitores::EleitorUrna::situacao::value_type::InfoType ModuloEleitor
     9, nameList
 };
 
-const char * ModuloEleitores::EleitorUrna::necessidade::value_type::nameList[] = {
+const char * ModuloEleitores::NecessidadeEspecial::nameList[] = {
     "<undefined>=0",
     "semNecessidade",
     "necessitaAudio"
   };
 
-const ModuloEleitores::EleitorUrna::necessidade::value_type::InfoType ModuloEleitores::EleitorUrna::necessidade::value_type::theInfo = {
+const ModuloEleitores::NecessidadeEspecial::InfoType ModuloEleitores::NecessidadeEspecial::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,

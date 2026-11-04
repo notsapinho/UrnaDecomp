@@ -25,8 +25,8 @@
 //   call site.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade,
-//   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, and 3728, fragment 225), and binaryen
-//   merges the copies.
+//   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, 3728, fragment 225, and 2805, fragment
+//   310), and binaryen merges the copies.
 // - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
 //   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387 and 10368 are in the link), its counts

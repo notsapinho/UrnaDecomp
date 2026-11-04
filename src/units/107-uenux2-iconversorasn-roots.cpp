@@ -8,9 +8,10 @@
 // The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
 // The callers each instance stands for:
-//   3730: 11411 (10270 is written). 3726, 3727 and 3736 need none: their callers 11390 and 11394, 11391 and 11395, and
-//   11424 and 11451, are written.
-//   3737 needs none: its callers 11381, 11423 and 11452 are written. 3738: 11411 (10270, 11457). 3799: 10273 (10271, 11587).
+//   3730, 3726, 3727 and 3736 need none: their callers 11411 and 10270, 11390 and 11394, 11391 and 11395, and 11424 and
+//   11451, are written.
+//   3737 and 3738 need none: their callers 11381, 11423 and 11452, and 11411, 10270 and 11457, are written. 3799: 10273
+//   (10271, 11587).
 //   2275: 10266, 10273 (10271, 11458, 11587). 5688 needs none: its callers 11359 and 11375 are written.
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
@@ -23,7 +24,8 @@
 // the reference the target has.
 //
 // The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is
-// reached that way, so the sink is the reference the target has.
+// reached that way, so the sink is the reference the target has. CConversorSeguranca's went: the three target functions
+// that store its vptr, 10270, 10271 and 11411, are written.
 //
 // comum::md::CUrna has a forward declaration only: Converte takes it by reference.
 #include <new>
@@ -56,7 +58,6 @@ int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao
 extern const char w107_municipio_vt[] __asm__("_ZTVN5comum3asn19CConversorMunicipioE");
 extern const char w107_agregada_vt[] __asm__("_ZTVN5comum3asn31CConversorIdentificacaoAgregadaE");
 extern const char w107_complemento_vt[] __asm__("_ZTVN5comum3asn30CConversorComplementoMunicipioE");
-extern const char w107_seguranca_vt[] __asm__("_ZTVN5comum3asn19CConversorSegurancaE");
 extern const char w107_abrangencia_vt[] __asm__("_ZTVN5comum3asn21CConversorAbrangenciaE");
 extern const char w107_dadolocal_vt[] __asm__("_ZTVN5comum3asn19CConversorDadoLocalE");
 extern const char w107_dadocarga_vt[] __asm__("_ZTVN5comum3asn19CConversorDadoCargaE");
@@ -94,8 +95,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     using namespace comum::md::estadoaplicacao;
     d = w107_desconverte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
     d = w107_desconverte<ModuloCandidatos::DadosCandidato, CDadosCandidato>(d, e);
-    d = w107_desconverte<ModuloTiposEleitorais::Seguranca, CSeguranca>(d, e);
-    d = w107_desconverte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_converte<ModuloTiposResultadosEcoUrna::Urna, CUrna>(d, e);
@@ -120,7 +119,6 @@ struct SIConversorRoots {
         w107_sink_vt = w107_municipio_vt;
         w107_sink_vt = w107_agregada_vt;
         w107_sink_vt = w107_complemento_vt;
-        w107_sink_vt = w107_seguranca_vt;
         w107_sink_vt = w107_abrangencia_vt;
         w107_sink_vt = w107_dadolocal_vt;
         w107_sink_vt = w107_dadocarga_vt;
