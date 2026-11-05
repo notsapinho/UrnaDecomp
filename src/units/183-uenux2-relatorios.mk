@@ -99,7 +99,8 @@ UENUX2_SRCS += $(RELATORIOS183_SRCS)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(RELATORIOS183_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 W183_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 # the callers of this unit's functions are not reconstructed: the roots keep them, at the tree's flags, since the
-# object emits the data sources' instances
+# object emits the data sources' instances; with Boost's headers, which cdatasourcesrelatorio.h reaches through
+# cconfiguracaoeleicao.h
 $(ROOT)/$(APP)/183-uenux2-relatorios-roots.o: $(ROOT)/src/units/183-uenux2-relatorios-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/183-uenux2-relatorios.mk $(W183_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/183-uenux2-relatorios-roots.cpp -o $(R)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -I$(BOOST_HDR) -c src/units/183-uenux2-relatorios-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/183-uenux2-relatorios-roots.o

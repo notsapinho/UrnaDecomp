@@ -11,6 +11,7 @@
 // ld_index is below 11181's. src/units/123-uenux2-crelatoriotesteimpressora.mk has the measurements.
 // FormCabecalhoEleicao (fn 5580) and FormRodapeZeresima (fn 5579), between ImprimeSeparadorVia and DSCodigoVerificador,
 // with 5580's internal helper ImprimeLinhaIgual: src/units/325-uenux2-geradores-zeresima.mk.
+// ImprimeQuantidade (fn 2248), after DSCodigoVerificador: src/units/220-uenux2-fimvotacao-estados.mk.
 #include "app/comum/relatorios/crelutil.h"
 
 #include <algorithm>
@@ -38,7 +39,7 @@
 
 namespace comum {
 
-// (original lines 41-50: content not recovered)
+// (original lines 42-50: content not recovered)
 #line 51
 namespace {
 
@@ -318,7 +319,14 @@ std::string CRelUtil::DSCodigoVerificador()
                        codigo.substr(7, 3));
 }
 
-// (original lines 418-539: content not recovered)
+void CRelUtil::ImprimeQuantidade(api::CPaperFormBuilder& builder, const std::string& rotulo, ueword quantidade)
+{
+    builder.AddTextField(
+        ecourna::api::util::CStringUtils::PreencheADireita(rotulo, ' ', 34) + std::format("{:04}", quantidade),
+        static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+}
+
+// (original lines 425-539: content not recovered)
 #line 540
 std::string CRelUtil::GetSeparadorFase(const EUrnaFase fase)
 {

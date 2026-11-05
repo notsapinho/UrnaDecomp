@@ -1,12 +1,17 @@
-// Reconstruction's note: of comum::md::estadoaplicacao::CEstadoGeral's members this file holds only the constructor
-// (target fn 5637), GetDadosQRCode (5636), SetAjusteDataHora (3705) and GetResumoHashVersoesPacotes (3703), the last
-// three chosen names: no record, slot or RTTI names them. Line 147 is the record of RecuperarCertificado (fn 5635, not
-// written) and holds its generated stub's last line; the lines of the members before it and after it are a choice
-// (src/units/215-uenux2-api-app-leftovers.mk says what orders them).
+// Reconstruction's note: of comum::md::estadoaplicacao::CEstadoGeral's members this file holds the constructor (target
+// fn 5637), GetDadosQRCode (5636), RecuperarCertificado (5635, its record's line 147: the default argument of
+// CPolySingleton<IPkcs11>::instance()), GetDadosQRCodeCertificado (5634), SetAjusteDataHora (3705) and
+// GetResumoHashVersoesPacotes (3703); every name but RecuperarCertificado's is chosen: no record, slot or RTTI names
+// them. The lines of the members other than line 147 are a choice (src/units/215-uenux2-api-app-leftovers.mk says what
+// orders them).
 #include "app/comum/dados/md/estadoaplicacao/cestadogeral.h"
 
 #include <cctype>
+#include <cmath>
+#include <format>
 
+#include "api/pattern/cpolysingleton.h"
+#include "api/pkcs11/ipkcs11.h"
 #include "ecourna/api/security/base64.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
 
@@ -26,7 +31,7 @@ CEstadoGeral::CEstadoGeral(EEstadoUrna estadoUrna, uedword idPE, CDadoLocal dado
 {
 }
 
-// (original lines 29-110: content not recovered)
+// (original lines 34-110: content not recovered)
 #line 111
 std::vector<std::pair<std::string, std::string>> CEstadoGeral::GetDadosQRCode() const
 {
@@ -59,12 +64,40 @@ std::vector<std::pair<std::string, std::string>> CEstadoGeral::GetDadosQRCode() 
     return dados;
 }
 
-// (original lines 142-143: content not recovered)
-#line 144
-// <stubs>
-// f5635 · 279 B · unmatched · name unknown
-// void f5635(i32) { ... }
-// </stubs>
+std::vector<uebyte> CEstadoGeral::s_certificado;
+
+std::vector<uebyte> CEstadoGeral::RecuperarCertificado()
+{
+    if (s_certificado.empty()) {
+        api::pkcs11::IPkcs11& oPkcs11 = api::CPolySingleton<api::pkcs11::IPkcs11>::instance();
+        oPkcs11.Slot23();
+        s_certificado = oPkcs11.LeCertificado().GetCertificado();
+        oPkcs11.Slot24();
+    }
+    return s_certificado;
+}
+
+std::vector<std::vector<std::pair<std::string, std::string>>> CEstadoGeral::GetDadosQRCodeCertificado(
+    bool dividido) const
+{
+    const std::string certificado = ecourna::api::util::CStringUtils::BytesToHexString(RecuperarCertificado());
+    unsigned int partes = 1;
+    if (dividido) {
+        const std::size_t tamanhoCertificado = RecuperarCertificado().size();
+        partes = std::ceil(static_cast<float>(tamanhoCertificado * 2) / 1082);
+    }
+    const unsigned int tamanho = std::ceil(static_cast<float>(certificado.size()) / static_cast<float>(partes));
+    std::vector<std::vector<std::pair<std::string, std::string>>> dados;
+    for (unsigned int parte = 0; parte < partes; ++parte) {
+        std::vector<std::pair<std::string, std::string>> campos;
+        campos.push_back(std::make_pair("QRCE", std::format("{}:{}", parte + 1, partes)));
+        campos.push_back(std::make_pair("ISUE", std::to_string(m_correspondencia.GetNumeroInternoUrna())));
+        campos.push_back(std::make_pair("MSUE", std::to_string(m_dadoCarga.GetModelo())));
+        campos.push_back(std::make_pair("CERT", certificado.substr(parte * tamanho, tamanho)));
+        dados.push_back(campos);
+    }
+    return dados;
+}
 
 void CEstadoGeral::SetAjusteDataHora(const CAjusteDataHora& ajusteDataHora)
 {

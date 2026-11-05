@@ -57,11 +57,6 @@
 // f5952 · 284 B · unmatched · placement: link order · name unknown
 // void f5952(i32, i32) { ... }
 
-// link-order cluster 868 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmostraqrcodebu.cpp
-
-// f5980 · 225 B · unmatched · placement: link order · name unknown
-// void f5980(i32) { ... }
-
 // link-order cluster 907 · uses=2
 
 // f6616 · 490 B · unmatched · placement: link order · name unknown
@@ -126,11 +121,6 @@
 
 // f2072 · 16 B · unmatched · placement: link order · name unknown
 // void f2072(i32, i32) { ... }
-
-// link-order cluster 1149 · uses=5 · neighbours' file uenux2/src/api/gui/cfixedimage.cpp
-
-// f2248 · 554 B · unmatched · placement: link order · name unknown
-// void f2248(i32, i32, i32) { ... }
 
 // link-order cluster 1220 · uses=7
 

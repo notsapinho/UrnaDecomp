@@ -41,6 +41,11 @@ public:
     static void DestroyInst();
 
     void IncluiString(const std::string& str);
+    // Appends the last result (+40) as IncluiString does, IncluiString inlined (its record, line 109). No target
+    // function of its own: fn 5967 (CDataSourcesRelatorio<CRdvVota, CEleitores>'s helper, read as another object's
+    // code: unit 220's fragment) holds it behind a 16-byte frame of its own, binaryen's inlining of a function of this
+    // TU with one caller. Its name is chosen.
+    void IncluiResultado();
     void Reinicia(const std::string& valor);
     std::string CalculaCodigo();
 

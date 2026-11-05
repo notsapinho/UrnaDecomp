@@ -34,9 +34,9 @@
 //                     their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
-//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (2248, 11946, 12105, 12110), and 12110 for
-//                     2775 (5591, unit 296's, and 5579 and 5580, fragment 325's, which call them too, are in the
-//                     link). Its form is a parameter: their callers zero the vector in line, and it takes no
+//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (11946, 12105, 12110), and 12110 for
+//                     2775 (5591, unit 296's, 5579 and 5580, fragment 325's, and 2248, unit 220's, which call them
+//                     too, are in the link). Its form is a parameter: their callers zero the vector in line, and it takes no
 //                     constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
