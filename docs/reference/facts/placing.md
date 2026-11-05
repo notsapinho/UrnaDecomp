@@ -95,7 +95,8 @@ not uenux2's code: 501 (a message queue's push under a lock) is an `-fexceptions
 likely the executable TU's ([levels.md](levels.md) §V1). It is no body to match from a uenux2 object: the header's
 inline member (`api::CPriorityMessageQueue<api::SMessage>::Insert`, `api/ipc/cmessagequeue.h`) is written for its uenux2
 callers, and their copy read `differs` until a tree root at that TU's rule, `src/app/roots_messagequeue.cpp`, held the
-instance ahead of them (`src/units/269-uenux2-cmessagequeue-insert.mk`).
+instance ahead of them; the executable TU's own posts give it since unit 170 wrote them, and the root went
+(`src/units/269-uenux2-cmessagequeue-insert.mk`).
 
 ## P2. A class with no file of its own, or out of its upstream file
 

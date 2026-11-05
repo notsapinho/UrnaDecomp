@@ -61,8 +61,8 @@
 #   names the class where one does. The destructor's slot is __on_zero_shared's offset: 4 for most, so they declare it first.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251
 # (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler. 6222 is the
-# target's __cxa_demangle, called by 212 and 5521: it has no name and stays `no-candidate`, because our link has one caller
-# of it and inlines it into trace. The 217 demangler matches are what it calls, not it.
+# target's __cxa_demangle, called by 212 and 5521; while our link had one caller of it, binaryen inlined it into trace,
+# and it matches since unit 170 wrote 5521 (the executable TU's Desmangle). The 217 demangler matches are what it calls.
 # 4788, filesystem::detail::ErrorHandler<void>::report_impl, came from the content pass: it has no symbol-file line and
 # no census pair. Its `symbol` in splat/scan.tsv comes from the rescan once the match names it. It is the one body of its
 # kind in our link, with no direct caller on either side. Every other match of this unit was named before the scan.

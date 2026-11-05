@@ -18,20 +18,21 @@
 # Insert (fn 501, 217 B): the target's body locks m_sync (+24, slot 2) and keeps its pointer in a frame word that fn
 # 5528 unlocks (slot 3) on both paths, increments m_ordem (+28), pushes {message, priority, order} into the heap at +4
 # (invoke of table slot 237, fn 11076), and releases m_semaforo (+20, slot 3). It calls invoke_*: an -fexceptions copy,
-# which no uenux2 object gives. It matches, with 5528 and 11076, from the tree root src/app/roots_messagequeue.cpp at
-# the executable TU's rule; unit 269's fragment has that evidence, the measurements, and the two forms of the header the
-# copy needed (the item a named local, the heap's comparator a function object). Chosen: Insert's name and its
-# parameters' order, the guard class (api::CSyncCtlGuard, in api/ipc/cmessagequeue.h) and its names, and the local
-# `ordem`. The item built after m_ordem's increment is the target's order (501 stores m_ordem before it loads the
-# message).
+# which no uenux2 object gives. It matches, with 5528 and 11076, from the executable TU's object (unit 170's posts
+# instantiate it; the tree root that gave it at that TU's rule went with them); unit 269's fragment has that evidence,
+# the measurements, and the two forms of the header the copy needed (the item a named local, the heap's comparator a
+# function object). Chosen: Insert's name and its parameters' order, the guard class (api::CSyncCtlGuard, in
+# api/ipc/cmessagequeue.h) and its names, and the local `ordem`. The item built after m_ordem's increment is the
+# target's order (501 stores m_ordem before it loads the message).
 #
 # The message. Each of the target's 33 calls of 501 that builds one (in the split pieces, all but 7708's) stores the
 # queue it passes as 501's first argument in the word at +4 and the type in the short at +0 (7221, 7178, 11994, 6018 and
 # the others), and fn 3903 does so with its own first parameter before it calls fn 7708, which is `f501(p0, p1, 1)`. So
 # SMessage's second field holds the queue's address (evidence; its name m_fila and type `const void*` are chosen),
-# Post(short) is fn 3903's shape and Insert(const T&) fn 7708's (both names chosen; neither copy is written: 3903's
-# callers 10376, 11026 and 11100 are table slots 110, 57 and 55; fn 1164, which holds those three constants, holds them
-# as keys of comum::CArquivosSavd's maps, unit 95's, not as table slots). Measured
+# Post(short) is fn 3903's shape and Insert(const T&) fn 7708's (both names chosen). Both match since unit 170 wrote the
+# executable TU's three posts, 3903 as binaryen's merge of them (its callers 10376, 11026 and 11100 are table slots 110,
+# 57 and 55; fn 1164, which holds those three constants, holds them as keys of comum::CArquivosSavd's maps, unit 95's,
+# not as table slots). Measured
 # on a scratch TU at this tree's flags (wasm-objdump of the object): Post with `m_tipo = tipo; m_fila = this;` gives
 # 7221's order, the word at +12 of the frame stored before the type at +8; the other order stores the type first. With
 # the field left unset, `SMessage m; m.m_tipo = 12; Insert(m, 1)` stores no word at +12, and with it value-initialized

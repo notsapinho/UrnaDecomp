@@ -16,7 +16,7 @@
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
 # and FinishState (7022); CConfirmaVotoEmCargo's constructor (5929) with its two data members; CConfirmaProporcional's
-# (11752); CEstadoComDesligamentoAutomatico's (1285). The roots' header says which of their callers are in the link
+# (11752); CEstadoComDesligamentoAutomatico's (1285). The last note says which of their callers are in the link
 # (1285's ten are, so its stand-in went). Out of line, by the target: each constructor is a function of its own with two
 # callers or more (11752 has one, fn 1961, the body binaryen shares for six builders that each called it). Lines and
 # files: StartState and FinishState sit after ProcessInput's record (:69) and before ProcessTick's (:120), as the band
@@ -421,7 +421,7 @@
 #   Chosen: the conditional's form for the key, the locals and the switch.
 # - CPedeProporcional::ProcessInputAudio (11711, record :84, code 9387) and LegendaValida (5922, a free function in
 #   cpedeproporcional.cpp, declared in its header for its second target caller, fn 5500, the executable TU's state
-#   reader; the roots take its address for that caller's invoke). The INPUT_CONFIRMA branch tests the party's lookup
+#   reader, written since in unit 170, which invokes it). The INPUT_CONFIRMA branch tests the party's lookup
 #   (comum::CPartidos' Find, cursor set) and LegendaValida negated, CPedeNulo first: written as `Find(...) != nullptr &&
 #   LegendaValida(...)` with CPedeNominal first, the two GetInst blocks came out the other way round (63 over 342 rows, 1
 #   deleted); as written, 58 over 342, operand-only. LegendaValida looks the party up with CDataMap::Existe (a const
@@ -509,8 +509,45 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXX
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cvotacaostateaudio.cpp includes cconfiguracaoeleicao.h too
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# what nothing reconstructed references yet: 97-uenux2-cvotacaostateaudio-roots.cpp takes the address of fn 5922; it
-# declares through asm labels and instantiates nothing
-$(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-roots.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/97-uenux2-cvotacaostateaudio-roots.o
+# No roots file. Its last stand-in, the address of vota::LegendaValida (fn 5922) for the invoke of its second target
+# caller, fn 5500 (the executable TU's state reader, through table slot 90), went once 5500 was written there (unit
+# 170, in the link): a link without it moves no row in or out of match, the match list the same (measured on the
+# merged tree, in one link with the executable TU's posts placed after main). What the roots file said needs no
+# stand-in, and why:
+#
+# vota::testeteclado::CErroTesteTecladoFim's vtable needs no sink: its constructor, which stores it, is in the link,
+# inlined with its GetInst into vota::testeteclado::CEnviarManutencao::ProcessInput (fn 11812, unit 217). None of the
+# direct callers of the destructors (3857, 785, 1560) is stood in for: the destructors are in the table, so binaryen
+# keeps them out of line. The three comum::CPedeTituloMesario* states' vtables, with their D0 (3609),
+# are stored by their constructors, which fn 10388 (CPedeTituloMesario::StartState, written) holds inlined. The ten confirmation states' vtables are referenced by their constructors, inlined
+# into their GetInst, which slot 16 of the CConfereVotoEmCargo instances calls, and vota::CPedeNulo's and CPedeNominal's
+# by theirs, inlined into their GetInst, inlined into fn 11711 (written).
+#
+# The ten vota::CConfereVotoEmCargo<ESTADO, TELA> instances are built in the target by their GetInst, inlined into four
+# functions, all written: fn 11744 (CPedeNulo::GetProximoEstado), fn 11724 (CPedeNominal::GetProximoEstado), fn 11711
+# (CPedeProporcional::ProcessInputAudio) and fn 11683 (CPedeMajoritario::ProcessInputAudio), whose objects instantiate
+# the class template for the instances they build. Their calls give IConfereVotoEmCargo's constructor (fn 1165), whose
+# four callers they are, its call sites.
+#
+# api::CPosixRWMutex's constructor (target fn 10245) is reached only by its table slot 244, which fn 10864 passes to fn
+# 6023: fn 10864 is the executable TU's CDefaultGenericFactory<IRWSyncCtl, CPosixRWMutex> (unit 170), in the link, so
+# the constructor needs no stand-in.
+#
+# The constructors, with direct callers in the target that are not reconstructed: CVotacaoStateAudio's (fn 1785) has
+# six, fns 5929, 5932, 6051's two (GetInst of vota::CPedeProporcional and CPedeMajoritario, binaryen's merge), 1165,
+# 4420 and 4459, all written, so it needs no stand-in. CConfirmaVotoEmCargo's (fn 5929)
+# has two, fns 11752 and 11700, both written. CConfirmaProporcional's (fn 11752) has one, fn 1961, the body binaryen
+# shares for six singletons' builders, and CConfirmaMajoritario's (fn 11700) fn 2901, the same for four: the ten
+# GetInst those bodies hold are written and call them, so no stand-in is needed there. Their callers are slot 16 of the
+# CConfereVotoEmCargo instances, which their builders bring into the link. CCompletaProporcional's
+# (fn 5932) has one, fn 11711, which calls it twice (vota::CPedeNulo's and CPedeNominal's GetInst, inlined there), and
+# the two GetInst (fns 3849 and 5921, thunks into fn 6051) have their slot 16 callers (fns 11751 and 11699), fn 4459 and
+# CPedeProporcional's fn 11756, all written. Of
+# CEstadoComDesligamentoAutomatico's (fn 1285) ten callers
+# are all in the link (2888, 3855, 3877, 5936, 5947, 5948, 12051, and 11804, 11809 and 11812, unit 217's): no
+# stand-in.
+#
+# comum::md::CCargo::GetDetalheConsulta (target fn 1923, a thunk into binaryen's merge 6029, whose other member is
+# comum::md::CLocal::GetContingencia, fn 3724) has six direct callers in the target: fns 3074, 3819, 5604, 6999, 7787 and
+# 11253. 6999, 5604, 3819 and 11253 are written; unit 232's roots stand for the other two (DetalhesConsulta, two
+# calls).

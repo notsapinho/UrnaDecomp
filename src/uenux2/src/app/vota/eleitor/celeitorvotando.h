@@ -52,6 +52,10 @@ public:
 
     static CEleitorVotando& GetInst();
 
+    // The post's state (+12): the executable TU's state JSON (target fn 5500) reads it through the vptr test of a
+    // dynamic_cast to this final class and names it by its typeinfo. The getter and its name are chosen.
+    comum::CAppState* GetEstadoCargo() const { return m_pEstado; }
+
     // fn 4471: appends the post's vote (vota::AdicionaVoto, fn 4192) and logs it by its kind through CLogVota: fns
     // 4546, 4541, 4542 and 3272 for the kinds 5, 6, 8 and 9, fn 4537 for any other. Its two callers, fns 7428 and
     // 11754, call GetInst and drop the result just before they call it, the call of a member that reads no member

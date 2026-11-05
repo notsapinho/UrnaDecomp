@@ -238,11 +238,6 @@ $(ROOT)/$(APP)/roots_texttospeech.o: $(ROOT)/src/app/roots_texttospeech.cpp $(RO
 VOTA_WEB_OBJS += $(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o
 $(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o: $(ROOT)/src/uenux2/mock/app/comum/cappinfobuilder.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/mock/app/comum/cappinfobuilder.cpp -o $(R)
-# the executable TU's copy of api::CPriorityMessageQueue<api::SMessage>::Insert and of what it instantiates
-# (src/app/roots_messagequeue.cpp): landing pads and -Oz shapes, so that TU's rule, after it and ahead of the uenux2
-# objects that emit Insert too
-$(ROOT)/$(APP)/roots_messagequeue.o: $(ROOT)/src/app/roots_messagequeue.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c src/app/roots_messagequeue.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.
@@ -268,12 +263,12 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
 # ---- link order (the executable TU first, VOTA_WEB_OBJS above, then roots_coderenv.o, built at that TU's rule: the
-# target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then roots_texttospeech.o and
-# roots_messagequeue.o, at the same rule, ahead of the uenux2 objects whose copies of ITextToSpeech's inline members and of
-# CPriorityMessageQueue<SMessage>::Insert they replace; then the stand-ins, votaInit's first; roots_set.o last, after
+# target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then roots_texttospeech.o, at
+# the same rule, ahead of the uenux2 objects whose copies of ITextToSpeech's inline members it replaces; then the
+# stand-ins, votaInit's first; roots_set.o last, after
 # roots_rhvoice.o, whose copy of __tree_balance_after_insert (152) the target's is; app before libraries; libraries
 # in this order) --------
-APP_OBJS := roots_coderenv.o roots_texttospeech.o roots_messagequeue.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o roots_set.o
+APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o roots_set.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

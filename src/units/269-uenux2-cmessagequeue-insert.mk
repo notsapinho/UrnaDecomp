@@ -2,9 +2,12 @@
 # api/ipc/cmessagequeue.h (unit 174 wrote Insert there), and what that copy instantiates: api::CSyncCtlGuard's
 # destructor (5528), priority_queue::push (11076) and its __split_buffer's destructor (5523), with binaryen's merge body
 # 2896, which that destructor and roots_coderenv.o's __split_buffer<char> destructor (2704) call. No source of its own:
-# the target's copy is an -Oz -fexceptions object's, and the tree root src/app/roots_messagequeue.cpp emits it at the
-# executable TU's rule, VOTA_WEB_CXXFLAGS (its rule and its APP_OBJS entry are src/Makefile's; its comment says whose
-# copy and why there). This file holds the evidence and the measurements.
+# the target's copy is an -Oz -fexceptions object's, the executable TU's, whose three posts (unit 170's
+# HabilitaAudioEleitor, LiberaEleitor and SinalizaSincronismo, each over Insert(const SMessage&), 7708) instantiate it,
+# and that TU's object, first on the link line, gives it. Until those posts were written, the tree root
+# src/app/roots_messagequeue.cpp emitted the instance at that TU's rule, VOTA_WEB_CXXFLAGS, after that TU's object and
+# ahead of the uenux2 objects; it went with them (the link without it: unit 170's fragment). This file holds the
+# evidence and the measurements, taken with the root.
 #
 # Matches (6, none lost, against 441ae041 by index, how-to step 10): 501 Insert, 5528 the guard's destructor, 11076 push
 # (named by step 8 from 501's table slot), 5523 __split_buffer<SItem>'s destructor, 2896 (`no-candidate` before) and
@@ -22,8 +25,8 @@
 # - 11076: push_back with its growth inlined (5523 twice, table slot 238) and push_heap's sift-up.
 # - Whose copy: landing pads say an -fexceptions object (uenux2 compiles none: docs/reference/facts/app-flags.md F6),
 #   and -Oz: the same object compiled with -Os after the rule's flags inlines 5528 and push into Insert (wasm-objdump -x
-#   -j Function on it), where the target keeps both. That the copy is the executable TU's is a reading (the root's
-#   comment).
+#   -j Function on it), where the target keeps both. That the copy is the executable TU's was a reading; its posts,
+#   written since by unit 170, instantiate it there.
 #
 # Forms, measured in whole links (docs/reference/facts/levels.md V4: the plain link's objects at 441ae041 with one
 # object at VOTA_WEB_CXXFLAGS that instantiates Insert, scanned with the committed symbol file and matches; pnpm wasm
@@ -46,7 +49,7 @@
 # - The object's place: ahead of the executable TU's object (V4's place), the same instance takes 14 rows of other
 #   classes out of match (form members of cmtformbuilder.cpp and cpaperformbuilder.cpp, CBuzzFieldMT and CBeepFieldMT's
 #   Draw, a CWasmScreenMT local class's D0, roots_coderenv.o's ~basic_stringbuf); after it and after
-#   roots_texttospeech.o, as the tree root sits, none.
+#   roots_texttospeech.o, as the tree root sat, none.
 #
 # Hand lines: 501's callers+content line (unit 174's) went. A generated line names 501 (`call by:4464,7377,10210,11914`,
 # none of them 501); with the hand line alone out and the match lines of 501, 7221 and 10763 (the callers it carried)
@@ -54,9 +57,8 @@
 # verifies 11474 matches.
 #
 # Chosen: the function object's name, SComparaItem, and that it is nested in the class; the local's name; push(const&)
-# over push(&&) (the same bytes); the root's file name and its place after roots_texttospeech.o in APP_OBJS.
+# over push(&&) (the same bytes).
 #
-# Not matched: 7708 (`f501(p0, p1, 1)`, Insert(const SMessage&)'s -Oz copy) and 3903, read as a body binaryen merged
-# from three posts (10376, 11026 and 11100, table slots 110, 57 and 55, each `f3903(p0, <5, 1 or 9>)`; its neighbours
-# in its use band, 3900 to 3906, are merge bodies): the code that reaches Insert at that level, not written. No vtable
-# that ledger/vtables.json lists, and none docs/reference/facts/reading.md R20's search of the data finds, holds them.
+# Matched since unit 170 wrote the executable TU's three posts: 7708 (`f501(p0, p1, 1)`, Insert(const SMessage&)'s -Oz
+# copy) and 3903, binaryen's merge of the posts 10376, 11026 and 11100 (table slots 110, 57 and 55, each `f3903(p0, <5,
+# 1 or 9>)`; its neighbours in its use band, 3900 to 3906, are merge bodies). Unit 170's fragment has the evidence.
