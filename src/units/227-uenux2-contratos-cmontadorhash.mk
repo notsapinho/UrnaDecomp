@@ -53,13 +53,15 @@
 # no-candidate, the remainder not explained. Its libc++ and libc callees that match with it: 7738, 7739, 7740, 7742,
 # 7743, 7744, 7747 and 7749 (7741, lexically_normal's code, reads unresolved, a slot of path's constructor over a
 # char[2] with no target function; 7748 no-candidate), 3335, 4676, 4681, 4686, 1266, 2545, 2547, 3332, 4674, 4675, 4680,
-# 5619 and binaryen's merge 1085; the sort of strings 2722 with 939, 3599, 5356 and 5357; libc's getcwd (3984), strdup
-# (6253), strnlen (6250) and memmove (6259). Rows of library code turn match with it too, their objects unchanged, read
-# as bodies binaryen treats otherwise once 5360's callees give their callees more call sites (how-to step 9; their old
-# scan details: a constant where the target has a parameter, a callee inlined): libc's printf_core (6233), libc++'s
-# money_get::do_get (7884) and path's constructor from a string_view (4789), with unit 190's 183, 3679 and 5549 (its
-# fragment); and src/app/roots_coderenv.cpp's vector<string>::__vallocate and allocator<string>::allocate (11180, 5570),
-# no-candidate before, which the census and the content pass pair now. The forms (the loops, the set's spelling, the
+# 5619 and binaryen's merge 1085; the sort of strings 2722 with 939, 3599, 5356 and 5357; libc's strdup (6253), strnlen
+# (6250) and memmove (6259). Rows of library code turn match with it too, their objects and bodies unchanged, read as
+# bodies binaryen treats otherwise once 5360's callees give their callees more call sites (how-to step 9; their old
+# scan details: a constant where the target has a parameter, a callee inlined; docs/reference/facts/splat.md S10 item 29
+# has each): libc's printf_core (6233) and getcwd (3984), libc++'s money_get::do_get (7884) and path's constructor from
+# a string_view (4789), with unit 190's 183, 3679 and 5549 (its fragment), and src/app/roots_coderenv.cpp's
+# vector<string>::__vallocate (11180), all in the link before with the same bodies; and allocator<string>::allocate
+# (5570), whose body is also path.o's allocator of pair<string_view, PathPartKind> (binaryen keeps one,
+# roots_coderenv.o's by link order). The forms (the loops, the set's spelling, the
 # link's parent walk, the "/"s literal) are chosen among those that compile to its calls; none was measured against
 # another.
 #

@@ -21,8 +21,8 @@ __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* 
     return texto[11];
 }
 
-// Stands for fns 7787, 11946 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns
-// 11908 and 11943 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
+// Stands for fns 7787 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns 11908,
+// 11943 and 11946 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
 __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
 {
     w2259(reinterpret_cast<int>(relatorios), reinterpret_cast<int>(partes));

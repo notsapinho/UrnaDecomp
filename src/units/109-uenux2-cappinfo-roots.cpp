@@ -31,7 +31,8 @@ const void* volatile cappinfo_sink;
 
 // Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898, unit 110's 2266,
 // unit 104's 10635, unit 277's 10710, unit 329's 7160, unit 293's 2725, unit 135's 5382, unit 283's 10590, unit 155's
-// 11242 and unit 221's 10451 are linked, and 491): 3059, 4160, 6737, 7174, 7787, 12098, 12105, 12110, 12134.
+// 11242, unit 221's 10451 and unit 110's 3059 and 4160 are linked, and 491): 6737, 7174, 7787, 12098, 12105, 12110,
+// 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
 // The stand-in for fn 903's caller 7160 went: 7160 (unit 329) is linked, with unit 102's four, unit 138's 11870 and
 // 11871, unit 50's 10566, unit 104's 12082 and 12081, unit 277's 10710 and unit 110's 13023.

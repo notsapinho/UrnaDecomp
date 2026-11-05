@@ -219,7 +219,10 @@
 #   - Chosen: the names GeraZeresima, CriaRelatorioZeresima, FormLinhas and FormListaCandidatos, their being free
 #     functions of vota (they read no state) and FormLinhas's and FormListaCandidatos's internal linkage; the forms'
 #     choices are in cgeradorresumozeresima.h. The parts' parameter types are 11946's (cpartecandidatos.h); 11212 to
-#     11215 still match with them.
+#     11215 still match with them. The seven includes the forms need in cgeradorresumozeresima.cpp (ccandidaturas.h,
+#     ccargos.h, cfederacoes.h, cpartidos.h, crespostasds.h, ctradutorfrase.h and votadefs.h) took the seven lines of
+#     its gap above `namespace {` (original lines 30-36), and its records 43 and 47 keep their lines (src/README.md
+#     "Gaps").
 # - comum::TrailerSemCandidatos<CRdvVota, CEleitores> (fn 11975, 15 over 243, table slot 1632, which 11946 and 12110
 #   pass) in a block of its own at cdatasourcesrelatorio.h's end, and vota::PartidoComCandidatos (fn 11976, 8 over 65,
 #   table slot 1631) in cgeradorresumozeresima.cpp, all operand-only: their evidence and choices are in those files;
@@ -236,10 +239,11 @@
 # cpartecandidatos.h's classes, unit 123's w123_titulo (FormTituloPartido), unit 162's FederacoesDoPartido (5799,
 # callers 5922 and 11976) and unit 110's s11478 (LinhaRespostaCorrente, slot 3051, which only 11946 passes). Unit 89's
 # Federacoes (5809, callers 5922 and 11976) and Consultas's two calls of 2272 (11976 was its one caller not in the link)
-# stand for callers all in the link now and are left to the landing of the branch that edits that file: a link of these
-# objects with unit 89's roots compiled without them gives 5809, 2272, 11976, 5922, 3819, 11213 and 11255 the same
-# scores as the plain link. Those of units 31, 77, 89, 109, 110, 121, 123, 162, 168, 196, 205, 216 and 317 keep callers
-# that still wait; the comments of those with callers now in the link name them.
+# stood for callers all in the link and went when 11976 was in it: a link of these objects with unit 89's roots compiled
+# without them gave 5809, 2272, 11976, 5922, 3819, 11213 and 11255 the same scores as the plain link. So did one of the
+# two calls each of unit 109's Partidos (819, for 11976) and unit 317's ArquivosRelatorios (3654, for 11946), and with
+# unit 110's 4160 unit 98's TraduzOsDois (654). Those of units 31, 77, 89, 109, 110, 121, 123, 162, 168, 196, 205, 216
+# and 317 keep callers that still wait; the comments of those with callers now in the link name them.
 #
 # Not written, with what each waits for:
 # - 12105, 12110 and the stretch: not attempted.

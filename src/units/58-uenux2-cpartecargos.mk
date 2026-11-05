@@ -3,9 +3,10 @@
 # 11208 and 11207, vtable slots 0 and 1), the
 # compiler's code for the class definition in cpartecargos.h beside it. With them, the api::IReportPart interface the
 # class implements (src/api/gui/reports/ireportpart.h). The control block __shared_ptr_emplace<comum::CParteCargos>'s
-# D2 and D0 (target fns 11948 and 11947) come from fragment 325's cgeradorresumozeresima.cpp, whose 5971 builds the
-# class with std::make_shared ahead of 11946's builder; this unit's roots file, which built it for both while neither
-# was written, went when 11946 was in the link.
+# D2 and D0 (target fns 11948 and 11947) come in our link from fragment 325's cgeradorresumozeresima.cpp, whose 5971
+# builds the class with std::make_shared ahead of 11946's builder (the target keeps the block's vtable, @1544344, and
+# the two functions, right above 11946, in the builder's run); this unit's roots file, which built it for both while
+# neither was written, went when 11946 was in the link.
 # No record names any of these files, and every path is chosen. cpartecargos.cpp: the class's functions are two
 # link-order stretches with no record of their own. Stretch 415 (fns 11207-11209, use band 1) has the class-convention
 # guess app/comum/dados/cpartecargos.cpp; the stretches beside it whose labels are records' are in app/comum/relatorios/

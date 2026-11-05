@@ -938,8 +938,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     # 11180 size 52 ours 11334 size 52      (11224, size 70)
     ```
 
-    The `ours` numbers were read on the link of the merge that landed 5360. What holds the eight is binaryen's choice
-    over the whole module: a landing that takes 5360's library code out of the link takes them out.
+    The `ours` numbers were read at cf3b755a. What holds the eight is binaryen's choice over the whole module: a landing
+    that takes 5360's library code out of the link takes them out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

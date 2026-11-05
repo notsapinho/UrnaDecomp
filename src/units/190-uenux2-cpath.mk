@@ -19,14 +19,15 @@
 # path::operator/=(const path&) (183), has_filename (3679) and has_root_directory (5549) match from
 # mock/app/comum/cappinfobuilder.cpp's object, at the executable TU's rule (unit 253), since unit 227's
 # CMontadorHash::CriaHashesDiretorio (5360) calls std::filesystem::weakly_canonical, whose libc++.a functions 7738, 7742
-# and 7749 (matched with it) call 3679 and 5549 too. Before, 183 differed, 87 over 105 rows, from cpath.cpp's copy at
-# the tree's -O3, which inlines has_root_directory, operator= and has_filename; a compile of operator/= at the
+# and 7749 (matched with it) call 3679 and 5549 too. Before unit 253, 183 differed, 87 over 105 rows, from cpath.cpp's
+# copy at the tree's -O3, which inlines has_root_directory, operator= and has_filename; a compile of operator/= at the
 # executable TU's -Oz -fexceptions keeps has_root_directory, operator=, has_filename, push_back and append(const
 # string&) as calls, in that order, which are 183's callees 5549, 1700, 3679, 409 and 3717, and with that object (a
-# function returning `a /= b`) first on the link line, as docs/reference/facts/levels.md V4 does, its copy read 31 over
-# 52 rows: binaryen inlined has_root_directory and has_filename, which had one caller there, where the target's 5549 has
-# 183 and 7749 and 3679 has 183, 7738 and 7742, three functions only the table holds (slots 8848, 8871, 8866). That the
-# three are the executable TU's copies was read so, and the callers 5360 brings are what they waited for.
+# function returning `a /= b`) first on the link line, as docs/reference/facts/levels.md V4 does, its copy, the link's
+# from unit 253 until 5360 was in it, read 31 over 52 rows (at b1711c89): binaryen inlined has_root_directory and
+# has_filename, which had one caller there, where the target's 5549 has 183 and 7749 and 3679 has 183, 7738 and 7742,
+# three functions only the table holds (slots 8848, 8871, 8866). That the three are the executable TU's copies was read
+# so, and the callers 5360 brings are what they waited for (docs/reference/facts/splat.md S10 item 29).
 #
 # Written and not matched, each with its measurement:
 # - path::__filename (1224) is libc++.a's, and matches with 1840 (path::__parent_path) and 2134 (PathParser::decrement,

@@ -1,6 +1,6 @@
 // Roots: keep comum::CRelatorioTesteImpressora's callees in the skeleton link the way the target keeps them. The class's
-// vtable is kept by its constructor (fn 5586, crelatoriotesteimpressora.cpp), which stores the vptr and which unit 280's
-// roots reach for its caller 11869 (11911, unit 296's, is in the link).
+// vtable is kept by its constructor (fn 5586, crelatoriotesteimpressora.cpp), which stores the vptr and which its
+// callers 11869 (unit 138's) and 11911 (unit 296's) reach, both in the link.
 // - GetCorrespondencia (slot 9, fn 11197) calls CDadoCorrespondencia's copy constructor, fn 1249, which has six callers
 //   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 (unit 160)
 //   and 11395 (comum::asn::CConversorEstadoGeralGap::DoDesconverte, unit 93, three call sites) are in the link, and

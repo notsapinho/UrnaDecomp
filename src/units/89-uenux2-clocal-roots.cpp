@@ -47,7 +47,7 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 4160, 7787, 12098, 12105, 12110, 12134 (6599, unit 110's, 11242, unit 155's, 5579 and
+// Stands for fn 401's callers: 7787, 12098, 12105, 12110, 12134 (4160 and 6599, unit 110's, 11242, unit 155's, 5579 and
 // 5977, unit
 // 325's, 10500, unit 239's, 11223, unit 287's ImprimeTituloJE, 11908, unit 176's, written, 5584, CRelUtil's
 // ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798, CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's

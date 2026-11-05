@@ -4,7 +4,9 @@
 #   Imprime's .cpp (CFormPart's, CParteRdv's and CParteEleitores's own, and cpartecandidatos.cpp for its four
 #   classes): CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590; the match lines name
 #   CParteRdv's since cpartecandidatos.cpp links after cparterdv.cpp, below: step 9 renamed them), CParteCandidatosMajoritarios's and
-#   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
+#   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210; the D2's copy is
+#   cgeradorzeresima.cpp.o's, whose control block's 11958 calls it and which links ahead of cpartecandidatos.cpp.o, as
+#   the target's data hold the builder's run, @1544064, ahead of cpartecandidatos.cpp's, @1576388), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
 #   and 6026, which match too under the byn$mgfn-shared$ names our link gives them: CParteEleitores's D2 and D0 since its
 #   Imprime is written in cparteeleitores.cpp, which this fragment lists ahead of cformpart.cpp (step 9 renamed the two
@@ -29,7 +31,11 @@
 # emit those classes' vtables and destructors. The unit has no pending file since 11212, the last trapped member, was
 # written. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and message,
 # and 11212's on its own (:174:19), with code 9083 and its message; the lines of 11215, of the constructors, which follow
-# 11214, and where 11212 starts above its record are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
+# 11214, and where 11212 starts above its record are a choice (11215's two lines lower since cpartecandidatos.h
+# declares api::IForm and api::IPaper in place of including their headers, which gave cparterdv.cpp.o, an includer
+# that uses neither, 48 guarded initializers: cpartecandidatos.cpp includes them on two lines above its first gap,
+# original lines 39-66 since, and cgeradorzeresima.cpp beside its other api/gui headers). CParteEleitores::Imprime
+# calls its part's slot 2 once per record of
 # comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
 # api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
 #

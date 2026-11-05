@@ -208,7 +208,8 @@
 # party's 16-bit integer (comum's TPartidoID, from ecourna's TPartidoID through its conversion) loads each party once in
 # the outer loop, as the target does; as `const auto&` the object loads it again in the inner loop (try-tu.sh --symbols,
 # the function's disassembly compared; not linked). Its callers are fns 5922 (vota::LegendaValida, unit 97's, written)
-# and 11976, not reconstructed, for which the roots' Federacoes stands.
+# and 11976 (vota::PartidoComCandidatos, unit 325's), both in the link; the roots' Federacoes, which stood for 11976,
+# went.
 #
 # CCandidaturas::ExisteCandidatoPartido, in ccandidaturas.cpp after Busca, has no target function of its own: its one
 # caller, fn 5922, holds its loop inlined by binaryen, its result a block's tested again, and unit 97's fragment has the

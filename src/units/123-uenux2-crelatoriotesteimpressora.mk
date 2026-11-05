@@ -63,8 +63,8 @@
 # holds a second pleito, that pleito's date against a default api::CDate, today (1382): operator== inline, then <
 # through operator<=> (1261, unit 125). The flag is stored false first. The byte at +4 is stored 0 before the vptr, the
 # base's member (cimprimirextratocarga.h), and +5 is the flag. CPleito::GetData (cpleito.h) is added for it. Its two
-# target callers, 11869 (not written) and 11911 (unit 296's, in the link), read its returned this: unit 280's roots
-# stand in for 11869. It
+# target callers, 11869 (unit 138's) and 11911 (unit 296's), both in the link, read its returned this; unit 280's
+# roots stood in for 11869 until it was. It
 # matches: 9 over 99 rows, all operand-only, before step 8 (11 over 99, the result's row deleted, with no reader).
 #
 # GetDadosLocal (slot 15, target fn 11188): the lines of the section's data, in a vector of strings. For a voting urna
