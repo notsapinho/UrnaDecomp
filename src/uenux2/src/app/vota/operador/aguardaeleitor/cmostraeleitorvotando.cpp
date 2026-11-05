@@ -1,6 +1,5 @@
-// vota::CMostraEleitorVotando (/home/rubio/tse/uenux2/src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp).
-// Reconstruction's note, not TSE's text. Records: 10426's (ProcessInput) at line 64, column 22, and 10425's (ProcessKey,
-// SalvaHabilitacaoEleitor's) at 127 and 159, column 31; the other lines are chosen (unit 142's fragment says why).
+// vota::CMostraEleitorVotando. Reconstruction's note, not TSE's text: the records are ProcessInput's (10426) at line
+// 64 and ProcessKey's (10425) at 127 and 159; every other line is chosen (src/units/142-uenux2-app-vota-estados-448.mk).
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/hwil/iinput.h"
@@ -23,6 +22,51 @@
 #include "app/vota/operador/cthreadoperador.h"
 #include "ecourna/api/util/cstringutils.hpp"
 namespace vota {
+namespace { std::string TextoAudioAtivado(); }
+const char TITULO_TREINAMENTO[] = "TREINAMENTO DE ELEITORES";
+std::shared_ptr<api::IForm<api::IScreenMT>> CMostraEleitorVotando::CriaForm(std::shared_ptr<std::string> nome)
+{
+    api::CMTFormBuilderBase builder;
+    builder.AddLed(api::LED_OPERACAO_1);
+    if (comum::CAppInfo::EhTreinamentoEleitor()) {
+        builder.AddTextField(TITULO_TREINAMENTO, api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
+    } else {
+        builder.AddTextField(&comum::CEleitorDadoNomeParaUrna::Text, api::SPoint{1, 1}, "{:35}", api::ALINHAMENTO_ESQUERDA);
+        builder.AddTextField(&GetTextoIdentidadeDigitada, api::SPoint{1, 2}, api::ALINHAMENTO_ESQUERDA);
+        builder.AddTextField("Seq:", api::SPoint{32, 2}, api::ALINHAMENTO_ESQUERDA);
+        builder.AddTextField(&comum::CEleitorDadoSequencial::Text, api::SPoint{40, 2}, "{:04}", api::ALINHAMENTO_DIREITA);
+        builder.AddTextField("Seção:", api::SPoint{30, 3}, api::ALINHAMENTO_ESQUERDA);
+        builder.AddTextField(&comum::CEleitorDadoSecao::Text, api::SPoint{40, 3}, "{:04}", api::ALINHAMENTO_DIREITA);
+    }
+    builder.AddTextField(&TextoAudioAtivado, api::SPoint{1, 3}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField(api::CTextSource(nome), api::SPoint{1, 4});
+    return builder.GetForm("");
+}
+CMostraEleitorVotando& CMostraEleitorVotando::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CMostraEleitorVotando());
+    }
+    return *s_inst;
+}
+std::unique_ptr<CMostraEleitorVotando> CMostraEleitorVotando::s_inst;
+std::mutex CMostraEleitorVotando::s_mutex;
+void CMostraEleitorVotando::StartState()
+{
+    *m_nome = CThreadOperador::GetInst().GetTextoEleitor();
+    m_form->Slot2();
+    comum::CInfoMTLCD::GetInst().MostraIconeBateria();
+    m_pNextState = this;
+}
+void CMostraEleitorVotando::ProcessInput()
+{
+    auto& terminal = api::CPolySingleton<api::IInputMT>::instance();
+    if (terminal.HasKey()) {
+        terminal.GetKey();
+    }
+}
+
 CMostraEleitorVotando::~CMostraEleitorVotando() = default;
 
 namespace {
@@ -40,50 +84,6 @@ CMostraEleitorVotando::CMostraEleitorVotando()
     , m_nome(std::make_shared<std::string>())
     , m_form(CriaForm(m_nome))
 {
-}
-CMostraEleitorVotando& CMostraEleitorVotando::GetInst()
-{
-    std::lock_guard<std::mutex> trava(s_mutex);
-    if (!s_inst) {
-        s_inst.reset(new CMostraEleitorVotando());
-    }
-    return *s_inst;
-}
-std::unique_ptr<CMostraEleitorVotando> CMostraEleitorVotando::s_inst;
-std::mutex CMostraEleitorVotando::s_mutex;
-
-void CMostraEleitorVotando::StartState()
-{
-    *m_nome = CThreadOperador::GetInst().GetTextoEleitor();
-    m_form->Slot2();
-    comum::CInfoMTLCD::GetInst().MostraIconeBateria();
-    m_pNextState = this;
-}
-void CMostraEleitorVotando::ProcessInput()
-{
-    auto& terminal = api::CPolySingleton<api::IInputMT>::instance();
-    if (terminal.HasKey()) {
-        terminal.GetKey();
-    }
-}
-
-std::shared_ptr<api::IForm<api::IScreenMT>> CMostraEleitorVotando::CriaForm(std::shared_ptr<std::string> nome)
-{
-    api::CMTFormBuilder builder;
-    builder.AddLed(api::LED_OPERACAO_1);
-    if (comum::CAppInfo::EhTreinamentoEleitor()) {
-        builder.AddTextField("TREINAMENTO DE ELEITORES", api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
-    } else {
-        builder.AddTextField(&comum::CEleitorDadoNomeParaUrna::Text, api::SPoint{1, 1}, "{:35}", api::ALINHAMENTO_ESQUERDA);
-        builder.AddTextField(&GetTextoIdentidadeDigitada, api::SPoint{1, 2}, api::ALINHAMENTO_ESQUERDA);
-        builder.AddTextField("Seq:", api::SPoint{32, 2}, api::ALINHAMENTO_ESQUERDA);
-        builder.AddTextField(&comum::CEleitorDadoSequencial::Text, api::SPoint{40, 2}, "{:04}", api::ALINHAMENTO_DIREITA);
-        builder.AddTextField("Seção:", api::SPoint{30, 3}, api::ALINHAMENTO_ESQUERDA);
-        builder.AddTextField(&comum::CEleitorDadoSecao::Text, api::SPoint{40, 3}, "{:04}", api::ALINHAMENTO_DIREITA);
-    }
-    builder.AddTextField(&TextoAudioAtivado, api::SPoint{1, 3}, api::ALINHAMENTO_ESQUERDA);
-    builder.AddTextField(api::CTextSource(nome), api::SPoint{1, 4});
-    return builder.GetForm("");
 }
 
 void CMostraEleitorVotando::ProcessKey(uebyte tecla)

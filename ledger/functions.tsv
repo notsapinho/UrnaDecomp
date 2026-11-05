@@ -5257,13 +5257,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5391	475	2	app	ecourna	-	-	none	-	
 5392	42	2	libcxx	vota	-	-	none	-	
 5393	652	2	app	vota	-	-	none	-	
-5394	18	0	app	vota	-	-	none	-	
+5394	18	0	app	vota	skeleton	5824	shape	1	vota::CEleitorDemorando::ProcessKey(unsigned char)
 5395	30	2	app	vota	skeleton	5655	shape	6	void api::CPolySingletonList::push<vota::IExecucaoVota>(std::__2::unique_ptr<vota::IExecucaoVota, std::__2::default_delete<vota::IExecucaoVota>>&&, api::TPolySingletonsInfo&)
 5396	1586	2	app	vota	-	-	none	-	
 5397	2997	2	app	vota	-	-	none	-	
 5398	30	2	app	vota	skeleton	5669	shape	6	void api::CPolySingletonList::push<vota::impl::ISincronismoVotoEleitor>(std::__2::unique_ptr<vota::impl::ISincronismoVotoEleitor, std::__2::default_delete<vota::impl::ISincronismoVotoEleitor>>&&, api::TPolySingletonsInfo&)
 5399	105	2	app	vota	-	-	none	-	
-5400	82	2	app	vota	-	-	none	-	
+5400	82	2	app	vota	skeleton	5672	shape	6	vota::CNomeEleitor::HabilitaEleitor()
 5401	1583	2	app	vota	-	-	none	-	
 5402	754	2	app	vota	-	-	none	-	
 5403	13	2	app	vota	skeleton	5796	addr	1	vota::CControlaReconhecimento::PrimeiraTentativa()
@@ -10282,7 +10282,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10416	176	0	app	vota	-	-	none	-	
 10417	10	0	app	-	skeleton	11887	addr	2	__cxx_global_array_dtor.2_6213
 10418	12	0	app	-	skeleton	11916	addr	2	__cxx_global_array_dtor_6138
-10419	85	0	app	vota	-	-	none	-	
+10419	85	0	app	vota	skeleton	12497	shape	5	vota::CPerguntaCodigoSuspensao::ProcessKey(unsigned char)
 10420	1917	0	app	vota	-	-	none	-	
 10421	207	0	app	vota	-	-	none	-	
 10422	10	0	-	-	skeleton	11889	addr	2	__cxx_global_array_dtor.2_6207
@@ -10313,7 +10313,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10447	245	0	app	vota	-	-	none	-	
 10448	36	0	app	vota	skeleton	12347	addr	1	vota::CDadoEleitorNaoConfere::StartState()
 10449	10	0	app	-	skeleton	11910	addr	2	__cxx_global_array_dtor.3_6152
-10450	12	0	app	-	skeleton	12506	addr	2	__cxx_global_array_dtor_4389
+10450	12	0	app	-	skeleton	12506	addr	2	__cxx_global_array_dtor_4386
 10451	6996	0	app	vota	-	-	none	-	
 10452	158	0	app	vota	-	-	none	-	
 10453	17	0	app	vota	skeleton	12598	addr	3	comum::CPedeDigitalMesario::FinishState()
@@ -10619,7 +10619,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10753	12	0	-	-	skeleton	12597	addr	2	__cxx_global_array_dtor_4116
 10754	49	0	app	vota	skeleton	12037	shape	2	vota::CHabilitacaoAudioNaoPermitida::StartState()
 10755	10	0	app	-	skeleton	12224	addr	2	__cxx_global_array_dtor.2_5201
-10756	12	0	app	-	skeleton	12361	addr	2	__cxx_global_array_dtor.6
+10756	12	0	app	-	skeleton	12361	addr	2	__cxx_global_array_dtor.6_4813
 10757	14	0	app	vota	skeleton	12440	shape	2	vota::CHorarioVotacaoTerminou::ProcessInput()
 10758	169	0	app	vota	-	-	none	-	
 10759	14	0	app	libc++	-	-	none	-	
@@ -11576,7 +11576,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11710	51	0	app	vota	-	-	none	-	
 11711	811	0	app	vota	-	-	none	-	
 11712	103	0	app	vota	skeleton	11137	shape	1	vota::CPedeProporcional::StartStateAudio()
-11713	10	0	app	-	skeleton	12505	addr	2	__cxx_global_array_dtor.2_4390
+11713	10	0	app	-	skeleton	12505	addr	2	__cxx_global_array_dtor.6
 11714	12	0	app	-	skeleton	11083	addr	2	__cxx_global_array_dtor_8537
 11715	26	0	app	vota	skeleton	11106	addr	4	vota::CConfereVotoEmCargo<vota::CConfirmaVotoNominal, (vota::ETelaVotacao)2>::GetProximoEstado() const
 11716	26	0	app	vota	skeleton	11107	addr	4	vota::CConfereVotoEmCargo<vota::CCandidatoInexistente, (vota::ETelaVotacao)12>::GetProximoEstado() const

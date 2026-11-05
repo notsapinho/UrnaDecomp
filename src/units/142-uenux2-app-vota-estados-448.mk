@@ -4,7 +4,7 @@
 # ProcessInput (10593, slot 7: on Read()'s 9, api::INPUT_CONFIRMA, it goes to vota::CCancelaHabilitacaoEleitor::GetInst,
 # fn 1536; Read() is unit 135's, in api/gui/cinteractiveform.h);
 # vota::CPedeAnoNascimentoSemBiometria's StartState (10490); vota::CMostraEleitorVotando's ProcessInput (10426, slot 7)
-# and ProcessKey (10425, slot 6, written and not matched: its paragraph below);
+# GetInst (1150) and ProcessKey (10425, slot 6, written and not matched: its paragraph below);
 # vota::CPerguntaCodigoSuspensao's StartState (10421); and the destructor and deleting destructor every one of them holds
 # (fns 448 and 765, slots 0 and 1, matched under CUrnaInspecionada's symbols, the first of the five classes in link
 # order; the target holds these two bodies once for 19 classes). vota::CLogVota gains the three members
@@ -66,35 +66,62 @@
 # test negated with the arms swapped; the instance read twice in ProcessInput; LogaJustificativaRecebida with the
 # message as a temporary argument. So those orders and forms are evidence.
 #
-# CMostraEleitorVotando's singleton, in cmostraeleitorvotando.cpp, at chosen lines between the destructor and
-# ProcessInput's record and, for CriaForm, after it:
-# - GetInst (fn 1150), with the constructor inlined, which clang gives, and the form's builder CriaForm inlined by
-#   binaryen (a second stack frame, entered with a copy of +12's std::shared_ptr<std::string> made before it, so it takes
-#   the pointer by value). The form: AddLed(1); then, when comum::CAppInfo::EhTreinamentoEleitor() (697), the text
+# CMostraEleitorVotando's singleton, in cmostraeleitorvotando.cpp, at chosen lines: CriaForm, GetInst, the statics and
+# StartState above ProcessInput's record (line 64), the destructor, TextoAudioAtivado (declared above CriaForm) and the
+# constructor below it, the file's note in two lines above the includes (it was three):
+# - GetInst (fn 1150), matched. The object keeps the constructor and the form's builder CriaForm out of line (GetInst
+#   calls the constructor, which calls CriaForm), and binaryen inlines both: a 16-byte stack frame after the `new`, and a
+#   128-byte one entered with a copy of +12's std::shared_ptr<std::string> made before it, so CriaForm takes the pointer
+#   by value. The form: AddLed(1); then, when comum::CAppInfo::EhTreinamentoEleitor() (697), the title
 #   "TREINAMENTO DE ELEITORES" at {1, 1}, else the name (11529, "{:35}") at {1, 1}, the identity typed (10586) at
 #   {1, 2}, "Seq:" at {32, 2}, the sequence number (11528, "{:04}", right-aligned) at {40, 2}, "Seção:" at {30, 3} and the
 #   section (11527, "{:04}", right-aligned) at {40, 3}; then 10539's text at {1, 3} and the name's api::CTextSource at
-#   {1, 4}; GetForm(""). The points are the words the target stores (65537 and on), the texts its literals. It is written
-#   and differs: `score 184 over 803 rows (same 619, replaced 109 [108 operand-only], inserted 26, deleted 49)`, the
-#   rows not operands read as following from the builder's construction, which the target clears in place (12 bytes at +104 of the frame) where
-#   ours calls api::CMTFormBuilder's constructor (fn 203's body) and keeps its result in a local, as unit 104's 10214
-#   does: of the seven target callers of GetForm (1694; `grep -rlE 'call 1694( |$)' build/out/splat/pieces/asm`), only
-#   10204 calls fn 203; 1150 clears the builder in place, as 10214, 4633, 5341, 5343 and 10676 do, where 88 other target
-#   functions call 203. Those callers' builder is api::CMTFormBuilderBase, whose constructor is inline
-#   (api/gui/cmtformbuilder.h), over which 10214, 5341, 5343 and 10676 match; 1150's source still builds an
-#   api::CMTFormBuilder, and 1150 is not measured over the base. No vote names 1150 (its callers are vtable slots or not
-#   written, and its body anchors nothing), so a hand line names it by `rtti-vptr`: it alone holds the class's address
-#   point 1593008. 5394, 10407 and 10523 (unit 152's) match through it.
-# - Its statics' exit destructors, 10429 (the std::unique_ptr at 1909316) and 10428 (the std::mutex at 1909292), match:
-#   their .bss names come from two `callers+content` hand lines, each resting on 1150's use of the address. The statics
-#   are defined after GetInst, s_inst first: 10429 lies above 10428 in their use band, so it links first.
+#   {1, 4}; GetForm(""). The points are the words the target stores (65537 and on), the texts its literals. The body
+#   as first written scored `184 over 803 rows (same 619, replaced 109 [108 operand-only], inserted 26, deleted 49)`;
+#   three changes give the match, each measured with pnpm wasm score in the whole link before steps 7 to 9:
+#   - the builder an api::CMTFormBuilderBase (api/gui/cmtformbuilder.h says why that class): the target clears the
+#     builder's 12 bytes in place (+104 of the 128-byte frame) and calls no constructor, as 10214, 4633, 5341, 5343
+#     and 10676 do, where an api::CMTFormBuilder calls its constructor (fn 203's body): 130 over 782 rows (5
+#     inserted, 5 deleted);
+#   - the title the named constant TITULO_TREINAMENTO, as in telasoperador.cpp (unit 51's fragment): the target copies
+#     its 24 bytes with i64.load align=3 from 538432, outside the merged strings, where the literal gave align=0: 127
+#     over 782 (5 inserted, 5 deleted), those three rows now operands. Both objects' copies are 16-aligned mergeable
+#     strings (wasm-objdump -x -j linking: `.rodata._ZN4votaL18TITULO_TREINAMENTOE p2align=4 [ STRINGS ]`), which
+#     wasm-ld joins at one address, so the symbol file names that address once per object, by content;
+#   - CriaForm defined first, above GetInst and the constructor: 65 over 777, every row an operand (calls, data, the
+#     statics' .bss addresses and one table slot). Before it, the target computed `this + 20`, the result's address
+#     (the form at +20), right after the std::shared_ptr's copy, and our link inside CriaForm, after its CTextSource's
+#     copy: binaryen's code-pushing pass moves it there (the link's -Oz run alone, docs/reference/facts/codegen.md C4,
+#     with --skip-pass=code-pushing computes it where the target does). Replayed on the link's module (wasm-dis of
+#     emcc-01-base.wasm, the functions moved, wasm-as -g, the -Oz line of build/out/wasm-map/vota_web/replay.sh, then
+#     pnpm wasm score): CriaForm ahead of both GetInst and the constructor, in either of their orders, 67 over 779 (2
+#     inserted, a copy of the new object's pointer that the link's later passes drop: the real link above has none),
+#     and each order with CriaForm after either of them 129 over 784. A function takes its place in the object at its
+#     first mention (how-to step 3) and the constructor mentions CriaForm, so only a definition above both gives the
+#     order: GetInst above the constructor alone left the linked wasm byte-identical. The same replay gives 67 over 779
+#     with CriaForm and 10539 at the end of telasoperador.cpp's functions and this file's functions after them, the
+#     reading of unit 51's fragment (the screens' code, 1150's too, in the object linked after ctextfieldupdatemt.cpp's,
+#     where 10539's band is): a free function there, with this file linked after it, is the other form, not chosen,
+#     since it moves this file's object past the 270 objects the link holds between it and telasoperador.cpp's.
+#   Step 8 names it by vptr-anchor (`call by:5400,10415` at afc03869); no hand line names it. 5394, 10407 and 10523
+#   (unit 152's) match through it.
+# - Its statics' exit destructors, 10429 (the std::unique_ptr at 1909316) and 10428 (the std::mutex at 1909292), match.
+#   Their .bss names are now 1150's votes (vote:4 and vote:1 by:1150). The two callers+content hand lines that held
+#   them, each resting on 1150's use of the address, went: with either or both out, the scan run twice and splat-build
+#   on copies of the match list without 1150, 10428 and 10429 give the same 12693 rows and the target's sha256, as a
+#   control with both lines does (10428 and 10429 use the names beside 1150). The statics are defined after GetInst,
+#   s_inst first: 10429 lies above 10428 in their use band, so it links first. With this definition order 10428's
+#   local name is __cxx_global_array_dtor.6 (it was .2; step 9 renamed the line).
 # - 10539, the text "ÁUDIO ATIVADO" or " ": " " unless CThreadEleitor's instance exists (read under its mutex, through
 #   the inline CThreadEleitor::Existe added to cthreadeleitor.h) and CEstadoAudio's mode is not 2, or
 #   IsAudioAtivadoMesario (1687, unit 50's) holds. Only 1150 passes its slot. It is a function of this file's anonymous
 #   namespace, TextoAudioAtivado: name, linkage and file are chosen, the file against its band, which puts 10539 right
 #   after the __func slots of api::CTextFieldUpdateMT's timer lambda (10540 to 10544, unit 51's; the class's own
 #   members are 10545 to 10549), not among this file's functions (10424 to 10429).
-# Chosen too: CriaForm's name and its being a static member, the statics' names.
+#   Step 8 names it by `table by:1150` since 1150 matches.
+# Chosen too: CriaForm's name and its being a static member, the statics' names; this file's own TITULO_TREINAMENTO,
+# its name and scope (unit 51's; one constant in a header both files include is another form, not measured); the
+# forward declaration of TextoAudioAtivado and the lines of every definition but ProcessInput's and ProcessKey's.
 #
 # CJustificativaEfetuada's singleton, in cjustificativaefetuada.cpp, at chosen lines after the destructor (the file has
 # no record): GetInst (fn 2747, matched, named by vptr-anchor), with the constructor inlined, which builds +12 with
@@ -241,6 +268,12 @@
 #   an operand. So the target's object had no such set; no form tried gives it (object reads: the training test in a
 #   named bool and GetDadosSemBiometria inline keep the set; TipoAtivacaoAudio leaving its result unset in mode 0 drops
 #   it in all four cases, where the target keeps three).
+# - Replayed on the link's module as for 1150 above, with this file's functions after ccontrolareconhecimento.cpp's,
+#   10425 scores 200 over 2196 rows (4 inserted, 2 deleted: the -Oz output, before the link's later passes); with
+#   SalvaHabilitacaoEleitor moved above ProcessKey 352 over 2205 (with the three helpers above it or below it too), and
+#   with the three helpers alone above ProcessKey 250 over 2211. In the target's SemBiometria case the 0 is the one
+#   binaryen's inlining stores into SalvaHabilitacaoEleitor's local before its 144-byte frame (`i32.const 0; local.set
+#   1`); that its redundant-set elimination then dropped the source's own 0 is a reading, not reproduced.
 #
 # Matched since: CPedeAnoNascimentoSemBiometria::StartState (fn 10490). The target stores +4 (the next state) first,
 # then +32 and +28. Each of the six orders of the three statements written as assignments compiles at the tree's flags
