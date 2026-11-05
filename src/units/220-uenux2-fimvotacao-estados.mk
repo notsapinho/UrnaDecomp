@@ -1,7 +1,8 @@
 # uenux2 three states of the end of the vote in app/vota/eleitor/fimvotacao/, each a singleton over one or two forms:
 #   vota::CGeraBU (cgerabu.{h,cpp}): GetInst 6129, with the constructor inlined by binaryen; the exit destructors of its
 #     static std::unique_ptr and std::mutex, 12112 and 12111
-#   vota::CGeraRelatorios (cgerarelatorios.{h,cpp}): GetInst 6084, the same shape; exit destructors 12107 and 12106
+#   vota::CGeraRelatorios (cgerarelatorios.{h,cpp}): GetInst 6084, the same shape; exit destructors 12107 and 12106;
+#     its StartState (12105) is written in cgerarelatorios.cpp: src/units/372-uenux2-relatorios-gerarelatorios.mk
 #   vota::CCopiaResultadoParaMR (ccopiaresultadoparamr.{h,cpp}): GetInst 6174, the same shape; exit destructors 12152 and
 #     12145
 # Their forms come from functions this unit adds to other units' files, whose paragraphs have the evidence: unit 110's
@@ -9,8 +10,8 @@
 # TelaCopiaResultadoParaMR, which binaryen inlines into 6129 and 6174) and unit 165's cpreshowformvota.cpp
 # (vota::GetFormulario 886, a thunk of binaryen's 6117, matched since unit 247). The destructors are the bodies other
 # states share (448 and 765 for CGeraBU's two std::shared_ptr; 244 and 387 for the other two), matched already.
-# 220-uenux2-fimvotacao-estados-pending.cpp traps the three StartState and says what each waits for; the class heads say
-# what each layout rests on.
+# 220-uenux2-fimvotacao-estados-pending.cpp traps the other two StartState and says what each waits for; the class
+# heads say what each layout rests on.
 #
 # Evidence: the records name the .cpp files (cgerabu.cpp:54, cgerarelatorios.cpp:51, ccopiaresultadoparamr.cpp:59 to
 # 174, all StartState's); the vtables' slots and the D0s (a call of the D2 and a free: out of line; D2s with no vptr
@@ -75,10 +76,8 @@
 #   comum/comparecimentomesario/estados/cregistrarmesarios.cpp, 11140 in cformbuilder.cpp). This unit wrote both and
 #   took them out again: our link inlined 11140 into 1255, its one call site, and a second, identical 1255 did not keep
 #   it out of line; unit 247's fragment has what does.
-# - the three StartState (12110, 12105, 12134): the pending file's header.
-# - fns 11236, 11237, 11238 and 11239: the __func members of comum::(anonymous)::MontaCabecalho's lambda
-#   (comum::CGeradorRelEleitoresHabBiograf), whose std::function only CGeraRelatorios::StartState (12105) builds
-#   (/usr/bin/grep -rlE 'i32\.const 1576052($|[^0-9])' build/out/splat/pieces/asm prints 11238, 11239 and 12105).
+# - two StartState (12110, 12134): the pending file's header. The third, 12105, and the __func members of
+#   comum::(anonymous)::MontaCabecalho's lambda it builds (11236 to 11239) are fragment 372's.
 #
 # Chosen, no evidence names them: the classes' member names and their type (the std::shared_ptr of
 # api::IForm<api::IScreen> that the form functions return; the target only stores them); GetInst's name and its
@@ -100,6 +99,8 @@ FIMVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/fimvotacao/cgerabu.cpp \
     src/app/vota/eleitor/fimvotacao/cgerarelatorios.cpp \
     src/app/vota/eleitor/fimvotacao/ccopiaresultadoparamr.cpp
 UENUX2_SRCS += $(FIMVOTACAO_ESTADOS_SRCS)
+# cgerarelatorios.cpp reaches ecourna's chorariosurna.hpp through cconfiguracaoeleicao.h, which includes Boost
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/fimvotacao/cgerarelatorios.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 220-uenux2-fimvotacao-estados-pending.cpp gives the vtables trapping bodies, compiled
 # at the classes' directory's flags (app/vota/ builds with strict aliasing: UENUX2_TBAA_DIRS in src/Makefile)
 FIMVOTACAO_ESTADOS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

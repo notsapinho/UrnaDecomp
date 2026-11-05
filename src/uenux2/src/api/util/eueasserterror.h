@@ -40,6 +40,10 @@ enum EUeAssertError {
     // 32 characters for each name, chosen to that length
     EUA_EMITIRMAISBU_ESTADO_INVALIDO = 3452,
     EUA_EMITIRMAISBU_FIMDOSTRABALHOS = 3453,
+    // vota::CGeraRelatorios::StartState (fn 12105, record cgerarelatorios.cpp 51:104): the text "Assert
+    // (poInfo.GetVota().GetEstadoVota() == EAVGERARRELATORIOS)". With the invocation indented four columns and the code
+    // qualified api::, the column leaves 31 characters for the name, chosen to that length
+    EUA_GERARELATORIOS_EST_INVALIDO = 3455,
     // vota::CVerificaQtdBUsAdicionais::StartState (fn 12023, records cverificaqtdbusadicionais.cpp 36:102 and 37:116):
     // the texts "Assert (egVota.GetEstadoVota() == EAVENCERRADA)" and "Assert (egVota.GetEstadoEncerramento() ==
     // EAEFIMDOSTRABALHOS)". With the invocations indented four columns and the codes qualified api::, the columns leave

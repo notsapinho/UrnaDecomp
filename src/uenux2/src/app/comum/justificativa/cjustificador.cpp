@@ -78,4 +78,15 @@ std::string CJustificadorDadoTitulo::Text()
     return justificador.GetTituloCorrente().GetNumero();
 }
 
+std::string CJustificadorDadoQuantidade::Text(const std::string& formato)
+{
+    const CJustificador& justificador = CJustificador::GetInst();
+    std::string texto = formato;
+    if (justificador.QuantidadeJustificados() == 1) {
+        texto.pop_back();
+    }
+    const std::size_t quantidade = justificador.QuantidadeJustificados();
+    return std::vformat(texto, std::make_format_args(quantidade));
+}
+
 } // namespace comum

@@ -35,10 +35,11 @@
 //                     their defaults
 //   TextoMultiLinha   3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit
 //                     110's, is): it calls it twice, with another rectangle and alignment the second time
-//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (12105, 12110), and 12110 for 2775
-//                     (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, and 2248, unit 220's, which call them
-//                     too, are in the link). Its form is a parameter: their callers zero the vector in line, and it takes no
-//                     constructor of ours. The EStyle and alignments vary as theirs do
+//   RelatorioA        the caller of 193, 604, 198 and 1264 not in the link, 12110, one call of each, and 12110 for
+//                     2775, two (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, 2248, unit 220's, and 12105,
+//                     fragment 372's, which call them too, are in the link: the calls that stood for 12105 went). Its
+//                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours.
+//                     The EStyle and alignment are parameters, as 12110's vary
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
 #include <string>
@@ -132,10 +133,6 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
     form.AddTextField(texto, estilo, alinhamento);
     form.AddTextField(fonte, alinhamento);
     form.AddNewLine(linhas);
-    form.AddNewLine(1);
-    form.AddCut();
-    form.AddTextField(texto, static_cast<api::IPaper::EStyle>(2), api::ALINHAMENTO_CENTRO);
-    form.AddTextField(fonte, api::ALINHAMENTO_DIREITA);
     form.AddCut();
     form.AddQRCode(qrcode);
     return static_cast<int>(linhas);
@@ -147,8 +144,9 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //                         calls of 301 (GetInteractiveForm) went: the last of its 49 target callers not in the link,
 //                         10451 (unit 221's), is now
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelC   the callers of 357 (Build): 12105 and 12110, not reconstructed (11256, 2890, 12005, 11908, 11946,
-//                3872, 3873, 5579, 5977, 3699, 5580, 5970, 5971 and 11253 are in the link); it calls Build twice
+//   FormPapelC   the caller of 357 (Build) not reconstructed, 12110 (11256, 2890, 12005, 11908, 11946, 3872, 3873,
+//                5579, 5977, 3699, 5580, 5970, 5971, 11253 and fragment 372's 12105 are in the link): one call, the
+//                one that stood for 12105 having gone with it
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {
     const auto simples = form.GetForm(nome);
@@ -174,9 +172,9 @@ __attribute__((noinline)) int FormB(api::CFormBuilder& form, const std::shared_p
     return form.GetForm(preShow, std::string()).use_count() + posicao.x;
 }
 
-__attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPaperFormBuilder& outro)
+__attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form)
 {
-    return form.Build().use_count() + outro.Build().use_count() + 3;
+    return form.Build().use_count() + 3;
 }
 
 // The MT builder's input fields: ControleMT, the stand-in for the callers of 395 (CMTFormBuilder::AddInputControl),

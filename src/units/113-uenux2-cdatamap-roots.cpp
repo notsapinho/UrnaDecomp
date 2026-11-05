@@ -12,9 +12,10 @@
 //   and 11973), 1283 (9: 5604, 11181, 11213, 11255 and 11261 are in the link), 3125 (4, all in the link). All four in
 //   the link are what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset,
 //   32 or 20.
-// - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105; 11206 is in the link), 5611 (5604 and
-//   11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
-//   written Gera) in the link; those over the parties' map stay for 1283's callers.
+// - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105 and 11206, both in the link), 5611 (5604
+//   and 11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
+//   written Gera) in the link, and those over the voters' map with 12105 (fragment 372's); those over the parties' map
+//   stay for 1283's callers.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741, needs no stand-in: its target callers 5725, 10587 and 10590 are in the link.
 //   Add over this key, 5725 (6734, 10590), and the copy of the pair's second member, 3743 (5725, 6734, 10590): 10590
@@ -29,13 +30,14 @@
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade,
 //   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, 3614, unit 221, 3728, fragment
 //   225, and 2805, fragment 310), and binaryen merges the copies.
-// - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
-//   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
+// - comum::CJustificador's constructor, 3742 (1391 and 11474, both in the link, 11474 through fragment 372): its two
+//   call sites keep it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
+//   Its stand-in went with 11474.
 // - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387, 10368, 3614 and 10451 are in the
 //   link), its counts
 //   3606 and 2727 (called by 10795 and by 5387 and 10368, the data sources' slot 2, in the link with unit 104's 10388,
-//   and both by 12105), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls HasInst once, for 12105 (11616,
-//   unit 122's, is in the link and calls it three times).
+//   and both by 12105), and HasInst, 2221 (11616, 12105): both callers are in the link (unit 122's 11616 calls it
+//   three times, fragment 372's 12105 twice), and the stand-in for 12105 went.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 #include <new>
@@ -50,7 +52,6 @@
 #include "app/comum/justificativa/cjustificadordetalhe.h"
 #include "ecourna/app/dados/cnumeroinscricaoeleitoral.hpp"
 
-using TMapaEleitores = api::CDataMap<comum::md::CEleitorIdentidade, comum::CEleitorDetalhe>;
 using TMapaPartidos = api::CDataMap<unsigned short, comum::md::CPartido>;
 using TMapaJustificados = api::CDataMap<ecourna::app::dados::CNumeroInscricaoEleitoral, comum::CJustificadorDetalhe>;
 using TComparecimento = comum::md::CComparecimentoMesario;
@@ -113,38 +114,17 @@ __attribute__((noinline)) int CopiaDetalhe(void* destino, const comum::CJustific
     return 37;
 }
 
-// Stands for 3742's caller 11474, which holds comum::CJustificador::GetInst's code and is not reconstructed (1391 and
-// 11475 are in the link): two call sites, since binaryen inlines a function called once.
-__attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
-{
-    new (primeiro) comum::CJustificador();
-    new (segundo) comum::CJustificador();
-    return 43;
-}
-
-// Stands for the caller of CRegistradorMesario::HasInst (fn 2221) not in the link, 12105; 11616 is. GetInst (fn
-// 815) and the two counts (fns 3606 and 2727) have two callers or more in the link: 10795, 10313, 10337 and the data
-// sources' slot 2 (5387 and 10368).
-__attribute__((noinline)) int ConsultaRegistrador()
-{
-    return comum::CRegistradorMesario::HasInst() ? 47 : 59;
-}
-
 const void* volatile w113_sink;
 
 struct SW113Roots {
     SW113Roots()
     {
-        w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaEleitores>);
-        w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaEleitores>);
         w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&CarregaUm);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
         w113_sink = reinterpret_cast<const void*>(&AdicionaJustificado);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
-        w113_sink = reinterpret_cast<const void*>(&CriaJustificadores);
-        w113_sink = reinterpret_cast<const void*>(&ConsultaRegistrador);
     }
 } w113_roots;
 

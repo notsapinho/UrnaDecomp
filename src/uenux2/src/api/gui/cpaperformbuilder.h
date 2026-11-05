@@ -31,8 +31,8 @@ public:
     using SharedField = std::shared_ptr<IFormField<IPaper>>;
     void AddTextField(const std::string& texto, IPaper::EStyle estilo, ETextAlignment alinhamento);
     void AddTextField(std::string (*fonte)(), ETextAlignment alinhamento);
-    template <typename FONTE>
-    void AddTextField(FONTE fonte);
+    template <typename FONTE> void AddTextField(FONTE fonte);
+    template <typename FONTE> void AddTextField(FONTE fonte, const std::string& formato);
     void AddNewLine(size_t linhas);
     void AddCut();
     void AddQRCode(const CQRCodeImagePaper::QrcodeData& qrcode);
@@ -55,6 +55,24 @@ template <typename FONTE>
 void CPaperFormBuilder::AddTextField(FONTE fonte)
 {
     const SharedIText text(new CDataText<FONTE>(fonte));
+    const SharedField campo(new CTextFieldPaper(text, static_cast<IPaper::EStyle>(1)));
+    m_campos.push_back(campo);
+}
+
+// The same over a callable that formats the string it is given, an api::CDataTextFmt<FONTE> (cdatatextfmt.h): comum's
+// CGeradorBUJ (cgeradorbuj.cpp) builds one over CJustificadorDadoQuantidade::Text (target fn 11474, table slot 2948)
+// and "{:05} Justificativas". Target fn 12105 holds its instance behind a 16-byte frame of its own (binaryen's
+// inlining of a linkonce copy with one caller, a reading): the CDataTextFmt allocated, its control block, the
+// CTextFieldPaper of style 1 and its block, pushed as the other overload does. Its being a member template here, its
+// name and its parameters' forms are chosen (src/units/372-uenux2-relatorios-gerarelatorios.mk). Its users include
+// cdatatextfmt.h.
+template <typename T>
+class CDataTextFmt;
+
+template <typename FONTE>
+void CPaperFormBuilder::AddTextField(FONTE fonte, const std::string& formato)
+{
+    const SharedIText text(new CDataTextFmt<FONTE>(fonte, formato));
     const SharedField campo(new CTextFieldPaper(text, static_cast<IPaper::EStyle>(1)));
     m_campos.push_back(campo);
 }

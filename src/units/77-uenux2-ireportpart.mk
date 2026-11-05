@@ -151,6 +151,5 @@
 IREPORTPART_SRCS := src/app/comum/relatorios/cparteeleitores.cpp src/app/comum/relatorios/cparterdv.cpp src/api/gui/reports/cformpart.cpp
 UENUX2_SRCS += $(IREPORTPART_SRCS)
 IREPORTPART_HDRS := $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
-$(ROOT)/$(APP)/77-uenux2-ireportpart-roots.o: $(ROOT)/src/units/77-uenux2-ireportpart-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/77-uenux2-ireportpart.mk $(IREPORTPART_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/77-uenux2-ireportpart-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/77-uenux2-ireportpart-roots.o
+# No roots: api::CFormPart's builders in the target (5971, 11908, 11943, 11946 and 12105) are all in the link, the last
+# through fragment 372's; the two stand-ins that stood for 12105 (a by-value and a by-reference form) went with it.

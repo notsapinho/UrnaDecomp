@@ -191,7 +191,8 @@
 # wrapper of the trim body 9406 that binaryen merges into 3942 with the copying CStringUtils::ToLower, are written and
 # match: 1374 is `call by:3712,5667`.
 #
-# 2262 is one body with ASN1::ABSTRACT_SYNTAX::info_type's constructor, and this object comes first, so its match line
+# 2262 is one body with ASN1::ABSTRACT_SYNTAX::info_type's constructor and, since fragment 372, with
+# comum::CGeradorRelEleitoresHabBiograf's, and this object comes first, so its match line
 # carries comum::CLocal's symbol. Its line and 2261's read C1 and D1 and not C2 and D2 since GetInst was written, and that is
 # no twin: C1 and C2 are aliases of one function in clocal.cpp.o (wasm-objdump -x prints one func= for both), and GetInst mentions C1
 # first, so the link map holds no C2 or D2 of this class. 3751, 3756, 5813, 2815, 2818 and 3786 read so for the same reason. 3753 is a second caller of the copying ToLower (1879), which releases unit 12's
@@ -302,7 +303,8 @@
 #   above Carrega, 331 over 2501 (6 inserted, 10 deleted); with clocal.cpp's object first and Carrega above the
 #   helpers, as written, 183 over 2495, all operand-only. The data agree with the objects' order: clocal.cpp's records
 #   (@1559828 to @1559876) lie ahead of the readers' run (1562844 on).
-# - Unit 309's roots stand in for 5740's caller 7787 (4161 is in the link) and for 5741's callers 12105 and 7787.
+# - Unit 309's roots stand in for 5740's caller 7787 (4161 is in the link) and for 5741's caller 7787 (12105, fragment
+#   372's, is in the link).
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp src/app/comum/dados/carregaarquivo.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

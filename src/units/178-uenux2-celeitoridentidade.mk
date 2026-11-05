@@ -51,18 +51,12 @@
 # "...'{}'.", ",\n  "). Its name, its being a free function of comum::md beside FormataIdentidade, its file and its line
 # are chosen; no other spelling was tried.
 #
-# Roots (178-uenux2-celeitoridentidade-roots.cpp): of the five functions' target callers some are in the link (six of
-# 566's, 2803's 2225, and 1924's 10586 and 11233) and the others are not reconstructed, so the file gives each function
-# two call sites (the roots header says which callers each stands for); 3723's two (2803 and unit 278's 10627) are in
-# the link,
-# and its stand-in went; the two Valida get none, since the
-# target inlines each into its one caller and ours has that one call too. FormataIdentificador has one caller in the
-# link, 10586, and DuasFormatacoesIdentificador stands for the other two.
+# No roots: every target caller of the five functions is in the link: CEleitorIdentidade's constructor's 13, 2798's
+# three, 2803's four, 3723's two (2803 and unit 278's 10627), and FormataIdentificador's three (unit 50's 10586,
+# fragment 317's 11233 and fragment 372's 12105, which calls it three times); the stand-ins went with them, the last,
+# DuasFormatacoesIdentificador, with 12105. The two Valida get none, since the target inlines each into its one caller
+# and ours has that one call too.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORIDENTIDADE_SRCS := src/app/comum/dados/md/iregraidentidade.cpp src/app/comum/dados/md/eleitor/celeitoridentidade.cpp
 UENUX2_SRCS += $(CELEITORIDENTIDADE_SRCS)
-# the unit's target callers are not reconstructed: 178-uenux2-celeitoridentidade-roots.cpp stands in for them
-$(ROOT)/$(APP)/178-uenux2-celeitoridentidade-roots.o: $(ROOT)/src/units/178-uenux2-celeitoridentidade-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/178-uenux2-celeitoridentidade.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/178-uenux2-celeitoridentidade-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/178-uenux2-celeitoridentidade-roots.o
