@@ -179,8 +179,8 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,342 | 1,342 | 0 | 0 | 0 |
-| `fingerprint` | 628 | 627 | 0 | 1 | 0 |
+| `byte` | 1,343 | 1,343 | 0 | 0 | 0 |
+| `fingerprint` | 627 | 626 | 0 | 1 | 0 |
 | `addr` | 7,788 | 7,575 | 92 | 120 | 1 |
 | `shape` | 1,129 | 1,082 | 33 | 14 | 0 |
 | `none` | 3,456 | 1,976 | 198 | 351 | 931 |
