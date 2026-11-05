@@ -109,9 +109,15 @@
 # members (10434, and 10442 and 10476, the statics of units 152's and 282's vota::CEleitorDemorando and
 # CDigitalNaoReconhecida; the fourth, 12033, unit 156's vota::CRetirarMR's, joined it since and matches with it);
 # before that the census paired our destructor of it with fn 10414 (the same body as ours,
-# over another class's pointer and D2: a shape pair), and 10434 read no-candidate. The roots stand
-# for 1901's target caller not in the link (10425; 10419, unit 142's, and 10209, unit 104's, are), and the vtable sink
-# went: 1901's constructor stores the vptr.
+# over another class's pointer and D2: a shape pair), and 10434 read no-candidate.
+#
+# No roots file. Its last stand-in, two calls of vota::CEleitorVotouNaoVotou::GetInst (1901) for its target caller
+# 10425, went once 10425 was written (unit 142, in the link): 1901's target callers 10209 (unit 104's), 10419 and 10425
+# (unit 142's) are all in the link, and a link without it moves no row in or out of match. The vtable sink went before:
+# 1901's constructor, inlined into GetInst, stores the vptr, and StartState and the destructors (10431, 1284, 2884) come
+# with the vtable. What the roots file said needs no stand-in: comum::IPedeTituloMesario's constructor (target fn 3608)
+# has its three direct call sites in fn 10388 (the derived states' constructors, inlined there), which is in the link
+# (CPedeTituloMesario::StartState).
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
 # (unit 65 wrote its first form): this unit adds nothing to it.
@@ -122,8 +128,3 @@ UENUX2_SRCS += $(CELEITORVOTOUNAOVOTOU_SRCS)
 # IPedeTituloMesario::ProcessInput reads comum::CConfiguracaoEleicao, whose header reaches ecourna's CHorariosUrna and
 # so Boost's headers: an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# vota::CEleitorVotouNaoVotou::GetInst's callers are not all written: 71-uenux2-celeitorvotounaovotou-roots.cpp stands
-# in for them
-$(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-roots.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-roots.o

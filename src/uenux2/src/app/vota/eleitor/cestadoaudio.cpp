@@ -39,6 +39,16 @@ void CEstadoAudio::Desativa()
     m_modo = MODO_DESATIVADO;
 }
 
+bool CEstadoAudio::Modo0Selecionado() const
+{
+    return m_modo == MODO_0;
+}
+
+bool CEstadoAudio::Modo1Selecionado() const
+{
+    return m_modo == MODO_1;
+}
+
 void CEstadoAudio::SetTeclasTesteTeclado(char esperada, char pressionada)
 {
     m_teclaEsperada = esperada;

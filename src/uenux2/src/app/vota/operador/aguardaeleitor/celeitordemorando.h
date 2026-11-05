@@ -31,7 +31,8 @@ namespace vota {
 // field of the form, +20 set by StartState from vota::CThreadOperador's text of the voter (its string at +108); +28 the
 // form, which ProcessInput reads through api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record
 // cinteractiveform.h:57 @1592840). bool for the byte and every member name are chosen; nothing here writes the byte but
-// the constructor (10425, the code that comes here, is not written).
+// the constructor and vota::CMostraEleitorVotando::ProcessKey (fn 10425: false on its key 3, true on its key 4,
+// before it goes here), through SetVotou, a setter whose name is chosen, as CEleitorVotouNaoVotou's.
 class CEleitorDemorando final : public comum::CAppState {
 public:
     virtual ~CEleitorDemorando() override;
@@ -43,6 +44,8 @@ public:
     virtual void ProcessKey(uebyte tecla) override;
 
     virtual void ProcessInput() override;
+
+    void SetVotou(bool votou) { m_bVotou = votou; }
 
 private:
     CEleitorDemorando();

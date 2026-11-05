@@ -1,10 +1,6 @@
-// Roots of fragment 291: keep comum::CEleitores::GetCurrentBiometriaEleitor (fn 1393, unit 110's celeitores.cpp) in
-// the skeleton link the way the target reaches it: six direct callers (fns 10425, 10465, 10474, 10478, 10500 and
-// 10512, vota's identification states; 10465, 10474, 10478, 10500 and 10512 are in the link, units 282, 239 and 161),
-// each passing CEleitores::GetInst()'s result. The stand-in is for the other one, 10425. binaryen
-// inlines a function called once, so the stand-in calls it twice, on two objects, and reads both 40-byte results.
-// Declared through an asm label with the object's signature (the md::CBiometriaEleitor comes back through the result's
-// address); the results are left undestroyed: nothing calls the stand-in.
+// Roots of fragment 291. comum::CEleitores::GetCurrentBiometriaEleitor (fn 1393, unit 110's celeitores.cpp) needs no
+// stand-in now: its six direct callers (fns 10425, 10465, 10474, 10478, 10500 and 10512, vota's identification states)
+// are in the link, units 142, 282, 239 and 161, and the one that stood for 10425 went.
 //
 // DetectaDigital instantiates api::CPolySingleton<api::IFingerDetection>::instance, a landed header's template, whose
 // copy is fn 3615 (its records cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105 name it): of its three target
@@ -18,19 +14,7 @@
 #include "api/hwil/ifingerdetection.h"
 #include "api/pattern/cpolysingleton.h"
 
-extern "C" {
-void w1393_root(void*, int) __asm__("_ZNK5comum10CEleitores26GetCurrentBiometriaEleitorEv");
-}
-
 namespace {
-
-__attribute__((noinline)) int BiometriasCorrentes(int eleitores, int outros)
-{
-    int biometrias[20];
-    w1393_root(biometrias, eleitores);
-    w1393_root(biometrias + 10, outros + 4);
-    return biometrias[8] - biometrias[18];
-}
 
 __attribute__((noinline)) const void* DetectaDigital()
 {
@@ -43,7 +27,6 @@ const void* volatile biometria_291_sink;
 struct SBiometria291Roots {
     SBiometria291Roots()
     {
-        biometria_291_sink = reinterpret_cast<const void*>(&BiometriasCorrentes);
         biometria_291_sink = reinterpret_cast<const void*>(&DetectaDigital);
     }
 } biometria_291_roots;

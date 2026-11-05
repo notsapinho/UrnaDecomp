@@ -3,14 +3,14 @@
 // table slot has its address taken. Declared through asm labels, so this TU needs no uenux2 header
 // and instantiates nothing; a function that returns a class takes the result's address first, as the target's do.
 // - vota::impl::IInformacaoThreadOperador::GetInst (target fn 599): the 16 vota:: functions over it and
-//   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its callers not written yet,
-//   fns 10425 and 10451 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10676 and 10680, unit 161's, 10646, unit
-//   104's, 10523, unit 152's, 3616, unit 319's, and 10481, unit 282's, are in the link). GetInst
+//   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its caller not written yet,
+//   fn 10451 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10676 and 10680, unit 161's, 10646, unit 104's, 10523,
+//   unit 152's, 3616, unit 319's, 10481, unit 282's, and 10425, unit 142's, are in the link). GetInst
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
-// - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: GetIdentidadeEleitor (1535;
-//   10425; 10587, 10631, 3616 and 10590, units 152, 104, 319 and 283, are in the link) and GetApresentacaoFotoEleitor
-//   (2745; 10425). The calls of LimpaBiometria (3621), SetEleitorSemFoto (5413) and SetFotoNaoApresentada (1904) went:
+// - the vota:: functions over GetInst: the calls of GetIdentidadeEleitor (1535) and GetApresentacaoFotoEleitor (2745)
+//   went, their last target caller not in the link, 10425 (unit 142, which calls each four times), being in it. The
+//   calls of LimpaBiometria (3621), SetEleitorSemFoto (5413) and SetFotoNaoApresentada (1904) went:
 //   their target callers (5400, 10500 and 10511; 3616) are in the link. So did those of IsAudioAtivado (2746): its
 //   target callers 10481 (unit 282's), 3883 (unit 282's merge), 10511 (unit 161's) and 5400 (unit 239's) are in the
 //   link. SetIdentidadeDigitada (5414) needs none: its one target caller, 10677 (unit 161's), calls it twice.
@@ -26,9 +26,6 @@
 //   link, is (1150, 1901, 1905, 2735, 2747, 3625, 5401, 5418, 10439, 10588 and 10635 pass it too).
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
-
-void vota_GetIdentidadeEleitor(void* identidade) __asm__("_ZN4vota20GetIdentidadeEleitorEv");
-void vota_GetApresentacaoFotoEleitor(void* apresentacao) __asm__("_ZN4vota26GetApresentacaoFotoEleitorEv");
 }
 
 namespace {
@@ -39,23 +36,12 @@ __attribute__((noinline)) int w50_getinst(int salto)
     return primeira == informacaothreadoperador_getinst() ? salto + 3 : salto + 5;
 }
 
-__attribute__((noinline)) int w50_fachada(int salto, void* resultado)
-{
-    int soma = salto;
-    vota_GetIdentidadeEleitor(resultado);
-    vota_GetIdentidadeEleitor(static_cast<char*>(resultado) + 32);
-    vota_GetApresentacaoFotoEleitor(resultado);
-    vota_GetApresentacaoFotoEleitor(static_cast<char*>(resultado) + 48);
-    return soma;
-}
-
 const void* volatile w50_sink;
 
 struct SInformacaoThreadOperadorRoots {
     SInformacaoThreadOperadorRoots()
     {
         w50_sink = reinterpret_cast<const void*>(&w50_getinst);
-        w50_sink = reinterpret_cast<const void*>(&w50_fachada);
     }
 } w50_roots;
 

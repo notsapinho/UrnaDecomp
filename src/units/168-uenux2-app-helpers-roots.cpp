@@ -6,8 +6,9 @@
 //   (unit 116's CThreadEleitor::Run) are in the link. Nor have ProcessKey (3843), ProcessInput (5911), ProcessTick
 //   (5910), AcceptsKey (3842), AcceptsInput (5909) and AcceptsTick (5908): their callers, 4349 and 10204 (unit 116's,
 //   4349 written and not matched), are both in the link.
-// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 (unit 50) and 10680 (unit 161) are in the
-//   link; w168_tecla and w168_treinamento stand for the other two, not written.
+// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 (unit 50), 10680 (unit 161) and 10425 (unit
+//   142, written, which calls it twice) are in the link; w168_treinamento stands for 12098, not written. w168_tecla,
+//   which stood for 10425 (ProcessKey's key its parameter), went.
 // - vota::EhTreinamentoMesario (fn 1823; callers 7306, 10465, 10474, 10478, 10500, 10512): its stand-in went, every
 //   caller in the link: 10512 (unit 161, written), 10465, 10474 and 10478 (unit 282), 7306 (unit 104) and 10500.
 // - vota::AdicionaSeparador (fn 1387; callers 11908, written, 11946, 12105, 12110, not written), with the alignments
@@ -19,11 +20,6 @@
 #include "app/vota/comum/votadefs.h"
 
 namespace {
-
-__attribute__((noinline)) int w168_tecla(uebyte tecla)
-{
-    return (vota::EhTreinamento() ? 3 : 5) + tecla;
-}
 
 __attribute__((noinline)) int w168_treinamento()
 {
@@ -58,7 +54,6 @@ const void* volatile w168_sink;
 struct SW168Roots {
     SW168Roots()
     {
-        w168_sink = reinterpret_cast<const void*>(&w168_tecla);
         w168_sink = reinterpret_cast<const void*>(&w168_treinamento);
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
         w168_sink = reinterpret_cast<const void*>(&w168_assinaturas);

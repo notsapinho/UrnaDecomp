@@ -1,11 +1,9 @@
 // Roots: keep what the unit reaches in the skeleton link the way the target reaches it. Most of its target callers are
 // not reconstructed. Each function has direct callers in the target and gets two call sites here, which vary what the
 // callers vary, so dead-argument elimination folds nothing in:
-// - CEleitorIdentidade's constructor (fn 566): 13 direct callers, which use the returned `this`, so the stand-ins use it
-//   too. Twelve are in the link (3766, 11542, 10401 and 10402, unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225,
-//   unit 50; 11407, fragment 225; 10313, unit 71; 10337, unit 135; 11411, unit 310), and the first five, 11407, 10313,
-//   10337 and 11411 pass the type as a constant or a column's value; the stand-ins stay for the one that waits, 10425
-//   (which passes the constant 1).
+// - CEleitorIdentidade's constructor (fn 566): 13 direct callers, all in the link now (3766, 11542, 10401 and 10402,
+//   unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225, unit 50; 11407, fragment 225; 10313, unit 71; 10337, unit
+//   135; 11411, unit 310; 10425, unit 142, which passes the constant 1 and uses the returned `this`): its stand-ins went.
 // - FormataIdentidade (fn 2798): callers 3616 (unit 319), 10420 (unit 142, which passes the type as the constant 1)
 //   and 10631 (unit 104), all in the link: its stand-ins went.
 // - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50), 10420 (unit 142's validatitulosuspensao.cpp,
@@ -20,16 +18,10 @@
 // so none is a target function's body. Declared through asm labels with the object's signatures (a constructor returns
 // `this`), so this TU needs no uenux2 header and instantiates nothing.
 extern "C" {
-int r178_identidade(int, int, int) __asm__("_ZN5comum2md18CEleitorIdentidadeC1ENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r178_formata_identificador(int, int) __asm__("_ZN5comum2md20FormataIdentificadorERKNS0_18CEleitorIdentidadeE");
 }
 
 namespace {
-
-__attribute__((noinline)) int DuasIdentidades(int destino, int identificador, int tipo)
-{
-    return r178_identidade(destino, identificador, tipo) + r178_identidade(destino + 16, identificador + 12, tipo + 1);
-}
 
 __attribute__((noinline)) void DuasFormatacoesIdentificador(int destino, int identidade)
 {
@@ -42,7 +34,6 @@ const void* volatile r178_sink;
 struct SRoots178 {
     SRoots178()
     {
-        r178_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r178_sink = reinterpret_cast<const void*>(&DuasFormatacoesIdentificador);
     }
 } roots178;

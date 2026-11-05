@@ -83,15 +83,15 @@
 #   GravaEnvelope's 304 against 320. The rest is not explained.
 # - Its name: a callers+content hand line in splat/symbol_addrs.txt, led by the six records only 2725 loads, whose
 #   copies only our ArmazenaImagem loads (`check_srcloc.py --strict` lists them as the target's); 5382 (unit 135),
-#   its one caller in our link, needs it, and falls without it (weighed by removal: unit 135's fragment). Its other
-#   caller, fn 10425 (vota::CMostraEleitorVotando's, not written), has a stand-in in the roots.
+#   its one caller in our link then, needs it, and falls without it (weighed by removal: unit 135's fragment). Its other
+#   caller, fn 10425 (vota::CMostraEleitorVotando's), is written in unit 142 and not matched; the roots' stand-in for it
+#   went.
 # - Chosen besides: the names of GravaWsqCifrado, GravaEnvelope and ZeraDataHora, their being static members,
 #   ID_INVALIDO and its type, every local's name, PreparaWsq's name and its being an inline member of
 #   vota::CConversorWsq, the access of each member, and the lines and order of the functions without a record (after
 #   CifrarWsq: GravaEnvelope, GravaWsqCifrado, ZeraDataHora, ArmazenaImagem).
 #
-# The roots stand in for 2725's other caller, fn 10425, and for the other callers of the instances above
-# (293-uenux2-ccontrolaarmazenamentodeimagens-roots.cpp). The stand-in for 2725's call of utimes went: 2725 is in the
+# The roots stand in for the other callers of the instances above (293-uenux2-ccontrolaarmazenamentodeimagens-roots.cpp). The stand-in for 2725's call of utimes went: 2725 is in the
 # link, beside SQLite's dotlockLock, and libc's __futimesat (6236) still matches.
 CCONTROLAARMAZENAMENTO_SRCS := src/app/comum/gravadores/asn/cconversorentidadehashes.cpp \
     src/app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.cpp

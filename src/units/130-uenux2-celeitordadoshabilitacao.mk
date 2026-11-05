@@ -20,9 +20,15 @@
 # optional empty (its null byte at +12 and flag at +28 cleared): the target stores them in the reverse of the members'
 # order, which a member-initializer list in declaration order gives (docs/reference/facts/codegen.md C1); it matches
 # byte for byte (`pnpm wasm score`: 0 over 20 rows). Its one target caller, vota::CMostraEleitorVotando::ProcessKey (fn
-# 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), calls it three times and is not written:
-# 130-uenux2-celeitordadoshabilitacao-roots.cpp stands for it. Chosen: its parameters' names and its being defined in
+# 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), calls it three times and is written (unit
+# 142, not matched), so the roots file that stood for it went. Chosen: its parameters' names and its being defined in
 # the .cpp, above GetTituloMesario (no record gives its line).
+# A second constructor, with the mesario's title, has no target index of its own: 10425 holds it inlined in
+# vota::CControlaReconhecimento::GetDadosBiometriaMesario (unit 161's), which binaryen inlines behind a 64-byte frame;
+# it stores the four words in the same reverse order and copies the title into the optional. It is out of line in the
+# .cpp, after the first: inline in the class, clang threads the title's copy into the destruction test of the caller's
+# temporary, which the target keeps joined (10425 `392 over 2218` rows against `360 over 2205`, pnpm wasm score in the
+# whole link). Chosen: its parameter's name, its being a reference, its line.
 #
 # Chosen, no evidence names them: the paths of both headers (the record names only the .cpp), comum as
 # CEleitorDadosHabilitacao's namespace (2825's record spells the type unqualified beside md:: types, which R11 of
@@ -30,7 +36,3 @@
 # getter name but GetTituloMesario, and the lines of everything but the throw.
 CELEITORDADOSHABILITACAO_SRCS := src/app/comum/dados/md/eleitor/celeitordadoshabilitacaobiometrica.cpp
 UENUX2_SRCS += $(CELEITORDADOSHABILITACAO_SRCS)
-# the constructor's caller is not reconstructed yet: 130-uenux2-celeitordadoshabilitacao-roots.cpp stands in for it
-$(ROOT)/$(APP)/130-uenux2-celeitordadoshabilitacao-roots.o: $(ROOT)/src/units/130-uenux2-celeitordadoshabilitacao-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/130-uenux2-celeitordadoshabilitacao.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/130-uenux2-celeitordadoshabilitacao-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/130-uenux2-celeitordadoshabilitacao-roots.o

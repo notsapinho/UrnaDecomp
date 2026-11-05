@@ -11,9 +11,9 @@
 // - comum::asn::GravaArquivo for the envelope (fn 2724) needs none now: its callers 2725, 11626 (unit 160) and 11629
 //   (unit 200, which calls it twice) are all written, and its stand-in went with 11629.
 // - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.
-// - comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725): fns 5382 and 10425, which calls it three times;
-//   5382 is in the link (unit 135), w293_armazena stands for 10425 and reads the result, as 5382 does. It passes the
-//   name it gets as the prefix too, so dead-argument elimination folds no prefix in (5382 passes "me", 10425 "").
+// - comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725) needs no stand-in now: its target callers, 5382
+//   (unit 135) and 10425 (unit 142, written, which calls it three times with the prefix "" where 5382 passes "me"), are
+//   in the link.
 // libc's __futimesat (fn 6236), the body of utimes, needs no stand-in now: its callers 2725 (unit 293) and SQLite's
 // dotlockLock (fn 12674) are in the link. Unit 122's cgravadorrcsecao.cpp.o instantiates the two templates first in our
 // link now, so the link keeps its copies; the target keeps cgravadorbu.cpp's by a reading (their records lie in its
@@ -45,13 +45,6 @@ __attribute__((noinline)) void w293_hashes(const api::CFile& arquivo, const comu
     comum::asn::GravaArquivo(arquivo, hashes);
 }
 
-// stands for fn 10425 (5382 is written)
-__attribute__((noinline)) int w293_armazena(const std::vector<uebyte>& wsq, const std::string& nome,
-    const std::string& diretorio, const std::string& externo)
-{
-    return static_cast<int>(comum::CControlaArmazenamentoDeImagens::ArmazenaImagem(wsq, nome, diretorio, externo, nome)) + 17;
-}
-
 const void* volatile w293_sink;
 
 struct SW293Roots {
@@ -59,7 +52,6 @@ struct SW293Roots {
     {
         w293_sink = reinterpret_cast<const void*>(&w293_hsm);
         w293_sink = reinterpret_cast<const void*>(&w293_hashes);
-        w293_sink = reinterpret_cast<const void*>(&w293_armazena);
     }
 } w293_roots;
 
