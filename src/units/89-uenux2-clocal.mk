@@ -66,8 +66,8 @@
 # the scores of both orders).
 # comum::CLocal::GetLocalID (fn 1933; the name is its literal's, "GetLocalID", the reading of these literals below): it
 # calls VerificaEhSecao with that literal and returns the place's id, the word at +16 of md::CLocal::GetSecao() (the
-# CIdentificacaoSecao at +4, its TLocalID at +12). Of its six callers, 1543 and 11188 (unit 123's) and 2725 (unit 293's)
-# are in the link and 7787, 11242 and 12098 are not written; the roots' LocaisID stands for those three. It has no record; its line, after UrnaBiometrica, is a choice.
+# CIdentificacaoSecao at +4, its TLocalID at +12). Of its six callers, 1543 and 11188 (unit 123's), 2725 (unit 293's)
+# and 11242 (unit 155's) are in the link and 7787 and 12098 are not written; the roots' LocaisID stands for those two. It has no record; its line, after UrnaBiometrica, is a choice.
 # comum::CLocal::EhExterior has no target index of its own: unit 71's IPedeTituloMesario::ProcessInput (fn 10313) holds
 # it inlined by binaryen, a 16-byte frame of its own opened after CLocal::GetInst's call, which is what keeps it out of
 # line here. It passes "EhExterior" to VerificaLido (the literal @85932, which no other target function loads), then
@@ -230,6 +230,10 @@
 #   what the original held there is not known. With the result zeroed first and one call, 3752 scored 30 over 441 rows
 #   (6 inserted, 14 deleted); as written, 12 over 435, all operand-only (`pnpm wasm score` against the whole link). 2816
 #   scored 6 over 68, all operand-only. Both match.
+# - GetIdentificacoesAgregadas (no target index: comum::CGeradorBUQRCodeVota::Slot2, fn 11242, unit 155's, holds it
+#   behind a 16-byte frame of its own, binaryen's inlining of its one caller): EhSecao("GetAgregadas"), GetAgregadas's
+#   literal, then a copy of the section's vector of md::CIdentificacaoAgregada, or an empty one. Its name, after the
+#   vector's type, and its place after GetAgregadas are chosen; unit 155's fragment has the form it measured.
 # - GetTipoLocalVotacao (no index): VerificaEhSecao("GetTipoLocalVotacao") and the section's type, which 11188 holds
 #   behind a stack frame of its own (binaryen's inlining of its one caller, from another TU). Its name is the literal's.
 # - comum::FormataAgregadas (5738; callers 1543 and 11188, both in the link), a free function (its name and parameter chosen): CLocal::GetInst
@@ -254,8 +258,8 @@
 #   the section's flag, the vector's size over 8 masked to a byte) inlined, which clang gives only in this TU, so it is
 #   this file's, as FormataAgregadas is; it is the file's last function, a choice (no index places it). 1543 matches
 #   with it (unit 123's fragment has the score).
-# The roots of unit 280 stand in for 4160 and 11242 (3752); 5738's other caller, 1543, is in the link, and its stand-in
-# went.
+# The roots of unit 280 stand in for 4160 (3752); its other callers, 5738's 1543 and 11242 (unit 155's), are in the
+# link, and 5738's stand-in went.
 #
 # comum::CLocal's loader and the section list, in clocal.cpp after VerificaEhSecao (no record; clocal.h says what is
 # chosen in each), with the pieces 5740 holds:

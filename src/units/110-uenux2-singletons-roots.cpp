@@ -15,7 +15,7 @@
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
-//   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 11242 and 12110 (652 and 2881 are in the link)
+//   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 7174 and 11616 (2822, 2825, 6034, 10210 and 10635
 //                       are in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
@@ -126,13 +126,13 @@ __attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
     w2825(eleitores, dados + 64);
 }
 
-// Stands for fns 11242 and 12110, target callers of CEleitores::QuantidadeAptos (fn 2823; 652 and 2881 are in the
-// link): two calls, each reading one of the two counts the result's address receives.
+// Stands for fn 12110, the target caller of CEleitores::QuantidadeAptos (fn 2823) not in the link (652, 2881 and
+// 11242, unit 155's, are): one call, reading both counts the result's address receives. The call that stood for 11242
+// went with it.
 __attribute__((noinline)) int QuantidadesAptos(int eleitores)
 {
     int quantidade[2];
     w2823(reinterpret_cast<int>(&quantidade[0]), eleitores);
-    w2823(reinterpret_cast<int>(&quantidade[1]), eleitores);
     return (quantidade[0] & 0xffff) + (quantidade[1] >> 16);
 }
 

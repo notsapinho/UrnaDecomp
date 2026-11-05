@@ -29,8 +29,8 @@ namespace {
 const void* volatile cappinfo_sink;
 
 // Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682, 4687, 2298, 3898, unit 110's 2266,
-// unit 104's 10635, unit 277's 10710, unit 329's 7160, unit 293's 2725, unit 135's 5382 and unit 283's 10590 are
-// linked, and 491): 3059, 4160, 6737, 7174, 7787, 10451, 11242, 12098, 12105, 12110, 12134.
+// unit 104's 10635, unit 277's 10710, unit 329's 7160, unit 293's 2725, unit 135's 5382, unit 283's 10590 and unit
+// 155's 11242 are linked, and 491): 3059, 4160, 6737, 7174, 7787, 10451, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
 // The stand-in for fn 903's caller 7160 went: 7160 (unit 329) is linked, with unit 102's four, unit 138's 11870 and
 // 11871, unit 50's 10566, unit 104's 12082 and 12081, unit 277's 10710 and unit 110's 13023.
@@ -44,7 +44,8 @@ __attribute__((noinline)) void Codigos(int a, int b, int c)
     w3788(a, c, 51);
     w3788(b + 12, c, 51);
 }
-// Stands for fn 2841's callers 11242, 12105 (two calls) and 12110, which pass the turn they read (not a constant).
+// Stands for fn 2841's callers 12105 (two calls) and 12110 (11242, unit 155's, is in the link), which pass the turn
+// they read (not a constant).
 __attribute__((noinline)) int Votos(int a, int t) { return w2841(a, t) + 2 * w2841(a + 4, t ^ 1); }
 
 // Stands for fn 819's callers: 7787, 11260, 11629, 11976 (11213, 11255, 3820, 6954, 11181, 5922, 11261, 11683, 11711,

@@ -23,10 +23,10 @@ const void* volatile w216_sink;
 // Stands for fn 1391's callers (comum::CJustificador::GetInst): 5971, 6734, 11616, 12105 (unit 138's 11835, unit 152's
 // 10587, unit 119's 10797 and unit 283's 10590 are in the link).
 __attribute__((noinline)) int Justificadores() { return w216_1391() - 11 * w216_1391(); }
-// Stands for fn 2822's callers 11242, 12098 and 12110 (10699, unit 277's, is in the link).
+// Stands for fn 2822's callers 12098 and 12110 (10699, unit 277's, and 11242, unit 155's, are in the link).
 __attribute__((noinline)) int HabilitadosSemBiometria(int a) { return 5 * w216_2822(a) + w216_2822(a + 4); }
-// Stands for the callers of fn 2821 (11242, 12098, 12110) and fn 1935 (11242, 12098, 12105, 12110) not in the link
-// (10701 and 10700, unit 277's, are): one call each, with theirs two call sites.
+// Stands for the callers of fn 2821 (12098, 12110) and fn 1935 (12098, 12105, 12110) not in the link (10701 and
+// 10700, unit 277's, and 11242, unit 155's, are): one call each, with theirs two call sites.
 __attribute__((noinline)) int HabilitadosPorTipo(int a) { return w216_2821(a) - 3 * w216_1935(a + 8); }
 // Stands for fn 5746's two calls in fn 7787, which pass the holder's 0 and a substitute's order.
 __attribute__((noinline)) void FotosCandidatura(int r, int c, int o, int f)

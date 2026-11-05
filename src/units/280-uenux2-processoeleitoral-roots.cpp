@@ -102,7 +102,7 @@ __attribute__((noinline)) int w280_busca(comum::md::TMapVersaoPacoteEleicao& ver
     return w280_find_equal(&versoes, nullptr, &pai, &vazio, &chave) + 280;
 }
 
-// stands for fns 4160 and 11242, the other callers of CLocal::GetAgregadas (fn 3752; 5738 is in the link)
+// stands for fn 4160, the other caller of CLocal::GetAgregadas (fn 3752; 5738 and 11242, unit 155's, are in the link)
 __attribute__((noinline)) std::size_t w280_agregadas(const comum::CLocal& local)
 {
     return local.GetAgregadas().size() + 280;
