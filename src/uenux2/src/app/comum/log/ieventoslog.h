@@ -80,6 +80,12 @@ public:
     std::string ConverteERelatoriosUE(const ERelatoriosUE relatorio);
     std::string ConverteFonteAlim(const uebyte fonte);
     inline std::string ConverteStatusBateria(const uebyte status);
+    // ConverteInicioTermino: "INÍCIO" for false and "TÉRMINO" for true, the second argument of
+    // vota::CLogVota::LogaGerandoRelatorio (fn 1047), which builds the string through a local holding its address, the
+    // shape of a callee binaryen inlined (docs/reference/facts/reading.md R10); it has no target function. That it is a
+    // member of this class, like the three Converte members above (a free function of vota gives the same link), its
+    // name, its file and its place are chosen (src/units/325-uenux2-geradores-zeresima.mk has the measurements).
+    std::string ConverteInicioTermino(const bool termino);
 
 protected:
     // protected: vota::CLogVota's members that fns 6017, 10776 and 10779 hold inlined read it and call api::CLoga::loga

@@ -14,9 +14,9 @@
 # - CBaseError<comum::EUeComumReconhecimentoBiometricoError, SErrorLimits{9000, 9050}>'s constructor (5369, a thunk
 #   into 710 named by the vptr it passes), with the new header
 #   app/comum/reconhecimentobiometrico/euecomumreconhecimentobiometricoerror.h. Its one caller, 2725 (5103 B, with the
-#   records of CControlaArmazenamentoDeImagens' static GerarCaminhosUnicos, LeChavePublica and CifrarWsq), is not
-#   written: of the 46 direct callees `pnpm wasm fn` lists for it, 16 had no `func:` line in splat/symbol_addrs.txt
-#   before this unit, 5369 among them, and 15 have none after it.
+#   records of CControlaArmazenamentoDeImagens' static GerarCaminhosUnicos, LeChavePublica and CifrarWsq), was not
+#   written then (unit 293 writes it): of the 46 direct callees `pnpm wasm fn` lists for it, 16 had no `func:` line in
+#   splat/symbol_addrs.txt before this unit, 5369 among them, and 15 none after it.
 #
 # Evidence:
 # - 3600 copies its two `const std::string&` into +0 and +12, calls 5364 on `this` and returns `this`; the object

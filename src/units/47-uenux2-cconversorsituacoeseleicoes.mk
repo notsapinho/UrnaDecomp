@@ -23,8 +23,6 @@
 SITUACOESELEICOES_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorsituacoeseleicoes.cpp \
   src/app/comum/dados/md/processoeleitoral/csituacoeseleicoes.cpp
 UENUX2_SRCS += $(SITUACOESELEICOES_SRCS)
-# the converter's users are not reconstructed yet: 47-uenux2-cconversorsituacoeseleicoes-roots.cpp keeps its vtable the
-# way the target reaches it
-$(ROOT)/$(APP)/47-uenux2-cconversorsituacoeseleicoes-roots.o: $(ROOT)/src/units/47-uenux2-cconversorsituacoeseleicoes-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/47-uenux2-cconversorsituacoeseleicoes-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/47-uenux2-cconversorsituacoeseleicoes-roots.o
+# No roots file: fn 5778 (comum::CarregaPleito, unit 280's), the one target function that stores the converter's vptr
+# (vtable @1570516, slots 2 and 3: fns 11360, 11361), matches and keeps the vtable in the link, so the roots file that
+# kept it while 5778 was not written went: a link without it moves no row in or out of match (measured).

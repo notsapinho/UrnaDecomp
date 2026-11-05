@@ -55,8 +55,9 @@
 #   comum::md::CDetalheCandidato's copy constructor, since fragment 191).
 NOMEARQUIVO_SRCS := src/app/comum/nomearquivo/cnomearquivo.cpp
 UENUX2_SRCS += $(NOMEARQUIVO_SRCS)
-# nothing reconstructed calls the builders yet: 131-uenux2-cnomearquivo-roots.cpp stands in for the target's callers,
-# two call sites each
+# 131-uenux2-cnomearquivo-roots.cpp stands in for fn 7787's calls of NomeArquivoSecao, two call sites (its other
+# callers, 3745 and 5727, are in the link: unit 279). NomeArquivoUF has two in fn 5778 (unit 280's), so its stand-in
+# for 5778 and 7787 went: a link without it moves no row in or out of match (measured at the landing).
 $(ROOT)/$(APP)/131-uenux2-cnomearquivo-roots.o: $(ROOT)/src/units/131-uenux2-cnomearquivo-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/131-uenux2-cnomearquivo.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/131-uenux2-cnomearquivo-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/131-uenux2-cnomearquivo-roots.o

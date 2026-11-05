@@ -16,6 +16,7 @@
 #include "api/util/csystem.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/carquivossavd.h"
+#include "app/comum/justificativa/cjustificador.h"
 #include "app/comum/cpath.h"
 #include "app/vota/comum/cassinadorvota.h"
 #include "app/vota/euevotaerror.h"
@@ -29,7 +30,7 @@ void CSincronizaVota::MarcaUrnaDesligando()
     s_urnaDesligando = true;
 }
 
-// (original lines 32-43: content not recovered)
+// (original lines 33-43: content not recovered)
 #line 44
 void CSincronizaVota::VerificaUrnaDesligando()
 {
@@ -158,7 +159,28 @@ void CSincronizaVota::SincronizaEstadoGeral()
     }
 }
 
-// (original lines 171-369: content not recovered)
+void CSincronizaVota::SincronizaJustificativa()
+{
+    VerificaUrnaDesligando();
+    comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    comum::CJustificador& justificador = comum::CJustificador::GetInst();
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(2, "", "Gravando a justificativa na MI", "Ocorreu um erro durante a sincronização da justificativa na MI.");
+        appInfo.SalvaVotaInterno();
+        justificador.SaveCurrentInternal();
+        AssinaArquivo(comum::ESavdArquivoUE(31));
+        api::CSynchronizer::GetInst().Sync();
+    }
+    GravaBancoDadosMI();
+    {
+        const api::CApplicationContextGuard guarda = api::CApplication::CriaContexto(4, "", "Gravando a justificativa na MV", "Ocorreu um erro durante a sincronização da justificativa na MV.");
+        appInfo.SalvaVotaExterno();
+        SincronizaAssinaturaVota();
+        api::CSynchronizer::GetInst().Sync();
+    }
+}
+
+// (original lines 192-369: content not recovered)
 #line 370
 void CSincronizaVota::SincronizaRelatorios(const std::string& arquivo)
 {

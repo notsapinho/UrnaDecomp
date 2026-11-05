@@ -8,10 +8,10 @@
 //
 // DetectaDigital instantiates api::CPolySingleton<api::IFingerDetection>::instance, a landed header's template, whose
 // copy is fn 3615 (its records cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105 name it): of its three target
-// callers, fns 10316, 10451 and 10465, only 10465 is in the link, so it calls the instance twice, with an empty
-// std::source_location where the callers' default argument makes a record of their own (unit 135's ReconheceDigital,
-// for IFingerMatcher's 1686, does the same). So this TU compiles at uenux2's flags, as unit 135's roots do, not
-// APP_CXXFLAGS (the fragment has the strict-aliasing measurement).
+// callers, fns 10316, 10451 and 10465, 10465 and 10316 (units 282 and 135) are in the link; it calls the instance
+// twice, with an empty std::source_location where the callers' default argument makes a record of their own (unit 135's
+// ReconheceDigital, for IFingerMatcher's 1686, does the same). So this TU compiles at uenux2's flags, as unit 135's
+// roots do, not APP_CXXFLAGS (the fragment has the strict-aliasing measurement).
 #include <source_location>
 
 #include "api/hwil/ifingerdetection.h"

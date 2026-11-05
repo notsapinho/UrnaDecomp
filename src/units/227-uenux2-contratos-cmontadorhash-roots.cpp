@@ -41,18 +41,9 @@ __attribute__((noinline)) void w227_insere(std::vector<api::hash::CHashArquivo>&
     hashes.insert(hashes.end(), outros.begin(), outros.end());
 }
 
-// ecourna::api::io::CFile::Write (fn 5180): stands for fn 5371, its target caller besides fn 11587
-// (comum::CGravadorRDV::GravaResultado, unit 305's).
-__attribute__((noinline)) void w227_escreve(const ecourna::api::io::CFile& arquivo, const std::vector<uebyte>& dados,
-    const std::vector<uebyte>& outros)
-{
-    arquivo.Write(dados);
-    arquivo.Write(outros);
-}
-
 namespace {
 
-void* volatile w227_sink[5];
+void* volatile w227_sink[4];
 
 struct SW227Roots {
     SW227Roots()
@@ -61,7 +52,6 @@ struct SW227Roots {
         w227_sink[1] = reinterpret_cast<void*>(&w227_dependencias);
         w227_sink[2] = reinterpret_cast<void*>(&w227_hashes);
         w227_sink[3] = reinterpret_cast<void*>(&w227_insere);
-        w227_sink[4] = reinterpret_cast<void*>(&w227_escreve);
     }
 } w227_roots;
 

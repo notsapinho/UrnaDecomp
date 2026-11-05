@@ -152,7 +152,7 @@
 #   unit 296's), and it tests CInformacaoEleicao::EhModoDemonstracao as GetSeparadorFase does. It adds the
 #   demonstration-mode line, centred in style 1, and two blank lines: 10 over 69, all operand-only. Its name, its lines
 #   and its being a static member are chosen.
-# - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
+# - ImprimeSeparadorVia (fn 5581, no record), on lines 348 to 353 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
 #   5581`), builds std::format's result for "-------------- {:02} / {:02} ---------------" (the 44-byte literal at
 #   378206, which no other target function loads: `/usr/bin/grep -rlE 'i32\.const 378206($|[^0-9])'
 #   build/out/splat/pieces/asm`) over its second and third arguments, both of argument code 6, unsigned (the i64 198
@@ -197,8 +197,8 @@
 #   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
 #   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
 #   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
-# Three of GetIDCargaFormatado's four callers are not reconstructed (5579, 12105, 12110; 11256 is in the link):
-# w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
+# Two of GetIDCargaFormatado's four callers are not reconstructed (12105, 12110; 11256 and unit 325's 5579 are in the
+# link): w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
 # stands for is in the link. IncluiAvisoModoDemonstracao's two callers, 1543 and 5591, are in the link.
 #
 # Four more CRelUtil statics in crelutil.cpp, all matched; their stand-ins are in unit 230's roots, the unit of

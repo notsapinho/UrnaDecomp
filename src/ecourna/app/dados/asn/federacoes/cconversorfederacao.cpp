@@ -25,8 +25,9 @@ CConversorFederacao::TDado CConversorFederacao::DoDeconverte(const TEntidade& en
     const TEntidade::partidos::value_type partidos = entidade.get_partidos();
     TVectorNumeroPartido numeros;
     std::transform(partidos.begin(), partidos.end(), std::back_inserter(numeros),
-                   [](TEntidade::partidos::value_type::value_type partido) { return TPartidoID(partido.getValue()); });
-    return TDado(id, sigla, nome, numeros);
+                   [](TEntidade::partidos::value_type::value_type partido) { return partido.getValue(); });
+    const TDado federacao(id, sigla, nome, numeros);
+    return federacao;
 }
 
 } // namespace ecourna::app::dados::asn

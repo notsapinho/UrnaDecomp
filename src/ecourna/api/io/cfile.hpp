@@ -41,8 +41,8 @@ public:
     int Flush() const;
     void Sync() const;
     uedword RawWrite(const void* buffer, uedword tamanho) const;
-    // Target fn 5180, no record: writes a buffer with RawWrite unless it is empty. Its target callers are fn 5371 (not
-    // written; it passes its own parameter, so the buffer is taken by reference) and fn 11587
+    // Target fn 5180, no record: writes a buffer with RawWrite unless it is empty. Its target callers are fn 5371 (unit
+    // 214's GravaWsq; it passes its own parameter, so the buffer is taken by reference) and fn 11587
     // (comum::CGravadorRDV::GravaResultado), which copies the std::vector<char> api::CFileASN::CodeObject returns into
     // a vector of another element type before the call: the target keeps that copy's length check apart from the one of
     // its first copy, into a std::vector<char>, which a second std::vector<char> merges with it (measured on

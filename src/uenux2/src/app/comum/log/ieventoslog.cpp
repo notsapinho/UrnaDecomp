@@ -129,4 +129,12 @@ std::string IEventosLog::ConverteStatusBateria(const uebyte status)
     }
 }
 
+std::string IEventosLog::ConverteInicioTermino(const bool termino)
+{
+    if (!termino) {
+        return "INÍCIO";
+    }
+    return "TÉRMINO";
+}
+
 } // namespace comum

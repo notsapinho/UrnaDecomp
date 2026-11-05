@@ -9,7 +9,8 @@
 # CEleicaoPE::PossuiCargoCandidato (5653), and CCargos::RemoveFiltro (3784) with the std::vector range assign it
 # instantiates (3783); CEleicaoPE::ValidaOrdem (3714) and GetIDsCargos (5654), once md/ built with strict aliasing;
 # with vota::CEleitorVotando's StartState (unit 197): CCargos::OrdenaPorImpressao (3782), the two comparators
-# (11559, 11558) and the libc++ sort instances ccargos.cpp's two std::sort calls emit (2837, 2833, 5804), below.
+# (11559, 11558) and the libc++ sort instances ccargos.cpp's two std::sort calls emit (2837, 2833, 5804), below;
+# CPleito's constructor (5652), with the ids' helper ObtemIDsEleicoes that clang inlines into it, below.
 # ccargo.cpp also holds CCargo's two constructors, which fragment 191 describes (no target index of their own: binaryen
 # inlines each into fn 11373).
 # Evidence, records: every file above but the converter's, each throw's line and column, and each record's spelling
@@ -158,23 +159,32 @@
 #   and ExisteEleicao's being members, the comparator's being a file-static function (use band 1 puts 11547 after this
 #   file's statics' exit destructors, 11551 and 11550, which an external function defined after them fits as well),
 #   ExisteEleicao's std::any_of (a range-for with an early return gives the same code), and every line.
+# - CPleito's constructor (fn 5652, records cpleito.cpp:64, 67 and 70) copies its six arguments into the members, then
+#   takes the elections' ids in a std::set<TEleicaoID> and throws 8159 when the set is smaller than the elections, 8160
+#   when it is larger than the version map and 8161 when it is not the situations' size (the records' codes and
+#   messages). Its callers are comum::CarregaPleito (5778, unit 280), under CPE::CreateInst (2787), and 3713 (not
+#   written; unit 280's roots stand in for it). The target calls fn 1953, the uninitialized copy of CEleicaoPE, and fn
+#   2289 calls no __init_with_size; at -O3, the tree's level, cpleito.cpp gives those calls, and 1953 and 3870 have
+#   their second callers in the link (unit 110's CPE brings CPleito's copy constructor, 1281). The target loads
+#   m_eleicoes' end and begin (+28, +24) before it builds the set, stores the set's begin pointer before the i64 zero of
+#   its root and size, and puts the three throws after the success path; the set built in the constructor's own body,
+#   with a range-for, gives each the other way (96 over 434 rows, 33 inserted, 32 deleted, `pnpm wasm score` in the
+#   whole link). The set comes from ObtemIDsEleicoes, a function of internal linkage in cpleito.cpp's anonymous
+#   namespace that takes the elections and returns their ids, and that clang inlines (no record, no index). Measured on
+#   the objects, the constructor's code with object-local numbers masked (docs/how-to-decompile.md step 3): that form,
+#   the same function `static` and a lambda invoked in place give the same code, the target's order and throws; the same
+#   function with external linkage, a member defined in cpleito.cpp and a member defined in the class give the loads
+#   after the set's stores; a helper over the two iterators gives a load more; std::for_each with a lambda puts the
+#   throws last and the loads after the stores; an index loop in the body keeps both of the first form's differences. In
+#   the whole link the anonymous-namespace form scores 30 over 401 rows, all operand-only (calls, data addresses and the
+#   thrown error's destructor slot), and `splat-remap` prints `IDENTICAL`. So the internal linkage is evidence
+#   (measured), and so is its being free, not a member (the member forms give other code); chosen: the function's name,
+#   its being a named function and not a lambda in place, the anonymous namespace and not `static` (each pair gives the
+#   same code), its parameter, its range-for, its line and the constructor's first line.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
 #   give it. The row stays `differs`.
-# - CPleito's constructor (fn 5652, records 64, 67 and 70) is written, in cpleito.cpp on those lines, and `differs`: it
-#   copies its six arguments into the members, then collects the elections' ids in a std::set<TEleicaoID> and throws
-#   8159 when the set is smaller than the elections, 8160 when it is larger than the version map and 8161 when it is
-#   not the situations' size (the records' codes and messages). It stays written because unit 280's chain needs it in
-#   the link: comum::CarregaPleito (5778) builds the pleitos, under CPE::CreateInst (2787), which
-#   CRelatorioTesteImpressora's constructor (5586, unit 123) calls; its other target caller is 3713 (not written), for
-#   which unit 280's roots stand in. The target calls fn 1953, the uninitialized copy of CEleicaoPE, and fn 2289 calls
-#   no __init_with_size; at -O3, the tree's level, cpleito.cpp gives those calls, and 1953 and 3870 have their second
-#   callers in the link (unit 110's CPE brings CPleito's copy constructor, 1281). Against the whole link it scores 96
-#   over 434 rows (`pnpm wasm score`, 33 inserted, 32 deleted): the target loads the elections' begin and end before it
-#   builds the set (ours after), stores the set's begin pointer before its zeroed root and size (ours after), and puts
-#   all three throws after the success path (ours the first one inline); not explained, so no form here is shown right.
-#   Its name holds by its records only once its opcodes are the target's, so 5778 waits for it too.
 # - CPleito::GetData (the date at +16, a chosen name, inline in cpleito.h) is added for CRelatorioTesteImpressora's
 #   constructor, and GetID, GetNome and GetData (cpleitodto.h, chosen names) for CarregaPleito. CProcessoEleitoral's two
 #   constructors (no index: comum's load 3771 holds both inlined in its two branches; their parameters, their order and

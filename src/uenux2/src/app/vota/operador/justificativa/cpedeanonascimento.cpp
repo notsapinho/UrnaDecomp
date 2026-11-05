@@ -4,7 +4,16 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/vota/log/clogvota.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/cthreadoperador.h"
+#include "app/vota/operador/justificativa/canoinformadoinvalido.h"
+#include "app/vota/operador/justificativa/celeitormenor16anos.h"
+#include "app/vota/operador/justificativa/cjustificativaefetuada.h"
+#include "app/vota/operador/justificativa/iiniciajustificativa.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
+#include "ecourna/api/util/cstringutils.hpp"
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
 namespace vota {
@@ -48,6 +57,37 @@ void CPedeAnoNascimento::StartState()
 {
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CPedeAnoNascimento::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA: {
+        const std::string ano = m_form->GetEntradas().at(0)->GetTexto();
+        if (ano.size() >= 4) {
+            CThreadOperador::GetInst().SetAnoNascimentoDigitado(ano);
+            const ueint16 anoNascimento = ecourna::api::util::CStringUtils::ToInt16(ano);
+            const ueint16 idade = comum::CConfiguracaoEleicao::GetInst().GetPleito().GetData().GetAno() - anoNascimento;
+            if (anoNascimento < 1900 || idade <= 0) {
+                CLogVota::GetInst().LogaAnoNascimentoInvalido();
+                m_pNextState = &CAnoInformadoInvalido::GetInst();
+            } else if (idade < 16) {
+                CLogVota::GetInst().LogaEleitorSemIdadeMinima();
+                m_pNextState = &CEleitorMenor16Anos::GetInst();
+            } else {
+                JustificaEleitor(anoNascimento);
+                m_pNextState = &CJustificativaEfetuada::GetInst();
+            }
+        }
+        break;
+    }
+    case api::INPUT_CORRIGE:
+        CLogVota::GetInst().LogaMesarioCancelouEntradaDados();
+        m_pNextState = &CPedeIdentidade::GetInst();
+        break;
+    default:
+        break;
+    }
 }
 
 } // namespace vota

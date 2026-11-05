@@ -148,8 +148,14 @@
 # iniciovotacao/cquerreimprimirzeresima.cpp's record (@1546384) with one cinteractiveform.h record between; the adjacent
 # recorded side, a choice (P5).
 #
+# The list also compiles unit 325's iniciovotacao/cgeradorresumozeresima.cpp (fns 3873 and 3872), right after
+# cinformacaozeresimatardia.cpp: the data's order, its records (@1543752, @1543768) between that file's and
+# CGeraZeresimaBase's vtable (@1544384). At fragment 325's own place the scores were the same and more of its band pairs
+# out of order; that fragment has the measurement.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.cpp \
+    src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cgerazeresimabase.cpp \
     src/app/vota/eleitor/iniciovotacao/cgeraresumozeresimabase.cpp \
     src/app/vota/eleitor/iniciovotacao/cgeraresumozeresima.cpp \

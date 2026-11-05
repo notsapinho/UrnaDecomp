@@ -259,13 +259,13 @@ row was built at 0b5f410: the object alone at `-O3` in the plain link (the recip
 | `CEleitorDinamicoDAO`'s 5776, 5775, 3768 | inlines `std::string::append` at every `operator+(string&&, const char*)`, and no TSE function of the target calls the grow helper that leaves (`awk -F'\t' '$2==1838 {print $1}' ledger/callgraph.tsv \| sort -un` prints only libc++'s string.o functions) | 5776 is `18 over 404`, 5775 `18 over 400`, all operand-only, and `splat-remap` stops only at `NOME_TABELA`'s name; with that name in a copy of the symbol file all three were `IDENTICAL` |
 | `IConversorASN`'s default `DoConverte` (731), `IConversorBiometriaASN`'s default (11418) | keeps a loop in a `std::format` throw of 44 and 47 bytes ([reading.md](reading.md) §R13) | `target 731: IDENTICAL`. The target holds 53 unconditional sites of 37 to 73 bytes with no loop and none with one, so the sign is the binary's, in 36 bodies. Unit 96's fragment holds the measurement; unit 159 wrote the defaults in their headers since, and both match |
 | `comum::md::CCandidatura`'s constructor (5660) | `UAC_IMPL` not inlined at cost 225, threshold 225, so the copy loop folds in | `63 over 519`, all operand-only, with a scratch second caller of 2870 (unit 89's fragment) |
-| `comum::md::CPleito`'s constructor (5652) | `__init_with_size` at cost 230, threshold 225 | `103 over 438` with scratch second callers, and its remainder is not explained: unwritten, unit 88's fragment |
+| `comum::md::CPleito`'s constructor (5652) | `__init_with_size` at cost 230, threshold 225 | `103 over 438` with scratch second callers then; it matches since, with its ids' set from a helper of internal linkage that clang inlines (unit 88's fragment) |
 | `CCabecalhoQRCodeBuilder::DefineHistoricoCarga` (5622) | inlines `append` | keeps `append`, `89 over 431`, operand-only but for five local pairs (unit 93's fragment) |
 
 At the tree's `-O3` (d4cbc1a, the link of the measurement above, `pnpm wasm score`): 3768, 5775 and 5776 match; 5622
 is `89 over 431`, its 5 inserted and 5 deleted rows `local.get`; 5660 is `220 over 669`, since no second caller keeps
 2870 out of line in this link (both match since unit 232's roots stand in for 2870's other callers); 731 and 11418
-were traps then (unit 47's pending file) and match since (unit 159), and 5652 is unwritten.
+were traps then (unit 47's pending file) and match since (unit 159), and 5652 was unwritten (it matches since, unit 88).
 
 **Sites under `mock/`, more.** With `cwasmthread.cpp.o`, `cwasmwebsound.cpp.o` and `cwasmscreen.cpp.o` at `-O3` as well
 (0b5f410), 2680, 9459, 9448, 9472 and 9604 print `IDENTICAL`, 9146 and 9125 are `13 over 307` and `13 over 313`, all
@@ -443,15 +443,16 @@ after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Co
 
 uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile`
 (`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`,
-`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp`)
+`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp`,
+`src/app/comum/justificativa/cjustificador.cpp`)
 but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
 `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp` and
 `operador/leidentidade/celeitorencontrado.cpp`), and without it elsewhere; [app-flags.md](app-flags.md) §F6 has the
 evidence and the measurement of the split, and [reading.md](reading.md) §R21 reads the setting from a body. Measured
 at bbf27ac1 for the four directories, at 36dda756 for `carquivossavd.cpp`, at b7c2e8a5 for the first two files
 `UENUX2_NOTBAA_FILES` lists, at fbf5698f for `cvotacaostateaudio.cpp`, at a3ab1f25 for `cconferevotoemcargo.cpp`, at
-b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos.cpp` and at 6df50018 for
-`cfabricaconteudomidiastart.cpp` (§F6 has each).
+b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos.cpp`, at 6df50018 for
+`cfabricaconteudomidiastart.cpp` and at a98e8aac for `cjustificador.cpp` (§F6 has each).
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object

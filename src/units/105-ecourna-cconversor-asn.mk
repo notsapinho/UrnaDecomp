@@ -38,6 +38,14 @@
 # - 9217, 9144, 9222 go through a value_type temporary: set_identificador(v) gives 471 rows, not 506.
 # - 9212 calls set_federacoes(const_reference): set_federacoes() = v inlines it. Its if tests empty() first: the other
 #   order gives other rows.
+# - 9216's lambda returns the number, not a TPartidoID: TPartidoID is one trivially copyable unsigned short, which comes
+#   back in a register, so a TPartidoID returned was copied into a second temporary before push_back (146 over 705).
+#   Returned as the number, it is converted by back_insert_iterator's assignment, which builds the temporary that
+#   push_back takes with CBaseType's constructor (out of line; not explicit in our header, cbasetype.hpp, which no
+#   record shows and this form needs): 139 over 699. 9216 also returns its result through a named local (federacao, a
+#   chosen name, const a choice): with `return TDado(...)` the constructor's landing pad is laid out after the normal
+#   path, the target's before it (unit 09's fragment measures 9106's two forms). With both, 84 over 675, all operand
+#   rows, and the row matches.
 # - 9063 is an insert into an empty OCTET_STRING: the (first, last) constructor gives other rows.
 # - 9102's optional fields insert the sequence: their value_type classes exist in the target, and take no assignment
 #   from SEQUENCE_OF<T>.
@@ -75,16 +83,14 @@
 # waited on the table slot of 3733, that root's IConversorASN<IdentificadorGeradorMidia, ...>::Deconverte.
 #
 # Written, and not a match yet:
-# - 9216: 146 over 705 rows, one more `block` at +0x3dd: the element goes through a temporary (a loop gives neither that
-#   nor 9214 out of line).
-# - 9106 and 9081: one extra branch island or landing pad around a call of an ASN.1 copy (47 over 225, 121 over 813; an
-#   if for the ternary gives 48 over 226, and const auto& on the registro local changes neither).
-#   9081 has 16 landing pads, ours 15: the target's second habilitacaoBiometrica_isPresent() call shares its pad with
-#   the last return's CEstadoComparecimento constructor, where ours shares it with the first call's. With the
-#   CConversorHabilitacaoBiometrica declared before that if, the object holds one pad more (18 for 17), but the
-#   converter's vptr is stored before the call, where the target stores it inside the if: 155 over 826 rows.
 # - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
 #   over 390, 13 and 13, and stops on `target br 2 | ours local.get 2` at +0x279, the placement of the map's cleanup.
+#   With const auto& on the vector, the map a named local and the result a named local returned (the form 9216's
+#   constructor call takes, above): 39 over 379, 2 rows inserted and 3 deleted. What is left is which of the two copies
+#   of the vector's free keeps a __resumeException of its own: the target's after ParaMapa's and the constructor's
+#   pads, ours after the loop's pad. The O3 IR has one resume block for both, so the backend makes that split (not read
+#   further). Also measured: the vector named too, 62 over 388; the map as const auto&, the same link as the map named;
+#   the loop written in this function, with std::transform 283 over 392 and with a range-for 143 over 399.
 # - 1006, 3813: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
 #   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and ours does (206 over 352).

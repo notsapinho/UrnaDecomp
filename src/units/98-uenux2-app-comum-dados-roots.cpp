@@ -50,9 +50,9 @@ __attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
     return w2266_root(detalhe + 208) * 5;
 }
 
-// Stands for two target callers of CEleitorDetalhe::GetBiometria (fn 1937): fns 3614 and 10316, not in the link; the
-// others, fn 1393 (CEleitores::GetCurrentBiometriaEleitor, unit 110's celeitores.cpp) and fn 3616 (unit 319's), are. The two 40-byte
-// results are md::CBiometriaEleitor's, left undestroyed: nothing calls this.
+// Stands for a target caller of CEleitorDetalhe::GetBiometria (fn 1937), fn 3614, not in the link, and stood for 10316,
+// in it now (unit 135's); the others, fn 1393 (CEleitores::GetCurrentBiometriaEleitor, unit 110's celeitores.cpp) and
+// fn 3616 (unit 319's), are. The two 40-byte results are md::CBiometriaEleitor's, left undestroyed: nothing calls this.
 __attribute__((noinline)) int BiometriasDosDois(int a, int b)
 {
     int biometrias[20];

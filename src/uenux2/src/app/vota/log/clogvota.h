@@ -153,6 +153,13 @@ public:
     // and 11991 their loop counter, 12065 and 12081 a byte plus one), which a uebyte parameter gives; its spelling is
     // chosen.
     void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, uebyte via);
+    // LogaGerandoRelatorio (fn 1047): comum::IEventosLog::loga (fn 233) of "Gerando relatório [{}] [{}]" (the report's
+    // name through ConverteERelatoriosUE, fn 5879, then "INÍCIO" when the flag is 0 and "TÉRMINO" otherwise). Its
+    // target callers pass CLogVota::GetInst()'s result, the report (fn 11946 RELATORIO_ZERESIMA, 11943
+    // RELATORIO_RESUMO_ZERESIMA, 12105 RELATORIO_BUJ and RELATORIO_BIM, 12110 RELATORIO_ELEITORES_HABILITADOS_
+    // BIOGRAFICAMENTE and RELATORIO_BU), and 0 before it and 1 after it. Its name, from the message, the flag's bool and
+    // its place are chosen.
+    void LogaGerandoRelatorio(comum::ERelatoriosUE relatorio, bool termino);
     void LogaMesarioIndagadoQtdViasAdicionais();
     void LogaMesarioNaoSolicitouViasAdicionais();
     void LogaMesarioIndagadoQualidadeBU();
@@ -363,6 +370,16 @@ private:
     // (fn 1398), the same body, which the target keeps out of line (8 callers) where 10706 holds 433 inline. The call
     // through a member and its name are chosen (src/units/277-uenux2-app-vota-operador-outrasopcoes.mk has the forms).
     void LogaAlertaVota(const std::string& mensagem);
+
+public:
+    // LogaAnoNascimentoInvalido, LogaEleitorSemIdadeMinima and LogaMesarioCancelouEntradaDados
+    // (vota::CPedeAnoNascimento::ProcessInput, fn 10590, after GetInst: "Ano de nascimento inválido", "Eleitor não tem
+    // idade mínima", "Mesário cancelou entrada dos dados") are LogaAnoNascimentoIgualCadastro's shape: the text's
+    // std::string in a 16-byte frame of its own and api::CLoga::loga (fn 433) on +4, severity 2, 2 and 1. Their names,
+    // from the messages, and their place here and at the end of clogvota.cpp are chosen.
+    void LogaAnoNascimentoInvalido();
+    void LogaEleitorSemIdadeMinima();
+    void LogaMesarioCancelouEntradaDados();
 };
 
 } // namespace vota

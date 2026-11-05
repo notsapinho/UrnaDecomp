@@ -31,7 +31,10 @@
 # the vtable and the default 10272 with it. The roots keep no vtable of CConversorDetalheCandidato and
 # CConversorDetalheConsulta: fn 11373 (fragment
 # 191's) stores both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367
-# (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores.
+# (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores;
+# nor of CConversorEleicaoPE, whose vptr fn 5778 (unit 280's comum::CarregaPleito) stores, through the converter's
+# constructor out of line in cconversoreleicaope.cpp (fragment 299): its sink went once that constructor was in the
+# link, measured (a link without it moves no row).
 #
 # Evidence. Records name each default, its class template and its throw's line and column: iconversorasn.h 89 and 98,
 # iconversorbiometriaasn.h 81, column 15 (a throw in a body in the class). Each thunk passes its instance's record, code

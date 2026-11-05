@@ -6,8 +6,8 @@
 // 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
 // 3697 and 5611 come from the first objects on the link line to instantiate them: 1283 from crelutil.cpp's (for unit
 // 123's TituloPartido, 11181), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes from
-// iiniciajustificativa.cpp's object (unit 152), whose StartState, 10587, holds Find inlined. Each function here has two
-// call sites or more, as each has in the target, so binaryen keeps it out of line:
+// cjustificador.cpp's object, whose Justifica (held by unit 283's 10590) is its first user on the link line. Each
+// function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7, all in the link: 2268, 2838, 5604, 6999, 11254, 11972
 //   and 11973), 1283 (9: 5604, 11181, 11213, 11255 and 11261 are in the link), 3125 (4, all in the link). All four in
 //   the link are what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset,
@@ -16,9 +16,11 @@
 //   11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
 //   written Gera) in the link; those over the parties' map stay for 1283's callers.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
-// - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590; 10587 is in the link), through Find, and the copy of the
-//   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real
-//   caller (the fragment says why).
+// - find<CNumeroInscricaoEleitoral>, 3741, needs no stand-in: its target callers 5725, 10587 and 10590 are in the link.
+//   Add over this key, 5725 (6734, 10590), and the copy of the pair's second member, 3743 (5725, 6734, 10590): 10590
+//   (unit 283, through comum::CJustificador::Justifica) and 5725 are in the link, and a stand-in each stands for 6734.
+//   cjustificador.cpp's object is ahead of this one on the link line, so 5725 is its copy, as in the target (its
+//   record lies in that object's data); fragment 113 says why it matches only with strict aliasing there.
 // - CRegistradorMesario::Registra, 5378, has its two call sites in 10337 (unit 135, in the link). Add(KeyType,
 //   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): cregistradormesario.cpp's
 //   object is ahead of this one on the link line, so its copies are the link's; a stand-in here only adds their second
@@ -92,25 +94,21 @@ __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidad
     return 23;
 }
 
-// Stands for 10590's search.
-__attribute__((noinline)) bool Justifica(TMapaJustificados& mapa,
-                                         const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
+// Stands for 6734 (comum::CEleitores::CompleteLoad, not written), the other target caller of Add over this key
+// (5725; 10590, through comum::CJustificador::Justifica, is in the link): two call sites, since binaryen inlines a
+// function called once.
+__attribute__((noinline)) int AdicionaJustificado(TMapaJustificados& mapa,
+                                                  const TMapaJustificados::Container::value_type& registro)
 {
-    return mapa.Find(numero) != nullptr;
+    mapa.Add(registro);
+    return 31;
 }
 
-// Stand for 6734 and 10590, which copy the detail into the pair they build.
+// Stands for 6734, which copies the detail into the pair it builds (10590 and 5725 are in the link).
 __attribute__((noinline)) int CopiaDetalhe(void* destino, const comum::CJustificadorDetalhe& origem)
 {
     new (destino) comum::CJustificadorDetalhe(origem);
     return 37;
-}
-
-__attribute__((noinline)) int CopiaDetalheDois(void* primeiro, void* segundo, const comum::CJustificadorDetalhe& origem)
-{
-    new (primeiro) comum::CJustificadorDetalhe(origem);
-    new (segundo) comum::CJustificadorDetalhe(origem);
-    return 41;
 }
 
 // Stands for 3742's caller 11474, which holds comum::CJustificador::GetInst's code and is not reconstructed (1391 and
@@ -141,9 +139,8 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&CarregaUm);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
-        w113_sink = reinterpret_cast<const void*>(&Justifica);
+        w113_sink = reinterpret_cast<const void*>(&AdicionaJustificado);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
-        w113_sink = reinterpret_cast<const void*>(&CopiaDetalheDois);
         w113_sink = reinterpret_cast<const void*>(&CriaJustificadores);
         w113_sink = reinterpret_cast<const void*>(&ConsultaRegistrador);
     }

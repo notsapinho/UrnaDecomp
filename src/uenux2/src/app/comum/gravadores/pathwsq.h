@@ -29,5 +29,9 @@ std::filesystem::path GetPathWsqOperadorExterno(EUrnaTurno turno);
 std::filesystem::path GetPathWsqOperadorExterno();
 std::filesystem::path GetPathWsqNaoRegistrado(EUrnaTurno turno);
 std::filesystem::path GetPathWsqNaoRegistrado();
+std::filesystem::path GetPathWsqRegistrado(EUrnaTurno turno);
+std::filesystem::path GetPathWsqRegistrado();
+std::filesystem::path GetPathWsqRegistradoExterno(EUrnaTurno turno);
+std::filesystem::path GetPathWsqRegistradoExterno();
 
 } // namespace comum

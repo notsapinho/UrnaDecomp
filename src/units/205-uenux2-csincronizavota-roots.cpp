@@ -4,11 +4,11 @@
 // merges none), stand for the rest, none of which is written:
 // - fn 1685 (api::CUeDesligandoError's constructor) is called by the throw of VerificaUrnaDesligando, which clang inlines
 //   into each of its seven target callers (491, 1836, 3333, 4662, 6737, 7174, 10590); 4662 is SincronizaBancoDados,
-//   1836 SincronizaRelatorios, 491 SincronizaEstadoGeralVota and 3333 SincronizaEstadoGeral, in the link.
-//   w205_assinatura reaches it the same way, through VerificaUrnaDesligando, so that every call passes the location of
-//   csincronizavota.cpp 47:15 and dead-argument elimination folds it as in the target;
-// - SincronizaAssinaturaVota (fn 4687): callers 491 (written) and 10590;
-// - GravaBancoDadosMI (fn 4657): callers 4662 (written) and 10590;
+//   1836 SincronizaRelatorios, 491 SincronizaEstadoGeralVota, 3333 SincronizaEstadoGeral and 10590
+//   vota::CPedeAnoNascimento::ProcessInput (unit 283, through SincronizaJustificativa), in the link, so every call
+//   passes the location of csincronizavota.cpp 47:15 and dead-argument elimination folds it as in the target;
+// - SincronizaAssinaturaVota (fn 4687) and GravaBancoDadosMI (fn 4657) need no stand-in: their target callers, 491 and
+//   10590, and 4662 and 10590, are in the link;
 // - GravaBancoDadosMV (fn 4682): callers 4657 (written) and 7174;
 // - SincronizaBancoDados (fn 4662): callers 7787 and 10786 (unit 119's trap for CControladorRegistraMesariosVota's slot
 //   16);
@@ -25,20 +25,12 @@
 
 namespace {
 
-// stands for fn 10590, which calls SincronizaAssinaturaVota and holds VerificaUrnaDesligando inlined (491, the other,
-// is in the link)
-__attribute__((noinline)) void w205_assinatura()
+// stands for fn 7174, GravaBancoDadosMV's other target caller (4657 is in the link); its calls of
+// SincronizaAssinaturaVota and GravaBancoDadosMI went with 10590 in the link
+__attribute__((noinline)) int w205_banco(int passo)
 {
-    vota::CSincronizaVota::SincronizaAssinaturaVota();
-    vota::CSincronizaVota::VerificaUrnaDesligando();
-}
-
-// stands for fns 10590 and 7174: SincronizaAssinaturaVota, GravaBancoDadosMI and GravaBancoDadosMV
-__attribute__((noinline)) void w205_banco()
-{
-    vota::CSincronizaVota::SincronizaAssinaturaVota();
-    vota::CSincronizaVota::GravaBancoDadosMI();
     vota::CSincronizaVota::GravaBancoDadosMV();
+    return passo + 3;
 }
 
 // stands for fns 7787 and 10786
@@ -88,7 +80,6 @@ const void* volatile w205_sink;
 struct SW205Roots {
     SW205Roots()
     {
-        w205_sink = reinterpret_cast<const void*>(&w205_assinatura);
         w205_sink = reinterpret_cast<const void*>(&w205_banco);
         w205_sink = reinterpret_cast<const void*>(&w205_sincroniza);
         w205_sink = reinterpret_cast<const void*>(&w205_assina);

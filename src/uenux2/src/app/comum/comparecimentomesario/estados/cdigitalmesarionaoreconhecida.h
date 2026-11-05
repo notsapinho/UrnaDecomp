@@ -21,7 +21,7 @@ namespace comum {
 // final states share: a std::shared_ptr at +12 is all they release, and the bodies read nothing else of the object,
 // whose size is unknown. A singleton: GetInst keeps the object in a static std::unique_ptr (@1909876, destroyed at exit
 // by fn 10326, a thunk into fn 389) under a static std::mutex (@1909852, by fn 10324). GetInst, its constructor and the
-// file's anonymous CNomeMesariosUrnaDS (fn 10323, record cdigitalmesarionaoreconhecida.cpp:27) are not reconstructed.
+// file's anonymous CNomeMesariosUrnaDS (fn 10323, record cdigitalmesarionaoreconhecida.cpp:27) are in the .cpp.
 // src/units/135-uenux2-comum-mesario-estados.mk says which of this is evidence and which is chosen.
 class CDigitalMesarioNaoReconhecida final : public CAppState {
 public:

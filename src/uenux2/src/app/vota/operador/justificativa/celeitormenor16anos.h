@@ -21,7 +21,7 @@ namespace vota {
 // vota::CPedeAnoNascimento on api::INPUT_CONFIRMA: 10598 is `f6014(p0, 1589788)`, a thunk into the body binaryen merged
 // from this class's and vota::CAnoInformadoInvalido's ProcessInput, which differ in the address of their TU's copy of
 // the record of api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (cinteractiveform.h:57, here @1589788). A
-// singleton: CPedeAnoNascimento::ProcessInput (fn 10590, pending), its one caller, holds GetInst and the constructor
+// singleton: CPedeAnoNascimento::ProcessInput (fn 10590), its one caller, holds GetInst and the constructor
 // inlined; GetInst keeps the 20-byte object in a static std::unique_ptr (@1905924) under a static std::mutex
 // (@1905900), whose exit destructors are fns 10600 and 10599. The constructor passes comum::CAppState::EVENTO_ENTRADA
 // (2) to the base's and builds the form straight into +12. src/units/283-uenux2-app-vota-operador-justificativa.mk says

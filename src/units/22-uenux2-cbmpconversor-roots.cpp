@@ -1,9 +1,10 @@
 // Roots: keep api::CBmpConversor::VerticalFlip and InvertColors (target fns 3664 and 3663) in the skeleton link. The
-// target calls both directly from the same three functions (10316 10451 10465, ledger/callgraph.tsv), 10465 in the
-// link (unit 282's), the other two not reconstructed, and none through the table; two noinline callers of both give
-// each more than one call site, so binaryen keeps their bodies out of line as the target does, and ConverteImagem
-// passes every argument through, so binaryen's dead-argument elimination folds none of them in. They are address-taken
-// from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as uenux2 code.
+// target calls both directly from the same three functions (10316 10451 10465, ledger/callgraph.tsv), none through the
+// table; 10316 (unit 135's) and 10465 (unit 282's) are in the link, and the two noinline callers stand for 10451. They
+// gave each more than one call site, so
+// binaryen keeps their bodies out of line as the target does, and ConverteImagem passes every argument through, so
+// binaryen's dead-argument elimination folds none of them in. They are address-taken from a static constructor.
+// Declared through asm labels with the wasm-level signatures; compiled as uenux2 code.
 extern "C" {
 void w3664_root_0(int, int, int) __asm__("_ZN3api13CBmpConversor12VerticalFlipEPhii");
 void w3663_root_0(int, int, int) __asm__("_ZN3api13CBmpConversor12InvertColorsEPhii");

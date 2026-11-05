@@ -21,8 +21,11 @@
 #         116's, matched); w205_desligando stands for the first two.
 # and, with no target index of their own: VerificaUrnaDesligando (record 47:15, inlined by clang into each of its seven
 # target callers, 491, 1836, 3333, 4662, 6737, 7174 and 10590), SincronizaAssinaturaRelatorio (binaryen inlined it into
-# 1836, its one caller, behind a stack frame of its own) and AssinaESincroniza (an anonymous-namespace helper clang
-# inlines into 4657).
+# 1836, its one caller, behind a stack frame of its own), AssinaESincroniza (an anonymous-namespace helper clang
+# inlines into 4657) and SincronizaJustificativa (binaryen inlined it into its one caller, vota::CPedeAnoNascimento::
+# ProcessInput, fn 10590, behind a 176-byte frame; a chosen name, after SincronizaEstadoGeral, and unit 283's fragment
+# has its notes), which makes AssinaArquivo, the file's other signing helper, a helper of two callers that clang
+# inlines into both (491 still matches).
 #
 # What the target fixes.
 # - The class: its records name only static members (VerificaUrnaDesligando, SincronizaRelatorios), so the five members

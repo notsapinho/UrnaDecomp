@@ -92,7 +92,7 @@
 #   the same inlined. Without the catch, 3564 scored 26 over 51 (19 deleted); with it 10 over 51, all operand rows.
 #   Every object the edit rebuilt was compared with the one before (functions by name, object-local numbers masked):
 #   only api_compression_czip.cpp.o (DoAdd and the destructor) and cappinfobuilder.cpp.o (the destructor) changed, so
-#   no uenux2 object without -fexceptions saw it. DoAdd stays unresolved (unit 06's fragment).
+#   no uenux2 object without -fexceptions saw it. DoAdd matches with it (unit 06's fragment).
 # - The service headers include their estado's and converter's headers, which the template's members need complete
 #   where they are instantiated (cappinfobuilder.cpp instantiates the four saves).
 # - What it moved elsewhere: CoderEnv::decode (679) comes from cservicoestadogeralvota.cpp.o now, and

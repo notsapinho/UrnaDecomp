@@ -96,6 +96,16 @@ public:
     // puts it right after GetIDCargaFormatado (fn 2786). Its name, its parameter's type and its being a static member
     // of this class are chosen.
     static void ImprimeSeparadorFase(api::CPaperFormBuilder& builder, const EUrnaFase fase);
+    // Target fn 5579, no record: the zeresima reports' footer (fns 11943 and 11946 call it with GetSeparadorFase's text,
+    // CConfiguracaoEleicao's +200, the parameters' GetRodapeZEVOTA, and CEstadoGeral's correspondence): the separator in
+    // style 1, "Código de identificação da carga" and GetIDCargaFormatado (fn 2786) of the load's code centred,
+    // "Ver: " and the version's number, the footer's titles through ImprimeTitulos (fn 3689), 20 new lines and a cut.
+    // In use band 2 it follows ImprimeSeparadorVia (5581) in this file's object, with 5580 (not written) between them,
+    // so it is defined below ImprimeSeparadorVia. Its name, its parameters' types, its being a static member of this
+    // class and both functions' lines (crelutil.cpp leaves the lines between them blank) are chosen.
+    static std::shared_ptr<api::IForm<api::IPaper>> FormRodapeZeresima(
+        const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,
+        const md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
 
 private:
     // The two parts of fn 1543 that it holds behind stack frames of their own (240 and 32 bytes), each binaryen's

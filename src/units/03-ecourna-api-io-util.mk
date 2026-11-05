@@ -37,7 +37,7 @@
 # (336) matches: its call of 5181 has two voters, 336 and 2767.
 # CFile::Write (target fn 5180, a chosen name) matches, in cfile.cpp after ReadFileBinary, declared in cfile.hpp, whose
 # comment has the evidence (its band place right after Sync, fn 5181, and the element type of its buffer) and the forms
-# measured; fragment 227's roots stand in for its caller 5371 (11587 is unit 305's). Its buffer is a
+# measured; its callers 5371 (unit 214's) and 11587 (unit 305's) are in the link. Its buffer is a
 # std::vector<uebyte>: fn 11587 copies its coded std::vector<char> into one before the call (cfile.hpp says what shows
 # it), and step 9 renamed 5180's match line to that signature.
 # CBitArray::GetValor(uebyte) (1375) holds GetValor(ueqword, uebyte) inlined by binaryen, and matches. The two-argument

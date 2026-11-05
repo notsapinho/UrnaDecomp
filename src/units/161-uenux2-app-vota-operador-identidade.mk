@@ -161,9 +161,9 @@
 # - `s_tentativa = 1; s_verificacao = 1;`: clang emits these two constant stores in the reverse of the source's order
 #   (wasm-objdump -d of the object, both orders), and the target stores 0x184690 first.
 # Its callees match: 1823
-# (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, this object's instance, named by its
-# census pair, `evidence:pair-addr`), 1393 and 2740; it reads the map's size through api::CDataMap::GetQuantidade
-# (chosen name, inline).
+# (vota::EhTreinamentoMesario, unit 168), 781 (the CDedo map's __tree::destroy, named by its census pair,
+# `evidence:pair-addr`; the link takes it from unit 135's cpededigitalmesario.cpp.o, an earlier object), 1393 and 2740;
+# it reads the map's size through api::CDataMap::GetQuantidade (chosen name, inline).
 # vota::CVerificaDadoEleitor::ProcessInput (10443), matched: on CONFIRMA the first entry's text, the log
 # LogaDadoDigitadoIncompleto when it has three characters or fewer, else std::stoul (4661) against
 # md::CEleitorDecorator::GetAnoNascimento (5665, unit 91) of the current voter, LogaDadoDigitadoConfere and

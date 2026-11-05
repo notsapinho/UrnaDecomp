@@ -16,7 +16,7 @@ namespace comum {
 // allocates 40 before it calls 3742), with a comum::servico::CJustificadorServico at +28, whose vptr 3742 stores and
 // whose destructor (fn 3740) the destructor (fn 2810) calls on +28. The map as a base and not a member at +0 is a choice,
 // as for CRegistradorMesario (src/units/113-uenux2-cdatamap.mk). The path of this header and the member's name are
-// chosen. Justifica and SaveCurrentInternal (records 55 and 83, held by fn 10590) and fn 11474 are not written.
+// chosen. Fn 11474 is not written.
 //
 // The singleton (fn 1391, GetInst, a chosen name) is the shape of comum::CFotos's (fn 2819): under the mutex at
 // 1838988, when the pointer at 1839012 is empty, it allocates 40 bytes, calls 3742 and stores the new object there. The
@@ -36,6 +36,15 @@ public:
     // How many voters are justified, the map's size (+8): vota::CReinicioVotacao::StartState (fn 11835) tests it for 0
     // in place. The name, and that it is an inline accessor, are chosen.
     std::size_t QuantidadeJustificados() const { return m_registros.size(); }
+
+    // The records' members (cjustificador.cpp:55 and :83), each held by fn 10590 behind a stack frame of its own.
+    // Justifica throws 8800 when Find, which moves the cursor, finds the título, and adds the record otherwise; the
+    // overload over a std::string, a function of its own (a 32-byte frame that builds the key), is a reading, and its
+    // name and signature are chosen. SaveCurrentInternal throws 8801 on an empty map and hands the servico the
+    // cursor's record. src/units/283-uenux2-app-vota-operador-justificativa.mk has the forms.
+    void Justifica(const ecourna::app::dados::CNumeroInscricaoEleitoral& titulo, ueword ano);
+    void Justifica(const std::string& titulo, ueword ano);
+    void SaveCurrentInternal();
 
 private:
     servico::CJustificadorServico m_servico;
