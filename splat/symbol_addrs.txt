@@ -1164,7 +1164,7 @@ _ZNSt3__26__treeIN5boost13re_detail_6007digraphIcEENS_4lessIS4_EENS_9allocatorIS
 _ZN7ecourna3api4util12CStringUtils16BytesToHexStringERKNSt3__26vectorIhNS3_9allocatorIhEEEE = func:1243; // size:0x11b evidence:call
 HTS_fclose = func:1244; // size:0x61 evidence:pair-addr
 _ZNSt3__26vectorIdNS_9allocatorIdEEE9push_backB8ne210108EOd = func:1246; // size:0xe6 evidence:call
-_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC2ERKS2_ = func:1249; // size:0x106 evidence:call by:5740
+_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC2ERKS2_ = func:1249; // size:0x106 evidence:call by:5637,5740
 _ZNK7RHVoice20brazilian_portuguese8get_infoEv = func:1250; // size:0x8 evidence:vtable
 _ZNK7RHVoice13resource_infoINS_8languageEE12get_instanceEv = func:1252; // size:0xb7 evidence:pair-fingerprint
 MMask_writeFormatInformation = func:1253; // size:0x17a evidence:pair-addr
@@ -1566,7 +1566,7 @@ _ZN3api14CMTFormBuilder7GetFormERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS
 _ZN3api12CApplication11GetContextoEv = func:1695; // size:0x162 evidence:call
 _ZN3api4JoinERKNSt3__26vectorINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEENS5_IS7_EEEERKS7_ = func:1696; // size:0x292 evidence:call by:652,11233
 _ZNSt3__26vectorIN5comum2md15estadoaplicacao20CDadoCorrespondenciaENS_9allocatorIS4_EEED2B8ne210108Ev = func:1698; // size:0x23 evidence:pair-addr
-_ZZNSt3__224__basic_format_arg_valueINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE8__handleC1B8ne210108IKN21ModuloEstadoGeralVota10EstadoVotaEEERT_ENUlRNS_26basic_format_parse_contextIcEERS7_PKvE_8__invokeESI_SJ_SL_ = func:1699; // size:0x19b evidence:table
+_ZZNSt3__224__basic_format_arg_valueINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE8__handleC1B8ne210108IKN21ModuloEstadoGeralUrna10EstadoUrnaEEERT_ENUlRNS_26basic_format_parse_contextIcEERS7_PKvE_8__invokeESI_SJ_SL_ = func:1699; // size:0x19b evidence:table
 _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_ = func:1700; // size:0x6b evidence:pair-fingerprint
 _ZNK5comum6CLocal5GetUFEv = func:1702; // size:0x65 evidence:call by:1543
 _ZNSt3__26__treeINS_12__value_typeIN5comum2md18CEleitorIdentidadeES4_EENS_19__map_value_compareIS4_NS_4pairIKS4_S4_EENS_4lessIS4_EELb1EEENS_9allocatorIS9_EEE4findIS4_EENS_15__tree_iteratorIS5_PNS_11__tree_nodeIS5_PvEElEERKT_ = func:1703; // size:0x12a evidence:pair-fingerprint
@@ -1731,7 +1731,7 @@ _ZN7ecourna3app5dados29CRegistroIdentificacaoEleitorC2ENSt3__210shared_ptrINS1_2
 _ZN7ecourna3api4util12CStringUtils7ToLowerERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:1879; // size:0xc evidence:call
 _ZN7ecourna3api4util12CStringUtils5SplitERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEc = func:1880; // size:0x40d evidence:call
 _ZN7ecourna3api4util12CStringUtils16PreencheADireitaERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEcm = func:1881; // size:0xab evidence:pair-addr
-_ZNK7ecourna3api3sql6sqlite13CSqlStatement20VerifyParameterIndexEi = func:1882; // size:0x10b evidence:srcloc-anchor
+_ZNK7ecourna3api3sql6sqlite13CSqlStatement20VerifyParameterIndexEi = func:1882; // size:0x10b evidence:call
 _ZNK7ecourna3api3sql6sqlite13CSqlResultSet17VerifyColumnIndexEi = func:1883; // size:0x10b evidence:srcloc-anchor
 _ZN7ecourna3api8security23CSymmetricCipherFactory6CreateERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:1884; // size:0x48f evidence:vtable
 _ZNK7ecourna3api2io5CFile3EofEv = func:1885; // size:0x10d evidence:srcloc-anchor
@@ -4793,6 +4793,7 @@ _ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC2EjNSt3__212basic_stringIcNS
 _ZN5comum2md15estadoaplicacao20CLocalidadeEleitoralC2Ejtt = func:5631; // size:0xcc evidence:srcloc-anchor
 _ZN5comum2md15estadoaplicacao10CDadoLocalC2ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE = func:5632; // size:0x3d evidence:pair-fingerprint
 _ZN5comum2md15estadoaplicacao10CDadoCargaC2ENS_10EUrnaTurnoENS_9EUrnaTipoES4_NS_11EUrnaModeloENS_9EUrnaFaseE = func:5633; // size:0x20d evidence:srcloc-anchor
+_ZN5comum2md15estadoaplicacao12CEstadoGeralC2ENS_11EEstadoUrnaEjNS1_10CDadoLocalENS1_10CDadoCargaENS1_15CAjusteDataHoraERKNS1_20CDadoCorrespondenciaENSt3__212basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEENSA_6vectorIhNSE_IhEEEE = func:5637; // size:0xde evidence:call by:11398
 _ZNK5comum2md18CVotosEleicoesVota10CompativelERKS1_ = func:5638; // size:0x256 evidence:pair-fingerprint
 _ZNK5comum2md18CVotosEleicoesVota14ComparecimentoEj = func:5639; // size:0x2d evidence:srcloc-anchor
 _ZN5comum2md18CVotosEleicoesVotaC2ENSt3__23mapIjNS0_12CVotosCargosENS2_4lessIjEENS2_9allocatorINS2_4pairIKjS4_EEEEEE = func:5640; // size:0x480 evidence:srcloc-anchor
@@ -7775,7 +7776,7 @@ _ZNK7ecourna3app5dados3asn30CConversorEstadoComparecimento28ConverteEstadoCompar
 _ZNK7ecourna3app5dados3asn30CConversorEstadoComparecimento10DoConverteERKNS1_21CEstadoComparecimentoE = func:9086; // size:0x467 evidence:pair-addr
 _ZNK7ecourna3app5dados3asn33CConversorApresentacaoFotoEleitor12DoDeconverteERKN27ModuloResultadoUrnaCadastro23ApresentacaoFotoEleitorE = func:9087; // size:0x25f evidence:srcloc-anchor
 _ZN7ecourna3app5dados3asn33CConversorApresentacaoFotoEleitor17ConverteResultadoENS1_24CApresentacaoFotoEleitor10EResultadoE = func:9088; // size:0x119 evidence:srcloc-anchor
-_ZN7ecourna3app5dados3asn33CConversorApresentacaoFotoEleitor14ConverteEstadoENS1_24CApresentacaoFotoEleitor7EEstadoE = func:9089; // size:0x11c evidence:srcloc-anchor
+_ZN7ecourna3app5dados3asn33CConversorApresentacaoFotoEleitor14ConverteEstadoENS1_24CApresentacaoFotoEleitor7EEstadoE = func:9089; // size:0x11c evidence:table by:9091
 _ZN9simulador11CWasmScreen8DrawTextERKN3api6SPointERKNS1_5SRectERKNS1_5ITextERKNS1_5SFontENS1_6TColorESE_ = func:9090; // size:0x2e evidence:pair-fingerprint
 _ZNK7ecourna3app5dados3asn33CConversorApresentacaoFotoEleitor10DoConverteERKNS1_24CApresentacaoFotoEleitorE = func:9091; // size:0xbf evidence:vptr-anchor
 _ZNSt3__29transformB8ne210108IN4ASN111SEQUENCE_OFIN27ModuloResultadoUrnaCadastro21ComparecimentoMesarioENS1_15EmptyConstraintEE14const_iteratorENS_20back_insert_iteratorINS_6vectorIN7ecourna3app5dados22CComparecimentoMesarioENS_9allocatorISD_EEEEEEZNSC_3asn19DeconverteSequenciaINS3_19DadosComparecimento16mesariosAbertura10value_typeENSI_31CConversorComparecimentoMesarioEEENS9_INT0_5TDadoENSE_ISP_EEEERKT_RKSO_EUlRKS4_E_EESO_SS_SS_SO_T1_ = func:9092; // size:0x378 evidence:srcloc-anchor
@@ -9652,6 +9653,7 @@ _ZNK5comum3asn24CConversorEstadoGeralGap10DoConverteERKNS_2md15estadoaplicacao15
 _ZNK5comum3asn24CConversorEstadoGeralGap13DoDesconverteERKN20ModuloEstadoGeralGap14EstadoGeralGapE = func:11395; // size:0x58d evidence:vtable
 _ZNSt3__24pairIKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_15__list_iteratorINS0_IS6_NS_10shared_ptrIN3api8CWavFileEEEEEPvEEEC2B8ne210108IJRS7_EJEEENS_21piecewise_construct_tENS_5tupleIJDpT_EEENSK_IJDpT0_EEE = func:11396; // size:0x12 evidence:pair-fingerprint
 _ZNK5comum3asn21CConversorEstadoGeral10DoConverteERKNS_2md15estadoaplicacao12CEstadoGeralE = func:11397; // size:0xc6e evidence:srcloc-anchor
+_ZNK5comum3asn21CConversorEstadoGeral13DoDesconverteERKN21ModuloEstadoGeralUrna15EstadoGeralUrnaE = func:11398; // size:0xe58 evidence:srcloc-anchor
 _ZNK5comum3asn29CConversorDadoCorrespondencia10DoConverteERKNS_2md15estadoaplicacao20CDadoCorrespondenciaE = func:11399; // size:0x252 evidence:vtable
 _ZNK5comum3asn29CConversorDadoCorrespondencia13DoDesconverteERKN21ModuloEstadoGeralUrna19DadoCorrespondenciaE = func:11400; // size:0x453 evidence:vtable
 _ZNK5comum3asn19CConversorDadoCarga10DoConverteERKNS_2md15estadoaplicacao10CDadoCargaE = func:11401; // size:0x4cb evidence:srcloc-anchor
@@ -29947,9 +29949,8 @@ _ZTI27CLimitedSequentialOutStream = 0x119b34; // type:data size:0x20 evidence:rt
 _ZTS27CLimitedSequentialOutStream = 0x119b54; // type:data size:0x1e evidence:rtti
 str.8f948406da8a = 0x119b54; // type:data size:0x1e evidence:string "27CLimitedSequentialOutStream"
 _ZTV22CLimitedCachedInStream = 0x119b74; // type:data size:0x24 evidence:rtti
-g_Alloc = 0x119b7c; // type:data size:0x8 evidence:content
-g_MidAlloc = 0x119b84; // type:data size:0x8 evidence:content
-g_BigAlloc = 0x119b8c; // type:data size:0x8 evidence:content
+g_Alloc = 0x119b84; // type:data size:0x8 evidence:content
+g_MidAlloc = 0x119b8c; // type:data size:0x8 evidence:content
 _ZTI22CLimitedCachedInStream = 0x119b98; // type:data size:0x20 evidence:rtti
 _ZTS22CLimitedCachedInStream = 0x119bb8; // type:data size:0x19 evidence:rtti
 str.525106685a81 = 0x119bb8; // type:data size:0x19 evidence:string "22CLimitedCachedInStream"
