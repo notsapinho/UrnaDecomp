@@ -7,18 +7,18 @@
 //   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
 //   2835  GetCurrentEleicaoID         11209 13550 (5604, unit 155's, is in the link)
 //   1267  CProcessoEleitoral::GetPleito2  7787 (2787, 5586, 11191, 1543, 11902 and 11223 are in the link)
-//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888, and 5747, written (3715 holds it inlined), and 12272
-//         (unit 110's), in the link
+//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787, and 5747, written (3715 holds it inlined), 12272 (unit
+//         110's) and 11888 (unit 104's), in the link
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
 //   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
-//   2796  GetNome                     5803 11892 (6569, unit 110's, is in the link)
+//   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
 //   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
 //   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
-//   5655  CCargo::operator<=>         11888, two call sites
+//   5655  CCargo::operator<=>: no stand-in, its caller 11888 (unit 104's, two call sites) is in the link
 //   5654  CEleicaoPE::GetIDsCargos    7787
 //   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
 //   3784  CCargos::RemoveFiltro       12098 12110
@@ -45,11 +45,9 @@ int w1388(int) __asm__("_ZNK5comum2md6CCargo19GetDetalheCandidatoEv");
 int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
 void w1547(int, int) __asm__("_ZNK5comum2md6CCargo13GetNomeNeutroEv");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
-void w2796(int, int, int) __asm__("_ZNK5comum2md6CCargo7GetNomeENS0_5CSexo5ESexoE");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
 int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
-int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
 void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
@@ -101,12 +99,6 @@ __attribute__((noinline)) int XorCargos(int a, int b)
     return w2257(a) ^ w2257(b);
 }
 
-__attribute__((noinline)) void NomesPorSexo(int saida, int a, int sexo)
-{
-    w2796(saida + 24, a, sexo);
-    w2796(saida + 36, a, sexo + 1);
-}
-
 __attribute__((noinline)) void Ordinais(int saida, int cargo, int a)
 {
     w2258(saida + 36, cargo, a);
@@ -121,11 +113,6 @@ __attribute__((noinline)) int SomaEleicoesDoPleito(int pleito, int a, int b)
 __attribute__((noinline)) int SomaSituacoes(int pleito, int a)
 {
     return w5648(pleito, a) * 5;
-}
-
-__attribute__((noinline)) int OrdemCargos(int a, int b)
-{
-    return w5655(a, b) * 7 - w5655(b, a + 140);
 }
 
 __attribute__((noinline)) void IDsDuasEleicoes(int saida, int a, int b)
@@ -169,11 +156,9 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesNeutros);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&NomesPorSexo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&OrdemCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);

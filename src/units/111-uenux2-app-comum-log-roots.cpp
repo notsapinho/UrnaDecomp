@@ -11,11 +11,11 @@
 //   11849 and 11921 (5882) (7160, 11921 and 11849 are in the link, units 329, 169 and 104); 5880 needs none, its two
 //   callers 11869 and 11911 (units 138 and 176) being in the link;
 //   LogaErroEstadoAplicativo (5881) needs none, its two callers 5945 and 11914 (units 138 and 199) being in the link;
-// - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
-//   are listed in the class header.
+// - comum::CInformacaoEleicao's constructor (fn 603, 22 callers in the target), ImprimeBJust (1950) and
+//   EhModoDemonstracao (2286) need none: their last caller not in the link, 12105, is (fragment 372's); nor do the
+//   counts' getters (3847, 5914 to 5918, 2865), their callers being in the link.
 #include <string>
 
-#include "app/comum/informacao/cinformacaoeleicao.h"
 #include "app/comum/log/clogcomum.h"
 #include "app/comum/log/ieventoslog.h"
 
@@ -55,20 +55,8 @@ __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEvent
     return 10;
 }
 
-// stands for the callers of fn 603, among them 12023 (11666 to 11669 and 6599 are in the link)
-__attribute__((noinline)) int w111_informacao(const ecourna::app::dados::CParametrosUrna& dados)
-{
-    comum::CInformacaoEleicao a(dados);
-    comum::CInformacaoEleicao b(dados);
-    return a.GetNumViasBU() + a.GetNumViasBUAdicionais() + a.GetNumViasEstadoUrna() + a.GetNumViasEleitores() + a.GetNumViasVersoesDados() +
-        a.GetNumViasPU() + (a.ImprimeBJust() ? 7 : 11) + (a.EhModoDemonstracao() ? 13 : 17) + b.GetNumViasBU() + b.GetNumViasBUAdicionais() +
-        b.GetNumViasEstadoUrna() + b.GetNumViasEleitores() + b.GetNumViasVersoesDados() + b.GetNumViasPU() + (b.ImprimeBJust() ? 19 : 23) +
-        (b.EhModoDemonstracao() ? 29 : 31) + (a.AceitaJustificativa() ? 37 : 41) + (b.AceitaJustificativa() ? 43 : 47);
-}
-
 int (*volatile w111_sink_copia)(comum::EExtensaoArquivoResultado, comum::EExtensaoArquivoResultado);
 int (*volatile w111_sink_gera)(comum::EExtensaoArquivoResultado, uebyte, uebyte);
-int (*volatile w111_sink_informacao)(const ecourna::app::dados::CParametrosUrna&);
 int (*volatile w111_sink_textos)(comum::IEventosLog&, comum::IEventosLog&);
 
 struct SW111Roots {
@@ -76,7 +64,6 @@ struct SW111Roots {
     {
         w111_sink_copia = w111_copia;
         w111_sink_gera = w111_gera;
-        w111_sink_informacao = w111_informacao;
         w111_sink_textos = w111_textos;
     }
 } w111_roots;

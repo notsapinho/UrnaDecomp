@@ -104,12 +104,26 @@
 #
 # vota::CMaisInformacoes::StartState (fn 11897, slot 2) matches, written in cmaisinformacoes.cpp between the statics and
 # ProcessInput, where use band 1 puts it (11899, 11898, 11897, 11896 at consecutive ld_index in names.tsv, 2334 to
-# 2337 at this landing).
+# 2337 at f9af1d5d).
 # It replaces the form at +12 with vota::CTelasVota::CriaTelaMaisInformacoes()'s (fn 6599, unit 110's ctelasvota.cpp,
 # its std::shared_ptr moved in: the old one released, then the empty temporary), calls the form's slot 2 and stores
 # `this` at +4. It calls CTelasVota::GetInst() (fn 407) first and drops the result: the static member called through the
 # instance (ctelasvota.h has the measurement against a const member). Before step 8 it scored 2 over 83 rows, both
 # operand-only (the two calls). Its trap left 104-uenux2-app-vota-estados-pending.cpp, with the include it used.
+#
+# vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892, slot 2, no record) matches, written in
+# cmenufiltrarcandidatospornumero.cpp after the statics, where use band 1 puts it (11894, 11893 and 11892 at ld_index
+# 3000, 3001 and 3002 in names.tsv at f9af1d5d). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
+# vota::TelaFiltragemCandidatosPorNumero returns for CVisualizarCandidatos::GetInst().GetCargo() (fns 1279, 5951, called
+# before the screen's prologue), the screen inlined by binaryen behind a 240-byte prologue (ctelasvota.h has its
+# evidence), then calls the form's slot 2 and stores `this` at +4, as CMaisInformacoes::StartState does. The screen
+# calls vota::AdicionaCampoNumerico (fn 2383, ctelasvota.cpp's), which matches with it; unit 110's fragment has what
+# fixes 2383's form, both places and why this file's object links after ctelasvota.cpp.o (it is compiled from unit 110's
+# list), and unit 373's roots stand in for 2383's other target callers. Measured with pnpm wasm score in the whole link
+# before step 8: 53 over 746 rows, every row a call or a data address. Chosen, as for the class's siblings: the
+# assignment's spelling and the member's name. Its trap left 104-uenux2-app-vota-estados-pending.cpp.
+# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput (fn 11891) is still a trap there: the -pending.cpp header says
+# what its body holds and what it waits for.
 #
 # Two slots written since, each measured in the whole link with pnpm wasm score against
 # build/out/wasm-map/vota_web/names.tsv:
@@ -510,8 +524,38 @@
 # target's block order (the
 # other order, 129 over 1094, measured with the file in this unit's list). AddItem (1693), which differs, takes its
 # name from a hand line on its own records (unit 84's fragment): without it 11881 and 12894 are unresolved self-voted.
-# The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp.
-# The two files sit in the list in name order beside the other auxiliares/ files, a choice not measured.
+#
+# vota::CMenuFiltrarCandidatosPorCargo::StartState (11888, slot 2, record cmenufiltrarcandidatosporcargo.cpp:44:31, the
+# CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and matches, with what it
+# calls that had no body: vota::CVisualizarCandidatos::CarregaCandidaturas (5953) and the two instances that object
+# emits for it, std::construct_at<CCandidatura, const CCandidatura&> (5952) and std::__uninitialized_allocator_relocate
+# over CCandidatura (5950), all in cvisualizarcandidatos.cpp (unit 150's fragment); std::set<comum::md::CCargo>'s
+# destroy (3862, this object's); and std::any's handler for unsigned char (12893, ctelasvota.cpp.o's). It holds, in this
+# order: m_pNextState and CMenuFiltrarCandidatosPorNumero::GetInst() (5954), compared into a bool that is set just before
+# the screen's prologue; CVisualizarCandidatos::GetInst() (1279) and its GetCargos (inlined: a 16-byte frame); the
+# screen TelaFiltragemCandidatosPorCargo (ctelasvota.cpp, inlined: a 144-byte frame; ctelasvota.h says what it holds);
+# the set destroyed after it, a temporary of that full-expression; the form's slot 2 once; and the menu's loop: CORRIGE
+# goes back to CMenuVisualizarCandidatos, CONFIRMA stores the chosen item's post (std::any_cast) through
+# CVisualizarCandidatos::GetInst().SetCargo. Measured with pnpm wasm score in the whole link (scratch links of the tree,
+# then step 9): the post read inside its filter, 216 over 1393 rows (12 inserted, 13 deleted); read into a local at the
+# loop's top, 462 over 1405; the local declared after the candidate's filter, where the target loads it once for the
+# filter and GetCargo, with the CORRIGE case first (the target's br_table [0 1 1 1 2]; CONFIRMA first gives
+# [2 1 1 1 0]), 194 over 1385 (4 inserted, 4 deleted: the bool computed inside the inlined screen), and the same with
+# the screen's parameters in the other order; the screen's non-empty branch first, 643 over 1571; with this file
+# compiled from unit 110's list after ctelasvota.cpp, a place needed for 11888 and not the data's order (unit 110's
+# fragment names the 25 object pairs it inverts and the 5 it puts in order), 82 over 1381, every row a call or a data
+# address, then a match at step 9. The "Todos" item's four temporaries ("Todos", the default callback, the std::any and
+# "0") die after SetSearchText, so the item is one chain, AddItem("Todos").SetDado(...).SetSearchText("0"), and
+# api::CMenuItem::SetDado returns the item (api/gui/cinputmenufield.h): the item bound to a reference with SetDado and
+# SetSearchText as two statements scores 247 over 1400 (19 inserted, 20 deleted) in the same link. Chosen: the
+# structured binding's names (their lengths put the record's call at column 31), the local bool, the case spelling,
+# SetCargo, and the lines (StartState below the statics, the record's line fixing the switch's).
+# The roots' call of CMenuFiltrarCandidatosPorNumero::GetInst (5954) went: its target callers, 11881 and 11888, are in
+# the link. PorPartido's StartState (11884) is a trap in 104-uenux2-app-vota-estados-pending.cpp.
+# cmenufiltrarcandidatosporpartido.cpp sits in the list in name order beside the other auxiliares/ files, a choice not
+# measured; cmenufiltrarcandidatosporcargo.cpp is compiled from unit 110's list (above).
+# cmenufiltrarcandidatospornumero.cpp, this unit's, is compiled from unit 110's list after ctelasvota.cpp (unit 110's
+# fragment has the measurement).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -524,8 +568,6 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/ciniciozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp \

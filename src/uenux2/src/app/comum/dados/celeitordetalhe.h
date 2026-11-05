@@ -39,6 +39,10 @@ public:
 
     const md::CEleitorDecorator& GetEleitor() const { return m_eleitor; }
     bool TemDadosDinamicos() const { return m_dinamico.has_value(); }
+    // The dynamic data as they are, with no check: comum::CGeradorRelEleitoresHabBiograf's report (held by target fn
+    // 12105) tests the optional's flag (+192) and reads the comparecimento state (+140) and the kind of enabling (+144)
+    // in place, with no call of GetDinamico (fn 1271). The accessor, its name and its being inline here are chosen.
+    const std::optional<md::CEleitorDinamico>& GetDadosDinamicos() const { return m_dinamico; }
     const md::CEleitorDinamico& GetDinamico() const;
     void MarcaHabilitado(const CEleitorDadosHabilitacao& dados);
     void MarcaVotou();

@@ -324,7 +324,8 @@ Four cases look like a rename and are not one:
 Target 11611 is `boost::wrapexcept<boost::gregorian::bad_month>::rethrow`, yet a match of it under
 `boost::wrapexcept<boost::gregorian::bad_weekday>::rethrow` (ours from `app/roots_boost.o`) verifies too. The target
 has no `bad_weekday` at all (`strings -a target/vota_web_wasm.wasm | grep -c bad_weekday` prints 0): its gregorian
-exceptions are `bad_day_of_month`, `bad_month` and `bad_year`. Our probe instantiates `bad_weekday` as well, its
+exceptions are `bad_day_of_month`, `bad_month` and `bad_year`. Our probe instantiated `bad_weekday` as well (it now
+takes only its typeinfo: `tools/libs/boost/probe.cpp`), its
 `rethrow` has the same shape as `bad_month`'s, and its vtable's content, re-pointed, is the target's
 `wrapexcept<bad_month>` vtable, so the body verifies under either name. The target's own vtable says which function
 11611 is: the RTTI names `_ZTVN5boost10wrapexceptINS_9gregorian9bad_monthEEE` at 0x17baa8, and its slot 3 (+12)

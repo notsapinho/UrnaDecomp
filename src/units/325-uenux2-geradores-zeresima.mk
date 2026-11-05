@@ -228,9 +228,10 @@
 #   table slot 1631) in cgeradorresumozeresima.cpp, all operand-only: their evidence and choices are in those files;
 #   both are named by 11946's table votes.
 #
-# Roots: 325-uenux2-geradores-zeresima-roots.cpp stands for the target callers not written: 12105 and 12110 for 1047;
-# 12110 for 3872 (with a varied argument: 11946 passes 0 at both its calls) and 3699. Its stand-ins for 11946 alone went
-# with it: those of 5977, 5579, 5971, 5580, 3873 and the insert (2875's instance). Stand-ins of other units whose every
+# Roots: 325-uenux2-geradores-zeresima-roots.cpp stands for 12110, the target caller not written, for 1047 (12105,
+# fragment 372's, is in the link: the roots' two calls are 12110's two), for 3872 (with a varied argument: 11946
+# passes 0 at both its calls) and for 3699. Its stand-ins for 11946 alone went with it: those of 5977, 5579, 5971,
+# 5580, 3873 and the insert (2875's instance). Stand-ins of other units whose every
 # caller is now in the link went: unit 111's w111_relatorio (for 1047; 1127 is matched), unit 230's w230_titulos (for
 # 5579), unit 183's two address sinks (for 3872), unit 88's s11556 (5580 passes 11556's slot), unit 77's CParteRdv
 # builder (5971), unit 129's Totais (5801's callers 11980 and 11981) and unit 140's w140_mapa (2877's caller 5971); unit
@@ -246,7 +247,7 @@
 # and 317 keep callers that still wait; the comments of those with callers now in the link name them.
 #
 # Not written, with what each waits for:
-# - 12105, 12110 and the stretch: not attempted.
+# - 12110 and the stretch: not attempted (12105 is fragment 372's, written).
 #
 # nothing in the skeleton gives these functions their target's call sites: the roots stand for those callers, through
 # asm labels, so the rule needs no header

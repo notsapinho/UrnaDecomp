@@ -3,10 +3,11 @@
 # Target functions matched:
 # - comum::servico::CJustificadorServico's destructor and deleting destructor (3740, 11464), in
 #   app/comum/justificativa/servico/cjustificadorservico.cpp, and CComparecimentoMesarioServico's (3607, 10312), in
-#   app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp, which unit 113 lists, ahead of
-#   cregistradormesario.cpp (its fragment gives the measurement). Both D2s are thunks into binaryen's 2899, which they
-#   form with api::CFormPart's and comum::CParteEleitores' D2s (10888, 11205), as in the target; 2899's match line names
-#   the first member in link order, CComparecimentoMesarioServico's D2 since unit 113 links it first (step 9 renamed it).
+#   app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp, which unit 278's list compiles, ahead of
+#   cregistradormesario.cpp (unit 113's fragment gives the measurement). Both D2s are thunks into binaryen's 2899, which
+#   they form with api::CFormPart's and comum::CParteEleitores' D2s (10888, 11205), as in the target; 2899's match line
+#   names the first member in link order, CJustificadorServico's D2 since the servico's object links after this unit's
+#   cjustificadorservico.cpp (step 9 renamed it).
 # - The registry's map (src/api/persistencia/cdaorepositorio.cpp): its exit destructor (10292) and
 #   std::map<std::string, std::shared_ptr<api::persistencia::IDAO>>'s destroy (3845). The map's name in
 #   splat/symbol_addrs.txt is generated (vote:8 by:3742,10292).

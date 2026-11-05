@@ -98,6 +98,11 @@ public:
     unsigned int GetComparecimento() const { return m_qtdVotaram; }
     // Record celeitores.cpp:497 (7847); slot 2 of vota::CEleitorVotando (fn 7377) holds it behind a 32-byte prologue.
     md::ETipoAbrangencia GetCurrentAbrangenciaEleitor() const;
+    // The current record, read through the cursor (+16) with no test of the map's end: the report of
+    // comum::CGeradorRelEleitoresHabBiograf (held by target fn 12105) walks the records with Reset and Next (fn 5601)
+    // and reads each in place, with no call of GetCurrent (fn 656). The accessor, its name and its being inline here
+    // are chosen, as CJustificador's GetTituloCorrente is.
+    const CEleitorDetalhe& GetDetalheCorrente() const { return m_corrente->second; }
     // fn 1393: the current record's CEleitorDetalhe::GetBiometria (fn 1937), returned through the result's address. Its
     // six callers (fns 10425, 10465, 10474, 10478, 10500, 10512, vota's identification states) call it on
     // CEleitores::GetInst()'s result (10500: `f1393(frame, f326())`), so it takes the singleton as `this`: a member, a

@@ -12,8 +12,9 @@
 # 3513, D0 9426, SetInt 5160, SetInt64 9425, SetDouble 9424, SetText 9423, SetBool 9421, SetBlob 9420, SetNull 9419,
 # SetDateTime 9422, Execute 9417, Reset 9416, IsClosed 9428 and VerifyParameterIndex 1882; CSqlResultSet's constructor 9449, D2 9443, D0
 # 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
-# 9435, 9446 9433), GetDateTime(const std::string &) 9434, the GetBlob pair (5161 9432), IndexForColumnName 1525,
-# Next 9444 and VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
+# 9435, 9446 9433), GetDateTime(const std::string &) 9434 and GetDateTime(int) 5162, the GetBlob pair (5161 9432),
+# IndexForColumnName 1525, Next 9444 and VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer
+# control blocks' __get_deleter and
 # __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from
 # celeitordinamicodao.cpp.o, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
 # externs' ToLower in place 5158, copying ToLower 1879 and Replace 9398; and library code these bodies call:
@@ -89,18 +90,22 @@
 # (`return {};` gives the same bytes; `if (tamanho > 0)` around the copy does not).
 #
 # Not matched, each with what blocks it:
-# - CSqlResultSet::GetDateTime (5162): its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B) was the copy of
-#   app/dados/asn/datahoraasn.cpp in our link, a different body (fn 6004, whose folded readout is 290 lines against the target's 1568);
-#   it is uenux2's cgravadorrcsecao.cpp's now (unit 122), and still not the target's (unit 122's fragment says what it waits for).
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
 # Matched later, with what held each:
+# - CSqlResultSet::GetDateTime (5162) waited for its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B),
+#   which it reaches through an invoke_ table slot: that was the copy of app/dados/asn/datahoraasn.cpp in our link, a
+#   different body (fn 6004, whose folded readout is 290 lines against the target's 1568), then uenux2's
+#   cgravadorrcsecao.cpp's (unit 122), which is the target's since the Boost tree root's probe dropped its date
+#   parsing, clock and lexical_cast calls (unit 122's fragment has the measurements). 5162's body is unchanged; with
+#   5851 named it matches (25 over 230 rows, all operand-only, pnpm wasm score).
 # - CSqlStatement::SetDateTime (9422) waited for its inlined ymd_to_string in iso_extended_format: the target holds it
 #   inlined here, its one caller, and the probe that src/app/roots_boost.o compiles (-O2, no -fexceptions, ahead of both
 #   trees) gave it a second call site. 9422 matches since that call left tools/libs/boost/probe.cpp (fragment 265 has
 #   the measurements). Its callees from_day_number (1376) and to_simple_string_type over a time_duration (9415, which
-#   it calls through invoke_vij) come from ecourna's objects too since the root declares them `extern template`, and
+#   it calls through invoke_vij) come from ecourna's objects too since the root stopped giving its own (its `extern
+#   template` lines, until the probe's date parsing and clocks went: fragment 265), and
 #   this unit's object gives 9415 and month_formatter's format_month in iso_extended_format (9414); 9422 reaches 1376
 #   and 9415 through their table slots, which re-point by name whichever copy fills them, so its bytes do not rest on
 #   those two lines (measured: a whole link without either line keeps 9422 verified).

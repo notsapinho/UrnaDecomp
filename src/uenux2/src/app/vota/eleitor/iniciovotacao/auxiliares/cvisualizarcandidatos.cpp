@@ -1,8 +1,14 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.h"
 
+#include <map>
+#include <set>
 #include <vector>
 
 #include "api/gui/cinteractiveform.h"
+#include "app/comum/dados/ccandidaturas.h"
+#include "app/comum/dados/ccargos.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/md/processoeleitoral/ccargo.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/euevotaerror.h"
@@ -28,6 +34,21 @@ CVisualizarCandidatos& CVisualizarCandidatos::GetInst()
 std::unique_ptr<CVisualizarCandidatos> CVisualizarCandidatos::s_inst;
 std::mutex CVisualizarCandidatos::s_mutex;
 
+
+void CVisualizarCandidatos::CarregaCandidaturas()
+{
+    if (!m_candidaturas.empty()) {
+        return;
+    }
+    const std::map<comum::TCargoID, comum::md::CCargo> cargos = comum::CCargos::GetInst().GetMapaCargos();
+    for (const auto& [chave, candidatura] : comum::CCandidaturas::GetInst().GetRegistros()) {
+        const auto cargo = cargos.find(candidatura.GetCargoID());
+        if (cargo != cargos.end() && cargo->second.HasDetalheCandidato()) {
+            m_candidaturas.push_back(candidatura);
+        }
+    }
+}
+
 comum::md::TCargoID CVisualizarCandidatos::GetCargo() const
 {
     return m_cargo.value_or(0);
@@ -40,7 +61,28 @@ void CVisualizarCandidatos::LimpaFiltros()
     m_candidato.reset();
 }
 
-// (original lines 43-114: content not recovered)
+std::set<comum::md::CCargo> CVisualizarCandidatos::GetCargos()
+{
+    CarregaCandidaturas();
+    const comum::CConfiguracaoEleicao& configuracao = comum::CConfiguracaoEleicao::GetInst();
+    std::set<comum::md::CCargo> cargos;
+    for (const comum::md::CCandidatura& candidatura : m_candidaturas) {
+        if (m_candidato && *m_candidato != 0 && candidatura.GetCandidatoID() != *m_candidato) {
+            continue;
+        }
+        const comum::md::TCargoID cargo = candidatura.GetCargoID();
+        if (m_cargo && *m_cargo != 0 && cargo != *m_cargo) {
+            continue;
+        }
+        if (m_partido && *m_partido != 0 && candidatura.GetPartidoID() != *m_partido) {
+            continue;
+        }
+        cargos.insert(configuracao.GetCargo(cargo));
+    }
+    return cargos;
+}
+
+// (original lines 85-114: content not recovered)
 #line 115
 void CVisualizarCandidatos::StartState()
 {

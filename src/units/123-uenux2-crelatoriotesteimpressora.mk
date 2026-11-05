@@ -123,8 +123,8 @@
 # function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 12105 and
-# 12110 are in the link (2785, 11943 and 11946 are). w123_copia, which stood for 1249's other callers
+# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 12110 is in
+# the link (2785, 11943, 11946 and fragment 372's 12105 are). w123_copia, which stood for 1249's other callers
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
@@ -198,9 +198,9 @@
 #   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
 #   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
 #   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
-# Two of GetIDCargaFormatado's four callers are not reconstructed (12105, 12110; 11256 and unit 325's 5579 are in the
-# link): w123_idcarga stands for them and calls it twice, as the target's several callers do; it goes when every caller it
-# stands for is in the link. IncluiAvisoModoDemonstracao's two callers, 1543 and 5591, are in the link.
+# One of GetIDCargaFormatado's four callers is not reconstructed, 12110 (11256, unit 325's 5579 and fragment 372's 12105
+# are in the link): w123_idcarga stands for it with one call, the one that stood for 12105 having gone with it; it goes
+# when 12110 is in the link. IncluiAvisoModoDemonstracao's two callers, 1543 and 5591, are in the link.
 #
 # Four more CRelUtil statics in crelutil.cpp, all matched; their stand-ins are in unit 230's roots, the unit of
 # comum::CSubstituidorTitulo, which the first one uses:

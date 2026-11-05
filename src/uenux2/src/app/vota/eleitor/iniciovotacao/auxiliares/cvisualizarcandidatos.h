@@ -3,10 +3,15 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
 #include <vector>
 
 #include "app/comum/cappstate.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
+
+namespace comum::md {
+class CCargo;
+} // namespace comum::md
 
 namespace vota {
 
@@ -42,7 +47,34 @@ public:
     // name, its being one member and its line in the .cpp (after GetCargo, in the blank run there) are chosen.
     void LimpaFiltros();
 
+    // The posts of the candidatures the filters let through, each once, ordered by CCargo's operator<=> (fn 5655):
+    // vota::CMenuFiltrarCandidatosPorCargo::StartState (fn 11888) holds it behind a second stack-pointer prologue (a
+    // 16-byte frame, which holds the pair the set's insert returns: our object keeps std::set's
+    // __emplace_unique_key_args out of line and binaryen inlines it, which gives that frame, a reading of the
+    // target's), so it is out of line here and binaryen inlines it into its one caller. Evidence, the body:
+    // CarregaCandidaturas (fn 5953), comum::CConfiguracaoEleicao::GetInst() (fn 187) before the set, then for each
+    // candidature the three filters in StartState's order (candidate +28, post +24, party +36, each only when set and
+    // not 0) and CConfiguracaoEleicao::GetCargo (fn 861) of its post inserted; the post is read once, after the
+    // candidate's filter, for its filter and for GetCargo, which a local declared there gives
+    // (src/units/104-uenux2-app-vota-estados.mk has the forms measured). The name, its being a member and public, and
+    // the local are chosen; the set is returned by value into 11888's frame.
+    std::set<comum::md::CCargo> GetCargos();
+
+    // 11888's CONFIRMA case stores the chosen post and its engaged flag at +24 in one 16-bit store, after std::any_cast
+    // and CVisualizarCandidatos::GetInst(): std::optional's assignment. The name and its being an inline member are
+    // chosen.
+    void SetCargo(comum::md::TCargoID cargo) { m_cargo = cargo; }
+
 private:
+    // Fn 5953: when m_candidaturas is empty, the posts comum::CCargos::GetMapaCargos (fn 2834) gives and, over
+    // comum::CCandidaturas' map, a push_back of each candidature whose post is there with a candidate's detail (CCargo
+    // +84): its copy is std::construct_at (fn 5952, called twice, both paths) and its reallocation
+    // std::__uninitialized_allocator_relocate (fn 5950), both instances this class's object emits first. Its two target
+    // callers are 11884 and 11888 (11888 through GetCargos, which it holds inlined); band 2 runs 5953, 5952, 5951
+    // (GetCargo), 5950 in reverse link order, so it is defined above GetCargo in the .cpp. The name and its being a
+    // private member are chosen.
+    void CarregaCandidaturas();
+
     CVisualizarCandidatos();
 
     static std::mutex s_mutex;

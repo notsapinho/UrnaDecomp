@@ -14,7 +14,9 @@
 # - std::__tree members: 2222 (find<PK>), 3741 (find<CNumeroInscricaoEleitoral>), 5379
 #   (__emplace_unique_key_args<CEleitorIdentidade>), 1703 (find<CEleitorIdentidade>), 860 (__find_equal<CEleitorIdentidade>).
 #   1703 and 860 do not depend on the mapped type: in the target each is one body for every map of this key, and the
-#   match line names this unit's instance (docs/how-to-decompile.md step 3, "A callee can be a twin").
+#   match line names the instance of the first object on the link line that emits one (docs/how-to-decompile.md step 3,
+#   "A callee can be a twin"): 860's is unit 225's cvisitanteeleitor.cpp's, the CIndexer map's, since unit 278's list
+#   compiles cregistradormesario.cpp.
 # - 3743, an out-of-line 2-byte copy of the map's pair's second member, read as CJustificadorDetalhe's copy constructor.
 # - comum::CJustificador's constructor, 3742 (app/comum/justificativa/cjustificador.cpp; the class in cjustificador.h
 #   beside it): CDataMap's constructor from the name "CJustificador", then the comum::servico::CJustificadorServico
@@ -23,7 +25,7 @@
 #   3742 by that anchor). Fragment 163
 #   has the servico and the registry. 1391 allocates 40 bytes before it calls 3742, and the destructor (2810) calls the
 #   servico's (3740) on +28: the class's size and the member's offset. Its callers 1391 and 11475 are written (below);
-#   a stand-in in the roots calls the constructor twice for the third, 11474, which is not.
+#   the third, 11474, matches (fragment 372's), and the roots' stand-in for it went.
 # - comum::CRegistradorMesario's singleton (cregistradormesario.h says what is evidence and what is chosen):
 #   - GetInst, 815, under a std::lock_guard of the static std::mutex: when the static std::unique_ptr is empty it resets
 #     it to a new object (52 bytes), whose constructor, in the class, passes the name "CRegistradorMesario" to CDataMap's
@@ -35,8 +37,8 @@
 #     CComparecimentoMesario>): recursive bodies, whose self-calls re-point once the symbol file names them (1902 by
 #     5380's call, 2728 by its census pair); 1902 was `differs` against the twin of another map's tree, 2265, whose node
 #     has its strings at the same offsets.
-#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers are 11616 (unit 122's, written) and 12105, not
-#     written.
+#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers are 11616 (unit 122's) and 12105 (fragment
+#     372's), both written.
 #   - the statics' exit destructors, 10310 (the unique_ptr's) and 10309 (the mutex's). The symbol file names the mutex
 #     at 1909908 by 815's vote alone; 2221 and 10309 read that address as well, and 10309 is the mutex's destructor.
 #   - QuantidadeMesariosInicio and QuantidadeMesariosFim, 3606 and 2727: each counts the map's records of one period, 1
@@ -48,17 +50,17 @@
 #   it stands for).
 #
 #   Measured in the link (pnpm wasm score against the target, after make -C src link-map):
-#   - the order of the objects: ccomparecimentomesarioservico.cpp is in this unit's list ahead of
-#     cregistradormesario.cpp, moved from unit 163's. In the target's data the servico's vtable (1595668), Entregar's
-#     record (1595692) and the control block's vtable lie between ipedetitulomesario.cpp's records (1595636, 1595652)
-#     and cregistradormesario.cpp's first (1595748): the servico's object comes right before cregistradormesario.cpp's.
-#     The move also puts it ahead of objects whose records lie before its data (cjustificador.cpp's, 1560664); no row
-#     moves for that. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
-#     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
-#     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
-#     cregistradormesario.cpp stays in this list: compiled from unit 221's list after cregistradigitaloperador.cpp,
-#     where the target holds its records, it would invert 14 object pairs against the target's data on the merged
-#     link, and no match needs it (unit 221's fragment has the measurement, on fns 10451 and 3614).
+#   - the order of the objects: ccomparecimentomesarioservico.cpp comes right before cregistradormesario.cpp (moved from
+#     unit 163's list, then from this unit's). In the target's data the servico's vtable (1595668), Entregar's record
+#     (1595692) and the control block's vtable lie between ipedetitulomesario.cpp's records (1595636, 1595652) and
+#     cregistradormesario.cpp's first (1595748): the servico's object comes right before cregistradormesario.cpp's.
+#     With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396, replaced 121 [121
+#     operand-only], inserted 2, deleted 2)`, its locals permuted; with the servico first `55 over 519 rows (same 464,
+#     replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve, in this unit's list and again
+#     in unit 278's. Unit 278's list compiles both now, after unit 221's cregistradigitaloperador.cpp, where the target
+#     holds cregistradormesario.cpp's records: fn 10451's locals need cregistradormesario.cpp there (unit 221's fragment
+#     has the measurement and the object pairs the move reorders). This list keeps cjustificador.cpp, now ahead of the
+#     servico as the target's data put it (its records at 1560664).
 #   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377
 #     downwards, so the destructor is defined (or first mentioned) above AtualizaMesarioSecao, which first mentions 5379
 #     (how-to step 3, "The order of two members"). Defined below Registra, the bodies were the same (5380 `4 over 29
@@ -153,10 +155,10 @@
 #
 # CJustificador's Justifica, its overload over std::string and SaveCurrentInternal (records 55 and 83), with
 # comum::servico::CJustificadorServico's Salva and Existe defined above SaveCurrentInternal, are held by fn 10590,
-# binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. Not reconstructed:
-# 11474, the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 (unit
-# 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal, record 85,
-# inlined) and 6734.
+# binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. 11474, the other data
+# source that holds GetInst's code, matches from cjustificador.cpp (fragment 372's). 5378 and 5379's other callers are
+# 10337 (unit 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal,
+# record 85, inlined) and 6734.
 #
 # comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
 # stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
@@ -174,12 +176,12 @@
 #   then IIdentificadorEleitor::GetNumero (fn 1139, a twin matched as api::CFixedText::GetText) on the current key,
 #   which GetTituloCorrente in cjustificador.h returns. The target reaches it only by table slot 2949.
 # Names: 2809, 2810 and 11477 are pair-addr, 11475 srcloc-anchor; 1391 and 11476 match by content. The mutex's name is
-# `vote:1 by:11475`, that anchor's vote, and it holds through 1391 and 11476, the other matches that read 1838988; 11474
-# (not written) and 11616 (unit 122's, written, not matched) read it too, each unlocking it through fn 150 after reading the
-# pointer. The pointer's name is
-# `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
+# `vote:2 by:1391,11475` (that anchor's vote and 1391's), and it holds through 11476 and 11474 (fragment 372's) too,
+# the other matches that read 1838988; 11616 (unit 122's, written, not matched) reads it too, unlocking it through fn
+# 150 after reading the pointer. The pointer's name is `vote:10 by:1391,11475,11477` (splat/symbol_addrs.txt at
+# 63b2b9ab). Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throws' (55, 83 and 104).
-CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
+CDATAMAP_SRCS := src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 
 $(ROOT)/$(APP)/113-uenux2-cdatamap-roots.o: $(ROOT)/src/units/113-uenux2-cdatamap-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/113-uenux2-cdatamap.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

@@ -106,8 +106,10 @@
 #   __shared_ptr_emplace constructor over no argument out of line, which binaryen inlines into its one caller, and
 #   5530's call of 5565); 5565 keeps its body only with a second caller in the link, 653.
 #   5565 is named by its own vptr anchor; 2024 by 5565's call vote alone, which docs/reference/splat.md 3 holds through
-#   901, a match that calls 2024 too; 901 and 5530 by the scan's content pass. With 2383 out of the link (below), 2024's callers in it pass the length 0, true and false alike, and binaryen
-#   folded the three (2024 then 5 parameters, 5565 three rows short); unit 92's roots stand for 2024's other callers.
+#   901, a match that calls 2024 too; 901 and 5530 by the scan's content pass. While 2383 was out of the link (below),
+#   2024's callers in it passed the length 0, true and false alike, and binaryen folded the three (2024 then 5
+#   parameters, 5565 three rows short), so unit 92's roots stood for 2024's other callers; 2383 is in the link since
+#   (unit 110's ctelasvota.cpp) and passes its own parameters on, and unit 92's roots keep a stand-in for 7787.
 # - 653, AddLabeledInputControl (records 76:23, the throw of the lambda over a key, EUeGuiError 4936, "Tecla de controle
 #   não suportada '{}'"; 86:15, 4937, "O número máximo de teclas suportado é {}", past three keys), matches. For each key
 #   it takes the bit of 'B', 'C' or 'D' (1, 4, 2: the switch's table at 524056), adds the key's labels with the alignment
@@ -143,13 +145,14 @@
 #   record's column 23 puts the throw four levels in, not how); the size check's argument alinhamentos.size(); the
 #   loop's range-for with structured bindings and the OR before the label; the blank lines between the lambda and the
 #   size check (the records fix only lines 76 and 86).
-#   2383, an adder of a CInputField<CFramedText> over a CNumberValidation (callers 1591, 2384, 7787, 11892), written
-#   as the target's code reads (the validation a named local, the field a SharedInput, AddField, return) differs in
-#   its frame alone: the target keeps the validation at +16 and the field's SharedField copy at +24, ours the other
-#   way round, and the validation as a temporary of the new-expression allocates the field first. Anchored by its
-#   vptr, its +24 against the target's +16 voted our table slot 24 (ecourna's CError constructor) onto the target's
-#   slot 16, and the conflicting vote took CError's name and ten matches with it (710, 1011, 1898, 2379, 3520, 3653,
-#   6133, 9056, 10257, 10881 left `match`), docs/reference/facts/splat.md S8 item 1's case.
+#   2383, an adder of a CInputField<CFramedText> over a CNumberValidation (callers 1591, 2384, 7787, 11892), matches in
+#   unit 110's ctelasvota.cpp, where a file-static helper clang inlines gives the target's frame (unit 110's fragment).
+#   Written here before as the target's code reads (the validation a named local, the field a SharedInput, AddField,
+#   return), it differed in its frame alone: the target keeps the validation at +16 and the field's SharedField copy at
+#   +24, ours the other way round, and the validation as a temporary of the new-expression allocates the field first.
+#   Anchored by its vptr, its +24 against the target's +16 voted our table slot 24 (ecourna's CError constructor) onto
+#   the target's slot 16, and the conflicting vote took CError's name and ten matches with it (710, 1011, 1898, 2379,
+#   3520, 3653, 6133, 9056, 10257, 10881 left `match`), docs/reference/facts/splat.md S8 item 1's case.
 # - 8872 matches (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
 #   since unit 170, whose copies of CPolySingletonList::find keep 305 and 608 apart (unit 100's fragment).
 # - api::AddInputMenuField (3675, a chosen name; cinteractiveformbuilder.h has its evidence and choices), defined last in
@@ -158,8 +161,8 @@
 #   is a reading of its use bands (how-to step 3, rule 5), and measured with pnpm wasm score in the plain link: in
 #   cinputmenufield.cpp, 162 over 528 rows (16 inserted, 18 deleted); here, 29 over 512, every row an operand (calls,
 #   data, and the five rows of the default instruction string's .bss address, which a hand line names: unit 84's
-#   fragment). It is named by its srcloc-anchor. The stand-ins for its target callers not written (11884, 11888) stay in
-#   unit 84's roots (MenuPorPartido, MenuPorCargo).
+#   fragment). It is named by its srcloc-anchor. The stand-in for its target caller not written (11884) stays in unit
+#   84's roots (MenuPorPartido); 11888's went once 11888 was in the link.
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
 # no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of

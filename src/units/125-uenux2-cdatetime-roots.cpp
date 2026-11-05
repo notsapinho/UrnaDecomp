@@ -7,7 +7,7 @@
 //   5343 (unit 165's, matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
 //   api::CMTFormBuilderBase::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
-//   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
+//   and the other units' counted: Format (fn 706, 15 target callers: 5472, and a stand-in for 12110), CDate()
 //   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586 and 1543, unit 176's 11902, and a stand-in for the others),
 //   CDateTime::ConvertFromLocalTime (fn 5476: 1000 and 11862, in the link, no stand-in), CDateTime(time_t) (fn 1000: Now, 5472,
 //   5473, 10870, 10401 and 10402, and a stand-in for 11914, ...), CDateTime::Now (fn 479, 33 target callers: 11198, and
@@ -18,7 +18,7 @@
 //   unit 152's 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller 7787
 //   calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
 //   comum::md::CHorarioVerao::Contem, 1543, 11902, and a stand-in for the others), CDateTime's (fn 759, 15 target callers: two
-//   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others) and CDate's operator-
+//   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and a stand-in for 7787) and CDate's operator-
 //   (fn 3648, callers 654, 11861, 11862: 654, CTradutorFrase::Traduz, and 11861 and 11862, CPreZeresima's
 //   GetEstadoSemTeste and GetTela (unit 138), are in the link, no stand-in).
 // - the rest have two callers in the link already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
@@ -52,12 +52,6 @@ namespace {
 __attribute__((noinline)) void DataFormatada(void* texto, const void* data, const void* formato)
 {
     w706_format(texto, data, formato);
-}
-
-__attribute__((noinline)) void DataFormatadaDuasVezes(void* texto, void* outro, const void* data, const void* formato)
-{
-    w706_format(texto, data, formato);
-    w706_format(outro, data, formato);
 }
 
 __attribute__((noinline)) int DiaDeHoje()
@@ -108,12 +102,6 @@ __attribute__((noinline)) void HoraFormatada(void* texto, const void* hora, cons
     w779_format(texto, hora, formato);
 }
 
-__attribute__((noinline)) void HoraFormatadaDuasVezes(void* texto, void* outro, const void* hora, const void* formato)
-{
-    w779_format(texto, hora, formato);
-    w779_format(outro, hora, formato);
-}
-
 __attribute__((noinline)) void SomaSegundos(void* dataHora, int segundos)
 {
     w2233_soma(dataHora, segundos);
@@ -134,7 +122,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&w5472_data);
         w125_sink = reinterpret_cast<void*>(&w5473_hora);
         w125_sink = reinterpret_cast<void*>(&DataFormatada);
-        w125_sink = reinterpret_cast<void*>(&DataFormatadaDuasVezes);
         w125_sink = reinterpret_cast<void*>(&DiaDeHoje);
         w125_sink = reinterpret_cast<void*>(&DataAnterior);
         w125_sink = reinterpret_cast<void*>(&DataHoraAgora);
@@ -144,7 +131,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&DataHoraAnterior);
         w125_sink = reinterpret_cast<void*>(&DataHoraPosterior);
         w125_sink = reinterpret_cast<void*>(&HoraFormatada);
-        w125_sink = reinterpret_cast<void*>(&HoraFormatadaDuasVezes);
         w125_sink = reinterpret_cast<void*>(&SomaSegundos);
         w125_sink = reinterpret_cast<void*>(&SomaMinutos);
     }

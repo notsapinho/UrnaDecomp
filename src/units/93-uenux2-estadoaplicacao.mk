@@ -197,8 +197,15 @@ ESTADOAPLICACAO_SRCS := src/app/comum/dados/asn/estadoaplicacao/cconversorajuste
   src/app/comum/dados/md/estadoaplicacao/cestadogeralvota.cpp \
   src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
 UENUX2_SRCS += $(ESTADOAPLICACAO_SRCS)
+# fragment 372's comum::CGeradorBUJ, whose data lie between cgeradorbu.cpp's and cgeradorbuqrcode.cpp's in the target:
+# src/units/372-uenux2-relatorios-gerarelatorios.mk has the place and the pairs
+UENUX2_SRCS += src/app/comum/relatorios/cgeradorbuj.cpp
 # unit 155's sources, listed after this unit's: src/units/155-uenux2-cgeradorbuqrcode.mk has why and the measurement
 UENUX2_SRCS += src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/comum/relatorios/cgeradorbuqrcodevota.cpp
+# fragment 372's comum::CGeradorRelEleitoresHabBiograf, whose data follow cgeradorbuqrcodevota.cpp's in the target (its
+# file reaches Boost through cconfiguracaoeleicao.h): fragment 372 has the place and the pairs
+UENUX2_SRCS += src/app/comum/relatorios/cgeradorreleleitoreshabbiograf.cpp
+$(ROOT)/$(APP)/uenux2/src/app/comum/relatorios/cgeradorreleleitoreshabbiograf.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ESTADOAPLICACAO_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # the users of these classes are not reconstructed yet: 93-uenux2-estadoaplicacao-roots.cpp keeps them the way the target

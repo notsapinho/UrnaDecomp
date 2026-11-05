@@ -3,7 +3,7 @@
 # - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (5385) in estados/cimprimiridentificacaomesariosfinal.cpp,
 #   its record's file (229:84, the ASSERT's), with the code 3409 in api/util/eueasserterror.h; the class head is in
 #   cimprimiridentificacaomesariosfinal.h, the file of the record of GetPrinter (line 41, which fn 12105 holds inlined,
-#   not written).
+#   written by fragment 372).
 # - comum::ListaArquivosNaoRegistrados (5374) in ccontroladorreconhecimetomesario.cpp, and the libc++ code of its
 #   std::sort: std::__introsort (5373), __insertion_sort_incomplete (5370) and __sort4 (2726) over
 #   std::filesystem::path*, and the comparator (310). 5374 also brings into the link more of libc++.a's
@@ -120,15 +120,16 @@
 #   BiometriaPresenteNosNaoRegistrados and SalvarBiometriaMesarioNaoRegistrado (no index: 3614 and 10451 hold them)
 #   follow GravaWsq, chosen lines; the header says what each rests on. The lambda of SalvarBiometriaMesarioNaoRegistrado
 #   brings its std::function's five members, which match (10294 to 10298).
-# ccontroladorreconhecimetomesario.cpp is compiled by unit 221's list now, after cregistradigitaloperador.cpp, where the
-# target holds its records: the move inverts no object pair against the target's data (unit 221's fragment has the
-# measurement).
+# ccontroladorreconhecimetomesario.cpp is compiled by unit 278's list now, after cregistradigitaloperador.cpp and
+# cregistradormesario.cpp, where the target holds its records, the order fn 10451's locals need (unit 221's fragment
+# has the measurement). BiometriaPresenteNosNaoRegistrados builds its copy of the first six files from a std::span of
+# the list (std::from_range) with the count a conditional, the form 10451's bytes ask for (unit 221's fragment says
+# which forms were measured; the form is chosen).
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
 COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp
 UENUX2_SRCS += $(COMPARECIMENTOMESARIO_SRCS)
-# a caller not reconstructed (fn 12105): 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for it (the
-# stand-ins for 3614 and 10451 went with them)
-$(ROOT)/$(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o: $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o
+# No roots: GetNomeMesario's (fn 5385) one target caller, 12105 (fragment 372's, which calls it twice), is in the link,
+# so its stand-in went, as had those for ListaArquivosNaoRegistrados (5374), CControladorReconhecimentoMesario::GetInst
+# (1149) and GravaWsq (5371), whose target callers (1149 and 10451; 3614, 5382, 10316, 10337 and 10451; 5382 and 10451)
+# are in the link.

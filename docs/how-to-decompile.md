@@ -154,9 +154,9 @@ address and `size:` cover it before calling it an object only that row reads (11
 `comum::CPath::s_pathFlash` plus 16: `/usr/bin/grep -n ' = 0x1c0df0;' splat/symbol_addrs.txt` gives its `size:0x18`).
 When the readers inline a `GetInst`, that match is often another class's large slot, and the destructor waits for it. A
 hand line may name the object instead when the reader's body, read without either match, ties the address to the class
-(step 9, "Hand edits"): 10428 and 10429, `CMostraEleitorVotando`'s `s_mutex` and `s_inst`, landed before their reader
-1150, which differs, on its vptr store into 1909316 (`/usr/bin/grep -n 'CMostraEleitorVotando6s_instE'
-splat/symbol_addrs.txt`).
+(step 9, "Hand edits"): 10340 and 10341, `CMesarioRegistrado`'s `s_mutex` and `s_inst`, landed before their one reader
+10337 (`IGestorDadoMesario::StartState`, which holds `CMesarioRegistrado::GetInst` inlined), which differs
+(`/usr/bin/grep -n 'CMesarioRegistrado6s_instE' splat/symbol_addrs.txt`).
 
 The third verdict with work left, `unresolved`, is in neither pool: 489 rows at 182dc6c1, 69 of them compiled from a
 TSE tree. Each has a body of ours, and its `detail` names the operand that has no target counterpart:
@@ -1528,10 +1528,10 @@ at bbf27ac1): compile them with `-j` on the object list first (step 6 item 4), t
 symbol-file hand edit whose only evidence is the match it enables: a name whose only use is to make a function match
 proves nothing. A hand edit is allowed when no generated route reaches a name and evidence outside the match gives it: a
 callee whose callers in the link are all named by `vtable` (those cast no votes) and whose other callers are not written
-(1150's `rtti-vptr` line: it alone holds its class's address point), a callee with one caller that can land, a merge
-body's own callee, a `.bss` object, a `.data` or read-only object too small for its bytes to place, or a small
-pointer that no vote reaches, led by the target functions other than the match that read or write it, its
-static destructor among them, a thunk into a shared body too; a data object the match alone touches has no such
+(3613's line: its one target caller besides itself, 10409, is named by `vtable`), a callee with one caller that can
+land, a merge body's own callee, a `.bss` object, a `.data` or read-only object too small for its bytes to place, or a
+small pointer that no vote reaches, led by the target functions other than the match that read or write it, its static
+destructor among them, a thunk into a shared body too; a data object the match alone touches has no such
 evidence and takes no hand line. [reference/splat.md](reference/splat.md) §2 has the kinds,
 what each rests on and what each comment must cite (a line with one caller's, and one that carries every caller it
 names, above all: §3's self-vote rule does not read hand lines), and §3 "No circular evidence" the data object only the

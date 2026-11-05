@@ -14,8 +14,9 @@ class IForm;
 namespace vota {
 
 // vota::CGeraRelatorios (RTTI: si_class of comum::CAppState; vtable @1540516 [244, 387, 12105, 7480, 1661, 218, 425,
-// 218, 425]): it overrides StartState (slot 2, fn 12105, record cgerarelatorios.cpp:51), pending, and the destructors,
-// the bodies the states over one std::shared_ptr at +12 share (fns 244 and 387): final, and out of line
+// 218, 425]): it overrides StartState (slot 2, fn 12105, record cgerarelatorios.cpp:51, written in cgerarelatorios.cpp
+// with the three report functions it holds inlined: src/units/372-uenux2-relatorios-gerarelatorios.mk) and the
+// destructors, the bodies the states over one std::shared_ptr at +12 share (fns 244 and 387): final, and out of line
 // (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 6084) keeps the object in a static
 // std::unique_ptr (@1833568) under a static std::mutex (@1833544), unit 104's shape, and builds the 20-byte object as
 // the base's constructor with 0 and, at +12, the form "Preparando dados para encerramento" (fn 6583,

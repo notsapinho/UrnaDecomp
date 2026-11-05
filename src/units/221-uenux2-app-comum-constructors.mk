@@ -56,10 +56,12 @@
 # roots file: the DAO's RecuperarID and RecuperarTodos (unit 91) call the three, as the target's 10402 and 10401 do.
 #
 # vota::CRegistraDigitalOperador's members, written in cregistradigitaloperador.cpp, extend this unit
-# (src/units/README.md "Landing a unit" item 2). Target fns matched: GetInst 5396, with the constructor and
-# its two form builders inlined; StartState 10454; ProcessInput 10452; the statics' exit destructors 10457 and 10456;
-# and 3886, the body binaryen forms from three statics' exit destructors, with 10321 (unit 135's) and 10682 (unit
-# 161's), which match through it. Evidence (cregistradigitaloperador.h has the class's RTTI, vtable and layout):
+# (src/units/README.md "Landing a unit" item 2); unit 278's list compiles that file and unit 214's
+# ccontroladorreconhecimetomesario.cpp, after the two states (the order of the objects, below). Target fns matched:
+# GetInst 5396, with the constructor and its two form builders inlined; StartState 10454; ProcessInput 10452; the
+# statics' exit destructors 10457 and 10456; and 3886, the body binaryen forms from three statics' exit destructors,
+# with 10321 (unit 135's) and 10682 (unit 161's), which match through it. Evidence (cregistradigitaloperador.h has the
+# class's RTTI, vtable and layout):
 # - The class: its vtable @1592424 [1537, 3629, 10454, 7480, 1661, 10453, 425, 10452, 10451] is stored by 5396 alone
 #   (its vptr 1592432: /usr/bin/grep -rlE 'i32\.const 1592432($|[^0-9])' build/out/splat/pieces/asm). Slots 0 and 1 are
 #   the bodies comum::CPedeDigitalMesario and vota::CPedeIdentidade share (1537 and 3629, matched as
@@ -108,12 +110,11 @@
 # the target, and the three match.
 # GetInst (5396) needs no stand-in: its two target callers, 10458 (unit 278) and 10443 (unit 161), are in the link.
 #
-# ProcessTick (10451, slot 8, 6996 B, records :143 to :145) is written and its row is `unresolved` (below); its callee
-# BiometriaMesarioPresente (3614, 4765 B) matches, named by the srcloc-anchor of the records it holds, with
-# comum::CControladorReconhecimentoMesario::ComparaDigitais (5372, unit 214's file), the hinted emplace of
-# std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> (5376, from cregistradormesario.cpp's object) and the
-# five __func members of SalvarBiometriaMesarioNaoRegistrado's lambda (10294 to 10298). What the target holds, read
-# with pnpm wasm fn and lift (the headers name each piece):
+# ProcessTick (10451, slot 8, 6996 B, records :143 to :145) matches, with its callee BiometriaMesarioPresente (3614,
+# 4765 B), named by the srcloc-anchor of the records it holds, comum::CControladorReconhecimentoMesario::ComparaDigitais
+# (5372, unit 214's file), the hinted emplace of std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> (5376,
+# from cregistradormesario.cpp's object) and the five __func members of SalvarBiometriaMesarioNaoRegistrado's lambda
+# (10294 to 10298). What the target holds, read with pnpm wasm fn and lift (the headers name each piece):
 # - On the capture tick (+11): both ticks stopped, +32 decremented; at 0 it is set back to 3, the next state is
 #   vota::CTentativaCapturaDigitalEsgotada and LogaHabilitacaoCanceladaCapturaDigitalMesario (fn 4522) logs it,
 #   otherwise the next state is vota::CDigitalNaoCapturada; each GetInst and constructor inlined (their headers).
@@ -140,40 +141,72 @@
 #   "me{:06}.wsq" of the id_arquivo compared (5372) when the voters' biometry did not match.
 # The forms the bytes asked for, each measured on the whole link (pnpm wasm score at the default depth, the variant's
 # object or link line swapped into a copy of link.cmd: docs/reference/facts/workflow.md W13):
-# - the order of the objects (docs/reference/facts/codegen.md C4): unit 214's ccontroladorreconhecimetomesario.cpp is
-#   compiled from this list right after this file, where the target holds its records
-#   (`LC_ALL=C awk -F'\t' '$2 ~ /cregistrad|ccontroladorrec/ {print $1, $2}' ledger/source-locations.tsv`). Of the 13
-#   object pairs that move reorders on the merged link, 12 come into the target's data order and 1 has no named data;
-#   it inverts none (each object's named data and records against the target's addresses). 10451 is then 773 over 3291
-#   rows and 3614 132 over 2174, operand rows only (the statics' and table slots' addresses). Unit 278's two state files
-#   and unit 113's cregistradormesario.cpp stay in their units' lists, which is measured too: the target holds the
-#   states' vtables ahead of this class's and cregistradormesario.cpp's records after its, but compiled from this list
-#   around this file they invert 82 object pairs against the target's data on the merged link (34 for each state file,
-#   which would link ahead of cvalidaidentidade.cpp, ctime.cpp, the outrasopcoes/ states and others whose data the
-#   target holds before theirs; 14 for cregistradormesario.cpp), and no match needs them: in that order 10451 scored 290
-#   over 3269 before the merge, 674 over 3281 with the states left in unit 278's list, and with the two comum files
-#   ahead of the states, as their own units placed them, 546 over 3294 (3614 445 over 2208);
+# - the entropy's counts as a std::map<uebyte, int> that a function returns by value (ContaOcorrencias, over the
+#   image's begin and end, called by CalculaEntropia; both functions, their names and linkage are chosen): the map's
+#   construction then stores its root and size first and its begin node after, the target's order. Built in
+#   CalculaEntropia's own body, clang stores the begin node first in every form tried (the iterators read before the
+#   map or after it, a range-for, a span, a reference, the helper inlined or not, `{}` or a comparator or an
+#   allocator given to the constructor: the object, wasm-objdump of each variant compiled at the file's flags), and in
+#   the landed order 10451 is 204 over 3257 so (3 rows inserted, 3 deleted). The helper over a const
+#   std::vector<uebyte>& with a range-for, or an immediately invoked lambda in CalculaEntropia, give 10451 byte for
+#   byte (wasm-objdump -d of 10451 in each link);
+# - the first six files (in unit 214's ccontroladorreconhecimetomesario.cpp) as std::vector<std::filesystem::path>
+#   (std::from_range, std::span(arquivos).first(quantidade)), quantidade the conditional
+#   `arquivos.size() >= 6 ? 6 : arquivos.size()`: the target sizes the copy `count >= 6 ? 72 : bytes` and tests the
+#   bytes for zero in the second arm only. std::min<std::size_t>(arquivos.size(), 6), with the span or with the
+#   iterator constructor (the base's form), and the conditional with the iterator constructor give a select and test
+#   begin against end first: 284 over 3266 in the landed order (12 rows inserted, 12 deleted). Same function in the
+#   object (wasm-objdump): the count spelled `arquivos.size() < 6 ? arquivos.size() : 6` or written inside first(),
+#   std::views::counted(arquivos.begin(), quantidade) for the span, std::ranges::to<std::vector> for the from_range
+#   constructor; `> 6` compares with 7, the target with 6. The conditional over std::min and the span are chosen for
+#   these bytes; both are the file's own expressions, no library body copied (how-to step 3);
+# - the order of the objects (docs/reference/facts/codegen.md C4): the two states' files (unit 278's), this file,
+#   ccomparecimentomesarioservico.cpp and cregistradormesario.cpp (unit 113's) and ccontroladorreconhecimetomesario.cpp
+#   (unit 214's), in that order, compiled from unit 278's list after the states. 10451 holds the states' GetInst,
+#   IdentificaMesario with its three searches, cregistradormesario.cpp's three Get* members and
+#   BiometriaPresenteNosNaoRegistrados inlined by binaryen, and the objects' order decides its locals: with the two
+#   forms above in the base's order (this file and the comum file in this unit's list, the states after them in unit
+#   278's, cregistradormesario.cpp ahead of all in unit 113's) 10451 was 727 over 3278 (24 rows inserted, 20 deleted:
+#   the inlined state constructors' locals and a permutation of locals through the capture loop, the searches and the
+#   copy of the six files); the states ahead of this file, 267 over 3258 (locals 1, 2 and 9 to 14 permuted); and
+#   cregistradormesario.cpp after this file too, 198 over 3254, every row an operand (the four statics' addresses and
+#   CControlaReconhecimento's s_digitalRegistrada, before step 8 named them). The comum file ahead of this one gives 348
+#   over 3271; ccontrolareconhecimento.cpp or cinformaeleitorpodevotar.cpp moved beside the group, 267 over 3258 both;
+#   the servico's object moves with cregistradormesario.cpp, right before it, a choice of the data's order and not a
+#   byte need: 815 needs it ahead of cregistradormesario.cpp (unit 113's fragment), and with the servico left in unit
+#   113's list 10451 is still 198 over 3254 and 815 still 55 over 519, both operand-only (that order puts 232 fewer
+#   pairs in the data's order and inverts 18 fewer); this unit's ccomparecimentomesariopk.cpp stays in its list (198
+#   over 3254 moved with them too). Against the target's data (each object's lowest record address, or the address of
+#   the vtable of its own class), the move puts 537 object pairs into the data's order and inverts 39:
+#   ccomparecimentomesarioservico.cpp and cregistradormesario.cpp now follow 18 objects whose data the target holds
+#   after theirs (comum/util/cmonitoraalimentacao.cpp, vota/monitor/cthreadmonitor.cpp, api/ipc/cthread.cpp,
+#   api/hwil/euedesligandoerror.cpp, api/hash/chasharquivo.cpp, chashdiretorio.cpp and cmontadorhash.cpp,
+#   vota/operador/cthreadoperador.cpp and caguardainicio.cpp, vota/iexecucaovota.cpp, and comum/gravadores/asn/util.cpp,
+#   cconversorcorrespresultado.cpp, cconversorurna.cpp, cconversorenvelopegenerico.cpp,
+#   cconversorhistoricovotoimpresso.cpp, cconversortipoapuracaosa.cpp, cconversorversoesarquivos.cpp and
+#   md/ctipoapuracaosa.cpp, which link in units between unit 113's and unit 278's); ccontroladorreconhecimetomesario.cpp
+#   follows cmontadorhash.cpp; and cregistradigitaloperador.cpp follows api/hash/cmontadorhash.cpp and
+#   comum/comparecimentomesario/estados/cregistrarmesarios.cpp; 50 pairs hold an object with no such address (counted on
+#   the merged link with the pair count of the move's measurement). Placed with this unit instead (the states moved up
+#   into this list), the group gives 10451 the same 198 rows and the move 384 pairs in the data's order against 94
+#   inverted (counted at b3b6d4bb, where the landed order gave 515 against 33);
 # - 2738 in a file of its own (above);
 # - the fingers built by reserve(2) and four push_back, where a vector of {1, 6} move-assigned lets clang fold away the
 #   8-byte buffer the target keeps (3614 is 144 over 2174 so, 11 rows deleted), and `dedos = {1, 6}` calls
 #   __assign_with_size out of line and keeps the vector in the frame (112 bytes against the target's 96: the object);
 # - the loop over the fingers by reference, each finger loaded at each use as in the target;
-# - the searches as a loop that keeps the identity found and logs after it: with the log inside the loop 10451 is 329
-#   over 3290, with std::ranges::find_if 371 over 3292;
-# - the file checks as nested ifs that return true from inside, the target's `block (result i32)`;
-# - the entropy's begin and end read before the map is built: the target loads them ahead of the map's construction
-#   and keeps its root as 0 on the first pass; a range-for over *imagem gives 310 over 3275.
-# What is left is not explained, in two places of 10451 (`pnpm wasm fn` of both sides, locals renamed by first use: no
-# other instruction differs): the map's construction stores its begin node first and its root and size after, the
-# target the other way round, in every form of the loop tried, the helper inlined or not, a span, a reference, the
-# iterators in either order (each object compiled alone); and the copy of the first six files, which the target sizes
-# by `count >= 6 ? 72 : bytes` and tests for zero only in the second arm, where std::min (or views::take, or a count
-# named first: the same object) tests the bytes first and multiplies a select, and an iterator chosen by the same test
-# keeps it a pointer (327 against 290 over 3269). The local numbers that differ besides follow from those two. 10451's
-# four statics of the two states (@1909068, @1909092, @1909096, @1909120) are read by it and by their exit destructors
-# (10459, 10460, 10462, 10463) alone, so they take a name only from 10451's own vote, which comes with its bytes: its
-# row reads `unresolved` on CTentativaCapturaDigitalEsgotada::s_inst, and the destructors' `differs`, on census pairs
-# with other objects' destructors of the same shape.
+# - the searches as a loop that keeps the identity found and logs after it: with the log inside the loop 10451 was 329
+#   over 3290, with std::ranges::find_if 371 over 3292 (the base's order and forms);
+# - the file checks as nested ifs that return true from inside, the target's `block (result i32)`.
+# ProcessTick's two states' statics (@1909068 and @1909092 CTentativaCapturaDigitalEsgotada's s_mutex and s_inst,
+# @1909096 and @1909120 CDigitalNaoCapturada's) are read by 10451, through the GetInsts it holds inlined (each s_inst
+# tested for null, set to the 20-byte object whose vptr is the class's, 1592288 or 1592360, the object it held deleted
+# through 244; each mutex unlocked through 150), and each by its exit destructor alone (the grep of i32.const <address>
+# in build/out/splat/pieces/asm): 10463 and 10460 pass s_inst to 389 (binaryen's body of several statics' exit
+# destructors, its match line named after cmaisinformacoes.cpp's), 10462 and 10459 pass s_mutex to 150. Their names are
+# step 8's, `vote:8` and `vote:2` by:10451, the srcloc-anchor ProcessTick's records give it; they hold through the four
+# destructors' matches, which step 9 added and no symbol line names (docs/reference/splat.md section 3, "No circular
+# evidence": the object's static destructor is the second match), so no hand line names them.
 # Four rows match besides, from objects this unit does not compile: 10516, the exit destructor of
 # CControlaReconhecimento::s_dedoRegistrado (unit 161's ccontrolareconhecimento.cpp), named by 3614's vote now that
 # 3614 assigns that static; 2972 (musl's log2) and 12450 (SQLite's logFunc, log2's one other caller in this link),
@@ -182,8 +215,7 @@
 # whole-link match no source of ours holds (docs/reference/facts/splat.md §S10 item 27).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# cregistradigitaloperador.cpp and ccontroladorreconhecimetomesario.cpp compile from unit 278's list (above).
 APP_COMUM_CONSTRUCTORS_SRCS := src/app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp \
-    src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp \
-    src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp \
     src/app/vota/operador/confirmaidentidade/ccomparecimentomesariopk.cpp
 UENUX2_SRCS += $(APP_COMUM_CONSTRUCTORS_SRCS)

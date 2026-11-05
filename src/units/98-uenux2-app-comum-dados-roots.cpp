@@ -41,15 +41,14 @@ __attribute__((noinline)) void VerificaDuasVezes(int vezes)
     }
 }
 
-// Stands for fn 2834's target callers 5953 and 7787, not in the link (2543 and 12244, unit 102's, are)
-// (comum::CCargos::GetMapaCargos, ccargos.cpp, unit 88's file). The two 12-byte maps are left undestroyed: nothing
-// calls this.
+// Stands for fn 2834's target caller 7787, not in the link (2543 and 12244, unit 102's, and 5953, unit 150's, are)
+// (comum::CCargos::GetMapaCargos, ccargos.cpp, unit 88's file). The 12-byte map is left undestroyed: nothing calls
+// this.
 __attribute__((noinline)) int MapasDeCargos(int a, int b)
 {
-    int mapas[6];
+    int mapas[3];
     w2834_root(mapas, a);
-    w2834_root(mapas + 3, b + 28);
-    return mapas[2] + mapas[5];
+    return mapas[2] + b;
 }
 
 const void* volatile comum_dados_sink;

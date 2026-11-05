@@ -160,9 +160,10 @@
 # CJustificador::HasInst's name and its being inline (cjustificador.h), and the CPlainText constructor's being a
 # delegating constructor of that class with its parameters (cplaintext.hpp). The linkages are readings: external where
 # the target shows a frame, static where it shows none.
-# 11616 is `unresolved`: its first operand with no target function is its call of parse_iso_time (scan detail +0x1ec),
-# 5851, not matched (below). Against the target it scores 1204 over 7245 rows (pnpm wasm score: 733 replaced, 699 of
-# them operand-only, 57 inserted, 414 deleted), and what differs past the operands is not explained in full. Two parts
+# 11616 is `differs` (scan detail +0x16, a local's number: target local.tee 11, ours 10); its call of parse_iso_time,
+# 5851, re-points since 5851 matches (below). Against the target it scores 1203 over 7245 rows (pnpm wasm score: 732
+# replaced, 698 of them operand-only, 57 inserted, 414 deleted), and what differs past the operands is not explained in
+# full. Two parts
 # are read: the copy of the CInfoSalt the CPlainText constructor takes by value is inlined in the target (two vector
 # copies and a vector length error) and a call of cinfosalt.cpp's out-of-line copy constructor in ours (fn 9470, unit
 # 05's), so the target's header defines that copy inline (a reading; unit 05's files are not changed); and the target
@@ -170,7 +171,7 @@
 # that the others branch to (read as binaryen's folding of identical tails in our link; why the target's are apart is not
 # traced). It stays
 # written: it brings 5366, 5841, 5843 and 5844 into the link, its object 1006 and 3813, and its parse_iso_time copy
-# 3812, 5839 and 8887 (below).
+# (5851) 2849, 3811, 5833, 5838, 3812, 5839 and 8887 (below).
 # Matched with 11616 written (steps 7 to 9; every row operand-only before the scan, pnpm wasm score):
 # - 5841, comum::ConverteComparecimentoMesario (11 over 274 rows): a free function after CriaIdentidadeEleitor (its
 #   band order: 5845, 5844, 5843, 5842, 5841 and 5839 run down ld_index in names.tsv), its collection state from a
@@ -205,6 +206,31 @@
 #   had been the last caller of a vector<std::string> chain (special_values_parser's sv_strings calls
 #   __init_with_size, 5585, roots_coderenv.o's instance), and with it out 3895, 5562, 5573, 5774, 5786 and 11158 left
 #   `match`: src/app/roots_coderenv.cpp now stands for 5585's target users, 11332 and 9586, and they match again.
+# Matched since the Boost tree root's probe (tools/libs/boost/probe.cpp) dropped its date parsing, clock and
+# lexical_cast calls (steps 6 to 10, every row operand-only before the scan, pnpm wasm score): Boost's
+# parse_iso_time<ptime> (5851, 9824 B), this object's copy, 200 over 4667 rows, with what only it calls:
+# bad_lexical_cast's constructor (2849, 3 over 14), lcast_ret_unsigned's convert for unsigned short (3811, 23 over 612)
+# and for unsigned long long (5833, 7 over 635), and token_iterator<offset_separator>'s constructor (5838, 3 over 159),
+# which matched from app/roots_boost.o before and from this object now. The target holds parse_undelimited_date,
+# gregorian::date's constructor from a year, a month and a day, and lcast_ret_unsigned's convert for unsigned int
+# inlined in 5851 (binaryen inlines a function with one call site), and in cb34a517's link urna_roots (app/roots.o,
+# with the probe's functions inlined into it) called them once,
+# twice and twice (wasm-objdump -d of that link, the `call` sites of each): 5851 read 2079 over 4695 rows there (714
+# replaced, 701 of them operand-only, 28 inserted, 1337 deleted). With the probe's from_undelimited_string and its
+# lexical_cast calls out and its two clocks in, 5851 read 729 over 4667 (429 replaced, 415 operand-only, 300 deleted):
+# the deleted rows are the target's inlined date constructor behind a second prologue (its month-end lengths and the
+# "Day of month is not valid for year" throw), where ours has one call (a reading of the score's rows; the clocks called
+# the constructor too, twice). In cb34a517's link 2849's
+# copy kept the source type a parameter ((i32 i32 i32)->(i32), 5 over 14), where the target's stores std::string's
+# typeinfo (the probe cast from other types), and 3811's and 5833's were app/roots_boost.o's, at APP_CXXFLAGS (295 over
+# 666 and 242 over 681 rows); this object's are the target's. The probe's change left the bodies of gregorian's
+# bad_year (its D0, 2846) and wrapexcept<bad_year> (3804 to 3809, and binaryen's merges 3899 to 3901) to this object.
+# 2846 matches as this object's bad_year D0, the name the target's bad_year vtable gives it. 3804 to 3809, 3899 and
+# 3900 match as the byte-identical members and merges of app/roots_boost.o's wrapexcept<std::invalid_argument>, which
+# links first, and 3901 as that class's throw_exception merge: those names are the link order's pick, the target's
+# vtables holding these bodies under bad_year, bad_month and bad_day_of_month (step 9 renamed the nine lines). The
+# probe keeps bad_weekday's typeinfo alone for a toolkit test: a call of greg_weekday's range check gave bad_weekday's
+# twins of these bodies, which named them and took 2846 to app/roots_boost.o (measured on a link with that call).
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp
@@ -246,13 +272,6 @@
 # - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
 #   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) are fragment
 #   227's.
-# - boost::date_time::parse_iso_time<ptime> (5851, 9824 B), which 11616 calls, this object's copy: 2079 over 4695 rows
-#   (pnpm wasm score: 714 replaced, 701 of them operand-only, 28 inserted, 1337 deleted). The target holds
-#   parse_undelimited_date inlined and calls 3811 three times and 5833 twice; ours calls parse_undelimited_date (5105)
-#   and lcast_ret_unsigned's converters for unsigned short, unsigned long long and unsigned int (3456, 3462, 3463), all
-#   from app/roots_boost.o, whose Boost probe (tools/libs/boost/probe.cpp: from_undelimited_string and lexical_cast)
-#   instantiates them first in the link. It waits for those copies, a tree root's change not made here; 2849, 3811 and
-#   5833, which only 5851 calls, wait with it, and so does 11616.
 # - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and `differs`, its first difference the frame (scan
 #   detail +0x6: the target's is 160 bytes, ours 80). It scores 453 over 3911 rows (pnpm wasm score: 15 inserted, 19
 #   deleted, 411 of 419 replaced operand-only); ecourna's globToFileList, its lambda and ~CZip are written in the forms

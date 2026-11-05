@@ -33,6 +33,17 @@
 # same merge once 2685 is in it, and 6155 matches under the merge's name, after ConverteDataHora. Boost's from_day_number
 # (1376) and greg_month's and greg_day's on_error (5183, 5182) match from this unit's datahoraasn.cpp.o since then, the
 # first ecourna object that emits them, once src/app/roots_boost.cpp leaves them to ecourna's objects (fragment 265).
+# ecourna::app::dados::asn::DesconverteDataHora (fn 1877, asn/datahoraasn.cpp) matches since Boost's parse_iso_time
+# copy (5851, unit 122's object), whose table slot it passes to invoke_iiii, does. It returns early for a text shorter
+# than 9 characters, before it tests the last one for 'Z': the target branches past the 'Z' case on `i32.lt_u` against
+# 9, once in each branch of the string's long/short test, which that form gives, where the one condition
+# `texto.size() >= 9 && texto.back() == 'Z'` (and `> 8`) gives `i32.le_u` against 8 (llvm-objdump -d of each form's
+# object, compiled by tools/round/try-tu.sh --symbols at the directory's flags; in the whole link the one condition
+# scored 31 over 420 rows, two of them not operands, pnpm wasm score). `!(texto.size() < 9 || texto.back() != 'Z')`
+# gives the same code for the function; an early return on `texto.size() < 9 || texto.back() != 'Z'`, before the
+# rewrite, does not (383 of its 462 instructions differ from the early return's, compared position by position). The
+# early return is chosen between the two that give the bytes.
+# In the whole link 1877 scores 27 over 420 rows, all operand-only, before the scan.
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \

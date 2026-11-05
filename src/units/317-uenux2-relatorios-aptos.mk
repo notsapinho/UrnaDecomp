@@ -99,11 +99,11 @@
 #   legend's separator is unit 168's vota::AdicionaSeparador (fn 1387), whose namespace is that unit's choice, called
 #   from this comum file.
 #
-# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's callers 12105 and 12110 (11223, 11908 and
-# unit 325's 5977 and 3871 are in the link), for 2259's callers 7787 and 12105 (11908 and unit 325's 11943 and 11946 are
-# in the link) and, since unit 325, for 3654's caller 12105 (11943 and 11946 are in the link). Unit 57's and
-# unit 219's roots, unit 77's CParteEleitores stand-in and unit 280's w280_cpe, which stood for 11908 or 11223 alone,
-# went with this unit, and unit 176's and 287's pending files with their last traps (11908, 11223).
+# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's caller 12110 (11223, 11908, unit 325's
+# 5977 and 3871 and fragment 372's 12105 are in the link) and for 2259's caller 7787 (11908, unit 325's 11943 and 11946
+# and fragment 372's 12105 are in the link); the calls that stood for 12105, of 2259 and of 3654, went with it. Unit
+# 57's and unit 219's roots, unit 77's CParteEleitores stand-in and unit 280's w280_cpe, which stood for 11908 or
+# 11223 alone, went with this unit, and unit 176's and 287's pending files with their last traps (11908, 11223).
 RELATORIOS_APTOS_SRCS := src/api/gui/reports/creport.cpp src/api/gui/reports/creportprinter.cpp \
     src/app/comum/relatorios/celeitoresaptos.cpp \
     src/app/comum/relatorios/cgeradorrellistaeleitores.cpp

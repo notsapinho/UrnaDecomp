@@ -23,22 +23,24 @@
 //                     1905, 941's 13 and 728's 16), and the link without those calls moved no row (steps 6 to 10)
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
-//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
-//                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and
-//                     6599, unit 110's, 11812, unit 217's, and 11881, unit 104's, are in the link); TelaB for 7787,
-//                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
-//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
-//                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
-//                     (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the other adders too
+//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040, 12055, 12065 and
+//                     12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and 6599, unit 110's,
+//                     11812, unit 217's, and 11881, 11888 and 11892, unit 104's, are in the link); TelaB for 7787, the
+//                     caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
+//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243
+//                     (AddLabeledKey over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the
+//                     alignments 0 and 2 (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the
+//                     other adders too
 //   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
 //                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
 //                     their defaults
 //   TextoMultiLinha   3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit
 //                     110's, is): it calls it twice, with another rectangle and alignment the second time
-//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (12105, 12110), and 12110 for 2775
-//                     (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, and 2248, unit 220's, which call them
-//                     too, are in the link). Its form is a parameter: their callers zero the vector in line, and it takes no
-//                     constructor of ours. The EStyle and alignments vary as theirs do
+//   RelatorioA        the caller of 193, 604, 198 and 1264 not in the link, 12110, one call of each, and 12110 for
+//                     2775, two (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, 2248, unit 220's, and 12105,
+//                     fragment 372's, which call them too, are in the link: the calls that stood for 12105 went). Its
+//                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours.
+//                     The EStyle and alignment are parameters, as 12110's vary
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
 #include <string>
@@ -132,10 +134,6 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
     form.AddTextField(texto, estilo, alinhamento);
     form.AddTextField(fonte, alinhamento);
     form.AddNewLine(linhas);
-    form.AddNewLine(1);
-    form.AddCut();
-    form.AddTextField(texto, static_cast<api::IPaper::EStyle>(2), api::ALINHAMENTO_CENTRO);
-    form.AddTextField(fonte, api::ALINHAMENTO_DIREITA);
     form.AddCut();
     form.AddQRCode(qrcode);
     return static_cast<int>(linhas);
@@ -147,8 +145,9 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //                         calls of 301 (GetInteractiveForm) went: the last of its 49 target callers not in the link,
 //                         10451 (unit 221's), is now
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelC   the callers of 357 (Build): 12105 and 12110, not reconstructed (11256, 2890, 12005, 11908, 11946,
-//                3872, 3873, 5579, 5977, 3699, 5580, 5970, 5971 and 11253 are in the link); it calls Build twice
+//   FormPapelC   the caller of 357 (Build) not reconstructed, 12110 (11256, 2890, 12005, 11908, 11946, 3872, 3873,
+//                5579, 5977, 3699, 5580, 5970, 5971, 11253 and fragment 372's 12105 are in the link): one call, the
+//                one that stood for 12105 having gone with it
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {
     const auto simples = form.GetForm(nome);
@@ -174,9 +173,9 @@ __attribute__((noinline)) int FormB(api::CFormBuilder& form, const std::shared_p
     return form.GetForm(preShow, std::string()).use_count() + posicao.x;
 }
 
-__attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPaperFormBuilder& outro)
+__attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form)
 {
-    return form.Build().use_count() + outro.Build().use_count() + 3;
+    return form.Build().use_count() + 3;
 }
 
 // The MT builder's input fields: ControleMT, the stand-in for the callers of 395 (CMTFormBuilder::AddInputControl),

@@ -20,24 +20,25 @@
 //   7787 lands.
 // - GetSeparadorFase (slot 20, fn 11183) calls CRelUtil::GetSeparadorFase, fn 1919, which has six callers in the target
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
-//   two not reconstructed (12105, 12110; 2785, 11183, 11943 and 11946 are in the link).
+//   one not reconstructed, 12110 (2785, 11183, 11943, 11946 and fragment 372's 12105 are in the link).
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
 //   did into 1919 alone. w123_erro stands for one of the other 13, 12110 (11968, 2791, 5967, 11181, 11212,
 //   11214, 3696, 942, 2786, 3689, 1543 and 11233 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
-//   5579, 11256, 12105, 12110): 11256 and 5579 (unit 325's) are in the link, and w123_idcarga stands for the other
-//   two and calls it twice.
+//   5579, 11256, 12105, 12110): 11256, 5579 (unit 325's) and 12105 (fragment 372's) are in the link, and w123_idcarga
+//   stands for 12110 with one call, the one that stood for 12105 having gone with it.
 // - CRelUtil::IncluiCabecalhoEleicoesMZS, fn 1543, has six callers in the target (awk -F'\t' '$2==1543'
 //   ledger/callgraph.tsv: 5977, 11223, 11902, 11908, 12105, 12110); 11902 (unit 176's), 11223 (unit 287's) and 11908
-//   (unit 176's) are in the link, with one call each, as is 5977 (unit 325's), and w123_cabecalho stands for 12105 and
-//   12110 and calls it twice, with the header types and the flag varied as those callers vary them (0 or 2 and 1,
-//   11223 and 11902; 0 and 0, 5977, 11908, 12110; 0 or 1 and 0, 12105), so that dead-argument elimination folds none.
+//   (unit 176's) are in the link, with one call each, as are 5977 (unit 325's) and 12105 (fragment 372's, three calls),
+//   and w123_cabecalho stands for 12110 with one call, passing what it passes (0 and 0, as 5977 and 11908 do; 11223 and
+//   11902 pass 0 or 2 and 1, 12105 0 or 1 and 0), so that dead-argument elimination folds none. The call that stood for
+//   12105 went with it.
 // - CRelUtil::ImprimeResumoCorrespondencia, fn 1541, has the same six callers as 1543 (awk -F'\t' '$2==1541'
 //   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105);
-//   11902, 11223, 11908 and 5977 (unit 325's) are in the link, and w123_rodape stands for the others (12105 and 12110 for
-//   1541, 12105 for 2785) and calls each twice.
+//   11902, 11223, 11908, 5977 (unit 325's) and 12105 (fragment 372's) are in the link, and w123_rodape stands for
+//   12110, 1541's one caller still waiting, with one call: the calls that stood for 12105, of 1541 and 2785, went.
 // - CRelUtil::ImprimeSeparadorVia, fn 5581, has one caller in the target, fn 12110 (vota::CGeraBU's slot 2, not
 //   reconstructed), which calls it twice (awk -F'\t' '$2==5581' ledger/callgraph.tsv): w123_vias stands for it with
 //   two call sites, so binaryen keeps 5581 out of line. 12110 passes no constant (the same builder at both calls, a
@@ -84,26 +85,21 @@ __attribute__((noinline)) void w123_erro(int codigo, const std::string& mensagem
 
 __attribute__((noinline)) unsigned w123_idcarga(const std::string& carga, const std::string& outra)
 {
-    return comum::CRelUtil::GetIDCargaFormatado(carga).size() + comum::CRelUtil::GetIDCargaFormatado(outra).size() + 123;
+    return comum::CRelUtil::GetIDCargaFormatado(outra).size() + carga.size() + 123;
 }
 
 __attribute__((noinline)) void w123_cabecalho(api::CPaperFormBuilder& builder, const std::string& titulo,
                                               const std::string& municipio, unsigned tipo)
 {
-    comum::CRelUtil::IncluiCabecalhoEleicoesMZS(builder, titulo, tipo + 123, tipo, tipo + 7, municipio,
-                                                static_cast<comum::CRelUtil::ETipoCabecalho>(tipo), tipo > 1);
     comum::CRelUtil::IncluiCabecalhoEleicoesMZS(builder, municipio, 123, 7, tipo, titulo,
                                                 comum::CRelUtil::eCabecalhoSecao, false);
 }
 
-__attribute__((noinline)) void w123_rodape(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro,
-                                           const comum::md::estadoaplicacao::CDadoCorrespondencia& correspondencia,
-                                           comum::EUrnaFase fase)
+__attribute__((noinline)) int w123_rodape(api::CPaperFormBuilder& outro,
+                                          const comum::md::estadoaplicacao::CDadoCorrespondencia& correspondencia)
 {
-    comum::CRelUtil::ImprimeResumoCorrespondencia(builder, correspondencia);
-    comum::CRelUtil::ImprimeSeparadorFase(builder, fase);
     comum::CRelUtil::ImprimeResumoCorrespondencia(outro, correspondencia);
-    comum::CRelUtil::ImprimeSeparadorFase(outro, comum::FASE_OFICIAL);
+    return 41;
 }
 
 __attribute__((noinline)) void w123_vias(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro, unsigned total)
@@ -118,8 +114,7 @@ unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
 unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
 void (*volatile w123_sink_cabecalho)(api::CPaperFormBuilder&, const std::string&, const std::string&, unsigned);
-void (*volatile w123_sink_rodape)(api::CPaperFormBuilder&, api::CPaperFormBuilder&,
-                                  const comum::md::estadoaplicacao::CDadoCorrespondencia&, comum::EUrnaFase);
+int (*volatile w123_sink_rodape)(api::CPaperFormBuilder&, const comum::md::estadoaplicacao::CDadoCorrespondencia&);
 void (*volatile w123_sink_vias)(api::CPaperFormBuilder&, api::CPaperFormBuilder&, unsigned);
 
 struct SRelatorioTesteImpressoraRoots {

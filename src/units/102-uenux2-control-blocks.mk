@@ -3,9 +3,10 @@
 # 102-uenux2-control-blocks-roots.cpp (its header says how). 30 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
-# 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
-# went all the same: one builder's vptr store keeps the block's vtable, and a link with the stand-in back moves no
-# row) and
+# 10683 matches, and 12463 did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was
+# written in unit 110's ctelasvota.cpp, whose object links first and gives it now; 7787, its third builder, is not
+# written, and the block's stand-in went before 2383 was: one builder's vptr store keeps the block's vtable, and a link
+# with the stand-in back moved no row) and
 # CDataText<vota::CEscolheOpcao::COpcaoDS>'s (2753, the same object, from which 10684 matches),
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CPreShowClearScreen's
 # (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138 matches),

@@ -13,7 +13,7 @@ namespace {
 const void* volatile cfederacoes_sink;
 
 // Stands for fn 2832's caller 7787 (5922 and 11976 are in the link).
-__attribute__((noinline)) int Federacoes() { return w2832() - 5 * w2832(); }
+__attribute__((noinline)) int Federacoes() { return w2832() * 5 - 3; }
 
 struct SCFederacoesRoots {
     SCFederacoesRoots()

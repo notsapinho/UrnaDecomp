@@ -71,8 +71,8 @@
 # api::CMTFormBuilder's constructor (fn 203's body) and used its result. Of GetForm's (fn 1694) seven target callers
 # (`grep -lE 'call 1694( |$)'` over build/out/splat/pieces/asm) only 10204 calls 203; 10214, 1150, 5341 and 4633 call
 # AddLed (435) right after the clearing, with 0, 1, 2 and 0, and 5343 and 10676 call no AddLed. That builder is now
-# api::CMTFormBuilderBase, whose constructor is inline (api/gui/cmtformbuilder.h), over which 10214, 5341, 5343 and
-# 10676 match; 4633 is not measured over it. Nothing in the link needs it while its callers 7709 and 7710 are traps
+# api::CMTFormBuilderBase, whose constructor is inline (api/gui/cmtformbuilder.h), over which 1150, 10214, 5341, 5343
+# and 10676 match; 4633 is not measured over it. Nothing in the link needs it while its callers 7709 and 7710 are traps
 # (unit 116's pending file: they wait for 5568), so it is not written (docs/how-to-decompile.md step 5).
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp
 # The roots' headers are named here: $(UENUX2_HDRS) is still empty when the fragments are read.

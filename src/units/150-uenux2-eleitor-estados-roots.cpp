@@ -6,8 +6,8 @@
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
-// and 11892, none reconstructed but 11881 (unit 104's): VisualizarCandidatos stands for the other four
-// with two calls. Its vptr store keeps that class's vtable.
+// and 11892, none reconstructed but 11881, 11888 and 11892 (unit 104's): VisualizarCandidatos stands for 11884 and
+// 11891 with two calls. Its vptr store keeps that class's vtable.
 //
 // vota::NomeTela (fn 6718) has two direct callers in the target, CTelasCargo's constructor (fn 2386) and
 // CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. 4135 is written; NomesTela stands for
@@ -24,7 +24,17 @@
 // stayed out of line, and it and 2079 scored as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
 //
 // vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
-// (vota::CMenuFiltrarCandidatosPorNumero's slots, pending in unit 104): CargoVisualizado stands for them with two calls.
+// (vota::CMenuFiltrarCandidatosPorNumero's slots, unit 104's): CargoVisualizado stands for 11891, pending, with one
+// call (11892 is in the link).
+//
+// vota::CVisualizarCandidatos::CarregaCandidaturas (fn 5953) has two direct callers in the target, fns 11884 and 11888
+// (vota::CMenuFiltrarCandidatosPorPartido's and PorCargo's StartState; 11888 calls it from
+// CVisualizarCandidatos::GetCargos, which it holds inlined): 11888 is in the link; CandidaturasCarregadas stands for
+// 11884 with one call.
+//
+// std::__uninitialized_allocator_relocate over comum::md::CCandidatura (fn 5950, the copy 5953's push_back makes
+// cvisualizarcandidatos.cpp.o emit first) has two direct callers in the target, fns 5953 (in the link) and 5710 (not
+// written): CandidaturasRelocadas stands for 5710 with one call.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -34,13 +44,16 @@ void w150_nome_tela(void* nome, int tela) __asm__("_ZN4vota8NomeTelaENS_12ETelaV
 extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
 int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
 int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
+void w150_carrega(void* estado) __asm__("_ZN4vota21CVisualizarCandidatos19CarregaCandidaturasEv");
+void w150_reloca(void* alocador, void* inicio, void* fim, void* destino) __asm__(
+    "_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md12CCandidaturaEEEPS4_EEvRT_T0_S9_S9_");
 }
 
 namespace {
 
 const void* volatile eleitor_estados_sink;
 
-// stands for fns 11884, 11888, 11891 and 11892 (11881 is in the link)
+// stands for fns 11884 and 11891 (11881, 11888 and 11892 are in the link)
 __attribute__((noinline)) int VisualizarCandidatos(int vezes)
 {
     return w150_visualizar() + (vezes > 1 ? w150_visualizar() : 3);
@@ -68,10 +81,25 @@ __attribute__((noinline)) int TemFala()
     return w150_tem_fala(w150_info()) + 17;
 }
 
-// stands for fns 11891 and 11892
+// stands for fn 11891 (11892 is in the link)
 __attribute__((noinline)) int CargoVisualizado(const void* estado, const void* outro)
 {
-    return w150_cargo(estado) - w150_cargo(outro);
+    return w150_cargo(estado) - static_cast<const char*>(outro)[3];
+}
+
+// stands for fn 11884 (11888 is in the link)
+__attribute__((noinline)) int CandidaturasCarregadas(void* estado)
+{
+    w150_carrega(estado);
+    return 19;
+}
+
+// stands for fn 5710 (5953 is in the link)
+__attribute__((noinline)) int CandidaturasRelocadas(char* inicio, char* fim)
+{
+    char alocador;
+    w150_reloca(&alocador, inicio, fim, fim + 72);
+    return 23;
 }
 
 struct SEleitorEstadosRoots {
@@ -82,6 +110,8 @@ struct SEleitorEstadosRoots {
         eleitor_estados_sink = reinterpret_cast<const void*>(&NomesTela);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
         eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
+        eleitor_estados_sink = reinterpret_cast<const void*>(&CandidaturasCarregadas);
+        eleitor_estados_sink = reinterpret_cast<const void*>(&CandidaturasRelocadas);
     }
 } eleitor_estados_roots;
 

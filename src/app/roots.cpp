@@ -4,7 +4,7 @@
 //   openssl    build/out/app/gen/openssl_roots.c (tools/libs/openssl/roots.txt, 258 symbols the app calls)
 //   7zip       tools/libs/7zip/driver.cpp via roots_7zip.cpp   (UpdateArchive / Open3 / Extract)
 //   rhvoice    tools/libs/rhvoice/driver.cpp via roots_rhvoice.cpp (engine::create + document synthesis)
-//   boost      tools/libs/boost/probe.cpp via roots_boost.cpp  (regex, signals2, date_time, lexical_cast, function)
+//   boost      tools/libs/boost/probe.cpp via roots_boost.cpp  (regex, signals2, function, optional, a typeid)
 #include "roots.h"
 
 int urna_roots_ecourna(int a);   // src/app/roots_ecourna.cpp: the reconstructed ecourna units
@@ -61,8 +61,7 @@ int probe_speak(const char *, const char *);
 int probe_regex(const char *, const char *);
 int probe_app_signal(unsigned long, unsigned long, const char *);
 int probe_signals(int);
-int probe_datetime(const char *);
-int probe_lexical(const char *);
+int probe_weekday(int);
 int probe_function(int);
 }
 
@@ -113,6 +112,6 @@ int urna_roots(int a) {
   r += urna_sqlite_roots() + urna_openssl_roots();
   const char *s = reinterpret_cast<const char *>(a);
   r += probe_update(s) + probe_extract(s) + probe_speak(s, s);
-  r += probe_regex(s, s) + probe_app_signal(a, a, s) + probe_signals(a) + probe_datetime(s) + probe_lexical(s) + probe_function(a);
+  r += probe_regex(s, s) + probe_app_signal(a, a, s) + probe_signals(a) + probe_weekday(a) + probe_function(a);
   return r;
 }

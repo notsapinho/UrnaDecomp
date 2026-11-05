@@ -13,10 +13,9 @@ namespace {
 // link.
 __attribute__((noinline)) int CodigosResumidos(const char* primeira, const char* segunda)
 {
-    int codigos[6];
+    int codigos[3];
     w2792(codigos, primeira);
-    w2792(codigos + 3, segunda + 8);
-    return codigos[1] + codigos[4];
+    return codigos[1] + segunda[8];
 }
 
 // Stands for fn 2273's caller 12110, not written (1543, 5740, 11902 and 11223 are in the link). The first

@@ -61,15 +61,17 @@
 # rule 1 to 4 of how-to step 3 (the converter's head beside its .cpp, CEntidadeEleitores in md/eleitor/, as the
 # converter's directory mirrors).
 #
-# Matched: 11411, CConversorEntidadeEleitores::DoDesconverte, and 2805, under the name of the hinted __find_equal of
-# std::map<md::CEleitorIdentidade, md::CIndexer>'s tree, which this object instantiates (11411's copy of the visitor's
-# map). The target's 2805 is binaryen's merge of at least three such instances, of maps whose nodes differ (the node
-# each caller allocates right after its call of 2805: 40 bytes in 11411, 236 in 3614, 84 in 5376 and 10451; pnpm wasm
-# fn), so the name is the instance our link holds, and the roots' stand-in stands for callers of the others. The
-# converter's .cpp is the class's key function's file, so its object emits the vtable (@1566768). Before step 8, 11411
-# scored 149 over 3308 rows, all operand-only: calls, data addresses, packed std::format strings and two table slots
-# (pnpm wasm score in this unit's link; the rows that are no call or data address are 69 against 9 and 148 against 43,
-# the throw's destructor slot and the format buffer's callback, and the format strings' packed i64 constants).
+# Matched: 11411, CConversorEntidadeEleitores::DoDesconverte, and 2805, under the name of the __find_equal instance of
+# the first object on the link line that emits one (std::map<md::CEleitorIdentidade, md::CEleitorDetalhe>'s, from unit
+# 221's cregistradigitaloperador.cpp, which unit 278's list compiles; this object instantiates the CIndexer map's,
+# 11411's copy of the visitor's map). The target's 2805 is binaryen's merge of at least three such instances, of maps
+# whose nodes differ (the node each caller allocates right after its call of 2805: 40 bytes in 11411, 236 in 3614, 84 in
+# 5376 and 10451; pnpm wasm fn), so the name is the instance our link holds, and the roots' stand-in stands for callers
+# of the others. The converter's .cpp is the class's key function's file, so its object emits the vtable (@1566768).
+# Before step 8, 11411 scored 149 over 3308 rows, all operand-only: calls, data addresses, packed std::format strings
+# and two table slots (pnpm wasm score in this unit's link; the rows that are no call or data address are 69 against 9
+# and 148 against 43, the throw's destructor slot and the format buffer's callback, and the format strings' packed i64
+# constants).
 #
 # What the target shows of 11411 (frames, pnpm wasm fn): DoDesconverte's own frame of 256 bytes, and inside it ten
 # frames of out-of-line functions binaryen inlined, each with one caller: __emplace_hint_unique_key_args (16 bytes; the
