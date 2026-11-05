@@ -213,6 +213,7 @@
 #   (cgravadorwsq.cpp:175 and :192, icompressor.cpp:61), which slots 2, 3 and 6 and their merged body need: no vote
 #   reaches 5821, since its callers are named by vtable or by content.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
+	src/app/comum/gravadores/cgravadorlog.cpp \
 	src/app/comum/gravadores/cgravadorversoesarquivos.cpp src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/pathwsq.cpp \
 	src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
 	src/app/comum/gravadores/md/cversoesarquivos.cpp
@@ -223,6 +224,10 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFL
 # cgravadorwsq.cpp's CompactaWsq builds an ecourna::api::compression::CZip, whose header includes minizip's zip.h and,
 # through ICompressor, Boost's signals2: include paths, not flags of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
+# cgravadorlog.cpp is unit 136's (CGravadorLog::GravaResultado, fn 11584), compiled in this list at its place in the
+# target's data, between cgravadorutil.cpp's records and CGravadorVersoesArquivos's vtable (unit 136's fragment has the
+# measurement and the pairs it inverts); its CZip needs the same include paths as cgravadorwsq.cpp's
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorlog.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 # nothing reconstructed calls most of these yet: 122-uenux2-app-comum-gravadores-roots.cpp stands in for the target's
 # callers, two call sites each
 $(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-roots.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)

@@ -115,22 +115,15 @@
 # operand-only], inserted 5, deleted 5)`. An out-of-line CSynchronizer::GetOpenFlag (unit 154), which binaryen inlines
 # into its one caller, gives `164 over 1951 rows`, every row an operand, and the match; that it is out of line, in
 # csynchronizer.cpp, is a choice that gives those bytes.
-# Rename (record 692:15) has no target index: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's
-# slot 7, not written), so its body is compared with nothing by the splat build (docs/reference/splat.md "Reviewing a
-# match"). Compared by hand (`pnpm wasm fn` of target 11584 and of the roots' RenomeiaUma, which holds our copy of it
-# inlined, the callees named by splat/matched.txt, the symbol file and names.tsv): the copy in 11584 has a stack-pointer
-# prologue of its own of 528 B, as ours has, and the same 13 calls in the same order, memcmp, rename,
-# __cxa_allocate_exception, __strerror_l, 5456, __try_constant_folding, __vformat_to, ~locale, a basic_string
-# constructor, emscripten_builtin_free, ~__optional_destruct_base, CBaseError<EUeUtilError>'s constructor (after
-# 7058, both) and __cxa_throw. Its store order is the same: `pnpm --silent wasm score ../target/vota_web_wasm.wasm
-# 11584 ../build/out/wasm/vota_web/vota_web_wasm.wasm <RenomeiaUma's index in names.tsv>` pairs each of our 30 stores
-# with an identical row of 11584's copy, in order; what differs is operands, local numbers and the first argument,
-# which 11584 reads out of its own frame. It is written because its std::format of two
-# strings and a char* shares the arguments' builder (fn 5456, a libc++ instance this object emits) with CopyFile, which
-# the target calls from both: binaryen inlines a function with one caller (docs/how-to-decompile.md step 3), so Rename
-# is what keeps 5456 out of line, a reading (a link without Rename was not measured). Rename also gives libc's rename
-# (fn 3974) a second caller in our link beside 7-Zip's MyMoveFile (wasm-objdump -d of the link), and 3974 matches. The
-# libc callees chmod (3997) and chown (6281), called twice by the helpers, and utime (6238) match.
+# Rename (record 692:15) has no target index: binaryen inlines it into its one caller, fn 11584
+# (comum::CGravadorLog::GravaResultado, unit 136), which matches with that copy, so the splat build checks Rename's code
+# there; the roots' stand-in for 11584, which held a copy of it inlined, went when 11584 was written. It is written
+# because its std::format of two strings and a char* shares the arguments' builder (fn 5456, a libc++ instance this
+# object emits) with CopyFile, which the target calls from both: binaryen inlines a function with one caller
+# (docs/how-to-decompile.md step 3), so Rename is what keeps 5456 out of line, a reading (a link without Rename was
+# not measured). Rename also gives libc's rename (fn 3974) a second caller in our link beside 7-Zip's MyMoveFile
+# (wasm-objdump -d of the link), and 3974 matches. The libc callees chmod (3997) and chown (6281), called twice by the
+# helpers, and utime (6238) match.
 # RemoveTree (5458) has no record. ledger/tu-clusters.tsv stretch 763 (5453 to 5461) is labelled csystem.cpp, and in
 # use band 2 the target runs 5459 (ExistDir), 5458, 5457 (truncate), 5456, a higher index linking first, so 5458 is an
 # external function defined between ExistDir and truncate (docs/how-to-decompile.md step 3, "What a record's place

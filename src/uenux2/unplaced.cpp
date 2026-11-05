@@ -306,11 +306,6 @@
 // f3781 · 108 B · unmatched · placement: link order · name unknown
 // void f3781(i32) { ... }
 
-// link-order cluster 1015 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorutil.cpp
-
-// f3797 · 82 B · unmatched · placement: link order · name unknown
-// void f3797(i32, i32) { ... }
-
 // link-order cluster 1064 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 
 // f2579 · 79 B · unmatched · placement: link order · name unknown
