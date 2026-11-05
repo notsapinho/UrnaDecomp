@@ -22,7 +22,10 @@ std::string FormataHora(const boost::posix_time::ptime& dataHora)
 boost::posix_time::ptime DesconverteDataHora(const std::string& dataHora)
 {
     std::string texto = dataHora;
-    if (texto.size() >= 9 && texto.back() == 'Z') {
+    if (texto.size() < 9) {
+        return boost::posix_time::from_iso_string(texto);
+    }
+    if (texto.back() == 'Z') {
         texto = texto.substr(0, 8) + "T" + texto.substr(8, 6);
     }
     return boost::posix_time::from_iso_string(texto);
