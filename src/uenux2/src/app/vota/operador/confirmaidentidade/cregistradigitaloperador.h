@@ -23,10 +23,10 @@ namespace vota {
 // overrides StartState (slot 2, fn 10454, records cregistradigitaloperador.cpp:95 and :98), FinishState (slot 5, fn
 // 10453, records :104 and :105, a thunk into binaryen's fn 6012, the body it shares with
 // comum::CPedeDigitalMesario::FinishState), ProcessInput (slot 7, fn 10452), which cancels the habilitation on CORRIGE
-// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145), written and not
-// matched (src/units/221-uenux2-app-comum-constructors.mk has its measured remainder). The destructor is out of line,
-// the body comum::CPedeDigitalMesario and vota::CPedeIdentidade share (fns 1537 and 3629), which releases the
-// std::shared_ptr at +24 and then the one at +16.
+// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145), matched
+// (src/units/221-uenux2-app-comum-constructors.mk has the forms and the order of objects it needs). The destructor is
+// out of line, the body comum::CPedeDigitalMesario and vota::CPedeIdentidade share (fns 1537 and 3629), which releases
+// the std::shared_ptr at +24 and then the one at +16.
 //
 // The layout is what the constructor stores, which GetInst (fn 5396) holds inlined by binaryen: CAppState's with
 // EVENTO_ENTRADA | EVENTO_TICK (6); +11 and +12 the bytes vota::CThreadOperador's AddStoppedTick (fn 807) returns for

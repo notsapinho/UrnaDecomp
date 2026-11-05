@@ -120,9 +120,11 @@
 #   BiometriaPresenteNosNaoRegistrados and SalvarBiometriaMesarioNaoRegistrado (no index: 3614 and 10451 hold them)
 #   follow GravaWsq, chosen lines; the header says what each rests on. The lambda of SalvarBiometriaMesarioNaoRegistrado
 #   brings its std::function's five members, which match (10294 to 10298).
-# ccontroladorreconhecimetomesario.cpp is compiled by unit 221's list now, after cregistradigitaloperador.cpp, where the
-# target holds its records: the move inverts no object pair against the target's data (unit 221's fragment has the
-# measurement).
+# ccontroladorreconhecimetomesario.cpp is compiled by unit 278's list now, after cregistradigitaloperador.cpp and
+# cregistradormesario.cpp, where the target holds its records, the order fn 10451's locals need (unit 221's fragment
+# has the measurement). BiometriaPresenteNosNaoRegistrados builds its copy of the first six files from a std::span of
+# the list (std::from_range) with the count a conditional, the form 10451's bytes ask for (unit 221's fragment says
+# which forms were measured; the form is chosen).
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
 COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp

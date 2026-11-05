@@ -35,7 +35,8 @@
 #   CRegistraDigitalOperador::GetInst's state (fn 5396, unit 221's) on CONFIRMA (9); 10461 is `f2295(p0, 9, 1592336)`,
 #   its Read() record. Their GetInst and constructors, written now, are held inlined by
 #   CRegistraDigitalOperador::ProcessTick (10451, unit 221's), the one store of each vptr (1592288, 1592360); their
-#   statics' exit destructors (10459, 10460, 10462, 10463) wait for 10451's match (unit 221's fragment says why).
+#   statics' exit destructors (10459, 10460, 10462, 10463) match with 10451, whose vote names the statics (unit 221's
+#   fragment says how).
 # - StartState (10627, slot 2) matches. In the target's order: vota::GetIdentidadeDigitada (fn 3623) into a local;
 #   comum::md::CValidadorIdentidade::GetInst (fn 1926) and a 16-byte frame binaryen inlined, the member TiposValidos
 #   added to unit 110's cvalidadoridentidade.cpp (the types of the rules whose IRegraIdentidade::EhValida, fn 3723,
@@ -103,15 +104,22 @@
 # IEleitorImpedidoVotar's (@1589136), leidentidade/ objects.
 #
 # Roots: none. The two states' vtable sinks went, their one storer, 10451, being in the link. Their files stay in this
-# list, after cvalidaidentidade.cpp: compiled from unit 221's list ahead of cregistradigitaloperador.cpp, where the
-# target holds their vtables, each would invert 34 object pairs against the target's data, and no match needs it (unit
-# 221's fragment has the measurement). The stand-ins for two members other units' sources hold went before, their
-# target callers being in the link: unit 221's CRegistraDigitalOperador::GetInst's two, 10458 (this unit's) and 10443
-# (unit 161's), and unit 161's CVerificaDadoEleitor::GetInst's four, 10447 (unit 161) and 10473, 10477 and 10485
-# (unit 282).
+# list, after cvalidaidentidade.cpp, and the list compiles after them, for 10451's locals, unit 221's
+# cregistradigitaloperador.cpp, unit 113's ccomparecimentomesarioservico.cpp and cregistradormesario.cpp and unit 214's
+# ccontroladorreconhecimetomesario.cpp, in that order (the target's data hold the states' vtables ahead of
+# cregistradigitaloperador.cpp's, and cregistradormesario.cpp's records after its and before
+# ccontroladorreconhecimetomesario.cpp's); those files stay their units' (unit 221's fragment has the measurement: the
+# scores of each order, and the object pairs the move puts into the data's order and the ones it inverts). The stand-ins
+# for two members other units' sources hold went before, their target callers being in the link: unit 221's
+# CRegistraDigitalOperador::GetInst's two, 10458 (this unit's) and 10443 (unit 161's), and unit 161's
+# CVerificaDadoEleitor::GetInst's four, 10447 (unit 161) and 10473, 10477 and 10485 (unit 282).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_VALIDAIDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cvalidaidentidade.cpp \
     src/app/vota/operador/confirmaidentidade/ctentativacapturadigitalesgotada.cpp \
-    src/app/vota/operador/confirmaidentidade/cdigitalnaocapturada.cpp
+    src/app/vota/operador/confirmaidentidade/cdigitalnaocapturada.cpp \
+    src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp \
+    src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp \
+    src/app/comum/comparecimentomesario/cregistradormesario.cpp \
+    src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
 UENUX2_SRCS += $(APP_VOTA_VALIDAIDENTIDADE_SRCS)
