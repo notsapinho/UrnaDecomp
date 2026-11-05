@@ -68,14 +68,33 @@
 # cgeradorbuqrcode.cpp.o's at 1575936), and CGeradorRelEleitoresHabBiograf's vtable (1576052) lies after
 # cgeradorbuqrcodevota.cpp.o's and before cgeradorrellistaeleitores.cpp.o's (1576188): their data run in name order, so
 # both go in unit 93's line beside unit 155's two files, before and after them. docs/reference/facts/codegen.md C4's
-# count, with the objects that have records and no vtable ranked by their lowest record (ledger/source-locations.tsv):
-# cgeradorbuj.cpp before cgeradorbuqrcode.cpp, 241 objects out of the data order (after unit 139's cgeradorbu.cpp, 282;
-# after unit 183's cgeradorrelpu.cpp, 255); the report's file after cgeradorbuqrcodevota.cpp, 241 (in unit 317's list
-# before cgeradorrellistaeleitores.cpp, its data successor, 268; first in that list, 266). C4's awk alone, vtables only:
-# 205 for the report's file here, 202 in unit 317's list. The bytes are the same at both places (12105's score above);
-# in unit 317's list the report's object came before clocal.cpp's, its constructor took 2262's match line from
-# comum::CLocal's (a twin rename), and it gave fn 5601's copy, which the target keeps from it too (its record 1576108
-# lies in its run): here 5601 comes from cparteeleitores.cpp's object, as before this unit.
+# count, the objects that have records and no named vtable ranked by their lowest .cpp record
+# (ledger/source-locations.tsv, ecourna's objects too), on the merged link at 63b2b9ab: both files have 301 objects out
+# of the data's order against them here; cgeradorbuj.cpp would have 311 after unit 183's cgeradorrelpu.cpp, 320 at
+# this fragment's own place (after unit 37's cmostraqrcodebu.cpp) and 338 after unit 139's cgeradorbu.cpp; the
+# report's file 323 at this fragment's own place, 326 first in unit 317's list and 328 there before
+# cgeradorrellistaeleitores.cpp, its data successor. C4's awk alone (vtables only) reads 207 for the report's file
+# here and 202 to 204 at the others. Here the four files of the BU reports' data run (cgeradorbuj.cpp, unit 155's
+# two, the report's file) link in their data order, after cgeradorbu.cpp, and the one pair of data neighbours left
+# inverted is the report's file with cgeradorrellistaeleitores.cpp, which unit 317's list links before them. Against
+# the next place, each file's place inverts the objects linked between the two whose data lie after its own and puts
+# in order those whose data lie before. cgeradorbuj.cpp against cgeradorrelpu.cpp's place: 120 put in order, 110
+# inverted (by directory: 42 of app/vota/operador, 37 of api/gui, 8 of app/comum/comparecimentomesario, 7 of
+# app/comum/relatorios, 5 of api/util, 4 of app/comum/gravadores, 3 of api/hash, one each of
+# app/comum/reconhecimentobiometrico, api/uelog, api/io and api/audio). The report's file against this fragment's own
+# place: 61 put in order, 39 inverted: api/gui's ctextfieldpaper.cpp, cprogressbar.cpp, cstepsprogressbar.cpp,
+# ctextfieldupdate.cpp, cimagefieldupdate.cpp, ctextfieldblinking.cpp, cmoviefield.cpp, cqrcodeimagefieldpaper.cpp,
+# clinefield.cpp, cdsimagefield.cpp, cledfieldmt.cpp, ctextbox.cpp, reports/cformpart.cpp, cbeepfieldmt.cpp,
+# cbuzzfieldmt.cpp, cclockfieldmt.cpp, cpreshowclearmt.cpp, cqrcodeimage.cpp, ccutfieldpaper.cpp,
+# cnewlinefieldpaper.cpp, cinputmenufield.cpp, cfillfield.cpp, crectfield.cpp, ctextrectfield.cpp and cframedtext.cpp;
+# api's audio/alsa/cwavfile.cpp, uelog/cescritorlog.cpp and util/isystemdatetime.cpp; comum's relatorios/
+# cpartecargos.cpp, cparteeleitores.cpp, cparterdv.cpp and cpartecandidatos.cpp, gravadores/asn/
+# cconversorhasharquivo.cpp, comparecimentomesario/estados/ipedetitulomesario.cpp and its dao/
+# ccomparecimentomesariodao.cpp; vota/operador's comum/cinformacaothreadoperador.cpp, ctextfieldupdatemt.cpp,
+# telasoperador.cpp and aguardaeleitor/celeitorvotounaovotou.cpp. The bytes are the same here and in unit 317's list
+# (12105's score above); in unit 317's list the report's object came before clocal.cpp's, its constructor took 2262's
+# match line from comum::CLocal's (a twin rename), and it gave fn 5601's copy, which the target keeps from it too (its
+# record 1576108 lies in its run): here 5601 comes from cparteeleitores.cpp's object, as before this unit.
 #
 # Stand-ins that 12105, in the link, made idle went, call by call (each file's comment says which callers still wait):
 # units 31 (RelatorioA's second adder calls, FormPapelC's second Build), 39 and 77 (their roots files and rules: every
@@ -93,7 +112,9 @@
 # MontaJustificativa, MontaRodape); CImprimirIdentificacaoMesariosFinal's members but GetNomeMesario and GetPrinter, its
 # parameter and fields; the report's enumerators, member, Gera and its helpers (MontaTitulo, MontaTitulos,
 # MontaEleitores, MontaSeparador, MontaRodape, DescricaoSecao, CabecalhoHabilitados) and the key struct SChaveSecao (its
-# members' types: a 16-bit section, an unsigned word compared unsigned, a byte); CJustificadorDadoQuantidade; the
+# members' types: a 16-bit section, an unsigned word compared unsigned, a byte); the sorted voters' element type,
+# std::pair<uedword, std::string> (the bytes give a 4-byte first member compared unsigned and a std::string), whose
+# name the matched instances 2789, 5599, 5600 and 5602 carry; CJustificadorDadoQuantidade; the
 # accessors GetDetalheCorrente and GetDadosDinamicos; the assert enumerator EUA_GERARELATORIOS_EST_INVALIDO (3455,
 # api/util/eueasserterror.h); every line but the records' (cgerarelatorios.cpp:51, cgeradorbuj.cpp:189,
 # cimprimiridentificacaomesariosfinal.h:41, cimprimiridentificacaomesariosfinal.cpp:229); the two new files' paths.

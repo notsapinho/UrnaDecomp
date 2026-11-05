@@ -113,11 +113,12 @@
 #   then reaching this object's copy, another body (18 over 149 rows against 163; the root's comment).
 #   boost::wrapexcept<std::runtime_error>'s members match from this object as well: its copy constructor (9377),
 #   rethrow and clone (9378, 9379), and the D0, D2 and thunks 5197 to 5200 that its vtable shares with
-#   wrapexcept<boost::bad_function_call>'s (ledger/vtables.json: both classes' vtables hold them). The probe's dropped date
-#   and lexical_cast code instantiated wrapexcept<std::runtime_error> in roots_boost.o, ahead of this object, and with that
-#   code out of the probe (unit 122's fragment) 5197 to 5200 and 9377 to 9379 match from here, an -fexceptions
-#   object's code, as the target's are (5197 to 5200, 9377 and 9379 call invoke_* imports and
-#   __cxa_find_matching_catch_*: pnpm wasm fn); no line of the root names them.
+#   wrapexcept<boost::bad_function_call>'s (ledger/vtables.json: both classes' vtables hold them), so their
+#   runtime_error names, over bad_function_call's, are the link order's pick. The probe's dropped date and lexical_cast
+#   code instantiated wrapexcept<std::runtime_error> in roots_boost.o, ahead of this object, and with that code out of
+#   the probe (unit 122's fragment) 5197 to 5200 and 9377 to 9379 match from here, an -fexceptions object's code, as
+#   the target's are (5197 to 5200, 9377 and 9379 call invoke_* imports and __cxa_find_matching_catch_*: pnpm wasm
+#   fn); no line of the root names them.
 # - FindRegexPosition (no target index: binaryen inlines it into its one caller, 5465), added for unit 179: FindRegex's
 #   start, behind a stack frame of its own in 5465; its name, its being a member and this file are chosen
 #   (src/units/179-uenux2-cvalidamidia.mk).

@@ -206,15 +206,15 @@
 #   had been the last caller of a vector<std::string> chain (special_values_parser's sv_strings calls
 #   __init_with_size, 5585, roots_coderenv.o's instance), and with it out 3895, 5562, 5573, 5774, 5786 and 11158 left
 #   `match`: src/app/roots_coderenv.cpp now stands for 5585's target users, 11332 and 9586, and they match again.
-# Matched since the Boost tree root's probe (tools/libs/boost/probe.cpp) dropped its date parsing, clock and lexical_cast
-# calls
-# (steps 6 to 10, every row operand-only before the scan, pnpm wasm score): Boost's parse_iso_time<ptime> (5851, 9824 B),
-# this object's copy, 200 over 4667 rows, with what only it calls: bad_lexical_cast's constructor (2849, 3 over 14),
-# lcast_ret_unsigned's convert for unsigned short (3811, 23 over 612) and for unsigned long long (5833, 7 over 635), and
-# token_iterator<offset_separator>'s constructor (5838, 3 over 159), which matched from app/roots_boost.o before and from
-# this object now. The target holds parse_undelimited_date, gregorian::date's constructor from a year, a month and a
-# day, and lcast_ret_unsigned's convert for unsigned int inlined in 5851 (binaryen inlines a function with one call
-# site), and in cb34a517's link urna_roots (app/roots.o, with the probe's functions inlined into it) called them once,
+# Matched since the Boost tree root's probe (tools/libs/boost/probe.cpp) dropped its date parsing, clock and
+# lexical_cast calls (steps 6 to 10, every row operand-only before the scan, pnpm wasm score): Boost's
+# parse_iso_time<ptime> (5851, 9824 B), this object's copy, 200 over 4667 rows, with what only it calls:
+# bad_lexical_cast's constructor (2849, 3 over 14), lcast_ret_unsigned's convert for unsigned short (3811, 23 over 612)
+# and for unsigned long long (5833, 7 over 635), and token_iterator<offset_separator>'s constructor (5838, 3 over 159),
+# which matched from app/roots_boost.o before and from this object now. The target holds parse_undelimited_date,
+# gregorian::date's constructor from a year, a month and a day, and lcast_ret_unsigned's convert for unsigned int
+# inlined in 5851 (binaryen inlines a function with one call site), and in cb34a517's link urna_roots (app/roots.o,
+# with the probe's functions inlined into it) called them once,
 # twice and twice (wasm-objdump -d of that link, the `call` sites of each): 5851 read 2079 over 4695 rows there (714
 # replaced, 701 of them operand-only, 28 inserted, 1337 deleted). With the probe's from_undelimited_string and its
 # lexical_cast calls out and its two clocks in, 5851 read 729 over 4667 (429 replaced, 415 operand-only, 300 deleted):
@@ -224,9 +224,13 @@
 # copy kept the source type a parameter ((i32 i32 i32)->(i32), 5 over 14), where the target's stores std::string's
 # typeinfo (the probe cast from other types), and 3811's and 5833's were app/roots_boost.o's, at APP_CXXFLAGS (295 over
 # 666 and 242 over 681 rows); this object's are the target's. The probe's change left the bodies of gregorian's
-# bad_year (its D0, 2846) and wrapexcept<bad_year> (3804 to 3809, and binaryen's merges 3899 to 3901) to this object,
-# after app/roots_boost.o, whose byte-identical bad_weekday members (the probe's greg_weekday, kept for a toolkit test)
-# and wrapexcept<std::invalid_argument>'s throw_exception merge (3901) now name them: step 9 renamed the ten lines.
+# bad_year (its D0, 2846) and wrapexcept<bad_year> (3804 to 3809, and binaryen's merges 3899 to 3901) to this object.
+# 2846 matches as this object's bad_year D0, the name the target's bad_year vtable gives it. 3804 to 3809, 3899 and
+# 3900 match as the byte-identical members and merges of app/roots_boost.o's wrapexcept<std::invalid_argument>, which
+# links first, and 3901 as that class's throw_exception merge: those names are the link order's pick, the target's
+# vtables holding these bodies under bad_year, bad_month and bad_day_of_month (step 9 renamed the nine lines). The
+# probe keeps bad_weekday's typeinfo alone for a toolkit test: a call of greg_weekday's range check gave bad_weekday's
+# twins of these bodies, which named them and took 2846 to app/roots_boost.o (measured on a link with that call).
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp

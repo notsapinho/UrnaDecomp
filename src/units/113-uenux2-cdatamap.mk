@@ -25,7 +25,7 @@
 #   3742 by that anchor). Fragment 163
 #   has the servico and the registry. 1391 allocates 40 bytes before it calls 3742, and the destructor (2810) calls the
 #   servico's (3740) on +28: the class's size and the member's offset. Its callers 1391 and 11475 are written (below);
-#   a stand-in in the roots calls the constructor twice for the third, 11474, which is not.
+#   the third, 11474, matches (fragment 372's), and the roots' stand-in for it went.
 # - comum::CRegistradorMesario's singleton (cregistradormesario.h says what is evidence and what is chosen):
 #   - GetInst, 815, under a std::lock_guard of the static std::mutex: when the static std::unique_ptr is empty it resets
 #     it to a new object (52 bytes), whose constructor, in the class, passes the name "CRegistradorMesario" to CDataMap's
@@ -37,8 +37,8 @@
 #     CComparecimentoMesario>): recursive bodies, whose self-calls re-point once the symbol file names them (1902 by
 #     5380's call, 2728 by its census pair); 1902 was `differs` against the twin of another map's tree, 2265, whose node
 #     has its strings at the same offsets.
-#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers are 11616 (unit 122's, written) and 12105, not
-#     written.
+#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers are 11616 (unit 122's) and 12105 (fragment
+#     372's), both written.
 #   - the statics' exit destructors, 10310 (the unique_ptr's) and 10309 (the mutex's). The symbol file names the mutex
 #     at 1909908 by 815's vote alone; 2221 and 10309 read that address as well, and 10309 is the mutex's destructor.
 #   - QuantidadeMesariosInicio and QuantidadeMesariosFim, 3606 and 2727: each counts the map's records of one period, 1
@@ -155,10 +155,10 @@
 #
 # CJustificador's Justifica, its overload over std::string and SaveCurrentInternal (records 55 and 83), with
 # comum::servico::CJustificadorServico's Salva and Existe defined above SaveCurrentInternal, are held by fn 10590,
-# binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. Not reconstructed:
-# 11474, the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 (unit
-# 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal, record 85,
-# inlined) and 6734.
+# binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. 11474, the other data
+# source that holds GetInst's code, matches from cjustificador.cpp (fragment 372's). 5378 and 5379's other callers are
+# 10337 (unit 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal,
+# record 85, inlined) and 6734.
 #
 # comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
 # stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
@@ -176,10 +176,10 @@
 #   then IIdentificadorEleitor::GetNumero (fn 1139, a twin matched as api::CFixedText::GetText) on the current key,
 #   which GetTituloCorrente in cjustificador.h returns. The target reaches it only by table slot 2949.
 # Names: 2809, 2810 and 11477 are pair-addr, 11475 srcloc-anchor; 1391 and 11476 match by content. The mutex's name is
-# `vote:1 by:11475`, that anchor's vote, and it holds through 1391 and 11476, the other matches that read 1838988; 11474
-# (not written) and 11616 (unit 122's, written, not matched) read it too, each unlocking it through fn 150 after reading the
-# pointer. The pointer's name is
-# `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
+# `vote:2 by:1391,11475` (that anchor's vote and 1391's), and it holds through 11476 and 11474 (fragment 372's) too,
+# the other matches that read 1838988; 11616 (unit 122's, written, not matched) reads it too, unlocking it through fn
+# 150 after reading the pointer. The pointer's name is `vote:10 by:1391,11475,11477` (splat/symbol_addrs.txt at
+# 63b2b9ab). Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throws' (55, 83 and 104).
 CDATAMAP_SRCS := src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)

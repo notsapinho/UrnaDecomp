@@ -94,13 +94,12 @@
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
 # Matched later, with what held each:
-# - CSqlResultSet::GetDateTime (5162) waited for its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B), which
-#   it reaches through an invoke_ table slot: that was the copy of app/dados/asn/datahoraasn.cpp in our link, a different
-#   body (fn 6004, whose folded readout is 290 lines against the target's 1568), then uenux2's cgravadorrcsecao.cpp's
-#   (unit 122), which is the target's since the Boost tree root's probe dropped its date parsing, clock and lexical_cast
-#   calls
-#   (unit 122's fragment has the measurements). 5162's body is unchanged; with 5851 named it matches (25 over 230
-#   rows, all operand-only, pnpm wasm score).
+# - CSqlResultSet::GetDateTime (5162) waited for its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B),
+#   which it reaches through an invoke_ table slot: that was the copy of app/dados/asn/datahoraasn.cpp in our link, a
+#   different body (fn 6004, whose folded readout is 290 lines against the target's 1568), then uenux2's
+#   cgravadorrcsecao.cpp's (unit 122), which is the target's since the Boost tree root's probe dropped its date
+#   parsing, clock and lexical_cast calls (unit 122's fragment has the measurements). 5162's body is unchanged; with
+#   5851 named it matches (25 over 230 rows, all operand-only, pnpm wasm score).
 # - CSqlStatement::SetDateTime (9422) waited for its inlined ymd_to_string in iso_extended_format: the target holds it
 #   inlined here, its one caller, and the probe that src/app/roots_boost.o compiles (-O2, no -fexceptions, ahead of both
 #   trees) gave it a second call site. 9422 matches since that call left tools/libs/boost/probe.cpp (fragment 265 has

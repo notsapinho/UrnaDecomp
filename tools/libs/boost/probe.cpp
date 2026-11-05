@@ -86,7 +86,7 @@ EMSCRIPTEN_KEEPALIVE int probe_signals(int x) {
   return acc + (last ? *last : 0);
 }
 
-// Takes bad_weekday's typeinfo and nothing else (splat/symbol_addrs.txt names no bad_weekday object of the target):
+// Takes bad_weekday's typeinfo and nothing else (the target has no bad_weekday: docs/reference/facts/splat.md S7):
 // asmlift-wasm/test/splat-symbols.test.ts ("offers every place of read-only content it finds more than once") reads it
 // (asmlift-wasm/README.md "Tests": a real-link case's object stays in for the test). A call of greg_weekday's range
 // check would emit bad_weekday's members too, twins of bad_year's that binaryen's fold would keep from this object.

@@ -127,10 +127,10 @@
 #   - 9258 matches since unit 84's CMenuItem::GetTextoFormatado (5492) votes for 2416, std::regex's constructor, beside
 #     it (docs/reference/facts/splat.md S10 item 23).
 #   - 1877 and 5162 waited for the slot of parse_iso_time, 5851 (9824 B), whose one direct caller is uenux2's 11616.
-#     Instantiated in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scored 2708 over 4726 rows, 1764 deleted: not
-#     the target's body. cgravadorrcsecao.cpp's copy (unit 122) matches since the Boost tree root's probe dropped its
-#     date parsing, clock and lexical_cast calls, and so do 5162 (unit 12) and 1877 (unit 04, whose fragment has the spelling of
-#     its size test).
+#     Instantiated in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scored 2708 over 4726 rows, 1764 deleted:
+#     not the target's body. cgravadorrcsecao.cpp's copy (unit 122) matches since the Boost tree root's probe dropped
+#     its date parsing, clock and lexical_cast calls, and so do 5162 (unit 12) and 1877 (unit 04, whose fragment has
+#     the spelling of its size test).
 #   - 2204, a Boost body, matches from clzmacompress.cpp.o with two of its callers, 5204 and 9576, since the tree root
 #     src/app/roots_boost.cpp leaves the app signal's operator() to unit 06's objects (fragment 06); its callers 9570,
 #     9578 and 9583 match too, since the Boost probe calls no disconnect (fragment 06). 9032, which waited for 306,

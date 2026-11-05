@@ -3,7 +3,7 @@
 # - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (5385) in estados/cimprimiridentificacaomesariosfinal.cpp,
 #   its record's file (229:84, the ASSERT's), with the code 3409 in api/util/eueasserterror.h; the class head is in
 #   cimprimiridentificacaomesariosfinal.h, the file of the record of GetPrinter (line 41, which fn 12105 holds inlined,
-#   not written).
+#   written by fragment 372).
 # - comum::ListaArquivosNaoRegistrados (5374) in ccontroladorreconhecimetomesario.cpp, and the libc++ code of its
 #   std::sort: std::__introsort (5373), __insertion_sort_incomplete (5370) and __sort4 (2726) over
 #   std::filesystem::path*, and the comparator (310). 5374 also brings into the link more of libc++.a's

@@ -14,12 +14,12 @@
 // 2762 have names: units 116, 179, 35 and 32). Both call fn 491 too, named now (unit 205). The third state's,
 // vota::CGeraRelatorios::StartState (fn 12105), is written in cgerarelatorios.cpp
 // (src/units/372-uenux2-relatorios-gerarelatorios.mk). 12134 stays a trap whatever its source: it reads three statics
-// no other target function reads (/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])' build/out/splat/pieces/asm prints its
-// piece alone): api::CSystem::AreFilesEqual's two 32768-byte buffers at 1839328 and 1872096 (zero-filled: the target's
-// initialized data ends at 1811674), whose names only its own vote could give, which docs/reference/splat.md section
-// 3, "No circular evidence", refuses for a .bss object; and its file's DepuraInfo word at 1540224 (.data, -1), which
-// content cannot place (fn 5574's row reads so for cvalidamidia.cpp's word) and only a seed pair's vote would name.
-// Their record lines in those files stay blank, past each file's end. 12110's stub went with its trap (a pending
+// no other target function reads (/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])' build/out/splat/pieces/asm prints
+// its piece alone): api::CSystem::AreFilesEqual's two 32768-byte buffers at 1839328 and 1872096 (zero-filled: the
+// target's initialized data ends at 1811674), whose names only its own vote could give, which docs/reference/splat.md
+// section 3, "No circular evidence", refuses for a .bss object; and its file's DepuraInfo word at 1540224 (.data, -1),
+// which content cannot place (fn 5574's row reads so for cvalidamidia.cpp's word) and only a seed pair's vote would
+// name. Their record lines in those files stay blank, past each file's end. 12110's stub went with its trap (a pending
 // member has no stub): it was in the gap of app/comum/relatorios/ccalculacv.cpp at line 55 (a record of an inlined
 // callee, ccalculacv.cpp:58). Move each into its file when it is reconstructed, and delete this file with the last.
 #include "app/vota/eleitor/fimvotacao/ccopiaresultadoparamr.h"

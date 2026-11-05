@@ -1,8 +1,8 @@
 // comum::CImprimirIdentificacaoMesariosFinal
 // (/home/rubio/tse/uenux2/src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp):
 // GetNomeMesario, target fn 5385, whose ASSERT is the record at line 229, column 84, and the members that print the
-// report (Imprime and its callees, which fn 12105 holds inlined: cimprimiridentificacaomesariosfinal.h). The lines above
-// GetNomeMesario are the original file's, not recovered: the members' lines and order are a choice.
+// report (Imprime and its callees, which fn 12105 holds inlined: cimprimiridentificacaomesariosfinal.h). The lines
+// above GetNomeMesario are the original file's, not recovered: the members' lines and order are a choice.
 
 #include "app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.h"
 

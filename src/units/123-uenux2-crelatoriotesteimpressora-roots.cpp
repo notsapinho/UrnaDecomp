@@ -37,8 +37,8 @@
 //   12105 went with it.
 // - CRelUtil::ImprimeResumoCorrespondencia, fn 1541, has the same six callers as 1543 (awk -F'\t' '$2==1541'
 //   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105);
-//   11902, 11223, 11908, 5977 (unit 325's) and 12105 (fragment 372's) are in the link, and w123_rodape stands for 12110,
-//   1541's one caller still waiting, with one call: the calls that stood for 12105, of 1541 and 2785, went with it.
+//   11902, 11223, 11908, 5977 (unit 325's) and 12105 (fragment 372's) are in the link, and w123_rodape stands for
+//   12110, 1541's one caller still waiting, with one call: the calls that stood for 12105, of 1541 and 2785, went.
 // - CRelUtil::ImprimeSeparadorVia, fn 5581, has one caller in the target, fn 12110 (vota::CGeraBU's slot 2, not
 //   reconstructed), which calls it twice (awk -F'\t' '$2==5581' ledger/callgraph.tsv): w123_vias stands for it with
 //   two call sites, so binaryen keeps 5581 out of line. 12110 passes no constant (the same builder at both calls, a

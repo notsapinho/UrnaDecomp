@@ -71,9 +71,9 @@ public:
 
 // The count of justified voters in a format string, the word's last letter dropped for one (fn 11474, reached only by
 // table slot 2948, which comum::CGeradorBUJ hands over with "{:05} Justificativas": cgeradorbuj.cpp). Its body holds
-// GetInst inlined, as CJustificadorDadoTitulo::Text's does, so it is defined in cjustificador.cpp (a reading), after
-// it: band 1 puts 11474 after 11475. The class's name, its holding nothing else, Text's name and parameter are chosen,
-// after the class above and comum::CEleitorDadoSequencial::Text (celeitores.h).
+// GetInst inlined, as CJustificadorDadoTitulo::Text's does (calls of 3742 and 150, never of 1391, GetInst's body),
+// which clang does only in GetInst's TU: so it is defined in cjustificador.cpp, after it (band 1: 11474 after 11475).
+// Its names and holding nothing else are chosen, after the class above and CEleitorDadoSequencial::Text (celeitores.h).
 class CJustificadorDadoQuantidade {
 public:
     static std::string Text(const std::string& formato);

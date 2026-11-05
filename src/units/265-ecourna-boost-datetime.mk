@@ -19,8 +19,8 @@
 # and of ymd_formatter<..., iso_extended_format<char>, char>::ymd_to_string with format_month under it. The root
 # declared the first two `extern template` (src/units/README.md "Companion files": a roots TU supplies no copy that
 # should come from another object) until the probe's date parsing, clocks and formatting went (unit 122's fragment);
-# the two lines went with them: roots_boost.o was the same object without them (cmp, measured before greg_weekday's
-# range check, the probe's one date_time use now, was added), and with that check in it defines neither (llvm-nm). Our
+# the two lines went with them: roots_boost.o was the same object without them (cmp, measured with no date_time use in
+# the probe), and with bad_weekday's typeinfo, the probe's one date_time use now, it defines neither (llvm-nm). Our
 # link takes from_day_number from datahoraasn.cpp.o,
 # the first ecourna object that emits it (csqlstatement.cpp.o's copy is the same function, compared in the two objects
 # with call targets by name: which object the target's came from the bytes do not tell), and to_simple_string_type from

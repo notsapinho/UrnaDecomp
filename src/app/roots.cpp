@@ -4,7 +4,7 @@
 //   openssl    build/out/app/gen/openssl_roots.c (tools/libs/openssl/roots.txt, 258 symbols the app calls)
 //   7zip       tools/libs/7zip/driver.cpp via roots_7zip.cpp   (UpdateArchive / Open3 / Extract)
 //   rhvoice    tools/libs/rhvoice/driver.cpp via roots_rhvoice.cpp (engine::create + document synthesis)
-//   boost      tools/libs/boost/probe.cpp via roots_boost.cpp  (regex, signals2, function)
+//   boost      tools/libs/boost/probe.cpp via roots_boost.cpp  (regex, signals2, function, optional, a typeid)
 #include "roots.h"
 
 int urna_roots_ecourna(int a);   // src/app/roots_ecourna.cpp: the reconstructed ecourna units

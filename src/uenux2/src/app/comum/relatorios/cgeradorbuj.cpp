@@ -1,7 +1,7 @@
 // comum::CGeradorBUJ: the forms of the report of the justified voters and their printing to a file (cgeradorbuj.h).
 // The reconstruction's note, not TSE's text: the file's one record is GeraBUJ's default argument of
 // api::CPolySingleton<api::IPaperRelatorios>::instance (line 189, column 29); the helpers, their names, their internal
-// linkage, their order and every other line are chosen. src/units/372-uenux2-relatorios-gerarelatorios.mk has the evidence.
+// linkage, their order and every other line are chosen (src/units/372-uenux2-relatorios-gerarelatorios.mk: evidence).
 #include "app/comum/relatorios/cgeradorbuj.h"
 
 #include <format>

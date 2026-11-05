@@ -2,8 +2,8 @@
 // which target fn 12105 holds inlined; fns 11236 to 11239 are its header's std::function members and fn 11240 the
 // column header it passes by table slot). The reconstruction's note, not TSE's text: no record names this file, its
 // lines or its functions but MontaCabecalho and the class (RTTI); every other name, the other helpers' internal linkage
-// and the functions' order are chosen. cgeradorreleleitoreshabbiograf.h and src/units/372-uenux2-relatorios-gerarelatorios.mk say what is
-// evidence and what is chosen.
+// and the functions' order are chosen. cgeradorreleleitoreshabbiograf.h and
+// src/units/372-uenux2-relatorios-gerarelatorios.mk say what is evidence and what is chosen.
 #include "app/comum/relatorios/cgeradorreleleitoreshabbiograf.h"
 
 #include <algorithm>

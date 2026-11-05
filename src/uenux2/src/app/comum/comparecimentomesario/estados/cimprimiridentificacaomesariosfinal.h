@@ -18,11 +18,11 @@ namespace comum {
 // and the members Imprime calls inlined by binaryen (frames of 16, 16, 384, 48, 32, 32 and 416 bytes of their own):
 // the three bytes' uses (+12 picks the header's kind and gates the opening and closing times, +13 titles the report for
 // the data recovery system, +14 prints the emission's date and time). The constructor stores 1 at +12 with a byte store
-// and 0 at +13 and +14 with one 16-bit store, through its `this` held in a local: an out-of-line constructor whose +12 is
-// a parameter its one caller passes as 1 (folded by binaryen's dead-argument elimination) and the other two constants
-// clang merges (a reading; an inline constructor of three parameters gave a 16-bit store at +12 and a byte at +14,
-// measured in a whole link). Chosen: the members' names but the records', the parameter, the access, GetTitulo's const,
-// the order of the declarations.
+// and 0 at +13 and +14 with one 16-bit store, through its `this` held in a local: an out-of-line constructor whose +12
+// is a parameter its one caller passes as 1 (folded by binaryen's dead-argument elimination) and the other two
+// constants clang merges (a reading; an inline constructor of three parameters gave a 16-bit store at +12 and a
+// byte at +14, measured in a whole link). Chosen: the members' names but the records', the parameter, the access,
+// GetTitulo's const, the order of the declarations.
 class CImprimirIdentificacaoMesariosFinal {
 public:
     explicit CImprimirIdentificacaoMesariosFinal(bool secao);

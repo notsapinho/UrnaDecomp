@@ -73,10 +73,10 @@
 # the caller's alignment, then the string freed. Its callers are four vota states' slot 2: 11908
 # (CImpressaoListaEleitores, written, unit 176's: fragment 317's legend calls it), 11946 (CGeraZeresimaBase,
 # CGeraZeresima, CRegerarZeresima; unit 325's, written), 12105 (CGeraRelatorios, fragment 372's, written, four calls
-# passing 2) and 12110 (CGeraBU, not written, three passing 0); the roots give it one, with 12110's 0. `pnpm wasm score` before
-# step 8: 3 over 56 rows, all operand-only; the scan matched it by its content. It has no record and reads only its
-# parameters, so it is a free function of vota, its callers' namespace (how-to step 3's member rule). Chosen: the name,
-# the file (votadefs.cpp, the file whose records name vota's free functions, as for 1485 above; chosen against use
+# passing 2) and 12110 (CGeraBU, not written, three passing 0); the roots give it one, with 12110's 0. `pnpm wasm score`
+# before step 8: 3 over 56 rows, all operand-only; the scan matched it by its content. It has no record and reads only
+# its parameters, so it is a free function of vota, its callers' namespace (how-to step 3's member rule). Chosen: the
+# name, the file (votadefs.cpp, the file whose records name vota's free functions, as for 1485 above; chosen against use
 # band 9, where the target's 1387 lies between md/processoeleitoral/ccargo.cpp's 1388 and 1386, comum code not
 # written, and then api/gui/cframedtext.cpp's 1385, none of them app/vota/ code), the line after EhTreinamento, and
 # static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
