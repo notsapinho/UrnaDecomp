@@ -581,7 +581,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   aligns the two, the index being the first column of `build/out/wasm-map/vota_web/names.tsv` (`awk -F'\t'
   '$2=="<symbol>" {print $1}'`: a symbol is no selector for a linked module): every store of ours pairs with an
   identical row of the caller's copy, in order, while operands, local numbers and where the arguments come from may
-  differ (unit 123's `w123_titulo` holds `CRelUtil::FormTituloPartido` inlined, as 11946 does).
+  differ (unit 123's `w123_titulo` held `CRelUtil::FormTituloPartido` inlined, as 11946 does, until 11946 was in the
+  link).
   Our side is the object's code (`wasm-objdump -d <object>`), since the link drops a function nothing calls: read it
   with each out-of-line callee it calls in place, and allow for what the link removes (an empty base destructor, a
   sized `operator delete` that is `free`). When the target caller is written and does not match, the body is compared

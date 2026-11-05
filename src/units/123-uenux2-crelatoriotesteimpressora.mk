@@ -63,8 +63,8 @@
 # holds a second pleito, that pleito's date against a default api::CDate, today (1382): operator== inline, then <
 # through operator<=> (1261, unit 125). The flag is stored false first. The byte at +4 is stored 0 before the vptr, the
 # base's member (cimprimirextratocarga.h), and +5 is the flag. CPleito::GetData (cpleito.h) is added for it. Its two
-# target callers, 11869 (not written) and 11911 (unit 296's, in the link), read its returned this: unit 280's roots
-# stand in for 11869. It
+# target callers, 11869 (unit 138's) and 11911 (unit 296's), both in the link, read its returned this; unit 280's
+# roots stood in for 11869 until it was. It
 # matches: 9 over 99 rows, all operand-only, before step 8 (11 over 99, the result's row deleted, with no reader).
 #
 # GetDadosLocal (slot 15, target fn 11188): the lines of the section's data, in a vector of strings. For a voting urna
@@ -123,8 +123,8 @@
 # function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 11946,
-# 12105 and 12110 are in the link (2785 and 11943 are). w123_copia, which stood for 1249's other callers
+# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 12105 and
+# 12110 are in the link (2785, 11943 and 11946 are). w123_copia, which stood for 1249's other callers
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
@@ -185,13 +185,13 @@
 #   is no call and no data address the thrown object's destructor's table slot (69); with the number read inside the
 #   expression, 26 over 247 (1 inserted, 2 deleted).
 # - The target reaches TituloPartido only by its table slot (3050), which only fn 11946 (vota::CGeraZeresimaBase's slot
-#   2, not written) loads, behind a stack-pointer prologue of its own: a function binaryen inlined there that builds a
+#   2, written since: fragment 325) loads, behind a stack-pointer prologue of its own: a function binaryen inlined there that builds a
 #   CPaperFormBuilder, adds one text field over the slot (AddTextField, fn 604, alignment 0) and returns Build's form
 #   (fn 357). Only crelutil.cpp's TU can take the address of its internal function, so that function is crelutil.cpp's:
 #   FormTituloPartido, a static member of CRelUtil (its name and membership chosen: the class's records name only static
 #   members), defined last in the file. In our link 11182's ld_index is then below 11181's (1543's paragraph, below, has them), the order their
-#   use band (1) asks; the other places were not linked. w123_titulo stands for 11946 and calls it once, so binaryen
-#   inlines it there as in the target; it goes when 11946 lands.
+#   use band (1) asks; the other places were not linked. 11946's builder holds it inlined by binaryen, as the target
+#   does; w123_titulo, which stood for that call, went with it.
 # - DSCodigoVerificador (fn 11182, record crelutil.cpp:412:27, the default std::source_location of its
 #   CPolySingleton<CCalculaCV>::instance() call) formats CCalculaCV::CalculaCodigo's result (fn 3700, unit 121) as
 #   "Código Verificador: {}.{}.{}.{}" of its substrings (0, 1), (1, 3), (4, 3) and (7, 3), the lengths the target's

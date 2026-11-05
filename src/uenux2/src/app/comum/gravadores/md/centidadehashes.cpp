@@ -1,5 +1,5 @@
-// Reconstruction: comum::md::CEntidadeHashes::ValidaCriacao (target fn 5855). Its throws are records of the target (lines
-// 59 and 62, column 15).
+// Reconstruction: comum::md::CEntidadeHashes's constructors and ValidaCriacao (target fn 5855). The throws are
+// records of the target (lines 59 and 62, column 15); the constructors have none, and their lines are a choice.
 
 #include "app/comum/gravadores/md/centidadehashes.h"
 
@@ -9,7 +9,25 @@
 
 namespace comum::md {
 
-// (original lines 12-55: content not recovered)
+CEntidadeHashes::CEntidadeHashes(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const std::string& siglaUF,
+    const CIdentificacaoSecao& identificacaoSecao, const std::string& versaoUENUX,
+    const std::vector<api::hash::CHashArquivo>& hashesArquivos)
+    : m_cabecalho(cabecalho), m_fase(fase), m_siglaUF(siglaUF), m_identificacaoSecao(identificacaoSecao),
+      m_versaoUENUX(versaoUENUX), m_hashesArquivos(hashesArquivos)
+{
+    ValidaCriacao();
+}
+
+CEntidadeHashes::CEntidadeHashes(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const std::string& siglaUF,
+    const CIdentificacaoUrnaContingencia& identificacaoContingencia, const std::string& versaoUENUX,
+    const std::vector<api::hash::CHashArquivo>& hashesArquivos)
+    : m_cabecalho(cabecalho), m_fase(fase), m_siglaUF(siglaUF), m_identificacaoContingencia(identificacaoContingencia),
+      m_versaoUENUX(versaoUENUX), m_hashesArquivos(hashesArquivos)
+{
+    ValidaCriacao();
+}
+
+// (original lines 30-55: content not recovered)
 #line 56
 void CEntidadeHashes::ValidaCriacao() const
 {

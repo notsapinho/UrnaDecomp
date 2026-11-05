@@ -8,12 +8,18 @@
 #include "api/util/eueasserterror.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/cpath.h"
+#include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargods.h"
+#include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/cfederacoes.h"
+#include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/crdvvota.h"
+#include "app/comum/dados/crespostasds.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeral.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/justificativa/cjustificador.h"
 #include "app/comum/relatorios/cdatasourcesrelatorio.h"
 #include "app/comum/relatorios/cgeradorbu.h"
@@ -21,14 +27,13 @@
 #include "app/comum/relatorios/cparterdv.h"
 #include "app/comum/relatorios/crelutil.h"
 #include "app/vota/comum/csincronizavota.h"
+#include "app/vota/comum/votadefs.h"
 #include "app/vota/eleitor/iniciovotacao/cgerazeresimabase.h"
 #include "app/vota/eleitor/iniciovotacao/crelvotautil.h"
 #include "app/vota/log/clogvota.h"
 
 namespace vota {
 
-// (original lines 30-36: content not recovered)
-#line 37
 namespace {
 
 api::SharedPaperForm CriaTituloExtratoRDV()
@@ -126,6 +131,54 @@ void GeraResumoZeresima()
     comum::CAppInfo::GetInst().GetVota().SetUrnaIdGerouZeresima(urnaId);
     CSincronizaVota::SincronizaEstadoGeralVota();
     CLogVota::GetInst().LogaGerandoRelatorio(comum::RELATORIO_RESUMO_ZERESIMA, true);
+}
+
+bool PartidoComCandidatos()
+{
+    const comum::md::TCargoID cargo = comum::CCargos::GetInst().GetCurrent().GetID();
+    const ueword partido = comum::CPartidos::GetInst().GetCurrent()->GetNumero();
+    const comum::CCandidaturas& candidaturas = comum::CCandidaturas::GetInst();
+    const auto candidatos = candidaturas.GetCandidatosPartido(cargo, partido);
+    if (!candidatos.empty()) {
+        return true;
+    }
+    const ecourna::app::dados::CFederacao* federacao = comum::CFederacoes::GetInst().GetFederacao(partido);
+    return federacao != nullptr && candidaturas.ExisteCandidatoFederacao(cargo, *federacao);
+}
+
+std::shared_ptr<api::IForm<api::IPaper>> FormSemCandidatos()
+{
+    api::CPaperFormBuilder builder;
+    builder.AddTextField("Não há candidatos concorrendo", static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_CENTRO);
+    builder.AddNewLine(1);
+    AdicionaSeparador(builder, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField(comum::TrailerSemCandidatos<comum::CRdvVota, comum::CEleitores>, api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+    return builder.Build();
+}
+
+std::shared_ptr<api::IForm<api::IPaper>> FormSemCandidatoRegistrado()
+{
+    api::CPaperFormBuilder builder;
+    builder.AddNewLine(1);
+    builder.AddTextField("Não há candidato registrado", static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_CENTRO);
+    builder.AddTextField(comum::md::CTradutorFrase::Traduz("para <P|este|este|esta> <PLSB>"),
+                         static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_CENTRO);
+    return builder.Build();
+}
+
+std::shared_ptr<api::IForm<api::IPaper>> FormLinhaResposta()
+{
+    api::CPaperFormBuilder builder;
+    builder.AddTextField(comum::LinhaRespostaCorrente, api::ALINHAMENTO_ESQUERDA);
+    return builder.Build();
+}
+
+void ImprimeTituloListaCandidatos(api::CPaperFormBuilder& builder)
+{
+    builder.AddTextField("---------LISTA DE CANDIDATOS----------", static_cast<api::IPaper::EStyle>(1),
+                         api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
 }
 
 } // namespace vota

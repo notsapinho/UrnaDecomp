@@ -19,12 +19,11 @@
 # constructor before the destructor and IsDir (band 6), Close before IsFile (band 5) and Open before IsLink (band 2), a
 # higher index linking first, which this order gives as each takes its place at its first mention; the lines of the
 # destructor (original 35-38) and of the members after NextEntry are a choice.
+# Every target caller of the members outside the class is in the link: 2762 and 5458 (unit 32), 5572 and 11167 (unit
+# 179), 7160 (unit 329) and 5360 (unit 227's CMontadorHash::CriaHashesDiretorio, written): the roots file that gave them
+# call sites went with 5360. 7160 reads the destructor's returned this (it frees it, a heap reader), and every caller
+# the constructor's, as the roots' AbreDois and FechaDois did.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and
 # every uenux2 header.
 CDIRREADER_SRCS := src/api/util/cdirreader.cpp
 UENUX2_SRCS += $(CDIRREADER_SRCS)
-# no caller of the members outside the class is reconstructed yet: 21-uenux2-cdirreader-roots.cpp gives each two call
-# sites or more
-$(ROOT)/$(APP)/21-uenux2-cdirreader-roots.o: $(ROOT)/src/units/21-uenux2-cdirreader-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/21-uenux2-cdirreader-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/21-uenux2-cdirreader-roots.o

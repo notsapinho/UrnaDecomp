@@ -13,8 +13,8 @@
 // - SincronizaBancoDados (fn 4662): callers 7787 and 10786 (CControladorRegistraMesariosVota's slot 16, unit 119's, in
 //   the link);
 // - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
-// - SincronizaRelatorios (fn 1836): callers 11943 (in the link: fragment 325's notes), 11946, 12105 (three times) and
-//   12110, the slot 2 of four vota states.
+// - SincronizaRelatorios (fn 1836): callers 11943 and 11946 (in the link: fragment 325's notes), 12105 (three times)
+//   and 12110, the slot 2 of four vota states.
 // - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 23 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
 //   11830, 11855, 11902, 11905, 11908 (written, unit 176), 11911, 11920, 11924, 11927, 11931, 11940, 11991, 12031,
 //   12034, 12065, 12077 and 12081.
@@ -49,7 +49,7 @@ __attribute__((noinline)) int w205_assina(int base)
     return base * 3;
 }
 
-// stands for fns 11946, 12105 and 12110, which pass the report they wrote (11943 is in the link)
+// stands for fns 12105 and 12110, which pass the report they wrote (11943 and 11946 are in the link)
 __attribute__((noinline)) void w205_relatorios(const std::string& relatorio, const std::string& outro)
 {
     vota::CSincronizaVota::SincronizaRelatorios(relatorio);

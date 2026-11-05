@@ -39,17 +39,15 @@ int w5660(int, int, int, int, int, int) __asm__("_ZN5comum2md12CCandidaturaC1Eht
 int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS0_8CIndexerE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
-void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
-int w5809(int, int, int) __asm__("_ZNK5comum13CCandidaturas24ExisteCandidatoFederacaoEhRKN7ecourna3app5dados10CFederacaoE");
 }
 
 namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 4160, 7787, 12098, 12105, 12110, 12134 (6599, unit 110's, 11242, unit 155's, 5579 and
+// Stands for fn 401's callers: 7787, 12098, 12105, 12110, 12134 (4160 and 6599, unit 110's, 11242, unit 155's, 5579 and
 // 5977, unit
 // 325's, 10500, unit 239's, 11223, unit 287's ImprimeTituloJE, 11908, unit 176's, written, 5584, CRelUtil's
 // ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798, CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's
@@ -131,16 +129,13 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
-// Stands for the callers of two CCandidaturas members that are not in our link, beside units 77's and 139's and
-// unit 155's written Gera (5604): GetCandidatosPartido (2272: 11976, beside 5604, 11213, 11255 and unit 200's 3819) and
-// Busca (1273: 11891, beside 5604,
+// Stands for the caller of CCandidaturas::Busca that is not in our link, beside units 77's and 139's and unit
+// 155's written Gera (5604): Busca (1273: 11891, beside 5604,
 // 11214, 11255, 11724, 11744, 11683 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
-// body, as one of 11683's two calls does). GetCandidatos (2840) needs none: its callers 4459, 5604 and 11214 are in the
-// link.
+// body, as one of 11683's two calls does). GetCandidatos (2840) and GetCandidatosPartido (2272) need none: their
+// callers are in the link (4459, 5604 and 11214; 11976, 5604, 11213, 11255 and unit 200's 3819).
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
-    w2272(r, c, cargo, partido);
-    w2272(s, c, cargo + 1, partido);
     return w1273(c, cargo, candidato);
 }
 // Stands for fn 5807's caller 6076 (its other, 12649, CDataText<CCandidaturasDSNome>::GetText, matches).
@@ -148,11 +143,6 @@ __attribute__((noinline)) void NomesUrna(int r, int s, int a)
 {
     w5807(r, a);
     w5807(s + 12, a + 1);
-}
-// Stands for fn 5809's caller 11976, not reconstructed (5922, its other, is in the link).
-__attribute__((noinline)) int Federacoes(int c, int cargo, int f, int g)
-{
-    return w5809(c, cargo, f) * 5 - w5809(c, cargo + 2, g);
 }
 
 struct SCLocalRoots {
@@ -191,7 +181,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
         clocal_sink = reinterpret_cast<const void*>(&Consultas);
         clocal_sink = reinterpret_cast<const void*>(&NomesUrna);
-        clocal_sink = reinterpret_cast<const void*>(&Federacoes);
     }
 } clocal_roots;
 

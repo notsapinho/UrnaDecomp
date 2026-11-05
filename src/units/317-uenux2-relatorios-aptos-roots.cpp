@@ -21,8 +21,8 @@ __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* 
     return texto[11];
 }
 
-// Stands for fns 7787, 11946 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns
-// 11908 and 11943 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
+// Stands for fns 7787 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns 11908,
+// 11943 and 11946 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
 __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
 {
     w2259(reinterpret_cast<int>(relatorios), reinterpret_cast<int>(partes));
@@ -30,12 +30,11 @@ __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
     return relatorios[3] + relatorios[15];
 }
 
-// Stands for fns 11946 and 12105, the target callers of api::GeraArquivoRelatorio (fn 3654), not written (11943, the
-// third, is in the link). The
+// Stands for fn 12105, the target caller of api::GeraArquivoRelatorio (fn 3654) not written (11943 and 11946, the
+// others, are in the link): one call, the one that stood for 11946 having gone with it. The
 // first argument is the address of the std::string the function takes as a const reference, the second the report.
 __attribute__((noinline)) int ArquivosRelatorios(char* arquivos, char* relatorio)
 {
-    w3654(reinterpret_cast<int>(arquivos), reinterpret_cast<int>(relatorio));
     w3654(reinterpret_cast<int>(arquivos) + 12, reinterpret_cast<int>(relatorio));
     return arquivos[11] + arquivos[23];
 }

@@ -29,8 +29,8 @@
 // not reconstructed: RepoeDois stands for it with two call sites, each passing an empty third string as 7174 does.
 // api::GetFileName and GetDirName (target fns 2763 and 5462) are called by 1501 (vota::CAssinadorVota's constructor,
 // with comum::CAssinador's inlined, reconstructed) once each and by 12098, and GetFileName by 5360 and 5461 too. 5461
-// (api::TrocaExtensao, unit 280's fragment) is in the link; 12098 and 5360 are not: PartesDoCaminho stands for them with
-// one call site of each.
+// (api::TrocaExtensao, unit 280's fragment) and 5360 (unit 227's) are in the link; 12098 is not: PartesDoCaminho stands
+// for it with one call site of each.
 // The stand-ins' bodies differ, so wasm-opt merges none of them, and no argument is the same constant at every call
 // site but CopyFile's folded bool, which the target folds too, so dead-argument elimination folds no other. They are
 // address-taken from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as

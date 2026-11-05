@@ -1,14 +1,20 @@
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"
 
 #include <chrono>
+#include <format>
+#include <string>
 
 #include "api/gui/cinteractiveform.h"
 #include "api/util/eueasserterror.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/comum/informacao/cinformacaoeleicao.h"
+#include "app/comum/relatorios/crelatoriotesteimpressora.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/ciniciozeresima.h"
 #include "app/vota/log/clogvota.h"
 
@@ -36,7 +42,7 @@ CVerificaHorarioZeresima& CVerificaHorarioZeresima::GetInst()
 std::unique_ptr<CVerificaHorarioZeresima> CVerificaHorarioZeresima::s_inst;
 std::mutex CVerificaHorarioZeresima::s_mutex;
 
-// (original lines 39-52: content not recovered)
+// (original lines 45-52: content not recovered)
 #line 53
 void CVerificaHorarioZeresima::StartState()
 {
@@ -64,6 +70,32 @@ void CVerificaHorarioZeresima::ProcessTickNaoDesligamento(uebyte tick)
         ASSERT(appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA,
             api::EUA_VERIFICAHORARIOZERESIMA_ESTADO_INVALIDO);
         m_pNextState = &CInicioZeresima::GetInst();
+    }
+}
+
+void CVerificaHorarioZeresima::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA: {
+        const CInformacaoEleicao informacao(CConfiguracaoEleicao::GetInst().GetParametrosUrna());
+        md::estadoaplicacao::CEstadoGeralVota& vota = CAppInfo::GetInst().GetVota();
+        if (vota.GetNumViasImpressasRelatorios().GetNumViasEstadoUrna() < informacao.GetNumViasEstadoUrna()) {
+            const CRelatorioTesteImpressora relatorio;
+            CLogVota::GetInst().LogaImprimindoRelatorioEstadoUrna();
+            relatorio.Imprime("estado da urna",
+                              std::format("{}ª via", vota.GetNumViasImpressasRelatorios().GetNumViasEstadoUrna() + 1));
+            vota.GetNumViasImpressasRelatorios().IncrementaNumViasEstadoUrna();
+            CSincronizaVota::SincronizaEstadoGeralVota();
+        }
+        m_form = CTelasVota::GetInst().CriaTelaAntesHorarioZeresima();
+        m_form->Slot2();
+        break;
+    }
+    case api::INPUT_BRANCO:
+        m_pNextState = &CMaisInformacoes::GetInst(this);
+        break;
+    default:
+        break;
     }
 }
 

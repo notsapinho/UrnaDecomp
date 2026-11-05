@@ -5,6 +5,12 @@
 
 #include "api/gui/reports/ireportpart.h"
 
+namespace api {
+class IPaper;
+template <typename MEDIA>
+class IForm;
+} // namespace api
+
 namespace comum {
 
 namespace md {
@@ -22,10 +28,14 @@ class CCargo;
 // through slot 0 (fn 411). The destructors are implicit, as reading.md R5 says to leave one when the class has a base.
 // That form and where final is written are choices: src/units/77-uenux2-ireportpart.mk lists what gives the same bytes.
 //
-// Imprime calls slot 2 of each shared_ptr; their element type, api::IReportPart, the member names and the order of the
-// constructors' parameters are chosen, from the roles below. The constructors are out of line in cpartecandidatos.cpp,
-// by value, inlined by binaryen into their one caller, fn 11946 (the fragment has the evidence), which allocates 12 +
-// sizeof for the three smaller classes and 16 + 88 for CParteCandidatosProporcionais, 8-aligned by its std::function.
+// Imprime calls slot 2 of each shared_ptr. Their element types are fn 11946's, the one builder: it hands the
+// constructors the forms it builds (api::IForm<api::IPaper>, api/gui/iform.h, whose slot 2 is Slot2) with no
+// api::CFormPart block around them, for every argument but CParteCandidatosProporcionais's fourth, a CFormPart (one of
+// the five blocks of vptr 1544112 that 11946 allocates), and CParteCandidatos's last three, the other three parts. The
+// member names and the order of the constructors' parameters are chosen, from the roles below. The constructors are out
+// of line in cpartecandidatos.cpp, by value, inlined by binaryen into their one caller, fn 11946 (the fragment has the
+// evidence), which allocates 12 + sizeof for the three smaller classes and 16 + 88 for CParteCandidatosProporcionais,
+// 8-aligned by its std::function.
 
 // 44 bytes. D2 2876 and D0 5590 (f136(D2(p0)): this D2 is above the inlining cost in the hinted forms as well) are
 // CParteRdv's too: its body has the same bytes and binaryen keeps one. Imprime (fn 11215) prints m_cabecalho and then
@@ -33,15 +43,16 @@ class CCargo;
 // m_parte4 when md::CCargo's IsMajoritario, IsProporcional or IsConsulta does.
 class CParteCandidatos final : public api::IReportPart {
 public:
-    CParteCandidatos(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> parte1,
+    CParteCandidatos(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                     std::shared_ptr<api::IForm<api::IPaper>> parte1,
                      std::shared_ptr<api::IReportPart> parte2, std::shared_ptr<api::IReportPart> parte3,
                      std::shared_ptr<api::IReportPart> parte4);
 
     virtual void Imprime() const override;
 
 private:
-    std::shared_ptr<api::IReportPart> m_cabecalho;
-    std::shared_ptr<api::IReportPart> m_parte1;
+    std::shared_ptr<api::IForm<api::IPaper>> m_cabecalho;
+    std::shared_ptr<api::IForm<api::IPaper>> m_parte1;
     std::shared_ptr<api::IReportPart> m_parte2;
     std::shared_ptr<api::IReportPart> m_parte3;
     std::shared_ptr<api::IReportPart> m_parte4;
@@ -52,15 +63,16 @@ private:
 // checking that CCandidaturas::Busca (fn 1273) finds it, and m_rodape.
 class CParteCandidatosMajoritarios final : public api::IReportPart {
 public:
-    CParteCandidatosMajoritarios(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> candidato,
-                                 std::shared_ptr<api::IReportPart> rodape);
+    CParteCandidatosMajoritarios(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                                 std::shared_ptr<api::IForm<api::IPaper>> candidato,
+                                 std::shared_ptr<api::IForm<api::IPaper>> rodape);
 
     virtual void Imprime() const override;
 
 private:
-    std::shared_ptr<api::IReportPart> m_cabecalho;
-    std::shared_ptr<api::IReportPart> m_candidato;
-    std::shared_ptr<api::IReportPart> m_rodape;
+    std::shared_ptr<api::IForm<api::IPaper>> m_cabecalho;
+    std::shared_ptr<api::IForm<api::IPaper>> m_candidato;
+    std::shared_ptr<api::IForm<api::IPaper>> m_rodape;
 };
 
 // 88 bytes, with padding at +60. D2 3867 and D0 11210 (f136(D2(p0))). Imprime (fn 11213) prints m_cabecalho and then,
@@ -69,22 +81,25 @@ private:
 // m_candidato per element, and m_rodapePartido. It ends with m_rodape.
 class CParteCandidatosProporcionais final : public api::IReportPart {
 public:
-    CParteCandidatosProporcionais(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> partido,
-                                  std::shared_ptr<api::IReportPart> cabecalhoCandidatos,
+    CParteCandidatosProporcionais(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                                  std::shared_ptr<api::IForm<api::IPaper>> partido,
+                                  std::shared_ptr<api::IForm<api::IPaper>> cabecalhoCandidatos,
                                   std::shared_ptr<api::IReportPart> candidato,
-                                  std::shared_ptr<api::IReportPart> rodapePartido, std::shared_ptr<api::IReportPart> rodape,
-                                  std::shared_ptr<api::IReportPart> semCandidatos, std::function<bool()> filtro);
+                                  std::shared_ptr<api::IForm<api::IPaper>> rodapePartido,
+                                  std::shared_ptr<api::IForm<api::IPaper>> rodape,
+                                  std::shared_ptr<api::IForm<api::IPaper>> semCandidatos,
+                                  std::function<bool()> filtro);
 
     virtual void Imprime() const override;
 
 private:
-    std::shared_ptr<api::IReportPart> m_cabecalho;
-    std::shared_ptr<api::IReportPart> m_partido;
-    std::shared_ptr<api::IReportPart> m_cabecalhoCandidatos;
+    std::shared_ptr<api::IForm<api::IPaper>> m_cabecalho;
+    std::shared_ptr<api::IForm<api::IPaper>> m_partido;
+    std::shared_ptr<api::IForm<api::IPaper>> m_cabecalhoCandidatos;
     std::shared_ptr<api::IReportPart> m_candidato;
-    std::shared_ptr<api::IReportPart> m_rodapePartido;
-    std::shared_ptr<api::IReportPart> m_rodape;
-    std::shared_ptr<api::IReportPart> m_semCandidatos;
+    std::shared_ptr<api::IForm<api::IPaper>> m_rodapePartido;
+    std::shared_ptr<api::IForm<api::IPaper>> m_rodape;
+    std::shared_ptr<api::IForm<api::IPaper>> m_semCandidatos;
     std::function<bool()> m_filtro;
 };
 
@@ -93,15 +108,16 @@ private:
 // CRespostas::Busca finds it, and m_rodape.
 class CParteCandidatosConsultas final : public api::IReportPart {
 public:
-    CParteCandidatosConsultas(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> candidato,
-                              std::shared_ptr<api::IReportPart> rodape);
+    CParteCandidatosConsultas(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                              std::shared_ptr<api::IForm<api::IPaper>> candidato,
+                              std::shared_ptr<api::IForm<api::IPaper>> rodape);
 
     virtual void Imprime() const override;
 
 private:
-    std::shared_ptr<api::IReportPart> m_cabecalho;
-    std::shared_ptr<api::IReportPart> m_candidato;
-    std::shared_ptr<api::IReportPart> m_rodape;
+    std::shared_ptr<api::IForm<api::IPaper>> m_cabecalho;
+    std::shared_ptr<api::IForm<api::IPaper>> m_candidato;
+    std::shared_ptr<api::IForm<api::IPaper>> m_rodape;
 };
 
 // Whether the post has candidates' details and no candidacy fit to print: CParteCandidatos::Imprime's first test, out

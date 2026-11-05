@@ -1,8 +1,10 @@
 # uenux2 comum::CGeracaoVersoesContratos (app/comum/gravadores/cgeracaoversoescontratos.{h,cpp}, the file the record of
 # its GetInst names, cgeracaoversoescontratos.cpp:38), the one file of comum/gravadores built with strict aliasing
 # (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6): ObtemDependencias (target fn 5869), written
-# and not matched, and the std::set<std::string> instances it brings, of which the insert (fn 5868), the hinted-insert
-# wrapper its copy calls (fn 1163) and the tree's destroy (fn 633) match from this object.
+# and not matched, and the std::set<std::string> instances it brings, of which the insert (fn 5868) matches from this
+# object, and the hinted-insert wrapper its copy calls (fn 1163) and the tree's destroy (fn 633) matched from it until
+# objects ahead of it emitted them too: unit 227's cmontadorhash.cpp.o (1163, with strict aliasing, src/api) and unit
+# 136's cgravadorhashes.cpp.o (633), linked ahead of it in unit 190's list, give the link's copies now.
 #
 # Evidence. fn 5869 is (i32 i32 i32 i32)->(): a std::set<std::string> returned by value, the address of an object it
 # reads at +0 (`this`, a reading: Choices), a string and a set. It calls CDependenciasContratos::GetValor (fn 3826) on
@@ -31,6 +33,9 @@
 #   this object alone, with the stand-in and without it: so the file is listed, and its directory's other files keep
 #   -fno-strict-aliasing, which gravadores/asn/ and gravadores/md/ need (F6). Listing the file is a choice.
 # So this file builds with strict aliasing (the user's decision) and the stand-in is in the roots: 1163 and 5868 match.
+# Of the two callers the stand-in stands for, 5360 (unit 227's) is in the link and calls 1163 twice; 11620 (unit 136's)
+# is in the link but its set is cpath.cpp's code, built without strict aliasing, which calls the emplace instead (unit
+# 190's fragment), so the stand-in stays for 11620.
 # 5869 reads unresolved, at its recursive call (`ours +0x82 call 5687: ... has no target function`): the census pairs it
 # at shape, which names nothing, and its other caller, 12098, is not in the link. It waits for 12098 (its call names
 # 5869) or a census pair that names it; in this link it scores 9 over 206 rows, every differing row a call's or a data

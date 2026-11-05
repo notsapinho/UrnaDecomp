@@ -1,7 +1,7 @@
 // Roots: keep this unit's functions in the skeleton link the way the target reaches them. Each has direct callers only:
-// CTradutorFrase::Traduz (654) fns 1543, 3689, 4160, 4161, 5591, 10631, 11181, 11188, 11260, 11261 and 11946 (11181,
-// 3689, 10631, 11188, 5591, 11261, 1543, 4161 and 11260 are in the link, the others not), Lanca (2263) fns 2543 (in the link)
-// and 7787, ConfereDadosDinamicos (3770) fns 1271, 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`).
+// Lanca (2263) fns 2543 (in the link) and 7787, ConfereDadosDinamicos (3770) fns 1271, 2825 and 10210
+// (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). CTradutorFrase::Traduz (654) needs none now: its callers 1543,
+// 3689, 4160, 4161, 5591, 10631, 11181, 11188, 11260, 11261 and 11946 are all in the link, and its stand-in went.
 // RecuperaLabel (5658) needs none: its two call sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a
 // function with one call site, so each gets two here, and the stand-ins' bodies differ from each other's and from every
 // target function. 3770's callers 1271 (CEleitorDetalhe::GetDinamico), 2825 (which holds
@@ -18,21 +18,12 @@
 // or ASN.1 header and instantiates nothing.
 extern "C" {
 extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
-void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 void w2543_root() __asm__("_ZN5comum24VerificaIntegridadeVotosEv");
 void w2834_root(void*, int) __asm__("_ZNK5comum7CCargos13GetMapaCargosEv");
 }
 
 namespace {
-
-__attribute__((noinline)) int TraduzOsDois(int a, int b)
-{
-    int traducoes[6];
-    w654_root(traducoes, a);
-    w654_root(traducoes + 3, b + 12);
-    return traducoes[1] + traducoes[4];
-}
 
 __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
 {
@@ -67,7 +58,6 @@ struct SComumDadosRoots {
     SComumDadosRoots()
     {
         comum_dados_sink = tipoidentificador_vt;
-        comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
         comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);

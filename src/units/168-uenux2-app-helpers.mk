@@ -71,9 +71,9 @@
 # vota::AdicionaSeparador (fn 1387, 169 B), at the end of votadefs.cpp: std::string(38, '-') (operator new of 40 and
 # the dashes stored eight at a time) passed to api::CPaperFormBuilder::AddTextField (fn 193) with IPaper's style 1 and
 # the caller's alignment, then the string freed. Its callers are four vota states' slot 2: 11908
-# (CImpressaoListaEleitores, written, unit 176's: fragment 317's legend calls it), and 11946 (CGeraZeresimaBase,
-# CGeraZeresima, CRegerarZeresima), 12105 (CGeraRelatorios) and 12110 (CGeraBU), not written, nine call sites passing 0
-# or 2; the roots give it two, with both values. `pnpm wasm score` before
+# (CImpressaoListaEleitores, written, unit 176's: fragment 317's legend calls it), 11946 (CGeraZeresimaBase,
+# CGeraZeresima, CRegerarZeresima; unit 325's, written), and 12105 (CGeraRelatorios) and 12110 (CGeraBU), not
+# written, nine call sites passing 0 or 2; the roots give it two, with both values. `pnpm wasm score` before
 # step 8: 3 over 56 rows, all operand-only; the scan matched it by its content. It has no record and reads only its
 # parameters, so it is a free function of vota, its callers' namespace (how-to step 3's member rule). Chosen: the name,
 # the file (votadefs.cpp, the file whose records name vota's free functions, as for 1485 above; chosen against use

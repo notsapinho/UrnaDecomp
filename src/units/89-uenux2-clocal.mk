@@ -208,7 +208,8 @@
 # party's 16-bit integer (comum's TPartidoID, from ecourna's TPartidoID through its conversion) loads each party once in
 # the outer loop, as the target does; as `const auto&` the object loads it again in the inner loop (try-tu.sh --symbols,
 # the function's disassembly compared; not linked). Its callers are fns 5922 (vota::LegendaValida, unit 97's, written)
-# and 11976, not reconstructed, for which the roots' Federacoes stands.
+# and 11976 (vota::PartidoComCandidatos, unit 325's), both in the link; the roots' Federacoes, which stood for 11976,
+# went.
 #
 # CCandidaturas::ExisteCandidatoPartido, in ccandidaturas.cpp after Busca, has no target function of its own: its one
 # caller, fn 5922, holds its loop inlined by binaryen, its result a block's tested again, and unit 97's fragment has the
@@ -260,8 +261,17 @@
 #   the section's flag, the vector's size over 8 masked to a byte) inlined, which clang gives only in this TU, so it is
 #   this file's, as FormataAgregadas is; it is the file's last function, a choice (no index places it). 1543 matches
 #   with it (unit 123's fragment has the score).
-# The roots of unit 280 stand in for 4160 (3752); its other callers, 5738's 1543 and 11242 (unit 155's), are in the
-# link, and 5738's stand-in went.
+# - comum::FormataAgregadasResumidas (no index; its name and parameter chosen, its being a free function too): the
+#   first five numbers as FormataAgregadas joins them, then "..." when there are more than five, put into the format it
+#   is given. Fn 4160 (vota::AdicionaCabecalhoLocal, unit 110's ctelasvota.cpp) holds it behind a 448-byte stack frame
+#   of its own, FormataAgregadas's frame and shape, with CLocal::GetInst and GetQtdAgregadas inlined, so it is this
+#   file's; after FormataQtdAgregadas, the file's last function, a choice. The count held as a size_t with the loop
+#   bounded by std::min<size_t>(count, 5) gives the target's one zero test before GetAgregadas; the count as a uebyte
+#   with that bound, or the bound written `i < quantidade && i < 5`, tested it again after the call (wasm-objdump -d
+#   of the object; in the whole link 4160 then scored 129 over 1693 and 128 over 1692 rows, 10 and 9 inserted, 3 and 2
+#   deleted). 4160 matches with it (92 over 1683 rows before step 8, operand-only).
+# The roots of unit 280 stood in for 4160 (3752) until 4160 was in the link; 3752's other callers, 5738's 1543 and
+# 11242 (unit 155's), are in the link too, and 5738's stand-in went.
 #
 # comum::CLocal's loader and the section list, in clocal.cpp after VerificaEhSecao (no record; clocal.h says what is
 # chosen in each), with the pieces 5740 holds:

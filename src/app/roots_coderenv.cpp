@@ -54,7 +54,11 @@ int urna_roots_coderenv(int a)
 // vector<path> one of ICompressor::Add (fn 9531, icompressor.cpp.o's) in one table slot alone, and binaryen merges the
 // two, so 9531 has no body of its own (src/units/122-uenux2-app-comum-gravadores.mk). That the copy is the executable
 // TU's is a reading.
-// 5585 itself stays unresolved: its callees 11180 and 11177 have no name.
+// 5585 itself stays unresolved: its callee 11177 has no name. 11180 (__vallocate) and 5570
+// (allocator<string>::allocate) match from this object since unit 227's CMontadorHash::CriaHashesDiretorio (5360) is in
+// the link: its libc++ code gives 5570 a second caller, path.o's 4674, so binaryen keeps 5570 out of 11180, as the
+// target does (docs/reference/facts/splat.md S10 item 29). 5570's body is also path.o's allocator of pair<string_view,
+// PathPartKind>, of which binaryen keeps one, this object's by link order: its name is that pick.
 #include <string>
 
 template void std::vector<std::string>::__init_with_size<std::string*, std::string*>(std::string*, std::string*, std::size_t);

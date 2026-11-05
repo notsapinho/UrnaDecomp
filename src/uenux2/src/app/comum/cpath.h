@@ -1,6 +1,8 @@
 #pragma once
 
 #include <filesystem>
+#include <set>
+#include <string>
 
 #include "app/comum/eflashorigem.h"
 #include "app/comum/eurnaturno.h"
@@ -26,6 +28,14 @@ public:
     // No target index: binaryen inlined it into comum::CArquivosSavd::GetInst (fn 1164), its one caller, where its code
     // sits behind a stack frame of its own. Its name is chosen from the path it builds.
     static std::filesystem::path GetPathTrabExterno();
+    // No target index: binaryen inlined it into GetDiretoriosSemHash, its one caller, where its code sits behind a
+    // stack frame of its own (in fn 11620). Its name is chosen from the path it builds.
+    static std::filesystem::path GetPathTmp();
+    // No target index: binaryen inlined it into comum::CalculaHashesArquivos, its one caller (cgravadorhashes.cpp,
+    // inlined in turn into fn 11620), behind a stack frame of its own: the directories whose files the urna's hashes
+    // leave out, the set api::hash::CMontadorHash::CriaHashesDiretorio takes (its record spells std::set<std::string>).
+    // Its name and its being a member are chosen.
+    static std::set<std::string> GetDiretoriosSemHash();
     static std::filesystem::path GetPathRootSemSA(EFlashOrigem origem);
     static std::filesystem::path GetPathResult(EFlashOrigem origem, EUrnaTurno turno);
     static std::filesystem::path GetPathResult(EFlashOrigem origem);

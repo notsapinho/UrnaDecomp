@@ -2,8 +2,11 @@
 # src/uenux2/src/app/comum/relatorios/cpartecargos.cpp, and the implicit destructors emitted with its vtable (target fns
 # 11208 and 11207, vtable slots 0 and 1), the
 # compiler's code for the class definition in cpartecargos.h beside it. With them, the api::IReportPart interface the
-# class implements (src/api/gui/reports/ireportpart.h); the roots' make_shared brings the control block
-# __shared_ptr_emplace<comum::CParteCargos>'s D2 and D0 (target fns 11948 and 11947).
+# class implements (src/api/gui/reports/ireportpart.h). The control block __shared_ptr_emplace<comum::CParteCargos>'s
+# D2 and D0 (target fns 11948 and 11947) come in our link from fragment 325's cgeradorresumozeresima.cpp, whose 5971
+# builds the class with std::make_shared ahead of 11946's builder (the target keeps the block's vtable, @1544344, and
+# the two functions, right above 11946, in the builder's run); this unit's roots file, which built it for both while
+# neither was written, went when 11946 was in the link.
 # No record names any of these files, and every path is chosen. cpartecargos.cpp: the class's functions are two
 # link-order stretches with no record of their own. Stretch 415 (fns 11207-11209, use band 1) has the class-convention
 # guess app/comum/dados/cpartecargos.cpp; the stretches beside it whose labels are records' are in app/comum/relatorios/
@@ -23,9 +26,3 @@
 # uenux2 header.
 CPARTECARGOS_SRCS := src/app/comum/relatorios/cpartecargos.cpp
 UENUX2_SRCS += $(CPARTECARGOS_SRCS)
-# of the constructor's two callers, fn 5971 is in the link (fragment 325's cgeradorresumozeresima.cpp) and fn 11946 is
-# not reconstructed yet: 58-uenux2-cpartecargos-roots.cpp, written before either, gives it two direct callers that build
-# the class with std::make_shared, as the target's do, and goes when 11946 is in the link
-$(ROOT)/$(APP)/58-uenux2-cpartecargos-roots.o: $(ROOT)/src/units/58-uenux2-cpartecargos-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/58-uenux2-cpartecargos.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/58-uenux2-cpartecargos-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/58-uenux2-cpartecargos-roots.o

@@ -9,14 +9,6 @@
 // f12310 · 10 B · unmatched · placement: link order · name unknown
 // ? f12310(i32) { ... }
 
-// link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
-
-// f4686 · 15 B · unmatched · placement: link order · name unknown
-// ? f4686(i32, i32, i32) { ... }
-
-// f4676 · 15 B · unmatched · placement: link order · name unknown
-// ? f4676(i32, i32, i32) { ... }
-
 // link-order cluster 709 · uses=2
 
 // f4937 · 1038 B · unmatched · placement: link order · name unknown
@@ -71,11 +63,6 @@
 // f6272 · 13 B · unmatched · placement: link order · name unknown
 // ? f6272(i32) { ... }
 
-// link-order cluster 944 · uses=3
-
-// f3335 · 356 B · unmatched · placement: link order · name unknown
-// void f3335(i32, i32, i32) { ... }
-
 // link-order cluster 979 · uses=3 · neighbours' file uenux2/src/api/util/cdate.cpp
 
 // f3650 · 312 B · unmatched · placement: link order · name unknown
@@ -98,11 +85,6 @@
 
 // f3762 · 7621 B · unmatched · placement: link order · name unknown
 // void f3762(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1063 · uses=4
-
-// f2547 · 60 B · unmatched · placement: link order · name unknown
-// void f2547(i32) { ... }
 
 // link-order cluster 1103 · uses=4 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp
 

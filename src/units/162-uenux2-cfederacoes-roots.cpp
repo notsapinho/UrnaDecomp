@@ -1,28 +1,24 @@
-// Roots: keep comum::CFederacoes's GetInst and GetFederacao in the skeleton link the way the target keeps them. Their
-// users are not reconstructed yet. Both have direct callers and no table slot (ledger/callgraph.tsv), so a noinline
-// stand-in gives each two call sites and binaryen keeps its body out of line. The destructor (fn 5800) needs none: its
-// two target callers, GetInst and the pointer's exit destructor (11553), are both in the link. The stand-ins differ in
-// their operators, and take their arguments as parameters, so binaryen merges none of them and folds no argument in.
+// Roots: keep comum::CFederacoes's GetInst in the skeleton link the way the target keeps it. It has direct callers and
+// no table slot (ledger/callgraph.tsv), and one of them is not reconstructed yet, so a noinline stand-in gives it a call
+// site of its own and binaryen keeps its body out of line. GetFederacao (fn 5799) needs none since its two target
+// callers, 5922 and 11976, are in the link, and the destructor (fn 5800) none: its two target callers, GetInst and the
+// pointer's exit destructor (11553), are both in the link.
 // Declared through asm labels with the object's signatures; address-taken from a static constructor.
 extern "C" {
 int w2832() __asm__("_ZN5comum11CFederacoes7GetInstEv");
-int w5799(int, int) __asm__("_ZNK5comum11CFederacoes12GetFederacaoEt");
 }
 
 namespace {
 
 const void* volatile cfederacoes_sink;
 
-// Stands for fn 2832's callers: 7787, 11976 (5922 is in the link).
+// Stands for fn 2832's caller 7787 (5922 and 11976 are in the link).
 __attribute__((noinline)) int Federacoes() { return w2832() - 5 * w2832(); }
-// Stands for fn 5799's caller 11976 (5922, its other, is in the link).
-__attribute__((noinline)) int FederacoesDoPartido(int a, int b) { return w5799(a, b) ^ w5799(a, b + 1); }
 
 struct SCFederacoesRoots {
     SCFederacoesRoots()
     {
         cfederacoes_sink = reinterpret_cast<const void*>(&Federacoes);
-        cfederacoes_sink = reinterpret_cast<const void*>(&FederacoesDoPartido);
     }
 } cfederacoes_roots;
 

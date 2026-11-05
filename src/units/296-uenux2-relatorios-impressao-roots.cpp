@@ -3,22 +3,14 @@
 // written callers together; each stand-in's comment names the target callers it stands for, and it goes when they are
 // all in the link. The bodies differ from each other's and from every target function's. Declared through asm labels
 // with the objects' signatures, so this TU needs no header and instantiates nothing.
-extern "C" void w5591(const void*, const void*, const void*) __asm__(
-    "_ZNK5comum21CImprimirExtratoCarga7ImprimeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
 extern "C" void w2792(void*, const void*) __asm__(
     "_ZN5comum26FormataCodigoCargaResumidoERKNS_2md15estadoaplicacao20CDadoCorrespondenciaE");
 extern "C" void w2273(void*, const void*) __asm__("_ZNK5comum8CAppInfo14LeGeralInternoEv");
 
 namespace {
 
-// Stands for fn 5591's caller 11869 (vota::CVerificaHorarioZeresima's, not written); its other caller, fn 11911, is in
-// the link.
-__attribute__((noinline)) void ImprimeExtrato(const char* relatorio, const char* textos)
-{
-    w5591(relatorio + 4, textos, textos + 12);
-}
-
-// Stands for fn 2792's callers 3059 and 7787 (not written); its other callers, fns 5591 and 1541, are in the link.
+// Stands for fn 2792's caller 7787 (not written); its other callers, fns 5591, 1541 and 3059 (unit 110's), are in the
+// link.
 __attribute__((noinline)) int CodigosResumidos(const char* primeira, const char* segunda)
 {
     int codigos[6];
@@ -42,7 +34,6 @@ const void* volatile relatorios_impressao_sink;
 struct SRelatoriosImpressaoRoots {
     SRelatoriosImpressaoRoots()
     {
-        relatorios_impressao_sink = reinterpret_cast<const void*>(&ImprimeExtrato);
         relatorios_impressao_sink = reinterpret_cast<const void*>(&CodigosResumidos);
         relatorios_impressao_sink = reinterpret_cast<const void*>(&EstadosGerais);
     }

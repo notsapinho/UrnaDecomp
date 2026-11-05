@@ -10,7 +10,8 @@
 //   2725, 11419, 11616 (unit 122) and 11629 (unit 200's) are all written, and its stand-in went with 11629.
 // - comum::asn::GravaArquivo for the envelope (fn 2724) needs none now: its callers 2725, 11626 (unit 160) and 11629
 //   (unit 200, which calls it twice) are all written, and its stand-in went with 11629.
-// - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.
+// - comum::asn::GravaArquivo for the hashes (fn 5367) needs none now: its one target caller, 11620 (unit 136's
+//   cgravadorhashes.cpp, written), which calls it twice, is in the link, and its stand-in went.
 // - comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (fn 2725) needs no stand-in now: its target callers, 5382
 //   (unit 135) and 10425 (unit 142, written, which calls it three times with the prefix "" where 5382 passes "me"), are
 //   in the link.
@@ -23,9 +24,7 @@
 #include <vector>
 
 #include "api/hwil/ikernelhsm.h"
-#include "api/io/cfile.h"
 #include "api/pattern/cpolysingleton.h"
-#include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 #include "app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.h"
 
 namespace {
@@ -38,20 +37,12 @@ __attribute__((noinline)) int w293_hsm()
     return &a == &b ? 19 : 23;
 }
 
-__attribute__((noinline)) void w293_hashes(const api::CFile& arquivo, const comum::md::CEntidadeHashes& hashes,
-    const comum::md::CEntidadeHashes& outros)
-{
-    comum::asn::GravaArquivo(arquivo, outros);
-    comum::asn::GravaArquivo(arquivo, hashes);
-}
-
 const void* volatile w293_sink;
 
 struct SW293Roots {
     SW293Roots()
     {
         w293_sink = reinterpret_cast<const void*>(&w293_hsm);
-        w293_sink = reinterpret_cast<const void*>(&w293_hashes);
     }
 } w293_roots;
 

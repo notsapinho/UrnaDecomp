@@ -16,16 +16,20 @@
 # merged into 536's body until that object gave every user its copy. Unit 109's CAppInfo::IndiceTurno (1553) was the
 # same case.
 #
+# path::operator/=(const path&) (183), has_filename (3679) and has_root_directory (5549) match from
+# mock/app/comum/cappinfobuilder.cpp's object, at the executable TU's rule (unit 253), since unit 227's
+# CMontadorHash::CriaHashesDiretorio (5360) calls std::filesystem::weakly_canonical, whose libc++.a functions 7738, 7742
+# and 7749 (matched with it) call 3679 and 5549 too. Before unit 253, 183 differed, 87 over 105 rows, from cpath.cpp's
+# copy at the tree's -O3, which inlines has_root_directory, operator= and has_filename; a compile of operator/= at the
+# executable TU's -Oz -fexceptions keeps has_root_directory, operator=, has_filename, push_back and append(const
+# string&) as calls, in that order, which are 183's callees 5549, 1700, 3679, 409 and 3717, and with that object (a
+# function returning `a /= b`) first on the link line, as docs/reference/facts/levels.md V4 does, its copy, the link's
+# from unit 253 until 5360 was in it, read 31 over 52 rows (at b1711c89): binaryen inlined has_root_directory and
+# has_filename, which had one caller there, where the target's 5549 has 183 and 7749 and 3679 has 183, 7738 and 7742,
+# three functions only the table holds (slots 8848, 8871, 8866). That the three are the executable TU's copies was read
+# so, and the callers 5360 brings are what they waited for (docs/reference/facts/splat.md S10 item 29).
+#
 # Written and not matched, each with its measurement:
-# - path::operator/=(const path&) (183) is named by the anchors' calls (`call by:358,634,1399`), and its body differs,
-#   87 over 105 rows: ours is cpath.cpp's copy at the tree's -O3, which inlines has_root_directory, operator= and
-#   has_filename. A compile of operator/= at the executable TU's -Oz -fexceptions keeps has_root_directory, operator=,
-#   has_filename, push_back and append(const string&) as calls, in that order, which are 183's callees 5549, 1700, 3679,
-#   409 and 3717. With that object (a function returning `a /= b`) first on the link line, as
-#   docs/reference/facts/levels.md V4 does, its copy is the link's and reads 31 over 52 rows: binaryen inlines
-#   has_root_directory and has_filename, which have one caller there, where the target's 5549 has 183 and 7749 and 3679
-#   has 183, 7738 and 7742, three functions only the table holds (slots 8848, 8871, 8866). So 183, 3679 and 5549 are
-#   read as the executable TU's copies and wait for its code that calls them.
 # - path::__filename (1224) is libc++.a's, and matches with 1840 (path::__parent_path) and 2134 (PathParser::decrement,
 #   which calls consumeName and consumeAllSeparators), both libc++.a's, since unit 62's CWasmLogd constructor, inlined
 #   into fn 8302, calls 1840. Before, 1224 read 180 over 252 rows and our link had no body of 2134
@@ -86,9 +90,9 @@
 # is comum::CArquivosSavd's destructor (unit 95). The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
-# appends "dinamico/" inline rather than calling 1082) waits for those callers. The setter is written: CPath::SetPathRoot,
-# a chosen name (unit 188's fragment says what its form rests on); binaryen inlines it into 8302, its one caller, so it
-# has no target function, and no match checks it while 8302 does not match.
+# appends "dinamico/" inline rather than calling 1082): 12098's waits for its caller; 11620's is written (below). The
+# setter is written: CPath::SetPathRoot, a chosen name (unit 188's fragment says what its form rests on); binaryen
+# inlines it into 8302, its one caller, so it has no target function, and no match checks it while 8302 does not match.
 #
 # Roots (190-uenux2-cpath-roots.cpp): it gives the members whose target callers are not all in the link the call sites
 # its header lists (two each; none for 1399, whose callers 1164 and 1274 are both in the link, none for 634, whose
@@ -102,8 +106,29 @@
 # private by our header's choice); its line, after GetPathChave, is a choice too. 1164 matches with strict aliasing in
 # its TU (unit 95's fragment), so its match checks this body.
 #
+# Added since: CPath::GetDiretoriosSemHash and GetPathTmp (chosen names, no target index), the code 11620 holds behind
+# its third and fourth frames, inlined by binaryen into comum::CalculaHashesArquivos (unit 136's cgravadorhashes.cpp),
+# their one caller, as 11620 holds them: a std::set<std::string> built from eight paths converted to strings, the root
+# followed by "dev/", "dsk/", "proc/" and "sys/", GetPathTmp (`std::filesystem::path path("/tmp/"); return s_pathRoot /
+# path.relative_path();`, GetPathMR's form, its frame of 48 bytes), GetPathDinamico of the internal and the external
+# flash, and the internal one followed by "tmp/". This file's object is the TU: it loads s_pathFlash[0] with `i64.load
+# align=3`, as the TU that defines the array does (the GetPathLog paragraph above), and clang inlines GetPathRoot and
+# GetPathDinamico there (-Rpass=inline: costs 40 and 200 against 250) and not GetPathTmp (490), the frames 11620 holds.
+# Both are static members, as the file's landed members are (a choice: GetPathTmp reads s_pathRoot, private by our
+# header's choice, and GetDiretoriosSemHash reads the statics through the members it calls); their lines, after
+# GetPathTrabExterno, are a choice. The set's eight inserts are the one form measured that differs, and it waits for the
+# flag: built without strict aliasing, as app/comum is, this object inlines libc++'s __emplace_hint_unique_extract_key
+# into the set's insert loop and calls __emplace_hint_unique_key_args (fn 2281's body), where the target calls fn 1163,
+# the emplace inlined into it, eight times, which is the shape a TU with strict aliasing gives (unit 136's fragment has
+# the probe and the scores: 11620 scores 182 over 2053, every row an operand, with this object compiled so, and the 15
+# of this unit's matches scored, all but the statics' exit destructors, score the same both ways, pnpm wasm score in the
+# link of each). cgravadorhashes.cpp, unit 136's file, is compiled in this list right after cpath.cpp: the target's data
+# put cpath.cpp's records (@1552104) ahead of cgravadorhashes.cpp's (@1554632), and with the object there 11620's locals
+# are the target's, where at the end of unit 136's list (after centidadehashes.cpp.o) they differ (unit 136's fragment).
+# The place keeps cgravadorhashes.cpp.o ahead of cmontadorhash.cpp.o, which the range insert 5854 needs (unit 227's).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-CPATH_SRCS := src/app/comum/cpath.cpp
+CPATH_SRCS := src/app/comum/cpath.cpp src/app/comum/gravadores/cgravadorhashes.cpp
 UENUX2_SRCS += $(CPATH_SRCS)
 # the unit's target callers are not reconstructed: 190-uenux2-cpath-roots.cpp stands in for them
 $(ROOT)/$(APP)/190-uenux2-cpath-roots.o: $(ROOT)/src/units/190-uenux2-cpath-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/190-uenux2-cpath.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

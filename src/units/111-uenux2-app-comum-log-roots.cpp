@@ -8,8 +8,8 @@
 // - comum::IEventosLog::logaAlerta (fn 1398) and logaErro (fn 2282) need none: their target callers are all in the
 //   link, 1398's eight (10512, unit 161's, the last) and 2282's five (10478, unit 282's, the last);
 // - comum::IEventosLog's members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
-//   11849 and 11921 (5882), 11869 and 11911 (5880) (7160, 11921, 11849 and 11911 are in the link, units 329, 169, 104
-//   and 176);
+//   11849 and 11921 (5882) (7160, 11921 and 11849 are in the link, units 329, 169 and 104); 5880 needs none, its two
+//   callers 11869 and 11911 (units 138 and 176) being in the link;
 //   LogaErroEstadoAplicativo (5881) needs none, its two callers 5945 and 11914 (units 138 and 199) being in the link;
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
 //   are listed in the class header.
@@ -43,14 +43,12 @@ __attribute__((noinline)) int w111_gera(comum::EExtensaoArquivoResultado extensa
     return 5;
 }
 
-// stands for fns 12134 and 11869 (7160, 11921, 11849 and 11911 are in the link)
+// stands for fn 12134 (7160, 11921 and 11849 are in the link); its calls for 11869 went with 11869's landing
 __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEventosLog& outro)
 {
     log.LogaMidiaResultadoAusente();
     log.LogaMidiaResultadoInvalida();
     log.LogaMesarioIndagadoImprimirZeresima();
-    log.LogaImprimindoRelatorioEstadoUrna();
-    outro.LogaImprimindoRelatorioEstadoUrna();
     outro.LogaMesarioIndagadoImprimirZeresima();
     outro.LogaMidiaResultadoInvalida();
     outro.LogaMidiaResultadoAusente();

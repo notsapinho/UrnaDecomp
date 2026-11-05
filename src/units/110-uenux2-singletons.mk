@@ -100,14 +100,14 @@
 # after CRespostasDSNumero's call operator, a choice. Chosen: its name and GetResposta's, its being a free function,
 # crespostasds.h as its header, GetResposta's being inline in the class.
 # comum::LinhaRespostaCorrente (fn 11478), the file's other function passed by a table slot (3051, by fn 11946,
-# vota::CGeraZeresimaBase's slot 2, not written): the roots take its address. It holds GetInst's code too (record 28),
-# reads the post's digits (CCargos::GetInst().GetCurrent()'s byte at +12, GetNumeroDigitos) before it, formats the
-# current answer's number with them ("{:0{}}", as CRespostasDSNumero does) into a named local, and returns "  " +
-# CStringUtils::PreencheADireita(answer, ' ', 26) + CStringUtils::PreencheAEsquerda(number, ' ', 10) (fns 1881, 499, 753,
-# 160 in that order; the local is freed last). It shares band 1 with 11479 below it, so it is defined after
-# RespostaCorrente. PreencheADireita's fill character is not in 11478's call: binaryen folded the one every caller passes
-# into 1881, whose body holds the constant 32, ' '. Chosen: its name, its being a free function, its declaration in
-# crespostasds.h.
+# vota::CGeraZeresimaBase's slot 2, unit 325's: the roots' sink that took its address went with it). It holds GetInst's
+# code too (record 28), reads the post's digits (CCargos::GetInst().GetCurrent()'s byte at +12, GetNumeroDigitos) before
+# it, formats the current answer's number with them ("{:0{}}", as CRespostasDSNumero does) into a named local, and
+# returns "  " + CStringUtils::PreencheADireita(answer, ' ', 26) + CStringUtils::PreencheAEsquerda(number, ' ', 10) (fns
+# 1881, 499, 753, 160 in that order; the local is freed last). It shares band 1 with 11479 below it, so it is defined
+# after RespostaCorrente. PreencheADireita's fill character is not in 11478's call: binaryen folded the one every caller
+# passes into 1881, whose body holds the constant 32, ' '. Chosen: its name, its being a free function, its declaration
+# in crespostasds.h.
 # comum::CRespostas::GetNumeros and Busca, after LinhaRespostaCorrente (no record: their lines, names and their being
 # members are chosen; they read the base's map). GetNumeros has no index of its own: unit 77's 11212
 # (CParteCandidatosConsultas::Imprime) holds it inlined by binaryen and matches. Busca has the bytes of unit 89's
@@ -481,26 +481,30 @@
 # choices. Here, what its place changed:
 # - Code. The screen builders that stood in its lines (TelaNeutra and TelaPorFavorAguarde at 3341 to 3364, the six above
 #   with their fonts at 3370 to 3430) and the keyboard test's after CTelasVota's statics (GetTelaTesteTecladoOpcional to
-#   SorteiaTeclasTesteTeclado, 3441 to 3471) moved above it, in their order, to lines 3177 to 3286, with the fonts
-#   {20, 0}, {25, 0}, {20, 1} and {13, 0} at 3170 to 3173; FONTE_TITULO and FONTE_VERSAO take lines 3002 and 3003 (every
-#   one of these lines chosen). Use band 2 is the evidence for above: 6587 (TelaPorFavorAguarde), 6583, 6581, 6580 and
-#   6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix (names.tsv's
-#   ld_index 2800, 2803, 2809, 2812 and 2815, then 6569's 2821, 6561's 2823, 6557's 2828 and the destructor's 2829).
-# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE,
-#   FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA, FONTE_TEXTO_CONFIRMA_CORRIGE and FONTE_SUPLENTE
-#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6ef8c to 0x6efb4 and 0x6f3d4), the target as {30, 0} @474888,
+#   SorteiaTeclasTesteTeclado, 3441 to 3471) moved above it, in their order, to lines 3197 to 3286 (TelaNeutra to 3029
+#   since, above CriaTelaAntesHorarioZeresima: below), with the fonts {25, 0}, {20, 1} and {13, 0} at 3191 to 3193 (and
+#   {20, 0} at 3072, beside {35, 0}, with AdicionaTelaQRCode: below); FONTE_TITULO and FONTE_VERSAO take lines 3002 and
+#   3003 (every one of these lines chosen). Use band 2 is the evidence for above: 6587 (TelaPorFavorAguarde), 6583,
+#   6581, 6580 and 6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix
+#   (names.tsv's ld_index 2805, 2808, 2814, 2817 and 2820, then 6569's 2826, 6561's 2828, 6557's 2833 and the
+#   destructor's 2834).
+# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
+#   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, FONTE_TECLA and FONTE_SUPLENTE
+#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4), the target as {30, 0} @474888,
 #   {20, 0} @474896, {25, 0} @474992, {15, 0} @475008, {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600:
-#   CriaTelaVisualizacaoCandidato reads {20, 1} above TelaTextoConfirmaCorrige, the first reader of {35, 0}, so one
-#   pair more reads inverted (FONTE_VERSAO's two are CriaTelaMaisInformacoes', below). What gives the target's order
-#   there is not read. The key vector went the other way: TelaTesteTeclado, which reads it, is above GetInst's line
-#   now, and the link holds TECLAS_TESTE_TECLADO (0x1b9f0c) before CTelasVota::s_mutex (0x1b9f18) and s_instancia
-#   (0x1b9f30), the target's order (src/units/217-uenux2-ctesteteclado.mk).
+#   AdicionaTelaQRCode (3059, above) reads {20, 0} and {35, 0} first, so {35, 0} precedes {25, 0}, one pair against
+#   the target's, and {20, 1} follows it as the target holds it; FONTE_VERSAO's two pairs are
+#   CriaTelaMaisInformacoes' (both below). The key vector went the other way: TelaTesteTeclado, which reads it, is
+#   above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO (0x1babfc) before CTelasVota::s_mutex (0x1bac08)
+#   and s_instancia (0x1bac20), the target's order (src/units/217-uenux2-ctesteteclado.mk).
 # - Use band 1. Its members 12268 to 12276 (the std::function over the suplentes' lambda) and 12520 to 12530 (6561's
-#   CDataImage and its control block) link before 17 functions of this object that the target's index puts before them:
+#   CDataImage and its control block) link before 28 functions of this object that the target's index puts before them:
 #   CInputMenuField::AddItem's std::function (12277 to 12285) and the control blocks of CTextFieldMultiLine (12298,
 #   12300), CDataText over a std::function (12301 to 12309), CQRCodeImage (12311, 12313), CTextField (12628, 12631) and
-#   CImageField (12639, 12640), 95 pairs (a script over names.tsv and ledger/ordinals.tsv). A reading, not measured:
-#   code above line 3288 not written yet mentions those first.
+#   CImageField (12639, 12640), 95 pairs, and 12520 to 12530 before the 11 rows of AdicionaTelaQRCode's blocks (12535
+#   to 12560, 3059's, written at 3088), 55 more (a script over names.tsv and ledger/ordinals.tsv). A reading, not
+#   measured: code above line 3288 not written yet mentions the 17 first. 3059's rows the object emits after the
+#   CDataImage block though 3059 is defined above 6569; what makes clang do so is not read (3059's paragraph below).
 #
 # ctelasvota.cpp also holds vota::TelaTextoConfirmaCorrige (fn 2376, a free function) after GetTelaCargo with its font
 # {35, 0}, and CTelasVota's static GetTelaTesteTecladoOpcional and GetTelaTesteTecladoObrigatorio (fns 6581, 6580)
@@ -540,8 +544,8 @@
 #   - Code: in link order use band 2 runs 6587, 6583, 6579, 6548 and band 3 4161, 4152, 4148, 4137, 4135 (names.tsv's
 #     ld_index rises along each). So 6587, which nothing in the file calls, is defined above
 #     TelaPreparandoDadosEncerramento, and 4161 is first mentioned above AdicionaTelaAguarde, by TelaNeutra's call:
-#     TelaNeutra and TelaPorFavorAguarde take lines 3177 to 3200, the first of the screen builders above
-#     CriaTelaVisualizacaoCandidato (its paragraph above).
+#     TelaNeutra takes lines 3029 to 3047 (above CriaTelaAntesHorarioZeresima: below) and TelaPorFavorAguarde lines
+#     3197 to 3200, the first of the screen builders above CriaTelaVisualizacaoCandidato (its paragraph above).
 #   - Data: clang creates a file constant where the first body that reads it is compiled, in the definitions' order,
 #     not at that function's place in the code (AdicionaLocal's comes from TelaNeutra's call). The target holds the
 #     fonts as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992 and {15, 0} @475008, @474896 being
@@ -554,8 +558,9 @@
 #     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
 #     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
 #     before, which 3064 (record 1585, not written), a reader of @474896, can explain. The fonts after @475008, {35, 0}
-#     @475016 and {20, 1} @475032, follow it as the target holds them: their first readers' bodies,
-#     TelaTextoConfirmaCorrige's and CriaTelaQRCodeBU's, come after AdicionaLocal's in that order.
+#     @475016 and {20, 1} @475032, followed it as the target holds them while their first readers' bodies were
+#     TelaTextoConfirmaCorrige's and CriaTelaQRCodeBU's, after AdicionaLocal's; AdicionaTelaQRCode (3059) reads {35, 0}
+#     first now (the order is in CriaTelaVisualizacaoCandidato's paragraph above).
 # - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
 #   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and
@@ -564,15 +569,15 @@
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
 # - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
 #   operand rows only in the whole link (9 over 65, pnpm wasm score), named by its callers' calls (7481 and 11797) and
-#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2828 between
-#   6579's 2815 and the destructor's 2829 (2806 and 2807 when it landed); the five lines it adds take five of the blank
+#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2833 between
+#   6579's 2820 and the destructor's 2834 (2806 and 2807 when it landed); the five lines it adds take five of the blank
 #   lines above record 3530.
 # - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
 #   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
 #   and TelaErroTesteTeclado (over three named char arrays, ctelasvota.h says why): one caller each, which holds it
 #   inlined; after the file's last record, their lines chosen. Use band 1 is not the file's order there
-#   (docs/reference/facts/placing.md P9, third case): 12903 (ld_index 2838) and 13023, GetTelaDestinoBUs's lambda
-#   (2834), link after CTelasVota's statics' exit destructors 12882 and 12875 (2808, 2809), and their place after the
+#   (docs/reference/facts/placing.md P9, third case): 12903 (ld_index 2849) and 13023, GetTelaDestinoBUs's lambda
+#   (2845), link after CTelasVota's statics' exit destructors 12882 and 12875 (2830, 2831), and their place after the
 #   file's last record cannot move above the statics' definition past the fonts and the recorded screens: four pairs
 #   read inverted. cestadoaudio.h is included for the lambda's
 #   CEstadoAudio::GetTeclasTesteTeclado, in place of a blank line above the first record.
@@ -595,7 +600,8 @@
 # - 6599's file: use band 2 puts it among this object's functions (ledger/tu-clusters.tsv stretches 902 to 906: 6587
 #   below it, 6601 to 6608 with records 1049 to 1126 above it). Band 2 runs 6599 ahead of 6587, so it is defined above
 #   TelaNeutra: at line 3000, a choice inside the record-less lines 1127 to 3167 that keeps records 1741 and 2382 blank
-#   and leaves room above TelaNeutra for 6595, 6594 and 6592, which band 2 puts between 6599 and 6587.
+#   and leaves room for 6595, 6594 and 6592, which band 2 puts between 6599 and 6587 (6595 and 6594 sit there now,
+#   below TelaNeutra, which moved above them: below).
 # - The constructor's TU, measured in the whole link (pnpm wasm score before step 8): in ctelasvota.cpp (clang keeps it
 #   a call: llvm-objdump -dr), 6599 drops its returned `this` and folds the menu's frame address into nine loads and
 #   stores where the target keeps that pointer in a local, 324 over 2151 rows; in citensmenuvota.cpp, 6599 takes the
@@ -616,13 +622,14 @@
 #   holds them after the menu's vtable and the first block (@1539884, @1539904), inside the constructor's run; and
 #   FONTE_VERSAO's two pairs (below).
 # - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), are defined right above it, their old
-#   lines left blank. 6599 reads FONTE_VERSAO before AdicionaTelaAguarde reads FONTE_AGUARDE, so the object holds
-#   FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA, FONTE_TEXTO_CONFIRMA_CORRIGE
-#   and FONTE_SUPLENTE in that order (wasm-objdump -x: segments 4, 9, 14, 32, 35, 76 and 289), FONTE_VERSAO's two pairs
-#   against the target's order (FONTE_TECLA ahead of FONTE_TEXTO_CONFIRMA_CORRIGE is CriaTelaVisualizacaoCandidato's).
-#   The target's readers of @474896 (6660, 6671, records 850 and 887, and 3064, record 1585) and of
-#   @474992 (6608, 6605, 6603, records 1049 to 1101) are defined above 6599's lines and not written: they can give the
-#   target's order (`/usr/bin/grep -rlE 'i32\.const 474992($|[^0-9])' build/out/splat/pieces/asm` lists the readers).
+#   lines left blank. 6599 reads FONTE_VERSAO before AdicionaTelaQRCode (3059, below) reads
+#   FONTE_INSTRUCAO_TESTE_TECLADO and FONTE_TEXTO_CONFIRMA_CORRIGE and AdicionaTelaAguarde FONTE_AGUARDE, so the object
+#   holds FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE,
+#   FONTE_TECLA and FONTE_SUPLENTE in that order (wasm-objdump -x: segments 4, 9, 21, 22, 26, 46 and 317), FONTE_VERSAO's
+#   two pairs and FONTE_TEXTO_CONFIRMA_CORRIGE's one against the target's order. The target's readers of @474896 (6660,
+#   6671, records 850 and 887, and 3064, record 1585) and of @474992 (6608, 6605, 6603, records 1049 to 1101) are defined
+#   above 6599's lines and not written: they can give the target's order (`/usr/bin/grep -rlE 'i32\.const
+#   474992($|[^0-9])' build/out/splat/pieces/asm` lists the readers).
 # - 6599 differs: 306 over 2151 rows (278 operand-only replaced, 14 inserted, 14 deleted), every row a local's number, a
 #   call, a data address or the format buffer's table slot (148 against 43). In the fourth item the target keeps the
 #   comum constructor's 16-byte frame pointer in the local that held the vota state, ours the count GetNumViasPU
@@ -636,6 +643,57 @@
 #   11897 matches all the same: the symbol file names 6599 by its vptr stores (evidence:vptr-anchor), and 6599 stays
 #   written for it (how-to step 5).
 # - 6599's other target caller is 7787 (not written): unit 354's roots stand in for it.
+# ctelasvota.cpp also holds the screen vota::CVerificaHorarioZeresima::ProcessInput (fn 11869, unit 138's) shows on
+# CONFIRMA, vota::CTelasVota::CriaTelaAntesHorarioZeresima (fn 6595), with what it builds: AdicionaTelaQRCode (3059),
+# the body of the screens with the urn's QR code, AdicionaCabecalhoLocal (4160), the location's header, and the labels'
+# vector's __emplace_back_slow_path (6594, one body for its <char, const char (&)[26]> and [17] instances, which only
+# 6595 calls; its match line names the [26] instance, the copy binaryen keeps by link order). ctelasvota.h has what
+# each body shows; no record names them, and their names are chosen.
+# - Matched: 6595, 4160 and 6594, operand-only before step 8 (56 over 760, 92 over 1683, 6 over 160 rows; pnpm wasm
+#   score in the whole link), and with them the slots of __func<comum::CQRCodeDS, std::string ()> (12550, 12552 to
+#   12557, 12560), which 3059's std::function emits in this object, CImageFieldUpdate's __func slots (unit 43) and
+#   11869 (unit 138). 4160, 6594 and 6595 match through the content pass, 6595 once 3059 has a name: 3059 has no
+#   record of its own and no caller that votes (11869 is named by vtable, 6595 by the content pass, and neither casts
+#   a vote at step 8), so it takes a hand line in splat/symbol_addrs.txt, rtti-vptr (it alone stores
+#   __shared_ptr_pointer<CQRCodeImage*, ...>'s vptr, @1538404, and loads CImageFieldUpdate's constructor's record),
+#   which carries 6595 and 11869 (a scan without it: no-candidate and unresolved). A callers+content line for 6595
+#   (the literals it alone loads) carried nothing and went.
+# - 3059 differs: 332 over 1286 rows (258 operand-only replaced, 10 others, 35 inserted, 29 deleted), every row but one
+#   block a local's number or an operand: in the copy of the comum::CQRCodeDS for the api::CQRCodeImage's std::function,
+#   the target leaves the empty vector's begin and end in locals never written before (0 from the function's entry) and
+#   presets the capacity's local to 0, where ours writes the three zeros in that branch and takes the capacity as the
+#   block's result (our object, before binaryen, writes the three zeros in that branch: wasm-objdump -d), and binaryen
+#   numbers the locals otherwise from there. Not explained. Same score with this object built with strict aliasing (a
+#   variant object in the whole link, not a flag change) and with the image helper an external inline function (the same
+#   wasm, sha256 equal). It also waits for 3703's name (CEstadoGeral::GetResumoHashVersoesPacotes, unit 215's, written
+#   and no-candidate), which no vote reaches either. 3059 stays written: 6595 calls it.
+# - The image field: AdicionaImagemAtualizada, internal to this file, takes the image by value and returns the field
+#   after api::CFormBuilder::AddField, so the image's copy is released before the field (the target's order of the two
+#   releases, after the call); as a template over the image's type, deduced, which api::CFormBuilder's
+#   AddTextFieldUpdate<FONTE> is too, the three control blocks 3059 builds come out in the target's order (band 1:
+#   12560 to 12550, then 12546, then 12541 and 12535), where the plain function put the image field's block first
+#   (18 pairs). Its name, its being a template and internal, and its file are chosen.
+# - Places, by the object's function order (a function takes its place where clang's code, after inlining, first
+#   mentions it: docs/reference/facts/reading.md R9): 6595 and 6594 in use band 2 between 6599 and 6587, 3059 in band 4
+#   above 3054, and 4160 in band 3 between AdicionaLocal (4161) and AdicionaTelaAguarde (4152). 6595's body mentions
+#   3059 and, through it, 4160 first, so TelaNeutra, whose call of AdicionaLocal is that function's first mention here,
+#   moves above 6595 (lines 3029 to 3047, its old lines 3341 to 3359 left blank): defined below it, 4160 sat above
+#   AdicionaLocal (one pair inverted). With that, no pair of band 2, 3 or 4 of this object's matched members is inverted
+#   (TelaNeutra, 2380, still matches). 6595 at 3049, the two fonts 3059 reads first and the helper in a block at 3070,
+#   3059 at 3088; 4160 after the file's last function. Their lines are chosen inside those bounds. Left inverted: band
+#   1, the CTextField block's members (12631, 12628), whose vtable the target holds between the records at lines 827 and
+#   853 (@1537680, among the data of the unwritten adicionaBase* helpers, which build it first: a reading), against the
+#   11 rows of 3059's blocks: 22 pairs; and those 11 rows against CriaTelaVisualizacaoCandidato's CDataImage block
+#   (12530 to 12520), which the object emits first though 3059 is defined above 6569, 55 pairs: both places are bound
+#   (bands 2 to 4, and record 487's lambda at 3323:29), and what makes clang emit that block first is not read (the
+#   band's 198 other pairs involve none of these rows); band 10, 1314 above
+#   1300, std::vector<std::pair<std::string, std::string>>'s copy constructor, which cqrcodeds.cpp.o (unit 299) gave the
+#   link and this object gives now, being ahead of it in the link: a row far from its run, read as another TU's copy
+#   (how-to step 3).
+# - Stand-ins: 110-uenux2-singletons-roots.cpp's TelasConstrutor stands for 7787 (6595, 3059, 4160) and
+#   TelaConfirmaZeresima for 6592 (3059, with the origin 2 6592 passes; 6595 passes 0). The stand-ins of other units
+#   that only these functions' calls ended went (units 43, 79, 102, 111, 215, 280, 296 and src/app/roots_ecourna.cpp
+#   say which).
 #
 # cmenuvisualizarcandidatos.cpp (unit 104's: vota::CMenuVisualizarCandidatos::StartState, 11881) is compiled from this
 # list, after ctelasvota.cpp and cmenumaisinformacoesvota.cpp: 11881 holds ctelasvota.cpp's

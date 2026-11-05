@@ -4,7 +4,9 @@
 #   Imprime's .cpp (CFormPart's, CParteRdv's and CParteEleitores's own, and cpartecandidatos.cpp for its four
 #   classes): CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590; the match lines name
 #   CParteRdv's since cpartecandidatos.cpp links after cparterdv.cpp, below: step 9 renamed them), CParteCandidatosMajoritarios's and
-#   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
+#   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210; the D2's copy is
+#   cgeradorzeresima.cpp.o's, whose control block's 11958 calls it and which links ahead of cpartecandidatos.cpp.o, as
+#   the target's data hold the builder's run, @1544064, ahead of cpartecandidatos.cpp's, @1576388), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
 #   and 6026, which match too under the byn$mgfn-shared$ names our link gives them: CParteEleitores's D2 and D0 since its
 #   Imprime is written in cparteeleitores.cpp, which this fragment lists ahead of cformpart.cpp (step 9 renamed the two
@@ -12,15 +14,16 @@
 #   callers, the D2s 3607 and 3740 of comum::servico::CComparecimentoMesarioServico and CJustificadorServico, which no
 #   unit defines: the two classes here give the same shared body and the same thunks;
 # - CFormPart's constructor (fn 601), in api/gui/reports/cformpart.cpp;
-# - from std::make_shared, each class's control block: __shared_ptr_emplace<T>'s D2 and D0, from the roots (11950,
-#   11949; 11964, 11963; 11952, 11951; 11960, 11959), except CParteRdv's (11979, 11978), which its builder 5971's object
-#   (fragment 325's cgeradorresumozeresima.cpp) emits, CParteEleitores's (11228, 11227) and
+# - from std::make_shared, each class's control block: __shared_ptr_emplace<T>'s D2 and D0, from their builder 11946's
+#   object (fragment 325's cgeradorzeresima.cpp: 11950, 11949; 11964, 11963; 11952, 11951; 11960, 11959), except
+#   CParteRdv's (11979, 11978), which its builder 5971's object (fragment 325's cgeradorresumozeresima.cpp) emits,
+#   CParteEleitores's (11228, 11227) and
 #   CFormPart's (11962, 11961), which fragment 317's cgeradorrellistaeleitores.cpp's object emits first (it builds both,
-#   for 11908, and links ahead of cparteeleitores.cpp and the roots); and, from the roots, the final classes'
-#   __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv; its match line names CParteRdv's, which 5971's
-#   object emits first) and 11958 call the D2, and 5966 (one body for
-#   the two three-part classes) holds it: clang inlined it there, as the roots object shows. The classes that are not
-#   final use the virtual fn 411, already matched.
+#   for 11908, and links ahead of cparteeleitores.cpp and the roots); and, from 11946's builder's object, the final
+#   classes' __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv; its match line names CParteRdv's,
+#   which 5971's object emits first) and 11958 call the D2, and 5966 (one body for the two three-part classes) holds it:
+#   clang inlined it there, as that object shows. The roots' builders of the four classes went with 11946. The classes
+#   that are not final use the virtual fn 411, already matched.
 # Imprime, the key function of every class, is written: api::CFormPart's (10889, a call of its form's slot 2) in
 # cformpart.cpp, which brings that class's vtable and destructors, CParteRdv's (11203) in cparterdv.cpp, CParteEleitores's
 # (11206) in cparteeleitores.cpp, and CParteCandidatos's (11215), CParteCandidatosMajoritarios's (11214),
@@ -28,7 +31,11 @@
 # emit those classes' vtables and destructors. The unit has no pending file since 11212, the last trapped member, was
 # written. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and message,
 # and 11212's on its own (:174:19), with code 9083 and its message; the lines of 11215, of the constructors, which follow
-# 11214, and where 11212 starts above its record are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
+# 11214, and where 11212 starts above its record are a choice (11215's two lines lower since cpartecandidatos.h
+# declares api::IForm and api::IPaper in place of including their headers, which gave cparterdv.cpp.o, an includer
+# that uses neither, 48 guarded initializers: cpartecandidatos.cpp includes them on two lines above its first gap,
+# original lines 39-66 since, and cgeradorzeresima.cpp beside its other api/gui headers). CParteEleitores::Imprime
+# calls its part's slot 2 once per record of
 # comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
 # api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
 #
@@ -98,11 +105,12 @@
 # binaryen inlined the comum constructors into their one caller each: fns 11946 and 5971 copy each pointer's two words
 # from a temporary in the frame, and 11908 opens a second stack frame (R10). A constructor defined in the class leaves
 # neither (a probe: clang stores into the object from i64 loads of the parameters, with no temporary and no A::A left),
-# and our out-of-line ones, called once from the roots, give those same shapes. So they are out of line and take their
-# pointers by value (R12). fn 11908 shows what CParteEleitores's does: std::make_shared<api::CFormPart> of its by-value
-# form.
+# and our out-of-line ones, called once from 11946's builder (fragment 325), give those same shapes. So they are out of
+# line and take their pointers by value (R12). fn 11908 shows what CParteEleitores's does:
+# std::make_shared<api::CFormPart> of its by-value form.
 #
-# Chosen. Every member name, every parameter name and order, the comum pointers' element type, api::IReportPart, and
+# Chosen. Every member name, every parameter name and order, the element type of the pointers 11946 hands no form
+# (cpartecandidatos.h: CParteCandidatos's last three, CParteCandidatosProporcionais's fourth), api::IReportPart, and
 # these paths: that cpartecandidatos.cpp holds CParteCandidatos and CParteCandidatosProporcionais too, because the
 # vtables interleave with the two records: Candidatos @1576388, Majoritarios @1576408, record :75 @1576428, Proporcionais
 # @1576444, Consultas @1576464, record :174 @1576484; cpartecandidatos.h; cparteeleitores.{h,cpp} and cparterdv.{h,cpp}

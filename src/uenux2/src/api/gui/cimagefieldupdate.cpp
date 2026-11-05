@@ -1,6 +1,6 @@
 // api::CImageFieldUpdate (/home/rubio/tse/uenux2/src/api/gui/cimagefieldupdate.cpp, the file the records of the
 // constructor and of Rect name). This comment is the reconstruction's. Target functions of this file:
-//   the constructor   record at line 32, column 15; binaryen inlined it into fn 3059; not reconstructed
+//   the constructor   record at line 32, column 15, with the timer's lambda; binaryen inlined it into fn 3059  (here)
 //   11090 Draw(IScreen&) const                                                                 (here)
 //   11089 Show(), 11088 Hide()                                                                 (here)
 //   11087 Rect() const   record at line 80, column 12                                          (here)
@@ -12,15 +12,28 @@
 
 #include "api/gui/cimagefieldupdate.h"
 
+#include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iimagesurfaceops.h"
 #include "api/gui/iscreen.h"
 #include "api/pattern/cpolysingleton.h"
-#include "api/util/itimer.h"
+#include "api/util/itimerscheduler.h"
 
 namespace api {
 
-// (original lines 23-57: content not recovered)
+CImageFieldUpdate::CImageFieldUpdate(const SPoint& posicao, const SharedIImage& imagem,
+                                     const std::chrono::milliseconds& intervalo, EAnchorPoint ancora)
+    : m_posicao(posicao)
+    , m_imagem(imagem)
+    , m_ancora(ancora)
+    , m_timer(ITimerScheduler::GetInst().CreateTimer(intervalo, [this]() { Invalidate(); }))
+{
+    if (!m_imagem) {
+        throw CUeGuiError(EUE_GUI_IMAGEFIELDUPDATE_IMAGEM_NULA, "Campo estava com a imagem nula");
+    }
+}
+
+// (original lines 36-57: content not recovered)
 #line 58
 void CImageFieldUpdate::Draw(IScreen& screen) const
 {
