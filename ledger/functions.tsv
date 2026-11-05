@@ -3731,7 +3731,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3865	22	3	app	vota	skeleton	4374	addr	4	vota::CInicioZeresima::GetInst()
 3866	23	3	app	-	skeleton	4009	shape	2	std::__2::__indic_conjunct_break::__get_property[abi:ne210108](char32_t)
 3867	403	2	app	comum	skeleton	3813	fingerprint	0	comum::CParteCandidatosProporcionais::~CParteCandidatosProporcionais()
-3868	23	3	app	-	skeleton	4013	shape	2	std::__2::__extended_grapheme_custer_property_boundary::__get_property[abi:ne210108](char32_t)
+3868	23	3	app	-	skeleton	4013	shape	3	std::__2::__extended_grapheme_custer_property_boundary::__get_property[abi:ne210108](char32_t)
 3869	466	3	app	comum	skeleton	4116	byte	0	std::__2::__tree_node_base<void*>*& std::__2::__tree<std::__2::__value_type<unsigned int, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>>::__find_equal<unsigned int>(std::__2::__tree_const_iterator<std::__2::__value_type<unsigned int, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, std::__2::__tree_node<std::__2::__value_type<unsigned int, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, void*>*, long>, std::__2::__tree_end_node<std::__2::__tree_node_base<void*>*>*&, std::__2::__tree_node_base<void*>*&, unsigned int const&)
 3870	217	3	app	-	-	-	none	-	
 3871	217	3	app	libc++	-	-	none	-	
@@ -5257,13 +5257,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5391	475	2	app	ecourna	-	-	none	-	
 5392	42	2	libcxx	vota	-	-	none	-	
 5393	652	2	app	vota	-	-	none	-	
-5394	18	0	app	vota	-	-	none	-	
+5394	18	0	app	vota	skeleton	5837	shape	1	vota::CEleitorDemorando::ProcessKey(unsigned char)
 5395	30	2	app	vota	skeleton	5673	shape	6	void api::CPolySingletonList::push<vota::IExecucaoVota>(std::__2::unique_ptr<vota::IExecucaoVota, std::__2::default_delete<vota::IExecucaoVota>>&&, api::TPolySingletonsInfo&)
 5396	1586	2	app	vota	-	-	none	-	
 5397	2997	2	app	vota	-	-	none	-	
 5398	30	2	app	vota	skeleton	5684	shape	6	void api::CPolySingletonList::push<vota::impl::ISincronismoVotoEleitor>(std::__2::unique_ptr<vota::impl::ISincronismoVotoEleitor, std::__2::default_delete<vota::impl::ISincronismoVotoEleitor>>&&, api::TPolySingletonsInfo&)
 5399	105	2	app	vota	-	-	none	-	
-5400	82	2	app	vota	-	-	none	-	
+5400	82	2	app	vota	skeleton	5672	shape	6	vota::CNomeEleitor::HabilitaEleitor()
 5401	1583	2	app	vota	-	-	none	-	
 5402	754	2	app	vota	-	-	none	-	
 5403	13	2	app	vota	skeleton	5810	addr	1	vota::CControlaReconhecimento::PrimeiraTentativa()
@@ -10282,7 +10282,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10416	176	0	app	vota	-	-	none	-	
 10417	10	0	app	-	skeleton	11863	addr	2	__cxx_global_array_dtor.2_6379
 10418	12	0	app	-	skeleton	11894	addr	2	__cxx_global_array_dtor_6304
-10419	85	0	app	vota	-	-	none	-	
+10419	85	0	app	vota	skeleton	12500	shape	5	vota::CPerguntaCodigoSuspensao::ProcessKey(unsigned char)
 10420	1917	0	app	vota	-	-	none	-	
 10421	207	0	app	vota	-	-	none	-	
 10422	10	0	-	-	skeleton	11865	addr	2	__cxx_global_array_dtor.2_6373
@@ -10313,7 +10313,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10447	245	0	app	vota	-	-	none	-	
 10448	36	0	app	vota	skeleton	12346	addr	1	vota::CDadoEleitorNaoConfere::StartState()
 10449	10	0	app	-	skeleton	11889	addr	2	__cxx_global_array_dtor.3_6318
-10450	12	0	app	-	skeleton	12509	addr	2	__cxx_global_array_dtor_4462
+10450	12	0	app	-	skeleton	12509	addr	2	__cxx_global_array_dtor_4459
 10451	6996	0	app	vota	-	-	none	-	
 10452	158	0	app	vota	-	-	none	-	
 10453	17	0	app	vota	skeleton	12604	addr	3	comum::CPedeDigitalMesario::FinishState()
@@ -10619,7 +10619,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10753	12	0	-	-	skeleton	12603	addr	2	__cxx_global_array_dtor_4184
 10754	49	0	app	vota	skeleton	12015	shape	2	vota::CHabilitacaoAudioNaoPermitida::StartState()
 10755	10	0	app	-	skeleton	12210	addr	2	__cxx_global_array_dtor.2_5320
-10756	12	0	app	-	skeleton	12361	addr	2	__cxx_global_array_dtor.6
+10756	12	0	app	-	skeleton	12361	addr	2	__cxx_global_array_dtor.6_4888
 10757	14	0	app	vota	skeleton	12443	shape	2	vota::CHorarioVotacaoTerminou::ProcessInput()
 10758	169	0	app	vota	-	-	none	-	
 10759	14	0	app	libc++	-	-	none	-	
@@ -11576,7 +11576,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11710	51	0	app	vota	-	-	none	-	
 11711	811	0	app	vota	-	-	none	-	
 11712	103	0	app	vota	skeleton	11116	shape	1	vota::CPedeProporcional::StartStateAudio()
-11713	10	0	app	-	skeleton	12508	addr	2	__cxx_global_array_dtor.2_4463
+11713	10	0	app	-	skeleton	12508	addr	2	__cxx_global_array_dtor.6
 11714	12	0	app	-	skeleton	11060	addr	2	__cxx_global_array_dtor_8713
 11715	26	0	app	vota	skeleton	11084	addr	4	vota::CConfereVotoEmCargo<vota::CConfirmaVotoNominal, (vota::ETelaVotacao)2>::GetProximoEstado() const
 11716	26	0	app	vota	skeleton	11086	addr	4	vota::CConfereVotoEmCargo<vota::CCandidatoInexistente, (vota::ETelaVotacao)12>::GetProximoEstado() const
