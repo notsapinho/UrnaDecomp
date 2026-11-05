@@ -108,8 +108,8 @@
 #   when std::filesystem::exists says no, builds an md::CParametro (app/comum/dados/md/eleitor/cparametro.h) from the
 #   identity of the voter's own type, the byte vector and CEleitor::GetOffsetBiometria (celeitor.cpp:79, which 1937
 #   holds behind a frame of its own), and returns comum::CLeitorASN::LeBiometriaEleitor's result
-#   (app/comum/asn/cleitorasn.h, below). Its caller 3614 is not written (unit 98's roots stand in for it, and
-#   for 10316 before unit 135), 10316 is (unit 135), 3616 is (unit 319) and 1393,
+#   (app/comum/asn/cleitorasn.h, below). Its caller 3614 is not written (unit 98's roots stand in for it with one
+#   call; a second stood for 10316 before unit 135), 10316 is (unit 135), 3616 is (unit 319) and 1393,
 #   CEleitores::GetCurrentBiometriaEleitor, is (fragment 291), which keeps it written. It matches from
 #   celeitordetalhe.cpp.o at the head of unit 110's list, ahead of carregaarquivo.cpp.o (unit 280's); after it, at unit
 #   98's place before the file moved, it did not (the forms below). Its name comes from its records (srcloc-anchor), not
