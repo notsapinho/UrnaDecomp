@@ -296,14 +296,6 @@
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
 
-// link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
-
-// f5737 · 132 B · unmatched · placement: link order · name unknown
-// void f5737(i32) { ... }
-
-// f5736 · 132 B · unmatched · placement: link order · name unknown
-// void f5736(i32) { ... }
-
 // link-order cluster 918 · uses=2
 
 // f6689 · 281 B · unmatched · placement: link order · name unknown

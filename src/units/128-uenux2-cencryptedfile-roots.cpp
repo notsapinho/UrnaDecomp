@@ -1,27 +1,20 @@
-// Roots: api::CEncryptedFile::Save (api/io/cencryptedfile.cpp), whose target callers 5736, 5737 and 7174 are not
-// reconstructed yet. The target calls it directly from those three, so it needs two call sites here for binaryen to keep
-// it out of line; w128_salva calls it twice. It goes when those callers are in splat/matched.txt.
+// Roots: api::CEncryptedFile's members (api/io/cencryptedfile.cpp) whose target callers are not all in the link. Save
+// and Write (2767, 2766) need none: the target callers of each are 5736, 5737 and 7174, and 5736 and 5737
+// (comum::CRdv::SalvaExterno and SalvaInterno, fragment 381) are in the link, two call sites, which keep them out of
+// line while 7174 waits (a link without their stand-in calls moved no row).
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "api/io/cencryptedfile.h"
 
-__attribute__((noinline)) void w128_salva(const api::CEncryptedFile& arquivo, const std::string& nome, const std::string& copia)
-{
-    arquivo.Save(nome);
-    arquivo.Save(copia);
-}
-
-// The destructor, Write and Read (target fns 1691, 2766, 3652) have the target callers 5736, 5737, 6734 and 7174
-// (2766: 5736, 5737 and 7174; 3652: 6734 and 7174), none reconstructed yet: two call sites each here, since binaryen
-// inlines a function called once. The results are dropped, as every target caller drops them. It goes when those
-// callers are in splat/matched.txt.
+// The destructor and Read (target fns 1691, 3652) have the target callers 5736, 5737, 6734 and 7174 (3652: 6734 and
+// 7174). 5736 and 5737 (fragment 381) are in the link: the two calls of Read stand for 6734 and 7174, and the two of
+// the destructor for 6734 and 7174, none reconstructed yet. The results are dropped, as every target caller drops
+// them. Each call goes when the callers it stands for are in the link.
 __attribute__((noinline)) void w128_le_grava(api::CEncryptedFile& escrita, api::CEncryptedFile& leitura,
-                                             const std::vector<uebyte>& dados, std::vector<uebyte>& lidos)
+                                             std::vector<uebyte>& lidos)
 {
-    escrita.Write(dados);
-    escrita.Write(lidos);
     leitura.Read(lidos);
     leitura.Read(lidos);
     std::destroy_at(&escrita);
@@ -51,7 +44,6 @@ void* volatile w128_sink;
 struct SW128Roots {
     SW128Roots()
     {
-        w128_sink = reinterpret_cast<void*>(&w128_salva);
         w128_sink = reinterpret_cast<void*>(&w128_le_grava);
         w128_sink = reinterpret_cast<void*>(&w128_carrega);
         w128_sink = reinterpret_cast<void*>(&w128_insere);

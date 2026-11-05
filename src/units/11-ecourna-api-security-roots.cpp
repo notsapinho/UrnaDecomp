@@ -30,7 +30,8 @@ extern const char rsec_hkdf_vt[] __asm__("_ZTVN7ecourna3api8security9CHKDFSeedE"
 }
 
 // CHKDFSeed has no key function: its vtable, D2 (fn 11498) and D0 (11497) are emitted by a TU that uses the class, in
-// the target uenux2's crdv.cpp (the vtable, 1560088, and typeinfo lie among that file's records), not written. Calling
+// the target uenux2's crdv.cpp (the vtable, 1560088, and typeinfo lie among that file's records), whose code that uses
+// the class (inlined into 7787) is not written (unit 381 writes other functions of that file). Calling
 // the destructor by its qualified name emits all three; the function is not rooted and the link drops it, and the
 // vtable's address below stands for the uenux2 code that stores the vptr (7787, which holds GetSeed inlined, and the
 // two destructors).

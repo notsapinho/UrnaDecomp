@@ -7,6 +7,7 @@
 
 #include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/util.h"
+#include "app/comum/cpath.h"
 #include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
@@ -17,7 +18,7 @@
 
 namespace comum {
 
-// (original lines 20-40: content not recovered)
+// (original lines 21-40: content not recovered)
 #line 41
 std::unique_ptr<CEleitores> CEleitores::s_instance;
 std::mutex CEleitores::s_mutex;
@@ -106,7 +107,14 @@ std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<s
 // void f6734(i32) { ... }
 // </stubs>
 
-// (original lines 207-297: content not recovered)
+// (original lines 207-277: content not recovered)
+#line 278
+std::string GetArquivoBancoDadosInterno()
+{
+    return (CPath::GetPathTrab(FLASH_INTERNA) / "uenux.db").string();
+}
+
+// (original lines 283-297: content not recovered)
 #line 298
 // <stubs>
 // f5761 · 3007 B · unmatched · name unknown
@@ -291,7 +299,14 @@ void CEleitores::ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) 
     }
 }
 
-// (original lines 742-751: content not recovered)
+// (original lines 742-743: content not recovered)
+#line 744
+std::string GetArquivoBancoDadosExterno()
+{
+    return (CPath::GetPathTrab(FLASH_EXTERNA) / "uenux.db").string();
+}
+
+// (original lines 749-751: content not recovered)
 #line 752
 std::string CEleitorDadoNomeParaUrna::Text(const std::string& formato)
 {
