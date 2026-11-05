@@ -10,6 +10,12 @@
 // votable's hash covers and each election's result carries and signs; its exit destructor (fn 10274, table slot 4476)
 // heads this object's run of slots, before the vtable's four (4477 to 4480: 174, 144, 10273, 10272). That the vector
 // is a file static, and its name, are chosen.
+// Codifica, last in the file, converts and codes the BU's entity for comum::CGravadorBU::GravaResultado (fn 11629),
+// which holds it behind a 64-byte frame of its own (the converter at +60, the entity at +8), with the converter's
+// vptr store, IConversorASN's Converte (record iconversorasn.h:56) and api::CFileASN::CodeObject (records
+// cfileasn.h:161 and :171) for ModuloBoletimUrna::EntidadeBoletimUrna inlined: those records lie in this object's
+// data, after DoConverte's and the inherited DoDesconverte's (1598676), so this object defines the code that holds
+// them. Its name, its being a free function of comum::asn and its line are chosen: no record names it.
 
 #include "app/comum/gravadores/asn/cconversorentidadebu.h"
 
@@ -17,6 +23,7 @@
 #include <string>
 #include <vector>
 
+#include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/cconversorcabecalhoentidade.h"
 #include "app/comum/asn/cconversorcodigocargoconsulta.h"
 #include "app/comum/asn/util.h"
@@ -40,7 +47,7 @@ using TCargoID = md::TCargoID;
 
 std::vector<uebyte> s_ultimoHash;
 
-// (original lines 43-58: content not recovered)
+// (original lines 50-58: content not recovered)
 #line 59
 ModuloBoletimUrna::TotalVotosVotavel CriaVotosVotavel(const md::CVotosVotavel& votosVotavel, const TCargoID codigoCargo,
     const ueword ordem)
@@ -281,4 +288,11 @@ ModuloBoletimUrna::DadosSA CConversorEntidadeBU::ConverteDadosSA(const md::CDado
     }
     return dadosSA;
 }
+
+std::vector<char> Codifica(const md::CEntidadeBU& entidade)
+{
+    const CConversorEntidadeBU conversor;
+    return api::CFileASN::CodeObject(conversor.Converte(entidade));
+}
+
 } // namespace comum::asn

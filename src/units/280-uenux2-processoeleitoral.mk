@@ -59,7 +59,7 @@
 #   - ModuloInformacaoMidia::InformacaoMidia's (records @1565512 to @1565628, after CabecalhoPacote's, the run's last
 #     reader): CarregaArquivoEcourna<CConversorInformacaoMidia>, fn 3735, which stores the converter's vptr in a 64-byte
 #     frame of its own and calls ecourna's Deconverte (record iconversorasn.hpp:66); its callers are the recorders
-#     11587 (unit 305), 11626 (unit 160) and 11629 (not written). After its records the run holds
+#     11587 (unit 305), 11626 (unit 160) and 11629 (unit 200). After its records the run holds
 #     ModuloTiposEcoUrna::Carga's vtable and typeinfo and IConversorASN<IdentificadorGeradorMidia, ...>'s Converte and
 #     Deconverte records (fns 3734 and 3733, matched from other objects): code of this object no function here
 #     accounts for, not identified.
@@ -134,9 +134,9 @@
 # instantiates neither: with one caller each, binaryen inlined push_back into CarregaPleito (no body for 5777) and
 # __find_equal into the hinted insert (3870 scored 270 over 345, 244 inserted); with the stand-ins 3870 scores 2 over
 # 101, 3869 0 over 246, 5777 13 over 420. The stand-ins for 3752 and 5738 (unit 89; 5738's went once its other caller, 1543, was in the link) and the 5586 readers are here
-# because this unit's chain needs them; unit 123's vtable sink went when 5586 was written. w280_informacao stands for
-# 3735's caller 11629 (11587 and 11626 are in the link). A stand-in goes when every target caller its comment names is
-# in the link.
+# because this unit's chain needs them; unit 123's vtable sink went when 5586 was written, and w280_informacao, which
+# stood for 3735's caller 11629, when unit 200 wrote it (3735's callers 11587, 11626 and 11629 are all in the link). A
+# stand-in goes when every target caller its comment names is in the link.
 # carregaarquivo.cpp, this unit's file, is compiled in unit 89's list, after clocal.cpp: 5740 needs clocal.cpp's object
 # ahead of it (unit 89's fragment has the measurement). Its include paths stay here.
 PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \

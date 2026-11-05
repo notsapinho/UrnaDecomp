@@ -36,6 +36,10 @@ public:
     // The name at +12, which comum::NomeEleicaoCorrente (fn 11556) copies; no record names it, so its name and its being
     // inline in the class are chosen.
     const std::string& GetNome() const { return m_nome; }
+    // The abrangencia at +24, which comum::CGravadorBU::GravaResultado (fn 11629) reads of each of the pleito's elections
+    // to find its voters (map::at over the recorder's map, keyed by md::ETipoAbrangencia); no record names it, so its
+    // name and its being inline in the class are chosen.
+    ETipoAbrangencia GetAbrangencia() const { return m_abrangencia; }
 
 private:
     void ValidaNome() const;

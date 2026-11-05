@@ -13,7 +13,7 @@ namespace api {
 // 2022 by comum::CPedeDigitalMesario::ProcessTick, fn 10316, and with 2020 by vota::CPedeIdentidade::StartState, fn
 // 10680, read as signed, so int); slot 6 fills the buffer ecourna::api::security::CHKDFSeed::GetSeed (fn 7787) works
 // from; slot 4 fills the buffer of comum::CControlaArmazenamentoDeImagens::CifrarWsq (held by fn 2725) and
-// comum::md::CEntidadeBU::ValidaCriacao (fn 11629). Slot 1 is the model year's last two digits as text (the mock's fn
+// comum::CGravadorBU::GravaResultado (fn 11629). Slot 1 is the model year's last two digits as text (the mock's fn
 // 8168). Slots 2 and 3 return ints; slot 2's name is chosen from the mock's value alone, 87654321, and slots 3, 4 and 5
 // have no caller that says what they are, so they keep their slot. No record or symbol names any member or this file:
 // every member name, their const (without it the bytes are the same) and the path, beside the hardware interfaces
