@@ -12,6 +12,7 @@
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
 namespace api {
+class CInputMenuField;
 class CProgressBar;
 class CFormBuilder;
 class CTextBox;
@@ -21,6 +22,10 @@ class IForm;
 struct SFont;
 struct SPoint;
 } // namespace api
+
+namespace comum {
+class CAppState;
+} // namespace comum
 
 namespace vota::testeteclado::impl {
 class IGeradorTeclas;
@@ -299,7 +304,22 @@ CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const
 //   target's arithmetic (variants compared in the object; src/units/110-uenux2-singletons.mk). Callers: 6557, 6587, 7787
 //   and 11797.
 // - TelaPorFavorAguarde (fn 6587): TelaNeutra("Por favor, aguarde...", 35, 0). Callers: 11855 and 11991, the zerésima
-//   printing states.
+//   printing states. The candidates' menu, which vota::CMenuVisualizarCandidatos::StartState (fn 11881) holds behind a
+//   second stack-pointer prologue (a 144-byte frame), with no call of CTelasVota::GetInst() before it: a free function,
+//   out of line in the object and inlined by binaryen. Evidence, the body: the status header (5), "Visualização de
+//   candidatos" at (320, 40) in the 30-point font (@474888, FONTE_TITULO), a menu at (40, 85) in the 25-point one
+//   (@474992, FONTE_AGUARDE) through api::AddInputMenuField (fn 3675) with "Selecione um filtro: " and 32767, its items
+//   "Por cargo", "Por partido" and "Candidato específico" (api::CInputMenuField::AddItem, fn 1693, with the default
+//   callback), each given a std::pair<comum::CAppState*, comum::CAppState*> in its std::any (the typeinfo @1539540
+//   11881's std::any_cast names; 11881 copies each pair from a local of its own frame before the screen's prologue,
+//   which by-value parameters give, a reading), the labels of CONFIRMA ('C', "Executar opção") and CORRIGE ('D',
+//   "Retornar") through fn 653, and "telaMenuVisualizacaoCandidatos" through GetFormularioInterativo (fn 576); it
+//   returns the form and the menu. The names, the alias, its being a free function of vota and its place after the
+//   file's last record are chosen.
+using TOpcaoMenuCandidatos = std::pair<comum::CAppState*, comum::CAppState*>;
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMenuVisualizacaoCandidatos(
+    TOpcaoMenuCandidatos porCargo, TOpcaoMenuCandidatos porPartido, TOpcaoMenuCandidatos candidato);
+
 void AdicionaLocal(api::CFormBuilder& builder);
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes);

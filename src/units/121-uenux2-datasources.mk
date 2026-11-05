@@ -13,7 +13,8 @@
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
 #   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673, from cmostraeleitorvotando.cpp.o
 #                                                                     (1150's std::make_shared)
-#   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
+#   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069, from cinputmenufield.cpp.o since its
+#                                                                     builder (fn 3675, unit 84) is written
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
 #   comum::CCalculaCV::IncluiString                                   942, from ccalculacv.cpp.o
 #   comum::CCalculaCV::Reinicia                                       5615, from ccalculacv.cpp.o
@@ -241,7 +242,7 @@
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions
 # compare equal. The names and types no evidence gives are marked as chosen where they are declared: crespostasds.h,
-# cescolheopcao.h, ccalculacv.h, cinputmenufield.h's constructor and crespostaconsulta.h's GetNumero.
+# cescolheopcao.h, ccalculacv.h and crespostaconsulta.h's GetNumero.
 #
 # Pending, with what each waits for: CGeracaoVersoesContratos's block (11635, 11636) waits for a class head in
 # app/comum/gravadores/; the blocks and members over a lambda or another TU's anonymous namespace wait for the function that

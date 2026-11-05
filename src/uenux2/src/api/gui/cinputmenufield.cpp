@@ -4,13 +4,13 @@
 //   function: binaryen inlines it into 10897), 3655 SetSearchText (record 142), Pisca() (binaryen inlines it into Read)
 //   10900 CMenuValidation::isValid (with the two helpers it holds, records 198 and 210), 10899 isValidChar
 //   5491, 10898 CInputMenuField::~CInputMenuField() (the D2 matches with strict aliasing: see the fragment), 10897 Draw,
-//   10896 Rect() const, 10894 Read(IInput&) (record 419), 10893 GetTypeName()
-//   5489 SelecionaItem(const std::string&), LimpaSelecao() (inlined everywhere)
-// and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates. Records of functions not written
-// keep their lines blank: 156 (CMenuItem), 251, 278, 298 and 320 to 339 (CInputMenuField); 468 and 477 lie past the
-// end. Move (10895, record 278) is pending (src/units/84-uenux2-cinputmenufield-pending.cpp), and Reposiciona (2770) is
-// not written (src/units/84-uenux2-cinputmenufield.mk). The lines of the members with no record are a choice, in the
-// order of their target indices in their use bands (src/units/84-uenux2-cinputmenufield.mk).
+//   10896 Rect() const, 10895 Move (record 278), 10894 Read(IInput&) (record 419), 10893 GetTypeName(), 1693 AddItem
+//   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona, 3675
+//   AddInputMenuField with the constructor, GetInstructionTextRect (251) and SetInstructionText (477), 5489
+//   SelecionaItem(const std::string&), LimpaSelecao() (inlined everywhere), and std::__destroy_at<CMenuItem> (5490),
+//   which the destructor's list instantiates. Records of functions not written keep their lines blank: 156 (CMenuItem)
+//   and 468 (CInputMenuField). The lines of the members with no record are a choice, in the order of their target
+//   indices in their use bands (src/units/84-uenux2-cinputmenufield.mk).
 
 #include "api/gui/cinputmenufield.h"
 
@@ -18,13 +18,13 @@
 #include <regex>
 
 #include "api/gui/cfixedtext.h"
+#include "api/gui/cformbuilder.h"
 #include "api/gui/eueguierror.h"
 #include "api/hwil/ibeep.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 
 namespace api {
-
 std::string CMenuItem::GetTextoFormatado() const
 {
     std::string texto;
@@ -53,8 +53,22 @@ void CMenuItem::UpdateRect()
     m_rect = SRect::Normalized(m_posicao.x, m_posicao.y, m_posicao.x + largura, m_posicao.y + altura + 1);
 }
 
-// (original lines 56-71: content not recovered)
-#line 72
+CMenuItem::CMenuItem(CInputMenuField* menu, unsigned int indice, const std::string& texto, const SPoint& posicao,
+                     const SFont& font, TMenuCallback acao)
+    : m_menu(menu),
+      m_indice(indice),
+      m_texto(texto),
+      m_posicao(posicao),
+      m_font(font),
+      m_acao(acao),
+      m_selecionado(false),
+      m_habilitado(true),
+      m_busca(std::to_string(indice)),
+      m_formato("")
+{
+    UpdateRect();
+}
+
 void CMenuItem::Draw() const
 {
     IScreen& tela = CPolySingleton<IScreen>::instance();
@@ -85,12 +99,7 @@ CMenuItem& CMenuItem::SetSearchText(const std::string& busca)
     return *this;
 }
 
-// <stubs>
-// f11884 · 3643 B · unmatched · name unknown
-// void f11884(i32) { ... }
-// </stubs>
-
-// (original lines 161-181: content not recovered)
+// (original lines 156-181: content not recovered)
 #line 182
 void CMenuItem::Pisca()
 {
@@ -124,8 +133,8 @@ bool CMenuValidation::matchesPartially(const std::string& text) const
     return false;
 }
 
-// (original lines 214-235: content not recovered)
-#line 236
+// (original lines 214-231: content not recovered)
+#line 232
 bool CMenuValidation::isValid(const std::string& text) const
 {
     if (text.size() == m_menu->GetLength()) {
@@ -140,9 +149,17 @@ bool CMenuValidation::isValidChar(char c) const
     return IInputValidation::isValidChar(c) && isValid(m_menu->GetTexto() + std::string(1, c));
 }
 
-// (original lines 250-253: content not recovered)
-#line 254
 CInputMenuField::~CInputMenuField() = default;
+
+
+SRect CInputMenuField::GetInstructionTextRect() const
+{
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    TPosition largura;
+    TPosition altura;
+    tela.GetFontMetrics(largura, altura, m_font, m_instrucao);
+    return SRect::Normalized(m_posicao.x, m_posicao.y, m_posicao.x + largura, m_posicao.y + altura + 1);
+}
 
 void CInputMenuField::Draw(IScreen& screen) const
 {
@@ -155,21 +172,97 @@ void CInputMenuField::Draw(IScreen& screen) const
                     static_cast<TColor>(0));
     CInputField<CFramedText>::Draw(screen);
 }
-
 SRect CInputMenuField::Rect() const
 {
     return m_rectItens.Union(m_rectInstrucao).Union(m_mask.Rect());
 }
+void CInputMenuField::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_posicao.x && posicao.y == m_posicao.y) {
+        return;
+    }
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    tela.Clear(Rect(), static_cast<TColor>(1));
+    const TPosition x = posicao.x;
+    m_posicao.x = x;
+    const TPosition y = posicao.y;
+    m_posicao.y = y;
+    for (CMenuItem& item : m_itens) {
+        item.Desloca(x, y);
+    }
+    m_posicao = posicao;
+    m_rectItens.Move(m_posicao);
+    Reposiciona();
+}
 
-// (original lines 273-294: content not recovered)
-#line 295
-// <stubs>
-// f1693 · 1335 B · unmatched · name unknown
-// ? f1693(i32, i32, i32) { ... }
-// </stubs>
 
-// (original lines 300-344: content not recovered)
-#line 345
+SPoint CInputMenuField::NextItemPosition() const
+{
+    if (m_itens.empty()) {
+        return m_posicao;
+    }
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    const TPosition limite = std::min(static_cast<int>(tela.GetHeight()), m_posicao.y + m_alturaMaxima) -
+                             (m_rectInstrucao.bottom - m_rectInstrucao.top + 1);
+    const SRect ultimo = m_itens.back().GetRect();
+    const TPosition alturaUltimo = ultimo.bottom - ultimo.top + 1;
+    if (alturaUltimo + ultimo.bottom < static_cast<TPosition>(limite - 5)) {
+        return SPoint{ultimo.left, ultimo.bottom};
+    }
+    const auto maior = std::max_element(m_itens.begin(), m_itens.end(), [](const CMenuItem& a, const CMenuItem& b) {
+        return a.GetRect().Width() < b.GetRect().Width();
+    });
+    return SPoint(ultimo.left + maior->GetRect().Width() + 20, m_posicao.y);
+}
+
+// (original lines 312-316: content not recovered)
+#line 317
+CMenuItem& CInputMenuField::AddItem(const std::string& texto, TMenuCallback acao)
+{
+    if (m_itens.size() == 99) {
+        throw CUeGuiError(EUE_GUI_INPUTMENUFIELD_MAXIMO_ITENS, "Um CInputMenuField não comporta mais que 99 itens");
+    }
+
+    const SPoint posicao = NextItemPosition();
+
+
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    m_itens.emplace_back(this, m_itens.size() + 1, texto, posicao, m_font, acao);
+    const SRect rectAnterior = m_rectItens;
+    m_rectItens = m_rectItens.Union(m_itens.back().GetRect());
+    Reposiciona();
+    const SRect rect = Rect();
+    if (rect.right > tela.GetWidth() ||
+        rect.bottom > tela.GetHeight() ||
+        m_alturaMaxima < static_cast<TPosition>(rect.bottom - rect.top + 1)) {
+        m_itens.pop_back();
+        m_rectItens = rectAnterior;
+        Reposiciona();
+
+        throw CUeGuiError(EUE_GUI_INPUTMENUFIELD_ITEM_NAO_CABE, "Item de menu não cabe na tela [" + texto + "]");
+    }
+    if (!m_itens.empty()) {
+        const auto maior = std::max_element(m_itens.begin(), m_itens.end(), [](const CMenuItem& a, const CMenuItem& b) {
+            return a.m_busca.size() < b.m_busca.size();
+        });
+        SetLength(maior->m_busca.size());
+    }
+    Invalidate();
+    return m_itens.back();
+}
+
+void CInputMenuField::Reposiciona()
+{
+    const SRect itens = m_rectItens.Adjust(0, 0, 0, 5);
+    m_rectInstrucao.Move(SPoint{itens.left, itens.bottom});
+    SPoint posicao{m_rectInstrucao.right, static_cast<TPosition>(m_rectInstrucao.top - 1)};
+    if (!m_instrucao.empty()) {
+        posicao.x += 7;
+    }
+    m_mask.Move(posicao);
+    Invalidate();
+}
+
 void CInputMenuField::LimpaSelecao()
 {
     if (m_selecionado != nullptr) {
@@ -193,7 +286,7 @@ void CInputMenuField::SelecionaItem(const std::string& busca)
     }
 }
 
-// (original lines 368-401: content not recovered)
+// (original lines 386-401: content not recovered)
 #line 402
 EInputResult CInputMenuField::Read(IInput& input)
 {
@@ -240,6 +333,51 @@ EInputResult CInputMenuField::Read(IInput& input)
 std::string CInputMenuField::GetTypeName() const
 {
     return "CInputMenuField";
+}
+
+// (original lines 449-472: content not recovered)
+#line 473
+void CInputMenuField::SetInstructionText(const std::string& texto)
+{
+    if (texto != m_instrucao) {
+        m_instrucao = texto;
+        CPolySingleton<IScreen>::instance().FillRect(Rect(), static_cast<TColor>(1));
+        m_rectInstrucao = GetInstructionTextRect();
+        Reposiciona();
+    }
+}
+
+
+inline const std::string INSTRUCAO_PADRAO_MENU = "Digite a sua opção: ";
+
+CMenuValidation::CMenuValidation(CInputMenuField* menu)
+    : IInputValidation("1234567890"),
+      m_menu(menu)
+{
+}
+
+CInputMenuField::CInputMenuField(const SPoint& posicao, const SFont& font, TPosition alturaMaxima)
+    : CInputField<CFramedText>(std::make_shared<CMenuValidation>(this), 1, true, true, true, true, false, posicao, font,
+                               static_cast<ETextAlignment>(0)),
+      m_posicao(posicao),
+      m_font(font),
+      m_rectItens(m_posicao.x, m_posicao.y, m_posicao.x, m_posicao.y),
+      m_instrucao(INSTRUCAO_PADRAO_MENU),
+      m_rectInstrucao(GetInstructionTextRect()),
+      m_rectReservado(m_posicao.x, m_posicao.y, m_posicao.x, m_posicao.y),
+      m_selecionado(nullptr),
+      m_alturaMaxima(alturaMaxima),
+      m_formato("[%S] - %T")
+{
+}
+
+std::shared_ptr<CInputMenuField> AddInputMenuField(CFormBuilder& builder, const SPoint& posicao, const SFont& font,
+                                                   const std::string& instrucao, TPosition alturaMaxima)
+{
+    std::shared_ptr<CInputMenuField> menu = std::make_shared<CInputMenuField>(posicao, font, alturaMaxima);
+    menu->SetInstructionText(instrucao);
+    builder.AddField(menu);
+    return menu;
 }
 
 } // namespace api

@@ -10,14 +10,15 @@
 //                     written): of 901, AddInputControl() (1591, 2376, 3063, 3064, 6626, 6639, 7787, 11804, 11809)
 //                     and of 5530, AddInputControl(int) (7787 and 12055, which pass the keys 6 and 5). Each adder
 //                     gets two call sites
-//   RotulosA, RotulosB  the callers of 653, AddLabeledInputControl, none reconstructed but 2376 (ctelasvota.cpp),
-//                     2291 (CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and
-//                     TelaMRModoDemo) and 11804 and 11809 (unit 217's): 6569, 6592, 6595, 6599, 7787, 11881, 11884,
-//                     11888, 11892 and 12040, which pass the same two constants as 2376 does: they stay while those
-//                     callers wait. The target's 653 has neither of its last two parameters, folded by binaryen: it loads
-//                     the area's corners from api::CApplication::s_areaTela (.data 1577200) and adds the keys' labels,
-//                     so each passes s_areaTela and false (the flag's sense is cinteractiveformbuilder.cpp's choice).
-//                     653 is also 5565's (CInputFieldControlBase<IScreen>'s constructor) other caller beside 5530
+//   RotulosA, RotulosB  the callers of 653, AddLabeledInputControl, none reconstructed but 2376 (ctelasvota.cpp), 2291
+//                     (CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo),
+//                     11804 and 11809 (unit 217's) and 11881 (unit 104's, not matched): 6569, 6592, 6595, 6599, 7787,
+//                     11884, 11888, 11892 and 12040, which pass the same two constants as 2376 does: they stay while
+//                     those callers wait. The target's 653 has neither of its last two parameters, folded by binaryen:
+//                     it loads the area's corners from api::CApplication::s_areaTela (.data 1577200) and adds the keys'
+//                     labels, so each passes s_areaTela and false (the flag's sense is cinteractiveformbuilder.cpp's
+//                     choice). 653 is also 5565's (CInputFieldControlBase<IScreen>'s constructor) other caller beside
+//                     5530
 // api::CPolySingleton<api::IScreenMT>::instance (1714) needs no stand-in: every target caller the one here stood for,
 // 10680 and 10690, is in the link.
 #include <memory>

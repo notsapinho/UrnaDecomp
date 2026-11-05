@@ -11,7 +11,8 @@
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
+#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.h"
+#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -57,9 +58,19 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
     __builtin_trap();
 }
 
-// CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
-// name: 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576, 653 and 1279 have names).
-void CMenuVisualizarCandidatos::StartState()
+// CMenuFiltrarCandidatosPorCargo::StartState: fn 11888 (3084 B), record cmenufiltrarcandidatosporcargo.cpp:44 (its line
+// stays blank there), not written: it builds its menu with api::AddInputMenuField (fn 3675) and AddItem (fn 1693),
+// which are written, and calls fns 5953 and 3862, which have no body here.
+void CMenuFiltrarCandidatosPorCargo::StartState()
+{
+    __builtin_trap();
+}
+
+// CMenuFiltrarCandidatosPorPartido::StartState: fn 11884 (3643 B), record cmenufiltrarcandidatosporpartido.cpp:39 (its
+// line stays blank there), not written: its menu holds api::CMenuItem::SetFormatString and
+// api::CInputMenuField::SetFormatString inlined (records cinputmenufield.cpp:156 and 468), which are not written, and
+// it calls fn 5953, which has no body here.
+void CMenuFiltrarCandidatosPorPartido::StartState()
 {
     __builtin_trap();
 }

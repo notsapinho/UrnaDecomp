@@ -3,12 +3,13 @@
 // api::CMenuValidation and api::CInputMenuField (/home/rubio/tse/uenux2/src/api/gui/cinputmenufield.cpp, named by the
 // records of CMenuItem, CMenuValidation and CInputMenuField; the header beside it is chosen).
 //
-// RTTI: CMenuValidation is an si_class of api::IInputValidation. Its vtable (@1583300) is [12502, 2980, 10900, 10899]: the
-// base's destructor (the class adds nothing to destroy), the deleting destructor every derived validation shares, slot 2
-// and slot 3. fn 3675, which holds CInputMenuField's constructor, builds it with std::make_shared (a 32-byte block, 12 of
-// them the control block): the string "1234567890" for the base, the menu's this at +16. fn 10900 reads the menu's list
-// of items at +140 through it, which is why the pointer is a CInputMenuField's. The member's name and the constructor's
-// parameter are chosen. isValid (fn 10900) holds matchesExactly and matchesPartially, records 198:5 and 210:5.
+// RTTI: CMenuValidation is an si_class of api::IInputValidation. Its vtable (@1583300) is [12502, 2980, 10900, 10899]:
+// the base's destructor (the class adds nothing to destroy), the deleting destructor every derived validation shares,
+// slot 2 and slot 3. fn 3675, which holds CInputMenuField's constructor, builds it with std::make_shared (a 32-byte
+// block, 12 of them the control block): the string "1234567890" for the base, the menu's this at +16. fn 10900 reads
+// the menu's list of items at +140 through it, which is why the pointer is a CInputMenuField's. The member's name and
+// the constructor's parameter are chosen. isValid (fn 10900) holds matchesExactly and matchesPartially, records 198:5
+// and 210:5.
 //
 // CInputMenuField (RTTI: an si_class of CInputField<CFramedText>; fn 3675 stores its vptr after calling
 // IInputField<IScreen>'s constructor, fn 2024). Its vtable (@1583356) is [5491, 10898, 10897, 6327, 6324, 4118, 3037,
@@ -20,30 +21,46 @@
 // items' rectangle at +104 (the position as an empty rectangle at first), the instruction text at +112 and its
 // rectangle at +124, eight bytes at +132 that fn 3675 sets to the same empty rectangle and nothing here reads, the list
 // of items at +140, the selected item at +152 (Read and fn 5489 store it, the constructor zeroes it), the last
-// constructor argument at +156 (fn 1693 compares it with the height of Rect() and adds it to the position's y: a
-// height limit, a reading) and a std::string at +160 that fn 3675 sets to "[%S] - %T" (the format string, a reading from
-// the record of SetFormatString at 468): 172 bytes, the
-// 184-byte make_shared block less its 12-byte header. CMenuItem's implicit destructor, inlined into
-// std::__destroy_at<CMenuItem> (fn 5490), destroys, in this order, the std::string at +96, a std::any at +80 (the call
-// through its handler with the destroy action, 0), the std::string at +68, the std::function at +32 and the std::string
-// at +8; fn 1693 builds the item with the menu at +0, its number at +4, the text, the position at +20, the menu's font
-// at +24, the callback, an empty rectangle at +56, the bools at +64 and +65 (0 and 1), the number as text at +68
-// (std::to_string) and an empty string at +96. Every data member's name, the names of LimpaSelecao, SelecionaItem,
-// Reposiciona, Desloca, Pisca and GetTextoFormatado (fn 5492, the text an item shows: its format with "%S" and "%T"
-// replaced by the search text and the text), their parameters and the friendship are chosen. SetSearchText, UpdateRect
-// and Draw have their names and types from their records (cinputmenufield.cpp 142, 49, 74).
+// constructor argument at +156 (fn 1693 compares it with the height of Rect() and adds it to the position's y: a height
+// limit, a reading) and a std::string at +160 that fn 3675 sets to "[%S] - %T" (the format string, a reading from the
+// record of SetFormatString at 468): 172 bytes, the 184-byte make_shared block less its 12-byte header. CMenuItem's
+// implicit destructor, inlined into std::__destroy_at<CMenuItem> (fn 5490), destroys, in this order, the std::string at
+// +96, a std::any at +80 (the call through its handler with the destroy action, 0), the std::string at +68, the
+// std::function at +32 and the std::string at +8; fn 1693 builds the item with the menu at +0, its number at +4, the
+// text, the position at +20, the menu's font at +24, the callback, an empty rectangle at +56, the bools at +64 and +65
+// (0 and 1), the number as text at +68 (std::to_string) and an empty string at +96. Every data member's name, the names
+// of LimpaSelecao, SelecionaItem, Reposiciona, Desloca, Pisca and GetTextoFormatado (fn 5492, the text an item shows:
+// its format with "%S" and "%T" replaced by the search text and the text), their parameters and the friendship are
+// chosen. SetSearchText, UpdateRect and Draw have their names and types from their records (cinputmenufield.cpp 142,
+// 49, 74).
 //
-// The constructor is declared and not defined. fn 3675 builds the menu with std::make_shared, a 184-byte block, and holds
-// the constructor inlined, its second prologue among the block's stores: it stores the position's four bytes at +92, the
-// font's eight at +96, and its last argument (32767 from fn 11881, 310 from 11884 and 11888) as 16 bits at +156, then
-// sets the instruction text (SetInstructionText, record 477:9) after the constructor. So the constructor reads those
-// three; a parameter every caller passes as the same constant would leave no trace there (docs/how-to-decompile.md step
-// 2). The declaration lets src/units/121-uenux2-datasources-roots.cpp name it in the dropped builder of
-// __shared_ptr_emplace<CInputMenuField>. The parameters' names and order and TPosition for the last are chosen.
+// The constructor is defined in cinputmenufield.cpp. fn 3675 builds the menu with std::make_shared, a 184-byte block,
+// and holds the constructor inlined, its second prologue among the block's stores: it stores the position's four bytes
+// at +92, the font's eight at +96, and its last argument (32767 from fn 11881, 310 from 11884 and 11888) as 16 bits at
+// +156, then sets the instruction text (SetInstructionText, record 477:9) after the constructor. So the constructor
+// reads those three; a parameter every caller passes as the same constant would leave no trace there
+// (docs/how-to-decompile.md step 2). It copies the instruction text from a std::string the target keeps in .bss at
+// 1832432, built in the global constructors from "Digite a sua opção: " under a guard byte (1832444) that only that
+// initialisation reads, and destroyed at exit by fn 11662 (table slot 1). A guard says an inline variable (or a
+// template's static member), and one initialisation in the target's global constructors says one TU defines it:
+// INSTRUCAO_PADRAO_MENU in cinputmenufield.cpp (in this header every TU that includes it emits its own guarded copy).
+// Its name and its being an inline variable of api rather than a template's member are chosen. The parameters' names
+// and order and TPosition for the last are chosen.
+//
+// What fn 3675 and fn 1693 show of the members they call (src/units/84-uenux2-cinputmenufield.mk has the measurements):
+// AddItem (records 320, 326 and 339) takes the item's text and a TMenuCallback, the record's type name, whose default
+// argument is the lambda the vtable @1539468 names (`{default arg#1}::{lambda(api::CMenuItem&)#1}`); it builds the item
+// in place at the end of the list with the menu, the item count plus one (passed to std::to_string(unsigned int), fn
+// 327, so the index is unsigned), the text, the position NextItemPosition (record 298) gives, the menu's font and a
+// copy of the callback, and returns the item. The item's rectangle is read through a copy (the target copies it into a
+// frame slot before SRect::Union takes it), which a getter that returns it by value gives: GetRect, its name chosen.
+// 11881 reads the chosen item's std::any (+152, then +80) and sets an item's std::any with std::any's copy assignment
+// (fn 1763, action 1, the copy, first): GetItemSelecionado, GetDado and SetDado, names and forms chosen.
 
 #include <any>
 #include <functional>
 #include <list>
+#include <memory>
 #include <string>
 
 #include "api/gui/cframedtext.h"
@@ -53,14 +70,28 @@
 
 namespace api {
 
+class CFormBuilder;
 class CInputMenuField;
+class CMenuItem;
+
+using TMenuCallback = std::function<void(CMenuItem&)>;
+
 
 /**
  * Item de um menu: o texto exibido, o que se digita para escolhê-lo e o que fazer quando é escolhido.
  */
 class CMenuItem {
 public:
+    CMenuItem(CInputMenuField* menu, unsigned int indice, const std::string& texto, const SPoint& posicao,
+              const SFont& font, TMenuCallback acao);
+
     bool IsHabilitado() const { return m_habilitado; }
+
+    SRect GetRect() const { return m_rect; }
+
+    const std::any& GetDado() const { return m_dado; }
+
+    void SetDado(const std::any& dado) { m_dado = dado; }
 
     const std::string& GetBusca() const { return m_busca; }
 
@@ -87,7 +118,7 @@ private:
     std::string GetTextoFormatado() const;
 
     CInputMenuField* m_menu;                       // +0
-    int m_indice;                                  // +4
+    unsigned int m_indice;                         // +4
     std::string m_texto;                           // +8
     SPoint m_posicao;                              // +20
     SFont m_font;                                  // +24
@@ -119,8 +150,18 @@ public:
 
     const std::list<CMenuItem>& GetItens() const { return m_itens; }
 
+    CMenuItem* GetItemSelecionado() const { return m_selecionado; }
+
+    CMenuItem& AddItem(const std::string& texto, TMenuCallback acao = [](CMenuItem&) {});
+
+    void SetInstructionText(const std::string& texto);
+
 private:
     friend class CMenuItem;
+
+    SRect GetInstructionTextRect() const;
+
+    SPoint NextItemPosition() const;
 
     void LimpaSelecao();
 
@@ -133,7 +174,7 @@ private:
     SRect m_rectItens;                 // +104
     std::string m_instrucao;           // +112
     SRect m_rectInstrucao;             // +124
-    char m_reservado[8];               // +132, not read here
+    SRect m_rectReservado;             // +132, not read here
     std::list<CMenuItem> m_itens;      // +140
     CMenuItem* m_selecionado;          // +152
     TPosition m_alturaMaxima;          // +156
@@ -145,7 +186,7 @@ private:
  */
 class CMenuValidation : public IInputValidation {
 public:
-    explicit CMenuValidation(CInputMenuField* menu) : IInputValidation("1234567890"), m_menu(menu) {}
+    explicit CMenuValidation(CInputMenuField* menu);
 
     bool isValid(const std::string& text) const override;
 
@@ -158,5 +199,14 @@ private:
 
     CInputMenuField* m_menu;
 };
+
+// fn 3675 (callers 11881, 11884 and 11888): builds a CInputMenuField with std::make_shared, gives it its instruction
+// text and adds it to the builder (api::CFormBuilder::AddField, fn 426), and returns it. No record names it (its
+// records are the inlined GetInstructionTextRect's and SetInstructionText's); that it is cinputmenufield.cpp.o's code
+// is a reading of its use band, where 3676 (cframedtext.cpp.o) and 3674 (cmtformbuilder.cpp.o) lie on either side of
+// it. Its name, its being a free function of api (it reads no private state of either class) and its parameters' names
+// are chosen.
+std::shared_ptr<CInputMenuField> AddInputMenuField(CFormBuilder& builder, const SPoint& posicao, const SFont& font,
+                                                   const std::string& instrucao, TPosition alturaMaxima);
 
 } // namespace api
