@@ -128,11 +128,19 @@ CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTi
 Write no comment or note of your own into those lines: they stay blank, and step 9 makes a run of three or more a
 gap, the project's statement that the content is not recovered. Recovered code may take a gap's lines where no record
 lies, a helper the target holds only inlined included (no index of its own, which the caller's rows point at): its
-name, linkage and place are choices the fragment lists (unit 14's `UltimoEspaco` in `ctextfieldmultiline.cpp`). The
-lines a record names for a function no file of ours
+name and place are choices the fragment lists (unit 14's `UltimoEspaco` in `ctextfieldmultiline.cpp`), and so is its
+linkage when both linkages give the caller the same code. Compile both: an external helper that clang inlines can
+still order the caller's loads and stores otherwise (`cpleito.cpp`'s `ObtemIDsEleicoes` is internal for 5652, unit
+88). A gap's comment can hide a record of a function with no stub, a library-group function such as a lambda the scan
+files under libc++ (12272 at line 3366 of `ctelasvota.cpp`), so list the file's records before writing into a gap:
+`awk -F'\t' '$2 ~ /comum\/ctelasvota\.cpp$/ {print $3, $6}' ledger/source-locations.tsv` prints each record's line and
+function. The lines a record names for a function no file of ours
 writes (a constructor its only caller inlined, a pending member) stay blank too, and the members you write go after
 them, or before them when evidence says so: their lines are then a choice, which the file's header comment or the
-fragment's header says. Such a run gets no gap when
+fragment's header says. When the members already written after those lines leave no run before the next record long
+enough for another, it goes after the last record line of its scope (`vota_web_wasm.cpp`'s
+`CVotaWebEngine::EstadoJson`, after `PressKey`, below record 592, unit 170); an inline member's place in its class
+moves no byte, which `cmp` of the object shows. Such a run gets no gap when
 no record line lies below it: lines 4-77 of `uenux2/src/api/gui/cprogressbar.cpp` hold the records 52, 58 and 67 of
 the constructor that `std::make_shared`'s 5545 inlined, and stay 74 blank lines. When the records' function has a
 stub, step 9 writes the stub over its record's line: `uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for
@@ -143,10 +151,13 @@ are chosen) goes in the file's header comment; in a file two stages extend at on
 paragraph of its own, and the landing keeps both. Above a record line (a header whose inline member a record names),
 every line added there moves the records below it: keep the line count above the first record, folding the note into
 the lines already there, and a declaration a new member needs takes a blank line above the first record (between
-include groups or members, never a `#line` of your own), which the fragment names. Run `TMPDIR=/tmp make -C src
-check-srcloc` after the link. Files landed before this rule still
-hold doc comments of their own above a function
-(`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are not the form to copy.
+include groups or members, never a `#line` of your own), which the fragment names. When those lines have no room left,
+the note goes into the fragment and the header keeps a pointer to it. Run `TMPDIR=/tmp make -C src check-srcloc`
+after the link. Files landed before this rule still hold doc comments of their own above a function
+(`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them), and bare `//` lines where
+blank ones belong (`LC_ALL=C git grep -c -E '^[[:space:]]*//[[:space:]]*$' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'`
+counts them per file; `stubs.py --check` passes them, since a run of comments is no blank run); they are not the form
+to copy, and a unit that writes such a file's function turns those lines blank, the line count kept.
 
 The comment is ASCII (a `-` between the numbers: Latin-1 has no dash), indented like the line under it, and sits on
 the first line it names; the `#line` names the line after the last. A `#line` without a file name keeps the file
@@ -169,7 +180,9 @@ the code below where it was, and `make -C src stubs` writes the comment again ov
 what a recovered function written into a gap needs. To move the code below instead, `--strip` the file first and edit
 the blank lines. Code added between a `#line` and the line under it moves that code, and so does any line added above
 a record with no `#line` between them, which in a stripped file is every line: an `#include` a new function needs,
-added at the top, moves every record of the file. Delete as many blank lines of the run below it. A moved record takes
+added at the top, moves every record of the file. Delete as many blank lines of the run below it. A deleted line
+moves them the other way: a definition moved further down leaves its old lines blank, for step 9 to write as a gap. A
+moved record takes
 its function out of `match` with its body unchanged: step 9 stops on `matched.txt only: [N]`, and N's row reads
 `unresolved` with `source_location not in the target` at the record's operand. `TMPDIR=/tmp make -C src check-srcloc`
 lists every record that moved, after the link: run it before step 7 when an edit added a line above a record.

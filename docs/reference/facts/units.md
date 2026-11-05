@@ -227,7 +227,7 @@ awk -F'\t' '$1==11419 || $1==11724 || $1==11744 {print $1, $5, $11}' splat/scan.
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
-number of table slots that hold each (at c1b2630; the indices move with the link, and the objects with the landings):
+number of table slots that hold each (at 3c1ef19d; the indices move with the link, and the objects with the landings):
 
 ```sh
 python3 -I -c "
@@ -238,24 +238,23 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
     if obj.endswith('-pending.o') and 'D0Ev' not in name and 'D2Ev' not in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
-# 339 46 _ZN4vota16CAguardaMensagem10ProcessKeyEh 104-uenux2-app-vota-estados-pending.o
-# 467 30 _ZNK5comum3asn22CConversorHorarioVerao10DoConverteERKNS_2md13CHorarioV 107-uenux2-iconversorasn-pending.o
-# 930 12 _ZN4vota29CItemVisualizarCandidatosVota5Slot2Ev 102-uenux2-control-blocks-pending.o
-# 5156 2 _ZNK4vota9CPedeNulo16GetProximoEstadoERKNSt3__212basic_stringIcNS1_11c 97-uenux2-cvotacaostateaudio-pending.o
-# 9779 1 _ZNK5comum3asn13IConversorASNIN15ModuloImpedidos17EntidadeImpedidosENS 98-uenux2-app-comum-dados-pending.o
-# 10095 1 _ZNK5comum3asn13IConversorASNIN21ModuloFotosCandidatos13FotoCandidatoE 159-uenux2-iconversorasn-defaults-pending.o
-# …       (ten more of unit 159's, one slot each)
+# 1497 8 _ZN4vota11CThreadVota9TrataErroERKN7ecourna3api9exception6CErrorE 116-uenux2-cthreads-pending.o
+# 10187 1 _ZN4vota4impl23CSincronismoVotoEleitor10SincronizaEv 241-uenux2-app-vota-eleitor-pending.o
+# 10277 1 _ZNK5comum3asn13IConversorASNIN16ModuloCandidatos18EntidadeCandidatosE 159-uenux2-iconversorasn-defaults-pending.o
+# 10278 1 _ZNK5comum3asn22CConversorCandidaturas13DoDesconverteERKN16ModuloCandi 159-uenux2-iconversorasn-defaults-pending.o
+# 10281 1 _ZN3api20CRHVoiceTextToSpeech12DoSynthesizeERKNSt3__212basic_stringIcN 158-uenux2-api-pending.o
+# 10311 1 _ZNK5comum8CRdvVota7ConfereERKNSt3__26vectorIhNS1_9allocatorIhEEEE 13-uenux2-crdvvota-pending.o
 ```
 
-Unit 104's `ProcessKey` trap is one body in 46 table slots: binaryen merged the pending traps of its wasm type into it,
-and the merged ones have no name in `names.tsv`. None of them gets a name. Unit 97's two `GetProximoEstado` traps are
-one body in two slots, so 11724 and 11744 have none either. The trap of 11419, unit 159's
-`CConversorBiometriaEleitorCifrada::DoDesconverte`, was alone in its slot, so it was named after its trap (until 11419
-was written and matched, fragment 335). A slot that holds a real body from the pending object (an inherited default,
-9779 for 11409) is a match, not this case (§U4). Which case a member is can change in a function its unit never touched.
-A trap a unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands
-leaves its partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned
-`differs` when 11366 matched.
+At c1b2630 the same listing printed unit 104's `ProcessKey` trap as one body in 46 table slots: binaryen merged the
+pending traps of its wasm type into it, and the merged ones had no name in `names.tsv`, nor did any of them get one.
+Unit 97's two `GetProximoEstado` traps were one body in two slots, so 11724 and 11744 had none either. The trap of
+11419, unit 159's `CConversorBiometriaEleitorCifrada::DoDesconverte`, was alone in its slot, so it was named after its
+trap (until 11419 was written and matched, fragment 335). A slot that holds a real body from the pending object (an
+inherited default, 9779 for 11409) is a match, not this case (§U4). Which case a member is can change in a function its
+unit never touched. A trap a unit adds merges with one of its wasm type and takes that member's name and `differs` row.
+A member that lands leaves its partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and
+10900 turned `differs` when 11366 matched.
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 
@@ -288,14 +287,15 @@ vtable, and no link error points at it.
 
 A fragment's own rules name their prerequisites by hand, unlike the generic rules of `src/Makefile`, which depend on
 every header of their tree (`ECOURNA_HDRS`, and `UENUX2_HDRS`, which holds the uenux2 and the ecourna headers).
-The objects an edit of a fragment rebuilds, at 4487d6b (name them: `roots_asn1.o` rebuilds on any fragment, so a count
-says nothing, and a companion's compile line does not end in `.o`):
+The objects an edit of a fragment rebuilds, at 3c1ef19d (name them: `roots_asn1.o` rebuilds on any fragment, so a
+count says nothing, and a companion's compile line does not end in `.o`):
 
 ```sh
-for f in 26-uenux2-csigverifier 30-uenux2-ctextfieldmt 19-uenux2-iscreen; do
+for f in 158-uenux2-api 30-uenux2-ctextfieldmt 19-uenux2-iscreen; do
   echo "$f:"; make -n -C src link -W "$PWD/src/units/$f.mk" | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- '-o [^ ]+'; done
-# 26-uenux2-csigverifier:
-# -o build/out/app/26-uenux2-csigverifier-pending.o     (its pending rule names the fragment; its roots rule does not)
+# 158-uenux2-api:
+# -o build/out/app/158-uenux2-api-pending.o              (both its companion rules name the fragment)
+# -o build/out/app/158-uenux2-api-roots.o
 # -o build/out/app/asn1/roots_asn1.o
 # 30-uenux2-ctextfieldmt:
 # -o build/out/app/asn1/roots_asn1.o                    (its roots rule does not name it)

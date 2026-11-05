@@ -196,6 +196,17 @@ The generated headers are `src/asn1/modules/<Modulo>.h` + `.cxx`.
 5. `tools/libs/cls2.json`'s 320 'asn1' functions include ~15 app functions (`api::AudioCollector`,
    `simulador::CWasm*`, `itanium_demangle` slots); filter by `ledger/func-attribution.tsv`'s component.
 6. A runtime probe build takes 6 s; a full skeleton link takes minutes. Test flags on the probe.
+7. uenux2's objects link ahead of `src/asn1`'s, so a uenux2 TU that instantiates a template under the symbol of one of
+   the runtime's matched instances gives the link's copy, at its own flags. `v.assign(other.begin(), other.end())` over
+   `BERDecoderPartial::Visitantes` makes 3476's symbol (the runtime's assign over `__wrap_iter`), and 679, 3476, 5058,
+   5059 and 5060 leave `match`; `src/asn1/asn1.h`'s `setVisitors` comment has the form that gives the uenux2 copy,
+   5704. After a new use of a template the runtime instantiates, list what the object defines that a runtime match
+   names, from the repository root, with `P` a folder of your own (this prints nothing for `carregaarquivo.cpp.o`):
+
+   ```sh
+   TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only -j build/out/app/uenux2/src/app/comum/dados/carregaarquivo.cpp.o | sort -u > $P/new.txt
+   awk -F'\t' '$11 ~ /^app\/asn1\// && $5=="match" {print $2}' splat/scan.tsv | sort -u | comm -12 $P/new.txt -
+   ```
 
 ## A5. Names the census cannot give the runtime
 
