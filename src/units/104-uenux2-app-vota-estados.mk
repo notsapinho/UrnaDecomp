@@ -104,7 +104,7 @@
 #
 # vota::CMaisInformacoes::StartState (fn 11897, slot 2) matches, written in cmaisinformacoes.cpp between the statics and
 # ProcessInput, where use band 1 puts it (11899, 11898, 11897, 11896 at consecutive ld_index in names.tsv, 2334 to
-# 2337 at this landing).
+# 2337 at f9af1d5d).
 # It replaces the form at +12 with vota::CTelasVota::CriaTelaMaisInformacoes()'s (fn 6599, unit 110's ctelasvota.cpp,
 # its std::shared_ptr moved in: the old one released, then the empty temporary), calls the form's slot 2 and stores
 # `this` at +4. It calls CTelasVota::GetInst() (fn 407) first and drops the result: the static member called through the
@@ -113,7 +113,7 @@
 #
 # vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892, slot 2, no record) matches, written in
 # cmenufiltrarcandidatospornumero.cpp after the statics, where use band 1 puts it (11894, 11893 and 11892 at ld_index
-# 3000, 3001 and 3002 in names.tsv at this landing). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
+# 3000, 3001 and 3002 in names.tsv at f9af1d5d). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
 # vota::TelaFiltragemCandidatosPorNumero returns for CVisualizarCandidatos::GetInst().GetCargo() (fns 1279, 5951, called
 # before the screen's prologue), the screen inlined by binaryen behind a 240-byte prologue (ctelasvota.h has its
 # evidence), then calls the form's slot 2 and stores `this` at +4, as CMaisInformacoes::StartState does. The screen

@@ -744,7 +744,7 @@
 #   (@1538652 to @1539000) lie in this object's data run (records @1538492 and @1539612), so no object linked before
 #   this one emits them: 2383's object is this one or a later one (7787, this file's, builds them too). In this file the
 #   helper and 2383 take lines 777 to 799 of the blank run above MensagemErroCargo, a choice, and the band's order holds
-#   against 2380, 2376 and 2369 (ld_index 2783, 2787, 2805 and 2828 in names.tsv at this landing). The three includes
+#   against 2380, 2376 and 2369 (ld_index 2783, 2787, 2805 and 2828 in names.tsv at f9af1d5d). The three includes
 #   they need (api/gui/cframedtext.h, cinputfield.h, cnumbervalidation.h) took three blank lines of the run above line
 #   291.
 # - Chosen: the names (AdicionaCampoNumerico after cescolheopcao.cpp's overload for api::CMTFormBuilder), the helper's
@@ -769,12 +769,12 @@
 #   move is needed for 11892, not for the data's order.
 # - The instances 2383's code and the two filter screens bring link from this object first now, each at its first user's
 #   place (how-to step 3): IInputField<IScreen>'s, CInputField<CFramedText>'s and CNumberValidation's members and blocks
-#   (band 1's 12350 to 12502, band 3's 4021) and std::any's handler for unsigned char (12893, the cargo screen's). They
-#   add 293 pairs of this object's matched members that the use bands invert (569 against 276 before: pairs of one use
-#   band whose ld_index order is not the target's, how-to step 3, "The order of two members"): 288 of band 1's 13
-#   instances against the object's later band-1 rows (the CDataImage block 12520 to 12530, 3059's blocks 12535 to 12560,
-#   12628, 12631, 12639, 12640 and 12658), 2 of 4021 against 4022 and 4118, and 3 of 12893 against 12875 and 12882
-#   (CTelasVota's statics' exit destructors) and 12894 (11881's handler).
+#   (band 1's 12350 to 12502 and 12658, band 3's 4021, 4022 and 4118) and std::any's handler for unsigned char (12893,
+#   the cargo screen's). They add 293 pairs that the use bands invert (569 against 276 before: pairs of one use band
+#   whose ld_index order is not the target's, how-to step 3, "The order of two members"): 288 in band 1, 253 of them one
+#   of the 14 instances against the object's later band-1 rows it held before (the CDataImage block 12520 to 12530,
+#   3059's blocks 12535 to 12560, 12628, 12631, 12639, 12640) and 35 two of them; 2 in band 3, 4021 against 4022 and
+#   4118; and 3 of 12893 against 12875 and 12882 (CTelasVota's statics' exit destructors) and 12894 (11881's handler).
 #
 # cmenufiltrarcandidatosporcargo.cpp (unit 104's: vota::CMenuFiltrarCandidatosPorCargo::StartState, 11888) follows
 # cmenufiltrarcandidatospornumero.cpp in this list: 11888 holds ctelasvota.cpp's TelaFiltragemCandidatosPorCargo inlined
@@ -782,7 +782,7 @@
 # before ctelasvota.cpp.o, it scored 194 over 1385 rows (4 inserted, 4 deleted: unit 104's fragment has the forms). The
 # move is needed for 11888, not the data's order. The target holds the class's vtable at @1545448, after PorNumero's
 # (@1545376) and before PorPartido's (@1545520) and CMenuVisualizarCandidatos' (@1545592). Of the places after
-# ctelasvota.cpp.o this one has the fewest objects out of the data's order against it (docs/reference/facts/ codegen.md
+# ctelasvota.cpp.o this one has the fewest objects out of the data's order against it (docs/reference/facts/codegen.md
 # C4's count on the merged link: 113 here, at least 114 at the others; 93 at its old place in unit 104's list). Against
 # that old place it puts 5 pairs in order (cmunicipio.cpp, ctelasvota.cpp, celeitoroptouporvotaremtransito.cpp,
 # cmenumaisinformacoesvota.cpp and cmenufiltrarcandidatospornumero.cpp) and inverts 25, objects whose target data lie
