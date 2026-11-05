@@ -87,14 +87,14 @@
 #   ecourna::app::dados::CParametrosUrna), then 2266, then celeitores.cpp's 2265 and 2264: name order puts
 #   celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five
 #   callers: 2823 and 2824 (unit 110's CEleitores::QuantidadeAptos and QuantidadeAptosPorAbrangencia) and 10635 (unit
-#   104) and 11233 (fragment 317's SituacaoEleitor, matched) in the link, and 11616, not written, for which the roots'
-#   SemImpedimentoEmOutro stands. Its name, its being a member (it reads the private impediments) and const are chosen.
+#   104), 11233 (fragment 317's SituacaoEleitor, matched) and 11616 (unit 122's) in the link; the roots' stand-in for
+#   11616 went. Its name, its being a member (it reads the private impediments) and const are chosen.
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its
 #   `const md::CEleitorDinamico&` result are chosen: no record gives them. Its target callers
 #   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2822, 2825 and 6034 (unit 110), 10210 and 10635
-#   (unit 104), and a stand-in of unit 110's roots for 7174 and 11616.
+#   (unit 104) and 11616 (unit 122), and a stand-in of unit 110's roots for 7174.
 # - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 matches

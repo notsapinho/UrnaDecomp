@@ -44,7 +44,7 @@ private:
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };
 
-// fn 10728: the text of the form's second field, passed by its table slot (3781) to api::CMTFormBuilder::AddTextField
+// fn 10728: the form's second field's text, passed by its table slot (3781) to api::CMTFormBuilderBase::AddTextField
 // (fn 619): the title the operator typed, vota::CThreadOperador's string at +120, formatted "{:<12s}". Its name and its
 // being a free function declared here are chosen: no record, slot or RTTI names it.
 std::string TituloEncerramentoDigitado();

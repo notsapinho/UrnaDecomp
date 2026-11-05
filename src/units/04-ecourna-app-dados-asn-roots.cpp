@@ -2,9 +2,10 @@
 // users - the bigger converters and the comum/vota code that builds them - are not reconstructed yet). In the target
 // each converter's vtable is data (CConversorTurno 1126336, CConversorFase 1126128, ...) whose DoConverte/DoDeconverte
 // slots put the bodies in the table: rooting the vtables keeps the same set. Library-ish helpers the target calls from
-// two places keep a second noinline caller here (one caller would let binaryen inline them): CCabecalhoEntidade's ctor (5112: 11616 + 9218), the date parser (1877: 9218 + 9132) and
+// two places keep a second noinline caller here (one caller would let binaryen inline them): the date parser (1877: 9218 + 9132) and
 // CBaseType<unsigned short, 1, 99, 3>'s ctor (5682: 9228 + another). CFoto's ctor (fn 5111)'s went: its callers 3616
-// (unit 319's) and 9226 are in the link. Declared through asm labels, so this TU needs no
+// (unit 319's) and 9226 are in the link. CCabecalhoEntidade's ctor (fn 5112)'s went too: its callers 9218 and 11616
+// (unit 122's) are in the link. Declared through asm labels, so this TU needs no
 // ecourna or ASN.1 header and instantiates nothing.
 extern "C" {
 extern const char asncore_vt_turno[] __asm__("_ZTVN7ecourna3app5dados3asn15CConversorTurnoE");
@@ -14,7 +15,6 @@ extern const char asncore_vt_foto[] __asm__("_ZTVN7ecourna3app5dados3asn14CConve
 extern const char asncore_vt_identificador[] __asm__("_ZTVN7ecourna3app5dados3asn30CConversorIdentificadorEleitorE");
 extern const char asncore_vt_label[] __asm__("_ZTVN7ecourna3app5dados3asn28CConversorLabelParametrizadoE");
 extern const char asncore_vt_titulo[] __asm__("_ZTVN7ecourna3app5dados3asn25CConversorTituloRelatorioE");
-int asncore_cabecalho_ctor(int, int, int, int) __asm__("_ZN7ecourna3app5dados18CCabecalhoEntidadeC1ERKN5boost10posix_time5ptimeEjNS2_16ETipoIDEleitoralE");
 long long asncore_desconverte_data(int) __asm__("_ZN7ecourna3app5dados3asn19DesconverteDataHoraERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 int asncore_cargo_ctor(int, int) __asm__("_ZN9CBaseTypeItLt1ELt99ELi3EEC2Et");
 }
@@ -23,7 +23,6 @@ namespace {
 
 const void* volatile asncore_sink;
 
-__attribute__((noinline)) int UsaCabecalho(int obj, int data) { return asncore_cabecalho_ctor(obj, data, 7, 1) * 3; }
 __attribute__((noinline)) long long UsaData(int texto) { return asncore_desconverte_data(texto + 4) + 5; }
 __attribute__((noinline)) int UsaCargo(int obj, int valor) { return asncore_cargo_ctor(obj, valor + 9) - 2; }
 
@@ -37,7 +36,6 @@ struct SAsnCoreRoots {
         asncore_sink = asncore_vt_identificador;
         asncore_sink = asncore_vt_label;
         asncore_sink = asncore_vt_titulo;
-        asncore_sink = reinterpret_cast<const void*>(&UsaCabecalho);
         asncore_sink = reinterpret_cast<const void*>(&UsaData);
         asncore_sink = reinterpret_cast<const void*>(&UsaCargo);
     }

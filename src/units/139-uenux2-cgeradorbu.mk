@@ -2,13 +2,14 @@
 # comum::CGeradorBUBase<comum::CRdvVota, comum::CEleitores> (cgeradorbubase.h) and
 # comum::CGeradorRelBase<comum::CRdvVota, comum::CEleitores> (cgeradorrelbase.h, new, its records' file): their
 # destructors, the base's three slots and CGeradorBU's ImprimePreTexto; and api::CPaperFormBuilder::AddTextField<FONTE>
-# over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, whose instance this unit's roots object emits. Paths
-# relative to src/uenux2.
+# over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, whose instance this unit's roots object emits too (the
+# link keeps cgeradorbu.cpp.o's, below). Paths relative to src/uenux2.
 #
 # Matched:
 # - CGeradorBU's D2 (target fn 3698) and D0 (11258), defined in cgeradorbu.cpp, which emits the bases' D2s with them:
 #   CGeradorBUBase's (5612) and CGeradorRelBase's (5609), which each derived D2 calls.
-# - AddTextField<CPadDS<CToUpperDS<CCargoDSNome>>> (5613), defined in api/gui/cpaperformbuilder.h, from the roots object.
+# - AddTextField<CPadDS<CToUpperDS<CCargoDSNome>>> (5613), defined in api/gui/cpaperformbuilder.h, from cgeradorbu.cpp.o
+#   since its caller 3699 (comum::CriaTituloCargo, fragment 325) is written there; from the roots object before.
 # - CGeradorBUBase<CRdvVota, CEleitores>::ImprimeProporcionalPartido (11255, slot 3, record cgeradorbubase.h:187), with
 #   ImprimeVotosCandidatos (record :222) inlined by binaryen (a second 400-byte frame), defined in the class in
 #   cgeradorbubase.h; cgeradorbu.cpp's object, which emits the base's vtable, emits it.
@@ -151,7 +152,8 @@
 CGERADORBU_SRCS := src/app/comum/relatorios/cgeradorbu.cpp
 UENUX2_SRCS += $(CGERADORBU_SRCS)
 W139_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-# the users of CGeradorBU (fn 12110) and of AddTextField<CPadDS<...>> (fns 3699, 12110) are not reconstructed:
+# the users of CGeradorBU (fn 12110) and AddTextField<CPadDS<...>>'s caller 12110 (3699 is in the link) are not
+# reconstructed:
 # 139-uenux2-cgeradorbu-roots.cpp keeps them, at the tree's flags, since it emits that instance
 $(ROOT)/$(APP)/139-uenux2-cgeradorbu-roots.o: $(ROOT)/src/units/139-uenux2-cgeradorbu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/139-uenux2-cgeradorbu.mk $(W139_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/139-uenux2-cgeradorbu-roots.cpp -o $(R)

@@ -3,7 +3,7 @@
 # CBaseError<api::EUeHashError, SErrorLimits{5100, 5150}> constructor its two throws instantiate (2723, a thunk into
 # binaryen's 710, named by the vptr it passes) and the new header api/hash/euehasherror.h. The class header,
 # api/hash/chasharquivo.h, is unit 46's, whose DoDesconverte (10269) is the constructor's one caller written.
-# The roots file also holds two template instances the target keeps from uenux2 objects not written, each matched from
+# The roots file also held two template instances the target keeps from uenux2 objects not written, each matched from
 # the roots object as code a landed header defines (src/units/README.md "Companion files"):
 # - std::vector<comum::md::CComparecimentoMesario>::__emplace_back_slow_path (5375), found by the content pass (no
 #   step-8 name). The target body moves a 52-byte element, a std::string at +0 (zeroed
@@ -11,6 +11,8 @@
 #   app/comum/comparecimentomesario/md/ccomparecimentomesario.h gives CComparecimentoMesario (that header's note says fn
 #   5377 holds the same 29-byte copy); its one caller, 11616, copies such an element into a temporary before each of its
 #   two calls. That the element is that class is a reading of the layout: the content pass compares bytes, not the type.
+#   11616 is written (unit 122's cgravadorrcsecao.cpp, which pushes such a copy as an rvalue), 5375 matches from its
+#   object, and the stand-in went.
 # - CBaseError<comum::EUeComumReconhecimentoBiometricoError, SErrorLimits{9000, 9050}>'s constructor (5369, a thunk
 #   into 710 named by the vptr it passes), with the new header
 #   app/comum/reconhecimentobiometrico/euecomumreconhecimentobiometricoerror.h. Its one caller, 2725 (5103 B, with the

@@ -22,8 +22,9 @@
 # objects, which would keep their own copies, so the instances are explicit instantiations in a tree root ahead of both
 # trees, at UENUX2_CXXFLAGS, as for CBaseType. Fragment 172 writes 10290, 10291, 11399, 11400 and 11440, whose objects
 # link ahead of ecourna's: the root's lines for IdentificadorGeradorMidia's Converte and Deconverte and Foto's
-# Deconverte went with them, and those three members match from those objects; DadosComparecimento's Converte stays
-# for 11616. The Foto stand-in for 11422 went with fragment 335's 11422.
+# Deconverte went with them, and those three members match from those objects; DadosComparecimento's Converte went
+# with 11616 (unit 122's cgravadorrcsecao.cpp and gravadores/asn/cconversorresultadournacadastro.cpp), and the Foto
+# stand-in for 11422 with fragment 335's 11422.
 #
 # Measured on the whole link (pnpm wasm score): 6031 and 6032 against our merges, 12 over 70 rows, operand-only; each
 # thunk 3 over 8, operand-only. While 11422 was not written, urna_roots_iconversorasn (which urna_roots calls; binaryen

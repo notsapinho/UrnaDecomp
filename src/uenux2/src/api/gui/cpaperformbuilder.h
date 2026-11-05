@@ -59,4 +59,10 @@ void CPaperFormBuilder::AddTextField(FONTE fonte)
     m_campos.push_back(campo);
 }
 
+// The type a printed form is handed around as: record 1543752 (cgeradorresumozeresima.cpp:43) spells
+// vota::(anonymous namespace)::CriaTituloExtratoRDV's result api::SharedPaperForm. That it is this type (what Build
+// returns, which fn 5971 holds that function's code passing on) is a reading; its being a using-declaration here, at
+// this header's end, is chosen.
+using SharedPaperForm = std::shared_ptr<IForm<IPaper>>;
+
 } // namespace api

@@ -74,7 +74,7 @@
 #   temporary shared (299 over 1687): a by-value class argument's temporary takes a new slot at each call, as
 #   docs/reference/facts/codegen.md C10 measures.
 # - The form: AddClock({33, 1}), "Selecione a opção: " at {1, 1}, one text per option through
-#   api::CMTFormBuilder::AddTextField<COpcaoDS> (cmtformbuilder.h; binaryen holds it inlined behind a 48-byte frame)
+#   api::CMTFormBuilderBase::AddTextField<COpcaoDS> (cmtformbuilder.h; binaryen holds it inlined behind a 48-byte frame)
 #   at the column and line the loop keeps as two ints (1, 2; 1, 3; then 20, 2 and 20, 3), "CORRIGE: retornar" at {1, 4},
 #   "CONFIRMA: prosseguir" at {40, 4} on the right, AdicionaCampoNumerico(builder, 1, true, {20, 1}) and
 #   GetInteractiveForm("", true). The loop's coordinates as an api::SPoint kept in place gave 299 rows; as TPosition
@@ -203,8 +203,8 @@
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
 # function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) unit 139's 11253 (written, not matched), 11254, 11255 and 11256 are in our link: the roots file's stand-in calls
-# it twice for the other four.
+# 11981) unit 139's 11253 (written, not matched), 11254, 11255 and 11256 and fragment 325's 11980 and 11981 are in our
+# link: the roots file's stand-in calls it twice for the other two.
 #
 # Reinicia, CalculaCodigo and GeraMacHexa have no record, and their names are chosen: CalculaCodigo is the function
 # CRelUtil::DSCodigoVerificador (fn 11182, unit 123) formats as the verification code. Scores are `pnpm wasm score`

@@ -31,11 +31,11 @@ bool IsValidDateTime(const std::string& dataHora);
 //   2233) the low word of a 64-bit value. That it is a member, const and takes time_t, and its line in cdatetime.cpp,
 //   after FormatCurrentDate, are chosen (src/units/138-uenux2-testeteclado.mk has the forms measured).
 // - FormatCurrentDate and FormatCurrentTime (fns 5472, 5473) are `std::string (*)(const std::string &)` callbacks: fn
-//   5343 passes their table slots with "DD/MM/YYYY" and "hh:mm:ss" to api::CMTFormBuilder::AddTextField (fn 651), and
-//   fn 7787 to fn 3058, each building an api::CDataTextFmt<std::string (*)(const std::string &)> over the pointer; and
-//   comum::CImprimirExtratoCarga::ImprimeDataHoraEmissao (fn 11216) calls both. Each formats the date or the time of
-//   Now (inlined, fns 1155 and 1000) through a copy of it. Their names, and that they are static members and not free
-//   functions, are chosen; src/units/125-uenux2-cdatetime.mk has the forms measured.
+//   5343 passes their table slots with "DD/MM/YYYY" and "hh:mm:ss" to api::CMTFormBuilderBase::AddTextField (fn 651),
+//   and fn 7787 to fn 3058, each building an api::CDataTextFmt<std::string (*)(const std::string &)> over the pointer;
+//   and comum::CImprimirExtratoCarga::ImprimeDataHoraEmissao (fn 11216) calls both. Each formats the date or the time
+//   of Now (inlined, fns 1155 and 1000) through a copy of it. Their names, and that they are static members and not
+//   free functions, are chosen; src/units/125-uenux2-cdatetime.mk has the forms measured.
 // - FormatCurrentDateTime (fn 10870) is a third such callback. Its only reference in the target is its table slot
 //   3117, which api::CFormBuilder::AddStatusHeader (fn 502) passes to fn 3058 with "A DD/MM/YYYY hh:mm:ss": it
 //   formats Now's time with the format (CTime::Format, fn 779) and then Now's date with that result (CDate::Format, fn

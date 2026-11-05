@@ -27,8 +27,6 @@
 //         both in the link (7377 holds FiltraPorAbrangencia's two calls), so it has no stand-in.
 //   5791  CConfiguracaoEleicao::GetIDsEleicoes     5735 (1269, CRdvVota::Comparecimento(), is written)
 //   3774  CConfiguracaoEleicao::GetCargosEleicoes  7787 (4454, unit 197's FinalizaEleitor, is in the link)
-// comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
-// 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
 // here, 2796's, so binaryen inlines it there, as the second stack prologue in 2796 shows it did. CNomesCargo's
 // constructor has one, 11369's, and goes the same way. comum::asn::CConversorNomesCargo's vtable keeps slots 2 and 3, as
@@ -55,7 +53,6 @@ int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
 void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
-void s11556(int) __asm__("_ZN5comum19NomeEleicaoCorrenteEv");
 void w5791(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao14GetIDsEleicoesEv");
 void w3774(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao17GetCargosEleicoesEv");
 }
@@ -183,7 +180,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&s11556);
         processoeleitoral_sink = reinterpret_cast<const void*>(&OrdemCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);

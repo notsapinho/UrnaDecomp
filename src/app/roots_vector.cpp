@@ -85,7 +85,8 @@ int urna_roots_vector_dado(int a)
 // __destroy_vector::operator() (2249, below) through a frame slot, as 1698 does. Its target callers are ecourna's
 // CStringUtils::Split (1880, on its landing pad), 9586 and 11733; urna_roots_vector_cadeias stands for the two that are
 // not in our link. Instantiated ahead of the block below, it takes its place in this object before 2249 and 2247, the
-// order of the three target indices.
+// order of the three target indices. src/app/roots_coderenv.cpp, which links first, builds its std::vector<std::string>
+// in place, so it emits no copy of this destructor to take 2255.
 #include <string>
 
 template __attribute__((minsize)) std::vector<std::string>::~vector();

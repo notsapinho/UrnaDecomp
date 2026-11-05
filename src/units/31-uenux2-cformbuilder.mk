@@ -1,4 +1,5 @@
-# uenux2 api::CFormBuilder, and its two siblings for the other media, api::CMTFormBuilder and api::CPaperFormBuilder, in
+# uenux2 api::CFormBuilder, and its siblings for the other media, api::CMTFormBuilderBase with api::CMTFormBuilder over
+# it, and api::CPaperFormBuilder, in
 # src/uenux2/src/api/gui/. cformbuilder.cpp is the file the records name: GetLabeledKeyPos (target fn 5544, line 372 col
 # 11, the CUeGuiError 4914 throw) and AddStatusHeader (fn 502, lines 292 and 305, written, below). No record names the
 # other two .cpp files, whose paths are chosen, each the class's in lower case beside cformbuilder.cpp; cpaperformbuilder.h
@@ -12,16 +13,19 @@
 #                      a template of cformbuilder.h, which says why; the scan's content pass finds it, no vote names it); 502 (AddStatusHeader), written and differs, below,
 #                      with the members of its lambda's CDataText: 11107 (GetText), 11109 and 11108 (the control block's
 #                      D2 and D0)
-#   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock),
-#                      3674 (AddField) and 395 (AddInputControl), with 3673, api::IInputField<IScreenMT>'s constructor
-#                      (api/gui/iinputfield.h), whose copy this object emits: the input fields, below
+#   CMTFormBuilderBase 180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728
+#                      (AddClock), 3674 (AddField); CMTFormBuilder, over it, 203 (its out-of-line constructor) and 395
+#                      (AddInputControl), with 3673, api::IInputField<IScreenMT>'s constructor (api/gui/iinputfield.h),
+#                      whose copy this object emits: the input fields, below. cmtformbuilder.h has why two classes: six
+#                      of GetForm's seven target callers build the builder in their frame with no constructor call,
+#                      where 10204 and GetInteractiveForm's 49 call 203
 #   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut), 2775 (AddQRCode); the member template AddTextField<FONTE>
 #                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
 #                      over CPadDS<CToUpperDS<CCargoDSNome>> (5613) is unit 139's, whose fragment says what shows it
 #   binaryen's         3890, the one body of 435, 1072 and 198; 1400, vector<shared_ptr<IFormField<...>>>::emplace_back(const
 #                      value_type&), one body of the media's instantiations, under the first in the link
 #   the getters        5550 (CFormBuilder::GetForm) and 11140 (its overload of a name alone, below), 1694 and 301
-#                      (CMTFormBuilder::GetForm and GetInteractiveForm, each
+#                      (CMTFormBuilderBase::GetForm and CMTFormBuilder::GetInteractiveForm, each
 #                      inlining a private overload that takes the pre-show) and 5515 (CPaperFormBuilder::GetForm): they
 #                      build the forms of api/gui/iform.h and api/gui/cinteractiveform.h, whose code these objects emit,
 #                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after the
@@ -204,7 +208,8 @@
 #
 # Chosen, the bytes do not decide:
 # - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and
-#   the file of CMTFormBuilder, and that the classes share no base. Which overloads share a name. That the private members
+#   the files of CMTFormBuilderBase and CMTFormBuilder, which members are the derived class's (cmtformbuilder.h lists
+#   them), and that the media's classes share no base. Which overloads share a name. That the private members
 #   are private. IFormFieldBase's GetName and SetName (api/gui/iformfield.h), name and being members: 426 reads and assigns
 #   the string at +12 of the field, in line. That the adders are plain members of the .cpp files and not templates of a
 #   header: each has one body in the target either way, and this is the form no stand-in has to instantiate. The lines of
@@ -213,12 +218,12 @@
 #   anchor 1 of 5547 are constants in the body or defaults of a parameter: binaryen folds a parameter every caller passes
 #   (docs/how-to-decompile.md step 2), and each is written as the first, but for the alignment of 5409 and 5419, a default
 #   argument. ANCHOR_TOP_RIGHT is api/gui/iimage.h's name for 1.
-# - In each pair below the two forms give the function's rows, by the function's disassembly with the object-local numbers
-#   masked: the private CMTFormBuilder::AddTextField, or its statements written in place, or the member `inline`, which only
-#   band 1 tells apart (cmtformbuilder.cpp's header has the count); `text`
-#   and `campo` const or not; `m_campos.push_back(campo)` or `emplace_back(campo)` in the four adders with a const local (not
-#   in the text adders, whose non-const `campo` picks another instantiation); `std::function` by value or by const
-#   reference; the constructors `= default` or `{}`.
+# - In each pair below the two forms give the function's rows, by the function's disassembly with the object-local
+#   numbers masked: the private CMTFormBuilderBase::AddTextField, or its statements written in place, or the member
+#   `inline`, which only band 1 tells apart (cmtformbuilder.cpp's header has the count); `text` and `campo` const or
+#   not; `m_campos.push_back(campo)` or `emplace_back(campo)` in the four adders with a const local (not in the text
+#   adders, whose non-const `campo` picks another instantiation); `std::function` by value or by const reference; the
+#   constructors `= default` or `{}`.
 # What the bytes fix and what is chosen in GetLabeledKeyPos:
 # the throw's column (11, one level in) puts it after the switch, so each arm
 # returns; the arms' order (left, centre, right) is the target's block order (br_table 3 1 0 2); each arm returns
@@ -233,10 +238,10 @@
 # set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
 # elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
 # 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156), 12005 (unit 246), 11908 (unit 176's, written), 3872, 3873,
-# 5579 and 5977 (unit 325's) and 11253 (unit 139's, written) are in the link and the stand-in FormPapelC calls it twice
-# for the others. In the whole link it scores 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name
-# is chosen: 5515 has GetForm, and the screens' builders, whose getters empty the vector themselves (unit 120's
-# fragment), give no name for this split.
+# 5579, 5977, 3699, 5580, 5970 and 5971 (fragment 325's) and 11253 (unit 139's, written) are in the link and the
+# stand-in FormPapelC calls it twice for the other three, 11946, 12105 and 12110. In the whole link it scores 1 over
+# 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the screens'
+# builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 #
 # CPaperFormBuilder::Show (target fn 3671, cpaperformbuilder.cpp), written with unit 246: its name and parameters are
 # its lambda's RTTI, api::CPaperFormBuilder::Show(const std::string &, const std::string &, bool)::$_0 (vtable @1581356,

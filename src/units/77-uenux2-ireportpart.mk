@@ -13,10 +13,12 @@
 #   unit defines: the two classes here give the same shared body and the same thunks;
 # - CFormPart's constructor (fn 601), in api/gui/reports/cformpart.cpp;
 # - from std::make_shared, each class's control block: __shared_ptr_emplace<T>'s D2 and D0, from the roots (11950,
-#   11949; 11979, 11978; 11964, 11963; 11952, 11951; 11960, 11959), except CParteEleitores's (11228, 11227) and
+#   11949; 11964, 11963; 11952, 11951; 11960, 11959), except CParteRdv's (11979, 11978), which its builder 5971's object
+#   (fragment 325's cgeradorresumozeresima.cpp) emits, CParteEleitores's (11228, 11227) and
 #   CFormPart's (11962, 11961), which fragment 317's cgeradorrellistaeleitores.cpp's object emits first (it builds both,
 #   for 11908, and links ahead of cparteeleitores.cpp and the roots); and, from the roots, the final classes'
-#   __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv) and 11958 call the D2, and 5966 (one body for
+#   __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv; its match line names CParteRdv's, which 5971's
+#   object emits first) and 11958 call the D2, and 5966 (one body for
 #   the two three-part classes) holds it: clang inlined it there, as the roots object shows. The classes that are not
 #   final use the virtual fn 411, already matched.
 # Imprime, the key function of every class, is written: api::CFormPart's (10889, a call of its form's slot 2) in

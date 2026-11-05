@@ -35,7 +35,8 @@
 #     CComparecimentoMesario>): recursive bodies, whose self-calls re-point once the symbol file names them (1902 by
 #     5380's call, 2728 by its census pair); 1902 was `differs` against the twin of another map's tree, 2265, whose node
 #     has its strings at the same offsets.
-#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers, 11616 and 12105, are not written.
+#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers are 11616 (unit 122's, written) and 12105, not
+#     written.
 #   - the statics' exit destructors, 10310 (the unique_ptr's) and 10309 (the mutex's). The symbol file names the mutex
 #     at 1909908 by 815's vote alone; 2221 and 10309 read that address as well, and 10309 is the mutex's destructor.
 #   - QuantidadeMesariosInicio and QuantidadeMesariosFim, 3606 and 2727: each counts the map's records of one period, 1
@@ -171,7 +172,8 @@
 #   which GetTituloCorrente in cjustificador.h returns. The target reaches it only by table slot 2949.
 # Names: 2809, 2810 and 11477 are pair-addr, 11475 srcloc-anchor; 1391 and 11476 match by content. The mutex's name is
 # `vote:1 by:11475`, that anchor's vote, and it holds through 1391 and 11476, the other matches that read 1838988; 11474
-# and 11616 read it too (each unlocks it through fn 150 after reading the pointer), not written. The pointer's name is
+# (not written) and 11616 (unit 122's, written, not matched) read it too, each unlocking it through fn 150 after reading the
+# pointer. The pointer's name is
 # `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throws' (55, 83 and 104).
 CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp

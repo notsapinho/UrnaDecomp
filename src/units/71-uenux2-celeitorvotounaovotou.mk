@@ -110,8 +110,8 @@
 # CDigitalNaoReconhecida; the fourth, 12033, unit 156's vota::CRetirarMR's, joined it since and matches with it);
 # before that the census paired our destructor of it with fn 10414 (the same body as ours,
 # over another class's pointer and D2: a shape pair), and 10434 read no-candidate. The roots stand
-# for 1901's target callers not in the link (10209, 10425; 10419, unit 142's, is), and the vtable sink went: 1901's
-# constructor stores the vptr.
+# for 1901's target caller not in the link (10425; 10419, unit 142's, and 10209, unit 104's, are), and the vtable sink
+# went: 1901's constructor stores the vptr.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
 # (unit 65 wrote its first form): this unit adds nothing to it.

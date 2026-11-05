@@ -11,9 +11,10 @@
 #   Measured: with userdict.cpp compiled with -fignore-exceptions, which only takes the landing pads away and says nothing
 #   of the target's flags, all four match. Of 770 rows with a candidate from RHVoice, 3 target bodies hold a landing pad
 #   and 192 of ours do.
-# - 8887 holds one constant argument at each of its two calls of basic_stringstream's constructor, table slot 1327, which Boost's parse_iso_time in
-#   ecourna's datahoraasn object loads. roots_ecourna's 1327 is a plain integer: it stays 1327 in the shifted link. With
-#   datahoraasn.cpp compiled the same way, 8887 matches.
+# - 8887 held one constant argument at each of its two calls of basic_stringstream's constructor, table slot 1327, which Boost's parse_iso_time in
+#   ecourna's datahoraasn object loaded. roots_ecourna's 1327 is a plain integer: it stays 1327 in the shifted link. With
+#   datahoraasn.cpp compiled the same way, 8887 matched. It matches since unit 122's cgravadorrcsecao.cpp, written, gives
+#   the link uenux2's parse_iso_time copy (no landing pads) ahead of ecourna's, so that slot is gone.
 # - 3559 and 9471, the destructors of AVNEncoder and AVNDecoder, are not the -Os copies their .cxx emits. Only 3559, 8903
 #   and 9770 hold AVNEncoder's vptr and 8873, 9471 and 679 AVNDecoder's. A probe object first on the link line matches 9471
 #   at -O3 -fexceptions, ecourna's level, and 3559 at -Oz -fexceptions, the executable TU's (facts/levels.md V1), with

@@ -100,12 +100,20 @@ public:
     // CConfiguracaoEleicao's +200, the parameters' GetRodapeZEVOTA, and CEstadoGeral's correspondence): the separator in
     // style 1, "Código de identificação da carga" and GetIDCargaFormatado (fn 2786) of the load's code centred,
     // "Ver: " and the version's number, the footer's titles through ImprimeTitulos (fn 3689), 20 new lines and a cut.
-    // In use band 2 it follows ImprimeSeparadorVia (5581) in this file's object, with 5580 (not written) between them,
+    // In use band 2 it follows ImprimeSeparadorVia (5581) in this file's object, with 5580 (FormCabecalhoEleicao) between,
     // so it is defined below ImprimeSeparadorVia. Its name, its parameters' types, its being a static member of this
-    // class and both functions' lines (crelutil.cpp leaves the lines between them blank) are chosen.
+    // class and both functions' lines (crelutil.cpp holds FormCabecalhoEleicao between them) are chosen.
     static std::shared_ptr<api::IForm<api::IPaper>> FormRodapeZeresima(
         const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,
         const md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
+    // Target fn 5580, no record: the header CParteCargos prints when the election changes (fns 5971 and 11946 hand it
+    // over as its first part), a line of 38 '=' in style 1, NomeEleicaoCorrente's text (table slot 3049, fn 11556)
+    // centred, the '=' line again and a new line, each '=' line through an internal helper of crelutil.cpp that clang
+    // inlines (the frame's order: src/units/325-uenux2-geradores-zeresima.mk). In use band 2 it lies between
+    // ImprimeSeparadorVia (5581) and FormRodapeZeresima (5579), so it is defined between them. Its name, its being a
+    // static member of this class (the class's records name only static members), the helper and its lines are
+    // chosen.
+    static std::shared_ptr<api::IForm<api::IPaper>> FormCabecalhoEleicao();
 
 private:
     // The two parts of fn 1543 that it holds behind stack frames of their own (240 and 32 bytes), each binaryen's

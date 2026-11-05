@@ -15,7 +15,7 @@ namespace {
 
 std::shared_ptr<api::IForm<api::IScreenMT>> MontaTela()
 {
-    api::CMTFormBuilder builder;
+    api::CMTFormBuilderBase builder;
     builder.AddBuzz(51, 10);
     builder.AddClock(api::SPoint{33, 1});
     builder.AddTextField("Inspecione cabina e urna", api::SPoint{1, 2}, api::ALINHAMENTO_ESQUERDA);

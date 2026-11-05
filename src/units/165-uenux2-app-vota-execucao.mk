@@ -31,8 +31,8 @@
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so);
 #   CPreShowFormVota::PreShow (7707, slot 2, the class's key function) and DesenhaDescricaoModo (4620), below.
-# Not matched: CAguardaInicio::GetInst (5343, below). The roots file says what stands for the unwritten caller of
-# IExecucaoVota's GetInst (5408 for 3594) and for 576's 16 callers.
+# CAguardaInicio::GetInst (5343, below) matches since, with its statics' exit destructors. The roots file says what
+# stands for the unwritten caller of IExecucaoVota's GetInst (5408 for 3594) and for 576's 16 callers.
 #
 # CAguardaInicio::ProcessKey (10217, slot 6): key 8 logs "Urna pronta para receber votos" (comum::IEventosLog::loga, fn
 # 233, on vota::CLogVota::GetInst, 184) and goes to vota::CPedeIdentidade::GetInst (652), key 7 to
@@ -82,12 +82,17 @@
 # FormatCurrentDate and FormatCurrentTime) at {11, 4} and {22, 4} with "DD/MM/YYYY" and "hh:mm:ss"; +20 is
 # CThreadOperador::GetInst().AddStoppedTick(500) (fn 807). Its callers, CThreadOperador::Run (10204) and
 # vota::CControladorRegistraMesariosVota's slot 9 (10794, unit 119), both match, so the vtable sink the roots file had
-# for this class went. Measured (pnpm wasm score against our symbol): 145 over 962 rows (104 of the 106 replaced
-# operand-only, 12 inserted, 27 deleted). The rows not operands are the builder's construction: the target clears its
-# 12 bytes in place and passes the frame address on, ours calls fn 203 and passes its result, the remainder units 104
-# and 142 record for 10214 and 1150 (of 1694's seven target callers only 10204 calls 203). Chosen: the helper
-# MontaTelaAguardaInicio, a function of the anonymous namespace that clang inlines into the constructor, and its local
-# names; the constructor's initializer list.
+# for this class went. Measured (pnpm wasm score against our symbol, before steps 7 to 9): over api::CMTFormBuilder,
+# whose constructor is out of line (fn 203's body), 145 over 962 rows (104 of the 106 replaced operand-only, 12
+# inserted, 27 deleted), the rows not operands the builder's construction, which the target clears in place (12 bytes)
+# and whose frame address it passes on; over api::CMTFormBuilderBase, whose constructor is inline
+# (api/gui/cmtformbuilder.h has the evidence and the reading), 66 over 950 rows, all operand-only: calls, data
+# addresses, the slot of the format's __prepare_write (7324, matched) and the .bss addresses of s_aplicacao, s_versao
+# and the class's statics. Step 8 names the statics from 5343's votes alone (s_mutex `vote:1`, s_inst `vote:4`, by
+# 5343), the build checking them with 5343's bytes; their exit destructors, 10222 (the mutex) and 10223 (the
+# pointer), the one other reader of each address, match with them, and 5343's table votes name FormatCurrentDate and
+# FormatCurrentTime (5472, 5473). Chosen: the helper MontaTelaAguardaInicio, a function of the anonymous namespace that clang inlines into the
+# constructor, and its local names; the constructor's initializer list.
 #
 # What the evidence gives:
 # - Classes: RTTI names each class; CExecucaoVota's object is 4 bytes (3594 allocates 4 and stores only the vptr),

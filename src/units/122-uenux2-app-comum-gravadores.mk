@@ -53,10 +53,10 @@
 #   no other form was measured. The include changes the mangled name of every GravaResultado (traps and declarations:
 #   units 60, 122, 136 and 200's pending objects, cgravadorenvelopearquivo.cpp.o's vtable reference), and no other
 #   object of the link (every object compared with cmp before and after).
-# - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): its vtable is emitted in
-#   122-uenux2-app-comum-gravadores-pending.cpp, whose trap of GravaResultado (fn 11616, slot 7, record
-#   cgravadorrcsecao.cpp:110) is the class's key function; the roots keep that vtable. cgravadorrcsecao.h gives the
-#   class its layout (60 bytes, from fn 12098, which builds it); slot 0 holds IResultado's destructor (fn 12090).
+# - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): cgravadorrcsecao.cpp emits the class's vtable
+#   with GravaResultado (fn 11616, slot 7, record cgravadorrcsecao.cpp:110, below), its key function; the roots keep
+#   the vtable for 12098, which stores it and is not written. cgravadorrcsecao.h gives the class its layout (60 bytes,
+#   from fn 12098, which builds it); slot 0 holds IResultado's destructor (fn 12090).
 # - Two inline accessors under chosen names, CConfiguracaoEleicao::GetPleito() and md::CPleito::GetID(): fn 3798 formats
 #   the word at +28 of CConfiguracaoEleicao, its CPleito's identifier. With the unit's edits of headers (these two and
 #   unit 60's), every object the link held before is byte-identical (542 objects, sha1 before and after).
@@ -136,6 +136,74 @@
 # 10263), 63 over 714, every row an operand: the calls, the data addresses, the format strings' packed addresses and the
 # format buffer's and the exception's table slots. Its place before cgravadorwsq.cpp follows the band (11582 above
 # CGravadorWSQ's rows); that order against cgravadorwsq.cpp was not measured otherwise.
+# comum::CGravadorRCSecao::GravaResultado (target fn 11616, slot 7, which this unit's pending object trapped) is written
+# in cgravadorrcsecao.cpp at its record's line (110), with what it holds: LeChavePublica (records :65, :75 and :83),
+# ObtemComparecimentoEleitores, CriaIdentidadeEleitor (fn 5845, :230) and the free functions cgravadorrcsecao.h declares
+# after the class. The target holds them behind stack frames of their own, in this order (the sizes read off the
+# prologues of pnpm wasm fn's readout): 976 (11616's own), 464 (FormataDataHora's std::format), 256
+# (ObtemComparecimentoEleitores), 80 (CriaHabilitacaoPorMesario), 96 (ObtemSituacaoReconhecimentoMesario), 64
+# (ObtemJustificativas), 64 and 64 for each period (ObtemMesariosAbertura with ObtemRegistrosMesariosAbertura, then
+# Encerramento's two), 176 (LeChavePublica), 80, 32 and 656 (comum::asn::CodificaDadosComparecimento with
+# CFileASN::CodeObject and CodeObjectFunction, gravadores/asn/cconversorresultadournacadastro.cpp) and 80 (ecourna's
+# CPlainText delegating constructor, cplaintext.cpp, with landing pads): each the shape of an out-of-line function
+# binaryen inlined into its one caller; which function each frame is is a reading of the calls it holds. Ours gives the
+# same frames in the same order. The two functions with no frame are static, so clang inlines them:
+# ConverteEstadoColetaDigital (measured, 5841 below) and CriaJustificativa, read from the target's order of
+# destructions (the shared pointer and its temporaries released before the push_back of the CIdentificacaoJustificativa,
+# which a function that returns it gives; no other form was measured). The forms the target's instances show: the poll
+# workers and the justifications pushed as rvalues (its slow paths 5375 and 5842 take `T&&`), the case of tipo
+# habilitação 2 before case 1 (the target's block order). Chosen: every name but the records' (GravaResultado,
+# LeChavePublica, CriaIdentidadeEleitor), that the functions which read no state of the class are free functions of
+# comum (or comum::asn) and not members, their parameters' names and types, the lines of the functions with no record
+# (after GravaResultado, CriaIdentidadeEleitor's record line kept), the file and path of the comum::asn functions,
+# CJustificador::HasInst's name and its being inline (cjustificador.h), and the CPlainText constructor's being a
+# delegating constructor of that class with its parameters (cplaintext.hpp). The linkages are readings: external where
+# the target shows a frame, static where it shows none.
+# 11616 is `unresolved`: its first operand with no target function is its call of parse_iso_time (scan detail +0x1ec),
+# 5851, not matched (below). Against the target it scores 1204 over 7245 rows (pnpm wasm score: 733 replaced, 699 of
+# them operand-only, 57 inserted, 414 deleted), and what differs past the operands is not explained in full. Two parts
+# are read: the copy of the CInfoSalt the CPlainText constructor takes by value is inlined in the target (two vector
+# copies and a vector length error) and a call of cinfosalt.cpp's out-of-line copy constructor in ours (fn 9470, unit
+# 05's), so the target's header defines that copy inline (a reading; unit 05's files are not changed); and the target
+# keeps `call 158; unreachable` (vector<unsigned char>'s __throw_length_error, a twin) at five places where ours has one
+# that the others branch to (read as binaryen's folding of identical tails in our link; why the target's are apart is not
+# traced). It stays
+# written: it brings 5366, 5841, 5843 and 5844 into the link, its object 1006 and 3813, and its parse_iso_time copy
+# 3812, 5839 and 8887 (below).
+# Matched with 11616 written (steps 7 to 9; every row operand-only before the scan, pnpm wasm score):
+# - 5841, comum::ConverteComparecimentoMesario (11 over 274 rows): a free function after CriaIdentidadeEleitor (its
+#   band order: 5845, 5844, 5843, 5842, 5841 and 5839 run down ld_index in names.tsv), its collection state from a
+#   static helper over the three values by value, which clang inlines. Measured in the whole link: the mapping over the
+#   poll worker by reference, an accessor in each condition, in another TU, where binaryen inlines it, gave an early
+#   exit on PertenceSecao that the target does not have (44 over 278 rows; in this TU, the scratch objects below show
+#   the same exit before binaryen); by value with the finger tested
+#   `!= 0` and `== 0`, one row was left, `!(dedo | !t)` against ours `!dedo & t` (14 over 274); `dedo` and `!dedo` give
+#   the target's. A helper that reads the three into locals first gives the same object as one that takes them by
+#   value, and so does no helper, the three read into locals in ConverteComparecimentoMesario itself (the same 69 lines
+#   of wasm-objdump -d); one that takes them by value in another TU nests its selects otherwise (a scratch TU at the
+#   tree's flags, wasm-objdump -d of each form). The helper, the helper's and the function's names, their being free
+#   functions and the parameters' types are chosen.
+# - 5843 and 5844, vector<CEstadoComparecimento>'s __emplace_back_slow_path over the arguments of the four emplace_back
+#   calls with a CApresentacaoFotoEleitor (4 over 116 and 4 over 115 rows). The object emits one instance per argument
+#   list (four with the Faltou case's two arguments, llvm-nm), and two are in the link: 5843 is the two five-argument
+#   calls' (with the CHabilitacaoBiometrica), and 5844 binaryen's fold of SemCargoParaVotar's (the enumerator, so
+#   ESituacaoComparecimento) and the other four-argument call's (`situacao`, const ESituacaoComparecimento&), which
+#   11616 calls twice. 5844's symbol is the one the fold kept (link order, not evidence), and the template arguments'
+#   qualifiers follow the calls' argument forms, which are chosen. 3813 (vector<ecourna's
+#   CComparecimentoMesario>'s slow path, `T&&`, 4 over 270) and 1006 (CEstadoComparecimento's D2, 0 over 121), which
+#   unit 105's notes say only this uenux2 caller brings: copies of this object, ahead of ecourna's.
+# - 5366, comum::asn::GravaArquivo for the voter-register result (55 over 540), in
+#   gravadores/asn/cconversorresultadournacadastro.cpp, whose header says what places it.
+# - 5839 (boost::date_time::string_parse_tree<char>::match, 1 over 314) and 3812 (basic_stringstream's constructor from
+#   a string, 15 over 151): Boost's parse_iso_time<ptime> instantiated here (no landing pads, the tree's flags) calls
+#   them, and its copy now links ahead of ecourna's app_dados_asn_datahoraasn.cpp.o. With that copy gone the slot
+#   unit 87's notes name (basic_stringstream's, which ecourna's copy loaded) is gone too, and
+#   ASN1::AVNDecoder::do_visit(OBJECT_IDENTIFIER&) (8887, unit 87's) matches.
+# - 5842, 5846 (src/app/roots_iconversorasn.cpp's instances), 5375 (unit 186's stand-in) and 2278 match from this object
+#   now, with the stand-ins that stood for 11616 gone (the README row lists them). The ecourna copy of parse_iso_time
+#   had been the last caller of a vector<std::string> chain (special_values_parser's sv_strings calls
+#   __init_with_size, 5585, roots_coderenv.o's instance), and with it out 3895, 5562, 5573, 5774, 5786 and 11158 left
+#   `match`: src/app/roots_coderenv.cpp now stands for 5585's target users, 11332 and 9586, and they match again.
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp
@@ -177,22 +245,13 @@
 # - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
 #   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) are fragment
 #   227's.
-# - fn 5841, which converts a comum::md::CComparecimentoMesario into ecourna's CComparecimentoMesario (fn 3486): its one
-#   caller is GravaResultado (fn 11616), which calls it twice. Written as a private const member of CGravadorRCSecao
-#   after CriaIdentidadeEleitor, it builds a CNumeroInscricaoEleitoral from a copy of the poll worker's identifier, a
-#   CRegistroIdentificacaoEleitor over a std::make_shared copy of it, the time by from_time_t(ConvertToLocalTime()) and
-#   the collection state, and in the whole link (pnpm wasm score against the target) it scored 44 over 278 rows: every
-#   row but those of the state was the target's up to operands. The target computes the state in a block (result
-#   i32) after ConvertToLocalTime's call, the shape of a function binaryen inlines into its one caller (a reading: the
-#   mapping written in the same TU, as a switch or as ifs, came before that call under try-tu.sh --single, and kept out
-#   of line it came after). Out of line in cgravadorutil.cpp, over the poll worker by const reference, three forms
-#   (ifs on the state, the flag at +20 and the finger; ifs on the state first; a switch) scored 44, 51 and 51 over 278
-#   to 281. The
-#   target loads the finger and the byte at +20 only after its test of state 1, tests that byte as `& 1` and combines it
-#   with `state == 2` before testing the finger: the forms by reference gave the loads' place and not the rest, and one
-#   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
-#   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
-#   written (docs/how-to-decompile.md step 5).
+# - boost::date_time::parse_iso_time<ptime> (5851, 9824 B), which 11616 calls, this object's copy: 2079 over 4695 rows
+#   (pnpm wasm score: 714 replaced, 701 of them operand-only, 28 inserted, 1337 deleted). The target holds
+#   parse_undelimited_date inlined and calls 3811 three times and 5833 twice; ours calls parse_undelimited_date (5105)
+#   and lcast_ret_unsigned's converters for unsigned short, unsigned long long and unsigned int (3456, 3462, 3463), all
+#   from app/roots_boost.o, whose Boost probe (tools/libs/boost/probe.cpp: from_undelimited_string and lexical_cast)
+#   instantiates them first in the link. It waits for those copies, a tree root's change not made here; 2849, 3811 and
+#   5833, which only 5851 calls, wait with it, and so does 11616.
 # - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and `differs`, its first difference the frame (scan
 #   detail +0x6: the target's is 160 bytes, ours 80). It scores 453 over 3911 rows (pnpm wasm score: 15 inserted, 19
 #   deleted, 411 of 419 replaced operand-only); ecourna's globToFileList, its lambda and ~CZip are written in the forms
@@ -216,8 +275,14 @@ GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/grav
 	src/app/comum/gravadores/cgravadorlog.cpp \
 	src/app/comum/gravadores/cgravadorversoesarquivos.cpp src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/pathwsq.cpp \
 	src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
-	src/app/comum/gravadores/md/cversoesarquivos.cpp
+	src/app/comum/gravadores/md/cversoesarquivos.cpp src/app/comum/gravadores/asn/cconversorresultadournacadastro.cpp
 UENUX2_SRCS += $(GRAVADORES_SRCS)
+# cgravadorrcsecao.cpp and gravadores/asn/cconversorresultadournacadastro.cpp read ecourna's voter-register result
+# classes, whose headers include Boost's ptime, and the latter ecourna's converters, which include the generated ASN.1
+# modules by their bare names: include paths, not flags of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorrcsecao.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/cconversorresultadournacadastro.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Isrc/asn1/modules
+$(foreach u,src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/cconversorresultadournacadastro.cpp,$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # cgravadorutil.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
@@ -229,12 +294,7 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp.o: UENUX2_CXXFLA
 # measurement and the pairs it inverts); its CZip needs the same include paths as cgravadorwsq.cpp's
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorlog.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 # nothing reconstructed calls most of these yet: 122-uenux2-app-comum-gravadores-roots.cpp stands in for the target's
-# callers, two call sites each
+# callers, two call sites each (its stand-in for 11616, the caller of CriaIdentidadeEleitor, went when 11616 was written)
 $(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-roots.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/122-uenux2-app-comum-gravadores-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/122-uenux2-app-comum-gravadores-roots.o
-# CGravadorRCSecao::GravaResultado is not reconstructed: 122-uenux2-app-comum-gravadores-pending.cpp gives it a trapping
-# body, compiled with the tree's flags, and emits the class's vtable and implicit deleting destructor
-$(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-pending.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/122-uenux2-app-comum-gravadores-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/122-uenux2-app-comum-gravadores-pending.o

@@ -1,17 +1,28 @@
 #pragma once
 
-// Two form builders of the zeresima reports that cgeradorresumozeresima.cpp defines (fns 3873 and 3872, no record of
-// their own). The file is the one the target's data and use bands give them: src/units/325-uenux2-geradores-zeresima.mk
-// says how. Their names, the parameter's bool, their being free functions of vota, their external linkage (the file's
-// records are vota::(anonymous namespace)'s, CriaTituloExtratoRDV's) and this header's path are chosen.
+// The zeresima reports' builders that cgeradorresumozeresima.cpp defines. The file's records (lines 43 and 47) are
+// vota::(anonymous namespace)::CriaTituloExtratoRDV's, which fn 5971 holds; no other function here has a record, and
+// every other line of the file is chosen. The file is the one the target's data and use bands give fns 3873 and 3872,
+// and 5971's records' (src/units/325-uenux2-geradores-zeresima.mk says how, and which other function is here by a
+// measurement). The names but CriaTituloExtratoRDV's, the parameter's bool, their being free functions of vota, their
+// external linkage (no record, slot or caller shows it: how-to step 3, "What a record's place says") and this header's
+// path are chosen.
 
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace api {
+class CReport;
 class IPaper;
+class IReportPart;
 template <typename MEDIA>
 class IForm;
 } // namespace api
+
+namespace comum::md::estadoaplicacao {
+class CDadoCorrespondencia;
+} // namespace comum::md::estadoaplicacao
 
 namespace vota {
 
@@ -21,5 +32,17 @@ namespace vota {
 // 3872 twice, with 0) and fn 12110 (3872).
 std::shared_ptr<api::IForm<api::IPaper>> CriaCabecalhoDetalheZE();
 std::shared_ptr<api::IForm<api::IPaper>> CriaDetalheCandidato(bool comVotos);
+
+// Fn 5971: the RDV extract's parts, the title (CriaTituloExtratoRDV, internal) and a CParteCargos over 5580's header
+// and a CParteRdv (src/units/325-uenux2-geradores-zeresima.mk has the evidence and the choices). Its callers are fns
+// 11943 and 11946.
+std::vector<std::shared_ptr<api::IReportPart>> CriaPartesExtratoRDV(const std::string& separador);
+
+// No target index: the report and the file of the zeresima's summary, which fn 11943
+// (vota::CGeraResumoZeresimaBase::StartState) holds behind stack frames of their own, binaryen's inlining of functions
+// with one caller. Here, beside 5971, by a measurement (src/units/325-uenux2-geradores-zeresima.mk).
+api::CReport CriaRelatorioResumoZeresima(const std::string& separador,
+                                         const comum::md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
+void GeraResumoZeresima();
 
 } // namespace vota

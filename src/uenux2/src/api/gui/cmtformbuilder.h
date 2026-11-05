@@ -1,11 +1,35 @@
 #pragma once
 
-// api::CMTFormBuilder: the builder of the forms of the IScreenMT screen. No record, symbol or RTTI names this class; the
-// name is chosen after api::CPaperFormBuilder, the name the records give the IPaper one, and its file is the class's in
-// lower case, beside cformbuilder.h. What is read from the bytes: the object is 12 bytes built by fn 203, the same body as
-// api::CFormBuilder's constructor, and destroyed in line as one vector, fns 180, 941, 728, 435 and 1072 push to a vector at
-// this + 0, and they build IFormField<IScreenMT> fields, which api::CFormBuilder's vector cannot hold. So there are two
-// vectors' classes, and binaryen keeps one of the two constructors' bodies. That the two classes share no base is a choice.
+// api::CMTFormBuilderBase and api::CMTFormBuilder: the builders of the forms of the IScreenMT screen. No record, symbol
+// or RTTI names either class; the names are chosen, CMTFormBuilder after api::CPaperFormBuilder, the name the records
+// give the IPaper one, CMTFormBuilderBase after it as its base (TSE names a base so: comum::CGeradorBUBase), and the
+// file is CMTFormBuilder's in lower case, beside cformbuilder.h. What is read from the bytes: the object is 12 bytes,
+// destroyed in line as one vector, fns 180, 941, 728, 435 and 1072 push to a vector at this + 0, and they build
+// IFormField<IScreenMT> fields, which api::CFormBuilder's vector cannot hold. So there are other vectors' classes than
+// api::CFormBuilder's, and binaryen keeps one body, fn 203, for CMTFormBuilder's constructor and api::CFormBuilder's.
+// That these classes share no base with api::CFormBuilder is a choice.
+//
+// Two classes, by how the callers build the object (ledger/callgraph.tsv and the bodies). Of the target callers of
+// GetForm (fn 1694) and GetInteractiveForm (fn 301), the 49 of 301 and one of 1694's seven, fn 10204, call fn 203; the
+// other six of 1694's, fns 1150, 4633, 5341, 5343, 10214 and 10676, clear the builder's 12 bytes in their own frame (an
+// i32 store of 0 at +8 and an i64 store of 0 at +0) and call no constructor. They call adders the others call too
+// (AddTextField, fns 180, 619, 651 and 5409, AddLed 435, AddBuzz 941, AddClock 728) on that frame address, so, a
+// reading, the adders and GetForm are members of a class whose constructor is inline, CMTFormBuilderBase, and the
+// builder the others build is of a class over it whose constructor is out of line, CMTFormBuilder, whose `= default`
+// constructor in cmtformbuilder.cpp is fn 203's body. Over CMTFormBuilderBase, 10214, 5341, 5343 and 10676 match (1150
+// and 4633 are not measured over it). Measured with pnpm wasm score in the whole link, over CMTFormBuilderBase and then
+// with only the four screens' builders made CMTFormBuilders: 10214 21 over 299 rows and 128 over 307, 5341 36 over 450
+// and 86 over 458, 5343 66 over 950 and 145 over 962, 10676 51 over 507 and 96 over 510; units 104's, 165's and 161's
+// fragments say what the rows are. Chosen: two classes rather than one CMTFormBuilder with a second, inline constructor
+// beside the out-of-line one (`explicit CMTFormBuilder(int) {}`, the four screens building `builder(0)`), which gives
+// the same objects function by function (cfinalizaoperador.cpp's, caguardainicio.cpp's, caguardainspecao.cpp's,
+// csincronismooperador.cpp's and cmtformbuilder.cpp's at the link's compile lines, the class names masked); deriving
+// rather than holding the base; GetInteractiveForm, AddInputControl and AddTextFieldUpdate being the derived class's
+// (in the target only the builders fn 203 builds use them: 301's 49 callers, 395's 39, 5410 and 652, which hold the
+// other two inlined) and AddField the base's (its three callers, 395, 1151 and 5410, take the derived class); m_campos
+// being protected; the base declaring no constructor. The other naming, CMTFormBuilder as the base and a new name for
+// the derived class (as api::CInteractiveFormBuilder derives from api::CFormBuilder), renames the class of every
+// builder fn 203 builds; this one renames the members of the six callers' class.
 //
 // Each adder's name, and which overloads share a name, are chosen from the field it builds. CTextSource goes by value: the
 // adders release its reference at their end, and a class holding a libc++ shared_ptr is trivial-ABI here, so the callee
@@ -53,25 +77,11 @@
 
 namespace api {
 
-/**
- * Monta os formulários da tela MT.
- */
-class CMTFormBuilder {
+class CMTFormBuilderBase {
 public:
     using SharedField = std::shared_ptr<IFormField<IScreenMT>>;
-    using SharedInput = std::shared_ptr<IInputField<IScreenMT>>;
-
-    CMTFormBuilder();
 
     void AddField(SharedField&& campo);
-
-    void AddInputControl();
-
-    // The control field built with std::make_shared (its block's vtable, @1580748, beside AddInputControl()'s
-    // __shared_ptr_pointer one, @1580708, in this file's data): fn 5410 holds it inlined by binaryen, behind a 16-byte
-    // frame of its own that keeps the SharedField passed to AddField. Its name, the overload and its parameter are
-    // chosen after api::CInteractiveFormBuilder::AddInputControl(int).
-    void AddInputControl(int teclas);
 
     SharedField AddTextField(const std::string& texto, const SPoint& posicao, ETextAlignment alinhamento);
 
@@ -98,19 +108,6 @@ public:
 
     std::shared_ptr<IForm<IScreenMT>> GetForm(const std::string& nome);
 
-    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::string& nome, bool limpaTeclado);
-
-private:
-    std::shared_ptr<IForm<IScreenMT>> GetForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow, const std::string& nome);
-
-    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow,
-                                                                          const std::string& nome, bool limpaTeclado);
-
-    SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
-
-    std::vector<SharedField> m_campos;
-
-public:
     template <typename FONTE>
     SharedField AddTextField(FONTE fonte, const SPoint& posicao);
 
@@ -123,6 +120,34 @@ public:
     template <typename FONTE>
     SharedField AddTextField(FONTE fonte, const SPoint& posicao, const std::string& formato);
 
+protected:
+    std::vector<SharedField> m_campos;
+
+private:
+    std::shared_ptr<IForm<IScreenMT>> GetForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow, const std::string& nome);
+
+    SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
+};
+
+/**
+ * Monta os formulários da tela MT.
+ */
+class CMTFormBuilder : public CMTFormBuilderBase {
+public:
+    using SharedInput = std::shared_ptr<IInputField<IScreenMT>>;
+
+    CMTFormBuilder();
+
+    void AddInputControl();
+
+    // The control field built with std::make_shared (its block's vtable, @1580748, beside AddInputControl()'s
+    // __shared_ptr_pointer one, @1580708, in this file's data): fn 5410 holds it inlined by binaryen, behind a 16-byte
+    // frame of its own that keeps the SharedField passed to AddField. Its name, the overload and its parameter are
+    // chosen after api::CInteractiveFormBuilder::AddInputControl(int).
+    void AddInputControl(int teclas);
+
+    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::string& nome, bool limpaTeclado);
+
     // A text a source gives through a CDataTextFmt, in an api::CTextFieldUpdateMT that redraws it as it changes: its
     // instance over api::CTextSource is held inlined by binaryen in fn 652, behind a 16-byte frame of its own. It pushes a
     // copy of the field into m_campos with vector::emplace_back in place and releases the field before it returns, so it
@@ -132,6 +157,10 @@ public:
     template <typename FONTE>
     void AddTextFieldUpdate(FONTE fonte, const SPoint& posicao, const std::chrono::milliseconds& intervalo,
                             const std::string& formato);
+
+private:
+    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow,
+                                                                          const std::string& nome, bool limpaTeclado);
 };
 
 // The adder of a text a source of the caller's type gives, CDataText<FONTE> with CDataText's default alignment: its
@@ -142,7 +171,7 @@ public:
 // template with two parameters (an overload with an alignment would take the calls with a string literal from the
 // non-template overloads) are chosen.
 template <typename FONTE>
-CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoint& posicao)
+CMTFormBuilderBase::SharedField CMTFormBuilderBase::AddTextField(FONTE fonte, const SPoint& posicao)
 {
     const SharedIText text(new CDataText<FONTE>(fonte));
     SharedField campo(new CTextFieldMT(posicao, text));
@@ -151,7 +180,7 @@ CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoi
 }
 
 template <typename FONTE>
-CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoint& posicao, const std::string& formato)
+CMTFormBuilderBase::SharedField CMTFormBuilderBase::AddTextField(FONTE fonte, const SPoint& posicao, const std::string& formato)
 {
     const SharedIText text(new CDataTextFmt<FONTE>(fonte, formato));
     SharedField campo(new CTextFieldMT(posicao, text));

@@ -4,15 +4,15 @@
 // - the constructors from a string, CDate's (target fn 3649) and CDateTime's (fn 5475), each fill one slot of the table
 //   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`): their addresses are taken. 3649's direct callers 2765 and 5475
 //   and 5475's direct caller 2764 are this unit's. So are FormatCurrentDate's and FormatCurrentTime's (fns 5472, 5473):
-//   5343 (unit 165's, written, not matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
-//   api::CMTFormBuilder::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
+//   5343 (unit 165's, matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
+//   api::CMTFormBuilderBase::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
 //   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586 and 1543, unit 176's 11902, and a stand-in for the others),
 //   CDateTime::ConvertFromLocalTime (fn 5476: 1000 and 11862, in the link, no stand-in), CDateTime(time_t) (fn 1000: Now, 5472,
 //   5473, 10870, 10401 and 10402, and a stand-in for 11914, ...), CDateTime::Now (fn 479, 33 target callers: 11198, and
-//   two stand-ins for the others), ConvertToLocalTime (fn 1381: unit 101's Ajusta, 10875, 10403, and a stand-in for
-//   5841; 7160, unit 329's, 10710, unit 277's, and 7306, unit 104's, are in the link), CDateTime's operator+= (fn
+//   two stand-ins for the others), ConvertToLocalTime (fn 1381: unit 101's Ajusta, 10875, 10403, 7160, unit 329's,
+//   10710, unit 277's, 7306, unit 104's, and 5841, unit 122's, all in the link, no stand-in), CDateTime's operator+= (fn
 //   2233, callers 5412, 5474, 5959, 10566 and 11825, of which
 //   5959, 10566 and 11825 are in the link: two stand-ins), std::to_string(long long) (fn 4658: ConvertFromLocalTime and
 //   unit 152's 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller 7787
@@ -41,7 +41,6 @@ int* w1000_tempo(void*, long long) __asm__("_ZN3api9CDateTimeC1Ex");
 int* w5475_texto(void*, const void*) __asm__("_ZN3api9CDateTimeC1ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w2764_timestamp(void*, const void*) __asm__("_ZN3api9CDateTime20ConvertFromTimestampERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w759_compara(const void*, const void*) __asm__("_ZNK3api9CDateTimessERKS0_");
-long long w1381_tempo(const void*) __asm__("_ZNK3api9CDateTime18ConvertToLocalTimeEv");
 void w2233_soma(void*, int) __asm__("_ZN3api9CDateTimepLEi");
 void w779_format(void*, const void*, const void*) __asm__("_ZNK3api5CTime6FormatERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w5472_data(void*, const void*) __asm__("_ZN3api9CDateTime17FormatCurrentDateERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
@@ -115,11 +114,6 @@ __attribute__((noinline)) void HoraFormatadaDuasVezes(void* texto, void* outro, 
     w779_format(outro, hora, formato);
 }
 
-__attribute__((noinline)) long long TempoDaDataHora(const void* dataHora)
-{
-    return w1381_tempo(dataHora);
-}
-
 __attribute__((noinline)) void SomaSegundos(void* dataHora, int segundos)
 {
     w2233_soma(dataHora, segundos);
@@ -151,7 +145,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&DataHoraPosterior);
         w125_sink = reinterpret_cast<void*>(&HoraFormatada);
         w125_sink = reinterpret_cast<void*>(&HoraFormatadaDuasVezes);
-        w125_sink = reinterpret_cast<void*>(&TempoDaDataHora);
         w125_sink = reinterpret_cast<void*>(&SomaSegundos);
         w125_sink = reinterpret_cast<void*>(&SomaMinutos);
     }

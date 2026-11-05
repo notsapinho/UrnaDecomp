@@ -21,7 +21,7 @@ namespace vota {
 // vota::CPedeIdentidade (RTTI: si_class of comum::CAppState; vtable @1588232 [1537, 3629, 10680, 7480, 1661, 10678,
 // 425, 10677, 10676]): the operator's screen that asks for the voter's identifier. It overrides StartState (slot 2,
 // fn 10680, records cpedeidentidade.cpp:62 and :63), FinishState (slot 5, fn 10678), which stops the three ticks,
-// ProcessInput (slot 7, fn 10677) and ProcessTick (slot 8, fn 10676, written and not matched), both in
+// ProcessInput (slot 7, fn 10677) and ProcessTick (slot 8, fn 10676), both matched and both in
 // src/units/161-uenux2-app-vota-operador-identidade.mk. ProcessTick handles the three ticks: on +11's, when the voting
 // is blocked by the time, it stops that tick and logs it; on +12's, once vota::impl::IInformacaoThreadOperador's
 // inspection time (slot 18) has come, it schedules the next one, posts 12 to vota::CThreadEleitor's queue and goes to

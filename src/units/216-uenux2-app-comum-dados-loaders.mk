@@ -7,8 +7,8 @@
 #
 # The stand-ins, each for the target callers its comment names, none of them written; each goes when they are in the
 # link:
-# - Justificadores: two calls of CJustificador::GetInst (1391) for 5971, 6734, 11616, 12105 (11835, unit 138's,
-#   10587, unit 152's, 10797, unit 119's, and 10590, unit 283's, are in the link);
+# - Justificadores: two calls of CJustificador::GetInst (1391) for 6734 and 12105 (11835, unit 138's, 10587, unit
+#   152's, 10797, unit 119's, 10590, unit 283's, 5971, fragment 325's, and 11616, unit 122's, are in the link);
 # - HabilitadosSemBiometria: two calls of CEleitores::QuantidadeHabilitacaoSemBiometria (2822) for 12098 and 12110
 #   (10699, unit 277's, and 11242, unit 155's, are in the link);
 # - HabilitadosPorTipo: one call each of CEleitores::QuantidadeHabilitacaoBiometrica (2821) and

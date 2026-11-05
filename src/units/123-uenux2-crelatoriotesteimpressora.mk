@@ -123,8 +123,8 @@
 # function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 11943,
-# 11946, 12105 and 12110 are in the link (2785 is). w123_copia, which stood for 1249's other callers
+# five throwers not in the link (the roots file lists them) and goes with the last, and w123_separador when 11946,
+# 12105 and 12110 are in the link (2785 and 11943 are). w123_copia, which stood for 1249's other callers
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |

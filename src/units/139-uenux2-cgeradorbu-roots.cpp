@@ -7,11 +7,12 @@
 //   the table too, so its one direct caller here, the D0, leaves it a body of its own, as binaryen keeps a function the
 //   table holds (docs/reference/facts/tool-traps.md X1); no stand-in calls it. The bases' D2s (fns 5612, 5609) each have
 //   one caller, the derived D2, and a slot of their class's vtable, which the D2s store.
-// - AddTextField<CPadDS<...>> (fn 5613) has two direct callers in the target, fns 3699 and 12110, neither reconstructed.
-//   w139_cargo stands for both: it calls the instance twice, so binaryen keeps it out of line, and it takes the source by
-//   reference, so it builds no CPadDS (whose constructor is not recovered). The instance is this object's: no
-//   reconstructed TU instantiates it, and this file compiles with the tree's flags, UENUX2_CXXFLAGS (the fragment's
-//   rule), as the target's copy is uenux2 code.
+// - AddTextField<CPadDS<...>> (fn 5613) has two direct callers in the target, fns 3699 and 12110. 3699 (fragment 325's
+//   comum::CriaTituloCargo, in cgeradorbu.cpp) is in the link, and cgeradorbu.cpp.o emits the copy of the instance the
+//   link keeps. w139_cargo stands for 12110 (not reconstructed): its one call is the instance's second call site, so
+//   binaryen keeps it out of line, and it takes the source by reference, so it builds no CPadDS (whose constructor is
+//   not recovered). This file compiles with the tree's flags, UENUX2_CXXFLAGS (the fragment's rule), as the target's
+//   copy is uenux2 code.
 #include "api/gui/cpaperformbuilder.h"
 #include "app/comum/dados/ccargods.h"
 
@@ -25,11 +26,10 @@ using FonteCargo = comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>;
 
 const void* volatile cgeradorbu_sink;
 
-// Stands for fn 5613's callers 3699 and 12110.
-__attribute__((noinline)) void w139_cargo(api::CPaperFormBuilder& a, api::CPaperFormBuilder& b, const FonteCargo& fonte)
+// Stands for fn 5613's caller 12110 (3699 is in the link).
+__attribute__((noinline)) void w139_cargo(api::CPaperFormBuilder& builder, const FonteCargo& fonte)
 {
-    a.AddTextField(fonte);
-    b.AddTextField(fonte);
+    builder.AddTextField(fonte);
 }
 
 struct SCGeradorBURoots {

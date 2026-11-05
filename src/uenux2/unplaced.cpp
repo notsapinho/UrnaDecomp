@@ -11,11 +11,6 @@
 // f4633 · 675 B · unmatched · placement: link order · name unknown
 // void f4633() { ... }
 
-// link-order cluster 742 · uses=2 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
-
-// f5341 · 1052 B · unmatched · placement: link order · name unknown
-// void f5341(i32) { ... }
-
 // link-order cluster 748 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
 
 // f5376 · 343 B · unmatched · placement: link order · name unknown
@@ -245,14 +240,6 @@
 
 // f5808 · 501 B · unmatched · placement: link order · name unknown
 // void f5808(i32, i32, i32) { ... }
-
-// link-order cluster 835 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorrcsecao.cpp
-
-// f5844 · 237 B · unmatched · placement: link order · name unknown
-// ? f5844(i32, i32, i32, i32, i32) { ... }
-
-// f5843 · 239 B · unmatched · placement: link order · name unknown
-// ? f5843(i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 837 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/centidadehashes.cpp
 
