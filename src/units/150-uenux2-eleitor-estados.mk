@@ -122,12 +122,27 @@
 #   are lambdas beyond the two the records give (measured above for the holder's photo and the right edge), the helper
 #   adicionaImagem, inlined into 6561, the filters' form and StartState's loop, and every line but the records'.
 #
+# vota::CVisualizarCandidatos::CarregaCandidaturas (5953), GetCargos (no index: binaryen inlines it into its one caller)
+# and SetCargo (inline), for vota::CMenuFiltrarCandidatosPorCargo::StartState (11888; unit 104's fragment has its
+# evidence and the forms measured), with std::construct_at<CCandidatura, const CCandidatura&> (5952) and
+# std::__uninitialized_allocator_relocate over CCandidatura (5950), the push_back's copy and reallocation, instances
+# this object emits first: all three match (5953 named by 11888's call, 5952 and 5950 by pair-addr), and
+# cvisualizarcandidatos.h says what each member rests on. Before step 8 they scored 9 over 267 (5953), 4 over 131 (5952)
+# and 4 over 184 (5950), all operand-only. Band 2 runs 5954, 5953, 5952, 5951 (GetCargo), 5950 (ledger/ordinals.tsv),
+# and our link gives 5953, 5952, GetCargo and 5950 rising ld_index (names.tsv), so CarregaCandidaturas is defined above
+# GetCargo and its first mention of construct_at puts 5952 between them; GetCargos after LimpaFiltros is a choice. The
+# roots stand in for 5953's other target caller, 11884 (pending in unit 104), and 5950's, 5710 (not written), with one
+# call each (CandidaturasCarregadas, CandidaturasRelocadas). The file reaches Boost through cconfiguracaoeleicao.h now
+# (the include path below).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \
     src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp \
     src/app/vota/eleitor/comum/ctelascargo.cpp
 UENUX2_SRCS += $(ELEITOR_ESTADOS_SRCS)
+# cvisualizarcandidatos.cpp reaches Boost through cconfiguracaoeleicao.h (its GetCargos reads comum::CConfiguracaoEleicao)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # nothing reconstructed calls CVisualizarCandidatos::GetInst, CInstrucaoVotacaoAcessibilidade::GetInst, NomeTela,
 # CVisualizarCandidatos::GetCargo or has<api::ITextToSpeech> from all of their target callers yet:
 # 150-uenux2-eleitor-estados-roots.cpp stands in for the missing callers

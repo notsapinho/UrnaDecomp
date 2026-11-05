@@ -66,7 +66,9 @@
 // copy of the callback, and returns the item. The item's rectangle is read through a copy (the target copies it into a
 // frame slot before SRect::Union takes it), which a getter that returns it by value gives: GetRect, its name chosen.
 // 11881 reads the chosen item's std::any (+152, then +80) and sets an item's std::any with std::any's copy assignment
-// (fn 1763, action 1, the copy, first): GetItemSelecionado, GetDado and SetDado, names and forms chosen.
+// (fn 1763, action 1, the copy, first): GetItemSelecionado, GetDado and SetDado, names and forms chosen, but SetDado's
+// result: it returns the item, as fn 11888's AddItem("Todos").SetDado(...).SetSearchText("0") needs (its four
+// temporaries die after SetSearchText; src/units/104-uenux2-app-vota-estados.mk has the measurement).
 
 #include <any>
 #include <functional>
@@ -101,7 +103,7 @@ public:
 
     const std::any& GetDado() const { return m_dado; }
 
-    void SetDado(const std::any& dado) { m_dado = dado; }
+    CMenuItem& SetDado(const std::any& dado) { m_dado = dado; return *this; }
 
     const std::string& GetBusca() const { return m_busca; }
 

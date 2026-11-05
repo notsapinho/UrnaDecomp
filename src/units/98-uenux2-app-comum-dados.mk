@@ -291,7 +291,7 @@
 #   can land: with the stand-in it carried 2543 alone (weighed by removal: only 2543's and 11514's rows moved). While
 #   our link inlines 11514, it has no body of its own to name, so neither the line nor the stand-in is in the tree.
 # - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: two calls of 2543 for its callers 6734, 7174 and 12098, and
-#   two of 2834 for 5953 and 7787 (12244, unit 102's, is in the link).
+#   one of 2834 for 7787 (12244, unit 102's, and 5953, unit 150's, are in the link; the call for 5953 went with it).
 # Chosen: the names (VerificaVotosCargo, ChaveCandidatura, ChaveResposta, Procura, GetMapaCargos included), the free
 # functions' linkage and files, GetMapaCargos' being a member (m_todos's access is our header's), the parameters'
 # names, and the lines.

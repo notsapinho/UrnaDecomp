@@ -510,8 +510,36 @@
 # target's block order (the
 # other order, 129 over 1094, measured with the file in this unit's list). AddItem (1693), which differs, takes its
 # name from a hand line on its own records (unit 84's fragment): without it 11881 and 12894 are unresolved self-voted.
-# The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp.
-# The two files sit in the list in name order beside the other auxiliares/ files, a choice not measured.
+#
+# vota::CMenuFiltrarCandidatosPorCargo::StartState (11888, slot 2, record cmenufiltrarcandidatosporcargo.cpp:44:31, the
+# CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and matches, with what it
+# calls that had no body: vota::CVisualizarCandidatos::CarregaCandidaturas (5953) and the two instances that object
+# emits for it, std::construct_at<CCandidatura, const CCandidatura&> (5952) and std::__uninitialized_allocator_relocate
+# over CCandidatura (5950), all in cvisualizarcandidatos.cpp (unit 150's fragment); std::set<comum::md::CCargo>'s
+# destroy (3862, this object's); and std::any's handler for unsigned char (12893, ctelasvota.cpp.o's). It holds, in this
+# order: m_pNextState and CMenuFiltrarCandidatosPorNumero::GetInst() (5954), compared into a bool that is set just before
+# the screen's prologue; CVisualizarCandidatos::GetInst() (1279) and its GetCargos (inlined: a 16-byte frame); the
+# screen TelaFiltragemCandidatosPorCargo (ctelasvota.cpp, inlined: a 144-byte frame; ctelasvota.h says what it holds);
+# the set destroyed after it, a temporary of that full-expression; the form's slot 2 once; and the menu's loop: CORRIGE
+# goes back to CMenuVisualizarCandidatos, CONFIRMA stores the chosen item's post (std::any_cast) through
+# CVisualizarCandidatos::GetInst().SetCargo. Measured with pnpm wasm score in the whole link (scratch links of the tree,
+# then step 9): the post read inside its filter, 216 over 1393 rows (12 inserted, 13 deleted); read into a local at the
+# loop's top, 462 over 1405; the local declared after the candidate's filter, where the target loads it once for the
+# filter and GetCargo, with the CORRIGE case first (the target's br_table [0 1 1 1 2]; CONFIRMA first gives
+# [2 1 1 1 0]), 194 over 1385 (4 inserted, 4 deleted: the bool computed inside the inlined screen), and the same with
+# the screen's parameters in the other order; the screen's non-empty branch first, 643 over 1571; with this file
+# compiled from unit 110's list after ctelasvota.cpp, the target's data order (ctelasvota.cpp's run at @1539xxx, this
+# class's vtable at @1545448, CMenuVisualizarCandidatos' at @1545592), 82 over 1381, every row a call or a data
+# address, then a match at step 9. The "Todos" item's four temporaries ("Todos", the default callback, the std::any and
+# "0") die after SetSearchText, so the item is one chain, AddItem("Todos").SetDado(...).SetSearchText("0"), and
+# api::CMenuItem::SetDado returns the item (api/gui/cinputmenufield.h): the item bound to a reference with SetDado and
+# SetSearchText as two statements scores 247 over 1400 (19 inserted, 20 deleted) in the same link. Chosen: the
+# structured binding's names (their lengths put the record's call at column 31), the local bool, the case spelling,
+# SetCargo, and the lines (StartState below the statics, the record's line fixing the switch's).
+# The roots' call of CMenuFiltrarCandidatosPorNumero::GetInst (5954) went: its target callers, 11881 and 11888, are in
+# the link. PorPartido's StartState (11884) is a trap in 104-uenux2-app-vota-estados-pending.cpp.
+# cmenufiltrarcandidatosporpartido.cpp sits in the list in name order beside the other auxiliares/ files, a choice not
+# measured; cmenufiltrarcandidatosporcargo.cpp is compiled from unit 110's list (above).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -524,7 +552,6 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/ciniciozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \

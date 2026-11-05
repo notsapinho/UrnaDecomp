@@ -5,6 +5,7 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
 #include <string>
 #include <utility>
 #include <vector>
@@ -22,6 +23,10 @@ class IForm;
 struct SFont;
 struct SPoint;
 } // namespace api
+
+namespace comum::md {
+class CCargo;
+} // namespace comum::md
 
 namespace comum {
 class CAppState;
@@ -280,6 +285,26 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaErroTesteTeclado();
 std::shared_ptr<api::IForm<api::IScreen>> TelaRetireMR();
 CFormInterativoTelaVota TelaLacreTampa();
 CFormInterativoTelaVota TelaMRModoDemo();
+
+// The post filter's menu, which vota::CMenuFiltrarCandidatosPorCargo::StartState (fn 11888) holds behind a second
+// stack-pointer prologue (a 144-byte frame) with no call of CTelasVota::GetInst() before it: a free function, out of
+// line in the object and inlined by binaryen. Evidence, the body: the status header (5), "Visualização de candidatos"
+// at (320, 40) in the 30-point font (@474888) and "Filtragem por cargo" at (320, 75) in the 25-point one (@474992),
+// centred, colours 2 over 1; with no post, "Nenhum cargo disponível!" at (320, 200) in that font and the label of
+// CORRIGE ('D', "Retornar") through fn 653; else a menu at (10, 120) in the 20-point font (@474896) through
+// api::AddInputMenuField (fn 3675) with "Selecione o cargo: " and 310, when the bool 11888 computes first (its next
+// state is not CMenuFiltrarCandidatosPorNumero's) an item "Todos" whose std::any holds the post 0 and whose search
+// text is "0", one item per post of the set (std::set<comum::md::CCargo>, ordered) with a copy of its candidate
+// detail's masculine name (CCargo::GetDetalheCandidato, fn 1388) and its id in the std::any (std::any's handler for
+// unsigned char, fn 12893), and the labels of CONFIRMA ('C', "Confirmar seleção") and CORRIGE ('D', "Retornar");
+// then "telaFiltragemCandidatosPorCargo" through GetFormularioInterativo (fn 576). It returns the form and the menu,
+// as TelaMenuVisualizacaoCandidatos (below) does. Why ctelasvota.cpp: the three fonts are this file's constants (the
+// reading above). The name (from the form's), the parameters' names and order (the other order scored the same, 194
+// over 1385 rows, before 11888's object moved after ctelasvota.cpp.o),
+// the local that holds the item's name (a temporary in the call is not measured), its being a free function of vota and
+// its place after the file's last record are chosen.
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorCargo(
+    bool todos, const std::set<comum::md::CCargo>& cargos);
 
 // The keyboard test's screen and key sequence, which vota::testeteclado::CTesteTeclado::StartState (fn 11805) holds
 // behind second stack-pointer prologues, one caller each: TelaTesteTeclado and SorteiaTeclasTesteTeclado, defined in

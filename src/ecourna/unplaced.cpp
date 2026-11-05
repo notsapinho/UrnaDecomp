@@ -61,11 +61,6 @@
 // f5766 · 5577 B · unmatched · placement: link order · name unknown
 // void f5766(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 861 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cretomada.cpp
-
-// f5950 · 399 B · unmatched · placement: link order · name unknown
-// void f5950(i32, i32, i32) { ... }
-
 // link-order cluster 886 · uses=2
 
 // f6272 · 13 B · unmatched · placement: link order · name unknown

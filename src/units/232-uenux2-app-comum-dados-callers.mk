@@ -16,8 +16,9 @@
 #   200's, which passes true, is in the link); the stand-in passes both.
 # CopiaCargos, one call of std::vector<md::CCargo>'s copy constructor (2289), went: the last caller it stood for,
 # 11371, is in the link (fragment 299, through md::CEleicaoPE's constructor), as 1953 and 5777 are (unit 280).
-# - Suplentes: one call of std::vector<md::CDadosCandidato>::__init_with_size (2870), for 5808, 5952 and 7787;
-#   md::CCandidatura's constructor (5660) is the other caller. Without it binaryen inlines 2870 into 5660, which then
+# - Suplentes: one call of std::vector<md::CDadosCandidato>::__init_with_size (2870), for 5808 and 7787;
+#   md::CCandidatura's constructor (5660) and std::construct_at<CCandidatura> (5952, unit 150's object) are the other
+#   callers. Without it binaryen inlines 2870 into 5660, which then
 #   differs (fragment 89).
 #
 # Not written: two tree destroys whose one target caller, 7787, holds the code that builds and destroys each tree,
