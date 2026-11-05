@@ -119,8 +119,8 @@
 # Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's,
 # CEleitorJaVotou's and CIdentidadeInvalida's (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaProximoDedo1x4 (record 187, held inlined by 10465) is written since 10465 is (below).
-# Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState, written, below), 10676 (written,
-# below).
+# Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState, written, below). 10676 matches
+# since (below).
 # Matched since: vota::IEleitorImpedidoVotar::StartState (fn 10625, slot 2 of the base and its six derived classes, in
 # ieleitorimpedidovotar.cpp after the destructor, before ProcessInput: 10625 above 10624 in use band 1): the form's
 # slot 2, the class's slot 9 (LogaImpedimento), vota::ApresentaFotoEleitor (fn 3616, unit 319) and `this` as the next
@@ -246,8 +246,8 @@
 # `>= 2020`, the slot called directly on GetInst's result rather than through a vota:: function over it, and the two
 # `if`s' spelling.
 #
-# CPedeIdentidade::ProcessTick (10676, slot 8) is written in cpedeidentidade.cpp, after ProcessInput, a chosen line, and
-# does not match. In the target's order: on the tick at +11, when IsVotacaoBloqueadaPorHorario (fn 2226) holds,
+# CPedeIdentidade::ProcessTick (10676, slot 8) is written in cpedeidentidade.cpp, after ProcessInput, a chosen line, a
+# match. In the target's order: on the tick at +11, when IsVotacaoBloqueadaPorHorario (fn 2226) holds,
 # CThreadOperador's StopTick (fn 422) of it and CLogVota::GetInst, then a 16-byte frame binaryen inlined: the member
 # LogaVotacaoBloqueadaPorHorario, added to clogvota.cpp, logaAlerta (fn 1398) of "Votacao foi bloqueada por horario"
 # (a literal only 10676 loads); on the tick at +12, when api::CDateTime::Now() (fn 479) is not before
@@ -258,14 +258,15 @@
 # text of the field with the form's focus is empty, else " " (a one-character store in place); the field is read with
 # std::vector::at at CInteractiveForm's +84, the index of the focus, through GetEntradaAtual, added to
 # api/gui/cinteractiveform.h (its out_of_range call is fn 234). Measured with pnpm wasm score in the whole link, before
-# steps 7 to 9: `96 over 510 rows (same 414, replaced 81 [80 operand-only], inserted 3, deleted 12)`, and every row
-# that is no operand is in the inlined CAguardaInspecao constructor's form: the target clears the builder's 12 bytes in
-# place (`i32.store[l2+44] = 0; i64.store[l2+36] = 0`) and uses the frame's address, ours calls
-# api::CMTFormBuilder's constructor (fn 203's body) and keeps its result in a local, which shifts the locals after it.
-# That is the remainder units 02, 104, 142 and 165 record for 4633, 10214, 1150 and 5343, GetForm's callers (fn 1694):
-# not explained. The slot keeps it written (docs/how-to-decompile.md step 5); its trap went. Its row reads `unresolved`
-# on CAguardaInspecao::s_inst's .bss address, which no target name holds while 10676 does not match (step 8 names the
-# function by its vtable slot, which casts no vote). Chosen: the log member's name and its place in clogvota.cpp,
+# steps 7 to 9, while the inlined CAguardaInspecao constructor's form was built over api::CMTFormBuilder, whose
+# constructor is out of line (fn 203's body): `96 over 510 rows (same 414, replaced 81 [80 operand-only], inserted 3,
+# deleted 12)`, every row that is no operand in that form, where the target clears the builder's 12 bytes in place
+# (`i32.store[l2+44] = 0; i64.store[l2+36] = 0`) and uses the frame's address. Built over api::CMTFormBuilderBase, whose
+# constructor is inline (api/gui/cmtformbuilder.h has the evidence; unit 281's caguardainspecao.cpp), `51 over 507 rows
+# (same 456, replaced 51 [51 operand-only], inserted 0, deleted 0)`: calls, data addresses and the .bss addresses of
+# CAguardaInspecao's statics. Step 8 names those from 10676's votes alone (s_mutex `vote:1`, s_inst `vote:4`, by 10676),
+# the build checking them with 10676's bytes; the statics' exit destructors, 10531 and 10532, the one other reader of
+# each address, match with them (unit 281's fragment). Chosen: the log member's name and its place in clogvota.cpp,
 # GetEntradaAtual's name and result (a field pointer; an index getter with at() in ProcessTick is not measured), `>=` on
 # the two times, the slot called on GetInst's result directly, the literal 12, and the `if` and `else if` spelling.
 #

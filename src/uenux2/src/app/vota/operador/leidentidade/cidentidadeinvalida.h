@@ -47,8 +47,8 @@ private:
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };
 
-// The text of the form's second field, passed by its table slot (3860) to api::CMTFormBuilder::AddTextField (fn 619):
-// fn 10670, `f3623(p0)`, the identifier typed (vota::GetIdentidadeDigitada, fn 3623). Its band puts it after the
+// The text of the form's second field, passed by its table slot (3860) to api::CMTFormBuilderBase::AddTextField (fn
+// 619): fn 10670, `f3623(p0)`, the identifier typed (vota::GetIdentidadeDigitada, fn 3623). Its band puts it after the
 // statics' exit destructors and before StartState (fn 10669), so it is external, defined there. Its name and its being a
 // free function of vota are chosen.
 std::string TextoIdentidadeInvalida();

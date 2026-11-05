@@ -29,7 +29,7 @@ namespace vota {
 // The constructor is fn 1905, out of line (its callers are fn 5424, CEleitorNaoEncontrado::GetInst, and fn 10635, which
 // calls it five times for the other derived classes): it passes comum::CAppState::EVENTO_ENTRADA (2) to the base's,
 // stores its int at +20, and builds the form: the identity typed on line 1 (table slot 3907, GetTextoIdentidadeDigitada),
-// the texts of its two std::function on lines 2 and 3 (api::CMTFormBuilder's AddTextField over a std::function, fn
+// the texts of its two std::function on lines 2 and 3 (api::CMTFormBuilderBase's AddTextField over a std::function, fn
 // 5419, which takes a copy of each), and on line 4 "CONFIRMA: retornar" at the right when the int at +20 is 0 or
 // "CORRIGE: retornar" at the left when it is 1, the key ProcessInput reads; the form is assigned to +12 in the body
 // (the member is cleared first, then the result moved in). The derived classes pass two function pointers (the table

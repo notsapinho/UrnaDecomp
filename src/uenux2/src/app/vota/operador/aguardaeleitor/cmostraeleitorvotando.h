@@ -29,7 +29,7 @@ namespace vota {
 //
 // The layout: +12 a std::shared_ptr<std::string>, which fn 1150 builds empty with std::make_shared (control block vptr
 // 1588328, __shared_ptr_emplace<std::string>) and StartState fills from vota::CThreadOperador's string at +108; +20 the
-// form, from api::CMTFormBuilder::GetForm (fn 1694). The member names are chosen.
+// form, from api::CMTFormBuilderBase::GetForm (fn 1694). The member names are chosen.
 class CMostraEleitorVotando final : public comum::CAppState {
 public:
     virtual ~CMostraEleitorVotando() override;

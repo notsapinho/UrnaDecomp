@@ -178,7 +178,7 @@
 #   GetText, holds its operator() inlined: CRegistradorMesario::GetInst (fn 815) and QuantidadeMesariosInicio (fn 3606,
 #   Inicial and Votacao: one body, fn 5387) or QuantidadeMesariosFim (fn 2727, Final: fn 10368), formatted as an
 #   unsigned argument (type code 6) with std::vformat. The adder over CDataTextFmt is a member template of
-#   api::CMTFormBuilder (cmtformbuilder.h says what is chosen). The voter's screen is
+#   api::CMTFormBuilderBase (cmtformbuilder.h says what is chosen). The voter's screen is
 #   comum::TelaEleitorRegistroMesarios, the second copy of fn 1255, with a parameter its body does not read:
 #   ipedetitulomesario.h has the three forms measured against it. Measured in the whole link (pnpm wasm score of 10388):
 #   186 over 2061 rows, all operand-only (the six statics' addresses), then a match at step 9; the statics are named by

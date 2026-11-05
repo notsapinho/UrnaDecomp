@@ -26,17 +26,18 @@
 #   (docs/reference/facts/codegen.md C4). The data hold the same order: CAguardaInspecao's vtable and typeinfo
 #   (@1590724, @1590768) come right before CConfirmaInspecionada's.
 # - CAguardaInspecao's GetInst and constructor have no target index: vota::CPedeIdentidade::ProcessTick (10676, unit
-#   161's, written and not matched: that fragment has the measurement) holds both inlined, the one store of this class's
-#   vptr (1590732): a 20-byte object, CAppState(1), EVENTO_TECLA, the form at +12 from api::CMTFormBuilder::GetForm("")
+#   161's, a match: that fragment has the measurements) holds both inlined, the one store of this class's vptr
+#   (1590732): a 20-byte object, CAppState(1), EVENTO_TECLA, the form at +12 from api::CMTFormBuilderBase::GetForm("")
 #   (fn 1694 writes into the member) with AddBuzz(51, 10), AddClock at {33, 1}, "Inspecione cabina e urna" at {1, 2} and
 #   "Instruções no terminal do eleitor" at {1, 3}, under the static mutex (@1908528) and into the static pointer
-#   (@1908552). The form is a plain one (GetForm, not GetInteractiveForm), and the vtable overrides slot 6 (ProcessKey)
-#   and keeps the base's empty slot 7 (218). Its StartState is the shared 1070, the next state this and the form's slot
-#   2. The statics' exit destructors, 10531 (the mutex) and 10532 (the pointer), read `differs` on the census's pairs
-#   with other objects' destructors: 10676 is the one other target function that loads 1908528 and 1908552
-#   (`/usr/bin/grep -rlE 'i32\.const 1908552($|[^0-9])' build/out/splat/pieces/asm` prints 10532's piece and 10676's),
-#   so they wait for its match. In band 1, 10532 and 10531 lie above 10530: the statics, the pointer first, are defined
-#   before ProcessKey.
+#   (@1908552), over an api::CMTFormBuilderBase, whose constructor is inline: 10676 clears the builder's 12 bytes in its
+#   frame (api/gui/cmtformbuilder.h). The form is a plain one (GetForm, not GetInteractiveForm), and the vtable
+#   overrides slot 6 (ProcessKey) and keeps the base's empty slot 7 (218). Its StartState is the shared 1070, the next
+#   state this and the form's slot 2. The statics' exit destructors, 10531 (the mutex) and 10532 (the pointer), match
+#   since 10676 does: 10676 is the one other target function that loads 1908528 and 1908552 (`/usr/bin/grep -rlE
+#   'i32\.const 1908552($|[^0-9])' build/out/splat/pieces/asm` prints 10532's piece and 10676's), and its votes name the
+#   two statics; before, they read `differs` on the census's pairs with other objects' destructors. In band 1, 10532 and
+#   10531 lie above 10530: the statics, the pointer first, are defined before ProcessKey.
 #
 # Chosen: the paths, by the data. CConfirmaInspecionada's vtable lies between CAguardaInspecao's (@1590724) and
 # vota::CHabilitaAudioEleitor's (@1590852, confirmaidentidade/chabilitaaudioeleitor.cpp), ahead of

@@ -8,7 +8,7 @@ namespace {
 
 std::shared_ptr<api::IForm<api::IScreenMT>> MontaTelaEncerramento()
 {
-    api::CMTFormBuilder builder;
+    api::CMTFormBuilderBase builder;
     builder.AddLed(api::LED_OPERACAO_0);
     builder.AddTextField("Procedimentos de Encerramento", api::SPoint{20, 1}, api::ALINHAMENTO_CENTRO);
     builder.AddTextField("Siga as instruções na tela do eleitor", api::SPoint{20, 3}, api::ALINHAMENTO_CENTRO);

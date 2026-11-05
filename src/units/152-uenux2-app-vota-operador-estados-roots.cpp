@@ -10,10 +10,10 @@
 //   (10511, unit 161) and unit 282's states call; vota::CEleitorDemorando's, inlined into its GetInst (2734), which the
 //   next item keeps; and vota::CSuspensaoAutomaticaEleitor's and vota::CPerguntaEleitorVotando's, inlined with their
 //   GetInst into CEleitorDemorando's StartState and ProcessInput (fns 10440 and 10439).
-// - The GetInst of CDesabilitaAudioEleitor (fn 5393), whose target callers are fns 10209 and 10430, of which 10430
-//   (unit 71) is in the link. The stand-in calls it twice, so that binaryen keeps it a function of its own, and
-//   subtracts the two results; vota::CEleitorDemorando::GetInst (2734) the same way, adding them: its one target
-//   caller, CMostraEleitorVotando::ProcessKey (10425, unit 142's trap), calls it four times.
+// - vota::CEleitorDemorando::GetInst (2734): its one target caller, CMostraEleitorVotando::ProcessKey (10425, unit
+//   142's trap), calls it four times; the stand-in calls it twice, so that binaryen keeps it a function of its own, and
+//   adds the results. The GetInst of CDesabilitaAudioEleitor (fn 5393) needs none: its two target callers, 10209
+//   (CSincronismoOperador::ProcessKey, unit 104) and 10430 (unit 71), are in the link.
 //   CHorarioVotacaoTerminou::GetInst (fn 5430) needs none: its two target callers, 10677 (unit 161) and 10689
 //   (CEscolheOpcao::ProcessInput, written in unit 277's list), are in the link.
 // - vota::IIniciaJustificativa's constructor (target fn 3624) needs none: its two target callers, 10631 and 10635, are
@@ -25,17 +25,10 @@
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2
 // header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-int w5393_root_0() __asm__("_ZN4vota23CDesabilitaAudioEleitor7GetInstEv");
 int w2734_root_0() __asm__("_ZN4vota17CEleitorDemorando7GetInstEv");
 }
 
 namespace {
-
-// Stands for fn 10209, the target caller of vota::CDesabilitaAudioEleitor::GetInst (fn 5393) not in the link (10430 is).
-__attribute__((noinline)) int DesabilitaAudio()
-{
-    return w5393_root_0() - w5393_root_0();
-}
 
 // Stands for fn 10425 (vota::CMostraEleitorVotando::ProcessKey, unit 142's trap), which calls
 // vota::CEleitorDemorando::GetInst (fn 2734) four times.
@@ -49,7 +42,6 @@ const void* volatile estados152_sink;
 struct SEstados152Roots {
     SEstados152Roots()
     {
-        estados152_sink = reinterpret_cast<const void*>(&DesabilitaAudio);
         estados152_sink = reinterpret_cast<const void*>(&EleitorDemorando);
     }
 } estados152_roots;

@@ -4,8 +4,8 @@
 // - the constructors from a string, CDate's (target fn 3649) and CDateTime's (fn 5475), each fill one slot of the table
 //   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`): their addresses are taken. 3649's direct callers 2765 and 5475
 //   and 5475's direct caller 2764 are this unit's. So are FormatCurrentDate's and FormatCurrentTime's (fns 5472, 5473):
-//   5343 (unit 165's, written, not matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
-//   api::CMTFormBuilder::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
+//   5343 (unit 165's, matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
+//   api::CMTFormBuilderBase::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
 //   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, unit 123's 5586 and 1543, unit 176's 11902, and a stand-in for the others),
