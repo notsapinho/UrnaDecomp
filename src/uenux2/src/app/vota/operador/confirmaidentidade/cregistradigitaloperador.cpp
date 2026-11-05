@@ -292,15 +292,21 @@ bool CRegistraDigitalOperador::BiometriaMesarioPresente(const comum::md::CEleito
 }
 
 namespace {
-// Chosen: this function, its name and its internal linkage (the target holds the map in ProcessTick's own frame).
-double CalculaEntropia(const api::TSharedImageVector& imagem)
+// Chosen: these two functions, their names and their internal linkage (the target holds the map in ProcessTick's own
+// frame). The counts come back by value for the map's stores (src/units/221-uenux2-app-comum-constructors.mk).
+std::map<uebyte, int> ContaOcorrencias(const std::vector<uebyte>::const_iterator inicio,
+                                       const std::vector<uebyte>::const_iterator fim)
 {
-    const auto inicio = imagem->cbegin();
-    const auto fim = imagem->cend();
     std::map<uebyte, int> ocorrencias;
     for (auto it = inicio; it != fim; ++it) {
         ++ocorrencias[*it];
     }
+    return ocorrencias;
+}
+
+double CalculaEntropia(const api::TSharedImageVector& imagem)
+{
+    const std::map<uebyte, int> ocorrencias = ContaOcorrencias(imagem->cbegin(), imagem->cend());
     double soma = 0;
     for (const auto& [valor, quantidade] : ocorrencias) {
         const double probabilidade = static_cast<double>(quantidade) / static_cast<int>(imagem->size());
@@ -311,7 +317,7 @@ double CalculaEntropia(const api::TSharedImageVector& imagem)
 
 } // namespace
 
-// (original lines 316-324: content not recovered)
+// (original lines 322-324: content not recovered)
 #line 325
 bool CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores(const comum::md::CEleitorIdentidade& mesario)
 {

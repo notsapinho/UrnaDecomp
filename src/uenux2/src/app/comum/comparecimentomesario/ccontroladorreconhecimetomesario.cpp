@@ -2,11 +2,11 @@
 // reconstruction's notes, not TSE's text, are in src/units/214-uenux2-app-comum-comparecimentomesario.mk: the records
 // fix ComparaDigitais's lines (65 and 76); every other line is a choice.
 #include "app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.h"
-
 #include <algorithm>
 #include <filesystem>
 #include <format>
 #include <functional>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -150,8 +150,8 @@ bool CControladorReconhecimentoMesario::BiometriaPresenteNosRegistrados(const st
 bool CControladorReconhecimentoMesario::BiometriaPresenteNosNaoRegistrados(const std::vector<uebyte>& digital)
 {
     const std::vector<std::filesystem::path> arquivos = ListaArquivosNaoRegistrados();
-    const std::vector<std::filesystem::path> recentes(
-        arquivos.begin(), arquivos.begin() + std::min<std::size_t>(arquivos.size(), 6));
+    const std::size_t quantidade = arquivos.size() >= 6 ? 6 : arquivos.size();
+    const std::vector<std::filesystem::path> recentes(std::from_range, std::span(arquivos).first(quantidade));
     for (const std::filesystem::path& arquivo : recentes) {
         const std::filesystem::path caminho = GetPathWsqNaoRegistrado() / arquivo;
         if (std::filesystem::exists(caminho)) {

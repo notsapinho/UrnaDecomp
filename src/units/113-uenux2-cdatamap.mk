@@ -48,17 +48,17 @@
 #   it stands for).
 #
 #   Measured in the link (pnpm wasm score against the target, after make -C src link-map):
-#   - the order of the objects: ccomparecimentomesarioservico.cpp is in this unit's list ahead of
-#     cregistradormesario.cpp, moved from unit 163's. In the target's data the servico's vtable (1595668), Entregar's
-#     record (1595692) and the control block's vtable lie between ipedetitulomesario.cpp's records (1595636, 1595652)
-#     and cregistradormesario.cpp's first (1595748): the servico's object comes right before cregistradormesario.cpp's.
-#     The move also puts it ahead of objects whose records lie before its data (cjustificador.cpp's, 1560664); no row
-#     moves for that. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
-#     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
-#     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
-#     cregistradormesario.cpp stays in this list: compiled from unit 221's list after cregistradigitaloperador.cpp,
-#     where the target holds its records, it would invert 14 object pairs against the target's data on the merged
-#     link, and no match needs it (unit 221's fragment has the measurement, on fns 10451 and 3614).
+#   - the order of the objects: ccomparecimentomesarioservico.cpp comes right before cregistradormesario.cpp (moved from
+#     unit 163's list, then from this unit's). In the target's data the servico's vtable (1595668), Entregar's record
+#     (1595692) and the control block's vtable lie between ipedetitulomesario.cpp's records (1595636, 1595652) and
+#     cregistradormesario.cpp's first (1595748): the servico's object comes right before cregistradormesario.cpp's.
+#     With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396, replaced 121 [121
+#     operand-only], inserted 2, deleted 2)`, its locals permuted; with the servico first `55 over 519 rows (same 464,
+#     replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve, in this unit's list and again
+#     in unit 278's. Unit 278's list compiles both now, after unit 221's cregistradigitaloperador.cpp, where the target
+#     holds cregistradormesario.cpp's records: fn 10451's locals need cregistradormesario.cpp there (unit 221's fragment
+#     has the measurement and the object pairs the move reorders). This list keeps cjustificador.cpp, now ahead of the
+#     servico as the target's data put it (its records at 1560664).
 #   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377
 #     downwards, so the destructor is defined (or first mentioned) above AtualizaMesarioSecao, which first mentions 5379
 #     (how-to step 3, "The order of two members"). Defined below Registra, the bodies were the same (5380 `4 over 29
@@ -179,7 +179,7 @@
 # pointer. The pointer's name is
 # `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throws' (55, 83 and 104).
-CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
+CDATAMAP_SRCS := src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 
 $(ROOT)/$(APP)/113-uenux2-cdatamap-roots.o: $(ROOT)/src/units/113-uenux2-cdatamap-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/113-uenux2-cdatamap.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
