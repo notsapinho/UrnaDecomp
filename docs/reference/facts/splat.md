@@ -223,7 +223,9 @@ moved by neither shift` on the data words' line.
 5. **The build's lists.** `TMPDIR=/tmp make -C src splat` prints `kind-unverified: 0/<matches> matches` and
    `review warnings: <n> literal operands … <n> past-data, <n> target-object, <n> past-table`. The warnings are in
    upstream library functions built from their own sources (sqlite, OpenSSL, libc++, 7-Zip, RHVoice, zlib's minizip),
-   whose numbers come from those sources.
+   whose numbers come from those sources, and in two TSE functions whose number no TSE source writes: 11172's 1341440,
+   the bit mask clang builds for a switch over enumerators (unit 179), and 9543's nine 65836 operands (constants and
+   load and store offsets), which come with minizip's `zipOpen64`, inlined into it (unit 06).
 
 The limits of the check that remain are listed in `docs/reference/splat.md` "Reviewing a match".
 

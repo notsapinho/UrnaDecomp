@@ -170,8 +170,10 @@
 #   between IValidaMidia's typeinfo and GetInst's push record, at the distances our link gives them. Removed alone, with
 #   Valida's match line out of the copy, two scans leave Valida `unresolved self-voted` and splat-build gives the
 #   target's sha256 with 12579 matches: Valida rests on it. The word (.data, -1) has no target name: 5574 alone loads
-#   it, so no vote and no hand line names it (docs/reference/splat.md section 3, "No circular evidence"), and 5574
-#   stays unresolved.
+#   it, so no vote names it, its four bytes occur 65+ times (the scan's detail), and no hand line may, since its one
+#   use would be the match the line enables (docs/reference/splat.md section 3, "No circular evidence": its sentence
+#   names a .bss object no target function but the match reads; this word is .data, and the reasoning is the same),
+#   and 5574 stays unresolved.
 #
 # Chosen: every name but the records' (ConteudoIncializacao, CFabricaConteudoMidiaStart, GetInst, the classes RTTI
 # names): the slots' (EhValida, Valida, ContemApenasArquivosPermitidos, ContemResultado, ContemArquivosResultado,

@@ -66,9 +66,13 @@
 #   whose default argument makes it, in a member body defined in the class.
 # - votaPressKey calls the getter and drops its result, then tests the pointer and builds the string simulador::PushKey
 #   (9649) takes: PressKey as a member, the getter's name (Engine), g_engine and every parameter name are chosen.
-# - Lines: 592 is the record's; 361 and 515, the records of CPoliticaExecucaoEleitorWeb::LimpaBufferInput (10835) and
-#   CVotaWebEngine::Init (7840), stay blank, 361 at namespace level and 515 inside the class, which starts after 361.
-#   Every other line, and the order of the definitions, is a choice.
+# - Lines: 361 and 592 are the records' (CPoliticaExecucaoEleitorWeb::LimpaBufferInput, 10835, in its class at
+#   namespace level, and SetAudioEnabled); 515, the record of CVotaWebEngine::Init (7840, not written), stays blank
+#   inside the class, which starts after 361, and the members written beside it go after it (src/README.md "Gaps"):
+#   Tick and GetStateJson from 517, EstadoJson after PressKey, below 592. Every other line, and the order of the
+#   definitions, is a choice. The engine's members are inline: EstadoJson at 425 to 512, above Init's record, or after
+#   PressKey gives a cmp-identical object (measured; that clang emits them in the order of their first use is a
+#   reading).
 # - The default arguments' records of instance() name this file only at 592: the TU's other calls of instance() are in
 #   functions not written.
 #
@@ -221,19 +225,25 @@
 #   11026). The types' roles are read from the operator states that post them (Post(5) in CSincronismoOperador, Post(9)
 #   or Post(8) then Post(1) in CHabilitaAudioEleitor::ProcessInput); the three names are chosen. The message is built in
 #   each, not with `fila.Post(N)`: at this rule Post(short) stays a call (wasm-objdump -d of a probe object), where 3903
-#   holds the stores. Linkage and place: external, since clang inlines a one-call internal function; defined after the
-#   exports, since the target's table holds priority_queue::push (which Insert invokes) at slot 237, after main's slots
+#   holds the stores. Linkage and place: external, since clang inlines a one-call internal function; defined after
+#   main, since the target's table holds priority_queue::push (which Insert invokes) at slot 237, after main's slots
 #   111 to 124: read with the table's order (below), the posts' bodies, which first mention Insert, came after main
 #   (SinalizaSincronismo declared above the engine class for Tick); 11100 above 11026 in the file, as their target
-#   indices order them. votaInit's two have no caller in our TU: 170-uenux2-wasm-vota-web-roots.cpp stands for 7840's
+#   indices order them, and SinalizaSincronismo last, a choice. Measured: the object's first mentions of function
+#   addresses in code order (wasm-objdump -d -r) put push's 45th, before main's, with the three posts above main or
+#   with SinalizaSincronismo alone above it, and 71st, after InitApplication's (46th), with the three after main, which
+#   our link's table gives push as slot 71; that link, measured with unit 97's last stand-in gone too, and one with
+#   the three above main (between the exports and main) and the stand-in kept give the same match rows through steps
+#   7 to 9, no verdict moved, the symbol file and the match list byte-identical, slot 3 std::string's constructor in
+#   both. votaInit's two have no caller in our TU: 170-uenux2-wasm-vota-web-roots.cpp stands for 7840's
 #   invokes. Without them binaryen merges nothing and inlines 7708 into SinalizaSincronismo (`pnpm wasm score` against
 #   10376 read 20 over 23 rows, 18 inserted). Since they are written, this TU instantiates Insert first on the link
 #   line, so the tree root src/app/roots_messagequeue.cpp, which gave 501 at this TU's rule (unit 269), went.
-# - 2369 (vota::CTelasVota::IncrementaBarraSincronismo, in ctelasvota.cpp, unit 110's source, round 22 B's file, an
-#   add-only hunk): `m_barraSincronismo->Incrementa()`, the shared_ptr at +180 (5508, matched); out of line, since 7174
-#   (uenux2, -O3, not written) calls it four times. Its name, its being a member, its file and its line (in the gap
-#   before GetTelaCargo's record, 3530) are chosen; in use band 5 it links after 2380 and 2376, as their indices order
-#   them (ld_index 2795, 2811, 2827). Unit 110's fragment and README row do not name it yet (left for that landing).
+# - 2369 (vota::CTelasVota::IncrementaBarraSincronismo, in ctelasvota.cpp, unit 110's source, an add-only hunk):
+#   `m_barraSincronismo->Incrementa()`, the shared_ptr at +180 (5508, matched); out of line, since 7174 (uenux2, -O3,
+#   not written) calls it four times. Its name, its being a member, its file and its line (in the gap before
+#   GetTelaCargo's record, 3530) are chosen; in use band 5 it links after 2380 and 2376, as their indices order them
+#   (ld_index 2795, 2811, 2827). Unit 110's fragment and README row name it.
 # - The -Oz copies come with what is written: 2737 and 977 because 5500's form calls find(const char*) out of line, and
 #   170-uenux2-wasm-vota-web-roots.cpp gives 977 the second caller the target gives it (3355, not written; with one
 #   caller binaryen inlined it into 2737's copy); 11011 from ListaCandidatos's lookup; the ostream copies from
@@ -280,13 +290,13 @@
 #   moved Insert's first mention ahead of votaPressKey's and the constructor to slot 4, and 988 fell to `shape`, taking
 #   the `table` names of the locale::__imp::install members it held and 1227, 1524, 3363, 4760, 5152, 7833, 7850, 8046,
 #   8327 and 9405 out of match (steps 7 to 9 on that link).
-# Stand-ins this section ends, measured together: a link without them, and without unit 97's LegendaValida address (left
-# to the landing: decomp23-c changed that file), gives the same 12558 match lines, and no scan row moves (step 9's join
-# against the link with them): src/app/vota_api.cpp (votaTick and votaGetStateJson; its APP_OBJS entry with it), unit
-# 40's CampoIncrementa (for 2369), unit 165's w165_execucao (for 5408), unit 99's address of ConsoleError (for 10857),
-# unit 103's address of ostream's << of an unsigned short (4755, the target's slots 96 and 103, which 5500 takes first),
-# and the tree root src/app/roots_messagequeue.cpp (above). Unit 97's LegendaValida address (for 5500) stands beside its
-# caller now; the landing takes it out.
+# Stand-ins this section ends, measured together: a link without them, and without unit 97's LegendaValida address,
+# gives the same 12558 match lines, and no scan row moves (step 9's join against the link with them):
+# src/app/vota_api.cpp (votaTick and votaGetStateJson; its APP_OBJS entry with it), unit 40's CampoIncrementa (for
+# 2369), unit 165's w165_execucao (for 5408), unit 99's address of ConsoleError (for 10857), unit 103's address of
+# ostream's << of an unsigned short (4755, the target's slots 96 and 103, which 5500 takes first), and the tree root
+# src/app/roots_messagequeue.cpp (above). Unit 97's LegendaValida address (for 5500) went later, with that unit's roots
+# file, measured again on the tree it left (unit 97's fragment).
 #
 # Rows of this object that match with fragment 241 and the GetInsts unit 165 writes (against 36dda756, by index): the
 # has<T> thunks 2736, 2741 and 2744 (IExecucaoVota, impl::ISincronismoVotoEleitor, impl::IPoliticaExecucaoEleitor),
@@ -301,7 +311,8 @@
 # `differs` on that constant (`git show 36dda756:splat/scan.tsv`).
 # And 5496, vector<unsigned char>'s __assign_with_size, this TU's -Oz copy: RecebeMensagem (10949) calls it through
 # assign, and so does its other target caller, 5702 (fragment 335's comum::asn::DesconverteMinucias), so binaryen keeps
-# it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls has<T> through asm labels.
+# it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls has<T> and __str_find, and
+# takes the addresses of votaInit's two posts, through asm labels.
 $(ROOT)/$(APP)/170-uenux2-wasm-vota-web-roots.o: $(ROOT)/src/units/170-uenux2-wasm-vota-web-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/170-uenux2-wasm-vota-web.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/170-uenux2-wasm-vota-web-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/170-uenux2-wasm-vota-web-roots.o

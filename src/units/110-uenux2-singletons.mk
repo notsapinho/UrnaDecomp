@@ -552,6 +552,10 @@
 #   `const int passo = meio + altura;` before `const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;`
 #   gives the target's sequence (meio + ((-n * size) + (size / -4 & 65535)) + 240, the step unmasked).
 # - The three include lines this needs (clocal.h, ctradutorfrase.h, cstringutils.hpp) took blank lines above line 291.
+# - 2369, CTelasVota::IncrementaBarraSincronismo (matched; unit 170's fragment has the evidence): the
+#   m_barraSincronismo increment, out of line for 7174's four calls and votaTick's; its name, membership and line
+#   (the gap before line 3530) are chosen. The include it needs (api/gui/cprogressbar.h) took a blank line above line
+#   291.
 #
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \

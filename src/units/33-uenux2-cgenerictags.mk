@@ -65,8 +65,10 @@
 # this file). WalkTreeTLV refuses a tag of the wrong size (7020), then walks the TLV from position 0: the tag
 # (m_tamanhoTag characters), the field of the tag and its length marker (m_tamanhoTagComNulo characters), whose marker
 # must be one of '<' to '?' (the target's `(c & 252) == 60` over a one-character substr, written as
-# `find_first_not_of("<=>?") == 0`), 2 * (the field's last character - ';') hexadecimal digits of the value's length
-# (ecourna's CStringUtils::HexToInt, fn 3507), and the value; it returns the position of the first TLV of the tag asked
+# `find_first_not_of("<=>?") == 0`, a chosen spelling: `find_first_of("<=>?") == std::string::npos` gives another
+# WalkTreeTLV in the object at this file's flags, 1460 instructions against 1451, measured), 2 * (the field's last
+# character - ';') hexadecimal digits of the value's length (ecourna's CStringUtils::HexToInt, fn 3507), and the value;
+# it returns the position of the first TLV of the tag asked
 # for, and npos at the end or at an invalid marker, which is a `break` (unit 95's fragment has the forms measured
 # before). DecodeTLV throws 7021 when the tag is not there, takes the value and erases the TLV from the string (erase's
 # out-of-line part, fn 1136, is a call in 5892). The locals' names, types and const, the two functions' lines around
