@@ -14,7 +14,6 @@ int w2838(int) __asm__("_ZN5comum19GetCandidaturaAtualERKNSt3__212basic_stringIc
 int w5806(int) __asm__("_ZNK5comum19CCandidaturasDSSexoclEv");
 void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
 int w2262(int) __asm__("_ZN5comum6CLocalC1Ev");
-int w2261(int) __asm__("_ZN5comum6CLocalD1Ev");
 int w5744(int) __asm__("_ZN5comum2md6CLocalD2Ev");
 void w5673(int) __asm__("_ZNK5comum2md6CLocal13ValidaCriacaoEv");
 int w1003(int) __asm__("_ZNK5comum6CLocal9GetZonaIDEv");
@@ -59,12 +58,9 @@ __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 5950, 7787, 11448 (2871 linked)
-__attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
-__attribute__((noinline)) void Destrutores(int a, int b)
-{
-    w2261(a + 4);
-    w2261(b);
-}
+// Construtores stands for 12105 (401, 1543, 4160 and 5738 are in the link). CLocal's destructor (fn 2261) needs none:
+// its target callers 401, 1543, 4160, 5738 and 11508 are in the link.
+__attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) * 2 - b; }
 __attribute__((noinline)) int LocaisDados(int a, int b) { return w5744(a) * 3 - w5744(b); }
 __attribute__((noinline)) int IndicesFoto(int a, int b, int c, int d)
 {
@@ -154,7 +150,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Sexos);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
         clocal_sink = reinterpret_cast<const void*>(&Construtores);
-        clocal_sink = reinterpret_cast<const void*>(&Destrutores);
         clocal_sink = reinterpret_cast<const void*>(&LocaisDados);
         clocal_sink = reinterpret_cast<const void*>(&IndicesFoto);
         clocal_sink = reinterpret_cast<const void*>(&Valida);

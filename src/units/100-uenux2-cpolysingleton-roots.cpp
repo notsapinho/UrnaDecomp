@@ -84,7 +84,7 @@ __attribute__((noinline)) int w100_todos()
 // 11862 (unit 138), is in the link, and its calls went.
 __attribute__((noinline)) int w100_getinst()
 {
-    return &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
+    return *reinterpret_cast<const unsigned char*>(&api::ITimerScheduler::GetInst()) + 2;
 }
 
 // The control block of each singleton: __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>. The target's builder is
