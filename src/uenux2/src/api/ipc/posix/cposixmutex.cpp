@@ -7,9 +7,8 @@
 
 namespace api {
 
-/**
- * Cria um mutex recursivo.
- */
+// (original lines 10-12: content not recovered)
+#line 13
 CPosixMutex::CPosixMutex()
     : m_contador(0)
 {
@@ -17,16 +16,9 @@ CPosixMutex::CPosixMutex()
     pthread_mutexattr_init(&atributos);
     const int resultado = pthread_mutexattr_settype(&atributos, PTHREAD_MUTEX_RECURSIVE);
     if (resultado != 0) {
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
+
+        // (original lines 21-29: content not recovered)
+#line 30
         throw CUeIpcError(EUE_IPC_FALHA_CRIAR_MUTEX, std::format("Falha ao criar mutex recursivo: {}", strerror(resultado)));
     }
     pthread_mutex_init(&m_mutex, &atributos);
@@ -37,9 +29,8 @@ CPosixMutex::~CPosixMutex()
     pthread_mutex_destroy(&m_mutex);
 }
 
-/**
- * Trava o mutex.
- */
+// (original lines 40-42: content not recovered)
+#line 43
 void CPosixMutex::Lock()
 {
     const int resultado = pthread_mutex_lock(&m_mutex);

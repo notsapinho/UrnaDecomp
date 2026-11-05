@@ -207,7 +207,7 @@ moved by neither shift` on the data words' line.
    pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm \
      sym:sqlite3_bind_pointer --against 12829
    # target 12829: IDENTICAL (3 ambiguous operands read as table slot copy 11892 of symbol
-   #   _ZN12_GLOBAL__N_112probe_client4doneEv, address same-content 0x6de8b, address symbol sqlite3Config)
+   #   _ZN9simulador23CFingerPrepareSimulador7PreparaEv, address same-content 0x6de8b, address symbol sqlite3Config)
    ```
 
    With `--no-kinds` the body `differs at body byte 43 (target instruction +2a i32.const 11892)`. Functions that
@@ -215,11 +215,13 @@ moved by neither shift` on the data words' line.
    `sqlite3_bind_pointer`, 12863 `sqlite3_result_pointer` and 12932 `sqlite3_mutex_alloc`;
    `grep -c 'fills 126 slots' splat/scan.tsv` prints 0. The target body picks which of the 126 slots each pointer
    becomes, so check each pick against the two links' tables (read both element segments): every slot the target
-   body uses has the same neighbours as our slot. For example our 2044 and the target's 11892 both
-   sit between `getPageNormal` and `sqlite3RCStrUnref`, and `sqlite3_mutex_alloc`'s nine slots 2018 to 2029 line up
-   with 11866 to 11877, `pthreadMutexFree` and `pthreadMutexEnd` included. The one copied address,
-   `sqlite3_bind_pointer`'s and `sqlite3_result_pointer`'s `""` (SQLite's default `zPType`), is the NUL after a
-   `" \t"` string in both links (ours 0x32590, the target's 0x6de8b).
+   body uses has the same neighbours as our slot. For example our 12718 and the target's 11892 both
+   sit between `getPageNormal` and `sqlite3RCStrUnref`, and `sqlite3_mutex_alloc`'s slots 12692 to 12703 line up
+   with 11866 to 11877, `pthreadMutexFree` and `pthreadMutexEnd` included (`pthreadMutexEnd`'s under the name of its
+   byte-identical twin `EVP_aes_128_cbc_hmac_sha1`, which our link keeps since OpenSSL links ahead of SQLite,
+   [link-order.md](link-order.md) §L3, and which 1624's match line now holds). The one copied
+   address, `sqlite3_bind_pointer`'s and `sqlite3_result_pointer`'s `""` (SQLite's default `zPType`), is the NUL after
+   a `" \t"` string in both links (ours 0x63c95, the target's 0x6de8b).
 5. **The build's lists.** `TMPDIR=/tmp make -C src splat` prints `kind-unverified: 0/<matches> matches` and
    `review warnings: <n> literal operands … <n> past-data, <n> target-object, <n> past-table`. The warnings are in
    upstream library functions built from their own sources (sqlite, OpenSSL, libc++, 7-Zip, RHVoice, zlib's minizip),
@@ -603,7 +605,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -707,18 +709,19 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
     app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o` and `3717 match app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`.
     Until that unit, `src/app/roots_uenux2.cpp` held 252 as an explicit instantiation with `minsize` and left 3717 to
     `libc++.a`.
-11. **14072, 14073, 14241, 14242, 12991 and 13334, the nine KDF getters 13522 to 13577, and 13242, 13256, 13945 and
-    13963, by their corrected names (§S11), and 14063 and 14064.** Step 9 can swap the two pairs, or give 12991, 13334
-    or a KDF getter another table's name, since no name of the symbol file disagrees, and the check above cannot see a
-    swap: each name's prefix must agree with its dispatch table and its neighbours. 14063 and 14064, chacha20's
-    settable and gettable getters, matched by the census's `addr` pairs when a merge moved our numbering (`differs`
-    before it), under the names their table gives (1748288, ids 14 and 13).
+11. **14072, 14073, 14241, 14242, 12991 and 13334, the nine KDF getters 13522 to 13577, and 13242, 13256, 13945, 13963,
+    13447 and 13499, by their corrected names (§S11), and 14063 and 14064.** Step 9 can swap the two pairs, or give
+    12991, 13334 or a KDF getter another table's name, since no name of the symbol file disagrees, and the check above
+    cannot see a swap: each name's prefix must agree with its dispatch table and its neighbours. 14063 and 14064,
+    chacha20's settable and gettable getters, matched by the census's `addr` pairs when a merge moved our numbering
+    (`differs` before it), under the names their table gives (1748288, ids 14 and 13).
 
     ```sh
     awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ || $1==13334 && $2 !~ /^hmac_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==14063 && $2 !~ /^chacha20_settable/ || $1==14064 && $2 !~ /^chacha20_gettable/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==13522 && $2 !~ /^x942kdf_/ || $1==13528 && $2 !~ /^kdf_tls1_prf_.*kdfs/ || $1==13536 && $2 !~ /^sskdf_/ || $1==13543 && $2 !~ /^kdf_sshkdf_/ || $1==13549 && $2 !~ /^kdf_scrypt_.*kdfs/ || $1==13556 && $2 !~ /^kdf_pkcs12_/ || $1==13562 && $2 !~ /^kdf_pbkdf2_/ || $1==13570 && $2 !~ /^krb5kdf_/ || $1==13577 && $2 !~ /^kbkdf_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==13242 && $2 !~ /^test_rng_/ || $1==13256 && $2 !~ /^seed_src_/ || $1==13945 && $2 !~ /^sha1_/ || $1==13963 && $2 !~ /^md5_sha1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '$1==13447 && $2 !~ /^sm2_settable/ || $1==13499 && $2 !~ /^dh_settable/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
 12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's name.** Each holds a table slot of
@@ -855,6 +858,21 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
     161's list). wasm-ld's tail merge puts a suffix on the first string, in reversed order, that ends with it, and that
     literal is the first in both modules, the only text string of the target that ends in `" o"`. A form that drops the
     literal from both files, or a string of ours that is no target's and sorts below it, takes the three rows out.
+26. **962, 2352 and 12936, by `sqlite3BuiltinFunctions`'s place mod 8, and 12506, 12776 and 250, by
+    `sqlite3_version`'s place mod 4.** Both places follow from `sqlite3.o`'s after libcrypto
+    ([link-order.md](link-order.md) §L3). 12936's `staticMutexes - 48` votes for `sqlite3BuiltinFunctions` with 962's
+    and 2352's only while our object sits at 0 mod 8, as the target's 0x1d7698 does. Ours (0x1c2a28) is 0xe8 into
+    SQLite's `.bss`, as the target's is, and its first object, `sqlite3Stat`, follows `rand_unix.o`'s `random_devices`,
+    8-aligned and 0x60 bytes: an object that brings `.bss` between them can move it. 12776 (`sqlite3_libversion`, which
+    the content pass found; no symbol-file line names it) and 12506 (`versionFunc`) load `sqlite3_version`, which step
+    8 places by its bytes (`evidence:content`) at the target's 0x16952a only while our copy is at an address that is not
+    a multiple of 4 (§S9 item 1). Ours is at 0x145ae9, after `der_wrap_gen.o`'s 11-byte OIDs. After `asn1.o`'s typeinfo
+    names it was at 0x8d11c (93c63667), where 12506 read `unresolved` (`sqlite3_version: no target symbol; bytes not in
+    the target`), 12776 `differs` and 250 `unresolved self-voted`. 250 (`sqlite3_initialize`) is the one voter of
+    `sqlite3RegisterBuiltinFunctions.aBuiltinFunc`, so it holds only while that object's bytes agree with the target's
+    ([../splat.md](../splat.md) §3, "No circular evidence"), and they agree through 12506's match: `compareObject`
+    (`asmlift-wasm/src/splat-symbols.ts`) on the object gives `agrees` with `splat/matched.txt` applied and `unknown`
+    without 12506's line.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -937,16 +955,31 @@ their tables give (sha1's at 1752208, md5_sha1's at 1751904, id 12, `OSSL_FUNC_D
 13256's in seed_src's (1787040), id 12, `OSSL_FUNC_RAND_GETTABLE_CTX_PARAMS`. Those two lines were corrected, and the
 rescan added nothing (`git show -s --format=%B b0faa13`); item 11 checks the four.
 
+Moving `sqlite3.o` after libcrypto ([link-order.md](link-order.md) §L3) moved our numbering again, and step 9 matched
+two keymgmt getters swapped: 13447 as `dh_settable_params` (source `ledger`) and 13499 as `sm2_settable_params`
+(`content`), each `readings: address same-content`, since `dh_known_settable_params` and `sm2_known_settable_params`
+hold the same 40 bytes. 13447's slot is in sm2's table (1774208) and 13499's in dh's and dhx's (1771104, 1771280),
+id 14, `OSSL_FUNC_KEYMGMT_SETTABLE_PARAMS`, and their neighbours agree (13446 and 13448 are `sm2_` functions, 13498 and
+13500 `dh_` ones). So does the data: the target's 13447 returns 0x1b24f0, 0xd90 after `ec_types` (0x1b1760), and 13499
+returns 0x1b09b0, 0x400 before `dsatype2id` (0x1b0db0), which are the distances of `sm2_known_settable_params` from
+`ec_types` and of `dh_known_settable_params` from `dsatype2id` in our map. Both lines were corrected, and the rescan
+added nothing. Read over every keymgmt table's id 14, the dispatch tables give the family's other matched members
+their own names (13461 `ec_settable_params`, ec's table; 6691 `x25519_settable_params`, x25519's and x448's). Item 11
+checks the two.
+
 The scan's content pass can make the same kind of match. It pairs one of our functions that no `match` row holds yet,
 called or not, with an unmatched target body when, re-pointed, it equals exactly that one body and no other function
 of ours equals it (`contentPairs` in `asmlift-wasm/src/splat-sub.ts`). Its key is the locals and the opcodes, not
 the wasm type, so an empty body pairs as soon as other matches leave one unmatched empty target body: 7722 is 2 bytes,
 as are 218, 425, 1528, 1870, 8372, 10853 and 14351, of other types (`awk -F'\t' '$7==2 {print $1}' splat/scan.tsv`).
 The merge 9a0cec7 matched 7722 that way, under `sqlite3_thread_cleanup`, a name no lane had chosen
-(`awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'
-splat/scan.tsv` prints `7722 sqlite3_thread_cleanup symbol 2`, `git show 9a0cec7^1:splat/matched.txt | awk '$1==7722'`
-prints nothing). What ties the name to 7722 is data the scan never reads: the target's `sqlite3Apis`, SQLite's table
-of its API functions, holds 7722's one table slot, 12188, at 1802196:
+(`git show 9a0cec7:splat/scan.tsv | awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'` prints `7722 sqlite3_thread_cleanup
+content 2`, `git show 9a0cec7^1:splat/matched.txt | awk '$1==7722'` prints nothing). Since `sqlite3.o` links after
+7-Zip ([link-order.md](link-order.md) §L3), binaryen's fold of the empty bodies keeps 7-Zip's `Sha256Prepare` and
+`sqlite3_thread_cleanup` leaves our link, so step 9 renamed the line to that twin (how-to step 10, "A twin whose name
+moved"): `awk -F'\t' '$1==7722 {print $1, $2, $4, $7}' splat/scan.tsv` prints `7722 Sha256Prepare symbol 2`. What
+ties 7722 to `sqlite3_thread_cleanup` is data the scan never reads: the target's `sqlite3Apis`, SQLite's table of its
+API functions, holds 7722's one table slot, 12188, at 1802196:
 
 ```sh
 python3 -I -c "
