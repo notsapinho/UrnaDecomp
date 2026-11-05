@@ -142,6 +142,31 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
     return static_cast<int>(linhas);
 }
 
+// The adders over a font every target caller passes, which binaryen's dead-argument elimination folded into the
+// target's bodies: 5546 (AddTextRectField) loads the SFont {35, 0} at @475016, and 5545 (AddProgressBar) the size of the
+// SFont {0, 0} at @475024, both among the fonts of vota/eleitor/comum/ctelasvota.cpp's data (unit 110's fragment).
+// Each stand-in passes one constant of this file with that value, so the fold happens here too, and varies what the
+// target's callers vary. The constants are no target objects: 5546 matches through the target's places of its font's
+// bytes, and 5545 waits for @475024's name (src/units/31-uenux2-cformbuilder.mk).
+//   TextoRetangulo    7787's two calls of 5546, its only caller (other texts and rectangles)
+//   BarraProgresso    7787's call of 5545 (the limit 4, an empty text) and 12098's (30, "%p"), its only two callers
+const api::SFont FONTE_TEXTO_RETANGULO{35, 0};
+const api::SFont FONTE_BARRA{0, 0};
+
+__attribute__((noinline)) int TextoRetangulo(api::CFormBuilder& form, const std::string& texto, const api::SRect& rect)
+{
+    form.AddTextRectField(texto, rect, FONTE_TEXTO_RETANGULO);
+    return form.AddTextRectField(std::string(), api::SRect{rect.top, rect.left, rect.bottom, rect.right}, FONTE_TEXTO_RETANGULO)
+        .use_count();
+}
+
+__attribute__((noinline)) int BarraProgresso(api::CFormBuilder& form, const std::string& texto, const api::SPoint& canto,
+                                             const api::SPoint& oposto, uedword limite)
+{
+    const auto barra = form.AddProgressBar(limite, canto, oposto, FONTE_BARRA, std::string());
+    return barra.use_count() + form.AddProgressBar(limite + 26, oposto, canto, FONTE_BARRA, texto).use_count();
+}
+
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name).
 //   FormMTA, FormMTB      callers of 1694 (4633; 1150, 5341, 5343, 10204, 10214 and 10676 are in the link); their
@@ -203,6 +228,8 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&FormA);
         w5544_sink = reinterpret_cast<void*>(&FormB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
+        w5544_sink = reinterpret_cast<void*>(&TextoRetangulo);
+        w5544_sink = reinterpret_cast<void*>(&BarraProgresso);
     }
 } w5544_roots;
 

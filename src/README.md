@@ -141,10 +141,11 @@ fragment's header says. When the members already written after those lines leave
 enough for another, it goes after the last record line of its scope (`vota_web_wasm.cpp`'s
 `CVotaWebEngine::EstadoJson`, after `PressKey`, below record 592, unit 170); an inline member's place in its class
 moves no byte, which `cmp` of the object shows. Such a run gets no gap when
-no record line lies below it: lines 4-77 of `uenux2/src/api/gui/cprogressbar.cpp` hold the records 52, 58 and 67 of
-the constructor that `std::make_shared`'s 5545 inlined, and stay 74 blank lines. When the records' function has a
-stub, step 9 writes the stub over its record's line: `uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for
-lines 18-424, then f13550's stub on lines 425-428 (its record is 428:15), then the unit's members. A comment there
+no record line lies below it: until unit 40 wrote the constructor that 5545 inlines, lines 11-77 of
+`uenux2/src/api/gui/cprogressbar.cpp`, which hold its records 52, 58 and 67, stayed blank (f9af1d5d). When the
+records' function has a stub, step 9 writes the stub over its record's line:
+`uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for lines 18-424, then f13550's stub on lines 425-428 (its
+record is 428:15), then the unit's members. A comment there
 reads as TSE's, and no evidence gives it.
 What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
 are chosen) goes in the file's header comment; in a file two stages extend at once, each appends its note there as a

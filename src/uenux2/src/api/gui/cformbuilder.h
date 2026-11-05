@@ -44,8 +44,11 @@
 #include "api/gui/ipreshow.h"
 #include "api/gui/itext.h"
 #include "api/gui/primitives.h"
+#include "ecourna/api/uetypes.hpp"
 
 namespace api {
+
+class CProgressBar;
 
 /**
  * Monta os formulários da interface.
@@ -76,6 +79,24 @@ public:
     // and so is having the colours in the body rather than as parameters every caller passes the same
     SharedField AddBlinkingTextField(const std::string& texto, const SPoint& posicao, const SFont& fonte,
                                      ETextAlignment alinhamento);
+
+    // a CTextRectField over a CFixedText of texto, centred, the text in the colour 2 over 20: target fn 5546, which holds
+    // the field's constructor inlined (ctextrectfield.cpp). Its one target caller, fn 7787 (vota::CTelasVota's
+    // constructor), passes one SFont at both its calls, {35, 0} @475016 among ctelasvota.cpp's fonts, and binaryen's
+    // dead-argument elimination folded it: 5546 loads it at that address. The name, the font's place among the
+    // parameters, and the colours and the alignment as constants of the body rather than parameters every caller passes
+    // the same are chosen
+    SharedField AddTextRectField(const std::string& texto, const SRect& rect, const SFont& fonte);
+
+    // a CProgressBar from 0 to limite over the rectangle of two corners, the bar in the colour 13 over 1, the text over
+    // the bar in 1 and off it in 2, a border 2 pixels wide in 2, with the text texto and the size of fonte: target fn 5545,
+    // which holds the bar's constructor inlined (cprogressbar.cpp). It returns the bar: 7787 keeps its result in
+    // vota::CTelasVota's std::shared_ptr<api::CProgressBar> (ctelasvota.h). Its two target callers, 7787 and 12098, pass
+    // one SFont, {0, 0} @475024 among ctelasvota.cpp's fonts, which binaryen folded: 5545 reads its size at that address.
+    // The name, the font's place among the parameters, the fixed values as constants of the body, and limite's being the
+    // upper limit (the callers pass 0 for the other two, cprogressbar.h) are chosen
+    std::shared_ptr<CProgressBar> AddProgressBar(uedword limite, const SPoint& canto, const SPoint& oposto,
+                                                 const SFont& fonte, const std::string& texto);
 
     SharedField AddDoubleLineField(std::string (*fonte)(), const SPoint& linha1, const SPoint& linha2, TPosition maxX,
                                    const SFont& font, TColor corFundo);

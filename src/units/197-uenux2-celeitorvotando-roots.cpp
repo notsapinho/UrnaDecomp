@@ -16,19 +16,14 @@
 // - The std::map<SCargoInfo, CVotos> copy of comum::md::CVotosCargos::InsereCedula (held by fn 4454) calls
 //   __emplace_hint_unique_key_args (fn 5681), which calls __find_equal (fn 3251). 5681's other target caller, fn 11349
 //   (comum::asn::CConversorEleicoesVota::DoDesconverte), is in the link (unit 140's). 3251's are fns 2386
-//   (vota::CTelasCargo's constructor), not written, and 3266 (src/app/roots_set.cpp's, in the link): Procura stands
-//   for 2386.
+//   (vota::CTelasCargo's constructor, unit 150's) and 3266 (src/app/roots_set.cpp's), both in the link: Procura,
+//   which stood for 2386, went.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 int w197_abrangencia(const void* eleitor, const void* uf, unsigned int municipio) __asm__(
     "_ZNK5comum2md17CEleitorDecorator14GetAbrangenciaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEj");
 void w197_ordena_impressao(void* cargos) __asm__("_ZN5comum7CCargos18OrdenaPorImpressaoEv");
-int w197_find_equal(void* mapa, const void* dica, void* pai, void* auxiliar, const void* chave) __asm__(
-    "_ZNSt3__26__treeINS_12__value_typeIN5comum2md12CVotosCargos10SCargoInfoENS3_6CVotosEEENS_19__map_val"
-    "ue_compareIS5_NS_4pairIKS5_S6_EENS_4lessIS5_EELb1EEENS_9allocatorISB_EEE12__find_equalIS5_EERPNS_16_"
-    "_tree_node_baseIPvEENS_21__tree_const_iteratorIS7_PNS_11__tree_nodeIS7_SK_EElEERPNS_15__tree_end_nod"
-    "eISM_EESN_RKT_");
 }
 
 namespace {
@@ -50,20 +45,11 @@ __attribute__((noinline)) void Imprime(char* cargos, int vezes)
     }
 }
 
-// stands for fn 2386 (3266, 3251's other caller, is in the link)
-__attribute__((noinline)) int Procura(char* mapa, const char* chave)
-{
-    void* pai = nullptr;
-    void* auxiliar = nullptr;
-    return w197_find_equal(mapa, mapa + 8, &pai, &auxiliar, chave + 1) + 3266;
-}
-
 struct SCEleitorVotandoRoots {
     SCEleitorVotandoRoots()
     {
         celeitorvotando_sink = reinterpret_cast<const void*>(&Abrange);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Imprime);
-        celeitorvotando_sink = reinterpret_cast<const void*>(&Procura);
     }
 } celeitorvotando_roots;
 

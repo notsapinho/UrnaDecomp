@@ -31,6 +31,10 @@ class IScreen;
 // binaryen inlined it into Draw, its one caller. Its name and its place among the private members are chosen; it is a
 // member by docs/how-to-decompile.md step 3's rule (it reads the value, the limits and the text, private here), a
 // choice as well (src/units/40-uenux2-cprogressbar.mk).
+// The constructor is written in cprogressbar.cpp at its records: it value-initializes its base, tests the limits and
+// the rectangle's width and height against twice the border's width, sets the value through SetValor, and gives a
+// font size of 0 one from the height; binaryen inlines it into fn 5545, its one caller. The fragment has what its
+// code shows and the forms measured.
 /**
  * Barra de progresso desenhada na tela, entre um limite inferior e um superior.
  */

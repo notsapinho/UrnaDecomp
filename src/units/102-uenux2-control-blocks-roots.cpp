@@ -35,7 +35,6 @@
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/coptionvalidation.h"
 #include "api/gui/cpreshownothing.h"
-#include "api/gui/cprogressbar.h"
 #include "api/gui/cqrcodeimagefieldpaper.h"
 #include "api/gui/ctextfieldpaper.h"
 #include "api/gui/iinputvalidation.h"
@@ -67,7 +66,6 @@
 extern "C" {
 extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CMovieFieldENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
@@ -151,12 +149,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<ecourna::api::security::CTrng
     return std::make_shared<ecourna::api::security::CTrng>();
 }
 
-__attribute__((optnone, noinline)) std::shared_ptr<api::CProgressBar> w102_barra(
-    uedword v, uedword i, uedword s, const api::SRect& r, api::TColor c0, api::TColor c1, api::TColor c2,
-    api::TColor c3, const std::string& t, api::TFontSize f, uebyte m, api::TColor c4)
-{
-    return std::make_shared<api::CProgressBar>(v, i, s, r, c0, c1, c2, c3, t, f, m, c4);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<api::CMovieField> w102_campo_filme(
     const api::SPoint& p, const std::shared_ptr<api::CMovie>& filme, api::EAnchorPoint a)
 {
@@ -218,7 +210,6 @@ struct SW102Roots {
     {
         w102_sink = w102_vt_cdataimage_ccandidaturasdsfoto;
         w102_sink = w102_vt_cmoviefield;
-        w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;

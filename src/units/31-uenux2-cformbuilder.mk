@@ -7,6 +7,7 @@
 #
 # Target functions, all matched but two:
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
+#                      5546 (AddTextRectField, below) and 5545 (AddProgressBar, written and differs, below),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs;
 #                      3678 and 2243 (AddLabeledKey, over a key's name and over a key) and 2782 (AddTextFieldMultiLine), below;
 #                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
@@ -126,6 +127,41 @@
 # reference (api/util/itimerscheduler.h): with the callback by value it was 30 over 308 rows, 24 of them operand-only,
 # the one difference the place of the 500 ms interval's store, which the target makes before it builds the
 # std::function (`pnpm wasm score` against our fn). TelaA and TelaB give it its two call sites.
+#
+# 5546, AddTextRectField, matches (the scan; step 8 names it by the srcloc-anchor of CTextRectField's record, whose
+# constructor, unit 90's, binaryen inlines into it): AddTextField's (202) shape over an api::CTextRectField, the text a
+# CFixedText, centred (the 2 at +16 of its block). The font is a parameter that 7787, its one target caller, passes as
+# one constant at both calls, the SFont {35, 0} @475016: binaryen folded it, and the target's 5546 loads it at that
+# address. The roots' TextoRetangulo passes a constant of its own with those bytes twice, so the fold happens here too,
+# and the scan reads the address as one of the places of those bytes in the target (the row's readings list `address
+# same-content`), not as the stand-in's object. Its place: band 1 links its block's members (11118, 11117) between
+# AddTextField's CFixedText block's (11120, 11119) and AddBlinkingTextField's (11113, 11112), and the target's data
+# hold the block's vtable @1578336 between theirs (@1578296, @1578456), so it follows AddTextField. Band 2 puts 5546
+# after GetForm (5550), which this file has after the adders by choice (above): that pair stays inverted, as 5547's
+# with 5550 is; after GetForm, its block's two members would read inverted against AddBlinkingTextField's two.
+#
+# 5545, AddProgressBar, is written and `differs` (docs/how-to-decompile.md step 5): an api::CProgressBar (unit 40's
+# constructor, which binaryen inlines into it) over RectEntre's rectangle, returned as the bar (cformbuilder.h). Its
+# font is a parameter both target callers, 7787 and 12098, pass as one constant, the SFont {0, 0} @475024, which
+# binaryen folded: 5545 reads its size at that address. In the whole link it scores 52 over 844 rows, every one an
+# operand (`pnpm wasm score`), and the scan stops at that address (`... no target symbol; bytes occur 22+ times`): the
+# roots' BarraProgresso passes a constant of its own with those bytes, eight zero bytes are found too often in the
+# target for the scan to place them, and no target function but 5545 and 7787 reads @475024. With a line naming the
+# stand-in's constant at 0x73f90 in a scratch copy of the symbol file, `pnpm wasm splat-remap
+# ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm sym:<AddProgressBar> --against 5545
+# --symbols <the copy>` prints
+# IDENTICAL. So it waits for that object's name, which a match of 7787 (vota::CTelasVota's constructor, whose file's
+# data hold the object) can give once it is written and passes its own constant; no hand line names it meanwhile, as
+# the stand-in's object is no target object. What the bytes fixed, measured: the size is read before the allocation,
+# after the rectangle, so the rectangle and the size are named locals in that order. `fonte.size` given to make_shared
+# is read in the constructor, after the allocation (3 rows inserted and 3 deleted in the link), and a size local
+# declared before the rectangle is read among the rectangle's loads (the object); `static_cast<TFontSize>(fonte.size)`
+# in the call gives the same function as the two locals (the object, the variants compiled beside each other under
+# names of one length). Its place: after GetForm, in the run before AddStatusHeader's first record: band 1 links its
+# block's members (11111, 11110) after AddBlinkingTextField's and before AddStatusHeader's lambda's block (11109,
+# 11108), the data its vtable @1578496 between theirs, and band 2 puts 5545 after GetForm (5550) and before
+# GetLabeledKeyPos (5544). Unit 108's stand-in call of SRect::Adjust for it, unit 40's vtable sink and unit 102's
+# builder of its control block went: it is in the link.
 #
 # What the bytes fix:
 # - In each of the MT and paper adders the text local outlives the field's allocation: the field's `new` follows the text's
@@ -262,7 +298,8 @@
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
-# the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678); 728,
+# the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and
+# its TextoRetangulo and BarraProgresso pass the fonts the target folds into 5546 and 5545); 728,
 # 941, 5409 and 5419 have every target caller in the link and no call there
 $(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/util/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/31-uenux2-cformbuilder-roots.cpp -o $(R)

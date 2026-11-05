@@ -9,71 +9,50 @@
 
 namespace api {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (original lines 12-32: content not recovered)
+#line 33
+CProgressBar::CProgressBar(const uedword valor, const uedword limiteInferior, const uedword limiteSuperior,
+                           const SRect& rect, TColor corBarra, TColor corFundo, TColor corTextoBarra, TColor corTexto,
+                           const std::string& texto, TFontSize tamanhoFonte, uebyte larguraBorda, const TColor corBorda)
+    : IFormField<IScreen>()
+    , m_valor(limiteInferior)
+    , m_limiteInferior(limiteInferior)
+    , m_limiteSuperior(limiteSuperior)
+    , m_rect(rect)
+    , m_rectBarra(rect.Adjust(1, 1, -3, -3))
+    , m_corBarra(corBarra)
+    , m_corFundo(corFundo)
+    , m_corTextoBarra(corTextoBarra)
+    , m_corTexto(corTexto)
+    , m_texto(texto)
+    , m_tamanhoFonte(tamanhoFonte)
+    , m_larguraBorda(larguraBorda)
+    , m_corBorda(corBorda)
+{
+    if (limiteInferior >= limiteSuperior) {
+        throw CUeGuiError(EUE_GUI_PROGRESSBAR_LIMITES_INVALIDOS,
+                          std::format("Limite inferior ({}) >= limite superior ({})", limiteInferior, limiteSuperior));
+    }
+
+
+    if (rect.right - rect.left <= 2 * larguraBorda) {
+        throw CUeGuiError(EUE_GUI_PROGRESSBAR_LARGURA_INSUFICIENTE,
+                          std::format("Largura da barra ({}) não comporta a margem ({})", rect.right - rect.left, larguraBorda));
+    }
+
+    // (original lines 62-65: content not recovered)
+#line 66
+    if (rect.bottom - rect.top <= 2 * larguraBorda) {
+        throw CUeGuiError(EUE_GUI_PROGRESSBAR_ALTURA_INSUFICIENTE,
+                          std::format("Altura da barra ({}) não comporta a margem ({})", rect.bottom - rect.top, larguraBorda));
+    }
+
+    SetValor(valor);
+
+    if (m_tamanhoFonte == 0) {
+        m_tamanhoFonte = static_cast<TFontSize>(std::floor((m_rect.bottom - (m_rect.top + 2 * m_larguraBorda)) * 0.8));
+    }
+}
 
 CProgressBar::~CProgressBar() = default;
 

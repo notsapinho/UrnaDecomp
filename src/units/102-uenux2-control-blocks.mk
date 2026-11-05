@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 37 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 30 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 36 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 31 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 10683 matches, and 12463 did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was
@@ -17,7 +17,9 @@
 # celeitordinamicodao.cpp, from which 11536 and 11537 match) and comum::md::CComparecimentoMesario's (10402,
 # CComparecimentoMesarioDAO::RecuperarID, unit 91's ccomparecimentomesariodao.cpp, from which 10395 and 5429, the slot 2
 # it shares with std::string's block, match) and api::CTextFieldBlinking's (1265,
-# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
+# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and
+# api::CProgressBar's (5545, CFormBuilder::AddProgressBar, the same object, from which 11111 and 11110 match; the roots'
+# builder and sink went) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
 # which 8585 and 8578 match) and the pointer blocks of comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose
 # builders are unit 113's comum::CJustificador constructor (3742) and comum::CRegistradorMesario::GetInst (815): each
 # holds its servico's constructor inlined, whose object instantiates Entregar and with it the block (11463 matches from
