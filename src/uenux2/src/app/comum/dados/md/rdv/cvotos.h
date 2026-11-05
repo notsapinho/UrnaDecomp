@@ -26,6 +26,8 @@ public:
     TQtdVoto Legenda(const std::string& numero) const;
     TQtdVoto Partido(const std::string& numero) const;
     TQtdVoto TotalQue(bool (CVoto::*criterio)() const) const;
+    // comum::CRdvVota::Confere (fn 11486) holds it inlined: the vector's size, then each vote (CVoto's operator==).
+    bool operator==(const CVotos& outro) const = default;
 
 private:
     using TCriterio = std::function<bool(const CVoto&)>;

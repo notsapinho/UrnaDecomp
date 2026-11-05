@@ -11,6 +11,30 @@
 # declares private, an access the header chooses. Whole link, before step 9: `score 0 over 6 rows
 # (same 6, replaced 0 [0 operand-only], inserted 0, deleted 0) BYTE-EXACT`; step 8 names it by pair-fingerprint.
 #
+# comum::md::estadoaplicacao::CEstadoGeral::RecuperarCertificado (target fn 5635, 279 B), matched, at its record's line
+# 147 of cestadogeral.cpp (static, returning std::vector<uebyte> by value, as the record reads; the line holds the
+# default argument of CPolySingleton<api::pkcs11::IPkcs11>::instance() at column 41, `api::pkcs11::IPkcs11& oPkcs11 = `
+# before it a choice of what fills the column), with its static vector's exit destructor, fn 11268, this object's
+# __cxx_global_array_dtor, matched by content: 5635 and 11268 alone load the static (@1839076, cestadogeral.h), step 8
+# names it by 5635's vote (`vote:5 by:5635`), and 11268 is its second user. 5635 reads the certificate through IPkcs11's
+# slots 23, 10 and 24 the first time and returns a copy. Whole link, before steps 7 to 9 (pnpm wasm score): with slot 10
+# returning a const std::vector<uebyte>, 20 over 121 rows, operand-only, but a 16-byte frame with the result at +4 where
+# the target has 48 and +12; with slot 10 returning a 36-byte object whose vector at +0 is copied through an accessor
+# (api::pkcs11::SResultadoCertificado, ipkcs11.h), 11 over 121, all operand-only (the static's address, calls).
+# CEstadoGeral::GetDadosQRCodeCertificado (target fn 5634, 2021 B, a chosen name), after it in cestadogeral.cpp, written
+# and not matched (no-candidate: nothing names it, so its stub in src/uenux2/unplaced.cpp stays): the certificate's QR
+# code fields; cestadogeral.h has what the body does and its callers, fns 12110 and 12039, neither written (unit 220's
+# roots stand for both). It stays written: it is 5635's one caller, and the stand-ins' destruction of its result brings
+# fn 5980 (unit 220). Whole link: first written with the second certificate's size inside the count's expression and the
+# hex text's length read after the result vector is declared, 75 over 973 rows (15 inserted, 14 deleted); as written, 52
+# over 963 (45 operand-only, 5 inserted, 2 deleted). The remainder is the destruction of that second call's result: the
+# target frees it with no store of its end pointer (`__end_ = __begin_`, which our object keeps) and computes the size
+# after the free. Each with that store, measured on variant compiles of cestadogeral.cpp's object (wasm-objdump -d): the
+# size in a statement of its own (written), inside the expression, read from a named vector, an unsigned local of twice
+# the size, a ternary for the count, GetDadosQRCodeCertificado above RecuperarCertificado, and the size inside the
+# expression with -fno-strict-aliasing. Not explained. The name, the bool, the locals and 1082 as an int literal are
+# chosen.
+#
 # api::TerminaComBarraInvertida (target fn 5484, 131 B), matched, in src/uenux2/src/api/io/cinistrings.cpp, a new file,
 # declared in a new api/io/cinistrings.h: whether a line ends in a run of backslashes of odd length. Evidence: its one
 # target caller, fn 5480 (8780 B, not written), calls it twice and holds the records of

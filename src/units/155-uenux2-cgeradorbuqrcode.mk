@@ -23,13 +23,14 @@
 #   its callers 5603 and 5604 are both here). cgeradorbuqrcodevota.h says why the constructor takes two flags its
 #   callers pass as false.
 # - Of Gera (fn 5604, below): preBuild's lambda (fn 2791, record ccabecalhoqrcodebuilder.cpp:284, unit 93's file),
-#   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, a template instance; its records are the header's;
-#   the link takes it from gravadores/asn/cassinavotavelbu.cpp.o, the first object in link order to emit it), and
-#   std::sort's instances over the consulta's answers with GetCamposConsulta's comparator lambda:
-#   __introsort (5605), __insertion_sort_incomplete (2790), __sort4 (1920) and iter_swap (248). 2790, 1920 and 248
-#   serve fn 5610 too (unit 139's introsort of the same element over ImprimeConsulta's comparator, 11253's): binaryen
-#   merges the identical instances, and the link takes them from unit 139's cgeradorbu.cpp.o, which links first; 5605
-#   is this object's.
+#   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, a template instance; its records are the header's; the
+#   link takes it from comum/dados/md/estadoaplicacao/cestadogeral.cpp.o, the first object in link order to emit it
+#   since RecuperarCertificado, fn 5635, is written there (unit 215), as the target's data do: its record @1574788
+#   follows 5635's @1574772), and std::sort's instances over the consulta's answers with GetCamposConsulta's comparator
+#   lambda: __introsort (5605), __insertion_sort_incomplete (2790), __sort4 (1920) and iter_swap (248). 2790, 1920 and
+#   248 serve fn 5610 too (unit 139's introsort of the same element over ImprimeConsulta's comparator, 11253's):
+#   binaryen merges the identical instances, and the link takes them from unit 139's cgeradorbu.cpp.o, which links
+#   first; 5605 is this object's.
 # - CGeradorBUQRCodeVota's Slot2 (fn 11242, no record of its own; the vtable's slot 2 names it): it fills the QR code
 #   header's fields of the builder Gera passes it, ORIG to HREM, with CEstadoGeralVota::GetDtHrInicioAquisicao and
 #   GetDtHrFimAquisicao inlined from their header (records cestadogeralvota.h:90 and :106, in this object's data), and

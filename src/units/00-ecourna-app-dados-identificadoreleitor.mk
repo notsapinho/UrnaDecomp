@@ -23,7 +23,7 @@
 #   then erases: its landing pad wraps the erase's __erase_external_with_move itself, so clang inlined the in-place
 #   form into it and the two share this TU (a reading).
 # - PreencheADireita(const std::string&, char, size_t) (fn 1881) pads a copy on the right; its five callers pass ' '
-#   (folded), four of them are in the link, and roots_ecourna.cpp's UsaPreencheCopiaB stands for the fifth, 2248.
+#   (folded), all five are in the link (roots_ecourna.cpp's stand-in for the last, 2248, went).
 # The bands give the order: in uses 3, read in link order, 3512, 3511, 3510, 3509, then ToInt16 (3508), so 3512 sits
 # above PreencheADireita and 3510 below it (3509, ToUpper in place, below, is the upper-case counterpart of ToLower: a reading
 # of its body). In uses 2, 5159 comes right before 5158, and in uses 6, 1881 before 1880 and 1879: 5158 and 1879 are the

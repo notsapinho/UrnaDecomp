@@ -8,10 +8,10 @@
 // the caller copies, 8-aligned in comum::asn::CAssinaVotavelBu::Assinar's frame (the 8 bytes at its head one 64-bit
 // word here: two 32-bit words put it 4 bytes higher, unit 321's fragment), and slot 24 (+96); fn 10273, which holds
 // comum::asn::CAssinaVotavelBu::Assinar (record 1597332), calls slots 23, 6 and 24 the same way;
-// CEstadoGeral::RecuperarCertificado (fn 5635, record 1574772) calls slot 23 and then slot 10 (+40). The members are
-// declared up to slot 24 with pure bodies; slot 6 is named from its role (5604 prints what it returns as the boletim's
-// " ASSI:{}" field, and Assinar's name agrees), the others after their slots (slot 10's role in 5635 is not followed).
-// The destructor in slots 0 and 1, the result's type and every name are chosen, and so is this path.
+// CEstadoGeral::RecuperarCertificado (fn 5635, record 1574772) calls slot 23, slot 10 (+40) and slot 24. The members
+// are declared up to slot 24 with pure bodies; slot 6 is named from its role (5604 prints what it returns as the
+// boletim's " ASSI:{}" field, and Assinar's name agrees), slot 10 from its role in 5635 (below), the others after their
+// slots. The destructor in slots 0 and 1, the results' types and every name are chosen, and so is this path.
 
 #include <vector>
 
@@ -28,6 +28,19 @@ struct SResultadoAssinatura {
     const std::vector<uebyte>& GetAssinatura() const { return m_assinatura; }
 };
 
+// The result of IPkcs11::LeCertificado (slot 10), which fn 5635 keeps as the certificate whose hex text fn 5634 prints
+// in QR codes: 5635 passes the result's address at +12 of a 48-byte frame, copies the vector at +0 into its static
+// (std::vector's __assign_with_size, fn 1681, the copy assignment from an lvalue) and frees it before slot 24, as a
+// temporary of the statement does. A 36-byte object, 4-aligned, gives that frame (measured on cestadogeral.cpp's
+// object; a std::vector<uebyte> result gives 16 bytes and +4, measured in the whole link with pnpm wasm score); the 24
+// bytes after the vector, which 5635 neither reads nor destroys, their name and type, and the accessor are chosen.
+struct SResultadoCertificado {
+    std::vector<uebyte> m_certificado;
+    uebyte m_resto[24];
+
+    const std::vector<uebyte>& GetCertificado() const { return m_certificado; }
+};
+
 class IPkcs11 {
 public:
     virtual ~IPkcs11() = default;
@@ -40,7 +53,7 @@ public:
     virtual void Slot7() = 0;
     virtual void Slot8() = 0;
     virtual void Slot9() = 0;
-    virtual void Slot10() = 0;
+    virtual SResultadoCertificado LeCertificado() = 0;
     virtual void Slot11() = 0;
     virtual void Slot12() = 0;
     virtual void Slot13() = 0;

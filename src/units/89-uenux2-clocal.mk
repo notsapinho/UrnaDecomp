@@ -113,9 +113,10 @@
 # - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
 #   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
-# - md::CIndiceFoto's constructor (5659), declared by unit 36. The file is the one the record of CIndicesFotos::at names
-#   (cindicesfotos.cpp:30, a function not written, whose line stays blank). md::CIndicesFotos's constructor is there
-#   too, out of line by choice: comum::asn::CIndexadorFotos::DoDesconverte (11441), which
+# - md::CIndiceFoto's constructor (5659), declared by unit 36, over a std::string and an md::CIndexer now (step 9
+#   renamed its match line, the same body; cindicesfotos.h says why). The file is the one the record of
+#   CIndicesFotos::at names (cindicesfotos.cpp:30, a function not written, whose line stays blank). md::CIndicesFotos's
+#   constructor is there too, out of line by choice: comum::asn::CIndexadorFotos::DoDesconverte (11441), which
 #   124-uenux2-app-comum-dados-asn.mk matches, holds it inlined and shows neither tell (that fragment says so).
 # - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
 #   GetImpedimentoP2, which fn 5764, CEleitores::LoadEleitorDetalhe, holds behind a frame of its own: it is written there

@@ -1,11 +1,14 @@
 // vota's free functions (uenux2/src/app/vota/comum/votadefs.cpp). The reconstruction's own note: the records of
 // VerificaAssinaturaMI, VerificaAssinaturaMV and GetQuantidadeMaximaBUsAdicionais (target fns 3290, 3288 and 4582) fix
-// lines 103, 110 and 135; every other line is a choice. EhTreinamento (fn 1485), AdicionaSeparador (1387),
-// RegistraMesarios (2520), ExisteArquivoZeresima (no index: 11835 holds it inlined) and NaoAceitaJustificativa (4578)
-// have no record: their file and lines, after the last record, are a choice (src/units/168-uenux2-app-helpers.mk), as
-// are those of CriaArquivoImprimindo, ExisteArquivoImprimindo and RemoveArquivoImprimindo (fns 1488, -, 1487).
+// lines 103, 110 and 135; every other line is a choice. VerificaAssinaturaArquivos (fn 4625), EhTreinamento (fn 1485),
+// AdicionaSeparador (1387), RegistraMesarios (2520), ExisteArquivoZeresima (no index: 11835 holds it inlined) and
+// NaoAceitaJustificativa (4578) have no record: their file and lines are a choice
+// (src/units/168-uenux2-app-helpers.mk), as are those of CriaArquivoImprimindo, ExisteArquivoImprimindo and
+// RemoveArquivoImprimindo (fns 1488, -, 1487).
 #include "app/vota/comum/votadefs.h"
 
+#include <filesystem>
+#include <map>
 #include <string>
 
 #include "api/gui/cpaperformbuilder.h"
@@ -15,16 +18,37 @@
 #include "api/util/csystem.h"
 #include "api/util/eueasserterror.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cpacotearquivos.h"
 #include "app/comum/cpath.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/comum/iinterfacemensagem.h"
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/informacao/cinformacaoeleicao.h"
 
-// (original lines 24-89: content not recovered)
-#line 90
+// (original lines 29-65: content not recovered)
+#line 66
 namespace vota {
 
+void VerificaAssinaturaArquivos(const std::filesystem::path& diretorio)
+{
+    const std::map<std::string, std::string> arquivos = {
+        {"vota.bin", "vota.vsu"}, {"rdv.dat", "rdv.vsu"}, {"ze.dat", "ze.vsu"}, {"rze.dat", "rze.vsu"},
+        {"bu.dat", "bu.vsu"},     {"buj.dat", "buj.vsu"}, {"bim.dat", "bim.vsu"},
+    };
+    for (const auto& [arquivo, pacote] : arquivos) {
+        const std::filesystem::path caminhoArquivo = diretorio / arquivo;
+        if (std::filesystem::exists(caminhoArquivo)) {
+            const std::filesystem::path caminhoPacote = diretorio / pacote;
+            const comum::CPacoteArquivos pacoteArquivos(caminhoPacote.string(), arquivo, comum::SAVD_CHAVE_UE, comum::SAVD_APLIC_VOTA);
+            comum::CInterfaceMensagemVazia mensagem;
+            pacoteArquivos.Validar(mensagem);
+        }
+    }
+}
+
+// (original lines 85-91: content not recovered)
+#line 92
 bool EhTreinamentoMesario()
 {
     return EhTreinamento() && !comum::CAppInfo::GetInst().GetVota().GetTreinamentoEleitor();

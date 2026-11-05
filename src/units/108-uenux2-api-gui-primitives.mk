@@ -40,7 +40,7 @@
 # these fields, matches from the executable TU's object (unit 170), first on the link line at -Oz;
 # src/app/roots_uenux2.cpp held it until that unit.
 UENUX2_SRCS += src/api/gui/primitives.cpp
-# second call sites of Union, Left, Right and Adjust (108-uenux2-api-gui-primitives-roots.cpp says for which callers)
+# second call sites of Union and Adjust (108-uenux2-api-gui-primitives-roots.cpp says for which callers)
 $(ROOT)/$(APP)/108-uenux2-api-gui-primitives-roots.o: $(ROOT)/src/units/108-uenux2-api-gui-primitives-roots.cpp $(ROOT)/src/units/108-uenux2-api-gui-primitives.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/108-uenux2-api-gui-primitives-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/108-uenux2-api-gui-primitives-roots.o

@@ -89,9 +89,9 @@
 # written for unit 296, which says why and what it measures: its one user, fn 12110, passes its address (table slot
 # 2921), so the roots take it beside the others. It matches by the scan's content pass.
 #
-# Not reconstructed: the other records of cdatasourcesrelatorio.h (TrailerProporcionalPartido 11260, CodVerificador
-# 11974); GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981 and TrailerMajoritario 11980 are fragment
-# 325's;
+# The other records of cdatasourcesrelatorio.h, TrailerProporcionalPartido (11260) and CodVerificador (11974), are unit
+# 220's (its roots emit them); GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981 and TrailerMajoritario
+# 11980 are fragment 325's;
 # fn 3872, the one user of 11972 and 11973, is unit 325's (vota::CriaDetalheCandidato).
 RELATORIOS183_SRCS := src/app/comum/relatorios/cgeradorrelpu.cpp
 UENUX2_SRCS += $(RELATORIOS183_SRCS)
@@ -99,7 +99,8 @@ UENUX2_SRCS += $(RELATORIOS183_SRCS)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(RELATORIOS183_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 W183_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 # the callers of this unit's functions are not reconstructed: the roots keep them, at the tree's flags, since the
-# object emits the data sources' instances
+# object emits the data sources' instances; with Boost's headers, which cdatasourcesrelatorio.h reaches through
+# cconfiguracaoeleicao.h
 $(ROOT)/$(APP)/183-uenux2-relatorios-roots.o: $(ROOT)/src/units/183-uenux2-relatorios-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/183-uenux2-relatorios.mk $(W183_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/183-uenux2-relatorios-roots.cpp -o $(R)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -I$(BOOST_HDR) -c src/units/183-uenux2-relatorios-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/183-uenux2-relatorios-roots.o

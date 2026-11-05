@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 28 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 29 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
@@ -31,7 +31,9 @@
 # LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o) and the five pointer blocks of
 # comum::CItemMenu over the vota menu items (vota::CMenuMaisInformacoesVota's constructor, which fn 6599 holds, in
 # app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, unit 110's list, from whose object 12209, 12202, 12194, 12183,
-# 12172, 12162 and the four's slot 2, 2932, match). Each block below: the
+# 12172, 12162 and the four's slot 2, 2932, match) and api::CDataImage<std::__bind<...>>'s over the photo reader of
+# vota::CTelasVota::CriaTelaVisualizacaoCandidato (6561, unit 110's ctelasvota.cpp, from which 12530 and 12529 match,
+# below). Each block below: the
 # T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
 # shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
@@ -134,13 +136,12 @@
 # there; 3602 is written now, in gravadores/asn/cassinavotavelbu.cpp at the tree's flags, and 10279 matches from its
 # object, which measures it.
 # Pending, each with what it waits for:
-# - 12530, 12529, CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its
-#   function, so they land with fn 6561 (11109 and 11108, CDataText<AddStatusHeader's lambda>'s, landed with fn 502,
-#   unit 31).
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
 #   another TU's anonymous namespace, so they come with fns 6627 and 10388. 10388 is written (unit 104) and its three
 #   blocks are in the link; their __get_deleter rows still differ (unit 97's fragment).
+# 12530 and 12529, the block of CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>, which waited here for
+# fn 6561 (a lambda is spelled only in its function), match from ctelasvota.cpp.o with it (unit 150's fragment).
 # 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
 # in the builder, matched from unit 121's roots and match now from cinteractiveformbuilder.cpp.o, whose fn 3675 (unit
 # 120's file) builds the block.

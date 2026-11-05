@@ -15,11 +15,12 @@
 # the packed format string of IConversorASN's inlined Desconverte):
 # - CQRCodeDS::SetOrigem (target fn 5783, 8 over 106 rows) and operator() (5782, 68 over 1096), which holds
 #   MontaConteudo and ExtraiVersao, both inlined by binaryen; CQRCodeDS's constructor, a thunk over std::vector's copy
-#   constructor that binaryen inlines into its callers; and the instances this object brings:
-#   std::vector<std::pair<std::string, std::string>>'s copy constructor (1300, 4 over 113), its __emplace_back_slow_path
+#   constructor that binaryen inlines into its callers; and the instances this object brings or brought:
+#   std::vector<std::pair<std::string, std::string>>'s copy constructor (1300, 4 over 113; it links from
+#   cestadogeral.cpp.o now, ahead of this object, unit 215's), its __emplace_back_slow_path
 #   from a 5-character literal and a moved string (5780, 6 over 182) or a copied one (5781, 7 over 195: VERS's const
 #   temporary and DTPL's lvalue are two instances of one body), and the pair's constructor from two string literals
-#   (1348, 3 over 120).
+#   (1348, 3 over 120; votadefs.cpp.o's copy now, below).
 # - CConversorDetalheCandidato::DoDesconverte (11375, 78 over 1218) and the move of a std::vector<md::CCargo>'s
 #   elements, std::__uninitialized_allocator_relocate (3816, 2 over 243), from cconversoreleicaope.cpp.o then; the copy
 #   the link keeps is unit 200's cgravadorbu.cpp.o's since that unit wrote 3818 (FiltraCargos), its other caller.
@@ -98,10 +99,12 @@
 #
 # Roots (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp): stand-ins for target callers not in our link, each going
 # when they are: QRCodeTela for fn 3059 (the constructor, so 1300 keeps two call sites, and SetOrigem); ConteudoQRCode
-# for fn 12553 (operator()); ParDeTextos for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant first
-# argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted). CargosRealocados, for fn 3818
-# (3816's other caller), went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's
-# check). Stand-ins of other units that my rows end went (fragments 88, 107, 124 and 232 say which).
+# for fn 12553 (operator()). ParDeTextos stood for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant
+# first argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted) and went when unit 168
+# wrote 4625, whose votadefs.cpp.o, linked ahead of this object, now names 1348's match line (pair<const std::string,
+# std::string> from two char[9], a twin of this object's instance). CargosRealocados, for fn 3818 (3816's other caller),
+# went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's check). Stand-ins of
+# other units that my rows end went (fragments 88, 107, 124 and 232 say which).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CQRCODEDS_SRCS := src/app/comum/dados/cqrcodeds.cpp
 CONVERSORES299_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.cpp \

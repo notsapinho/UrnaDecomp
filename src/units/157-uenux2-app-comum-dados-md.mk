@@ -64,8 +64,9 @@
 #   CDadoCorrespondencia's copy constructor, whose target body has landing pads of its own (invoke_iii three times,
 #   __cxa_find_matching_catch_2, __resumeException); it matches from mock/app/comum/cappinfobuilder.cpp's object, at the
 #   executable TU's rule (unit 253).
-# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fn 3704 matches now (unit 155); 1681
-#   (vector<uebyte>::__assign_with_size over uebyte*) matches from src/app/roots_vector.cpp (unit 11).
+# - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41), is written and matches (unit 215); fn
+#   3704 matches (unit 155), and 1681 (vector<uebyte>::__assign_with_size over uebyte*) from src/app/roots_vector.cpp
+#   (unit 11).
 # - 11390, 11391, 11399 and 11400 (CConversorEstadoGeralVota's and CConversorDadoCorrespondencia's slots) and fn 1080
 #   (comum::asn::Utils::ConverteDataHoraJE) are matched now: fragments 172 and 96.
 # - 11423 is comum::asn::CConversorDadosDisponiveisCarga's DoDesconverte, which holds CDadosDisponiveisCarga's

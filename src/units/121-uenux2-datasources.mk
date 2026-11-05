@@ -203,8 +203,8 @@
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
 # function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) unit 139's 11253, 11254, 11255 and 11256 and fragment 325's 11980 and 11981 are in our
-# link: the roots file's stand-in calls it twice for the other two.
+# 11981) unit 139's 11253, 11254, 11255 and 11256, fragment 325's 11980 and 11981 and unit 220's 5967 and 11260 are in
+# our link: the roots file's stand-in for the last two went.
 #
 # Reinicia, CalculaCodigo and GeraMacHexa have no record, and their names are chosen: CalculaCodigo is the function
 # CRelUtil::DSCodigoVerificador (fn 11182, unit 123) formats as the verification code. Scores are `pnpm wasm score`
@@ -235,10 +235,10 @@
 #     11's roots no longer take Mac's address, nor CSiphashMac's DoMac and DoVerify (9498 and 9497 keep `match`, in the
 #     link through the vtable 3700 stores), and src/app/roots_ecourna.cpp's UsaConversoes3 no longer calls HexToQWord.
 #     Its other calls stay.
-# The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and w121_codigo for 11260 and
-# 11974, CalculaCodigo's: each goes when they land. 11260 and 11974 (CDataSourcesRelatorio<CRdvVota, CEleitores>'s
-# TrailerProporcionalPartido and CodVerificador, records cdatasourcesrelatorio.h:188 and 348) wait for fn 5967, which
-# loads IncluiString's record and calls fn 1281 (439 B, CPleito's copy constructor, matched: unit 280).
+# The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and goes when it lands. Its
+# w121_codigo (for 11260 and 11974, CalculaCodigo's callers) and w121_inclui (for 5967 and 11260, IncluiString's) went:
+# CDataSourcesRelatorio<CRdvVota, CEleitores>'s TrailerProporcionalPartido (11260, record cdatasourcesrelatorio.h:188),
+# CodVerificador (11974, :348) and IncluiDadosFinaisCV (5967) are in the link, from unit 220's roots.
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions
@@ -247,8 +247,9 @@
 #
 # Pending, with what each waits for: CGeracaoVersoesContratos's block (11635, 11636) waits for a class head in
 # app/comum/gravadores/; the blocks and members over a lambda or another TU's anonymous namespace wait for the function that
-# spells them (11107, 11109 and 11108 matched with fn 502, AddStatusHeader, cformbuilder.cpp): 12524, 12522, 12530, 12529, 12520 for fn
-# 6561 (CTelasVota::CriaTelaVisualizacaoCandidato), 12587, 12588, 12589, 12592, 12591 for fn 6627 (ctelasvota.cpp's
+# spells them (11107, 11109 and 11108 matched with fn 502, AddStatusHeader, cformbuilder.cpp, and 12524, 12522, 12530,
+# 12529, 12520 with fn 6561, ctelasvota.cpp's, for CTelasVota::CriaTelaVisualizacaoCandidato's photos): 12587, 12588,
+# 12589, 12592, 12591 for fn 6627 (ctelasvota.cpp's
 # anonymous namespace, reached through fn 1192); 10373, 10367, 10361 are in the link with fn 10388 (unit 104) and still
 # differ (unit 97's fragment).
 W121_SRCS := src/app/comum/relatorios/ccalculacv.cpp

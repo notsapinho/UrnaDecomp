@@ -14,8 +14,6 @@
 // - w13_cria calls md::CVotosCargos' and md::CVotosEleicoesVota's constructors (fns 5643, 5640), standing for their
 //   target caller 7787 (CreateInst); the other, 11349 (CConversorEleicoesVota::DoDesconverte, unit 140's), is in the
 //   link, and w13_desconverte, which stood for it, went.
-// - w13_desconverte_rdv and w13_confere call md::CVotosEleicoesVota::Compativel (fn 5638), standing for its two target
-//   callers, CRdvVota's Desconverte and Confere (fns 11487, 11486, trapped in this unit's -pending.cpp).
 // - md::CVoto's constructor (fn 2256) needs none: its target callers, 4442, 4471 and 4454 (unit 197's) and
 //   comum::asn::CConversorVoto::DoDesconverte (fn 11354), are in the link.
 // - md::CVotosCargos::QuantidadeEscolhas (fn 5642) has none: its one target caller, 4454 (unit 197's FinalizaEleitor,
@@ -30,7 +28,6 @@ int w13_votoscargos(void*, void*) __asm__(
     "_ZN5comum2md12CVotosCargosC1ENSt3__23mapINS1_10SCargoInfoENS0_6CVotosENS2_4lessIS4_EENS2_9allocatorINS2_4pairIKS4_S5_EEEEEE");
 int w13_votoseleicoes(void*, void*) __asm__(
     "_ZN5comum2md18CVotosEleicoesVotaC1ENSt3__23mapIjNS0_12CVotosCargosENS2_4lessIjEENS2_9allocatorINS2_4pairIKjS4_EEEEEE");
-int w13_compativel(const void*, const void*) __asm__("_ZNK5comum2md18CVotosEleicoesVota10CompativelERKS1_");
 }
 extern const char w13_rdvvota_vt[] __asm__("_ZTVN5comum8CRdvVotaE");
 extern const char w11496_vt[] __asm__("_ZTVN5comum20CRdvPosicionadorVotaE");
@@ -48,16 +45,6 @@ __attribute__((noinline)) int w13_cria(char* destino, char* mapas)
     return w13_votoscargos(destino + 24, mapas) + 3;
 }
 
-__attribute__((noinline)) int w13_desconverte_rdv(const char* rdv, const char* outro)
-{
-    return w13_compativel(rdv + 20, outro) + 9;
-}
-
-__attribute__((noinline)) int w13_confere(const char* rdv, const char* outro)
-{
-    return w13_compativel(rdv + 20, outro + 8) * 11;
-}
-
 void* volatile w13_sink;
 
 struct SW13Roots {
@@ -67,8 +54,6 @@ struct SW13Roots {
         w13_sink = const_cast<char*>(w11496_vt);
         w13_sink = reinterpret_cast<void*>(&w13_comparecimento);
         w13_sink = reinterpret_cast<void*>(&w13_cria);
-        w13_sink = reinterpret_cast<void*>(&w13_desconverte_rdv);
-        w13_sink = reinterpret_cast<void*>(&w13_confere);
     }
 } w13_roots;
 

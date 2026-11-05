@@ -9,7 +9,7 @@ CIndexadorFotos::TDado CIndexadorFotos::DoDesconverte(const TEntidade& entidade,
     std::vector<md::CIndiceFoto> indices;
     const std::vector<md::CIndiceFoto>& fotos = visitante.GetIndices();
     for (size_t i = 0; i < fotos.size(); ++i) {
-        indices.push_back(md::CIndiceFoto(fotos[i].GetCodigo(), fotos[i].GetIndice()));
+        indices.push_back(md::CIndiceFoto(fotos[i].GetCodigo(), fotos[i].GetIndexer()));
     }
     CConversorAbrangencia conversor;
     const md::CAbrangencia abrangencia = conversor.Desconverte(entidade.get_abrangencia());

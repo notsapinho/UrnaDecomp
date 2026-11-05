@@ -7,13 +7,14 @@
 //   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
 //   2835  GetCurrentEleicaoID         11209 13550 (5604, unit 155's, is in the link)
 //   1267  CProcessoEleitoral::GetPleito2  7787 (2787, 5586, 11191, 1543, 11902 and 11223 are in the link)
-//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888 12272, and 5747, written (3715 holds it inlined)
-//   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written
+//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888, and 5747, written (3715 holds it inlined), and 12272
+//         (unit 110's), in the link
+//   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
 //   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
-//   3715  GetNomeSuplente             5803 12272
-//   2796  GetNome                     5803 6569 11892
+//   2796  GetNome                     5803 11892 (6569, unit 110's, is in the link)
+//   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
 //   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
 //   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
@@ -44,7 +45,6 @@ int w1388(int) __asm__("_ZNK5comum2md6CCargo19GetDetalheCandidatoEv");
 int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
 void w1547(int, int) __asm__("_ZNK5comum2md6CCargo13GetNomeNeutroEv");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
-void w3715(int, int, int, int) __asm__("_ZNK5comum2md6CCargo15GetNomeSuplenteEmNS0_5CSexo5ESexoE");
 void w2796(int, int, int) __asm__("_ZNK5comum2md6CCargo7GetNomeENS0_5CSexo5ESexoE");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
@@ -99,12 +99,6 @@ __attribute__((noinline)) void NomesNeutros(int saida, int a, int b)
 __attribute__((noinline)) int XorCargos(int a, int b)
 {
     return w2257(a) ^ w2257(b);
-}
-
-__attribute__((noinline)) void NomesSuplentes(int saida, int cargo, int suplente, int sexo)
-{
-    w3715(saida, cargo, suplente, sexo);
-    w3715(saida + 12, cargo, suplente + 1, sexo + 1);
 }
 
 __attribute__((noinline)) void NomesPorSexo(int saida, int a, int sexo)
@@ -175,7 +169,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesNeutros);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&NomesSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesPorSexo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);

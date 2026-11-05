@@ -19,6 +19,9 @@ public:
     CSuplencia(uebyte ordem, bool temFoto, const CNomesCargo& nomes);
 
     const CNomesCargo& GetNomes() const { return m_nomes; }
+    // The photo flag: vota::CTelasVota::CriaTelaVisualizacaoCandidato's substitutes' lambda (fn 12272) tests +1 against 1
+    // before it adds the substitute's photo. The name is chosen, after CDetalheCandidato::TemFoto.
+    bool TemFoto() const { return m_temFoto; }
 
 private:
     uebyte m_ordem;

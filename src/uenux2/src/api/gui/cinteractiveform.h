@@ -13,14 +13,17 @@
 // - Read (line 57, its record's EInputResult return) passes the input device to the slot 8 of the field with the
 //   focus, through std::vector::at: the target gets CPolySingleton<INPUT>::instance() before the bounds check, so the
 //   instance is a local first. comum's mesario states hold it inlined in their slot 7
-//   (src/units/135-uenux2-comum-mesario-estados.mk). WaitAndRead is not written, so its line stays blank. Chosen:
-//   SetFocus's name, the data members', parameters' and Read's local's names, how the record's column 25 is spelled, and
-//   Slot6's parameter type (a pointer, which the base's empty body, fn 425, takes as one word).
+//   (src/units/135-uenux2-comum-mesario-estados.mk). Chosen: SetFocus's name, the data members', parameters' and Read's
+//   local's names, how the record's column 25 is spelled, and Slot6's parameter type (a pointer, which the base's empty
+//   body, fn 425, takes as one word).
+// - WaitAndRead (line 62, its record's): vota::CVisualizarCandidatos::StartState (fn 11876) holds it inlined, the
+//   keyboard's instance kept, its slot 3 (HasKey) asked until it says yes, with api::CSystem::Dorme(10) between, then
+//   Read's code. WaitAndRead's lines but 62, and Slot2's (moved down), are chosen.
 // - GetEntradas: vota::CMostraQRCodeBU::ProcessInput and CMostraQRCodeCertificado::ProcessInput (fns 12051, 12038) read
 //   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name, its const reference
-//   result and its lines (original 112-115) are chosen.
+//   result and its lines (original 116-119) are chosen.
 // - GetEntradaAtual: vota::CPedeIdentidade::ProcessTick (fn 10676) reads the text of the field with the focus,
-//   std::vector::at with the index at +84. Its name, its pointer result and its lines (original 117-120) are chosen.
+//   std::vector::at with the index at +84. Its name, its pointer result and its lines (original 121-124) are chosen.
 
 #include <algorithm>
 #include <cstddef>
@@ -30,6 +33,7 @@
 #include "api/gui/iform.h"
 #include "api/gui/iinputfield.h"
 #include "api/pattern/cpolysingleton.h"
+#include "api/util/csystem.h"
 
 namespace api {
 
@@ -47,16 +51,21 @@ public:
         }
     }
 
-    // (original lines 50-54: content not recovered)
-#line 55
+
     EInputResult Read()
     {
         auto& teclado = CPolySingleton<INPUT>::instance();
         return m_entradas.at(m_atual)->Read(teclado);
     }
+    EInputResult WaitAndRead()
+    {
+        auto& teclado = CPolySingleton<INPUT>::instance();
+        while (!teclado.HasKey()) {
+            CSystem::Dorme(10);
+        }
+        return m_entradas.at(m_atual)->Read(teclado);
+    }
 
-    // (original lines 61-64: content not recovered)
-#line 65
     void Slot2() override
     {
         for (auto* entrada : m_entradas) {
@@ -114,7 +123,7 @@ public:
         return m_entradas.at(m_atual);
     }
 
-    // (original lines 122-144: content not recovered)
+    // (original lines 126-144: content not recovered)
 #line 145
     void ClearKeyboardInput()
     {

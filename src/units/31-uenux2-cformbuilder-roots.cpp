@@ -29,14 +29,15 @@
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
+//                     (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the other adders too
 //   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
 //                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
 //                     their defaults
-//   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
-//                     another rectangle and alignment the second time
-//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (2248, 11946, 12105, 12110), and 12110 for
-//                     2775 (5591, unit 296's, and 5579 and 5580, fragment 325's, which call them too, are in the
-//                     link). Its form is a parameter: their callers zero the vector in line, and it takes no
+//   TextoMultiLinha   3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit
+//                     110's, is): it calls it twice, with another rectangle and alignment the second time
+//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (11946, 12105, 12110), and 12110 for
+//                     2775 (5591, unit 296's, 5579 and 5580, fragment 325's, and 2248, unit 220's, which call them
+//                     too, are in the link). Its form is a parameter: their callers zero the vector in line, and it takes no
 //                     constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.

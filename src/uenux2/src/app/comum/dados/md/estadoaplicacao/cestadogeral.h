@@ -50,6 +50,24 @@ public:
     // member (it reads the members above) are chosen.
     std::vector<std::pair<std::string, std::string>> GetDadosQRCode() const;
 
+    // Target fn 5635, out of line in cestadogeral.cpp, its record's name (static, std::vector<uebyte> by value, record
+    // cestadogeral.cpp:147, the default argument of CPolySingleton<api::pkcs11::IPkcs11>::instance()): the certificate,
+    // read through api::pkcs11::IPkcs11 the first time (slots 23, 10 and 24) and kept in a static vector (@1839076),
+    // which only 5635 and its exit destructor, fn 11268, load (/usr/bin/grep -rlE 'i32\.const 1839076($|[^0-9])'
+    // build/out/splat/pieces/asm prints the two); 5635 has no guard, so the static is no function-local one. Its name
+    // s_certificado, its being a member and its access are chosen.
+    static std::vector<uebyte> RecuperarCertificado();
+    // Target fn 5634, out of line, after 5635 in cestadogeral.cpp (use band 2 puts it right after 5635 and before
+    // cdadocarga.cpp's 5633; the file, 5635's, which it calls twice, is chosen): the certificate as QR code fields, one
+    // list per part, each QRCE (the part's number from 1 and the count, "{}:{}", two unsigned), ISUE (the
+    // correspondence's internal number, +60), MSUE (the load's model, +44) and CERT (the part's slice of the
+    // certificate's hex text); with the bool set the count is twice the certificate's byte count over 1082, rounded up
+    // in float arithmetic, else 1. Its callers are fn 12110 (vota::CGeraBU's slot 2, with true and the state
+    // comum::CAppInfo::LeGeralInterno returns) and fn 12039 (a callback in cmostraqrcodecertificado.cpp's object, by
+    // use band 1, whose table slot fn 12040 stores; with false and CAppInfo::GetGeral's), neither written. The name,
+    // the bool and its being a member (it reads the members above) are chosen.
+    std::vector<std::vector<std::pair<std::string, std::string>>> GetDadosQRCodeCertificado(bool dividido) const;
+
     // Target fn 3705, out of line in cestadogeral.cpp: its callers (7160, 7306, 10710) read the +52 adjustment inline,
     // change it with CAjusteDataHora::AdicionaDeltaT (fn 3702) and store it back through this call. The name is chosen:
     // no record, slot or RTTI names it.
@@ -62,6 +80,8 @@ public:
     std::string GetResumoHashVersoesPacotes() const;
 
 private:
+    static std::vector<uebyte> s_certificado;
+
     EEstadoUrna m_estadoUrna;
     uedword m_idPE;
     CDadoLocal m_dadoLocal;

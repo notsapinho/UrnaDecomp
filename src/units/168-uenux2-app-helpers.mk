@@ -164,6 +164,39 @@
 # VerificaAssinaturaMI is this object's first to mention in our link), so its line is above that function's, with the
 # namespace opened earlier (both readings). Before steps 7 to 9, 4 over 19 rows, operand-only. The roots' stand-in
 # went: every caller is in the link, 10512 written, the others matched.
+#
+# Added since, above EhTreinamentoMesario in votadefs.cpp: vota::VerificaAssinaturaArquivos (fn 4625, 3584 B, a chosen
+# name), the signature check of the vota files of a directory. Its one target caller, 7787 (not written, which
+# votaInit, 7840, reaches through invoke_v with its table slot 39), calls it twice with comum::CPath::GetPathTrab
+# (fn 358) of the internal and the external flash; the roots' w168_arquivos stands for it. What its body fixes (pnpm
+# wasm fn): a std::map<std::string, std::string> of seven pairs of literals in this order, vota.bin/vota.vsu,
+# rdv.dat/rdv.vsu, ze.dat/ze.vsu, rze.dat/rze.vsu, bu.dat/bu.vsu, buj.dat/buj.vsu and bim.dat/bim.vsu (fn 1348 seven
+# times, libc++'s hinted emplace 1221 seven times, the pairs freed in reverse), walked in key order; for each file that
+# exists under the directory (std::filesystem::exists on `diretorio / arquivo`, freed after the block: a named local),
+# a comum::CPacoteArquivos over `(diretorio / pacote).string()` (a named path freed after the block, and a string
+# temporary freed after the constructor, which copies it into +0), the file, the key 53 and the application 1
+# (SAVD_CHAVE_UE, SAVD_APLIC_VOTA), and a comum::CInterfaceMensagemVazia (vptr 1532504) handed to its Validar; then
+# the map's destroy (fn 720). The CPacoteArquivos members it holds are unit 95's (its fragment says how each is
+# written): out-of-line functions of other objects, which binaryen inlined.
+# - The file. No record is 4625's own: each it holds is a callee's (cpacotearquivos.cpp 85, 91, 116, 190). 4625 alone
+#   stores CInterfaceMensagemVazia's vptr (`/usr/bin/grep -rlE 'i32\.const 1532504($|[^0-9])'
+#   build/out/splat/pieces/asm` prints only its piece), and that class's vtable (1532496) and the typeinfos of it and
+#   of its base comum::IInterfaceMensagem (1532520, 1532532) lie between vota::CThreadVota's typeinfo (1532484) and
+#   this file's first record (1532540, line 103): the object that emits them first is cthreadvota.cpp.o or this one,
+#   and not cpacotearquivos.cpp.o (its records lie at 1552008 to 1552088). This file, beside VerificaAssinaturaMI and
+#   MV, is the reading taken; external and above line 101 is where the data's order puts a function of this file whose
+#   code first needs that vtable (an internal one's data would follow line 135's record), a reading too. In use band 2
+#   the target's 4625 is above this file's 4582 and 4578, as our object has them (ld_index 4816, 4826, 4833); 4620
+#   (vota::DesenhaDescricaoModo, cpreshowformvota.cpp.o in our link, linked ahead of this object) lies between them in
+#   the target's band, an order this unit does not change.
+# - pnpm wasm score against the link before step 8: 125 over 1607 rows, all operand-only; matched, named by
+#   srcloc-anchor. Step 9 renamed two twins to this object's copies, the bodies the target keeps once: 1348 (std::pair's
+#   constructor from two literals, now pair<const std::string, std::string> from char[9] twice) and 1528 (the empty
+#   three-argument body, now CInterfaceMensagemVazia::ValidandoArquivo, slot 3 of the vtable the target holds at
+#   1532496).
+# Chosen: the name, the parameter's type (const std::filesystem::path&, which the target copies to append to), the map's
+#   `const`, the structured binding and the locals' names, and its being a free function of namespace vota (it reads no
+#   state; its one caller, 7787, is reached from votaInit).
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna

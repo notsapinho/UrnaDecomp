@@ -39,6 +39,10 @@ public:
     // Whether the current position is the first: vota::CEleitorVotando::ProcessTick (fn 7349) tests the word at +0
     // against 0. The member and its name are chosen.
     bool IsPrimeiro() const { return m_atual == 0; }
+    // Whether the current position is the last: comum::CDataSourcesRelatorio<CRdvVota, CEleitores>'s
+    // TrailerProporcionalPartido and CodVerificador (fns 11260 and 11974) test the word at +0 plus one against the size
+    // of the vector at +16 before they call fn 5967. The member and its name are chosen.
+    bool IsUltimo() const { return m_atual + 1 == m_cargos.size(); }
     void Next();
     const md::CCargo& GetCurrent() const;
     comum::TCargoID GetCurrentCargoID() const;

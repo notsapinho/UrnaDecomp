@@ -4,21 +4,64 @@
 # comum::CPacoteArquivos::RetornaNomeChave (5900) in cpacotearquivos.cpp (162:11) and
 # comum::IInterfaceSavd::EnviarRequisicao (3830) in iinterfacesavd.cpp, which binaryen holds with the two static members
 # the records name, DesconverteHeader (553:15, 559:15) and DesconverteMensagem (568:15, 574:15, 578:15), and with
-# ConverteHeader; the class headers beside them and app/comum/euecomumerror.h, with the handle formatter of the three
-# SAVD enums. The formatter's handle body (fn 536) is the one binaryen keeps for every such enum, ours named by the
-# table vote of 275, 680 and 5900; it matches since unit 253's data hand line names libc++'s __fields_integral.
+# ConverteHeader; the class headers beside them and app/comum/euecomumerror.h, with the handle formatter of the SAVD
+# enums (three, and ESavdAplic's since 4625). The formatter's handle body (fn 536) is the one binaryen keeps for every
+# such enum, ours named by the table vote of 275, 680 and 5900; it matches since unit 253's data hand line names
+# libc++'s __fields_integral.
 # 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
 # it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #
 # comum::CPacoteArquivos::TrataErroPacote (5901, record 169:11), added after the unit landed: it throws code 7222 with
 # the key's name (5900 on +24), the package's name (the std::string at +0) and IInterfaceSavd's code and text (+16, an
-# int: argument type 3; +4); the getters on IInterfaceSavd and their names are chosen. Fn 4625 (not reconstructed)
-# builds the object in its frame and gives the layout: +0 a std::string, +12 a std::vector (its begin and end compared,
-# its elements walked), +24 the ESavdChaveValidar, +28 and +32 words. The vector's element type and every member's name
-# are chosen; +28 and +32 are not declared, since nothing written reads them. The target's band (uses 2) has 5901
-# ahead of 5900 in the link. A reading: 4625, whose records lie at lines 85 to 116 and whose body calls 5901 before
-# 5900, is defined above both, and a function takes its place at its first mention; with 4625 not written our object
-# has them the other way round.
+# int: argument type 3; +4); the getters on IInterfaceSavd and their names are chosen.
+#
+# Added since: the CPacoteArquivos members fn 4625 (vota::VerificaAssinaturaArquivos, unit 168's votadefs.cpp) holds,
+# none with a target index of its own: the constructor (frameless) and, behind frames of their own (528, 16 and 560
+# bytes), ValidarChaveEAplicacaoValida (records 85:15, 91:15), Validar (116:29, the default location of
+# CPolySingleton<IInterfaceSavd>::instance()) and TrataErroPacoteArquivo (190:15): out-of-line functions binaryen
+# inlined, one call each (docs/reference/facts/reading.md R10). With them, comum::IInterfaceMensagem and
+# CInterfaceMensagemVazia (app/comum/iinterfacemensagem.h, new: RTTI and a vtable only, all inline), EUeComumError's
+# 7219, 7220 and 7223, and ESavdAplic's formatter in iinterfacesavd.h. pnpm wasm score of 4625 against the link before
+# step 8: 125 over 1607 rows, all operand-only; then it matched (named by srcloc-anchor).
+# - The layout is the object 4625 builds in its frame: +0 a std::string, +12 a std::vector<std::string> (Validar walks
+#   it and passes each element on as the file), +24 the ESavdChaveValidar, +28 the command (stored with i32.store,
+#   loaded with i32.load: 32 bits) and +32 the ESavdAplic. The names, the command's type (ueint32), each member's
+#   access, and the constructor's parameters and their order are chosen.
+# - The constructor: the name copied into +0, the vector zeroed and the key, the command 0x1001 and the application
+#   stored (+32, +28, +24, +20, +12, the target's order, which the member-initializer list as written gives; other
+#   forms not measured), ValidarChaveEAplicacaoValida, the file pushed when it is not empty (fn 1108, libc++'s
+#   __emplace_back_slow_path), then the command again: 0x2021 when the vector is empty, else 0x1001. The first store
+#   is the target's (+28 = 4097 before ValidarChaveEAplicacaoValida's code), so the member is initialized and then set.
+#   Its being out of line in this file, and its line, are chosen: a definition in the header, which 4625's TU would
+#   inline, was not measured.
+# - ValidarChaveEAplicacaoValida throws 7219 for a key outside 49 to 59 and 7220 for an application outside 1 to 9,
+#   each formatting the member (argument type 15, a handle: the key's through table slot 2156, the application's
+#   through 2157, both binaryen's body 536; the application's formatter is new in iinterfacesavd.h). `x < lo || x > hi`
+#   gives the target's compares, `(x - (hi + 1)) <= -(hi - lo + 2)` unsigned, for both. Its record has no `const`.
+# - Validar: CPolySingleton<IInterfaceSavd>::instance() (fn 1822); for the commands 0x2021 and 0x1011, the message's
+#   slot 2 with the package, IInterfaceSavd::ValidarPacote (iinterfacesavd.cpp; binaryen inlined it, frame 32) with the
+#   application, the key, the command and the name, and TrataErroPacote when it fails; otherwise, for each file, slot 3
+#   with the package and the file, VerificarArquivo (5892) and TrataErroPacoteArquivo when it fails. The target loads
+#   the vector's end again on every turn, which an iterator loop testing end() gives; a range-for does not (this
+#   object compiled with each, Validar compared with object-local numbers masked: the range-for's lacks that load).
+#   The package branch's return and the order of the two branches are chosen.
+# - TrataErroPacoteArquivo: TrataErroPacote for the SAVD codes 1 to 3, else code 7223 with the key's name, the
+#   package, the file and the SAVD's code and text. The target tests `(code - 1) > 2` unsigned and throws when it holds:
+#   `code >= 1 && code <= 3` around the call with the throw in the `else` gives it in the link; `code < 1 || code > 3`
+#   around the throw gave `(code - 4) <= -4` (3 rows of the score's 135 over 1610 before the next item's change). On
+#   this object the negated `&&` around the throw compiles to `(code - 1) < 3` where the `else` form has `<= 2`; it was
+#   not linked.
+# - ValidarPacote (iinterfacesavd.cpp) takes the command as a ueint32: the target loads +28 with i32.load and stores
+#   its low half, where a ueword parameter made our link load it with i32.load16_u (the same score). The request's
+#   application is assigned before its command: that order stores the command first, as the target does, and the other
+#   the other way round (clang stores values read first in reverse, docs/reference/facts/codegen.md C1), measured on
+#   the object, then in the link. ValidarUE (5890), into which clang inlines it, is the same function with each of
+#   those (iinterfacesavd.cpp compiled with each, masked). Its key is a uedword, the reading taken for 5892 below: an
+#   `ESavdChaveValidar : unsigned int` with the enum parameter gives the same functions in iinterfacesavd.cpp's and
+#   this file's objects (masked), so the parameter is a choice.
+# - The order: the target's band (uses 2) has 5901 ahead of 5900, and our object now has it so (build/out/wasm-map's
+#   ld_index 7978 and 7980): Validar, defined above both, mentions TrataErroPacote first. The lines of the constructor,
+#   of Validar's definition and of TrataErroPacoteArquivo's (from 185) are chosen around the records.
 #
 # comum::CArquivosResultado::GetInst (348), its out-of-line constructor and destructor and its two statics are in this
 # unit's files and belong to unit 111's measurement: its fragment says why GetInst sits above the statics.
@@ -49,10 +92,10 @@
 #   store of its own after the i64 store of the zeroed request and command: at clang's time it is the parameter, which
 #   binaryen's dead-argument elimination folds (5890's wasm type drops it), so the roots pass 1 from both stand-ins;
 #   with the 1 a constant at clang's time, clang merged it into the i64 (measured: 0x20210100). ValidarPacote compares
-#   the key, a plain ESavdChaveValidar, signed, where 4625 or-s it with the ESavdAplic and compares unsigned
-#   (`i32.le_u(i32.or(l3, l10), 255)`): 4625's landing decides between `ESavdChaveValidar : unsigned int` and an
-#   unsigned key parameter (iinterfacesavd.h has the two readings). No byte of 5890 depends on it, since 5890 passes the
-#   constant 53.
+#   the key unsigned, or-ed with the ESavdAplic, as 4625 does (`i32.le_u(i32.or(l3, l10), 255)`): a uedword parameter
+#   since 4625 landed (the CPacoteArquivos paragraph above has the two readings and the command's ueint32). No byte of
+#   5890 depends on either, since 5890 passes the constant 53; the inline cost above was measured with the earlier
+#   parameter types.
 # - 3831 builds sup{pkg{package} key{key}}: a CGenericTags with the four tags inserted (CriaTags, a chosen helper in the
 #   anonymous namespace, which clang inlines: 3831 and 5892 hold the same four inserts), the content, which binaryen
 #   inlined into 3831 (MontaConteudoTLV, a chosen name; a prologue of its own in 3831, and clang keeps it a call at cost
@@ -152,8 +195,8 @@
 #   the end of its scope where the temporary was freed after HexToInt, 503 over 1596. What that left, clang reusing the
 #   marker substr's source pointer for the field's last character where the target computes it again, is the spelling
 #   unit 33's fragment measures, and the rows of local numbers were the order's (a reading of the four links above).
-# - The roots: fn 4625, 5892's other target caller, is not written, and VerificaArquivo stands for it, so that 5892
-#   has two call sites (11179's inlined ValidarUE and the stand-in) and binaryen keeps it out of line, as the target has.
+# - The roots: VerificaArquivo stood for fn 4625, 5892's other target caller, and went when 4625 was written (unit 168):
+#   5892 has two call sites, 11179's inlined ValidarUE and 4625's inlined Validar, and binaryen keeps it out of line.
 #
 # Evidence and choices. The records fix each throw's line and each function's name and types. Chosen, and marked where
 # declared: every enumerator's name, ESavdChaveValidar's and EExtensaoArquivoResultado's enumerator names, the two

@@ -52,8 +52,8 @@ __attribute__((noinline)) comum::SIdentificacaoArquivo* w280_identificacao(void*
     return ::new (destino) comum::SIdentificacaoArquivo(fase, id + 280, uf, pleito);
 }
 
-// stands for fns 5967 and 7787, the callers of CPleito's copy constructor (fn 1281) not in the link that read its
-// returned this (1543 and 11902, which read it too, are in the link; 2787 and 3771 drop it)
+// stands for fn 7787, the caller of CPleito's copy constructor (fn 1281) not in the link that reads its returned this
+// (1543, 5967 and 11902, which read it too, are in the link; 2787 and 3771 drop it)
 __attribute__((noinline)) std::size_t w280_copia(void* destino, const comum::md::CPleito& pleito)
 {
     return (::new (destino) comum::md::CPleito(pleito))->GetEleicoes().size() + 280;

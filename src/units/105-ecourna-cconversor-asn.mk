@@ -65,10 +65,13 @@
 # RTTI holds no DataGeracao, a made-up name, so ModuloTiposEleitorais.h lists only the fields it still holds.
 # cidentificacaosecaoeleitoral.hpp and cconfiguracaomunicipio.hpp replace the layout stand-ins of units 10 and 07.
 #
-# Names. Hand edits in splat/symbol_addrs.txt, each with its evidence: 9029 and 9043 (one holder of the slot) and five
+# Names. Hand edits in splat/symbol_addrs.txt, each with its evidence: 9043 (one holder of the slot) and five
 # theInfo records by the type name each holds; 3813's and 5842's went once 11616 was written (unit 122): with both out,
 # and their match lines too, two scans add both back and splat-build verifies the copies
-# (docs/reference/facts/asn1.md A3). The thunks 9098 9100
+# (docs/reference/facts/asn1.md A3). 9029's went once 9029 and 3777 matched (below): the census pairs 9029 by address
+# (`pair-addr`), and on copies of the symbol file and the match list without the hand line and both match lines, two
+# scans add both back and splat-build gives the target's sha256; so they do without every line of 9029's name, and
+# without 3777's generated `call` line. The thunks 9098 9100
 # 9123 9140 9183 9210 and 9099 9122 9139 9160, their merges 1970 and 2926 and 9209 need no line: the scan pairs them by
 # content, each alone and all together.
 #
@@ -82,6 +85,16 @@
 # IConversorASN<DadosComparecimento, CDadosComparecimento>::Converte, whose name only 9056's own operand voted for
 # (`self-voted`). It matches since unit 166's tree root holds uenux2's copy of 5365, and with it 9202 (unit 08's), which
 # waited on the table slot of 3733, that root's IConversorASN<IdentificadorGeradorMidia, ...>::Deconverte.
+#
+# 9029 was `unresolved` on 3777, CParametrosUrna's implicit copy constructor, which the target keeps as a function of
+# its own, called by 9029 and twice by 7787. Its target body is uenux2's: no landing pad, and the vector's
+# __init_with_size inlined, where this unit's cparametrizacaourna.cpp emits a copy with ten invoke_ calls and the
+# __init_with_size call 9029's scan row stopped on, and binaryen inlined that copy into 9029, its one caller in our
+# link. src/app/roots_iconversorasn.cpp, a tree root at uenux2's flags ahead of ecourna's objects, holds the uenux2 copy
+# (its comment has the evidence and reads 7787's two calls as comum::CConfiguracaoEleicao's code), and this unit's roots
+# stand in for 7787's two calls (UsaCopiaParametros), so 3777 is out of line, and both match: 3777 from the tree root's
+# object, named by 9029's call vote. The stand-in goes when 7787 is in the link, the tree root's copy when an object
+# ahead of ecourna's instantiates it.
 #
 # Written, and not a match yet:
 # - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
@@ -99,8 +112,6 @@
 #   5842 and 5846, two more such copies (185 over 295 and 312 over 449 from this unit's objects, which have landing
 #   pads), matched from src/app/roots_iconversorasn.cpp, which compiled them at uenux2's flags for 11616, and match from
 #   11616's object now.
-# - 9029: 3777, CParametrosUrna's copy constructor, is a call in the target, and binaryen inlines it here, its one caller
-#   in our link (440 over 454): its other caller, 7787, is not written.
 CCONVERSOR_ASN_SRCS := app/dados/cdetalhamentocomparecimento.cpp app/dados/federacoes/cfederacoes.cpp \
                  app/dados/parametrizacaourna/cparametrizacaourna.cpp \
                  app/dados/processoeleitoral/cconfiguracaomunicipio.cpp app/dados/cmunicipiozona.cpp \

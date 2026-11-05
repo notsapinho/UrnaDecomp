@@ -75,6 +75,12 @@
 #     comum::CLocal::Carrega (fn 5740, unit 89's clocal.cpp) holds behind its 64-byte frame (the converter's vptr at
 #     +60), the md::CLocal it returns built in the memory Carrega allocates first. 5740 matches; unit 89's fragment has
 #     the order of the two objects it needed.
+#   - ModuloFotosCandidatos::FotoCandidato's (records @1565084 to @1565196, legravaentidade.h's LeEntidadeEm at :92 and
+#     :98 among them, after the FotosCandidatos index reader's and before ModuloComplementosMunicipios' reader's, both
+#     fn 7787's): comum::CLeitorASN::LeFotoCandidato (cleitorasn.h), which instantiates
+#     LeEntidadeEm<asn::CConversorFotoCandidato> and which fn 3755 (comum::CFotos::GetImagem, unit 109's cfotos.cpp)
+#     holds behind a 576-byte frame of its own, as 1937 holds LeBiometriaEleitor; it has no index of its own. Written
+#     after the Impedidos instance, since the two readers between are not written; unit 109's fragment has 3755's score.
 #   The run's other readers are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
 # functions' being free functions of comum (they read no class's state), their lines and these paths;
@@ -126,7 +132,7 @@
 # Roots (280-uenux2-processoeleitoral-roots.cpp): stand-ins for the target callers not reconstructed, each named in its
 # comment, so that each function keeps the call sites the target gives it, and the constructors' results are read where
 # a target caller reads them: 2787 and 3771 drop the returned this of CPleito's copy constructor (1281) and 2787 that of
-# SIdentificacaoArquivo's (5726), while 1543, 5967, 7787 and 11902 read 1281's (1543 and 11902 are in the link now, unit 123's and 176's), 7787 reads 5726's, and 11869 and 11911
+# SIdentificacaoArquivo's (5726), while 1543, 5967, 7787 and 11902 read 1281's (1543, 5967 and 11902 are in the link now, unit 123's, 220's and 176's), 7787 reads 5726's, and 11869 and 11911
 # read CRelatorioTesteImpressora's (5586; 11911 is written now, unit 296's, and reads it). Without a reader binaryen
 # drops the result: 1281 scored 9 over 215 rows, 5726 3 over 17 and 5586 11 over 99, each with the target's result row
 # deleted; with the readers, 7, 1 and 9, all operand-only. libc++'s vector<CEleicaoPE>::push_back and the version map's

@@ -56,10 +56,11 @@
 #
 # comum::CRdvVota's other slots (vtable @1560164; CRdv declares no destructor, so the vtable has no destructor slot),
 # in crdvvota.cpp. Slot 0 is the key function, so crdvvota.cpp emits the vtable. Inside a band of ledger/ordinals.tsv
-# the target's index runs in reverse link order: band 1 reads 11492 (slot 2), 11490 (slot 1), 11485 (the converter's
-# D2, which our object emits right after ~CRdvVota and the three destroys ~CRdvVota calls), so slots 2 and 1 sit
-# above the destructor; band 2 reads 5734 (~CRdvVota), 5733 (slot 0), 5732; band 3 3749, 3748, 3747; band 4 2814,
-# 2813. Our link gives each band the same order. The order across bands and the lines are chosen.
+# the target's index runs in reverse link order: band 1 reads 11492 (slot 2), 11490 (slot 1), 11488, 11487, 11486
+# (slots 11 to 13), 11485 (the converter's D2, which our object emits right after ~CRdvVota and the three destroys
+# ~CRdvVota calls), so slots 2, 1 and 11 to 13 sit above the destructor; band 2 reads 5734 (~CRdvVota), 5733 (slot
+# 0), 5732; band 3 3749, 3748, 3747; band 4 2814, 2813. Our link gives each band the same order. The order across bands
+# and the lines are chosen.
 # - Slots 4 to 10, Legenda, Partido, Nominais, Legendas, Nulos, Brancos and Cargo (fns 3749, 2814, 2813, 5732, 3748,
 #   3747, 1930): each returns m_votos's total of the same name, which has that slot as its one caller, and wasm-opt
 #   inlines it there as in the target. binaryen merges the seven into the shared bodies 6033 (Legenda, Partido) and 2296
@@ -73,9 +74,44 @@
 #   inlines it (the second stack frame the target has there); in 5733 clang inlines it. The code is as written: both
 #   are operand-only.
 # - Slot 2 (fn 11492) returns m_votos's Comparecimento (fn 5639).
-# - Slots 11 to 13, Converte, Desconverte and Confere (fns 11488, 11487, 11486), are not written: this unit's
-#   -pending.cpp traps them and says what each waits for. Desconverte's record, crdvvota.cpp:237, lies past the end of
-#   the file, which ends before it.
+# - Slots 11 to 13, Converte, Desconverte and Confere (fns 11488, 11487, 11486), between GetVotos(TEleicaoID) and the
+#   destructor, as band 1 orders them, with Desconverte's throw on its record's line and column (crdvvota.cpp:237:15),
+#   so the destructor and every member after it are now past that line. Converte returns asn::Codifica(m_conversor,
+#   m_votos). Desconverte decodes the bytes with asn::Decodifica (fn 5680), throws 4660 with the target's literal
+#   (126733, "Conteudo do arquivo eh incompatível com objeto") when m_votos.Compativel (fn 5638) fails, and swaps the
+#   result in with std::swap(m_votos, votos): clang keeps that instance out of line and binaryen inlines it, the 32-byte
+#   frame 11487 holds after the test, which moves m_votos's two maps into its temporary first. Confere decodes the same
+#   way and returns m_votos.Compativel(votos) && m_votos == votos, the equality of md::CVotosEleicoesVota inlined (its
+#   header, cvotoscargos.h and cvotos.h say what 11486 shows of each level). Codifica and Decodifica are
+#   asn/rdv/cconversorregistrodigitalvoto.cpp's, in this list after cconversoreleicoesvota.cpp: that file's header says
+#   what places them there and what is chosen. Our link keeps band 1's order: names.tsv's ld_index runs 11490's,
+#   11488's, 11487's, 11486's, then 11485's body.
+#   Measured on the whole link before step 8 (pnpm wasm score against the target, every differing row an operand: a
+#   call, a data address, a packed format string or a table slot): 11488 62 over 705 rows, 11487 16 over 329, 11486 3
+#   over 402, 5680 26 over 322; all four matched at step 9, named by srcloc-anchor (11488, 11487, 5680) and vtable
+#   (11486) evidence.
+#   Forms compared on the objects (each compiled at its file's flags, the function's disassembly with the object-local
+#   numbers masked, how-to step 3): Desconverte gives other code with std::swap(votos, m_votos), std::ranges::swap or a
+#   move assignment, and the same with `using std::swap;` and an unqualified call; Confere gives other code with
+#   votos == m_votos, and the same with !(m_votos != votos), with an if that returns false before `return m_votos ==
+#   votos;`, and with `const auto votos`. In cconversorregistrodigitalvoto.cpp, Decodifica's vector as a temporary of
+#   the DecodeObject call (with the entity named or not) puts the vector at +0 and the entity at +12 of the frame, where
+#   5680 has them at +52 and +0; the entity as a temporary of the Desconverte call gives the same object. Codifica's
+#   entity as a temporary of the CodeObject call is destroyed before the copy into the result, where 11488 destroys it
+#   last; `auto` for it, and the converter taken as CConversorRegistroDigitalVoto<CConversorEleicoesVota>, give the same
+#   object.
+#   CBaseError<api::EUeRdvError>'s constructor (fn 655) is now crdvvota.cpp.o's copy (Desconverte's throw is its first
+#   use on the link line; it was md/rdv/cvoto.cpp.o's) and matches as before; so does api::CFileASN::DecodeObject for
+#   the RDV's entity (fn 5825), cconversorregistrodigitalvoto.cpp.o's copy now (unit 305's fragment says why). That
+#   object then holds 5680 before 5825 (names.tsv's ld_index), a pair the other way round from use band 2's: the
+#   target's 5825 sits among app/comum/gravadores/ objects' functions there (5823, 5824), as cgravadorrdv.cpp.o's
+#   copy, which our link drops, so the pair is two objects' in the target and says nothing of an order here. The new
+#   object and cgravadorrdv.cpp.o are a pair our link holds against the target's data (codegen.md C4): cgravadorrdv's
+#   records of 5825 and 11587 (cfileasn.h's, @1556960 and @1557060) precede the new object's (@1571500), and it links
+#   after unit 13's list, as it does after cconversoreleicoesvota.cpp.o; so 5825's copy is the new object's.
+#   Chosen: 4660's enumerator name (euerdverror.h), the slots' lines but the throw's, the local's name and its spelled
+#   type, and the three equality operators' being defaulted members; SCargoInfo's comparing the id alone is evidence,
+#   its being the struct's operator== a choice (cvotoscargos.h).
 # Chosen: slot 0's name (an overload of slot 1's), the alias CRdv::TVotosCargo, and emplace (the target finds the key
 # before it allocates the node, as emplace does; try_emplace was not measured).
 #
@@ -155,7 +191,8 @@
 # app/comum/dados/cconfiguracaoeleicao.h for it.
 #
 # The roots stand in for the callers no unit writes: the CRdvVota vtable's address for CreateInst's vptr store, and the
-# stand-ins the roots file lists by target caller.
+# stand-ins the roots file lists by target caller. The two that called md::CVotosEleicoesVota::Compativel for
+# Desconverte and Confere went with them, and so did this unit's -pending.cpp, whose traps were their last members.
 #
 # The way a voter's ballot (comum::md::CCedula, unit 197's ccedula.h) enters the RDV, which vota::CEleitorVotando's
 # FinalizaEleitor (fn 4454, unit 197) holds, each member here out of line with one caller and
@@ -199,11 +236,13 @@
 # a TU without strict aliasing gives (the reload GetIDsCargos had in unit 88 before md/ built with strict aliasing).
 # md/rdv/cvotoscargos.cpp.o's copy, which the link kept while it came first, is 15 over 167 rows (5 deleted); that
 # object's is 4 over 167, operand rows only, as md/rdv/'s objects built with -fno-strict-aliasing gave in a probe link.
-# No flag changes here (docs/reference/facts/app-flags.md F6). The error codes 4662, 4669, 4672 to 4677 and 4735
+# No flag changes here (docs/reference/facts/app-flags.md F6). The error codes 4660, 4662, 4669, 4672 to 4677 and 4735
 # (euerdverror.h) are named from their messages; the names ErroPosicao, InsereCedula's and ConfereCedula's locals are
 # chosen. The list's order is the target's: its data hold the records of celeitorvotando.cpp (1533188), crdvvota.cpp
-# (1560132), asn/rdv/cconversoreleicoesvota.cpp (1571240) and md/rdv/'s cvoto.cpp (1573404), cvotos.cpp (1573420),
-# cvotoscargos.cpp (1573700) and cvotoseleicoesvota.cpp (1573908) in that order (LC_ALL=C awk -F'\t' '$2 ~
+# (1560132), asn/rdv/cconversoreleicoesvota.cpp (1571240), then those of the instances that
+# asn/rdv/cconversorregistrodigitalvoto.cpp's functions hold (1571500 to 1571548; that they are that file's is a
+# reading, its header has it), and md/rdv/'s cvoto.cpp (1573404), cvotos.cpp (1573420), cvotoscargos.cpp (1573700) and
+# cvotoseleicoesvota.cpp (1573908) in that order (LC_ALL=C awk -F'\t' '$2 ~
 # /crdvvota\.cpp$|cconversoreleicoesvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}'
 # ledger/source-locations.tsv | sort -n), and the order of these objects decides what binaryen makes of fn 4454, which
 # holds this list's RecebeCedula chain inlined (docs/reference/facts/codegen.md C4), and which copy of 5681 the link
@@ -218,18 +257,19 @@
 # each step. With cconversoreleicoesvota.cpp listed after crdvvota.cpp, 4454 scores as before (178 over 2686, operand
 # rows only) and matches (unit 197's fragment).
 CRDVVOTA_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/comum/dados/crdvvota.cpp \
-  src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp src/app/comum/dados/md/rdv/cvoto.cpp \
-  src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
+  src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp src/app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.cpp \
+  src/app/comum/dados/md/rdv/cvoto.cpp src/app/comum/dados/md/rdv/cvotos.cpp \
+  src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
+# cconversorregistrodigitalvoto.cpp includes its header's generated ASN.1 module, which the generic uenux2 rule does not
+# depend on
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # crdvvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do)
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# the CRdvVota slots not written: 13-uenux2-crdvvota-pending.cpp traps them, compiled with the tree's flags
-$(ROOT)/$(APP)/13-uenux2-crdvvota-pending.o: $(ROOT)/src/units/13-uenux2-crdvvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/13-uenux2-crdvvota.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/13-uenux2-crdvvota-pending.cpp -o $(R)
 # the roots that keep the units linked (see the file header)
 $(ROOT)/$(APP)/13-uenux2-crdvvota-roots.o: $(ROOT)/src/units/13-uenux2-crdvvota-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/13-uenux2-crdvvota.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/13-uenux2-crdvvota-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/13-uenux2-crdvvota-pending.o $(APP)/13-uenux2-crdvvota-roots.o
+override EXTRA_OBJS += $(APP)/13-uenux2-crdvvota-roots.o
