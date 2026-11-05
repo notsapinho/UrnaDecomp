@@ -23,9 +23,11 @@
 # The bodies agree: the eight have no landing pad, and 9215, 2666 and 2668 have. ecourna's callers (9066 9127 9130 9142
 # 9221 9228) call the uenux2 copies directly, because uenux2's objects come first in the link and the linkonce copy of the
 # first object wins. So src/Makefile's UENUX2_PREFIX_MAP gains the third spelling (facts/app-flags.md F6 has its evidence),
-# and src/app/roots_cbasetype.cpp, ahead of both trees, instantiates the eight constructors explicitly: no real uenux2 caller
-# of them is written (11616 calls six), and a fragment's roots link after ecourna's objects, which would keep their own copies
-# (`source_location not in the target`, 5682's row before this unit). This unit's roots file only calls them.
+# and src/app/roots_cbasetype.cpp, ahead of both trees, instantiated the eight constructors explicitly while no real uenux2
+# caller of them was written, since a fragment's roots link after ecourna's objects, which would keep their own copies
+# (`source_location not in the target`, 5682's row before this unit). 11616 (unit 122's cgravadorrcsecao.cpp) is written
+# and calls six, which match from uenux2 objects now (TAno's from cjustificador.cpp.o, the five others from 11616's), so
+# the root keeps 1960's and 5682's. This unit's roots file only calls them.
 #
 # roots_cbasetype.o compiles at UENUX2_CXXFLAGS, not APP_CXXFLAGS: the constructors are the same at both, but the libc++
 # format bodies the instances bring to the head of the link are not, and those stay the tree's code this way.
@@ -125,7 +127,8 @@
 #   - 9258 matches since unit 84's CMenuItem::GetTextoFormatado (5492) votes for 2416, std::regex's constructor, beside
 #     it (docs/reference/facts/splat.md S10 item 23).
 #   - 1877 and 5162 wait for the slot of parse_iso_time, 5851 (9824 B), whose one direct caller is uenux2's 11616. Instantiated
-#     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scores 2708 over 4726 rows, 1764 deleted: not the target's body.
+#     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scored 2708 over 4726 rows, 1764 deleted: not the target's body.
+#     The link's copy is cgravadorrcsecao.cpp's now (unit 122, which has what 5851 waits for).
 #   - 2204, a Boost body, matches from clzmacompress.cpp.o with two of its callers, 5204 and 9576, since the tree root
 #     src/app/roots_boost.cpp leaves the app signal's operator() to unit 06's objects (fragment 06); its callers 9570,
 #     9578 and 9583 match too, since the Boost probe calls no disconnect (fragment 06). 9032, which waited for 306,

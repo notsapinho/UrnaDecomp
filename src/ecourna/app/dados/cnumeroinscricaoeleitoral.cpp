@@ -27,8 +27,3 @@ std::string CNumeroInscricaoEleitoral::Formatado() const
 }
 
 } // namespace ecourna::app::dados
-
-// <stubs>
-// f5841 · 600 B · unmatched · placement: link order · name unknown
-// void f5841(i32, i32) { ... }
-// </stubs>

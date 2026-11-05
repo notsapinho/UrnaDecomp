@@ -33,7 +33,8 @@
 //   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387 and 10368 are in the link), its counts
 //   3606 and 2727 (called by 10795 and by 5387 and 10368, the data sources' slot 2, in the link with unit 104's 10388,
-//   and both by 12105), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls HasInst twice.
+//   and both by 12105), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls HasInst once, for 12105 (11616,
+//   unit 122's, is in the link and calls it three times).
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 #include <new>
@@ -120,12 +121,12 @@ __attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
     return 43;
 }
 
-// Stands for the callers of CRegistradorMesario::HasInst (fn 2221), 11616 and 12105, not in the link. GetInst (fn
+// Stands for the caller of CRegistradorMesario::HasInst (fn 2221) not in the link, 12105; 11616 is. GetInst (fn
 // 815) and the two counts (fns 3606 and 2727) have two callers or more in the link: 10795, 10313, 10337 and the data
 // sources' slot 2 (5387 and 10368).
 __attribute__((noinline)) int ConsultaRegistrador()
 {
-    return comum::CRegistradorMesario::HasInst() ? 47 : (comum::CRegistradorMesario::HasInst() ? 53 : 59);
+    return comum::CRegistradorMesario::HasInst() ? 47 : 59;
 }
 
 const void* volatile w113_sink;

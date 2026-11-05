@@ -8,43 +8,16 @@
 // CBaseType (src/units/README.md "Companion files", the tree roots). It compiles at UENUX2_CXXFLAGS, the tree's own
 // flags: what the instances bring is then uenux2's code. Each line goes when a real uenux2 caller instantiates that
 // member: IdentificadorGeradorMidia's Converte and Deconverte went with 10290, 10291, 11399 and 11400, and Foto's
-// Deconverte with 11440 (fragment 172's objects, which link ahead of ecourna's). DadosComparecimento's Converte stays
-// for 11616, not written.
+// Deconverte with 11440 (fragment 172's objects, which link ahead of ecourna's), and DadosComparecimento's Converte with
+// 11616 (unit 122's cgravadorrcsecao.cpp and gravadores/asn/cconversorresultadournacadastro.cpp).
 #include <vector>
 
 #include "asn1.h"
-#include "ModuloResultadoUrnaCadastro.h"
 #include "ModuloTiposEleitorais.h"
-#include "ecourna/api/asn/iconversorasn.hpp"
-#include "ecourna/app/dados/resultadournacadastro/cdadoscomparecimento.hpp"
 
-using ecourna::api::asn::IConversorASN;
-using ecourna::app::dados::CDadosComparecimento;
-
-template ModuloResultadoUrnaCadastro::DadosComparecimento
-IConversorASN<ModuloResultadoUrnaCadastro::DadosComparecimento, CDadosComparecimento>::Converte(
-    const CDadosComparecimento&) const;
-
-// Two more copies whose target bodies are uenux2's, for the same 11616: they have no landing pad, and 11616 calls each
-// directly, while ecourna's converters reach them only through invoke slots (9094 passes 5842's, 6936; 9052 and 9056
-// pass 5846's, 7026), whose own copies have landing pads (pnpm wasm score against ours: 185 over 295 rows and 312 over
-// 449). Each goes when a real uenux2 caller instantiates it:
-// - vector<CIdentificacaoJustificativa>::__emplace_back_slow_path<CIdentificacaoJustificativa> (5842), which calls
-//   __uninitialized_allocator_relocate (5831) directly, as comum::dao::CJustificadorDAO::RecuperarTodos (11469, unit
-//   66) does: with ecourna's copy reaching 5831 through a slot, the relocate kept its allocator parameter;
-// - CDadosComparecimento's implicit copy constructor (5846), with std::optional<TVectorComparecimentoMesario>'s copy
-//   (5832), which it calls twice, and its callee __uninitialized_allocator_copy_impl<CEstadoComparecimento> (2278),
-//   which the link now takes from this object instead of ecourna's ccomparecimentosecao.cpp.o, the same code;
-//   urna_copia_dados_comparecimento only instantiates it (clang keeps the copy out of line, a call) and leaves the
-//   link.
-template ecourna::app::dados::CIdentificacaoJustificativa*
-std::vector<ecourna::app::dados::CIdentificacaoJustificativa>::__emplace_back_slow_path<
-    ecourna::app::dados::CIdentificacaoJustificativa>(ecourna::app::dados::CIdentificacaoJustificativa&&);
-
-void urna_copia_dados_comparecimento(void* destino, const CDadosComparecimento& dados)
-{
-    ::new (destino) CDadosComparecimento(dados);
-}
+// The two other copies this file held for 11616, whose target bodies are uenux2's as well (no landing pad, and 11616
+// calls each directly), went with it: vector<CIdentificacaoJustificativa>::__emplace_back_slow_path<
+// CIdentificacaoJustificativa> (5842) and CDadosComparecimento's implicit copy constructor (5846).
 
 // The two calls of Foto's Deconverte (5708) that stood for comum::asn::CConversorBiometriaEleitor::DoDesconverte
 // (11422) went: both its target callers, 11422 (fragment 335's) and 11440, are in our link.

@@ -3,10 +3,11 @@
 // binaryen keeps its body out of line. The stand-ins differ in their bodies, from each other and from every target
 // function, take what the target's callers vary as parameters, and are address-taken from a static constructor.
 // - api::CPolySingleton<api::IKernelHSM>::instance (fn 2279): fns 2725, 11419, 11616, 11629 and 12110; 2725
-//   (ccontrolaarmazenamentodeimagens.cpp) and 11419 (fragment 335's) are written, w293_hsm stands for the others. It
-//   passes an empty std::source_location, as unit 100's w100_usa does: a record here would be none of the target's.
+//   (ccontrolaarmazenamentodeimagens.cpp), 11419 (fragment 335's) and 11616 (unit 122) are written, w293_hsm stands for
+//   the others. It passes an empty std::source_location, as unit 100's w100_usa does: a record here would be none of
+//   the target's.
 // - ecourna::api::io::DeserializeFromFile<ModuloEnvelopeChave::EntidadeChave> (fn 2280): fns 2725, 11419, 11616 and
-//   11629; 2725 and 11419 are written, the stand-in is for 11616 and 11629.
+//   11629; 2725, 11419 and 11616 (unit 122) are written, the stand-in is for 11629.
 // - comum::asn::GravaArquivo for the envelope (fn 2724): fns 2725, 11626 and 11629 (which calls it twice); 11626 (unit
 //   160) and 2725 are written, the stand-in is for 11629.
 // - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.
@@ -40,11 +41,10 @@ __attribute__((noinline)) int w293_hsm()
     return &a == &b ? 19 : 23;
 }
 
-__attribute__((noinline)) void w293_chaves(ModuloEnvelopeChave::EntidadeChave& chave, ModuloEnvelopeChave::EntidadeChave& outra,
-    const std::string& nome, const std::string& outroNome)
+// stands for fn 11629 (2725, 11419 and 11616 are written): one call
+__attribute__((noinline)) void w293_chaves(ModuloEnvelopeChave::EntidadeChave& chave, const std::string& nome)
 {
     ecourna::api::io::DeserializeFromFile(chave, nome);
-    ecourna::api::io::DeserializeFromFile(outra, outroNome);
 }
 
 __attribute__((noinline)) void w293_envelopes(const api::CFile& arquivo, const api::CFile& outro,

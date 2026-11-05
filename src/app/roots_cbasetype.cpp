@@ -3,7 +3,10 @@
 // The first uenux2 object that used one kept the copy, and no such object is written yet, while ecourna's objects emit
 // their own. A fragment's roots link after those, so only an object ahead of them can hold the copies. It compiles at
 // UENUX2_CXXFLAGS, the tree's own flags, unlike the other roots: everything the instances bring is then uenux2's code. Each
-// line goes when a real uenux2 caller instantiates that constructor. src/units/112-ecourna-cbasetype.mk has the evidence.
+// line goes when a real uenux2 caller instantiates that constructor: TAno's, TScoreHabilitacao's, TSecaoID's, TZonaID's,
+// TMunicipioID's and TLocalID's went when comum::CGravadorRCSecao::GravaResultado (fn 11616, unit 122's
+// cgravadorrcsecao.cpp) was written, and they match from uenux2 objects now (TAno's from cjustificador.cpp.o, the
+// five others from cgravadorrcsecao.cpp.o). src/units/112-ecourna-cbasetype.mk has the evidence.
 //
 // The same holds for the token iterator over a std::string: std::sregex_token_iterator's constructor and operators and
 // the matchers under them (4307, 6970, 3137, 2054, 2056, 4276, 4279, 6897, 6942) and std::regex_replace into a
@@ -29,12 +32,6 @@
 #include <string>
 
 template CBaseType<unsigned short, 0, 9999, 15>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 36>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 999, 38>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 9>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 7>::CBaseType(unsigned short);
-template CBaseType<unsigned int, 0, 99999, 6>::CBaseType(unsigned int);
-template CBaseType<unsigned int, 0, 9999, 8>::CBaseType(unsigned int);
 template CBaseType<unsigned short, 1, 99, 3>::CBaseType(unsigned short);
 
 std::string urna_regex_tokens(const std::string& texto, const std::regex& re)

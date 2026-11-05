@@ -21,8 +21,8 @@
 #   was the link's, it reached 5831 through an invoke's table slot, so 5831 kept the allocator parameter the target's
 #   lacks (docs/reference/facts/reading.md R18) and 11469 scored 28 over 743 rows, 1 inserted, the allocator argument.
 #   The target's copy of the slow path (fn 5842) is uenux2's and calls 5831 directly. src/app/roots_iconversorasn.cpp
-#   holds a uenux2-flag explicit instantiation of it ahead of ecourna's objects, for 11616 (not written); with it 5842,
-#   5831 (both from that object now) and 11469 match.
+#   held a uenux2-flag explicit instantiation of it ahead of ecourna's objects, for 11616; with it 5842, 5831 and 11469
+#   matched. 11616 is written now (unit 122's cgravadorrcsecao.cpp), and 5842 matches from its object.
 #
 # Read from the bytes:
 # - slot 3: the calls are ISqlConnection's slot 5 (Prepare) and ISqlStatement's slots 3, 2, 10 and 12 (SetInt64, SetInt,
