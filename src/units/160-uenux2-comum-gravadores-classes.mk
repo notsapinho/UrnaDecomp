@@ -100,14 +100,14 @@
 # found to give the same bytes.
 #
 # Not matched, and what each waits for:
-# - Not attempted: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266; md::CEntidadeHashes's members past +36
-#   are not recovered). The constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn 12098)
-#   matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written: template
-#   instances whose callers are not written, so that no instance of ours exists (the element types are readings of the
-#   bodies; 5859 and 3815, which were among them, match from unit 200's roots and igravadorenvelope.cpp.o): 5843 and
-#   5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths; fn 11616). 3816 (the relocation of a
-#   vector of comum::md::CCargo; fns 3818 and 11371) and 5868 (a tree insertion with a string key), which were among
-#   them, match: 3816 from unit 200's cgravadorbu.cpp.o (3818's object; fragment 299's cconversoreleicaope.cpp.o,
+# - comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266) is unit 293's file's and matches (centidadehashes.h has
+#   the members it reads). The constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn
+#   12098) matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written:
+#   template instances whose callers are not written, so that no instance of ours exists (the element types are readings
+#   of the bodies; 5859 and 3815, which were among them, match from unit 200's roots and igravadorenvelope.cpp.o): 5843
+#   and 5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths; fn 11616). 3816 (the relocation
+#   of a vector of comum::md::CCargo; fns 3818 and 11371) and 5868 (a tree insertion with a string key), which were
+#   among them, match: 3816 from unit 200's cgravadorbu.cpp.o (3818's object; fragment 299's cconversoreleicaope.cpp.o,
 #   11371's, held the copy before), 5868 from fragment 268's object, its caller fn 5869's.
 # - 5852 and 5854 (std::vector<api::hash::CHashArquivo>'s range insert and its helper; fns 5358 and 11620 call 5854) are
 #   fragment 227's: 5852 matches from cmontadorhash.cpp's object, and 5854 waits for 11620, whose object, built without

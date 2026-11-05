@@ -10,7 +10,8 @@
 // __shared_ptr_pointer<CInputFieldControl<IScreenMT>*>, so nothing below stands for those either, and so is fn 5410
 // (vota::MontaTelaEleitorPodeVotar, unit 161), whose inlined CMTFormBuilder::AddInputControl(int) builds
 // __shared_ptr_emplace<CInputFieldControl<IScreenMT>> and stores CInputFieldControlBase<IScreenMT>'s vtable. The other
-// users are not reconstructed: fns 2383, 3675, 7787, 6624 and 4185 (5913, unit 59's, is in the link). So:
+// users are not reconstructed: fns 2383, 7787, 6624 and 4185 (5913, unit 59's, and 3675, unit 84's, are in the
+// link). So:
 // - The optnone functions below are not rooted, and wasm-ld drops them with the constructors. They exist to make clang
 //   emit what the target's builders emit (src/units/README.md "A class with no key function", "A control block"):
 //   w92_emite_campo builds a CInputField as fn 2383 does; w92_emite_mascara and w92_emite_mascara_cinza call the
@@ -88,14 +89,16 @@ __attribute__((optnone, noinline)) void w92_emite_mascara_cinza(api::CMaskedText
 namespace {
 
 // fn 2024, IInputField<IScreen>'s constructor, has six direct callers in the target (fns 901, 2383, 3675, 5565, 5913
-// and 7787). 901 and 5565 are in the link and pass the length 0, true and false, and 5913 (unit 59) is too; the
-// others pass other lengths and flags, and 2024's wasm type keeps every parameter. CampoNumeroA and CampoNumeroB
-// stand for 2383, 3675 and 7787: each builds a CInputField<CFramedText> as 2383 does, with the length and the five
-// flags varied from each other and from 901's and 5565's, or dead-argument elimination would fold those two's.
+// and 7787). 901 and 5565 are in the link and pass the length 0, true and false, and 5913 (unit 59) is too; the others
+// pass other lengths and flags, and 2024's wasm type keeps every parameter. CampoNumeroA and CampoNumeroB stand for
+// 2383, 3675 and 7787, and stay for 2383 and 7787 (3675, unit 84's, is in the link): each builds a
+// CInputField<CFramedText> as 2383 does, with the length and the five flags varied from each other and from 901's and
+// 5565's, or dead-argument elimination would fold those two's.
 //
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
-// 6652 and 7787), only 5913 in the link (unit 59). These two stand in for the others: the target's callers pass
-// different lengths, points, fonts and alignments, so these do too, and each has a body no target function has.
+// 6652 and 7787), 5913 (unit 59) and 3675 (unit 84) in the link. These two stand in for the others: the target's
+// callers pass different lengths, points, fonts and alignments, so these do too, and each has a body no target function
+// has.
 __attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
 {
     return new api::CFramedText(n, p, f, api::ALINHAMENTO_CENTRO);

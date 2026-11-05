@@ -13,14 +13,18 @@
 #   (fn 12674), its other caller, from the libraries: with a second caller of utimes (the roots' stand-in, now 2725)
 #   binaryen keeps __futimesat out of line, as the target does, where it inlined it into dotlockLock before.
 # - std::filesystem::path::string() (fn 1555, 49 B), which 2725 calls out of line for each throw's message.
+# - comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266), in cconversorentidadehashes.cpp: the file's header
+#   comment and centidadehashes.h say what it holds and what its rows were.
 # The two templates' instances, and CBaseError<comum::EUeComumReconhecimentoBiometricoError, ...>'s constructor (fn
 # 5369, unit 186), come from ccontrolaarmazenamentodeimagens.cpp.o now, the first object to instantiate them in our link
 # (this unit's roots object and unit 186's gave them before, with the same bodies: the scan matches them from either).
 # The target's copies of the templates are cgravadorbu.cpp's by a reading of the data (their records lie in that
 # object's run of the data, before IGravadorEnvelope's vtable @1554456), a uenux2 object without strict aliasing, the
 # flags both ccontrolaarmazenamentodeimagens.cpp.o and the roots rule below compile with. serialization.hpp's
-# ReadWholeFile is static, so two TUs that include the header now each have their own (the ODR question above); the link
-# keeps ccontrolaarmazenamentodeimagens.cpp.o's instance of DeserializeFromFile, which calls that TU's copy.
+# ReadWholeFile is static, so the three TUs that include the header (this unit's roots,
+# ccontrolaarmazenamentodeimagens.cpp and fragment 335's cconversorbiometriaeleitorcifrada.cpp) each have their own (the
+# ODR question below); the link keeps ccontrolaarmazenamentodeimagens.cpp.o's instance of DeserializeFromFile, which
+# calls that TU's copy, for 2725 and 11419 both.
 #
 # Measured on this link (pnpm wasm score against the target, then the scan):
 # - 2280 with the file read in DeserializeFromFile's own scope, the CFile alive across the decode: 117 over 319 rows
@@ -38,8 +42,9 @@
 #   definition must refer to the same entity in every TU that defines the template, so a function of internal linkage
 #   that DeserializeFromFile calls makes the program ill-formed (no diagnostic required) as soon as a second TU includes
 #   the header, whether it instantiates the template or not; the failure one would see, the one instance the linker
-#   keeps calling one TU's helper, needs two TUs to instantiate the same specialization. Only this unit's roots include
-#   the header now, so it is harmless today.
+#   keeps calling one TU's helper, needs two TUs to instantiate the same specialization. Three TUs include the header
+#   now and two of them instantiate it (above), so the program breaks the rule; the copies are the same code, and
+#   `static` stays because `inline` and a lambda called in place each lose 2280 and 11419 (fragment 335 measured both).
 # - 2279 82 over 900 rows, 5367 and 2724 6 over 10 each, 6006 58 over 712, every row an operand.
 # - 6236 against our __futimesat: with the stand-in reading the result, 11 over 69 rows (its i32 result, which the
 #   target's type lacks); dropping it, as both target callers do, 3 over 67, operands only, and dotlockLock 4 over 54

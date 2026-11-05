@@ -11,8 +11,8 @@
 //   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
 //   so the target holds one body for both and does not tell which source defines it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fn
-//   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link) and api::CInputMenuField
-//   (1579324, fn 3675). A dropped builder needs T's constructor declared, not defined.
+//   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link). The one of api::CInputMenuField
+//   (1579324) went: its builder, fn 3675 (unit 84), is in the link.
 // And four stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, kept by their
 // addresses: each comment names the target callers it stands for. The one of vota::AdicionaCampoNumerico (fn 1151) went:
 // its last target caller not in the link, fn 10500 (unit 239's), is.
@@ -29,7 +29,6 @@
 #include <string>
 
 #include "api/gui/cdatatext.h"
-#include "api/gui/cinputmenufield.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/iinputfield.h"
 #include "app/comum/dados/crespostasds.h"
@@ -39,7 +38,6 @@
 extern "C" {
 extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRespostasDSNumeroEEE");
 extern const char w121_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEEE");
-extern const char w121_vt_menu[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api15CInputMenuFieldENS_9allocatorIS2_EEEE");
 }
 
 __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
@@ -50,12 +48,6 @@ __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
 __attribute__((optnone, noinline)) std::shared_ptr<std::string> w121_string(const std::string& valor)
 {
     return std::make_shared<std::string>(valor);
-}
-
-__attribute__((optnone, noinline)) std::shared_ptr<api::CInputMenuField> w121_menu(
-    const api::SPoint& posicao, const api::SFont& font, api::TPosition largura)
-{
-    return std::make_shared<api::CInputMenuField>(posicao, font, largura);
 }
 
 namespace {
@@ -70,8 +62,8 @@ __attribute__((noinline)) void w121_destroi_calcula(comum::CCalculaCV* primeiro,
     segundo->~CCalculaCV();
 }
 
-// Stands for five of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11253, 11260, 11980 and
-// 11981 (11254, 11255 and 11256 are in the link).
+// Stands for four of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11260, 11980 and 11981
+// (11253, 11254, 11255 and 11256 are in the link).
 __attribute__((noinline)) void w121_inclui(comum::CCalculaCV& calcula, const std::string& primeira, const std::string& segunda)
 {
     calcula.IncluiString(primeira);
@@ -104,7 +96,6 @@ struct SW121Roots {
         w121_sink = reinterpret_cast<const void*>(&w121_codigo);
         w121_sink = w121_vt_respostas;
         w121_sink = w121_vt_string;
-        w121_sink = w121_vt_menu;
     }
 } w121_roots;
 

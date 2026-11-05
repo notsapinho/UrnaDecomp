@@ -46,12 +46,8 @@ void urna_copia_dados_comparecimento(void* destino, const CDadosComparecimento& 
     ::new (destino) CDadosComparecimento(dados);
 }
 
-// Stands in for 5708's target caller comum::asn::CConversorBiometriaEleitor::DoDesconverte (11422), not in our link
-// (its other caller, 11440, is): two call sites, since binaryen inlines a function called once
-// (docs/reference/facts/tool-traps.md X1), and without one wasm-ld drops the instance and 3733 has no partner to merge
-// with.
-extern "C" void urna_deconverte_foto(int, int, int) __asm__(
-    "_ZNK7ecourna3api3asn13IConversorASNIN21ModuloTiposEleitorais4FotoENS_3app5dados5CFotoEE10DeconverteERKS4_");
+// The two calls of Foto's Deconverte (5708) that stood for comum::asn::CConversorBiometriaEleitor::DoDesconverte
+// (11422) went: both its target callers, 11422 (fragment 335's) and 11440, are in our link.
 
 // ASN1::CoderEnv::decode over a range of std::vector<char> (target fn 679), the copy of asn1.h's template its callers
 // keep, read as uenux2's: no landing pad, and istringstream's constructor inlined where the runtime's -Os decode(const
@@ -61,8 +57,8 @@ extern "C" void urna_deconverte_foto(int, int, int) __asm__(
 // and 11905. 3791, comum::IServicoEstado's reader (unit 206), and 11905 (unit 176's) are in our link, and 3791's object
 // (app/uenux2/src/app/comum/appinfo/servicos/cservicoestadogeralvota.cpp.o) gives the copy, so the explicit instance
 // this file held went: without it 679 matches from that object (steps 7 to 9). 3735, 3771, 5706, 5778 (unit 280),
-// 11517, 1937 (unit 110), 5825 (unit 305), 2280 (unit 293, ecourna's DeserializeFromBuffer inlined) and 5740 (unit 89,
-// CarregaArquivo<CConversorLocal>'s reader inlined) are in our link too, the others not:
+// 11517, 1937 (unit 110), 5825 (unit 305), 2280 (unit 293, ecourna's DeserializeFromBuffer inlined), 5740 (unit 89,
+// CarregaArquivo<CConversorLocal>'s reader inlined) and 11419 (fragment 335) are in our link too, the others not:
 // urna_roots_iconversorasn stands in for them with two calls, each passing defered as false, the constant binaryen
 // folded. The iterator type is DecodeObjectFunction's (api/io/asn/cfileasn.h), the begin() and end() of its const
 // std::vector<char>&, a chosen spelling: an instance over const char* gave the same function when this file held it.
@@ -71,8 +67,6 @@ extern "C" bool urna_decodifica(int, int, int, int, bool) __asm__(
 
 int urna_roots_iconversorasn(int a)
 {
-    urna_deconverte_foto(a, a + 4, a + 8);
-    urna_deconverte_foto(a + 16, a + 4, a + 24);
     bool lido;
     [[clang::noinline]] lido = urna_decodifica(a, a + 4, a + 8, a + 12, false);
     [[clang::noinline]] lido &= urna_decodifica(a + 16, a + 4, a + 8, a + 20, false);

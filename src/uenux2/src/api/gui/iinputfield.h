@@ -48,12 +48,13 @@
 //
 // The constructor for IScreen, fn 2024, matches from api/gui/cinteractiveformbuilder.cpp's object, where
 // CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901) call it with the length 0 and the
-// flags true and false; its other target callers (2383, 3675, 5913, 7787) pass others, 5913 in the link (unit 59), and
-// unit 92's roots stand for the rest so that binaryen folds none of its parameters. 3673, IInputField<IScreenMT>'s,
-// matches from unit 121's cescolheopcao.cpp object, which links first; api::CMTFormBuilder::AddInputControl (395) calls
-// it with the length 0 and the confirm flag true, 1151 is in the link, and unit 31's roots stand for 5410, not written,
-// with a varied length and flag, so that binaryen folds the four flags every target caller passes alike (false, true,
-// false, false) and not those two, as 3673's wasm type has it. Read (fns 6319, 11024) matches for both media.
+// flags true and false; its other target callers (2383, 3675, 5913, 7787) pass others, 5913 and 3675 in the link (units
+// 59 and 84), and unit 92's roots stand for 2383 and 7787 so that binaryen folds none of its parameters. 3673,
+// IInputField<IScreenMT>'s, matches from unit 121's cescolheopcao.cpp object, which links first;
+// api::CMTFormBuilder::AddInputControl (395) calls it with the length 0 and the confirm flag true, 1151 is in the link,
+// and unit 31's roots stand for 5410, not written, with a varied length and flag, so that binaryen folds the four flags
+// every target caller passes alike (false, true, false, false) and not those two, as 3673's wasm type has it. Read (fns
+// 6319, 11024) matches for both media.
 
 #include <chrono>
 #include <cstddef>

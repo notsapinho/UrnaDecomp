@@ -9,6 +9,9 @@
 # and 0 at +36, +32 and +28 and invokes CreateZipFile through table slot 6119; every row is operand-only and it
 # matches by content (the scan's content pass finds it: its depth-0 shape is the only one on both sides; a
 # vptr+shape hand line that named it carried no row, measured, and went).
+# CZip's second constructor, which also adds a map's files (no target index: binaryen inlines it into its one caller,
+# comum::CGravadorLog::GravaResultado, 11584, unit 136), is defined at the end of czip.cpp, a line chosen; czip.hpp and
+# unit 136's fragment give its evidence.
 # CZip's destructor is declared in czip.hpp and defined in czip.cpp after Close: CompactaWsq calls its D2 (2690) out of
 # line, twice. Defined in the class, clang inlined it there (-Rpass=inline: cost 110 against 250; 170 with
 # ICompressor's destructor inline in its header, still inlined), and 5821 then held the D2's code where the target

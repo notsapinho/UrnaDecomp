@@ -35,6 +35,16 @@ public:
     // result. No record names it; the name is chosen from what it returns.
     comum::md::TCargoID GetCargo() const;
 
+    // Clears the three filters: vota::CMenuVisualizarCandidatos::StartState (fn 11881) resets the optionals' flags at
+    // +25, +38 and +32, in that order, on GetInst()'s result (each `if (flag == 1) flag = 0`, std::optional::reset).
+    // The name, and that it is one inline member, are chosen.
+    void LimpaFiltros()
+    {
+        m_cargo.reset();
+        m_partido.reset();
+        m_candidato.reset();
+    }
+
 private:
     CVisualizarCandidatos();
 

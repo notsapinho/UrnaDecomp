@@ -5,7 +5,7 @@
 //   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 (unit 160)
 //   and 11395 (comum::asn::CConversorEstadoGeralGap::DoDesconverte, unit 93, three call sites) are in the link, and
 //   11395 reads the copy's result as the target's does, and 5740 (unit 89's, the general state's copy) is in the link
-//   too; 5637 and 12098 still wait. The stand-in that stood for
+//   too, and so is 5637 (unit 215's); 12098 still waits. The stand-in that stood for
 //   them went before they landed, on a link without it that moves no row: 11197 and 5856 keep `match`.
 // - InicializaTradutorFrase (slot 10, fn 11196) hands its map to comum::md::CTradutorFrase::SetLabels, inline, which
 //   calls the tree's __assign_multi, fn 5794, with the static map's address. 5794 has two callers in the target

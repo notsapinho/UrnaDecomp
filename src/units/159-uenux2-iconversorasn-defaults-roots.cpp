@@ -2,8 +2,6 @@
 // reconstructed yet; in the target each converter's vtable is data whose DoConverte/DoDesconverte slots put the bodies
 // in the table (no slot has a direct caller), so rooting the vtable keeps the same set:
 // - comum::asn::CConversorHistoricoVotoImpresso, vtable @1597388 (slots 2 and 3: fns 10276, 10275);
-// - comum::asn::CConversorDedo, @1566480 (fns 11415, 11416);
-// - comum::asn::CConversorBiometriaEleitor, @1565992 (fns 11421, 11422);
 // - comum::asn::CConversorCandidaturas, @1562360 (fns 11444, 11445);
 // - comum::asn::CConversorFotoCandidato, @1562580 (fns 11439, 11440);
 // - comum::asn::CConversorEntidadeBU, @1597528 (fns 10273, 10272): the one target function that stores its vptr is
@@ -14,11 +12,11 @@
 // matches. Nor is comum::asn::CConversorEleicaoPE's (@1570088, slots 2 and 3: fns 11370, 11371): fn 5778
 // (comum::CarregaPleito, unit 280's), the one target function that stores its vptr, is in the link, through the
 // converter's constructor out of line in cconversoreleicaope.cpp (unit 299).
+// Nor are comum::asn::CConversorDedo's (@1566480) and CConversorBiometriaEleitor's (@1565992): fns 11422 and
+// 11419 (fragment 335), the target functions that store their vptrs, are in the link.
 // Declared through asm labels, so this TU needs no uenux2 or ASN.1 header and instantiates nothing.
 extern "C" {
 extern const char historicovotoimpresso_vt[] __asm__("_ZTVN5comum3asn31CConversorHistoricoVotoImpressoE");
-extern const char dedo_vt[] __asm__("_ZTVN5comum3asn14CConversorDedoE");
-extern const char biometriaeleitor_vt[] __asm__("_ZTVN5comum3asn26CConversorBiometriaEleitorE");
 extern const char candidaturas_vt[] __asm__("_ZTVN5comum3asn22CConversorCandidaturasE");
 extern const char fotocandidato_vt[] __asm__("_ZTVN5comum3asn23CConversorFotoCandidatoE");
 extern const char entidadebu_vt[] __asm__("_ZTVN5comum3asn20CConversorEntidadeBUE");
@@ -26,17 +24,15 @@ extern const char entidadebu_vt[] __asm__("_ZTVN5comum3asn20CConversorEntidadeBU
 
 namespace {
 
-const void* volatile defaults159_sink[6];
+const void* volatile defaults159_sink[4];
 
 struct SDefaults159Roots {
     SDefaults159Roots()
     {
         defaults159_sink[0] = historicovotoimpresso_vt;
-        defaults159_sink[1] = dedo_vt;
-        defaults159_sink[2] = biometriaeleitor_vt;
-        defaults159_sink[3] = candidaturas_vt;
-        defaults159_sink[4] = fotocandidato_vt;
-        defaults159_sink[5] = entidadebu_vt;
+        defaults159_sink[1] = candidaturas_vt;
+        defaults159_sink[2] = fotocandidato_vt;
+        defaults159_sink[3] = entidadebu_vt;
     }
 } defaults159_roots;
 

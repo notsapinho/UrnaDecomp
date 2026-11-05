@@ -23,7 +23,7 @@
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
 //                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
 //                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, unit
-//                     110's, and 11812, unit 217's, are in the link); TelaB for 7787,
+//                     110's, 11812, unit 217's, and 11881, unit 104's, are in the link); TelaB for 7787,
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
 //                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
@@ -145,8 +145,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341; 1150, 5343, 10204, 10214 and 10676 are in the link) and of 301
 //                         (1 of its 49 target callers is not in the link: 10451)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelC   the callers of 357 (Build): 3699, 5580, 5970, 5971, 11253, 11946, 12105 and 12110, not
-//                reconstructed (11256, 2890, 12005, 11908, 3872, 3873, 5579 and 5977 are in the link); it calls Build
+//   FormPapelC   the callers of 357 (Build): 3699, 5580, 5970, 5971, 11946, 12105 and 12110, not reconstructed
+//                (11256, 2890, 12005, 11908, 3872, 3873, 5579, 5977 and 11253 are in the link); it calls Build
 //                twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {

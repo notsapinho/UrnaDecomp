@@ -87,9 +87,10 @@
 # chain, the assignment as is, from a local or as an explicit operator= call, and the TU without strict aliasing;
 # std::optional(...), std::make_optional and emplace store the flag with no test. The two tests swapped give the
 # target's order there too, against the records' order (108's throw is 8084's, the acquisition already ended).
-# Not reconstructed: the slots of the other converters here, CEstadoGeral, CCabecalhoQRCodeBuilder's other
-# setters (fn 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and
-# preBuild().
+# CCabecalhoQRCodeBuilder's setters that comum::CGeradorBUQRCodeVota::Slot2 (fn 11242, unit 155's) holds inlined are
+# written in ccabecalhoqrcodebuilder.cpp after DefineVersaoSoftware; unit 155's fragment has what they show and what
+# was measured, and why that unit's two sources are compiled at the end of this unit's list.
+# Not reconstructed: the slots of the other converters here and CEstadoGeral (preBuild() is written, above line 284).
 #
 # What decides the form, measured:
 # - Who inlined what. ValidaCriacao, ValidaModelo, ConverteEstadoSA, DesconverteEstadoSA, ConverteTipoAjusteDataHora and
@@ -196,6 +197,8 @@ ESTADOAPLICACAO_SRCS := src/app/comum/dados/asn/estadoaplicacao/cconversorajuste
   src/app/comum/dados/md/estadoaplicacao/cestadogeralvota.cpp \
   src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
 UENUX2_SRCS += $(ESTADOAPLICACAO_SRCS)
+# unit 155's sources, listed after this unit's: src/units/155-uenux2-cgeradorbuqrcode.mk has why and the measurement
+UENUX2_SRCS += src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/comum/relatorios/cgeradorbuqrcodevota.cpp
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ESTADOAPLICACAO_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # the users of these classes are not reconstructed yet: 93-uenux2-estadoaplicacao-roots.cpp keeps them the way the target

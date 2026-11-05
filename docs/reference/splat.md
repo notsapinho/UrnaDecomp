@@ -556,7 +556,7 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   with nothing. Compare its store order with the target caller's by hand, and the fragment says "compared with nothing".
   When a stand-in holds our copy inlined, `pnpm wasm score <target> <the target caller> <link> <the stand-in>` aligns
   the two: every store of ours pairs with an identical row of the caller's copy, in order, while operands, local
-  numbers and where the arguments come from may differ (unit 32's `CSystem::Rename`, inlined in 11584).
+  numbers and where the arguments come from may differ (unit 32's `CSystem::Rename` in 11584, until 11584 matched).
   Our side is the object's code (`wasm-objdump -d <object>`), since the link drops a function nothing calls: read it
   with each out-of-line callee it calls in place, and allow for what the link removes (an empty base destructor, a
   sized `operator delete` that is `free`). When the target caller is written and does not match, the body is compared

@@ -4,6 +4,8 @@
 // 2791, its record at line 284) and build(), which binaryen inlined into fn 5604 (each has one caller there; the
 // setters leave a stack frame of their own), under chosen names too. That the members sit above line 284 is a choice;
 // the first seven's order is the target's, the higher target index first in the object.
+// The setters comum::CGeradorBUQRCodeVota::Slot2 (fn 11242) calls follow DefineVersaoSoftware, in Slot2's call order,
+// a choice: binaryen inlines each into its one caller, so none has a target index of its own.
 #include "app/comum/relatorios/ccabecalhoqrcodebuilder.h"
 
 #include <cctype>
@@ -108,7 +110,95 @@ void CCabecalhoQRCodeBuilder::DefineVersaoSoftware(const std::string& versao)
     m_versaoSoftware = std::format("VERS:{} ", api::CStringUtils::GetVersionNumber(versao));
 }
 
-// (original lines 111-276: content not recovered)
+void CCabecalhoQRCodeBuilder::DefineOrigemRED()
+{
+    m_origem = std::format("ORIG:{} ", "RED"sv);
+}
+
+void CCabecalhoQRCodeBuilder::DefineOrigemVOTA()
+{
+    m_origem = std::format("ORIG:{} ", "VOTA"sv);
+}
+
+void CCabecalhoQRCodeBuilder::DefineAgregadas(const std::vector<ueword>& agregadas)
+{
+    std::string numeros;
+    for (const ueword numero : agregadas) {
+        numeros += std::format("{}.", numero);
+    }
+    numeros.pop_back();
+    m_agregadas = std::format("AGRE:{} ", numeros);
+}
+
+void CCabecalhoQRCodeBuilder::DefineLocal(uedword local)
+{
+    m_local = std::format("LOCA:{} ", local);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeAptos(ueword qtde)
+{
+    m_qtdeAptos = std::format("APTO:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeAptosDaSecao(ueword qtde)
+{
+    m_qtdeAptosDaSecao = std::format("APTS:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeAptosTTE(ueword qtde)
+{
+    m_qtdeAptosTTE = std::format("APTT:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeCompareceram(ueword qtde)
+{
+    m_qtdeCompareceram = std::format("COMP:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineMunicipio(uedword municipio)
+{
+    m_municipio = std::format("MUNI:{} ", municipio);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeHabilitacaoBiometrica(ueword qtde)
+{
+    m_qtdeHabilitacaoBiometrica = std::format("HBBM:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeHabilitacaoBiografica(ueword qtde)
+{
+    m_qtdeHabilitacaoBiografica = std::format("HBBG:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeHabilitacaoSemBiometria(ueword qtde)
+{
+    m_qtdeHabilitacaoSemBiometria = std::format("HBSB:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineQtdeFaltosos(ueword qtde)
+{
+    m_qtdeFaltosos = std::format("FALT:{} ", qtde);
+}
+
+void CCabecalhoQRCodeBuilder::DefineAbertura(const api::CDateTime& dataHora)
+{
+    m_dataAbertura = std::format("DTAB:{} ", dataHora.GetData().Format("YYYYMMDD"));
+    m_horaAbertura = std::format("HRAB:{} ", dataHora.GetHora().Format("hhmmss"));
+}
+
+void CCabecalhoQRCodeBuilder::DefineFechamento(const api::CDateTime& dataHora)
+{
+    m_dataFechamento = std::format("DTFC:{} ", dataHora.GetData().Format("YYYYMMDD"));
+    m_horaFechamento = std::format("HRFC:{} ", dataHora.GetHora().Format("hhmmss"));
+}
+
+void CCabecalhoQRCodeBuilder::DefineEmissao(const api::CDateTime& dataHora)
+{
+    m_dataEmissao = std::format("DTEM:{} ", dataHora.GetData().Format("YYYYMMDD"));
+    m_horaEmissao = std::format("HREM:{} ", dataHora.GetHora().Format("hhmmss"));
+}
+
+// (original lines 201-276: content not recovered)
 #line 277
 void CCabecalhoQRCodeBuilder::preBuild() const
 {
@@ -166,8 +256,8 @@ std::string CCabecalhoQRCodeBuilder::build() const
         .append(m_municipio)
         .append(m_zona)
         .append(m_secao);
-    if (!m_campo132.empty()) {
-        cabecalho.append(m_campo132);
+    if (!m_agregadas.empty()) {
+        cabecalho.append(m_agregadas);
     }
     cabecalho.append(m_idUrna).append(m_codigoCarga).append(m_historicoCarga).append(m_versaoSoftware);
     if (IsOrigemSA()) {
@@ -179,13 +269,13 @@ std::string CCabecalhoQRCodeBuilder::build() const
             .append(m_qtdeAptosTTE)
             .append(m_qtdeCompareceram)
             .append(m_qtdeFaltosos)
-            .append(m_campos264[0])
-            .append(m_campos264[1])
-            .append(m_campos264[2])
-            .append(m_campos264[3])
-            .append(m_campos264[4])
-            .append(m_campos264[5])
-            .append(m_campos264[6]);
+            .append(m_qtdeHabilitacaoBiometrica)
+            .append(m_qtdeHabilitacaoBiografica)
+            .append(m_qtdeHabilitacaoSemBiometria)
+            .append(m_dataAbertura)
+            .append(m_horaAbertura)
+            .append(m_dataFechamento)
+            .append(m_horaFechamento);
         if (IsOrigemRED()) {
             cabecalho.append(m_dataEmissao).append(m_horaEmissao);
         }

@@ -31,8 +31,8 @@ ModuloRegistroDigitalVoto::Eleicoes CConversorEleicoesVota::DoConverte(const TDa
         for (const md::CCargo& cargo : cargos->second) {
             const md::CVotosCargos::SCargoInfo info{cargo.GetID(), cargo.GetTipo(), cargo.GetNumeroDigitos(), cargo.GetQtdeEscolhas()};
             const CConversorVotosCargo conversor(info);
-            const md::CVotos& votos = votosCargos.GetVotos(cargo.GetID());
-            eleicaoVota.set_votosCargos().push_back(conversor.Converte(std::make_pair(info, votos)));
+            const md::CVotos& votos = votosCargos.GetVotos(info.cargo);
+            eleicaoVota.set_votosCargos().push_back(conversor.Converte(CConversorVotosCargo::TDado(info, votos)));
         }
         eleicoesVota.push_back(eleicaoVota);
     }

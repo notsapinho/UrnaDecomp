@@ -9,11 +9,11 @@
 # link:
 # - Justificadores: two calls of CJustificador::GetInst (1391) for 5971, 6734, 11616, 12105 (11835, unit 138's,
 #   10587, unit 152's, 10797, unit 119's, and 10590, unit 283's, are in the link);
-# - HabilitadosSemBiometria: two calls of CEleitores::QuantidadeHabilitacaoSemBiometria (2822) for 11242, 12098 and
-#   12110 (10699, unit 277's, is in the link);
+# - HabilitadosSemBiometria: two calls of CEleitores::QuantidadeHabilitacaoSemBiometria (2822) for 12098 and 12110
+#   (10699, unit 277's, and 11242, unit 155's, are in the link);
 # - HabilitadosPorTipo: one call each of CEleitores::QuantidadeHabilitacaoBiometrica (2821) and
-#   QuantidadeHabilitacaoBiografica (1935) for 11242, 12098, 12110 and, of 1935, 12105 (their other callers, 10701
-#   and 10700, unit 277's, are in the link);
+#   QuantidadeHabilitacaoBiografica (1935) for 12098, 12110 and, of 1935, 12105 (their other callers, 10701 and
+#   10700, unit 277's, and 11242, unit 155's, are in the link);
 # - FotosCandidatura and CargosCandidatura: two calls each of VerificaFotoCandidatura (5746) and VerificaCargoCandidatura
 #   (5747) for their two calls each in fn 7787's integrity tests;
 # - ConstroiHV: two calls of CHV's constructor (3754) for its three in fn 7787 (CHV::CreateInst, inlined there);

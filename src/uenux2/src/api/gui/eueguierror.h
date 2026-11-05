@@ -111,6 +111,11 @@ enum EUeGuiError {
     // the value is the code api::CApplicationContextGuard's constructor throws (record capplicationcontextstack.cpp 45:15,
     // inlined into fn 676); the name is chosen from its message, "O contexto não pôde ser criado": no evidence names it
     EUE_GUI_APPLICATIONCONTEXTGUARD_CONTEXTO_NAO_CRIADO = 5013,
+    // the values are the codes api::CInputMenuField::AddItem (target fn 1693) throws (records cinputmenufield.cpp
+    // 320:15 and 339:15); the names are chosen from their messages, "Um CInputMenuField não comporta mais que 99 itens"
+    // and "Item de menu não cabe na tela [" + text + "]": no evidence names them
+    EUE_GUI_INPUTMENUFIELD_MAXIMO_ITENS = 4933,
+    EUE_GUI_INPUTMENUFIELD_ITEM_NAO_CABE = 4934,
 };
 
 using CUeGuiError = ecourna::api::exception::CBaseError<EUeGuiError, ecourna::api::exception::SErrorLimits{4900, 5100}>;

@@ -59,7 +59,7 @@
 #   build/out/wasm-map/vota_web/names.tsv was encodeBER (inlined into 9770).
 # - It called 3656 too, for its target callers 1681 and 5496, while 1681 was not in our link and 5496 was inlined into
 #   10949, its one caller there: without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
-#   inserted). Both are out of line now and call 3656: 5496 with unit 170's roots standing for its other caller, 5702,
+#   inserted). Both are out of line now and call 3656: 5496 with its other caller, 5702 (fragment 335), in the link,
 #   and 1681 from src/app/roots_vector.cpp (unit 11). The call went; the merge that took it out moved no row besides
 #   unit 11's own (steps 7 to 9).
 # - While that call stood, an explicit instantiation of __recommend beside its label gave a byte-identical link.

@@ -19,9 +19,6 @@
 // (unit 214): CopiaDuas stands for the other three, 6737, 7174 and 12098. Every target
 // caller passes the same value for one of its two bools, which the target's type (i32 i32 i32) has folded, and 0 or 1
 // for the other (2725 passes 1, the rest 0): CopiaDuas passes the folded one as 1 at both sites, the other as 0 and 1.
-// Rename has no target index of its own: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's slot
-// 7, not reconstructed). RenomeiaUma stands for 11584 and calls it once, so binaryen inlines it there too; its code
-// then gives the std::format arguments' builder that CopyFile shares (fn 5456) the second caller it has in the target.
 // libc's utime (fn 6238) is called by CopyFile and by 7-Zip's fn 2585, which our link does not hold: AjustaHora stands
 // for 2585, so binaryen keeps utime out of line as the target does.
 // libc's statfs (fn 3972) is called by libc++'s std::filesystem::__space (fn 4677, which GetFreeSpace and GetUsedSpace
@@ -45,7 +42,6 @@ int w2759_root_0(int) __asm__("_ZN3api7CSystem11GetFileSizeERKNSt3__212basic_str
 int w412_root_0(int) __asm__("_ZN3api7CSystem9ExistFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w2760_root_0(int) __asm__("_ZN3api7CSystem10RemoveFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w378_root_0(int, int, int, int) __asm__("_ZN3api7CSystem8CopyFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_bb");
-void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
 void w5455_root_0(int, int, int) __asm__("_ZN3api7CSystem11ReplaceFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_");
 void w2763_root_0(int, int) __asm__("_ZN3api11GetFileNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void w5462_root_0(int, int) __asm__("_ZN3api10GetDirNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
@@ -74,11 +70,6 @@ __attribute__((noinline)) void CopiaDuas(int origem, int destinoA, int destinoB)
 {
     w378_root_0(origem, destinoA, 0, 1);
     w378_root_0(destinoA, destinoB, 1, 1);
-}
-
-__attribute__((noinline)) void RenomeiaUma(int origem, int destino)
-{
-    w11584_root_0(destino, origem);
 }
 
 __attribute__((noinline)) void RepoeDois(int novoA, int atualA, int novoB, int atualB)
@@ -114,7 +105,6 @@ struct SW2759Roots {
         w2759_sink = reinterpret_cast<void*>(&RemoveDois);
         w2759_sink = reinterpret_cast<void*>(&w412_root_0);
         w2759_sink = reinterpret_cast<void*>(&CopiaDuas);
-        w2759_sink = reinterpret_cast<void*>(&RenomeiaUma);
         w2759_sink = reinterpret_cast<void*>(&AjustaHora);
         w2759_sink = reinterpret_cast<void*>(&RepoeDois);
         w2759_sink = reinterpret_cast<void*>(&PartesDoCaminho);

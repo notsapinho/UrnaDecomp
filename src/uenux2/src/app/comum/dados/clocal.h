@@ -47,6 +47,14 @@ public:
     // The three names are chosen from the literals, as the members above are; the vector's element type is chosen.
     uebyte GetQtdAgregadas() const;
     std::vector<ueword> GetAgregadas() const;
+    // The section's aggregated sections themselves, a copy of md::CSecaoEleitoral's vector, behind
+    // EhSecao("GetAgregadas"), else an empty one: comum::CGeradorBUQRCodeVota::Slot2 (target fn 11242) holds it
+    // behind a 16-byte stack frame of its own (binaryen's inlining of its one caller; the frame holds the literal's
+    // string), with the vector built in 11242's frame, so it has no target index, and tests the copy's emptiness
+    // before it calls GetAgregadas. It reads the private data through VerificaLido, so it is a member. The literal is
+    // GetAgregadas's (fn 3752), and both names are chosen; this one, after the vector's type, and its place after
+    // GetAgregadas in clocal.cpp are choices.
+    md::TVectorIdentificacaoAgregada GetIdentificacoesAgregadas() const;
     // Target fn 5741: behind EhSecao("GetTodasSecoes"), the section itself (its number, +16 of the identification, and
     // its type, through CIdentificacaoAgregada's constructor, fn 5672) and then its aggregated sections, a range insert.
     // The body reads the section's two scalars, copies its vector, and copies that copy again for the insert, freeing

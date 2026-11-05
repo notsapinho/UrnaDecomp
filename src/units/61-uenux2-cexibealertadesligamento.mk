@@ -48,9 +48,10 @@
 # member's type is unit 50's api::CDateTime (api/util/cdatetime.h and cdate.h).
 #
 # CAppState::SetNextState, out of line in cappstate.cpp, has no target function: binaryen inlines its one store into
-# every caller. Nineteen functions call it for their next-state stores (the definition around each call that
-# `/usr/bin/grep -rn 'SetNextState(' src/uenux2/src` lists, cappstate.{h,cpp} aside), eighteen matched and 10512
-# written. Seven are measured here: vota::CEncerramentoAntecipado::ProcessInput (10731)
+# every caller. Twenty functions call it for their next-state stores (the definition around each call that
+# `/usr/bin/grep -rn 'SetNextState(' src/uenux2/src` lists, cappstate.{h,cpp} aside), eighteen matched and 10512 and
+# 11881 written (11881, unit 104's, calls it on two other states it holds, why it is public: cappstate.h). Seven are
+# measured here: vota::CEncerramentoAntecipado::ProcessInput (10731)
 # and CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
 # comum::CConfirmaFimRegistroMesarios::ProcessInput (10383), unit 135's; CMesarioRegistrado::StartState (10339), unit
 # 279's; vota::CPedeAnoNascimentoSemBiometria::StartState (10490), unit 142's; vota::CNomeEleitor::HabilitaEleitor
@@ -95,7 +96,7 @@
 #   target loads the vector's ends again after the store).
 # Chosen: that the call is a setter (an empty call binaryen inlines gives the first four the same rows; the stores of
 # 10737, 5400 and 10490 here and of 10627's default case need the store in the call), its name, its parameter's name,
-# protected access and its place in cappstate.cpp.
+# its place in cappstate.cpp; its public access is a reading (cappstate.h).
 # Its body is the same bytes as simulador::CWasmNullPrinter::ApplyStyle's (target fn 8365, slot 12 of that class's
 # vtable), and cappstate.cpp.o links ahead of cwasmnullprinter.cpp.o, so binaryen's duplicate elimination keeps this
 # copy and 8365's match line names comum::CAppState::SetNextState, the twin our link keeps (how-to step 10, "A twin

@@ -247,14 +247,15 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
 # …       (ten more of unit 159's, one slot each)
 ```
 
-Unit 104's `ProcessKey` trap is one body in 46 table slots: binaryen merged the pending traps of its wasm type into
-it, and the merged ones have no name in `names.tsv`. None of them gets a name. Unit 97's two `GetProximoEstado` traps
-are one body in two slots, so 11724 and 11744 have none either. The trap of 11419, unit 159's
-`CConversorBiometriaEleitorCifrada::DoDesconverte`, is alone in its slot, so it is named after its trap. A slot that
-holds a real body from the pending object (an inherited default, 9779 for 11409) is a match, not this case (§U4).
-Which case a member is can change in a function its unit never touched. A trap a unit adds merges with one of its wasm
-type and takes that member's name and `differs` row. A member that lands leaves its partner alone again: 11366 (unit
-17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when 11366 matched.
+Unit 104's `ProcessKey` trap is one body in 46 table slots: binaryen merged the pending traps of its wasm type into it,
+and the merged ones have no name in `names.tsv`. None of them gets a name. Unit 97's two `GetProximoEstado` traps are
+one body in two slots, so 11724 and 11744 have none either. The trap of 11419, unit 159's
+`CConversorBiometriaEleitorCifrada::DoDesconverte`, was alone in its slot, so it was named after its trap (until 11419
+was written and matched, fragment 335). A slot that holds a real body from the pending object (an inherited default,
+9779 for 11409) is a match, not this case (§U4). Which case a member is can change in a function its unit never touched.
+A trap a unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands
+leaves its partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned
+`differs` when 11366 matched.
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 

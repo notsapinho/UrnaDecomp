@@ -5,10 +5,12 @@
 # CIdentificacaoUrnaContingencia (5888); libc++'s __sort5 (5717), __insertion_sort_incomplete (5718) and, at the tree's
 # -O3, __introsort (5719) over CConversorSecaoEleitoral::DoDesconverte's comparator;
 # CConversorSecaoEleitoral::DoConverte (11454), at the tree's -O3; and two copies of header code the converter's object
-# gives at this tree's flags, which were ecourna objects' and differed before: ASN1::SEQUENCE_OF_Base's destructor (621)
-# and std::vector<ASN1::AbstractData*>::insert (1076). The match lines of 3796 (CGravadorWSQ's constructor, whose
-# parameters are the plain names now), 859 and 915 (byte-identical twins the converter's object brings first) are
-# renamed.
+# gave at this tree's flags, which were ecourna objects' and differed before: ASN1::SEQUENCE_OF_Base's destructor (621)
+# and std::vector<ASN1::AbstractData*>::insert (1076), which match from unit 13's crdvvota.cpp.o now, an earlier object
+# that instantiates them too since fragment 140's 11483. The match lines of 3796 (CGravadorWSQ's constructor, whose
+# parameters are the plain names now), 859 and 915 (byte-identical twins the converter's object brought first) were
+# renamed; 859's line names SEQUENCE_OF<GeneralString>'s D0 since 11483 (fragment 140) is in unit 13's crdvvota.cpp.o,
+# which links ahead of it.
 #
 # comum's four ID names (app/comum/md/cidentificacaourna.h, cidentificacaosecao.h, repeated in
 # app/comum/gravadores/iresultado.h and cgravadorutil.h): TMunicipioID and TLocalID are uedword, TZonaID and TSecaoID

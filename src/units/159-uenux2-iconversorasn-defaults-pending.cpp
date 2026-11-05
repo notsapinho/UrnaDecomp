@@ -5,51 +5,13 @@
 // The stub of each member here went when this file landed; where it was the last stub of a stub-only file, that file
 // went with it, and writing the member writes the file again at its records' lines (named below, under
 // src/uenux2/src/app/comum/dados/).
-// - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
-//   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
-// - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record
-//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written: every callee has a name
-//   (fn 781 unit 161's; 2799 matches since md/ builds with strict aliasing, and 5708, which it calls too, from unit
-//   166's tree root), and it waits for three out-of-line md::CBiometriaEleitor constructors
-//   (md/eleitor/cbiometriaeleitor.{h,cpp}), which build its result.
-// - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
-//   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: its 43 callees all have names
-//   (splat/symbol_addrs.txt, splat/matched.txt; imports aside), 1555 since unit 293's 2725; 183 and 412 are unit 32's,
-//   and 518 and 679, ~CoderEnv and CoderEnv::decode, match since unit 229's root and src/app/roots_iconversorasn.cpp.
-// - comum::asn::CConversorEntidadeHashes::DoConverte (slot 2, fn 10266, 1338 B), not written: md::CEntidadeHashes's
-//   members past +36 are not recovered (unit 160's fragment).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura
 //   on its stack (constructor fn 5712), whose entity type ModuloCandidatos::Candidatura the generated module lacks.
 #include "app/comum/dados/asn/candidatura/cconversorcandidaturas.h"
-#include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
-#include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
-#include "app/comum/dados/asn/eleitor/cconversordedo.h"
-#include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
 
-md::CDedo CConversorDedo::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
-
-md::CBiometriaEleitor CConversorBiometriaEleitor::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
-
-CConversorBiometriaEleitorCifrada::TDado CConversorBiometriaEleitorCifrada::DoDesconverte(
-    const TEntidade&, const md::CParametro&) const
-{
-    __builtin_trap();
-}
-
 CConversorCandidaturas::TDado CConversorCandidaturas::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
-
-CConversorEntidadeHashes::TEntidade CConversorEntidadeHashes::DoConverte(const TDado&) const
 {
     __builtin_trap();
 }

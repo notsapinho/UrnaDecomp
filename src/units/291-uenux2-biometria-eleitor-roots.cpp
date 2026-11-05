@@ -9,9 +9,10 @@
 // DetectaDigital instantiates api::CPolySingleton<api::IFingerDetection>::instance, a landed header's template, whose
 // copy is fn 3615 (its records cpolysingleton.h:78 and cpolysingletonlist.h:99 and :105 name it): of its three target
 // callers, fns 10316, 10451 and 10465, 10465 and 10316 (units 282 and 135) are in the link; it calls the instance
-// twice, with an empty std::source_location where the callers' default argument makes a record of their own (unit 135's
-// ReconheceDigital, for IFingerMatcher's 1686, does the same). So this TU compiles at uenux2's flags, as unit 135's
-// roots do, not APP_CXXFLAGS (the fragment has the strict-aliasing measurement).
+// once, for 10451, with an empty std::source_location where the callers' default argument makes a record of their own
+// (unit 135's ReconheceDigital, for IFingerMatcher's 1686, does the same). The call that stood for 10316 went. So this
+// TU compiles at uenux2's flags, as unit 135's roots do, not APP_CXXFLAGS (the fragment has the strict-aliasing
+// measurement).
 #include <source_location>
 
 #include "api/hwil/ifingerdetection.h"
@@ -31,12 +32,10 @@ __attribute__((noinline)) int BiometriasCorrentes(int eleitores, int outros)
     return biometrias[8] - biometrias[18];
 }
 
-__attribute__((noinline)) int DetectaDigital()
+__attribute__((noinline)) const void* DetectaDigital()
 {
     const std::source_location local;
-    api::IFingerDetection& a = api::CPolySingleton<api::IFingerDetection>::instance(api::g_polySingletonsInfo(), local);
-    api::IFingerDetection& b = api::CPolySingleton<api::IFingerDetection>::instance(api::g_polySingletonsInfo(), local);
-    return &a == &b ? 5 : 13;
+    return &api::CPolySingleton<api::IFingerDetection>::instance(api::g_polySingletonsInfo(), local);
 }
 
 const void* volatile biometria_291_sink;

@@ -13,7 +13,8 @@
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
 #   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673, from cmostraeleitorvotando.cpp.o
 #                                                                     (1150's std::make_shared)
-#   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
+#   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069, from cinputmenufield.cpp.o since its
+#                                                                     builder (fn 3675, unit 84) is written
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
 #   comum::CCalculaCV::IncluiString                                   942, from ccalculacv.cpp.o
 #   comum::CCalculaCV::Reinicia                                       5615, from ccalculacv.cpp.o
@@ -202,7 +203,8 @@
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
 # function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) unit 139's 11254, 11255 and 11256 are in our link: the roots file's stand-in calls it twice for the other five.
+# 11981) unit 139's 11253 (written, not matched), 11254, 11255 and 11256 are in our link: the roots file's stand-in calls
+# it twice for the other four.
 #
 # Reinicia, CalculaCodigo and GeraMacHexa have no record, and their names are chosen: CalculaCodigo is the function
 # CRelUtil::DSCodigoVerificador (fn 11182, unit 123) formats as the verification code. Scores are `pnpm wasm score`
@@ -241,7 +243,7 @@
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions
 # compare equal. The names and types no evidence gives are marked as chosen where they are declared: crespostasds.h,
-# cescolheopcao.h, ccalculacv.h, cinputmenufield.h's constructor and crespostaconsulta.h's GetNumero.
+# cescolheopcao.h, ccalculacv.h and crespostaconsulta.h's GetNumero.
 #
 # Pending, with what each waits for: CGeracaoVersoesContratos's block (11635, 11636) waits for a class head in
 # app/comum/gravadores/; the blocks and members over a lambda or another TU's anonymous namespace wait for the function that

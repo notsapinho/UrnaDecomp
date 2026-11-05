@@ -128,10 +128,11 @@
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
-# ours +0xf end` in 11197's scan row); 5740 (unit 89's) is in the link since, and 5637 and 12098 still wait. The third, w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
-# lands. A fourth, w123_mapa, stands for 7787's call of the label map's initializer-list constructor (fn 5795, which
-# this unit's object instantiates for InicializaTradutorFrase), so that 5795 keeps two call sites and stays out of
-# line; it goes when 7787 lands. It declares the constructor through an __asm__ label with the object's signature
+# ours +0xf end` in 11197's scan row); 5740 (unit 89's) and 5637 (unit 215's) are in the link since, and 12098 still
+# waits. The third, w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it
+# goes when 7787 lands. A fourth, w123_mapa, stands for 7787's call of the label map's initializer-list constructor (fn
+# 5795, which this unit's object instantiates for InicializaTradutorFrase), so that 5795 keeps two call sites and stays
+# out of line; it goes when 7787 lands. It declares the constructor through an __asm__ label with the object's signature
 # ((i32, i32, i32) -> i32 in crelatoriotesteimpressora.cpp.o, wasm-objdump -x) and reads the result, which the target's
 # wasm type, (i32 i32)->(i32), keeps; the comparator, the object's third parameter, is in neither link's type (pnpm
 # wasm fn on both). Measured with `pnpm wasm score` against our plain link with the stand-in in it: 5795 1 over 172

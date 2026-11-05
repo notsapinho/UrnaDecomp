@@ -152,11 +152,6 @@
 // f2369 · 11 B · unmatched · placement: link order · name unknown
 // void f2369(i32) { ... }
 
-// link-order cluster 1219 · uses=7
-
-// f1763 · 248 B · unmatched · placement: link order · name unknown
-// void f1763(i32, i32) { ... }
-
 // link-order cluster 1220 · uses=7
 
 // f1767 · 509 B · unmatched · placement: link order · name unknown
@@ -206,16 +201,6 @@
 
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
-
-// link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
-
-// f5610 · 5599 B · unmatched · placement: link order · name unknown
-// void f5610(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 805 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f5637 · 222 B · unmatched · placement: link order · name unknown
-// ? f5637(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 808 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp
 
@@ -315,11 +300,6 @@
 
 // f3781 · 108 B · unmatched · placement: link order · name unknown
 // void f3781(i32) { ... }
-
-// link-order cluster 1015 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorutil.cpp
-
-// f3797 · 82 B · unmatched · placement: link order · name unknown
-// void f3797(i32, i32) { ... }
 
 // link-order cluster 1064 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 

@@ -17,6 +17,13 @@
 # says why), which the call names. For an absent digitacao it builds a ModuloRegistroDigitalVoto::VotoDigitado from ""
 # (the target stores that class's vptr), which src/asn1/modules/ModuloRegistroDigitalVoto.h adds and Voto::digitacao
 # takes by typedef; a callers+content hand line in splat/symbol_addrs.txt names VotoDigitado's theInfo.
+# CConversorEstadoGeral::DoDesconverte (11398) matches, with DesconverteEstadoUrna (records cconversorestadogeral.cpp:87
+# and :91) and IConversorASN<...>::Desconverte of AjusteDataHora, DadoLocal and DadoCarga (records iconversorasn.h:71),
+# each of the four behind a frame of its own (frames of 528 and 640 bytes in the target's body), over CEstadoGeral's
+# constructor (fn 5637, unit 215's cestadogeral.cpp) and the correspondence's Desconverte (fn 5692, whose other caller
+# is 11395). The state's throws format the ENUMERATED through enumeradoasn.h's formatter: the target's handle is fn
+# 1699, one body in seven slots, and step 9 renamed 1699's match line to this object's instance, the
+# ModuloEstadoGeralUrna::EstadoUrna handle, from ModuloEstadoGeralVota::EstadoVota's (a twin whose name moved).
 #
 # Evidence: the records give the files, the helpers' names and signatures and the throws' lines and columns; RTTI names
 # every converter and its base; the vtables give the slots. Each helper and data-class constructor is out of line, and
@@ -46,6 +53,17 @@
 # - ConverteTipo comes above DoConverte in cconversorvoto.cpp: with DoConverte first, 11355 computes the address of the
 #   inlined helper's result at its use and scores 55 over 329 rows (7 inserted, 7 deleted); with the helper first it is
 #   operand-only. DesconverteTipo's records (:71, :75) hold lines 49 to 76, so DoConverte starts at line 78.
+# - 11398 reads idPE before it converts the state, declares each converter just before its call (where the target
+#   stores its vptr), converts the adjustment, the locality, the load and the correspondence in that order, and builds
+#   the hash's vector before it copies the version. Each other order, compiled at the tree's flags, changes the
+#   object's DoDesconverte (a diff of its masked disassembly, 486 lines as written: 40 lines with the state first, 254
+#   with the four converters at the top, 176 with the locality, the load and the adjustment in the constructor's
+#   order, 131 with the version first); as written its whole-link score was 119 over 1546 rows, all operand-only,
+#   before step 8. DesconverteEstadoUrna lists carregada, carregando, testada, then unknownEnumeration_: with
+#   carregando first the object sets 49 before br_table [1 2 4 3 0] 2, where the target sets 50 before
+#   br_table [1 2 3 4 0] 2, as this order gives.
+# - DoDesconverte comes before DoConverte in the file: 11398 links ahead of 11397 in their use band (ld_index 3336
+#   and 3343 in build/out/wasm-map/vota_web/names.tsv).
 #
 # Chosen, no evidence names them: CSexo's and EEstadoUrna's enumerators (from the generated ASN.1 enumerators' names
 # and the values the bodies give), EUeComumAsnError's EUE_COMUM_ASN_SEXO_INVALIDO (7684, from its message); the data
@@ -60,19 +78,20 @@
 # of every function no throw of which has a record; IConversorParcialASN's slot (its name, and the visitor by
 # reference) and TEntidade's name (the record prints TDado and TVisitor); the typedef ModuloTiposEleitorais::CodigoSexo's place (ModuloCandidatos.h says why it is a typedef); the
 # order of this list (with each data class ahead of its converter 11381 and 11359 score the same, 56 and 10 rows, all
-# operand-only).
+# operand-only); DoDesconverte's locals being const (without const the object's DoDesconverte is the same, measured
+# as above); DesconverteEstadoUrna's switch with no default (a `default: break;` gives the same object, cmp, as
+# ConverteEstadoUrna has one); where DoDesconverte and DoConverte start, and the lines of DesconverteEstadoUrna above its record 87;
+# the include of enumeradoasn.h, which takes a blank line of the run between DoConverte and DesconverteEstadoUrna.
 #
-# Not matched, and what each waits for (this unit's -pending.cpp names the traps):
-# - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249
-#   (CDadoCorrespondencia's copy constructor, matched since unit 253).
+# Not matched, and what each waits for (the -pending.cpp went with its last trap, 11398):
 # CConversorDadoCorrespondencia's slots (11399, 11400; 11397 builds the class on its stack) were traps here: fragment
 # 172 writes and matches them, and its object emits the class's vtable now.
 # The base's default DoConverte of the two converters that override only DoDesconverte (11380, 11358) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
-# Not written: 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/. The
-# members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437 and 11438, are fragment 140's and unit
-# 13's now: 11482 matches from unit 13's crdvvota.cpp.o, 11437 and 11438 since units 245, 96 and 273, and the fragments
-# say what the others wait for.
+# 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/ and matches from unit
+# 293's cconversorentidadehashes.cpp. The members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437
+# and 11438, are fragment 140's and unit 13's now: 11482 and 11483 match from unit 13's crdvvota.cpp.o, 11437 and 11438
+# since units 245, 96 and 273, and the fragments say what the others wait for or hold.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_ASN124_SRCS := src/app/comum/dados/md/candidatura/cdadoscandidato.cpp \
@@ -86,11 +105,8 @@ DADOS_ASN124_SRCS := src/app/comum/dados/md/candidatura/cdadoscandidato.cpp \
 UENUX2_SRCS += $(DADOS_ASN124_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(DADOS_ASN124_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# the slots not written: 124-uenux2-app-comum-dados-asn-pending.cpp traps them, compiled with the tree's flags
-$(ROOT)/$(APP)/124-uenux2-app-comum-dados-asn-pending.o: $(ROOT)/src/units/124-uenux2-app-comum-dados-asn-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/124-uenux2-app-comum-dados-asn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/124-uenux2-app-comum-dados-asn-pending.cpp -o $(R)
 # the converters' users are not reconstructed yet: 124-uenux2-app-comum-dados-asn-roots.cpp keeps their vtables the way
 # the target reaches them
 $(ROOT)/$(APP)/124-uenux2-app-comum-dados-asn-roots.o: $(ROOT)/src/units/124-uenux2-app-comum-dados-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/124-uenux2-app-comum-dados-asn.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/124-uenux2-app-comum-dados-asn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/124-uenux2-app-comum-dados-asn-pending.o $(APP)/124-uenux2-app-comum-dados-asn-roots.o
+override EXTRA_OBJS += $(APP)/124-uenux2-app-comum-dados-asn-roots.o

@@ -137,7 +137,8 @@
 #   another TU's anonymous namespace, so they come with fns 6627 and 10388. 10388 is written (unit 104) and its three
 #   blocks are in the link; their __get_deleter rows still differ (unit 97's fragment).
 # 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
-# in the builder, match since from unit 121's roots, which name the one cinputmenufield.h declares now.
+# in the builder, matched from unit 121's roots and match now from cinputmenufield.cpp.o, whose fn 3675 (unit 84) builds
+# the block.
 # Paths relative to src/uenux2. citensmenuvota.cpp holds the out-of-line destructor the block of the fifth item needs.
 W102_SRCS := src/app/vota/operador/outrasopcoes/citensmenuvota.cpp
 UENUX2_SRCS += $(W102_SRCS)
