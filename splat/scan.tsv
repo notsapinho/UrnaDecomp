@@ -13275,7 +13275,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 13409	mac_import	14407	symbol	match	-	25	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 13410	mac_match	14408	symbol	match	-	177	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 13411	mac_has	14409	symbol	match	-	32	byte	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
-13412	mac_gettable_params	14412	symbol	match	readings: address same-content	7	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
+13412	mac_settable_params	14410	symbol	match	readings: address same-content	7	addr	openssl	2	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 13413	mac_set_params	14411	symbol	match	readings: address string	34	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 13414	sm2_settable_params	14445	ledger	differs	+0x2 target +0x1 i32.const 1780480 | ours +0x1 i32.const 1771952 [ours 1720368 = sm2_known_settable_params+0: sm2_known_settable_params (.data) has no target symbol; re-pointed bytes occur 2 times]	7	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ec_kmgmt.o
 13415	mac_get_params	14413	symbol	match	-	11	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
