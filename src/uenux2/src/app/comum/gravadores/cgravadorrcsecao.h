@@ -31,9 +31,10 @@ class CEleitorIdentidade;
 // cgravadorrcsecao.cpp emits the vtable.
 // LeChavePublica and CriaIdentidadeEleitor (fn 5845) are declared as their records (cgravadorrcsecao.cpp:65, :230)
 // print them; ObtemComparecimentoEleitores calls CriaIdentidadeEleitor, so it reaches the object and is a member too.
-// The functions after the class read no state of it: free functions of comum, external, since 11616 holds each but
-// ConverteComparecimentoMesario (fn 5841, two calls) behind a stack frame of its own, the shape of an out-of-line
-// function binaryen inlined into its one caller (src/units/122-uenux2-app-comum-gravadores.mk lists the frames).
+// The functions after the class read no state of it: free functions of comum. Their external linkage is a reading:
+// 11616 holds each but ConverteComparecimentoMesario (fn 5841, two calls) behind a stack frame of its own, the shape
+// of an out-of-line function binaryen inlined into its one caller (src/units/122-uenux2-app-comum-gravadores.mk lists
+// the frames).
 // Chosen: every name but the records', that the three members are private, that the others are free functions
 // declared here, every parameter's name and type beyond what the records spell, and the constructor's not being
 // declared.

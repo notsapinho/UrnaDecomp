@@ -94,7 +94,8 @@
 #   the loop written in this function, with std::transform 283 over 392 and with a range-for 143 over 399.
 # - 1006, 3813: copies that 11616, a uenux2 function, brings first in the link; both match since unit 122 writes it. 1006 was one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
-#   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and ours does (206 over 352).
+#   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and the ecourna copy our link
+#   took before 11616 did (206 over 352).
 #   5842 and 5846, two more such copies (185 over 295 and 312 over 449 from this unit's objects, which have landing
 #   pads), matched from src/app/roots_iconversorasn.cpp, which compiled them at uenux2's flags for 11616, and match from
 #   11616's object now.

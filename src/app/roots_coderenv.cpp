@@ -24,11 +24,13 @@ extern "C" void urna_init_with_size(void*, std::string*, std::string*, unsigned 
     "_ZNSt3__26vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEE16__init_with_sizeB8ne210108IPS6_SA_EEvT_T0_m");
 
 // std::vector<std::string>'s range construction (fn 5585, below) has two target users, neither written: fn 11332, a
-// std::vector<std::string> constructor from a two-word range (table slot 74, which fn 11733, a static initializer,
-// reaches through invoke_*), calls it directly, and ecourna's CLzmaCompress::DoAdd (fn 9586) passes its table slot,
-// 6051. urna_vector_string stands for 11332 and the sink below takes the address for 9586, so binaryen keeps 5585 out
-// of line with a slot of its own, as the target does. It builds the vector in place, so this object instantiates no
-// ~vector<std::string>: a local's destructor here was a copy that took 2255 from roots_vector.o, which links after.
+// std::vector<std::string> constructor from a two-word range (table slot 74, which fn 11733 reaches through
+// invoke_*; that 11733 is a static initializer is a reading: it is ()->() with landing pads, in table slot 18, and
+// no target function calls it directly), calls it directly, and ecourna's CLzmaCompress::DoAdd (fn 9586) passes its
+// table slot, 6051. urna_vector_string stands for 11332 and the sink below takes the address for 9586, so binaryen
+// keeps 5585 out of line with a slot of its own, as the target does. It builds the vector in place, so this object
+// instantiates no ~vector<std::string>: a local's destructor here was a copy that took 2255 from roots_vector.o,
+// which links after.
 __attribute__((noinline)) static int urna_vector_string(void* destino, std::string* primeiro, std::string* ultimo)
 {
     auto* v = ::new (destino) std::vector<std::string>(primeiro, ultimo);

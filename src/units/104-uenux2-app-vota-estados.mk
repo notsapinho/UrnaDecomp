@@ -115,14 +115,14 @@
 #   size() and front() leaves an if (52 over 299); with all three, 48 over 299, all operand-only. Same object function
 #   (wasm-objdump of a --symbols try, masked): std::any_of with an int lambda `c < '0' || c > '9'`.
 # - vota::CFinalizaOperador::StartState (fn 10214), a match. Its builder is an api::CMTFormBuilderBase, the class whose
-#   constructor is inline (api/gui/cmtformbuilder.h has the evidence: six of GetForm's seven target callers clear the
-#   builder's 12 bytes in their frame and call no constructor). Measured with pnpm wasm score in the whole link: over
-#   api::CMTFormBuilder, whose constructor is out of line (one body with fn 203), 128 over 307 rows (97 operand-only, 8
-#   inserted, 17 deleted); over the base, 21 over 299, every row a call or a data address. The form is built in a
-#   file-static helper and its slot 2 called on the returned temporary, so the builder is destroyed before the form is
-#   shown and the form released before m_pNextState is stored, the target's order; a named local of the form gave 136
-#   over 310 rows (11 inserted, 20 deleted), measured over api::CMTFormBuilder. The helper's name and its linkage are
-#   chosen; the points SPoint{20, 1} and {20, 3} are the two words the target stores (65556, 196628).
+#   constructor is inline (api/gui/cmtformbuilder.h has the evidence and the reading: six of GetForm's seven target
+#   callers clear the builder's 12 bytes in their frame and call no constructor). Measured with pnpm wasm score in the
+#   whole link: over api::CMTFormBuilder, whose constructor is out of line (one body with fn 203), 128 over 307 rows (97
+#   operand-only, 8 inserted, 17 deleted); over the base, 21 over 299, every row a call or a data address. The form is
+#   built in a file-static helper and its slot 2 called on the returned temporary, so the builder is destroyed before
+#   the form is shown and the form released before m_pNextState is stored, the target's order; a named local of the
+#   form gave 136 over 310 rows (11 inserted, 20 deleted), measured over api::CMTFormBuilder. The helper's name and its
+#   linkage are chosen; the points SPoint{20, 1} and {20, 3} are the two words the target stores (65556, 196628).
 # - vota::CSincronismoOperador::ProcessKey (fn 10209, slot 6, in csincronismooperador.cpp after StartState: 10210 lies
 #   above 10209 in use band 1), a match, with fn 5341, the screen it shows on keys 14 and 15. The target's br_table on
 #   the key less 1: on 1, when the +11 byte is 1, vota::CEleitorVotouNaoVotou's state (fn 1901, called twice: its +11

@@ -86,12 +86,12 @@
 # whose constructor is out of line (fn 203's body), 145 over 962 rows (104 of the 106 replaced operand-only, 12
 # inserted, 27 deleted), the rows not operands the builder's construction, which the target clears in place (12 bytes)
 # and whose frame address it passes on; over api::CMTFormBuilderBase, whose constructor is inline
-# (api/gui/cmtformbuilder.h has the evidence), 66 over 950 rows, all operand-only: calls, data addresses, the slot of
-# the format's __prepare_write (7324, matched) and the .bss addresses of s_aplicacao, s_versao and the class's
-# statics. Step 8 names the statics from 5343's votes alone (s_mutex `vote:1`, s_inst `vote:4`, by 5343), the build
-# checking them with 5343's bytes; their exit destructors, 10222 (the mutex) and 10223 (the pointer), the one other
-# reader of each address, match with them, and 5343's table votes name FormatCurrentDate and FormatCurrentTime (5472,
-# 5473). Chosen: the helper MontaTelaAguardaInicio, a function of the anonymous namespace that clang inlines into the
+# (api/gui/cmtformbuilder.h has the evidence and the reading), 66 over 950 rows, all operand-only: calls, data
+# addresses, the slot of the format's __prepare_write (7324, matched) and the .bss addresses of s_aplicacao, s_versao
+# and the class's statics. Step 8 names the statics from 5343's votes alone (s_mutex `vote:1`, s_inst `vote:4`, by
+# 5343), the build checking them with 5343's bytes; their exit destructors, 10222 (the mutex) and 10223 (the
+# pointer), the one other reader of each address, match with them, and 5343's table votes name FormatCurrentDate and
+# FormatCurrentTime (5472, 5473). Chosen: the helper MontaTelaAguardaInicio, a function of the anonymous namespace that clang inlines into the
 # constructor, and its local names; the constructor's initializer list.
 #
 # What the evidence gives:

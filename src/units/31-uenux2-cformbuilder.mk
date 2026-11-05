@@ -238,10 +238,10 @@
 # set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
 # elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
 # 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156), 12005 (unit 246), 11908 (unit 176's, written), 3872, 3873,
-# 5579 and 5977 (unit 325's) and 11253 (unit 139's, written) are in the link and the stand-in FormPapelC calls it twice
-# for the others. In the whole link it scores 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name
-# is chosen: 5515 has GetForm, and the screens' builders, whose getters empty the vector themselves (unit 120's
-# fragment), give no name for this split.
+# 5579, 5977, 3699, 5580, 5970 and 5971 (fragment 325's) and 11253 (unit 139's, written) are in the link and the
+# stand-in FormPapelC calls it twice for the other three, 11946, 12105 and 12110. In the whole link it scores 1 over
+# 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the screens'
+# builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 #
 # CPaperFormBuilder::Show (target fn 3671, cpaperformbuilder.cpp), written with unit 246: its name and parameters are
 # its lambda's RTTI, api::CPaperFormBuilder::Show(const std::string &, const std::string &, bool)::$_0 (vtable @1581356,

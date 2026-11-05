@@ -262,7 +262,8 @@
 # constructor is out of line (fn 203's body): `96 over 510 rows (same 414, replaced 81 [80 operand-only], inserted 3,
 # deleted 12)`, every row that is no operand in that form, where the target clears the builder's 12 bytes in place
 # (`i32.store[l2+44] = 0; i64.store[l2+36] = 0`) and uses the frame's address. Built over api::CMTFormBuilderBase, whose
-# constructor is inline (api/gui/cmtformbuilder.h has the evidence; unit 281's caguardainspecao.cpp), `51 over 507 rows
+# constructor is inline (api/gui/cmtformbuilder.h has the evidence and the reading; unit 281's caguardainspecao.cpp),
+# `51 over 507 rows
 # (same 456, replaced 51 [51 operand-only], inserted 0, deleted 0)`: calls, data addresses and the .bss addresses of
 # CAguardaInspecao's statics. Step 8 names those from 10676's votes alone (s_mutex `vote:1`, s_inst `vote:4`, by 10676),
 # the build checking them with 10676's bytes; the statics' exit destructors, 10531 and 10532, the one other reader of

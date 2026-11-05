@@ -34,10 +34,10 @@
 //                     their defaults
 //   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
 //                     another rectangle and alignment the second time
-//   RelatorioA        5580 and the other callers of 193, 604, 198 and 1264, and 12110 for 2775 (5591, unit 296's, and
-//                     5579, unit 325's, which call them too, are in the link). Its form is a parameter: their callers
-//                     zero the vector in line, and it takes no constructor of ours. The EStyle and alignments vary as
-//                     theirs do
+//   RelatorioA        the callers of 193, 604, 198 and 1264 not in the link (2248, 11946, 12105, 12110), and 12110 for
+//                     2775 (5591, unit 296's, and 5579 and 5580, fragment 325's, which call them too, are in the
+//                     link). Its form is a parameter: their callers zero the vector in line, and it takes no
+//                     constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelC, below) are listed beside them.
 #include <string>
@@ -147,8 +147,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //   FormMTA, FormMTB      callers of 1694 (4633; 1150, 5341, 5343, 10204, 10214 and 10676 are in the link) and of 301
 //                         (1 of its 49 target callers is not in the link: 10451)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelC   the callers of 357 (Build): 3699, 5580, 5970, 5971, 11946, 12105 and 12110, not reconstructed
-//                (11256, 2890, 12005, 11908, 3872, 3873, 5579, 5977 and 11253 are in the link); it calls Build
+//   FormPapelC   the callers of 357 (Build): 11946, 12105 and 12110, not reconstructed (11256, 2890, 12005,
+//                11908, 3872, 3873, 5579, 5977, 3699, 5580, 5970, 5971 and 11253 are in the link); it calls Build
 //                twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {

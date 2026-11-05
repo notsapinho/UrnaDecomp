@@ -77,10 +77,10 @@
 #   to 11919, which band 1 puts after it and our link ahead: 58 pairs; in band 3, 3873 and 3872 each against
 #   crelvotautil.cpp.o's 3874, ciniciozeresima.cpp.o's 3865 and creiniciocomparecimentomesario.cpp.o's 3864: 6 pairs.
 # - 5579: use band 2 puts it after ImprimeSeparadorVia (5581) in crelutil.cpp's object and before 5578 (the sort's
-#   __sort5), with 5580 (not written) between 5581 and 5579, so a static member of CRelUtil (whose records read
+#   __sort5), with 5580 (FormCabecalhoEleicao, below) between 5581 and 5579, so a static member of CRelUtil (whose records read
 #   `static`) defined below ImprimeSeparadorVia: ImprimeSeparadorVia on lines 348 to 353, right after
 #   ImprimeSeparadorFase, FormRodapeZeresima on 389 to 408, right above DSCodigoVerificador (410, record 412:27), the
-#   lines between them blank for 5580; those lines are chosen. ld_index 3255 and 3256. In band 2 it leaves three pairs
+#   lines between them 5580's (below); those lines are chosen. ld_index 3255 and 3256. In band 2 it leaves three pairs
 #   out of order, against the linkonce copies 5593, 5594 and 5595, which 5581 to 5584 have too (placing.md P9), and none
 #   against the object's other band-2 members (5577, 5578, 5581 to 5584, 5597). CConfiguracaoEleicao's +200, its second
 #   argument at both callers, is
@@ -106,7 +106,9 @@
 #   moved after cgeradorresumozeresima.cpp.o, 85 over 1132 (docs/reference/facts/codegen.md C4). cgerazeresimabase.cpp's
 #   object is the one after 5971's in the data (vota::CGeraZeresimaBase's vtable @1544384) and in our link; the file,
 #   the two names and their being free functions of vota (they read no state) are chosen. The two functions' names,
-#   CriaPartesExtratoRDV's and the trailers', are chosen; the title's is its records'.
+#   CriaPartesExtratoRDV's and the trailers', are chosen; the title's is its records'. So is the trailers' internal
+#   linkage (vota::(anonymous namespace), 5970's and the inlined CriaTrailerProporcional's): no record gives it, and use
+#   band 2's order, 5971 (ld_index 4697) ahead of 5970 (4699), fits either linkage.
 # - CDataSourcesRelatorio<CRdvVota, CEleitores>'s TrailerProporcional (fn 11981, 65 over 1242) and TrailerMajoritario
 #   (11980, 56 over 1054) at their records' lines (241 and 305), and GetLinhasEleitoresAptos (3871, 4 over 104) with its
 #   lambda's call operator (11968, record 212, 22 over 294) and that lambda's __func slots 11966, 11967, 11969 and
@@ -144,14 +146,25 @@
 #   from RHVoice's instance to it, the copy binaryen keeps (it links first). With 5971 in the link, step 9
 #   renamed 5969's line (one body for CParteCandidatos's and CParteRdv's __shared_ptr_emplace::__on_zero_shared, slot 2
 #   of both blocks' vtables) to CParteRdv's, which 5971's object emits.
+# - The order of cgeradorresumozeresima.cpp.o's members (how-to step 3, "The order of two members"; placing.md P9),
+#   the target index of each matched member against its ld_index in names.tsv, per use band of ledger/ordinals.tsv.
+#   The target's band-1 run 11981 to 11947 is one TU's, and our object holds 22 pairs of it out of order, all new
+#   with these matches (before them the object held only 11972 and 11973 in band 1):
+#   - DetalheCandidato and DetalheCandidatoZE (11972, 11973) ahead of the trailers (11981, 11980) and of CParteRdv's
+#     control block (11979, 11978);
+#   - the lambda's __func slots (11970 to 11966) and CFormPart's block (11962, 11961) ahead of CParteRdv's block.
+#   In band 4 the insert (2875) lies ahead of CParteRdv's D2 (2876), one more pair. The data agree with band 1:
+#   DetalheCandidatoZE's record (@1544048) follows the trailers' (@1543784, @1543800), and CParteRdv's block's vtable
+#   (@1543816) precedes CFormPart's (@1544104). The bytes are the same either way, and no reorder was measured.
 #
 # Roots: 325-uenux2-geradores-zeresima-roots.cpp stands for the target callers not written: 11946, 12105 and 12110 for
 # 1047; 11946 for 5977, 5579, 5971, 5580 and the insert (2875's instance); 11946 and 12110 for 3873, 3872 and 3699.
 # Stand-ins of other units whose every caller is now in the link went: unit 111's w111_relatorio (for 1047; 1127 is
 # matched), unit 230's w230_titulos (for 5579), unit 183's two address sinks (for 3872), unit 88's s11556 (5580 passes
 # 11556's slot), unit 77's CParteRdv builder (5971), unit 129's Totais (5801's callers 11980 and 11981) and unit 140's
-# w140_mapa (2877's caller 5971). Those of units 58, 77, 89, 109, 110, 121, 123, 162, 168, 196, 205, 216 and 317 keep
-# callers that still wait; the comments of those with callers now in the link name them.
+# w140_mapa (2877's caller 5971); unit 139's w139_cargo calls 5613 once now, for 12110 (3699 is written). Those of
+# units 31, 58, 77, 89, 109, 110, 121, 123, 162, 168, 196, 205, 216 and 317 keep callers that still wait; the comments
+# of those with callers now in the link name them.
 #
 # Not written, with what each waits for:
 # - 11946 (vota::CGeraZeresimaBase::StartState, unit 169's pending trap), and what only it reaches: 11975 and 11976

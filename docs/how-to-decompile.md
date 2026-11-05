@@ -1051,7 +1051,7 @@ written, unrooted, or wait for that caller; the fragment says which. Written, it
 ([reference/splat.md](reference/splat.md) "Reviewing a match" says how to read it by hand), and its statics' exit
 destructors are not matched until that caller's match names the objects: they read `no-candidate`, or `differs` or
 `unresolved` with source `ledger` on a census pair with another object's destructor of the same shape (10531 and 10532
-at 182dc6c1), which a landing can move.
+at 182dc6c1; both match since their caller 10676 does), which a landing can move.
 
 A trap in a `-pending.cpp` is right only where `src/units/README.md` "Pending members" says (a member that cannot be
 written yet, one that cannot match until other code lands, one whose real body would cost a match; an out-of-line

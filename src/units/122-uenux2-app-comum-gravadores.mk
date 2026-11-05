@@ -179,11 +179,17 @@
 #   the same exit before binaryen); by value with the finger tested
 #   `!= 0` and `== 0`, one row was left, `!(dedo | !t)` against ours `!dedo & t` (14 over 274); `dedo` and `!dedo` give
 #   the target's. A helper that reads the three into locals first gives the same object as one that takes them by
-#   value, and one that takes them by value in another TU nests its selects otherwise (a scratch TU at the tree's flags,
-#   wasm-objdump -d of each form). The helper's and the function's names, their being free functions and the
-#   parameters' types are chosen.
-# - 5843 and 5844, vector<CEstadoComparecimento>'s __emplace_back_slow_path over the arguments of the two emplace_back
-#   calls with a CApresentacaoFotoEleitor (4 over 116 and 4 over 115 rows); 3813 (vector<ecourna's
+#   value, and so does no helper, the three read into locals in ConverteComparecimentoMesario itself (the same 69 lines
+#   of wasm-objdump -d); one that takes them by value in another TU nests its selects otherwise (a scratch TU at the
+#   tree's flags, wasm-objdump -d of each form). The helper, the helper's and the function's names, their being free
+#   functions and the parameters' types are chosen.
+# - 5843 and 5844, vector<CEstadoComparecimento>'s __emplace_back_slow_path over the arguments of the four emplace_back
+#   calls with a CApresentacaoFotoEleitor (4 over 116 and 4 over 115 rows). The object emits one instance per argument
+#   list (four with the Faltou case's two arguments, llvm-nm), and two are in the link: 5843 is the two five-argument
+#   calls' (with the CHabilitacaoBiometrica), and 5844 binaryen's fold of SemCargoParaVotar's (the enumerator, so
+#   ESituacaoComparecimento) and the other four-argument call's (`situacao`, const ESituacaoComparecimento&), which
+#   11616 calls twice. 5844's symbol is the one the fold kept (link order, not evidence), and the template arguments'
+#   qualifiers follow the calls' argument forms, which are chosen. 3813 (vector<ecourna's
 #   CComparecimentoMesario>'s slow path, `T&&`, 4 over 270) and 1006 (CEstadoComparecimento's D2, 0 over 121), which
 #   unit 105's notes say only this uenux2 caller brings: copies of this object, ahead of ecourna's.
 # - 5366, comum::asn::GravaArquivo for the voter-register result (55 over 540), in

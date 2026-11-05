@@ -100,9 +100,9 @@ public:
     // CConfiguracaoEleicao's +200, the parameters' GetRodapeZEVOTA, and CEstadoGeral's correspondence): the separator in
     // style 1, "Código de identificação da carga" and GetIDCargaFormatado (fn 2786) of the load's code centred,
     // "Ver: " and the version's number, the footer's titles through ImprimeTitulos (fn 3689), 20 new lines and a cut.
-    // In use band 2 it follows ImprimeSeparadorVia (5581) in this file's object, with 5580 (not written) between them,
+    // In use band 2 it follows ImprimeSeparadorVia (5581) in this file's object, with 5580 (FormCabecalhoEleicao) between,
     // so it is defined below ImprimeSeparadorVia. Its name, its parameters' types, its being a static member of this
-    // class and both functions' lines (crelutil.cpp leaves the lines between them blank) are chosen.
+    // class and both functions' lines (crelutil.cpp holds FormCabecalhoEleicao between them) are chosen.
     static std::shared_ptr<api::IForm<api::IPaper>> FormRodapeZeresima(
         const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,
         const md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
