@@ -35,30 +35,48 @@
 #   (11371) showed, from the frame its inlined lambda gives. The lambda's own form (the converter captured by name and
 #   by reference, a `const auto&` parameter) is chosen.
 #
-# Written and not matched, and what each waits for:
-# - 11352 and 11351, CConversorVotosCargo::DoConverte and DoDesconverte, and 11350, CConversorEleicoesVota::DoConverte,
-#   waited for uenux2 at -O3; at the tree's -O3 11352 matches, and 11351 and 11350 differ by the scores the private
-#   -O3 link below gave, which the plain link gave too at -std=c++20 (pnpm wasm score): what is left is not explained.
-#   At the tree's -std=c++23, in the link that writes unit 13's CRdvVota slots, 11351 is 87 over 1235 rows (82
-#   operand-only, 2 inserted, 3 deleted) and 11350 94 over 870 (91 operand-only, 3 deleted: the target stores a new
-#   allocation's pointer at +24 of its frame, then at +20, where ours stores it at +20 alone). What was
-#   measured at -O2 and -O3: ecourna's IConversorASN Converte and Deconverte, which 11352 and 11351 hold for
-#   CConversorCargoID, append ": " with std::string::operator+=(const char*), which clang leaves out of line in that cold
-#   path at both levels; at -O2 it inlines append into it, and binaryen folds the literal into our copy, which no target
-#   function holds (the rows are `unresolved` on that call); at -O3 operator+= is the append the target calls (fn 678).
-#   11350's inner loop pushes each converted VotosCargo into the SEQUENCE_OF: the target holds that
-#   vector<AbstractData*>::push_back inlined and the outer loop's called; -Rpass=inline gives both cost 260 against 225
-#   at -O2, and at -O3 the inner one inlined (threshold 787) and the outer not (250). In a private link with this unit's
-#   three converter objects compiled with UENUX2_EXTRA=-O3 and every other object at -O2: 11352 is 53 over 421 rows,
-#   operand-only; 11351 94 over 1235 (89 operand-only, 2 inserted, 3 deleted); 11350 99 over 870 (96 operand-only, 3
-#   deleted).
+# Matched since, each once one form changed (pnpm wasm score against the target in the whole link, before steps 7 to 9;
+# "operand rows" are calls, data addresses, the std::format pieces' packed addresses and table slots):
+# - 11352, CConversorVotosCargo::DoConverte, once uenux2 built at -O3 (what -O2 gave is below).
+# - 11351, CConversorVotosCargo::DoDesconverte: the entity's votes bound to a const reference before the result's vector
+#   is constructed, as the target loads the field's object (the third field's pointer) before the vector's zeroing
+#   stores: 82 over 1233 rows, operand rows only, against 87 over 1235 (2 inserted, 3 deleted) with the range-for over
+#   entidade.get_votos() after the vector, as written before. The reference's spelling (TEntidade::votos::value_type)
+#   is chosen.
+# - 11350, CConversorEleicoesVota::DoConverte: GetVotos called with the SCargoInfo's cargo, which the target reads again
+#   from the info after CConversorVotosCargo's constructor (ours read it from the md::CCargo), and the pair built by
+#   CConversorVotosCargo::TDado's constructor, whose copy of the CVotos keeps the vector's first end store (+24 of the
+#   frame, before its copy loop) where std::make_pair's lets clang drop it: 71 over 870 rows, operand rows only, against
+#   94 over 870 (3 deleted) as written before and 74 over 870 (the same 3 deleted) with the info's cargo and
+#   std::make_pair.
+# - 11483, CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoConverte, the class template's member in
+#   rdv/cconversorregistrodigitalvoto.h (its comment says what the body holds), which unit 13's crdvvota.cpp.o emits;
+#   ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto::set_pleito takes const_reference (src/asn1/modules, the
+#   per-field form units 93 and 124 measured: the target builds a Constrained_INTEGER temporary for pleito, INTEGER's
+#   constructor with the info 1556824 and the vptr 1560492). Its code history, the rest as written:
+#   std::ranges::transform into std::back_inserter(historico) with a lambda that takes the string by const reference and
+#   returns it by value, 53 over 502 rows, operand rows only; std::ranges::for_each with a lambda that takes the string
+#   by value and pushes a GeneralString of it, 156 over 521 (19 inserted, 29 deleted: the loop inline here and the
+#   lambda's call out of line, inlined by binaryen per iteration); the same through for_each's iterator-pair overload,
+#   168 over 526, where -Rpass=inline gives that call (std::__invoke of the lambda) cost 325 against 250;
+#   std::ranges::transform with a lambda that takes the string by value and returns the GeneralString, 84 over 514 (12
+#   inserted, 7 deleted: the copy is destroyed before the push, and clone goes through the vtable). The lambda's
+#   parameter type and the local names are chosen. What the earlier forms gave (the -pending.cpp's note before this
+#   landing): std::copy into a back_inserter 253 over 588, the transform with a by-value lambda 279 over 625,
+#   ranges::for_each 273 over 620, each then with clone through the vtable, the vector's growth inlined and
+#   HistoricoCodigosCarga a class of the module's.
+# What was measured at -O2 and -O3 for 11352 and 11351: ecourna's IConversorASN Converte and Deconverte, which they hold
+# for CConversorCargoID, append ": " with std::string::operator+=(const char*), which clang leaves out of line in that
+# cold path at both levels; at -O2 it inlines append into it, and binaryen folds the literal into our copy, which no
+# target function holds (the rows are `unresolved` on that call); at -O3 operator+= is the append the target calls (fn
+# 678). 11350's inner loop pushes each converted VotosCargo into the SEQUENCE_OF: the target holds that
+# vector<AbstractData*>::push_back inlined and the outer loop's called; -Rpass=inline gives both cost 260 against 225
+# at -O2, and at -O3 the inner one inlined (threshold 787) and the outer not (250).
 #
 # The base's default DoConverte of CConversorPleito and CConversorProcessoEleitoral (11364, 11362) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
-# Pending (this unit's -pending.cpp traps them): 11349, CConversorEleicoesVota::DoDesconverte
-# (records :69, :74, :94 and :104, not written); 11483, CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoConverte
-# (11483 holds Converte<Eleicoes, ...> inlined, iconversorasn.h:56; the -pending.cpp gives what was measured and what it
-# waits for).
+# Pending (this unit's -pending.cpp traps it and says what waits for it): 11349, CConversorEleicoesVota::DoDesconverte
+# (records :69, :74, :94 and :104, not written).
 # Matched: 11482, that class's DoDesconverte, the class template's member in rdv/cconversorregistrodigitalvoto.h, which
 # unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte over the entity's elections, an instance
 # binaryen inlines (its 640-byte frame opens in the frameless 11482), and that instance's slot 3 through the vtable.

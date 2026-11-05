@@ -74,8 +74,8 @@
 #
 # Not matched, and what each waits for:
 # - The converters of CUrna, CCorrespondenciaResultado and CEnvelopeGenerico (fns 10287, 10284, 10289, 10288, 10271,
-#   10270) are unit 160's. Not written: CConversorEntidadeHashes::DoConverte (10266), which needs CEntidadeHashes's
-#   members past +36.
+#   10270) are unit 160's. CConversorEntidadeHashes::DoConverte (10266) matches from unit 293's
+#   cconversorentidadehashes.cpp, which reads CEntidadeHashes's members past +36 (centidadehashes.h says how).
 # - IGravador's slots 2 to 6 (fns 11630 to 11634) are not this unit's: unit 122's. CCarga::ValidaCriacao (fn 5670) is
 #   unit 157's (dados/md/correspondencia/ccarga.cpp), and matches.
 GRAVADORES_MD_SRCS := src/app/comum/gravadores/md/curna.cpp src/app/comum/gravadores/md/cenvelopegenerico.cpp \

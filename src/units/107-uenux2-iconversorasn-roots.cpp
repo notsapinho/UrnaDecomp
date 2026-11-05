@@ -1,9 +1,9 @@
-// Roots: reach comum::asn::IConversorASN<ENTIDADE, DADO>'s Converte and Desconverte (app/comum/asn/iconversorasn.h) the
-// way the target's callers do, until they land. Each instance here has direct callers only, at least two call sites in
-// the target (ledger/callgraph.tsv), and binaryen keeps it out of line for that, and merges those of one shape into
-// fns 1563 and 1008, with the record and the entity's typeid text as parameters. w107_converte and w107_desconverte
-// call an instance twice, so each has two call sites, and the stand-in w107_todos, which holds them all, has a body no
-// target function has.
+// Roots: reach comum::asn::IConversorASN<ENTIDADE, DADO>'s Desconverte (app/comum/asn/iconversorasn.h) the way the
+// target's callers do, until they land. Each instance here has direct callers only, at least two call sites in the
+// target (ledger/callgraph.tsv), and binaryen keeps it out of line for that, and merges those of one shape into fns
+// 1563 and 1008, with the record and the entity's typeid text as parameters. w107_desconverte calls an instance twice,
+// so each has two call sites, and the stand-in w107_todos, which holds them all, has a body no target function has.
+// The last Converte instance went: 2275's callers are all written.
 //
 // The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
@@ -12,7 +12,7 @@
 //   11451, are written.
 //   3737 and 3738 need none: their callers 11381, 11423 and 11452, and 11411, 10270 and 11457, are written. 3799 needs
 //   none: its callers 10271, 10273 and 11587 are written.
-//   2275: 10266 (10271, 10273, 11458, 11587). 5688 needs none: its callers 11359 and 11375 are written.
+//   2275 and 5688 need none: their callers 10266, 10271, 10273, 11458 and 11587, and 11359 and 11375, are written.
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
@@ -36,7 +36,6 @@
 #include "app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.h"
 #include "app/comum/dados/md/municipiozona/ccomplementomunicipio.h"
 #include "app/comum/dados/md/municipiozona/cmunicipio.h"
-#include "app/comum/md/ccabecalhoentidade.h"
 #include "app/comum/md/ccabecalhopacote.h"
 #include "app/comum/md/cseguranca.h"
 #include "asn1/modules/ModuloCandidatos.h"
@@ -64,16 +63,6 @@ extern const char w107_dadocarga_vt[] __asm__("_ZTVN5comum3asn19CConversorDadoCa
 namespace {
 
 template <typename ENTIDADE, typename DADO>
-inline char* w107_converte(char* destino, const char* entrada)
-{
-    const auto& conversor = *reinterpret_cast<const comum::asn::IConversorASN<ENTIDADE, DADO>*>(entrada);
-    const auto& dado = *reinterpret_cast<const DADO*>(entrada + 8);
-    ::new (destino) ENTIDADE(conversor.Converte(dado));
-    ::new (destino + 256) ENTIDADE(conversor.Converte(dado));
-    return destino + 512;
-}
-
-template <typename ENTIDADE, typename DADO>
 inline char* w107_desconverte(char* destino, const char* entrada)
 {
     const auto& conversor = *reinterpret_cast<const comum::asn::IConversorASN<ENTIDADE, DADO>*>(entrada);
@@ -90,7 +79,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     d = w107_desconverte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
     d = w107_desconverte<ModuloCandidatos::DadosCandidato, CDadosCandidato>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
-    d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     return d;
 }
 

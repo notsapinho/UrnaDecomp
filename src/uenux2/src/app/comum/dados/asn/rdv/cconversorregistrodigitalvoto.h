@@ -1,9 +1,12 @@
 #pragma once
 
+#include <algorithm>
+#include <iterator>
 #include <string>
 #include <vector>
 
 #include "app/comum/asn/iconversorasn.h"
+#include "app/comum/asn/util.h"
 #include "app/comum/dados/md/processoeleitoral/cpleito.h"
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
 #include "app/comum/eurnafase.h"
@@ -19,8 +22,8 @@ namespace comum::asn {
 // and the section's municipio +28, zona +32, local +36 and secao +40, 32- and 16-bit), and at +44 a vector of strings it
 // puts in historicoCodigosCarga. The D2 begins with the class's vptr store, so the class is not final. No record names
 // the file: the directory mirrors md::CVotosEleicoesVota's (docs/how-to-decompile.md step 3, rule 3), the name is the
-// class's. The member names and the words' types (by width) are chosen. DoDesconverte (fn 11482) is defined below;
-// DoConverte (fn 11483) is not written: 140-uenux2-app-comum-converters-pending.cpp traps it for the instance.
+// class's. The member names and the words' types (by width) are chosen. Both slots are defined below, and unit 13's
+// crdvvota.cpp.o emits them with the vtable.
 template <typename CONVERSOR>
 class CConversorRegistroDigitalVoto
     : public IConversorASN<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, md::CVotosEleicoesVota> {
@@ -46,6 +49,39 @@ typename CConversorRegistroDigitalVoto<CONVERSOR>::TDado
 CConversorRegistroDigitalVoto<CONVERSOR>::DoDesconverte(const TEntidade& entidade) const
 {
     return m_conversor.Desconverte(entidade.get_eleicoes());
+}
+
+// Target fn 11483: the section's identification built first (MunicipioZona, then IdentificacaoSecaoEleitoral, the
+// frame's two highest locals), the elections through the member converter's Converte (iconversorasn.h:56, which
+// binaryen inlines: its 640-byte frame opens inside this one), then the entity, constructed after them, and its five
+// fields in order. pleito goes through a Constrained_INTEGER temporary (the module's setter takes const_reference).
+// The code history is std::ranges::transform into a back_inserter with a lambda that returns each string by value:
+// the target keeps that loop in a function of its own that binaryen inlined (a 48-byte frame around the loop, and the
+// algorithm's {last, out} result stored back into this frame), copies each string, builds the GeneralString from the
+// copy, calls AbstractString::do_clone directly and destroys the GeneralString before the copy. What the other forms
+// gave is in unit 140's fragment.
+template <typename CONVERSOR>
+typename CConversorRegistroDigitalVoto<CONVERSOR>::TEntidade
+CConversorRegistroDigitalVoto<CONVERSOR>::DoConverte(const TDado& dado) const
+{
+    ModuloTiposEleitorais::MunicipioZona municipioZona;
+    municipioZona.set_municipio(m_municipio);
+    municipioZona.set_zona(m_zona);
+    ModuloTiposEleitorais::IdentificacaoSecaoEleitoral identificacao;
+    identificacao.set_municipioZona() = municipioZona;
+    identificacao.set_local(m_local);
+    identificacao.set_secao(m_secao);
+    const ModuloRegistroDigitalVoto::Eleicoes eleicoes = m_conversor.Converte(dado);
+    TEntidade entidade;
+    entidade.set_pleito(m_pleito);
+    entidade.set_fase() = Utils::ConverteFase(m_fase);
+    entidade.set_identificacao() = identificacao;
+    ModuloRegistroDigitalVoto::HistoricoCodigosCarga historico;
+    std::ranges::transform(m_historicoCodigosCarga, std::back_inserter(historico),
+        [](const std::string& codigo) { return codigo; });
+    entidade.set_historicoCodigosCarga() = historico;
+    entidade.set_eleicoes() = eleicoes;
+    return entidade;
 }
 
 } // namespace comum::asn

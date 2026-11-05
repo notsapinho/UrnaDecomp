@@ -13,6 +13,8 @@
 #   (fn 12674), its other caller, from the libraries: with a second caller of utimes (the roots' stand-in, now 2725)
 #   binaryen keeps __futimesat out of line, as the target does, where it inlined it into dotlockLock before.
 # - std::filesystem::path::string() (fn 1555, 49 B), which 2725 calls out of line for each throw's message.
+# - comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266), in cconversorentidadehashes.cpp: the file's header
+#   comment and centidadehashes.h say what it holds and what its rows were.
 # The two templates' instances, and CBaseError<comum::EUeComumReconhecimentoBiometricoError, ...>'s constructor (fn
 # 5369, unit 186), come from ccontrolaarmazenamentodeimagens.cpp.o now, the first object to instantiate them in our link
 # (this unit's roots object and unit 186's gave them before, with the same bodies: the scan matches them from either).

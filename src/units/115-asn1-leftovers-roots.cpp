@@ -1,7 +1,4 @@
-// Roots of the ASN.1 runtime's leftovers. Declared through asm labels with the wasm-level signatures, but for the one
-// template built below, a class with no key function (src/units/README.md "A class with no key function").
-#include "asn1/asn1.h"
-
+// Roots of the ASN.1 runtime's leftovers. Declared through asm labels with the wasm-level signatures.
 extern "C" {
 int leftovers_string_literal(int, int, int) __asm__("_ZN4ASN114AbstractStringC1EPKvPKc");
 int leftovers_string_copy(int, int, int) __asm__("_ZN4ASN114AbstractStringC1EPKvRKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
@@ -12,17 +9,6 @@ namespace {
 
 // std::string::find_first_not_of(const char*, size_t) (1843): 11546, 11571 and 14477 are not written, and they pass
 // other sets and positions than 1519 and 2185 do; without a caller that varies them binaryen folds both arguments.
-// ASN1::SEQUENCE_OF<ASN1::GeneralString>'s vtable and operator= (5731): of the two converters that call it, once each,
-// 11483 is not written (10273, fragment 321's, is). This stand-in calls it once, as 11483 does, and building the local
-// stores the vtable 5731 stores, so its slot 1 (859) comes along. Its body is no target function's.
-typedef ASN1::SEQUENCE_OF<ASN1::GeneralString> TNomes;
-
-__attribute__((noinline)) void CopiaNomes(const TNomes& origem)
-{
-    TNomes copia;
-    copia = origem;
-}
-
 __attribute__((noinline)) int FirstNotOfStandIn(int texto, int posicao)
 {
     return leftovers_first_not_of(texto, reinterpret_cast<int>(" \t"), posicao + 1);
@@ -36,7 +22,6 @@ struct SLeftoversRoots {
         leftovers_sink = reinterpret_cast<const void*>(&leftovers_string_literal);
         leftovers_sink = reinterpret_cast<const void*>(&leftovers_string_copy);
         leftovers_sink = reinterpret_cast<const void*>(&FirstNotOfStandIn);
-        leftovers_sink = reinterpret_cast<const void*>(&CopiaNomes);
     }
 } leftovers_roots;
 

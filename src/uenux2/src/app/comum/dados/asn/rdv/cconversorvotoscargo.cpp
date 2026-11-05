@@ -50,8 +50,9 @@ std::pair<md::CVotosCargos::SCargoInfo, md::CVotos> CConversorVotosCargo::DoDesc
             quantidadeEscolhas, m_cargoInfo.quantidadeEscolhas));
     }
 
+    const TEntidade::votos::value_type& entidadeVotos = entidade.get_votos();
     std::vector<md::CVoto> votos;
-    for (const auto& entidadeVoto : entidade.get_votos()) {
+    for (const auto& entidadeVoto : entidadeVotos) {
         const md::CVoto voto = m_conversorVoto.Desconverte(entidadeVoto);
         votos.push_back(voto);
     }
