@@ -58,4 +58,10 @@ CPlainText::CPlainText(const ueword identificadorUE, const ueword versao, std::v
 {
 }
 
+CPlainText::CPlainText(std::vector<uebyte> chave, std::vector<uebyte> conteudo, CInfoSalt infoSalt)
+    : CPlainText(0, 0, 0, 0, std::vector<uebyte>(1), std::vector<uebyte>(1), std::move(chave), std::move(conteudo),
+                 std::make_shared<CInfoSalt>(infoSalt))
+{
+}
+
 } // namespace ecourna::api::cepesc

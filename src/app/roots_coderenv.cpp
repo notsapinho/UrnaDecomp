@@ -6,22 +6,41 @@
 //   rule, second on the link line) instantiated both through comum::IServicoEstado's save (unit 206). That object gives
 //   those copies now, and the instances here went, with the stand-in that took CodeObjectFunction's four addresses for
 //   2891's thunks, which are in the link too: steps 7 to 9 on the link without them moved no row.
-// - 1532, encodeBER, has seven direct target callers besides 9770; 11488 11616 11629 5366 are not in our link
-//   (11582 is, unit 122, 6006, unit 293's merge of the two writers, and 11587, unit 305): without the call below, binaryen inlined it
-//   into 9770, its one caller then (measured while this file held 9770). encodeBER is protected, so the call goes
-//   through an __asm__ label.
+// - 1532, encodeBER, has seven direct target callers besides 9770; 11488 and 11629 are not in our link (11582 is, unit
+//   122, 6006, unit 293's merge of the two writers, 11587, unit 305, and 11616 and 5366, unit 122): the call below
+//   stands for the two not written; without it, binaryen inlined 1532 into 9770, its one caller then (measured while
+//   this file held 9770). encodeBER is protected, so the call goes through an __asm__ label.
 // - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290, all three out of line in our link and
 //   calling it (1681 from roots_vector.cpp, unit 11; 5496 with unit 170's roots standing for its other caller, 5702),
 //   so nothing here calls it. A call of it stood here while 1681 was not in the link: without it then, binaryen inlined
 //   3656 into 5290 (47 over 158 rows).
+#include <string>
 #include <vector>
 
 extern "C" int urna_codifica_ber(int, int, int) __asm__("_ZN4ASN18CoderEnv9encodeBERINSt3__220back_insert_iteratorINS2_6vectorIcNS2_9allocatorIcEEEEEEEEbRKNS_12AbstractDataET_");
-// Stands in for 1532's target callers named above.
+
+extern "C" void urna_init_with_size(void*, std::string*, std::string*, unsigned long) __asm__(
+    "_ZNSt3__26vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEE16__init_with_sizeB8ne210108IPS6_SA_EEvT_T0_m");
+
+// std::vector<std::string>'s range construction (fn 5585, below) has two target users, neither written: fn 11332, a
+// std::vector<std::string> constructor from a two-word range (table slot 74, which fn 11733, a static initializer,
+// reaches through invoke_*), calls it directly, and ecourna's CLzmaCompress::DoAdd (fn 9586) passes its table slot,
+// 6051. urna_vector_string stands for 11332 and the sink below takes the address for 9586, so binaryen keeps 5585 out
+// of line with a slot of its own, as the target does.
+__attribute__((noinline)) static int urna_vector_string(std::string* primeiro, std::string* ultimo)
+{
+    const std::vector<std::string> v(primeiro, ultimo);
+    return static_cast<int>(v.size());
+}
+
+void (*volatile urna_sink_init_with_size)(void*, std::string*, std::string*, unsigned long);
+
+// Stands in for 1532's target callers named above, and for 5585's.
 int urna_roots_coderenv(int a)
 {
     urna_codifica_ber(a, a + 4, a + 8);
-    return a;
+    urna_sink_init_with_size = urna_init_with_size;
+    return a + urna_vector_string(reinterpret_cast<std::string*>(a), reinterpret_cast<std::string*>(a + 24));
 }
 
 // std::vector<std::string>'s range construction from std::string* (target fn 5585): __vallocate and __construct_at_end

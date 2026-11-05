@@ -1,7 +1,7 @@
 // Roots: keep the CEPESC/CKeyLoader units' functions in the skeleton link the way the target keeps them
 // (their callers — comum::CControlaArmazenamentoDeImagens, CCepescCipher, … — are not reconstructed yet).
 // Target call shapes (ledger/callgraph.tsv + the elem segment): CInfoSalt::CInfoSalt(vec, vec) = 2 direct callers
-// (fns 11419, 11616); every other body is reached only through invoke_* (a table slot, uses 0): the copy ctor (slot 6323),
+// (fns 11419, 11616; UsaInfoSalt stands for 11419, and 11616, unit 122's, is in the link); every other body is reached only through invoke_* (a table slot, uses 0): the copy ctor (slot 6323),
 // both CCipheredOut ctors (6317/6318), CPlainText's 9-argument ctor (6328), DecipherKeyIfNeeded<EntidadeChave> (6313).
 // Address-taken from a static constructor like tools/round/gen_try_roots.py does: bodies intact, no export, no inlining.
 // Declared through asm labels with the wasm-level signatures so no header (and no ASN.1 type) is needed here.
@@ -35,11 +35,10 @@ struct SCepescRoots {
 } cepesc_roots;
 
 __attribute__((noinline)) int UsaInfoSalt1(int obj, int salt, int info) { return cepesc_infosalt_ctor(obj, salt, info) + 1; }
-__attribute__((noinline)) int UsaInfoSalt2(int obj, int salt, int info) { return cepesc_infosalt_ctor(obj, info, salt) * 3; }
 
 int UsaInfoSalt(int a)
 {
-    return UsaInfoSalt1(a, a + 24, a + 48) + UsaInfoSalt2(a + 1, a + 25, a + 49);
+    return UsaInfoSalt1(a, a + 24, a + 48);
 }
 
 // Stands for fn 5168's caller 11629, not in the link: CPlainText's constructor over two words and four vectors has two

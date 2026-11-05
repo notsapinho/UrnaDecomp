@@ -16,7 +16,6 @@
 //   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 4625, 5867
 //   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
 //   (fn 5867 returns nothing);
-// - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
 // - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
 //   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
 // - the other WSQ directories of pathwsq.cpp (fns 5819, 5818, 3795, 5817, 5816 and 3794): fns 5821 and 10425 call
@@ -25,8 +24,7 @@
 // - comum::GetPathWsqRegistrado (fn 5815): fns 3614 and 5382; 5382 is written (unit 135), the stand-in is for 3614.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
 //   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
-// IGravador and CGravadorRCSecao are abstract, so IGravador's constructor (declared with the object's int result) and
-// the private CriaIdentidadeEleitor are called through asm labels.
+// IGravador is abstract, so its constructor (declared with the object's int result) is called through an asm label.
 #include <filesystem>
 #include <map>
 #include <new>
@@ -42,9 +40,6 @@
 extern "C" int w122_igravador(void* objeto, unsigned int municipio, unsigned int zona, unsigned int local,
     unsigned int secao, int fase, int extensao, int arquivoSavd)
     __asm__("_ZN5comum9IGravadorC2EjtjtcNS_25EExtensaoArquivoResultadoENS_14ESavdArquivoUEE");
-
-extern "C" void w122_cria(void* resultado, const void* gravador, const void* identidade)
-    __asm__("_ZNK5comum16CGravadorRCSecao21CriaIdentidadeEleitorERKNS_2md18CEleitorIdentidadeE");
 
 extern "C" const char w122_vt_rcsecao[] __asm__("_ZTVN5comum16CGravadorRCSecaoE");
 
@@ -88,16 +83,6 @@ __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::
     return static_cast<int>(copia.size()) + 11;
 }
 
-// stands for fn 11616
-__attribute__((noinline)) int w122_identidade(const void* gravador, const void* eleitor, const void* principal)
-{
-    alignas(8) unsigned char a[8];
-    alignas(8) unsigned char b[8];
-    w122_cria(a, gravador, eleitor);
-    w122_cria(b, gravador, principal);
-    return a[0] + b[4];
-}
-
 // stands for fn 10451 (5374 is written)
 __attribute__((noinline)) int w122_naoregistrado(void* destino)
 {
@@ -133,7 +118,6 @@ int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum:
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
 int (*volatile w122_sink_nome)(comum::TMunicipioID, comum::TZonaID, comum::TSecaoID, char, comum::EExtensaoArquivoResultado);
-int (*volatile w122_sink_identidade)(const void*, const void*, const void*);
 int (*volatile w122_sink_versoes)(const std::string&, const comum::md::CVersoesArquivos::TMapVersoes&, const std::string&);
 const void* volatile w122_sink_vt_rcsecao;
 
@@ -145,7 +129,6 @@ struct SW122Roots {
         w122_sink_gravador = w122_gravador;
         w122_sink_nome = w122_nome;
         w122_sink_versoes = w122_versoes;
-        w122_sink_identidade = w122_identidade;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
         w122_sink_naoregistrado = w122_naoregistrado;
         w122_sink_wsqdiretorios = w122_wsqdiretorios;

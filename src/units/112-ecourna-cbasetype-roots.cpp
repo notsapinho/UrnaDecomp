@@ -4,12 +4,12 @@
 //
 // w112_usa stands for each constructor's target callers, which a real caller ends when it lands (search the indices in
 // splat/matched.txt):
-//   TQtdEleitor (1960): 9221 12098                TAno (2277): 10590 11469 11470 11616
-//   TScoreHabilitacao (2850): 9066 11616          TSecaoID (5848): 9127 11616
-//   TZonaID (5850): 9130 11616                    TMunicipioID (2851): 7787 9130 9142 11616
-//   TLocalID (5849): 9127 11616                   TCargoID (5682): 9228 11352
-// It calls each one twice, so each has two call sites here; 9066, 9127, 9130, 9142, 9221, 9228, 11469 and 11470 are
-// written, the rest are not. Its body is no target function's: two constructions and a difference.
+//   TQtdEleitor (1960): 9221 12098                TMunicipioID (2851): 7787 9130 9142 11616
+//   TCargoID (5682): 9228 11352
+// It calls each one twice, so each has two call sites here; 9130, 9142, 9221, 9228 and 11616 are written, the rest are
+// not. Its body is no target function's: two constructions and a difference. TAno (2277: 10590 11469 11470 11616),
+// TScoreHabilitacao (2850: 9066 11616), TSecaoID (5848: 9127 11616), TZonaID (5850: 9130 11616) and TLocalID (5849:
+// 9127 11616) need none: their target callers are all in the link.
 //
 // The copying Trim (1374) needs no stand-in: its target callers 2256, 3712, 5343, 5604, 5667, 5896 and 11377 are in the
 // link (5604 is unit 155's written Gera).
@@ -48,10 +48,8 @@ __attribute__((noinline)) int w112_todos(int v)
     using D = unsigned int;
     std::string texto(static_cast<size_t>(v), 'k');
     v += w112_apaga(texto, static_cast<size_t>(v));
-    return w112_usa<TQtdEleitor, W>(static_cast<W>(v)) + w112_usa<TAno, W>(static_cast<W>(v + 1)) +
-           w112_usa<TScoreHabilitacao, W>(static_cast<W>(v + 2)) + w112_usa<TSecaoID, W>(static_cast<W>(v + 3)) +
-           w112_usa<TZonaID, W>(static_cast<W>(v + 4)) + w112_usa<TMunicipioID, D>(static_cast<D>(v + 5)) +
-           w112_usa<TLocalID, D>(static_cast<D>(v + 6)) + w112_usa<TCargoID, W>(static_cast<W>(v + 7));
+    return w112_usa<TQtdEleitor, W>(static_cast<W>(v)) + w112_usa<TMunicipioID, D>(static_cast<D>(v + 5)) +
+           w112_usa<TCargoID, W>(static_cast<W>(v + 7));
 }
 
 int (*volatile w112_sink)(int);

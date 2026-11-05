@@ -22,6 +22,13 @@ public:
     // (it returns 9465's `this`), its parameters' names and types and its line in cplaintext.cpp are chosen.
     CPlainText(const ueword identificadorUE, const ueword versao, std::vector<uebyte> tabelaCriptografiaUE,
                std::vector<uebyte> numeroAleatorioUE, std::vector<uebyte> chave, std::vector<uebyte> conteudo);
+    // No target function of its own: comum::CGravadorRCSecao::GravaResultado (fn 11616), its one caller, holds it behind
+    // an 80-byte frame with landing pads (ecourna's code), which binaryen inlined. It builds two vectors of one zero
+    // byte, moves the key and the content into the 9-argument constructor's by-value parameters with the file type, the
+    // cipher id, the unit id and the version 0, and makes the salt shared with std::make_shared (CInfoSalt's copy
+    // constructor, fn 9470, through invoke_*). That it is a delegating constructor of this class, its parameters' names,
+    // types and order, and its line in cplaintext.cpp are chosen.
+    CPlainText(std::vector<uebyte> chave, std::vector<uebyte> conteudo, CInfoSalt infoSalt);
 
     uebyte GetTipoArquivo() const { return m_tipoArquivo; }
     uebyte GetIdCriptografia() const { return m_idCriptografia; }

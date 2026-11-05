@@ -29,6 +29,14 @@ public:
     ~CJustificador();
 
     static CJustificador& GetInst();
+    // Whether the singleton exists, read under its mutex: comum::CGravadorRCSecao::GravaResultado (fn 11616) holds the
+    // load of the pointer (1839012) and the unlock of the mutex (1838988, fn 150) in place, with no frame of its own.
+    // Its name, after CRegistradorMesario::HasInst's, and its being inline in the class are chosen.
+    static bool HasInst()
+    {
+        std::lock_guard<std::mutex> trava(s_mutex);
+        return s_inst != nullptr;
+    }
 
     // The título of the current record, the map's key: CJustificadorDadoTitulo::Text (fn 11475) reads the cursor at +12
     // and calls GetNumero (fn 1139, a twin) on the node's key. The name is chosen.

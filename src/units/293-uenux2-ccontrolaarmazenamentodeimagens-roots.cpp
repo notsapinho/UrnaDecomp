@@ -2,11 +2,11 @@
 // in the target and no table slot (ledger/callgraph.tsv), so each noinline stand-in below gives it two call sites and
 // binaryen keeps its body out of line. The stand-ins differ in their bodies, from each other and from every target
 // function, take what the target's callers vary as parameters, and are address-taken from a static constructor.
-// - api::CPolySingleton<api::IKernelHSM>::instance (fn 2279): fns 2725, 11419, 11616, 11629 and 12110; 2725 is written
-//   (ccontrolaarmazenamentodeimagens.cpp), w293_hsm stands for the others. It passes
+// - api::CPolySingleton<api::IKernelHSM>::instance (fn 2279): fns 2725, 11419, 11616, 11629 and 12110; 2725
+//   (ccontrolaarmazenamentodeimagens.cpp) and 11616 (unit 122) are written, w293_hsm stands for the others. It passes
 //   an empty std::source_location, as unit 100's w100_usa does: a record here would be none of the target's.
 // - ecourna::api::io::DeserializeFromFile<ModuloEnvelopeChave::EntidadeChave> (fn 2280): fns 2725, 11419, 11616 and
-//   11629; 2725 is written, the stand-in is for the others.
+//   11629; 2725 and 11616 (unit 122) are written, the stand-in is for the others.
 // - comum::asn::GravaArquivo for the envelope (fn 2724): fns 2725, 11626 and 11629 (which calls it twice); 11626 (unit
 //   160) and 2725 are written, the stand-in is for 11629.
 // - comum::asn::GravaArquivo for the hashes (fn 5367): fn 11620, which calls it twice.

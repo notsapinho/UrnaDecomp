@@ -16,8 +16,8 @@
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 11242 and 12110 (652 and 2881 are in the link)
-//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 7174 and 11616 (2822, 2825, 6034, 10210 and 10635
-//                       are in the link)
+//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
+//                       in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes

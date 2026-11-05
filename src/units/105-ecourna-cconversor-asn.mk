@@ -65,8 +65,9 @@
 # RTTI holds no DataGeracao, a made-up name, so ModuloTiposEleitorais.h lists only the fields it still holds.
 # cidentificacaosecaoeleitoral.hpp and cconfiguracaomunicipio.hpp replace the layout stand-ins of units 10 and 07.
 #
-# Names. Hand edits in splat/symbol_addrs.txt, each with its evidence: 9029 and 9043 (one holder of the slot), 3813 and
-# 5842 (one written caller, and 11616 not written), and five theInfo records by the type name each holds
+# Names. Hand edits in splat/symbol_addrs.txt, each with its evidence: 9029 and 9043 (one holder of the slot) and five
+# theInfo records by the type name each holds; 3813's and 5842's went once 11616 was written (unit 122): with both out,
+# and their match lines too, two scans add both back and splat-build verifies the copies
 # (docs/reference/facts/asn1.md A3). The thunks 9098 9100
 # 9123 9140 9183 9210 and 9099 9122 9139 9160, their merges 1970 and 2926 and 9209 need no line: the scan pairs them by
 # content, each alone and all together.
@@ -91,11 +92,12 @@
 #   pads, ours after the loop's pad. The O3 IR has one resume block for both, so the backend makes that split (not read
 #   further). Also measured: the vector named too, 62 over 388; the map as const auto&, the same link as the map named;
 #   the loop written in this function, with std::transform 283 over 392 and with a range-for 143 over 399.
-# - 1006, 3813: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
+# - 1006, 3813: copies that 11616, a uenux2 function, brings first in the link; both match since unit 122 writes it. 1006 was one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
 #   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and ours does (206 over 352).
 #   5842 and 5846, two more such copies (185 over 295 and 312 over 449 from this unit's objects, which have landing
-#   pads), match from src/app/roots_iconversorasn.cpp, which compiles them at uenux2's flags for 11616.
+#   pads), matched from src/app/roots_iconversorasn.cpp, which compiled them at uenux2's flags for 11616, and match from
+#   11616's object now.
 # - 9029: 3777, CParametrosUrna's copy constructor, is a call in the target, and binaryen inlines it here, its one caller
 #   in our link (440 over 454): its other caller, 7787, is not written.
 CCONVERSOR_ASN_SRCS := app/dados/cdetalhamentocomparecimento.cpp app/dados/federacoes/cfederacoes.cpp \

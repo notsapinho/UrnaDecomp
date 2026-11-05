@@ -307,7 +307,8 @@ copies it, 8956 sets it, and 2185 computes it. It derives from `AbstractData` (Â
 constant argument. In each the callee is in our table and not the target's: a `-fexceptions` object of ours calls it
 through `invoke_*`. Measured by links that take those landing pads away with `-fignore-exceptions`, which says nothing of the
 target's flags: with `userdict.cpp` so compiled, 208, 2653, 2186 and 8890 match, and with `app_dados_asn_datahoraasn` 8887
-does.
+does. 8887 matches since unit 122 writes comum::CGravadorRCSecao::GravaResultado (11616), whose object gives the link
+uenux2's copy of Boost's `parse_iso_time`, with no landing pads, ahead of that ecourna object's, so the slot is gone.
 
 **The target's RHVoice bodies have no landing pads.** Of the 680 rows of `splat/scan.tsv` at 0b5f410 whose
 candidate comes from an `rhvoice/â€¦` object, 2 target bodies call `__cxa_find_matching_catch_*` (9769 and 9774), and 127 of

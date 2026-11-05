@@ -54,8 +54,8 @@
 #
 # Measured on the whole link (pnpm wasm score), stand-ins and what each holds:
 # - urna_roots_coderenv calls 1532 once more (it took 9770's address until 2927 was in the link), for its direct target
-#   callers 11488, 11616, 11629 and 5366, not in our link (11582 is, unit 122's, 6006, unit 293's merge of the two
-#   writers, and 11587, unit 305's): without that call, before 11582 and 6006 were in the link, no function of
+#   callers 11488 and 11629, not in our link (11582 is, unit 122's, 6006, unit 293's merge of the two writers, 11587,
+#   unit 305's, and 11616 and 5366, unit 122's): without that call, before 11582 and 6006 were in the link, no function of
 #   build/out/wasm-map/vota_web/names.tsv was encodeBER (inlined into 9770).
 # - It called 3656 too, for its target callers 1681 and 5496, while 1681 was not in our link and 5496 was inlined into
 #   10949, its one caller there: without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
@@ -122,8 +122,9 @@
 #   1928's result); a link without both moves no row (steps 7 to 9).
 # - The hand lines of 2650 and 3552 (unit 115's, callers+content) went: both have generated lines now, and with the
 #   two out two scans give 11479 match rows beside the control and splat-build verifies 11479.
-# - Not written: 5366, another entity's CodeObjectFunction held by uenux2's code (no landing pad), which lost its stub
-#   to cfileasn.h's lines 161 and 171 (docs/reference/facts/placing.md P1). 5367 and 2724, the hashes' and the
+# - 5366, another entity's CodeObjectFunction held by uenux2's code (no landing pad), which lost its stub to cfileasn.h's
+#   lines 161 and 171 (docs/reference/facts/placing.md P1), is unit 122's (gravadores/asn/cconversorresultadournacadastro.cpp),
+#   and matches. The root also stands for 5585's target users, 11332 and 9586 (its comment). 5367 and 2724, the hashes' and the
 #   envelope's writers, are written (units 293 and 160) and match with their merge, 6006. ReadFromFile and
 #   DecodeObjectFunction are unit 206's (3791 holds them).
 # - Chosen: the codes' enumerator names (api/io/eueioerror.h), that CFileASN is a class, the lines of every statement

@@ -146,5 +146,5 @@ W102_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o 
 $(ROOT)/$(APP)/102-uenux2-control-blocks-pending.o: $(ROOT)/src/units/102-uenux2-control-blocks-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/102-uenux2-control-blocks.mk $(W102_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/102-uenux2-control-blocks-pending.cpp -o $(R)
 $(ROOT)/$(APP)/102-uenux2-control-blocks-roots.o: $(ROOT)/src/units/102-uenux2-control-blocks-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/102-uenux2-control-blocks.mk $(W102_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) $(OPENSSL_INCLUDES) -Ithird_party/RHVoice/src/include -c src/units/102-uenux2-control-blocks-roots.cpp -o $(R)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) $(OPENSSL_INCLUDES) -Ithird_party/RHVoice/src/include -I$(BOOST_HDR) -c src/units/102-uenux2-control-blocks-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/102-uenux2-control-blocks-pending.o $(APP)/102-uenux2-control-blocks-roots.o

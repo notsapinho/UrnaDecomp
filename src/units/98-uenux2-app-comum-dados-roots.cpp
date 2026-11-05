@@ -20,7 +20,6 @@ extern "C" {
 extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
 void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
-int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
 void w1937_root(void*, int) __asm__("_ZNK5comum15CEleitorDetalhe12GetBiometriaEv");
 void w2543_root() __asm__("_ZN5comum24VerificaIntegridadeVotosEv");
 void w2834_root(void*, int) __asm__("_ZNK5comum7CCargos13GetMapaCargosEv");
@@ -40,14 +39,6 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
 {
     w2263_root(primeiro);
     w2263_root(segundo + 16);
-}
-
-// Stands for fn 11616, a target caller of CEleitorDetalhe::SemImpedimento (fn 2266) not written; the other four, fns
-// 2823 and 2824 (CEleitores's slot 0), unit 110's celeitores.cpp, 10635 (unit 104's celeitorencontrado.cpp) and 11233
-// (fragment 317's cgeradorrellistaeleitores.cpp), are in the link.
-__attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
-{
-    return w2266_root(detalhe + 208) * 5;
 }
 
 // Stands for a target caller of CEleitorDetalhe::GetBiometria (fn 1937), fn 3614, not in the link, and stood for 10316,
@@ -90,7 +81,6 @@ struct SComumDadosRoots {
         comum_dados_sink = tipoidentificador_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
-        comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);
         comum_dados_sink = reinterpret_cast<const void*>(&BiometriasDosDois);
         comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
         comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);

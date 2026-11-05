@@ -261,14 +261,6 @@
 // f5808 · 501 B · unmatched · placement: link order · name unknown
 // void f5808(i32, i32, i32) { ... }
 
-// link-order cluster 835 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorrcsecao.cpp
-
-// f5844 · 237 B · unmatched · placement: link order · name unknown
-// ? f5844(i32, i32, i32, i32, i32) { ... }
-
-// f5843 · 239 B · unmatched · placement: link order · name unknown
-// ? f5843(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 837 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/centidadehashes.cpp
 
 // f5854 · 1843 B · unmatched · placement: link order · name unknown
