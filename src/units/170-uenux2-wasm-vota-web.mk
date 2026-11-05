@@ -176,9 +176,9 @@
 #   an i16 8192 at +12 and the vptr (`f137(16)`, then two i64 stores of 0), and a word of the frame that it nulls, reads
 #   back and frees (fn 136, emscripten_builtin_free); our simulador::CWasmThread is 8 bytes (cwasmthread.h, unit 99's: m_contexto
 #   at +4 alone). It waits for that layout.
-# - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor (target fn 10254, the record
-#   cposixmutex.cpp 30:15) has no target name: it is `no-candidate`, and ours (unit 01's) scores 19 over 209 rows
-#   against it, 1 deleted, not read further.
+#
+# 10869 (the CPosixMutex factory's Create) matches since CPosixMutex's constructor (target fn 10254, the record
+# cposixmutex.cpp 30:15, unit 01's) does: unit 01's fragment says what the constructor waited for.
 #
 # Stand-ins this unit ended: src/app/roots_uenux2.cpp's minsize instance of fn 252 and its extern template of append
 # (252 and 3717 match from this object), src/app/vota_api.cpp's votaPressKey and votaSetAudioEnabled, src/app/main.cpp

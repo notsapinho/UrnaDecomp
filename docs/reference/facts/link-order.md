@@ -130,6 +130,27 @@ Where that differs from the table, and what is known to turn on it:
   `ioapi.o`, `zip.o`, `deflate.o`, `zutil.o` in link order, with no decimal-digit boundary inside the group: the group
   sits in a tight run of the band, which a split across a boundary would put far apart. Fragment 06 links them so. The order decides which body binaryen keeps of `crc32` and `crc32_z`, and with it eleven matches
   ([libraries.md](libraries.md) §B8).
+- **SQLite after libcrypto.** `src/Makefile` links `sqlite3.o` after libcrypto's objects and archive (`LINK_LAST`),
+  where the target's data put it: in each of the three segments its objects lie between OpenSSL's and libc's (data
+  order is link order, L7 item 15; addresses from `splat/symbol_addrs.txt`). In `.rodata`, `sqlite3_version`
+  (0x16952a) follows `der_wrap_gen.o`'s 11-byte `ossl_der_oid_id_aes256_wrap` (0x16951f). In `.data`, SQLite's run from
+  `sqlite3_os_init.aVfs` (0x1b6f50) to `sqlite3azCompileOpt` (0x1ba240) follows OpenSSL's provider tables and precedes
+  libc's `__stderr_used` (0x1ba398). In `.bss`, `sqlite3Stat` (0x1d75b0) follows `rand_unix.o`'s `random_devices`
+  (0x1d7550, 0x60 bytes), and `sqlite3SavedPrng` (0x1d7908, 0x84 bytes) ends at libc's `__errno_storage` (0x1d798c).
+  L6's recovered line also puts `sqlite3.o`'s functions after libcrypto's straddle run. The command above printed
+  `… asn1 sqlite 7zip rhvoice zlib libqrencode openssl` while SQLite linked after `roots_asn1.o`, and prints `… asn1
+  7zip rhvoice zlib libqrencode openssl sqlite` now. What turns on it is the `.bss` residue. 12936
+  (`pthreadMutexAlloc`) reads `&staticMutexes[iType-2]` as `i32.const 1930960`, `staticMutexes - 48`, an address inside
+  `sqlite3BuiltinFunctions` (0x1d7698, 0 mod 8), which the target pads by 4 bytes before the 8-aligned
+  `staticMutexes`. After `roots_asn1.o`'s 4-byte sink our `sqlite3BuiltinFunctions` sat at 4 mod 8 (0x1bafcc with
+  7cfe8385 merged, `vota_web_wasm.map`). The constant then read `+ 52` and its vote contradicted 962's and 2352's,
+  so the name went (step 8's `dataVoteConflicts` 2, against 1 with SQLite last), and 962, 2352 and 12936 read
+  `unresolved` (`status.py`: `matched.txt only: [962, 2352, 12936]`). After `random_devices` it is at 0x1c2a28,
+  0 mod 8. There the three match, with 250, 12506 and 12776 besides, and no row leaves `match` ([splat.md](splat.md)
+  §S10 item 26 has the six). The move also renames fifteen match lines of SQLite functions to the byte-identical
+  OpenSSL or 7-Zip twins that link ahead of them now (how-to step 10, "A twin whose name moved"; 7722 is
+  [splat.md](splat.md) §S11's), and step 9 matched two OpenSSL getters under each other's names, corrected by hand
+  ([splat.md](splat.md) §S11).
 
 ## L4. Ordinal recovery from the bands: what anchors can and cannot give
 

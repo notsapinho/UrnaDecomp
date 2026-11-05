@@ -54,7 +54,7 @@
 211 _ZN7UStringC2Ev
 213 fe_mul
 214 sqlite3ExprDeleteNN
-215 pragmaVtabEof
+215 BN_is_zero
 216 sqlite3WalkExprNN
 217 _ZN7RHVoice12_GLOBAL__N_115feat_pos_in_sylD0Ev
 218 _ZN9simulador23CFingerPrepareSimulador7PreparaEv
@@ -208,7 +208,7 @@
 469 _ZN7RHVoice4item8iteratormmEv
 472 OBJ_obj2nid
 473 OSSL_PARAM_construct_int
-474 sqlite3_db_handle
+474 OSSL_DECODER_INSTANCE_get_decoder
 475 EC_KEY_free
 476 BN_dup
 477 BN_add
@@ -872,7 +872,7 @@
 1621 CRYPTO_strndup
 1622 ossl_aria_set_encrypt_key
 1623 DES_ede3_cbc_encrypt
-1624 pthreadMutexEnd
+1624 EVP_aes_128_cbc_hmac_sha1
 1625 namemap_add_name_n
 1626 ossl_lib_ctx_get_ex_data_global
 1627 CONF_module_add
@@ -1030,7 +1030,7 @@
 1857 LenPriceEnc_UpdateTables
 1859 _ZN13CStdOutStream17Normalize_UStringER7UString
 1861 _ZN4CArcD2Ev
-1862 nolockCheckReservedLock
+1862 _ZN8NArchive7NParser8CHandler28GetNumberOfArchivePropertiesEPj
 1864 _ZN7UString6DeleteEj
 1865 _ZNK7UString21ReverseFind_PathSeparEv
 1866 _ZN7UString6Add_LFEv
@@ -2252,7 +2252,7 @@
 4290 evp_decodeblock_int
 4291 evp_encodeblock_int
 4292 OBJ_dup
-4293 sqlite3_str_length
+4293 OBJ_get0_data
 4294 OBJ_txt2obj
 4295 CRYPTO_128_wrap
 4296 CRYPTO_ocb128_cleanup
@@ -2651,7 +2651,7 @@
 4847 Lzma2DecMtProps_Init
 4849 Lzma2Dec_Init
 4850 Lzma2Dec_Allocate
-4851 memjrnlFileSize
+4851 _ZThn16_N9NCompress10CCopyCoder24GetInStreamProcessedSizeEPy
 4854 _ZThn28_N9NCompress6NLzma28CDecoder7ReleaseEv
 4855 _ZThn28_N9NCompress6NLzma28CDecoder14QueryInterfaceERK4GUIDPPv
 4856 _ZThn24_N9NCompress6NLzma28CDecoder7ReleaseEv
@@ -3452,7 +3452,7 @@
 6973 MDC2_Init
 6974 ossl_md5_sha1_final
 6975 MD5_Transform
-6976 sqlite3_threadsafe
+6976 openssl_init_fork_handlers
 6977 self_test_set_callback_free
 6978 self_test_set_callback_new
 6979 core_obj_create
@@ -3906,8 +3906,8 @@
 7518 ossl_ecdh_simple_compute_key
 7519 ossl_ecdh_compute_key
 7520 ossl_ec_group_simple_order_bits
-7521 sqlite3_backup_pagecount
-7522 sqlite3_backup_remaining
+7521 BIO_meth_get_create
+7522 BIO_get_retry_reason
 7523 ossl_ec_GFp_simple_ladder_post
 7524 ossl_ec_GFp_simple_ladder_step
 7525 ossl_ec_GFp_simple_ladder_pre
@@ -4066,7 +4066,7 @@
 7696 ASN1_INTEGER_it
 7697 ASN1_OCTET_STRING_it
 7698 der_cmp
-7699 sqlite3_changes
+7699 ossl_dh_get_method
 7700 engine_unregister_all_DH
 7701 dh_finish
 7702 dh_init@openssl/O3/crypto/dh/libcrypto-lib-dh_key.o
@@ -4988,7 +4988,7 @@
 12367 pcache1Rekey
 12368 pcache1Unpin
 12369 pcache1Fetch
-12370 pcache1Pagecount
+12370 ENGINE_get_init_function
 12371 pcache1Cachesize
 12372 pcache1Create
 12373 pcache1Shutdown
@@ -4996,7 +4996,7 @@
 12376 sqlite3MemRoundup
 12377 sqlite3MemSize
 12378 sqlite3MemRealloc
-12379 sqlite3MemFree
+12379 _ZThn8_N9NCompress6NDelta8CEncoderD0Ev
 12380 sqlite3MemMalloc
 12382 jsonCacheDeleteGeneric
 12383 jsonObjectValue
@@ -5306,7 +5306,7 @@
 12778 sqlite3_keyword_check
 12779 sqlite3_keyword_count
 12780 sqlite3_keyword_name
-12781 sqlite3_vtab_distinct
+12781 EVP_PKEY_CTX_get_data
 12782 sqlite3_vtab_rhs_value
 12783 sqlite3_vtab_in
 12785 sqlite3_vtab_collation
@@ -5440,7 +5440,7 @@
 12931 sqlite3_mutex_free
 12933 sqlite3_vfs_unregister
 12934 sqlite3_vfs_register
-12935 noopMutexAlloc
+12935 _ZN14CXzCrc64Hasher13GetDigestSizeEv
 12937 sqlite3_vfs_find
 12938 sqlite3_msize
 12939 sqlite3_db_status
@@ -7733,7 +7733,7 @@
 10963 _ZNK3api22CQRCodeImageFieldPaper4DrawERNS_6IPaperE
 11012 _ZNK3api18CNewLineFieldPaper4DrawERNS_6IPaperE
 11015 _ZNK3api14CCutFieldPaper4DrawERNS_6IPaperE
-7722 sqlite3_thread_cleanup
+7722 Sha256Prepare
 9370 _ZNKSt3__220__shared_ptr_pointerIPN5boost13re_detail_60026basic_regex_implementationIcNS1_12regex_traitsIcNS1_16cpp_regex_traitsIcEEEEEENS_10shared_ptrIS8_E27__shared_ptr_default_deleteIS8_S8_EENS_9allocatorIS8_EEE13__get_deleterERKSt9type_info
 9375 _ZNKSt3__220__shared_ptr_pointerIPN5boost13re_detail_60031cpp_regex_traits_implementationIcEENS_10shared_ptrIKS4_E27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info
 9552 _ZN5boost6detail18sp_counted_impl_pdIPNS_8signals26detail11signal_implIFvmmRKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS2_19optional_last_valueIvEEiNS5_4lessIiEENS_8functionISE_EENSJ_IFvRKNS2_10connectionEmmSD_EEENS2_5mutexEE16invocation_stateENS0_13sp_ms_deleterISS_EEE11get_deleterERKSt9type_info
@@ -12635,3 +12635,12 @@
 10531 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/confirmaidentidade/caguardainspecao.cpp.o
 10532 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/confirmaidentidade/caguardainspecao.cpp.o
 10676 _ZN4vota15CPedeIdentidade11ProcessTickEh
+3977 pthread_mutexattr_init
+10254 _ZN3api11CPosixMutexC2Ev
+10869 _ZN3api22CDefaultGenericFactoryINS_8ISyncCtlENS_11CPosixMutexEE6CreateEv
+12936 pthreadMutexAlloc
+250 sqlite3_initialize
+12506 versionFunc
+12776 sqlite3_libversion
+13447 sm2_settable_params
+13499 dh_settable_params
