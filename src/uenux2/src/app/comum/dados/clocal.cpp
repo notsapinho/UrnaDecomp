@@ -231,4 +231,23 @@ std::string FormataQtdAgregadas(const std::string& formato)
     return std::vformat(formato, std::make_format_args(quantidade));
 }
 
+std::string FormataAgregadasResumidas(const std::string& formato)
+{
+    const CLocal& local = CLocal::GetInst();
+    const size_t quantidade = local.GetQtdAgregadas();
+    std::string agregadas;
+    if (quantidade > 0) {
+        const std::vector<ueword> numeros = local.GetAgregadas();
+        const char* separador = "";
+        for (size_t i = 0; i < std::min<size_t>(quantidade, 5); ++i) {
+            agregadas += std::format("{}{:04}", separador, numeros[i]);
+            separador = " ";
+        }
+        if (quantidade > 5) {
+            agregadas += "...";
+        }
+    }
+    return std::vformat(formato, std::make_format_args(agregadas));
+}
+
 } // namespace comum

@@ -116,4 +116,15 @@ std::string FormataAgregadas(const std::string& formato);
 // its parameter and its being a free function of comum are chosen.
 std::string FormataQtdAgregadas(const std::string& formato);
 
+// The first five aggregated sections' numbers, each as 4 digits after "" for the first and " " for the next ones, then
+// "..." when there are more than five, put into the format it is given at its one "{}": vota::AdicionaCabecalhoLocal
+// (target fn 4160, ctelasvota.h) holds it behind a 448-byte stack frame of its own (binaryen's inlining of a function
+// with one caller), with CLocal::GetInst and GetQtdAgregadas inlined, which clang does only in their own TU, so it is
+// clocal.cpp's code, as FormataAgregadas is (the same frame and calls). It has no target index. The count held as a
+// size_t and the loop's bound written std::min<size_t>(quantidade, 5) are the forms measured to give the target's one
+// zero test before GetAgregadas (fn 3752): the count as a uebyte with that bound, or `i < quantidade && i < 5`, tested
+// it again after the call (wasm-objdump -d of the object). Its name, its parameter and its being a free function of
+// comum are chosen.
+std::string FormataAgregadasResumidas(const std::string& formato);
+
 } // namespace comum

@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 28 come from the objects of units 31, 120, 101, 165,
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 37 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 29 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
@@ -24,7 +24,9 @@
 # and BatteryIconDataSource<Horizontal>'s (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which
 # 11116, 11106 and 11105 match) and api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's,
 # which holds vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316
-# and 12314 match from it; the roots' builder and sink that stood for 5936 went) and IHash's over
+# and 12314 match from it; the roots' builder and sink that stood for 5936 went) and api::CImageFieldUpdate's (3059,
+# vota::AdicionaTelaQRCode, the same object, from which 12541 and 12535 match; the roots' builder and sink went) and
+# IHash's over
 # ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 321's gravadores/asn/cassinavotavelbu.cpp,
 # from which 10277 and 10279 match) and comum::asn::CVisitanteEleitor's pointer block (11523, the lambda of
 # CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp, which holds unit 280's carregaarquivo.cpp's
@@ -60,7 +62,8 @@
 # Emplace blocks (slots 0 and 1, D2 and D0; slot 2 too where it is listed):
 #   CMovie 1593, 3076: 12835, 12830, 12823. FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
 #   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
-#   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059: 12541, 12535. CWavFile
+#   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059 (unit 110's
+#   ctelasvota.cpp, from whose object both match since; the roots' builder went): 12541, 12535. CWavFile
 #   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
 #   GetImage (8633) builds the block, as unit 164's CriaIcones (1263) does. CPreShowProgressBar (ten builders, 1591
 #   first): 12813,

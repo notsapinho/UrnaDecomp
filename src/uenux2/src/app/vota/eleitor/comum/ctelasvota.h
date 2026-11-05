@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include "app/comum/dados/cqrcodeds.h"
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
 namespace api {
@@ -185,6 +186,20 @@ public:
     // GetFormularioInterativo (fn 576). Its other target caller is 7787. The name, after the class's recorded CriaTela*
     // statics, and its place in ctelasvota.cpp are chosen; src/units/110-uenux2-singletons.mk has what it differs in.
     static CFormInterativoTelaVota CriaTelaMaisInformacoes();
+    // Fn 6595, the screen vota::CVerificaHorarioZeresima::ProcessInput (fn 11869) shows on CONFIRMA, called right after
+    // CTelasVota::GetInst() (fn 407), whose result 11869 drops: a static member called through the instance, the
+    // reading made for fns 6580, 6581 and 6599. Evidence, the body: a copy of comum::CConfiguracaoEleicao's zerésima
+    // time (+544, GetDataHoraZeresima), its hour ("h"), minutes ("mm") and date ("DD/MM/YYYY") through api::CTime's and
+    // api::CDate's Format (fns 779, 706), AdicionaTelaQRCode (fn 3059, below) with "ATENÇÃO", "Esta urna eletrônica só
+    // funcionará a partir de", <hour>h<minutes> do dia <date>. and the origin 0; then the label of 'C' ("Emissão do
+    // estado da urna") when comum::CInformacaoEleicao's count of state reports is above the vote state's count printed
+    // (+73 of comum::CAppInfo::GetVota's result), and the label of 'B' ("Mais informações"), through fn 653, and
+    // "telaAntesHorarioZeresima" through GetFormularioInterativo (fn 576). The labels' vector is zeroed after the
+    // counts are read and its first emplace_back calls the slow path directly (fn 6594, one body for its two
+    // instances): the test is a local computed before the vector is declared, a form measured (declared before the if,
+    // the vector's words were reloaded after the calls and the first emplace_back kept its fast path). Its other target
+    // caller is 7787. The name, from the screen's, its place in ctelasvota.cpp and the bool's name are chosen.
+    static CFormInterativoTelaVota CriaTelaAntesHorarioZeresima();
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
@@ -338,5 +353,32 @@ void AdicionaLocal(api::CFormBuilder& builder);
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes);
 std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde();
+
+// The body of the screens that show the urn's QR code (fn 3059) and the location's header it adds (fn 4160), in
+// ctelasvota.cpp: use band 4 puts 3059 among this object's functions (3064, record 1585, above it, 3054 below it) and
+// band 3 puts 4160 below AdicionaLocal (fn 4161); src/units/110-uenux2-singletons.mk has their places' measurement.
+// - AdicionaTelaQRCode (fn 3059; callers 6592, 6595 and 7787, the screens "telaConfirmaImpressaoZeresima" and
+//   "telaAntesHorarioZeresima" and CTelasVota's constructor): the status header (5), AdicionaCabecalhoLocal, "RESUMO DA
+//   CORRESPONDÊNCIA: " and comum::FormataCodigoCargaResumido (fn 2792) of the general state's correspondence (through
+//   the const comum::CAppInfo::GetGeral, fn 457, read before the header) at (320, 200), centred; an
+//   api::CImageFieldUpdate at (626, 250), ANCHOR_TOP_RIGHT, refreshed every 15000 ms, over an api::CQRCodeImage of 148
+//   (fn 3662, SharedIImage(new X), the __shared_ptr_pointer block @1538404) of a comum::CQRCodeDS of the general
+//   state's GetDadosQRCode (fn 5636) with the origin given; the title at (25, 260) in the 35-point font (@475016), the
+//   two other texts at (25, 310) and (25, 340) in the 20-point one (@474896) when they are not empty, and "Versão: {}"
+//   of api::CApplication::s_versao at (25, 400), left-aligned, and "Dados: {}" of
+//   CEstadoGeral::GetResumoHashVersoesPacotes (fn 3703) at (620, 400), right-aligned, in the 15-point one (@475008),
+//   colours 2 over 1. Written and not matched: src/units/110-uenux2-singletons.mk has the measurement.
+// - AdicionaCabecalhoLocal (fn 4160; callers 3059 and 7787): comum::CConfiguracaoEleicao's name (+8) and its pleito's
+//   (+32) at (320, 45) and (320, 80) in the 30-point font (@474888), comum::CLocal's municipality name, "/" and its UF
+//   at (320, 120), and "{}: {:04} {}: {:04}" of the translated <ZCSA>, the zone, <SCSA> and the section of the general
+//   state's section (CDadoLocal's +12, read as one i64 right after the const GetGeral, before CLocal::GetInst),
+//   followed by " ({})" of comum::FormataAgregadasResumidas("{}") (clocal.h) when the location has aggregated sections,
+//   at (320, 155), all centred in the 20-point font, colours 2 over 1. CAppInfo::GetInst is called before
+//   CConfiguracaoEleicao::GetInst, as the target calls them. No record names them; their names, their parameters'
+//   names, the origin's type (comum::CQRCodeDS::EOrigem, whose 2 fn 6592 passes has no enumerator) and their being free
+//   functions of vota with external linkage are chosen.
+void AdicionaTelaQRCode(api::CFormBuilder& builder, const std::string& titulo, const std::string& mensagem,
+                        const std::string& detalhe, comum::CQRCodeDS::EOrigem origem);
+void AdicionaCabecalhoLocal(api::CFormBuilder& builder);
 
 } // namespace vota

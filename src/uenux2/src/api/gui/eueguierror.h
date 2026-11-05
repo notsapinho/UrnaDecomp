@@ -29,6 +29,9 @@ enum EUeGuiError {
     // them
     EUE_GUI_FRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4917,
     EUE_GUI_GRAYEDFRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4918,
+    // the value is the code api::CImageFieldUpdate's constructor throws (record cimagefieldupdate.cpp 32:15, inlined into
+    // fn 3059); the name is chosen from its message, "Campo estava com a imagem nula": no evidence names it
+    EUE_GUI_IMAGEFIELDUPDATE_IMAGEM_NULA = 4921,
     // the value is the code api::CDSImageField's constructor throws (record cdsimagefield.cpp 29:15, inlined into fn 502);
     // the name is chosen from its message, "A fonte de dados não pode ser nula": no evidence names it
     EUE_GUI_DSIMAGEFIELD_FONTE_NULA = 4923,

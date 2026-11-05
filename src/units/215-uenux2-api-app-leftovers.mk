@@ -40,8 +40,10 @@
 # (pnpm wasm score, whole link). It is the first 8 characters of ecourna::api::security::EncodeBase64 of the hash at
 # +168 (the packages' hash, cestadogeral.h), and holds EncodeBase64 inlined by binaryen with its records base64.cpp:247
 # and :267, EncodeBase64's one caller in our link as in the target; the rows that differ are that inlined code's,
-# base64.cpp's form (unit 00's note; read from the score's alignment). Its target callers are 3059 and 7787, not in our
-# link (src/app/roots_ecourna.cpp's UsaBase64A and UsaBase64B stand for them), and 11222, in it. In use band 3 it links
+# base64.cpp's form (unit 00's note; read from the score's alignment). Its target callers are 3059 (unit 110's, in our
+# link, written and not matched), 7787, not in it (src/app/roots_ecourna.cpp's UsaBase64B stands for it; UsaBase64A,
+# for 3059, went), and 11222, in it. No vote names 3703: 3059 is named by a hand line and 11222 by vtable, and
+# neither casts one. In use band 3 it links
 # after 3705 and 3704, so after SetAjusteDataHora in the file. The hash goes into a named local before substr(0, 8):
 # this tree's -std=c++23 makes the temporary's substr the rvalue overload, which docs/reference/facts/app-flags.md F1
 # measured changing 3703 (that form was not linked here). No generated line names it: its opcodes differ, so no
@@ -76,9 +78,9 @@
 # names, its lines, and copying the load and the adjustment: std::move on m_dadoCarga's and m_ajusteDataHora's
 # arguments gives the same object (cmp).
 #
-# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 5480 (twice) for 5484, 3059 for 5636 (11200, unit
-# 123's, is in the link) and 10205 for 5637 (its address); 3705's stand-in went, its callers 7160, 7306 and 10710
-# (units 329, 104, 277) in the link.
+# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 5480 (twice) for 5484 and 10205 for 5637 (its
+# address); 3705's stand-in went, its callers 7160, 7306 and 10710 (units 329, 104, 277) in the link, and so did
+# 5636's, which stood for 3059: 5636's callers 11200 (unit 123's) and 3059 (unit 110's) are in the link.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
 UENUX2_SRCS += $(LEFTOVERS_UENUX2_SRCS)

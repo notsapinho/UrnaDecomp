@@ -185,3 +185,49 @@ struct SSingletonsRoots {
 } singletons_roots;
 
 } // namespace
+
+// The screen of vota::CVerificaHorarioZeresima and what it builds, in ctelasvota.cpp: CTelasVota::CriaTelaAntesHorarioZeresima
+// (fn 6595) has two direct callers in the target, 11869 (unit 138's, in the link) and 7787; AdicionaTelaQRCode (fn 3059)
+// has three, 6592, 6595 (in the link) and 7787; AdicionaCabecalhoLocal (fn 4160) has two, 3059 (in the link) and 7787.
+//   TelasConstrutor     stands for fn 7787 (CTelasVota's constructor): one call of each of the three; it goes when
+//                       7787 lands
+//   TelaConfirmaZeresima  stands for fn 6592 (the screen "telaConfirmaImpressaoZeresima"): one call of 3059 with the
+//                       origin 2, which 6592 passes (6595 passes 0); it goes when 6592 lands
+// binaryen inlines a function with one call site, and folds a parameter every caller passes as the same constant, so
+// the origins differ. The functions are declared through asm labels with the objects' signatures (the screen returns
+// its std::shared_ptr through the result's address); the bodies differ from each other and from every target function.
+extern "C" {
+void w6595(void*) __asm__("_ZN4vota10CTelasVota28CriaTelaAntesHorarioZeresimaEv");
+void w3059(void*, const void*, const void*, const void*, int) __asm__(
+    "_ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEE"
+    "ESB_SB_N5comum9CQRCodeDS7EOrigemE");
+void w4160(void*) __asm__("_ZN4vota22AdicionaCabecalhoLocalERN3api12CFormBuilderE");
+}
+
+namespace {
+
+__attribute__((noinline)) int TelasConstrutor(char* tela, char* builder, const char* textos)
+{
+    w6595(tela);
+    w3059(builder, textos, textos + 12, textos + 24, 0);
+    w4160(builder + 12);
+    return tela[3] + builder[5];
+}
+
+__attribute__((noinline)) int TelaConfirmaZeresima(char* builder, const char* textos)
+{
+    w3059(builder, textos + 36, textos + 48, textos + 60, 2);
+    return builder[7] * 3;
+}
+
+const void* volatile zeresima_sink;
+
+struct SZeresimaRoots {
+    SZeresimaRoots()
+    {
+        zeresima_sink = reinterpret_cast<const void*>(&TelasConstrutor);
+        zeresima_sink = reinterpret_cast<const void*>(&TelaConfirmaZeresima);
+    }
+} zeresima_roots;
+
+} // namespace

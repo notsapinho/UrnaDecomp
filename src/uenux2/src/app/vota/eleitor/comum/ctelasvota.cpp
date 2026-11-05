@@ -1,5 +1,6 @@
 #include "app/vota/eleitor/comum/ctelasvota.h"
 
+#include <chrono>
 #include <format>
 #include <functional>
 #include <map>
@@ -11,6 +12,7 @@
 
 #include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
+#include "api/gui/cimagefieldupdate.h"
 #include "api/gui/cinteractiveformbuilder.h"
 #include "api/gui/cinputmenufield.h"
 #include "api/gui/cprogressbar.h"
@@ -22,8 +24,11 @@
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/clocal.h"
+#include "app/comum/dados/cqrcodeds.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
+#include "app/comum/informacao/cinformacaoeleicao.h"
+#include "app/comum/relatorios/auxiliaresrelatorio.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
@@ -34,7 +39,7 @@
 
 namespace vota {
 
-// (original lines 37-290: content not recovered)
+// (original lines 42-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -214,8 +219,7 @@ CFormInterativoTelaVota CTelasVota::CriaTelaMaisInformacoes()
     return GetFormularioInterativo(builder, "telaMaisInformacoes");
 }
 
-// (original lines 3028-3340: content not recovered)
-#line 3341
+
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes)
 {
@@ -236,6 +240,79 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem
     return GetFormulario(builder, "telaNeutra");
 }
 
+CFormInterativoTelaVota CTelasVota::CriaTelaAntesHorarioZeresima()
+{
+    const api::CDateTime horario = comum::CConfiguracaoEleicao::GetInst().GetDataHoraZeresima();
+    const std::string hora = horario.GetHora().Format("h");
+    const std::string minuto = horario.GetHora().Format("mm");
+    const std::string data = horario.GetData().Format("DD/MM/YYYY");
+    api::CInteractiveFormBuilder builder;
+    AdicionaTelaQRCode(builder, "ATENÇÃO", "Esta urna eletrônica só funcionará a partir de",
+                       hora + "h" + minuto + " do dia " + data + ".", comum::CQRCodeDS::eOrigemTela);
+    const bool emiteEstado =
+        comum::CInformacaoEleicao(comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna()).GetNumViasEstadoUrna() >
+        comum::CAppInfo::GetInst().GetVota().GetNumViasImpressasRelatorios().GetNumViasEstadoUrna();
+    std::vector<std::pair<char, std::string>> teclas;
+    if (emiteEstado) {
+        teclas.emplace_back('C', "Emissão do estado da urna");
+    }
+    teclas.emplace_back('B', "Mais informações");
+    builder.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaAntesHorarioZeresima");
+}
+
+namespace {
+
+const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
+const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
+
+template <typename IMAGEM>
+api::CFormBuilder::SharedField AdicionaImagemAtualizada(api::CFormBuilder& builder, IMAGEM imagem,
+                                                        const api::SPoint& posicao,
+                                                        const std::chrono::milliseconds& intervalo,
+                                                        api::EAnchorPoint ancora)
+{
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CImageFieldUpdate>(posicao, imagem, intervalo, ancora);
+    builder.AddField(campo);
+    return campo;
+}
+
+} // namespace
+
+void AdicionaTelaQRCode(api::CFormBuilder& builder, const std::string& titulo, const std::string& mensagem,
+                        const std::string& detalhe, const comum::CQRCodeDS::EOrigem origem)
+{
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    const comum::md::estadoaplicacao::CEstadoGeral& geral = appInfo.GetGeral();
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    AdicionaCabecalhoLocal(builder);
+    builder.AddTextField("RESUMO DA CORRESPONDÊNCIA: " + comum::FormataCodigoCargaResumido(geral.GetCorrespondencia()),
+                         api::SPoint(320, 200), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    comum::CQRCodeDS qrCode(comum::CAppInfo::GetInst().GetGeral().GetDadosQRCode());
+    qrCode.SetOrigem(origem);
+    const api::SharedIImage imagem(new api::CQRCodeImage(148, qrCode));
+    AdicionaImagemAtualizada(builder, imagem, api::SPoint(626, 250), std::chrono::milliseconds(15000),
+                             api::ANCHOR_TOP_RIGHT);
+    builder.AddTextField(titulo, api::SPoint(25, 260), FONTE_TEXTO_CONFIRMA_CORRIGE, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    if (!mensagem.empty()) {
+        builder.AddTextField(mensagem, api::SPoint(25, 310), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA,
+                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    if (!detalhe.empty()) {
+        builder.AddTextField(detalhe, api::SPoint(25, 340), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA,
+                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    builder.AddTextField(std::format("Versão: {}", api::CApplication::s_versao), api::SPoint(25, 400), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(std::format("Dados: {}", comum::CAppInfo::GetInst().GetGeral().GetResumoHashVersoesPacotes()),
+                         api::SPoint(620, 400), FONTE_VERSAO, api::ALINHAMENTO_DIREITA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1));
+}
+
+// (original lines 3120-3360: content not recovered)
+#line 3361
 std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
 {
     return TelaNeutra("Por favor, aguarde...", 35, 0);
@@ -245,8 +322,8 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
 #line 3370
 namespace {
 
-
-const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
+// (original lines 3372-3373: content not recovered)
+#line 3374
 const api::SFont FONTE_AGUARDE{25, 0};
 
 } // namespace
@@ -423,12 +500,8 @@ void AdicionaLocal(api::CFormBuilder& builder)
                          static_cast<api::TColor>(2), static_cast<api::TColor>(22));
 }
 
-namespace {
-
-const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
-
-} // namespace
-
+// (original lines 3559-3564: content not recovered)
+#line 3565
 CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const std::optional<std::string>& confirma,
                                                  const std::optional<std::string>& corrige)
 {
@@ -703,6 +776,29 @@ std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMe
     menu->AddItem("Candidato específico").SetDado(candidato);
     builder.AddLabeledInputControl({{'C', "Executar opção"}, {'D', "Retornar"}}, api::CApplication::s_areaTela, false);
     return {GetFormularioInterativo(builder, "telaMenuVisualizacaoCandidatos"), menu};
+}
+
+
+void AdicionaCabecalhoLocal(api::CFormBuilder& builder)
+{
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    const comum::CConfiguracaoEleicao& configuracao = comum::CConfiguracaoEleicao::GetInst();
+    const comum::md::estadoaplicacao::CLocalidadeEleitoral secao = appInfo.GetGeral().GetDadoLocal().GetSecaoCarga();
+    const comum::CLocal& local = comum::CLocal::GetInst();
+    builder.AddTextField(configuracao.GetNome(), api::SPoint(320, 45), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(configuracao.GetPleito().GetNome(), api::SPoint(320, 80), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(local.GetNomeMunicipio() + "/" + local.GetUF(), api::SPoint(320, 120),
+                         FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1));
+    std::string texto = std::format("{}: {:04} {}: {:04}", comum::md::CTradutorFrase::Traduz("<ZCSA>"), secao.GetZona(),
+                                    comum::md::CTradutorFrase::Traduz("<SCSA>"), secao.GetSecao());
+    if (local.GetQtdAgregadas() > 0) {
+        texto += std::format(" ({})", comum::FormataAgregadasResumidas("{}"));
+    }
+    builder.AddTextField(texto, api::SPoint(320, 155), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
 }
 
 } // namespace vota

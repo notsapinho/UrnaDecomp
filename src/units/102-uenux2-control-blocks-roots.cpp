@@ -30,7 +30,6 @@
 #include "api/gui/ccutfieldpaper.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
-#include "api/gui/cimagefieldupdate.h"
 #include "api/gui/cmovie.h"
 #include "api/gui/cmoviefield.h"
 #include "api/gui/cnewlinefieldpaper.h"
@@ -69,7 +68,6 @@ extern "C" {
 extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CMovieFieldENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
@@ -164,11 +162,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CMovieField> w102_campo_
 {
     return std::make_shared<api::CMovieField>(p, filme, a);
 }
-__attribute__((optnone, noinline)) std::shared_ptr<api::CImageFieldUpdate> w102_imagem_viva(
-    const api::SPoint& p, const api::SharedIImage& im, const std::chrono::milliseconds& i, api::EAnchorPoint a)
-{
-    return std::make_shared<api::CImageFieldUpdate>(p, im, i, a);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<api::CWavFile> w102_wav(const api::CWavAudio& a, const void* d)
 {
     return std::make_shared<api::CWavFile>(a, d);
@@ -226,7 +219,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cdataimage_ccandidaturasdsfoto;
         w102_sink = w102_vt_cmoviefield;
         w102_sink = w102_vt_cprogressbar;
-        w102_sink = w102_vt_cimagefieldupdate;
         w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;

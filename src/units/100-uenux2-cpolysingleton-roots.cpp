@@ -79,8 +79,9 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for the callers of the GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024,
-// 3658, 3673, 5904 and 8302 are in the link. Fn 1155's last one, 11862 (unit 138), is in the link, and its calls went.
+// Stands for the callers of the GetInst that have not landed: 5543 for fn 1259, whose 502, 652, 1265, 2024, 3658,
+// 3673, 5904, 8302 and 3059 (unit 110's, CImageFieldUpdate's constructor inlined) are in the link. Fn 1155's last one,
+// 11862 (unit 138), is in the link, and its calls went.
 __attribute__((noinline)) int w100_getinst()
 {
     return &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;

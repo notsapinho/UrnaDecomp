@@ -13,7 +13,6 @@
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);
-//   SharedIImage(new X): CQRCodeImage (3059);
 //   std::shared_ptr<X>(new X): CDataTextFmt over const std::string (*)(const std::string&) (7787).
 // So this object instantiates the classes, as the sanctioned exception for std::make_shared does (src/units/README.md
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
@@ -21,9 +20,11 @@
 // direct caller: they are reached through the vtables the constructors store and through the control blocks.
 // CQRCodeImage's constructor, fn 3662, has three direct callers in the target, 3059, 12040 and 12055; 12055 is in the
 // link (unit 37: its std::make_shared is in vota::CTelasVota::CriaTelaQRCodeBU, ctelasvota.cpp, which binaryen inlines
-// into it), and two stand-ins call it here for the other two, so it stays a function of its own. CDataText over
-// std::function<std::string()> and its control block, which only 12055 builds with std::make_shared, come from
-// ctelasvota.cpp.o since then, and the stand-in for it went. The stand-ins differ in their bodies and are address-taken from a static constructor. They take
+// into it), and so is 3059 (unit 110's, SharedIImage(new X), whose __shared_ptr_pointer block comes from its object
+// since, and whose stand-in here went), and one stand-in calls it here for 12040, so it stays a function of its own.
+// CDataText over std::function<std::string()> and its control block, which only 12055 builds with std::make_shared,
+// come from ctelasvota.cpp.o since then, and the stand-in for it went. The stand-ins differ in their bodies and are
+// address-taken from a static constructor. They take
 // CTextSource by reference, as fn 5409 does, and build none: the target holds the record at ctextsource.h 37:19 twice, once
 // in each of two TUs, and our link holds no record of that kind yet.
 //
@@ -138,17 +139,11 @@ __attribute__((noinline)) SharedIImage ImagemQRCodeCompartilhada(api::TPosition 
     return std::make_shared<api::CQRCodeImage>(tamanho, fonte);
 }
 
-__attribute__((noinline)) SharedIImage ImagemQRCodePropria(api::TPosition tamanho, const FuncaoTexto& fonte)
-{
-    return SharedIImage(new api::CQRCodeImage(tamanho, fonte));
-}
-
 void* volatile w79_sink;
 
 struct SW79Roots {
     SW79Roots()
     {
-        w79_sink = reinterpret_cast<void*>(&ImagemQRCodePropria);
         w79_sink = reinterpret_cast<void*>(&TextoCompartilhado);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonteFormatado);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConst);

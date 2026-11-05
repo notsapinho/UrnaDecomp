@@ -39,8 +39,9 @@
 # Target fn 3703, which holds EncodeBase64's two records, is not EncodeBase64: it is a caller that binaryen inlined
 # EncodeBase64 into, returning `.substr(0, 8)` of the result for an object with a std::vector<uebyte> at +168 (callers
 # 3059, 7787, 11222). The object is comum::md::estadoaplicacao::CEstadoGeral (its packages' hash), and 3703 is written
-# as its GetResumoHashVersoesPacotes in unit 215's cestadogeral.cpp, for unit 287's 11222; roots_ecourna.cpp's
-# stand-ins call it for 3059 and 7787. It is 133 rows over 556, among them both size computations: the target's is
+# as its GetResumoHashVersoesPacotes in unit 215's cestadogeral.cpp, for unit 287's 11222; roots_ecourna.cpp's stand-in
+# calls it for 7787 (3059, unit 110's, is in the link). It is 133 rows over 556, among them both size computations: the
+# target's is
 # (n << 2) - ((n / 3) << 3), and base64.cpp's `(n / 3 + n % 3) * 4` compiles to an i32.mul of n / 3 by 3 (so do
 # `4 * (...)`, the terms swapped, `n / 3 * 4 + n % 3 * 4` and `n % 3` written out); `(n - n / 3 * 2) * 4` computes both
 # without one (base64.cpp's object, instruction kinds only). base64.cpp stays as it was: the rows of 3703 that differ
