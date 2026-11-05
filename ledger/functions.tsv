@@ -3566,7 +3566,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3700	1946	3	app	ecourna	-	-	none	-	
 3701	15	3	app	vota	skeleton	3656	byte	0	comum::md::estadoaplicacao::CEstadoGeralVota::IncrementaQtdBU()
 3702	494	3	app	ecourna	-	-	none	-	
-3703	1126	3	app	ecourna	-	-	none	-	
+3703	1126	3	app	ecourna	skeleton	3771	shape	57	comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes() const
 3704	2126	3	app	ecourna	-	-	none	-	
 3705	12	3	-	vota	skeleton	3772	byte	0	comum::md::estadoaplicacao::CEstadoGeral::SetAjusteDataHora(comum::md::estadoaplicacao::CAjusteDataHora const&)
 3706	82	2	libcxx	-	-	-	none	-	

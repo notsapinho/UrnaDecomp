@@ -3285,6 +3285,7 @@ _ZN5comum15CriaTituloCargoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9al
 _ZN5comum10CCalculaCV13CalculaCodigoEv = func:3700; // size:0x79a evidence:srcloc-anchor
 _ZN5comum2md15estadoaplicacao16CEstadoGeralVota15IncrementaQtdBUEv = func:3701; // size:0xf evidence:pair-fingerprint
 _ZN5comum2md15estadoaplicacao15CAjusteDataHora14AdicionaDeltaTEi = func:3702; // size:0x1ee evidence:srcloc-anchor
+_ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv = func:3703; // size:0x466 evidence:srcloc-anchor
 _ZN3api14CPolySingletonINS_6pkcs117IPkcs11EE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE = func:3704; // size:0x84e evidence:srcloc-anchor
 _ZN5comum2md15estadoaplicacao12CEstadoGeral17SetAjusteDataHoraERKNS1_15CAjusteDataHoraE = func:3705; // size:0xc evidence:pair-fingerprint
 _ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE = func:3707; // size:0xad evidence:call by:1931,2296,6033
@@ -38372,7 +38373,7 @@ log_ident = 0x1d8bc0; // type:data size:0x20 evidence:vote:1 by:2946
 log_opt = 0x1d8be0; // type:data size:0x4 evidence:vote:3 by:2946
 _gm_ = 0x1d8be4; // type:data size:0x1d8 evidence:vote:200 by:136,262,908,2943
 mparams = 0x1d8dbc; // type:data size:0x18 evidence:vote:13 by:262,908
-__THREW__ = 0x1d8dd4; // type:data size:0x4 evidence:vote:9615
+__THREW__ = 0x1d8dd4; // type:data size:0x4 evidence:vote:9636
 __threwValue = 0x1d8dd8; // type:data size:0x4 evidence:vote:1 by:12275
 __cxa_new_handler = 0x1d8ddc; // type:data size:0x4 evidence:vote:2 by:137,2549
 _ZN12_GLOBAL__N_18freelistE = 0x1d8de0; // type:data size:0x4 evidence:vote:6 by:6175,12142
