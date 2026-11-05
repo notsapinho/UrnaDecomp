@@ -1,5 +1,5 @@
 # uenux2 api::CGenericTags in src/uenux2/src/api/util/cgenerictags.cpp, the file its std::source_location records name
-# (all at column 15), with the class header (api/util/cgenerictags.h) and the 7013 to 7019 enumerators of
+# (all at column 15), with the class header (api/util/cgenerictags.h) and the 7013 to 7021 enumerators of
 # api/util/eueutilerror.h:
 #   5468  TagSize                         record at line 46 (7016)
 #   5467  EncodeTLV(tag, valor, tamanho)  records at lines 79 (7017) and 85 (7018)
@@ -7,6 +7,8 @@
 #   5466  AppendTLV(tlv, tag, valor)      no record; it holds AppendTLV(tlv, tag, valor, tamanho), record at line 102
 #                                         (7019), which binaryen inlined into it
 #   1071  insert                          records at lines 31, 34 and 37 (7013 to 7015)
+#   -     WalkTreeTLV, DecodeTLV          records at lines 110 (7020) and 136 (7021); no target index: both are
+#                                         inlined into fn 5892 (below)
 # CGenericTags has no RTTI: the map of tags at +8 is TagSize's and insert's (fn 1071, which stores the byte at node +28
 # from a size_t), and the two size_t members at +0 and +4 are read from the class's one inlined construction (fns 3831
 # and 5892 store 4 and 3 there; insert and the encoders compare the tag's size with +0 minus 1, and 5892 takes +4
@@ -55,13 +57,35 @@
 # -fstrict-aliasing` it scores `54 over 878 rows`, all operand-only, against `62 over 883 (57 operand-only, 5 inserted)`
 # with -fno-strict-aliasing. At 694de52's flags, with cgenerictags.cpp and csystem.cpp compiled by hand with uenux2's
 # set and relinked, it scores 56 over 883 rows (51 operand-only, 5 inserted), and without -fno-strict-aliasing 48 over
-# 878, all operand-only. WalkTreeTLV and DecodeTLV (records at lines 110 and 136, both held by fn 5892) are not
-# reconstructed: unit 95's fragment has 5892's measurement. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-CGENERICTAGS_SRCS := src/api/util/cgenerictags.cpp
-UENUX2_SRCS += $(CGENERICTAGS_SRCS)
-# the callers of insert, of EncodeTLV(tag, valor) and of AppendTLV(tlv, tag, valor) are 3831 and 5892 for each: 3831 is
-# in the link (unit 95's iinterfacesavd.cpp), 5892 is not reconstructed yet, and 33-uenux2-cgenerictags-roots.cpp stands
-# for it
-$(ROOT)/$(APP)/33-uenux2-cgenerictags-roots.o: $(ROOT)/src/units/33-uenux2-cgenerictags-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/33-uenux2-cgenerictags-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/33-uenux2-cgenerictags-roots.o
+# 878, all operand-only.
+#
+# WalkTreeTLV and DecodeTLV. Fn 5892 (unit 95's IInterfaceSavd::VerificarArquivo) holds both, each behind a 480-byte
+# frame of its own: binaryen inlined DecodeTLV into the TLV builder over a file that 5892 holds, its one caller, and
+# WalkTreeTLV into DecodeTLV, its one caller; clang keeps WalkTreeTLV a call there (too costly, -Rpass-missed=inline on
+# this file). WalkTreeTLV refuses a tag of the wrong size (7020), then walks the TLV from position 0: the tag
+# (m_tamanhoTag characters), the field of the tag and its length marker (m_tamanhoTagComNulo characters), whose marker
+# must be one of '<' to '?' (the target's `(c & 252) == 60` over a one-character substr, written as
+# `find_first_not_of("<=>?") == 0`), 2 * (the field's last character - ';') hexadecimal digits of the value's length
+# (ecourna's CStringUtils::HexToInt, fn 3507), and the value; it returns the position of the first TLV of the tag asked
+# for, and npos at the end or at an invalid marker, which is a `break` (unit 95's fragment has the forms measured
+# before). DecodeTLV throws 7021 when the tag is not there, takes the value and erases the TLV from the string (erase's
+# out-of-line part, fn 1136, is a call in 5892). The locals' names, types and const, the two functions' lines around
+# their records and the two codes' enumerators are chosen.
+# - The field's last character is `*campo.rbegin()` in both. Measured in the object (WalkTreeTLV's disassembly at this
+#   file's flags, the rest of the file as landed, a copy compiled under one name for every form): `*campo.rbegin()`,
+#   `*campo.crbegin()` and `*(campo.end() - 1)` give one function, which computes campo's data pointer again for that
+#   character, as 5892 does (35 `select`s); campo.back(), campo[campo.size() - 1], campo.end()[-1],
+#   campo.data()[campo.size() - 1] and *std::prev(campo.end()) give another, which reuses the one the marker's substr
+#   computed (34); back() through a helper clang inlines, the length computed before the marker test, the test held in
+#   a named bool and the marker a named std::string have 34 too. In the whole link (pnpm wasm score on scratch links
+#   of link.cmd with this file after iinterfacesavd.cpp), back() scores 176 over 1564 rows (12 inserted, 17 deleted)
+#   and rbegin 81 over 1552, all operand-only. In DecodeTLV, back() and rbegin give the same function; rbegin is
+#   written there too, a choice.
+# - The source is compiled from unit 95's list (src/units/95-uenux2-app-comum.mk), after iinterfacesavd.cpp,
+#   cassinador.cpp and csigverifier.cpp, the target's data order (this file's records at 1584416, iinterfacesavd.cpp's
+#   at 1552548). 5892 holds iinterfacesavd.cpp's code around this file's: with cgenerictags.cpp.o in this fragment's
+#   place, ahead of iinterfacesavd.cpp.o, it scores 491 over 1588 rows (36 inserted, 38 deleted), and after it 81 over
+#   1552, all operand-only, and it matches (unit 95's fragment has the links). This fragment holds no rule.
+# - The callers of insert, of EncodeTLV(tag, valor) and of AppendTLV(tlv, tag, valor) are 3831 and 5892, both in the
+#   link (unit 95's iinterfacesavd.cpp): 33-uenux2-cgenerictags-roots.cpp, whose stand-ins stood for 5892, went with it.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

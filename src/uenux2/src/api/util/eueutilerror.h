@@ -29,6 +29,10 @@ enum EUeUtilError {
     EUE_UTIL_TLV_TAG_TAMANHO_INVALIDO = 7017,
     EUE_UTIL_TLV_LIMITE_EXCEDIDO = 7018,
     EUE_UTIL_TLV_ANEXA_TAG_TAMANHO_INVALIDO = 7019,
+    // 7020 and 7021: the codes api::CGenericTags::WalkTreeTLV and DecodeTLV throw (cgenerictags.cpp 110 and 136, both
+    // held by fn 5892); each name is chosen from its message and the function that throws it: no evidence names them
+    EUE_UTIL_TLV_BUSCA_TAG_TAMANHO_INVALIDO = 7020,
+    EUE_UTIL_TLV_TAG_NAO_CODIFICADA = 7021,
     // 7027: the code api::CStringUtils::SetBit(std::vector<uebyte> &, ...) throws (record cstringutils.cpp 83:15, held
     // inlined by fn 2772); the name is chosen from its message, "Bit fora dos limites ({}) do vetor ({})". 7026: the
     // byte overload's throw (record 71:15), whose test binaryen folded with the bit its one caller passes; its value is

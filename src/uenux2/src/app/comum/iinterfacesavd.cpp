@@ -1,9 +1,10 @@
 // comum::IInterfaceSavd and the SAVD requests (/home/rubio/tse/uenux2/src/app/comum/iinterfacesavd.cpp). The records of
-// the target fix the lines of DesconverteHeader's and DesconverteMensagem's throws (553 to 578), ValidarUE's (886),
-// AssinarUE's (1004, inlined into fn 1277) and EnviarAcaoHSM's (1040); lines 898 and 1022 stay blank for the records of
-// the ValidarUE over a file and AssinarEcourna, not written (fns 11179 and 12098 hold them). Every other line is a
-// choice: the use bands put fn 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and AssinarArquivo (5891) ahead
-// of ValidarUE (5890). iinterfacesavd.h has the class, and the unit's fragment which members are reconstructed.
+// the target fix the lines of DesconverteHeader's and DesconverteMensagem's throws (553 to 578), ValidarUE's (886), the
+// ValidarUE over a file's (898, inlined into fn 11179), AssinarUE's (1004, inlined into fn 1277) and EnviarAcaoHSM's
+// (1040); line 1022 stays blank for the record of AssinarEcourna, not written (fn 12098 holds it). Every other line is a
+// choice: the use bands put fn 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and VerificarArquivo (5892)
+// ahead of AssinarArquivo (5891), ahead of ValidarUE (5890). iinterfacesavd.h has the class, and the unit's fragment
+// which members are reconstructed.
 
 #include "app/comum/iinterfacesavd.h"
 
@@ -56,7 +57,7 @@ std::string MontaConteudoTLV(const std::string& pacote, ueint32 chave)
     return conteudo;
 }
 
-// (original lines 59-479: content not recovered)
+// (original lines 60-479: content not recovered)
 #line 480
 bool IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisicao, const std::string& dados)
 {
@@ -187,7 +188,30 @@ std::string IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& 
     return "";
 }
 
-// (original lines 633-849: content not recovered)
+bool IInterfaceSavd::VerificarArquivo(ESavdAplic aplic, uedword chave, const std::string& pacote, const std::string& arquivo)
+{
+    if (aplic > 0xFF || chave > 0xFF || pacote.empty() || arquivo.empty()) {
+        m_mensagem = "Argumento inválido assinar verificar arquivo.";
+        return false;
+    }
+
+    const std::string dados = MontaRequisicaoTLV(pacote, chave, arquivo);
+    ueRequisicaoSavd requisicao = {};
+    requisicao.comando = 0x1001;
+    requisicao.aplicacao = aplic;
+    return EnviarRequisicao(m_codigo, requisicao, dados);
+}
+
+std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave, const std::string& arquivo)
+{
+    const api::CGenericTags tags = CriaTags();
+    std::string requisicao = MontaRequisicaoTLV(pacote, chave);
+    std::string conteudo = tags.DecodeTLV(requisicao, TAG_SUP);
+    tags.AppendTLV(conteudo, TAG_FIL, arquivo);
+    return tags.EncodeTLV(TAG_SUP, conteudo);
+}
+
+// (original lines 656-849: content not recovered)
 #line 850
 bool IInterfaceSavd::AssinarArquivo(ESavdAplic aplic, ueint32 comando, uebyte operacao, ueint32 arquivo)
 {
@@ -229,7 +253,16 @@ void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote
     }
 }
 
-// (original lines 890-979: content not recovered)
+// (original lines 890-894: content not recovered)
+#line 895
+void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote, const std::string& arquivo)
+{
+    if (!savd.VerificarArquivo(aplic, SAVD_CHAVE_UE, pacote, arquivo)) {
+        throw CUeComumError(EUE_COMUM_VALIDAR_ASSINATURA_UE_ARQUIVO, std::format("Falha ao validar assinatura UE\npacote: ({})\narquivo: ({})\nErro SAVD: ({})\n{}", pacote, arquivo, savd.GetCodigo(), savd.GetMensagem()));
+    }
+}
+
+// (original lines 902-979: content not recovered)
 #line 980
 bool IInterfaceSavd::EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao)
 {

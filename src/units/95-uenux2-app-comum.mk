@@ -91,28 +91,69 @@
 #   identificado"; clang makes the table of 96 pointers, which the target holds at 1551420, after carquivossavd.cpp's
 #   records and before cinfomtlcd.cpp's (ledger/source-locations.tsv). The enumerators are not recovered, so the case
 #   labels are the values; its being a free function is a choice. Its line, after operator[], is a choice.
-# Not written here: the ValidarUE over a file and AssinarEcourna, which binaryen inlined into 11179 and 12098 (AssinarUE,
-# inlined into 1277, is written: the paragraph on CArquivosSavd below); and 5892, the request over a package and a file that 4625 and 11179 call, which nothing in the link needs yet,
-# so it is out, with this measurement. 5892 refuses an ESavdAplic or a key above 255 (or-ed, unsigned) or an empty
-# package or file ("Argumento invalido assinar verificar arquivo."), then calls a function binaryen inlined (a prologue
-# of its own) that builds sup{pkg{package} key{key}} with 3831, decodes the content of its "sup" with
-# CGenericTags::DecodeTLV, which binaryen inlined, as it inlined WalkTreeTLV into that (records cgenerictags.cpp:110
-# and 136, codes 7020 and 7021), appends fil{file} with AppendTLV and encodes "sup" again with EncodeTLV, and sends it
-# with the command 0x1001 through 3830. WalkTreeTLV walks the TLV from position 0: the tag's characters, the length
-# marker after them, which must be one of '<' to '?' (the target's `(c & 252) == 60` over a one-character substr, read
-# as `find_first_not_of("<=>?") == 0`), the hexadecimal length (2 * (marker - ';') digits, CStringUtils::HexToInt),
-# and the value. Written so in a scratch link (pnpm wasm score against 5892): 597 over 1643 rows (91 inserted, 95
-# deleted) first; with ESavdChaveValidar given `: unsigned int` (a plain enum compares the key signed), 591 over 1639;
-# the invalid marker a `break` out of the walk where it was a second `return std::string::npos`, 564 over 1624 (read as
-# clang's cleanup destinations of a while: 1 return, 3 break); the hexadecimal length a named std::string in both
-# functions, freed at the end of its scope where the temporary was freed after HexToInt, 503 over 1596 (44 inserted, 51
-# deleted).
-# What remains: clang computes the one-character substr's source pointer (campo.data()) once and reuses it for
-# campo.back(), where the target computes it again in each place (our cgenerictags.cpp.o already holds the shared
-# select, at -O2 and with -fno-strict-aliasing as well; spelling the marker with an if-initializer, std::string's
-# constructor, `campo[campo.size() - 1]` or `!= std::string::npos` changes nothing there, and a helper or a lambda drops
-# the one-character string the target keeps); the other inserted and deleted rows are local numbers, and the operand
-# order of compares, which on both sides puts the lower-numbered local first (a reading). Not explained.
+# Not written here: AssinarEcourna, which binaryen inlined into 12098 (AssinarUE, inlined into 1277, is written: the
+# paragraph on CArquivosSavd below).
+#
+# Added since: the request over a package and a file, which fns 4625 and 11179 call, and the ValidarUE over a file:
+#   5892  IInterfaceSavd::VerificarArquivo, a chosen name                    no record of its own; matched
+#         with MontaRequisicaoTLV over a file (a chosen name) and unit 33's CGenericTags::DecodeTLV and WalkTreeTLV
+#         (records cgenerictags.cpp 110:15 and 136:15), which binaryen inlined into it
+#   ValidarUE(IInterfaceSavd &, ESavdAplic, const std::string &, const std::string &)  record 898:15, code 7324; no
+#         target index: binaryen inlined it into 11179 (comum::CSigVerifier::Verify, unit 26's), its one caller
+# - VerificarArquivo (5892): it refuses an ESavdAplic or a key above 255 (or-ed, compared unsigned) or an empty package
+#   or file, storing "Argumento inválido assinar verificar arquivo." at +4, the text its name is chosen from; then it
+#   builds the request TLV over the file, zeroes a request whose i64 store holds the command 0x1001 (a constant at
+#   clang's time, so a literal of the function, not a parameter: 5890's paragraph above has the sign), stores the
+#   ESavdAplic at +1 with a byte store of its own and sends it with 3830. A member, as it writes +4; the key is a
+#   uedword, the unsigned parameter of the two readings iinterfacesavd.h gives (chosen). It is defined before
+#   AssinarArquivo (5891): 5892 links first of this file's band-2 rows (5892 to 5889), its line a choice in the blank
+#   run after 3829.
+# - MontaRequisicaoTLV over a file: behind a 48-byte frame of its own inside 5892, so binaryen inlined it, and clang
+#   keeps it a call (-Rpass-missed=inline on this file): the four tags inserted (CriaTags), 3831's TLV of the package,
+#   its "sup" decoded with DecodeTLV, fil{file} appended with AppendTLV and "sup" encoded again with EncodeTLV, the frame
+#   holding the tags, 3831's TLV and the content in that order from the top. An overload of 3831's chosen name, defined
+#   after VerificarArquivo (the caller first, as 3830's measured order is; this order is not measured).
+# - The ValidarUE over a file: `if (!savd.VerificarArquivo(aplic, SAVD_CHAVE_UE, pacote, arquivo))` it throws 7324 with
+#   the package, the file and the SAVD's code and text (the format's types string, string, int, string), as the record's
+#   four parameters and 5890's form give; EUE_COMUM_VALIDAR_ASSINATURA_UE_ARQUIVO is a chosen name.
+# - The order. 5892 holds this file's helper around cgenerictags.cpp's DecodeTLV and WalkTreeTLV, and 11179
+#   csigverifier.cpp's Verify around this file's ValidarUE. The units' lists linked csigverifier.cpp.o (unit 26) and
+#   cgenerictags.cpp.o (unit 33) ahead of this list, where the target's data has iinterfacesavd.cpp, cassinador.cpp,
+#   csigverifier.cpp, then cgenerictags.cpp (records at 1552548, 1553268, 1576892 and 1584416). Measured with pnpm wasm
+#   score, the first link of these sources and scratch links of its link.cmd with objects moved (workflow.md W13):
+#   - both in their units' places, WalkTreeTLV's last character as campo.back(): 11179 55 over 436 rows (2 inserted, 2
+#     deleted, local numbers at the call of 5892), 5892 503 over 1596 (44 inserted, 51 deleted);
+#   - both moved after iinterfacesavd.cpp.o: 11179 26 over 434, all operand-only; 5892 176 over 1564 (12 inserted, 17
+#     deleted), and with unit 33's `*campo.rbegin()` 81 over 1552, all operand-only;
+#   - with rbegin, csigverifier.cpp.o alone after cassinador.cpp.o: 11179 26 over 434, 5892 491 over 1588 (36
+#     inserted, 38 deleted);
+#   - with rbegin, both after cassinador.cpp.o, in the data's order: 26 over 434 and 81 over 1552, all operand-only.
+#   So both files are listed here after cassinador.cpp, in the data's order, and both rows match; units 26 and 33 keep
+#   their notes and rows (src/units/README.md "Names"). Against each object's first record in
+#   ledger/source-locations.tsv (objects with none left out), the move of csigverifier.cpp.o puts 54 of the objects it
+#   passes in the data's order and inverts 40, whose records lie after its 1576892: api/gui's ctextfield,
+#   ctextfielddoubleline, ctextfieldmt, ctextfieldpaper, ctextfieldupdate, ctextfieldblinking, ctextrectfield, ctextbox,
+#   cframedtext, cimagefield, cimagefieldupdate, cdsimagefield, cmoviefield, cledfieldmt, cqrcodeimage,
+#   cqrcodeimagepaper, cprogressbar, cstepsprogressbar, cformbuilder, cinputmenufield and reports/creport, api's
+#   util/csystem, util/isystemdatetime, audio/alsa/cwavfile, uelog/cescritorlog and hwil/iimpressorarelatorios, vota
+#   operador's outrasopcoes/caguardaeleitoresvotarem, cencerramentohorarioinvalido and cescolheopcao,
+#   confirmaidentidade/cnomeeleitor, cdigitalreconhecida, cdigitalnaoreconhecida and cpededigital, and
+#   comum/cinformacaothreadoperador, and comum's comparecimentomesario/estados/cmesarioregistrado and
+#   ipedetitulomesario, comparecimentomesario/dao/ccomparecimentomesariodao,
+#   reconhecimentobiometrico/ccontrolaarmazenamentodeimagens, gravadores/asn/cassinavotavelbu and cconversorentidadebu;
+#   the move of cgenerictags.cpp.o puts 56 in the data's order and inverts 6 of those (cwavfile, isystemdatetime,
+#   cescritorlog, cinformacaothreadoperador, ipedetitulomesario, ccomparecimentomesariodao). The end of this list is the
+#   place in it that inverts fewest (cassinador.cpp's records lie before both files', csigverifier.cpp's before
+#   cgenerictags.cpp's), and steps 6 to 10 on this list lose no match.
+# - Measured before, in a scratch link at the tree's flags then and in the units' order (each form kept here): 597 over
+#   1643 rows first; the key compared unsigned (a plain enum compares it signed), 591 over 1639; the invalid marker a
+#   `break` out of the walk where it was a second `return std::string::npos`, 564 over 1624 (read as clang's cleanup
+#   destinations of a while: 1 return, 3 break); the hexadecimal length a named std::string in both functions, freed at
+#   the end of its scope where the temporary was freed after HexToInt, 503 over 1596. What that left, clang reusing the
+#   marker substr's source pointer for the field's last character where the target computes it again, is the spelling
+#   unit 33's fragment measures, and the rows of local numbers were the order's (a reading of the four links above).
+# - The roots: fn 4625, 5892's other target caller, is not written, and VerificaArquivo stands for it, so that 5892
+#   has two call sites (11179's inlined ValidarUE and the stand-in) and binaryen keeps it out of line, as the target has.
 #
 # Evidence and choices. The records fix each throw's line and each function's name and types. Chosen, and marked where
 # declared: every enumerator's name, ESavdChaveValidar's and EExtensaoArquivoResultado's enumerator names, the two
@@ -203,7 +244,7 @@
 #   stand-ins of 275's and 680's callers for the ones not written (1501, 1836, 4657, 4682 and 4687 are).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_SRCS := src/app/comum/carquivosresultado.cpp src/app/comum/carquivossavd.cpp src/app/comum/cpacotearquivos.cpp src/app/comum/iinterfacesavd.cpp \
-    src/app/comum/gravadores/cassinador.cpp
+    src/app/comum/gravadores/cassinador.cpp src/app/comum/relatorios/csigverifier.cpp src/api/util/cgenerictags.cpp
 UENUX2_SRCS += $(APP_COMUM_SRCS)
 # their callers are not reconstructed yet: 95-uenux2-app-comum-roots.cpp gives each two call sites
 $(ROOT)/$(APP)/95-uenux2-app-comum-roots.o: $(ROOT)/src/units/95-uenux2-app-comum-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/95-uenux2-app-comum.mk

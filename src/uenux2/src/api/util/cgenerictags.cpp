@@ -1,7 +1,8 @@
 // api::CGenericTags (/home/rubio/tse/uenux2/src/api/util/cgenerictags.cpp). Records fix the throws' lines, all at
-// column 15: insert (1071) 31, 34 and 37, TagSize (5468) 46, EncodeTLV (5467) 79 and 85, and AppendTLV 102 (inlined
-// into 5466). The overloads without the length-field size (3647, 5466) have no record: their names and lines are
-// chosen (src/units/33-uenux2-cgenerictags.mk says from what).
+// column 15: insert (1071) 31, 34 and 37, TagSize (5468) 46, EncodeTLV (5467) 79 and 85, AppendTLV 102 (inlined into
+// 5466), and WalkTreeTLV 110 and DecodeTLV 136 (both inlined into 5892, IInterfaceSavd::VerificarArquivo). The overloads
+// without the length-field size (3647, 5466) have no record: their names and lines are chosen
+// (src/units/33-uenux2-cgenerictags.mk says from what).
 
 #include "api/util/cgenerictags.h"
 
@@ -9,11 +10,12 @@
 #include <format>
 
 #include "api/util/eueutilerror.h"
+#include "ecourna/api/util/cstringutils.hpp"
 #include "ecourna/api/util/repete.hpp"
 
 namespace api {
 
-// (original lines 16-27: content not recovered)
+// (original lines 18-27: content not recovered)
 #line 28
 void CGenericTags::insert(const std::string& tag, size_t tamanho)
 {
@@ -74,9 +76,45 @@ void CGenericTags::AppendTLV(std::string& tlv, const std::string& tag, const std
     tlv += EncodeTLV(tag, valor, tamanho);
 }
 
-} // namespace api
+size_t CGenericTags::WalkTreeTLV(const std::string& tlv, const std::string& tag) const
+{
+    if (tag.size() != m_tamanhoTagComNulo - 1) {
+        throw CUeUtilError(EUE_UTIL_TLV_BUSCA_TAG_TAMANHO_INVALIDO, std::format("Tag [{}] com tamanho inválido", tag));
+    }
 
-// <stubs>
-// f5892 · 3294 B · unmatched · name unknown
-// ? f5892(i32, i32, i32, i32, i32) { ... }
-// </stubs>
+    size_t posicao = 0;
+    while (posicao < tlv.size()) {
+        const std::string tagAtual = tlv.substr(posicao, m_tamanhoTag);
+        const std::string campo = tlv.substr(posicao, m_tamanhoTagComNulo);
+        if (campo.substr(m_tamanhoTag, 1).find_first_not_of("<=>?") == 0) {
+            break;
+        }
+        const size_t tamanhoCampo = 2 * (*campo.rbegin() - ';');
+        const std::string comprimento = tlv.substr(posicao + m_tamanhoTagComNulo, tamanhoCampo);
+        const size_t tamanhoValor = ecourna::api::util::CStringUtils::HexToInt(comprimento);
+        if (tag == tagAtual) {
+            return posicao;
+        }
+        posicao += m_tamanhoTagComNulo + tamanhoCampo + tamanhoValor;
+    }
+    return std::string::npos;
+}
+
+
+std::string CGenericTags::DecodeTLV(std::string& tlv, const std::string& tag) const
+{
+    const size_t posicao = WalkTreeTLV(tlv, tag);
+    if (posicao == std::string::npos) {
+        throw CUeUtilError(EUE_UTIL_TLV_TAG_NAO_CODIFICADA, std::format("Tag [{}] não codificada", tag));
+    }
+
+    const std::string campo = tlv.substr(posicao, m_tamanhoTagComNulo);
+    const size_t tamanhoCampo = 2 * (*campo.rbegin() - ';');
+    const std::string comprimento = tlv.substr(posicao + m_tamanhoTagComNulo, tamanhoCampo);
+    const size_t tamanhoValor = ecourna::api::util::CStringUtils::HexToInt(comprimento);
+    std::string valor = tlv.substr(posicao + m_tamanhoTagComNulo + tamanhoCampo, tamanhoValor);
+    tlv.erase(posicao, m_tamanhoTagComNulo + tamanhoCampo + tamanhoValor);
+    return valor;
+}
+
+} // namespace api

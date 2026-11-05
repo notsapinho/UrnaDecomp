@@ -100,8 +100,12 @@ struct ueRespostaSavd {
 // AssinarArquivo (fn 5891), ValidarPacote and EnviarAcaoHSM (no target functions: clang inlines ValidarPacote into
 // comum::ValidarUE, fn 5890, and fn 4625 holds the same code behind a prologue of its own; binaryen inlines
 // EnviarAcaoHSM into comum::EnviarAcaoHSM, fn 5889) check their arguments, build a request and store the failure's text
-// at +4. They are members because they write +4 and +16. AssinarArquivo's and ValidarPacote's names are chosen;
-// EnviarAcaoHSM's is the one its log string gives ("IInterfaceSavd::EnviarAcaoHSM - Tentativa de envio..."), the
+// at +4. VerificarArquivo (fn 5892) does the same for a package and a file, over the request TLV of both, with the
+// command 0x1001; its name is chosen from the text it stores ("Argumento inválido assinar verificar arquivo."), and its
+// key is a uedword: fn 5892 or-s it with the ESavdAplic and compares unsigned, and of the two readings ESavdAplic's
+// comment gives, the unsigned parameter is the one chosen (the other is not measured for it). They are members because
+// they write +4 and +16. AssinarArquivo's, ValidarPacote's and VerificarArquivo's names are chosen; EnviarAcaoHSM's is
+// the one its log string gives ("IInterfaceSavd::EnviarAcaoHSM - Tentativa de envio..."), the
 // IInterfaceSavd:: qualifier included. The destructor is `= default` in the class, a choice among the inline forms: the
 // target's copy, 5503, is the executable TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the
 // string's destructor), and it matches from that TU's object (unit 170), whose CWasmSavd derives from this class.
@@ -117,6 +121,7 @@ public:
     std::string EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisicao, const std::vector<uebyte>& dados);
 
     bool AssinarArquivo(ESavdAplic aplic, ueint32 comando, uebyte operacao, ueint32 arquivo);
+    bool VerificarArquivo(ESavdAplic aplic, uedword chave, const std::string& pacote, const std::string& arquivo);
     bool ValidarPacote(ESavdAplic aplic, ESavdChaveValidar chave, ueword comando, const std::string& pacote);
     bool EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao);
 
@@ -141,11 +146,16 @@ extern const std::string TAG_KEY;
 extern const std::string TAG_FIL;
 
 // The request TLV of a package (fn 3831) and its content (no target function: binaryen inlines it into 3831, its one
-// caller). Names chosen; MontaRequisicaoTLV is called by fns 4625, 5890 and 5892.
+// caller), and the request TLV of a package and a file, which decodes the "sup" of 3831's TLV, appends the file's TLV
+// to its content and encodes "sup" again (no target function: binaryen inlines it into fn 5892, its one caller, behind a
+// frame of its own). Names chosen; MontaRequisicaoTLV over a package is
+// called by fns 4625, 5890 and 5892.
 std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave);
 std::string MontaConteudoTLV(const std::string& pacote, ueint32 chave);
+std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave, const std::string& arquivo);
 
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote);
+void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote, const std::string& arquivo);
 void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao);
 
