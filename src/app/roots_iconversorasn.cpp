@@ -19,6 +19,28 @@
 // calls each directly), went with it: vector<CIdentificacaoJustificativa>::__emplace_back_slow_path<
 // CIdentificacaoJustificativa> (5842) and CDadosComparecimento's implicit copy constructor (5846).
 
+// ecourna::app::dados::CParametrosUrna's implicit copy constructor (3777), whose target body is uenux2's: it has no
+// landing pad and copies its six vectors in loops of its own, with no call of the vector's __init_with_size, as this
+// object's copy does, while the copy that ecourna's app/dados/parametrizacaourna/cparametrizacaourna.cpp emits for
+// CParametrizacaoUrna's constructor (9029, unit 105) makes ten invoke_ calls and calls __init_with_size out of line
+// (wasm-objdump -d of both objects). Its target callers call it directly: 9029, and 7787 twice, at code of comum::CConfiguracaoEleicao
+// (app/comum/dados/cconfiguracaoeleicao.cpp) that binaryen inlined there, by a reading: a copy of a
+// CParametrizacaoUrna's parameters into a local after IConversorASN<EntidadeParametrizacaoUrna,
+// CParametrizacaoUrna>::Deconverte (whose record there names p/include, a uenux2 compile of the header), then the copy
+// of that local into +88 of the object a `new` of 688 bytes builds, after stores at +8, +20, +24 and +28 that follow
+// cconfiguracaoeleicao.h's layout. A fragment's roots link after ecourna's objects, so this object, ahead of both trees,
+// holds the copy; urna_copia_parametros_urna only instantiates it (clang keeps the copy out of line, a call) and leaves
+// the link. The object gives the copy the same code with and without -fno-strict-aliasing (its disassembly with the
+// object-local numbers masked). It goes when an object ahead of ecourna's on the link line instantiates the copy (by the
+// reading above, cconfiguracaoeleicao.cpp's CreateInst and constructor do in the target); unit 105's roots stand in for
+// 7787's two calls.
+#include "ecourna/app/dados/parametrizacaourna/cparametrosurna.hpp"
+
+void urna_copia_parametros_urna(void* destino, const ecourna::app::dados::CParametrosUrna& parametros)
+{
+    ::new (destino) ecourna::app::dados::CParametrosUrna(parametros);
+}
+
 // The two calls of Foto's Deconverte (5708) that stood for comum::asn::CConversorBiometriaEleitor::DoDesconverte
 // (11422) went: both its target callers, 11422 (fragment 335's) and 11440, are in our link.
 
