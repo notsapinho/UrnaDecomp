@@ -3,11 +3,12 @@
 # GetTypeName (10975, slot 7) in src/uenux2/src/api/gui/cprogressbar.cpp, the file the constructor's three
 # std::source_location records name (cprogressbar.cpp:52, 58 and 67, column 15: api::CProgressBar::CProgressBar(const
 # uedword, const uedword, const uedword, const SRect &, TColor, TColor, TColor, TColor, const std::string &, TFontSize,
-# uebyte, const TColor)). The constructor is not reconstructed: binaryen inlined it into std::make_shared's fn 5545
-# (component libc++, no stub), so lines 11-77 stay blank for it, its records' lines among them (the four includes Draw
-# needs, <cmath>, <format>, api/gui/cfixedtext.h and ecourna/api/util/cstringutils.hpp, and a blank line between them
-# took five blank lines of that run, above the first record: a layout of ours); no record falls in the destructor,
-# Draw, MontaTexto or Rect, so their lines (78 on) are a choice. The class header (api/gui/cprogressbar.h) has the
+# uebyte, const TColor)), and the constructor itself, written at those records (below): binaryen inlines it into fn
+# 5545 (api::CFormBuilder::AddProgressBar, unit 31), its one caller. Its lines above its first record are a choice, as
+# the includes' layout is (the four includes Draw needs, <cmath>, <format>, api/gui/cfixedtext.h and
+# ecourna/api/util/cstringutils.hpp, and a blank line between them took five blank lines above the first record: a
+# layout of ours); no record falls in the destructor, Draw, MontaTexto or Rect, so their lines (78 on) are a choice.
+# The class header (api/gui/cprogressbar.h) has the
 # layout that constructor stores: the destructor destroys the std::string at +68, then IFormFieldBase<IScreen>'s part
 # (its vptr, m_nome at +12). The destructor is out of line (the deleting one calls it), declared first, so it is the
 # key function and cprogressbar.o emits the vtable. Move (10976) is here, over SRect::Move, and SetValor and Incrementa
@@ -18,6 +19,34 @@
 # and Move, the order of their target indices in the use band (10978, 10977, 10976, 10975, 10974), which names.tsv's
 # ld_index follows (Draw 6733, between the D0's 6732 and Move's 6735). Paths relative to src/uenux2; the generic uenux2
 # rule depends on the source and every uenux2 header.
+#
+# The constructor has no target function of its own: 5545 holds it behind a second stack prologue (g0 - 592) right
+# after the allocation. The evidence is 5545's rows (`pnpm wasm fn ../target/vota_web_wasm.wasm 5545`); what they
+# give, the forms measured and the choices:
+# - It value-initializes its base, `IFormField<IScreen>()` in the mem-initializer list: 5545 zeroes +4 to +24 with
+#   three stores (+20, +12, +4) before the members, the shape docs/reference/facts/codegen.md C9 gives. Without it the
+#   base's own initializers store +4 (a byte), +8 and +16 apart, as 5546 does for CTextRectField (unit 90): the link
+#   without it (and without AddProgressBar's size local, unit 31) scored 65 over 850 rows, 6 inserted and 6 deleted,
+#   three of each the base's stores.
+# - The members in the class's order; the rectangle at +44 is rect.Adjust(1, 1, -3, -3), the four constants 5545 passes
+#   to fn 2768. Whether the original derives them from the border's width, which both callers pass as 2, the folded
+#   code does not say: chosen.
+# - The three tests read the parameters, not the members: 5545 tests limiteSuperior against 0 (the lower limit, 0 at
+#   both callers, folded) and the rectangle AddProgressBar passes (its local, +24 of its frame) against 4, twice the
+#   border's width.
+#   Each format's second argument is that width as an unsigned (__arg_t 6: the uebyte), the first the width or the
+#   height as an int (3). Each throw reads the rectangle again after the exception's allocation, which `throw`
+#   evaluates before its operand, so the difference is written in the throw, not kept in a local (a reading). Records
+#   52, 58 and 67, column 15; codes EUeGuiError's 4944 to 4946 (eueguierror.h), the messages the target's.
+# - Then SetValor(valor) (3667, this file's): 5545 holds its test, Limita's clamp and the form's refresh. m_valor's
+#   initializer is the lower limit, chosen: `m_valor(valor)` gives the same plain link (sha256 7a2740df... both), the
+#   two being 0 once folded.
+# - Then a font size of 0 becomes floor(0.8 * (bottom - (top + 2 * border))), over the members (+42, +38, +82, read
+#   again after the refresh's indirect call): f64.mul by 0.8, f64.floor and i32.trunc_sat_f64_s in 5545. The
+#   formula's spelling is chosen.
+# In the whole link 5545 scores 52 over 844 rows, every one an operand (`pnpm wasm score ../target/vota_web_wasm.wasm
+# 5545 ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>`); unit 31's fragment says what it waits for. Chosen too:
+# the parameters' and members' names (the header's), the enumerators' names, every line but the records'.
 #
 # Draw (10977): the evidence is the target's rows (`pnpm wasm fn ../target/vota_web_wasm.wasm 10977`); what it gives,
 # the forms measured and the choices:
@@ -55,8 +84,6 @@
 # 40-uenux2-cprogressbar-roots.cpp keeps.
 CPROGRESSBAR_SRCS := src/api/gui/cprogressbar.cpp
 UENUX2_SRCS += $(CPROGRESSBAR_SRCS)
-# nothing reconstructed references the vtable yet: 40-uenux2-cprogressbar-roots.cpp takes its address, which keeps
-# every slot in the table as the target has them
-$(ROOT)/$(APP)/40-uenux2-cprogressbar-roots.o: $(ROOT)/src/units/40-uenux2-cprogressbar-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/40-uenux2-cprogressbar.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/40-uenux2-cprogressbar-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/40-uenux2-cprogressbar-roots.o
+# No roots: api::CFormBuilder::AddProgressBar (fn 5545, unit 31), which holds the constructor inlined, stores the
+# vptr in the link, which keeps every slot in the table as the target has them; the roots file that took the
+# vtable's address until then went with it.

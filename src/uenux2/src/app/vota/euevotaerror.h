@@ -58,6 +58,11 @@ enum EUeVotaError {
     // the value is the code vota::NomeTela (target fn 6718) throws; the name is chosen from its message, "Tela
     // inválida {}": no evidence names it
     EUE_VOTA_TELA_INVALIDA = 9327,
+    // the values are the codes vota::CTelasCargo's constructor (target fn 2386, records ctelascargo.cpp:67 and :72)
+    // throws; the names are chosen from their messages, "Cargo <id> não foi passada nenhuma tela" and "Cargo <id> tela
+    // nula [<tela>]": no evidence names them
+    EUE_VOTA_CARGO_SEM_TELAS = 9328,
+    EUE_VOTA_CARGO_TELA_NULA = 9329,
     // the value is the code vota::CTelasCargo::GetTela (record ctelascargo.cpp:80, inlined into target fn 4135)
     // throws; the name is chosen from its message, "Cargo {} não possui [{}]": no evidence names it
     EUE_VOTA_CARGO_NAO_POSSUI_TELA = 9330,

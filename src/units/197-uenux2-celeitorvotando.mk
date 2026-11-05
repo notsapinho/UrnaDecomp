@@ -208,7 +208,7 @@
 # 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem, which stood for GetInst's fn 7481,
 # went when unit 104 wrote 7481 (7428 and 11754 were in the link; Registra, which stood for 11754's RegistraVoto calls,
 # went before), Abrange for GetAbrangencia's (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 12098
-# and 12110; 5604 is in the link) and Procura for 3251's (fn 2386; 3266 is in the link, src/app/roots_set.cpp). Precisa
+# and 12110; 5604 is in the link). Procura, which stood for 3251's caller 2386, went when unit 150 wrote 2386. Precisa
 # and Inicia, which stood for 7352 and 7377, went with them, Suspende, which stood for suspenderEleitor's (fn 4442)
 # calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442, and Converte, which stood for 5681's caller
 # 11349, with 11349 (unit 140's). GetInst's constructor stores the vptr, the target's one reference to the vtable, so no

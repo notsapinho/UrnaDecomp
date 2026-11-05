@@ -1,12 +1,13 @@
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
+#include <algorithm>
 #include <format>
 
 #include "app/vota/euevotaerror.h"
 
 namespace vota {
 
-// (original lines 9-19: content not recovered)
+// (original lines 10-19: content not recovered)
 #line 20
 std::string NomeTela(const ETelaVotacao tela)
 {
@@ -51,14 +52,19 @@ std::string NomeTela(const ETelaVotacao tela)
     throw CUeVotaError(EUE_VOTA_TELA_INVALIDA, std::format("Tela inválida {}", static_cast<int>(tela)));
 }
 
+CTelasCargo::CTelasCargo(const comum::TCargoID id, const TMapa& telas) : m_id(id), m_telas(telas)
+{
+    const std::string prefixo = std::format("Cargo {} ", id);
+    if (m_telas.empty()) {
+        throw CUeVotaError(EUE_VOTA_CARGO_SEM_TELAS, prefixo + "não foi passada nenhuma tela");
+    }
+    const auto nula = std::find_if(m_telas.begin(), m_telas.end(),
+                                   [](const TMapa::value_type& par) { return !par.second; });
+    if (nula != m_telas.end()) {
+        throw CUeVotaError(EUE_VOTA_CARGO_TELA_NULA, prefixo + "tela nula [" + NomeTela(nula->first) + "]");
+    }
+}
 
-// <stubs>
-// f2386 · 941 B · unmatched · name unknown
-// void f2386(i32, i32, i32) { ... }
-// </stubs>
-
-// (original lines 69-75: content not recovered)
-#line 76
 CFormInterativoTelaVota CTelasCargo::GetTela(const ETelaVotacao tela) const
 {
     const auto it = m_telas.find(tela);

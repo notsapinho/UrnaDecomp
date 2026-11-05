@@ -8,7 +8,9 @@
 //   3068  AddDoubleLineField
 //   5547  AddImage
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
+//   5546  AddTextRectField         over a CFixedText, after AddTextField 202 (the fragment says why)
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
+//   5545  AddProgressBar           written, differs: the fragment says what it waits for
 //   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
 //         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
 //   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
@@ -35,10 +37,12 @@
 #include "api/gui/crectfield.h"
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/cpreshowclearscreen.h"
+#include "api/gui/cprogressbar.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldblinking.h"
 #include "api/gui/ctextfieldmultiline.h"
 #include "api/gui/ctextfieldupdate.h"
+#include "api/gui/ctextrectfield.h"
 #include "api/gui/iscreen.h"
 #include "api/gui/ctextfielddoubleline.h"
 #include "api/gui/eueguierror.h"
@@ -154,6 +158,14 @@ CFormBuilder::SharedField CFormBuilder::AddTextField(const std::string& texto, c
     return campo;
 }
 
+CFormBuilder::SharedField CFormBuilder::AddTextRectField(const std::string& texto, const SRect& rect, const SFont& fonte)
+{
+    const auto text = std::make_shared<CFixedText>(texto, ALINHAMENTO_CENTRO);
+    SharedField campo = std::make_shared<CTextRectField>(rect, static_cast<TColor>(20), text, fonte, static_cast<TColor>(2));
+    AddField(campo);
+    return campo;
+}
+
 CFormBuilder::SharedField CFormBuilder::AddBlinkingTextField(const std::string& texto, const SPoint& posicao,
                                                              const SFont& fonte, ETextAlignment alinhamento)
 {
@@ -179,7 +191,19 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
     return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
 }
 
-// (original lines 182-289: content not recovered)
+std::shared_ptr<CProgressBar> CFormBuilder::AddProgressBar(uedword limite, const SPoint& canto, const SPoint& oposto,
+                                                           const SFont& fonte, const std::string& texto)
+{
+    const SRect rect = RectEntre(canto, oposto);
+    const TFontSize tamanho = fonte.size;
+    std::shared_ptr<CProgressBar> barra = std::make_shared<CProgressBar>(
+        0, 0, limite, rect, static_cast<TColor>(13), static_cast<TColor>(1), static_cast<TColor>(1),
+        static_cast<TColor>(2), texto, tamanho, 2, static_cast<TColor>(2));
+    AddField(barra);
+    return barra;
+}
+
+// (original lines 206-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {
