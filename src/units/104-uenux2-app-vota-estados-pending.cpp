@@ -53,18 +53,11 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorCargo::StartState: fn 11888 (3084 B), record cmenufiltrarcandidatosporcargo.cpp:44 (its line
-// stays blank there), not written: it builds its menu with api::AddInputMenuField (fn 3675) and AddItem (fn 1693),
-// which are written, and calls fns 5953 and 3862, which have no body here.
-void CMenuFiltrarCandidatosPorCargo::StartState()
-{
-    __builtin_trap();
-}
-
 // CMenuFiltrarCandidatosPorPartido::StartState: fn 11884 (3643 B), record cmenufiltrarcandidatosporpartido.cpp:39 (its
 // line stays blank there), not written: its menu holds api::CMenuItem::SetFormatString and
 // api::CInputMenuField::SetFormatString inlined (records cinputmenufield.cpp:156 and 468), which are not written, and
-// it calls fn 5953, which has no body here.
+// it calls fn 5953 (CVisualizarCandidatos::CarregaCandidaturas, written in cvisualizarcandidatos.cpp) before it collects
+// the candidatures' parties into a set in its frame.
 void CMenuFiltrarCandidatosPorPartido::StartState()
 {
     __builtin_trap();

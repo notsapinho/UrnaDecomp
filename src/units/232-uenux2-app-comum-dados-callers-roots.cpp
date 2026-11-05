@@ -32,8 +32,9 @@ __attribute__((noinline)) void CargosEleicao(int destino, unsigned eleicao)
     w232_3775(destino + 12, w232_187(), eleicao + 1, true);
 }
 
-// Stands for fns 5808, 5952 and 7787, which copy a std::vector<md::CDadosCandidato> (52-byte elements) with fn 2870;
-// md::CCandidatura's constructor (5660, unit 89) is the other caller.
+// Stands for fns 5808 and 7787, which copy a std::vector<md::CDadosCandidato> (52-byte elements) with fn 2870;
+// md::CCandidatura's constructor (5660, unit 89) and std::construct_at<CCandidatura> (5952, unit 150's object) are the
+// other callers.
 __attribute__((noinline)) void Suplentes(int destino, int primeiro, int ultimo)
 {
     w232_2870(destino + 60, primeiro, ultimo, (ultimo - primeiro) / 52);

@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**12,800 of 14,343 functions matched (89.24%), 4,173,683 of 5,883,903 code bytes (70.93%).**
+**12,806 of 14,343 functions matched (89.28%), 4,178,187 of 5,883,903 code bytes (71.01%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 3,049 / 3,285 | 92.82% | 1,463,039 / 2,168,476 | 67.47% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,159 / 8,294 | 86.32% | 2,209,447 / 3,145,292 | 70.25% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 3,054 / 3,285 | 92.97% | 1,467,405 / 2,168,476 | 67.67% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,160 / 8,294 | 86.33% | 2,209,585 / 3,145,292 | 70.25% |
 | not attributed | `unknown`, `app` | 2,592 / 2,764 | 93.78% | 501,197 / 570,135 | 87.91% |
-| **total** | | **12,800 / 14,343** | **89.24%** | **4,173,683 / 5,883,903** | **70.93%** |
+| **total** | | **12,806 / 14,343** | **89.28%** | **4,178,187 / 5,883,903** | **71.01%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -45,13 +45,13 @@ come from getting the version, the flags and the link order right, not from writ
 <!-- status:tse -->
 | component | what it is | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| `vota` | uenux2 `src/app/vota`: the voting application | 723 / 780 | 92.69% | 302,667 / 470,204 | 64.37% |
+| `vota` | uenux2 `src/app/vota`: the voting application | 727 / 780 | 93.21% | 306,634 / 470,204 | 65.21% |
 | `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 550 / 599 | 91.82% | 384,191 / 606,487 | 63.35% |
 | `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 483 / 516 | 93.60% | 84,750 / 214,120 | 39.58% |
 | `simulador` | the web simulator's `CWasm*` devices | 135 / 144 | 93.75% | 23,129 / 58,157 | 39.77% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 10 / 11 | 90.91% | 2,648 / 2,808 | 94.30% |
-| **uenux2** | the five rows above | **1,901 / 2,050** | **92.73%** | **797,385 / 1,351,776** | **58.99%** |
-| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 717 / 799 | 89.74% | 577,145 / 721,680 | 79.97% |
+| **uenux2** | the five rows above | **1,905 / 2,050** | **92.93%** | **801,352 / 1,351,776** | **59.28%** |
+| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 718 / 799 | 89.86% | 577,544 / 721,680 | 80.03% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 56 / 59 | 94.92% | 36,236 / 41,909 | 86.46% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 375 / 377 | 99.47% | 52,273 / 53,111 | 98.42% |
 <!-- /status:tse -->
@@ -62,7 +62,7 @@ come from getting the version, the flags and the link order right, not from writ
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,185 / 3,258 | 97.76% | 950,522 / 1,014,603 | 93.68% |
-| `libc++` | 1,752 / 1,957 | 89.52% | 300,198 / 439,879 | 68.25% |
+| `libc++` | 1,753 / 1,957 | 89.58% | 300,336 / 439,879 | 68.28% |
 | `sqlite` | 919 / 927 | 99.14% | 713,629 / 772,965 | 92.32% |
 | `7zip` | 491 / 970 | 50.62% | 45,754 / 292,539 | 15.64% |
 | `RHVoice` | 436 / 740 | 58.92% | 68,691 / 450,027 | 15.26% |
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 12,800 | 4,173,683 | matched |
+| `match` | 12,806 | 4,178,187 | matched |
 | `differs` | 278 | 235,165 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 474 | 583,585 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 791 | 891,470 | our link has no body for it yet |
+| `no-candidate` | 785 | 886,966 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 3,049 `match`, 46 `differs`, 42 `unresolved` and 148 `no-candidate`.
+For TSE code alone: 3,054 `match`, 46 `differs`, 42 `unresolved` and 143 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,357 | 1,357 | 0 | 0 | 0 |
-| `fingerprint` | 635 | 634 | 0 | 1 | 0 |
-| `addr` | 7,847 | 7,673 | 55 | 118 | 1 |
+| `byte` | 1,354 | 1,354 | 0 | 0 | 0 |
+| `fingerprint` | 638 | 637 | 0 | 1 | 0 |
+| `addr` | 7,851 | 7,677 | 55 | 118 | 1 |
 | `shape` | 1,184 | 1,141 | 31 | 12 | 0 |
-| `none` | 3,320 | 1,995 | 192 | 343 | 790 |
+| `none` | 3,316 | 1,997 | 192 | 343 | 784 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

@@ -87,10 +87,12 @@
 #   height or of the difference, `bottom + 1 - top`, `- 1 - (bottom - top)`, `-(height) + min`, `+ ~(bottom - top)`
 #   written out, std::min<int>, the minimum in a named int, `limite -=` in a second statement: each gives `top + ~bottom`,
 #   `top - bottom` with the constants joined, or the two loads ahead of GetHeight's call, none the target's
-#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from a
-#   callers+content hand line in splat/symbol_addrs.txt, on the four records only it loads (298, 320, 326, 339): its
-#   callers cannot name it, 11881's call vote being its own and 11884 and 11888 not written. Measured by the removal
-#   check (docs/reference/splat.md "Reviewing a match"): without the line, 11881 and 12894 are unresolved self-voted.
+#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from
+#   its callers' calls (step 8's `call by:11881,11888`), each caller named on its own (11881 by its vtable, 11888 by
+#   its record). The callers+content hand line on the four records only it loads (298, 320, 326, 339), needed while
+#   11881's vote was the only one, went once 11888 matched: with it out the scan run twice moved no row and the build
+#   verified, and with every line of the name out 11881, 11888, 12893 and 12894 are unresolved (docs/reference/
+#   splat.md "Reviewing a match").
 # - The constructor, CMenuValidation's constructor, GetInstructionTextRect (record 251:21) and SetInstructionText
 #   (record 477:9), which binaryen inlines into AddInputMenuField (3675), defined in api/gui/cinteractiveformbuilder.cpp
 #   (unit 120's fragment has why: with it in this file it scored 162 over 528 rows, CMenuValidation's constructor's
