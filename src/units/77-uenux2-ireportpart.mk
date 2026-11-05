@@ -12,15 +12,16 @@
 #   callers, the D2s 3607 and 3740 of comum::servico::CComparecimentoMesarioServico and CJustificadorServico, which no
 #   unit defines: the two classes here give the same shared body and the same thunks;
 # - CFormPart's constructor (fn 601), in api/gui/reports/cformpart.cpp;
-# - from std::make_shared, each class's control block: __shared_ptr_emplace<T>'s D2 and D0, from the roots (11950,
-#   11949; 11964, 11963; 11952, 11951; 11960, 11959), except CParteRdv's (11979, 11978), which its builder 5971's object
-#   (fragment 325's cgeradorresumozeresima.cpp) emits, CParteEleitores's (11228, 11227) and
+# - from std::make_shared, each class's control block: __shared_ptr_emplace<T>'s D2 and D0, from their builder 11946's
+#   object (fragment 325's cgeradorzeresima.cpp: 11950, 11949; 11964, 11963; 11952, 11951; 11960, 11959), except
+#   CParteRdv's (11979, 11978), which its builder 5971's object (fragment 325's cgeradorresumozeresima.cpp) emits,
+#   CParteEleitores's (11228, 11227) and
 #   CFormPart's (11962, 11961), which fragment 317's cgeradorrellistaeleitores.cpp's object emits first (it builds both,
-#   for 11908, and links ahead of cparteeleitores.cpp and the roots); and, from the roots, the final classes'
-#   __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv; its match line names CParteRdv's, which 5971's
-#   object emits first) and 11958 call the D2, and 5966 (one body for
-#   the two three-part classes) holds it: clang inlined it there, as the roots object shows. The classes that are not
-#   final use the virtual fn 411, already matched.
+#   for 11908, and links ahead of cparteeleitores.cpp and the roots); and, from 11946's builder's object, the final
+#   classes' __on_zero_shared: 5969 (one body for CParteCandidatos and CParteRdv; its match line names CParteRdv's,
+#   which 5971's object emits first) and 11958 call the D2, and 5966 (one body for the two three-part classes) holds it:
+#   clang inlined it there, as that object shows. The roots' builders of the four classes went with 11946. The classes
+#   that are not final use the virtual fn 411, already matched.
 # Imprime, the key function of every class, is written: api::CFormPart's (10889, a call of its form's slot 2) in
 # cformpart.cpp, which brings that class's vtable and destructors, CParteRdv's (11203) in cparterdv.cpp, CParteEleitores's
 # (11206) in cparteeleitores.cpp, and CParteCandidatos's (11215), CParteCandidatosMajoritarios's (11214),
@@ -98,11 +99,12 @@
 # binaryen inlined the comum constructors into their one caller each: fns 11946 and 5971 copy each pointer's two words
 # from a temporary in the frame, and 11908 opens a second stack frame (R10). A constructor defined in the class leaves
 # neither (a probe: clang stores into the object from i64 loads of the parameters, with no temporary and no A::A left),
-# and our out-of-line ones, called once from the roots, give those same shapes. So they are out of line and take their
-# pointers by value (R12). fn 11908 shows what CParteEleitores's does: std::make_shared<api::CFormPart> of its by-value
-# form.
+# and our out-of-line ones, called once from 11946's builder (fragment 325), give those same shapes. So they are out of
+# line and take their pointers by value (R12). fn 11908 shows what CParteEleitores's does:
+# std::make_shared<api::CFormPart> of its by-value form.
 #
-# Chosen. Every member name, every parameter name and order, the comum pointers' element type, api::IReportPart, and
+# Chosen. Every member name, every parameter name and order, the element type of the pointers 11946 hands no form
+# (cpartecandidatos.h: CParteCandidatos's last three, CParteCandidatosProporcionais's fourth), api::IReportPart, and
 # these paths: that cpartecandidatos.cpp holds CParteCandidatos and CParteCandidatosProporcionais too, because the
 # vtables interleave with the two records: Candidatos @1576388, Majoritarios @1576408, record :75 @1576428, Proporcionais
 # @1576444, Consultas @1576464, record :174 @1576484; cpartecandidatos.h; cparteeleitores.{h,cpp} and cparterdv.{h,cpp}

@@ -1,4 +1,4 @@
-# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 12 more, "Written since" below):
+# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and those "Written since", below):
 # vota::CInformacaoZeresimaTardia's destructors and StartState (target fns 2879, 11984, 11983); the abstract bases
 # vota::CGeraZeresimaBase and
 # vota::CGeraResumoZeresimaBase, their constructors (5965, 11945), their destructors (1720, 1952) and the body binaryen
@@ -11,12 +11,15 @@
 # (11923, 11922); vota::CConfirmaImpressaoZeresima's StartState (5958, one body with vota::CConfirmaRegerarZeresima's
 # slot 2), with the vota::CLogVota member it holds inlined, added to app/vota/log/clogvota.cpp (unit 119's file).
 # vota::CTelasVota (app/vota/eleitor/comum/ctelasvota.h, unit 110's) gains three getters for the members the
-# constructors copy (+212, +220, +228). The class heads say what each layout rests on;
-# 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp names every slot left and what it waits for.
-# vota::CInformacaoZeresimaTardia's constructor, GetInst and statics are written since (below).
+# constructors copy (+212, +220, +228). The class heads say what each layout rests on.
+# vota::CInformacaoZeresimaTardia's constructor, GetInst and statics are written since (below), and so is every slot:
+# the pending file went with vota::CGeraZeresimaBase::StartState (fn 11946), written in cgerazeresimabase.cpp.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
+# - vota::CGeraZeresimaBase::StartState (fn 11946) in cgerazeresimabase.cpp, over vota::GeraZeresima and the report it
+#   builds, in iniciovotacao/cgeradorzeresima.cpp (new: no target index, binaryen inlines both into 11946), and four
+#   forms and fn 11976 in cgeradorresumozeresima.cpp; fragment 325 holds the notes, the measurements and the choices.
 # - vota::CGeraResumoZeresimaBase::StartState (fn 11943) in cgeraresumozeresimabase.cpp, over two functions of
 #   cgeradorresumozeresima.cpp that binaryen inlines into it; fragment 325 holds its notes, as it holds those of that
 #   file. cgeraresumozeresimabase.cpp's object gets Boost's include path (below) for cconfiguracaoeleicao.h, as
@@ -155,11 +158,15 @@
 # The list also compiles unit 325's iniciovotacao/cgeradorresumozeresima.cpp (fns 3873 and 3872), right after
 # cinformacaozeresimatardia.cpp: the data's order, its records (@1543752, @1543768) between that file's and
 # CGeraZeresimaBase's vtable (@1544384). At fragment 325's own place the scores were the same and more of its band pairs
-# out of order; that fragment has the measurement.
+# out of order; that fragment has the measurement. And it compiles iniciovotacao/cgeradorzeresima.cpp (11946's
+# generator and builder) right after it, ahead of cgerazeresimabase.cpp: the place the data give the control blocks the
+# builder emits (@1544064 to @1544344, ahead of CGeraZeresimaBase's vtable), measured against the builder in
+# cgerazeresimabase.cpp in fragment 325.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.cpp \
     src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp \
+    src/app/vota/eleitor/iniciovotacao/cgeradorzeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cgerazeresimabase.cpp \
     src/app/vota/eleitor/iniciovotacao/cgeraresumozeresimabase.cpp \
     src/app/vota/eleitor/iniciovotacao/cgeraresumozeresima.cpp \
@@ -169,15 +176,11 @@ APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinfor
     src/app/vota/eleitor/iniciovotacao/cregeraresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cregerarzeresima.cpp
 UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS)
-# cconfirmaimpressaozeresima.cpp, cgeraresumozeresimabase.cpp and cgeradorresumozeresima.cpp include
-# app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include
-# path, not a flag of the code: unit 88 adds the same)
+# cconfirmaimpressaozeresima.cpp, cgeraresumozeresimabase.cpp, cgeradorresumozeresima.cpp and cgeradorzeresima.cpp
+# include app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an
+# include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cgeraresumozeresimabase.cpp.o: \
     UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp gives the vtables trapping
-# bodies, compiled with the unit's flags
-$(ROOT)/$(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o: $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorzeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)

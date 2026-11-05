@@ -11,6 +11,8 @@
 #include <utility>
 #include <vector>
 
+#include "api/gui/iform.h"
+#include "api/gui/ipaper.h"
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cpartidos.h"
@@ -22,9 +24,9 @@ namespace comum {
 void CParteCandidatos::Imprime() const
 {
     const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
-    m_cabecalho->Imprime();
+    m_cabecalho->Slot2();
     if (CargoSemCandidatos(cargo)) {
-        m_parte1->Imprime();
+        m_parte1->Slot2();
     } else if (cargo.IsMajoritario()) {
         m_parte2->Imprime();
     } else if (cargo.IsProporcional()) {
@@ -34,24 +36,25 @@ void CParteCandidatos::Imprime() const
     }
 }
 
-// (original lines 37-66: content not recovered)
+// (original lines 39-66: content not recovered)
 #line 67
 void CParteCandidatosMajoritarios::Imprime() const
 {
     const TCargoID cargo = CCargos::GetInst().GetCurrentCargoID();
     CCandidaturas& candidaturas = CCandidaturas::GetInst();
     const std::vector<TCandidatoID> candidatos = candidaturas.GetCandidatos(cargo);
-    m_cabecalho->Imprime();
+    m_cabecalho->Slot2();
     for (const TCandidatoID& candidato : candidatos) {
         if (candidaturas.Busca(cargo, candidato) == nullptr) {
             throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9081, std::format("Candidato não encontrado: {}/{}", cargo, candidato));
         }
-        m_candidato->Imprime();
+        m_candidato->Slot2();
     }
-    m_rodape->Imprime();
+    m_rodape->Slot2();
 }
 
-CParteCandidatos::CParteCandidatos(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> parte1,
+CParteCandidatos::CParteCandidatos(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                                   std::shared_ptr<api::IForm<api::IPaper>> parte1,
                                    std::shared_ptr<api::IReportPart> parte2, std::shared_ptr<api::IReportPart> parte3,
                                    std::shared_ptr<api::IReportPart> parte4)
     : m_cabecalho(std::move(cabecalho)),
@@ -62,18 +65,18 @@ CParteCandidatos::CParteCandidatos(std::shared_ptr<api::IReportPart> cabecalho, 
 {
 }
 
-CParteCandidatosMajoritarios::CParteCandidatosMajoritarios(std::shared_ptr<api::IReportPart> cabecalho,
-                                                           std::shared_ptr<api::IReportPart> candidato,
-                                                           std::shared_ptr<api::IReportPart> rodape)
+CParteCandidatosMajoritarios::CParteCandidatosMajoritarios(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                                                           std::shared_ptr<api::IForm<api::IPaper>> candidato,
+                                                           std::shared_ptr<api::IForm<api::IPaper>> rodape)
     : m_cabecalho(std::move(cabecalho)), m_candidato(std::move(candidato)), m_rodape(std::move(rodape))
 {
 }
 
 CParteCandidatosProporcionais::CParteCandidatosProporcionais(
-    std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> partido,
-    std::shared_ptr<api::IReportPart> cabecalhoCandidatos, std::shared_ptr<api::IReportPart> candidato,
-    std::shared_ptr<api::IReportPart> rodapePartido, std::shared_ptr<api::IReportPart> rodape,
-    std::shared_ptr<api::IReportPart> semCandidatos, std::function<bool()> filtro)
+    std::shared_ptr<api::IForm<api::IPaper>> cabecalho, std::shared_ptr<api::IForm<api::IPaper>> partido,
+    std::shared_ptr<api::IForm<api::IPaper>> cabecalhoCandidatos, std::shared_ptr<api::IReportPart> candidato,
+    std::shared_ptr<api::IForm<api::IPaper>> rodapePartido, std::shared_ptr<api::IForm<api::IPaper>> rodape,
+    std::shared_ptr<api::IForm<api::IPaper>> semCandidatos, std::function<bool()> filtro)
     : m_cabecalho(std::move(cabecalho)),
       m_partido(std::move(partido)),
       m_cabecalhoCandidatos(std::move(cabecalhoCandidatos)),
@@ -85,9 +88,9 @@ CParteCandidatosProporcionais::CParteCandidatosProporcionais(
 {
 }
 
-CParteCandidatosConsultas::CParteCandidatosConsultas(std::shared_ptr<api::IReportPart> cabecalho,
-                                                     std::shared_ptr<api::IReportPart> candidato,
-                                                     std::shared_ptr<api::IReportPart> rodape)
+CParteCandidatosConsultas::CParteCandidatosConsultas(std::shared_ptr<api::IForm<api::IPaper>> cabecalho,
+                                                     std::shared_ptr<api::IForm<api::IPaper>> candidato,
+                                                     std::shared_ptr<api::IForm<api::IPaper>> rodape)
     : m_cabecalho(std::move(cabecalho)), m_candidato(std::move(candidato)), m_rodape(std::move(rodape))
 {
 }
@@ -97,28 +100,28 @@ void CParteCandidatosProporcionais::Imprime() const
     const TCargoID cargo = CCargos::GetInst().GetCurrentCargoID();
     CPartidos& partidos = CPartidos::GetInst();
     CCandidaturas& candidaturas = CCandidaturas::GetInst();
-    m_cabecalho->Imprime();
+    m_cabecalho->Slot2();
     for (partidos.Reset(); !partidos.IsFim(); partidos.Next()) {
         if (!m_filtro()) {
             continue;
         }
-        m_partido->Imprime();
+        m_partido->Slot2();
         const std::vector<TCandidatoID> candidatos = candidaturas.GetCandidatosPartido(cargo, partidos.GetCurrent()->GetNumero());
         if (candidatos.empty()) {
-            m_semCandidatos->Imprime();
+            m_semCandidatos->Slot2();
         } else {
-            m_cabecalhoCandidatos->Imprime();
+            m_cabecalhoCandidatos->Slot2();
             for (const TCandidatoID candidato : candidatos) {
                 candidaturas.Localiza(cargo, candidato);
                 m_candidato->Imprime();
             }
         }
-        m_rodapePartido->Imprime();
+        m_rodapePartido->Slot2();
     }
-    m_rodape->Imprime();
+    m_rodape->Slot2();
 }
 
-// (original lines 149-164: content not recovered)
+// (original lines 150-164: content not recovered)
 #line 165
 void CParteCandidatosConsultas::Imprime() const
 {
@@ -126,14 +129,14 @@ void CParteCandidatosConsultas::Imprime() const
     CRespostas& respostas = CRespostas::GetInst();
     std::vector<TCandidatoID> numeros = respostas.GetNumeros(cargo);
     std::sort(numeros.begin(), numeros.end());
-    m_cabecalho->Imprime();
+    m_cabecalho->Slot2();
     for (const TCandidatoID& numero : numeros) {
         if (respostas.Busca(cargo, numero) == nullptr) {
             throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9083, std::format("Resposta não encontrada: {}/{}", cargo, numero));
         }
-        m_candidato->Imprime();
+        m_candidato->Slot2();
     }
-    m_rodape->Imprime();
+    m_rodape->Slot2();
 }
 
 } // namespace comum
