@@ -53,11 +53,11 @@
 #   [2 1 3 0] (measured on a probe link, every other row of 9770 operand-only).
 #
 # Measured on the whole link (pnpm wasm score), stand-ins and what each holds:
-# - urna_roots_coderenv calls 1532 once more (it took 9770's address until 2927 was in the link), for its direct target
-#   caller 11488, not in our link (11582 is, unit 122's, 6006, unit 293's merge of the two writers, 11587, unit 305's,
-#   11616 and 5366, unit 122's, and 11629, unit 200's): without that call, before 11582 and 6006 were in the link, no
-#   function of
-#   build/out/wasm-map/vota_web/names.tsv was encodeBER (inlined into 9770).
+# - urna_roots_coderenv called 1532 once more (it took 9770's address until 2927 was in the link), for its direct
+#   target caller 11488, until unit 13 wrote it (CRdvVota::Converte; 11582, unit 122's, 6006, unit 293's merge of the
+#   two writers, 11587, unit 305's, 11616 and 5366, unit 122's, and 11629, unit 200's, were in the link already): the
+#   call went with that landing, measured with steps 6 to 10. Without that call, before 11582 and 6006 were in the
+#   link, no function of build/out/wasm-map/vota_web/names.tsv was encodeBER (inlined into 9770).
 # - It called 3656 too, for its target callers 1681 and 5496, while 1681 was not in our link and 5496 was inlined into
 #   10949, its one caller there: without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
 #   inserted). Both are out of line now and call 3656: 5496 with its other caller, 5702 (fragment 335), in the link,

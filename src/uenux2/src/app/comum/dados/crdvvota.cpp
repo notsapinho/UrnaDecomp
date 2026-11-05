@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <string>
+#include <utility>
 
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "ecourna/api/pattern/singleton.hpp"
@@ -22,7 +23,7 @@ md::TQtdVoto CRdvVota::Candidato(md::TCargoID cargo, uedword numero, uebyte digi
     return m_votos.Candidato(cargo, numeroCandidato);
 }
 
-// (original lines 25-86: content not recovered)
+// (original lines 26-86: content not recovered)
 #line 87
 SINGLETON_IMPL_GET_INST(CRdvVota, s_mutex, s_instancia)
 
@@ -52,6 +53,28 @@ CRdv::TVotosCargo CRdvVota::GetVotos(md::TEleicaoID eleicao) const
         votos.emplace(info.cargo, votosCargo.GetVotos());
     }
     return votos;
+}
+
+// (original lines 120-227: content not recovered)
+#line 228
+std::vector<uebyte> CRdvVota::Converte() const
+{
+    return asn::Codifica(m_conversor, m_votos);
+}
+
+void CRdvVota::Desconverte(const std::vector<uebyte>& dados)
+{
+    md::CVotosEleicoesVota votos = asn::Decodifica(m_conversor, dados);
+    if (!m_votos.Compativel(votos)) {
+        throw api::CUeRdvError(api::EUE_RDV_CONTEUDO_INCOMPATIVEL, "Conteudo do arquivo eh incompatível com objeto");
+    }
+    std::swap(m_votos, votos);
+}
+
+bool CRdvVota::Confere(const std::vector<uebyte>& dados) const
+{
+    const md::CVotosEleicoesVota votos = asn::Decodifica(m_conversor, dados);
+    return m_votos.Compativel(votos) && m_votos == votos;
 }
 
 CRdvVota::~CRdvVota() = default;

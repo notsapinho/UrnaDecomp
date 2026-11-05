@@ -6,9 +6,12 @@
 # CFileASN::CodeObject (the "CodeObject de " writer 11587 holds behind a frame of its own), and ecourna's
 # api/io/cfile.hpp why CFile::Write takes a std::vector<uebyte>.
 #
-# Matched with it: api::CFileASN::DecodeObject<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto> (fn 5825), this
-# object's instance (its records lie in this object's data in the target, after CGravadorRDV's vtable; its other target
-# caller, 5680, is not written, and the roots stand in for it).
+# Matched with it: api::CFileASN::DecodeObject<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto> (fn 5825). The
+# target's copy is this object's instance (its records lie in this object's data in the target, after CGravadorRDV's
+# vtable). Its other target caller, 5680 (comum::asn::Decodifica), is unit 13's, in
+# app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.cpp, whose object links ahead of this one, so our link keeps
+# that object's copy, compiled at the tree's flags without strict aliasing as this object is (only the include paths
+# differ), and 5825 matches from it; the roots stand-in for 5680 went with it, and with it this unit's -roots.cpp.
 #
 # Measured in the whole link before step 8 (pnpm wasm score against the target):
 # - 11587: 111 over 1155 rows, operand-only, every operand a call, a data address, the packed format string of
@@ -26,7 +29,3 @@ UENUX2_SRCS += $(CGRAVADORRDV_305_SRCS)
 # generated ASN.1 module by its bare name; the generic uenux2 rule does not depend on the generated modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorrdv.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorrdv.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-# 305-uenux2-cgravadorrdv-roots.cpp stands in for the callers not written; it compiles with the tree's flags
-$(ROOT)/$(APP)/305-uenux2-cgravadorrdv-roots.o: $(ROOT)/src/units/305-uenux2-cgravadorrdv-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/305-uenux2-cgravadorrdv.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -Isrc/asn1/modules -c src/units/305-uenux2-cgravadorrdv-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/305-uenux2-cgravadorrdv-roots.o

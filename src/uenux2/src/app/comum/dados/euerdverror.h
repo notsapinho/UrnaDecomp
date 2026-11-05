@@ -8,7 +8,9 @@ namespace api {
 // md::CVotosEleicoesVota's constructors, fns 2256, 5643 and 5640): no evidence names them. So are those of 4662, 4669,
 // 4672 to 4677 and 4735, from the messages of the throws fn 4454 holds (CVotos::Insere, CVotosCargos::InsereCedula and
 // ConfereCedula, CVotosEleicoesVota::RecebeCedula).
+// 4660's name is chosen from the message of comum::CRdvVota::Desconverte's throw (fn 11487, record crdvvota.cpp:237).
 enum EUeRdvError {
+    EUE_RDV_CONTEUDO_INCOMPATIVEL = 4660,
     EUE_RDV_VOTO_INVALIDO = 4661,
     EUE_RDV_POSICAO_FORA_DO_LIMITE = 4662,
     EUE_RDV_MAPA_VOTOS_VAZIO = 4666,

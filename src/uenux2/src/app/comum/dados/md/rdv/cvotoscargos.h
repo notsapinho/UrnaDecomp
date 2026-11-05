@@ -27,6 +27,9 @@ public:
         uebyte numeroDigitos;
         uebyte quantidadeEscolhas;
         bool operator<(const SCargoInfo& outro) const { return cargo < outro.cargo; }
+        // The id alone, as operator<: comum::CRdvVota::Confere (fn 11486) compares the maps' keys by the byte at
+        // node+16 and nothing else of the key. That it is an operator== of the struct is chosen.
+        bool operator==(const SCargoInfo& outro) const { return cargo == outro.cargo; }
     };
     using TMapa = std::map<SCargoInfo, CVotos>;
 
@@ -56,6 +59,8 @@ public:
     // Out of line: md::CVotosEleicoesVota::Compativel (fn 5638) holds it inlined by binaryen, its result tested again.
     // The name is chosen.
     bool Compativel(const CVotosCargos& outro) const;
+    // comum::CRdvVota::Confere (fn 11486) holds it inlined: the map's size, then each cargo's id and votes.
+    bool operator==(const CVotosCargos& outro) const = default;
     // Records cvotoscargos.cpp:199 and :248 to :295; fn 4454 holds both, each behind a prologue of its own (48 and 208
     // bytes). ConfereCedula's being private is chosen.
     void InsereCedula(const CRdvPosicionador& posicionador, const CCedula& cedula);
