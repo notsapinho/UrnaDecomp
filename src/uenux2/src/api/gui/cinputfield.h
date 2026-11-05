@@ -5,8 +5,8 @@
 // IInputField<IScreen>, and the record gives the parameter's name, MASK; the parameter's being a type is what the
 // record's `[MASK = api::CFramedText]` shows. The vtable is @1538760 and the mask lies at +64: fns 12402 and 12405 pass
 // this + 64 to CFramedText's Move and Rect, and fn 2383 builds it there after IInputField's constructor (a 92-byte
-// object). That constructor's parameters are read from fn 2383, their names are chosen, and no function of this tree's
-// link holds it, as IInputField's cannot be reached.
+// object). That constructor's parameters are read from fn 2383, their names are chosen, and 2383
+// (vota::AdicionaCampoNumerico, unit 110's ctelasvota.cpp, a match) holds it inlined, as the target's does.
 //
 // Draw (fn 12438) is written, and so are Rect and Move. GetTypeName (fn 12411) is a thunk of binaryen's fn 2904.
 // SetLength (fn 12387) is defined in the class: its record's line 148 is the instance() call in its body, and the

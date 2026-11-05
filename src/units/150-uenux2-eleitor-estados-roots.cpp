@@ -24,7 +24,8 @@
 // stayed out of line, and it and 2079 scored as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
 //
 // vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
-// (vota::CMenuFiltrarCandidatosPorNumero's slots, pending in unit 104): CargoVisualizado stands for them with two calls.
+// (vota::CMenuFiltrarCandidatosPorNumero's slots, unit 104's): CargoVisualizado stands for 11891, pending, with one
+// call (11892 is in the link).
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -68,10 +69,10 @@ __attribute__((noinline)) int TemFala()
     return w150_tem_fala(w150_info()) + 17;
 }
 
-// stands for fns 11891 and 11892
+// stands for fn 11891 (11892 is in the link)
 __attribute__((noinline)) int CargoVisualizado(const void* estado, const void* outro)
 {
-    return w150_cargo(estado) - w150_cargo(outro);
+    return w150_cargo(estado) - static_cast<const char*>(outro)[3];
 }
 
 struct SEleitorEstadosRoots {

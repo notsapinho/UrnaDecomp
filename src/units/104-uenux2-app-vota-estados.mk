@@ -111,6 +111,20 @@
 # instance (ctelasvota.h has the measurement against a const member). Before step 8 it scored 2 over 83 rows, both
 # operand-only (the two calls). Its trap left 104-uenux2-app-vota-estados-pending.cpp, with the include it used.
 #
+# vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892, slot 2, no record) matches, written in
+# cmenufiltrarcandidatospornumero.cpp after the statics, where use band 1 puts it (11894, 11893 and 11892 at ld_index
+# 2980, 2981 and 2982 in names.tsv at this landing). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
+# vota::TelaFiltragemCandidatosPorNumero returns for CVisualizarCandidatos::GetInst().GetCargo() (fns 1279, 5951, called
+# before the screen's prologue), the screen inlined by binaryen behind a 240-byte prologue (ctelasvota.h has its
+# evidence), then calls the form's slot 2 and stores `this` at +4, as CMaisInformacoes::StartState does. The screen
+# calls vota::AdicionaCampoNumerico (fn 2383, ctelasvota.cpp's), which matches with it; unit 110's fragment has what
+# fixes 2383's form, both places and why this file's object links after ctelasvota.cpp.o (it is compiled from unit 110's
+# list), and unit 373's roots stand in for 2383's other target callers. Measured with pnpm wasm score in the whole link
+# before step 8: 53 over 746 rows, every row a call or a data address. Chosen, as for the class's siblings: the
+# assignment's spelling and the member's name. Its trap left 104-uenux2-app-vota-estados-pending.cpp.
+# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput (fn 11891) is still a trap there: the -pending.cpp header says
+# what its body holds and what it waits for.
+#
 # Two slots written since, each measured in the whole link with pnpm wasm score against
 # build/out/wasm-map/vota_web/names.tsv:
 # - vota::CMaisInformacoes::ProcessInput (fn 11896) matches. Its form's pointee is the records' CInteractiveForm<IScreen,
@@ -512,6 +526,8 @@
 # name from a hand line on its own records (unit 84's fragment): without it 11881 and 12894 are unresolved self-voted.
 # The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp.
 # The two files sit in the list in name order beside the other auxiliares/ files, a choice not measured.
+# cmenufiltrarcandidatospornumero.cpp, this unit's, is compiled from unit 110's list after ctelasvota.cpp (unit 110's
+# fragment has the measurement).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -525,7 +541,6 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp \

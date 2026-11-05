@@ -14,10 +14,13 @@
 #include "api/gui/capplication.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cformbuilder.h"
+#include "api/gui/cframedtext.h"
 #include "api/gui/cimagefield.h"
 #include "api/gui/cimagefieldupdate.h"
+#include "api/gui/cinputfield.h"
 #include "api/gui/cinputmenufield.h"
 #include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cnumbervalidation.h"
 #include "api/gui/cprogressbar.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextfield.h"
@@ -45,7 +48,7 @@
 
 namespace vota {
 
-// (original lines 48-290: content not recovered)
+// (original lines 51-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -78,8 +81,32 @@ api::SRect adicionaFotoEmoldurada(api::CFormBuilder& builder, const api::TPositi
 
 } // namespace
 
-// (original lines 494-800: content not recovered)
-#line 801
+// (original lines 494-776: content not recovered)
+#line 777
+namespace {
+
+std::shared_ptr<api::IInputField<api::IScreen>> AdicionaCampo(api::CFormBuilder& builder,
+    const std::shared_ptr<api::IInputValidation>& validacao, const size_t tamanho, const bool confirmaAoCompletar,
+    const bool corrigeLimpa, const bool aceitaConfirma, const bool aceitaBranco, const bool corrigeSai,
+    const api::SPoint& posicao, const api::SFont& fonte, const api::ETextAlignment alinhamento)
+{
+    std::shared_ptr<api::IInputField<api::IScreen>> campo(new api::CInputField<api::CFramedText>(validacao, tamanho,
+        confirmaAoCompletar, corrigeLimpa, aceitaConfirma, aceitaBranco, corrigeSai, posicao, fonte, alinhamento));
+    builder.AddField(campo);
+    return campo;
+}
+
+} // namespace
+
+std::shared_ptr<api::IInputField<api::IScreen>> AdicionaCampoNumerico(api::CFormBuilder& builder, const size_t tamanho,
+    const bool confirmaAoCompletar, const bool corrigeLimpa, const bool aceitaConfirma, const bool aceitaBranco,
+    const bool corrigeSai, const api::SPoint& posicao, const api::SFont& fonte, const api::ETextAlignment alinhamento)
+{
+    return AdicionaCampo(builder, std::shared_ptr<api::IInputValidation>(new api::CNumberValidation()), tamanho,
+                         confirmaAoCompletar, corrigeLimpa, aceitaConfirma, aceitaBranco, corrigeSai, posicao, fonte,
+                         alinhamento);
+}
+
 std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& cargo, const std::string& erro)
 {
     return tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro;
@@ -893,6 +920,24 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaErroTesteTeclado()
     builder.AddTextField(TEXTO_DEVIDAS_PROVIDENCIAS, api::SPoint(320, 260), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
                          static_cast<api::TColor>(2), static_cast<api::TColor>(1));
     return GetFormulario(builder, "telaErroTesteTeclado");
+}
+
+CFormInterativoTelaVota TelaFiltragemCandidatosPorNumero(const comum::TCargoID idCargo)
+{
+    const comum::md::CCargo cargo = comum::CConfiguracaoEleicao::GetInst().GetCargo(idCargo);
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Visualização de candidatos", api::SPoint(320, 40), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Filtragem por número do candidato", api::SPoint(320, 75), FONTE_AGUARDE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Número do " + cargo.GetNome(comum::md::CSexo::SEXO_MASCULINO) + ": ", api::SPoint(320, 215),
+                         FONTE_AGUARDE, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaCampoNumerico(builder, cargo.GetNumeroDigitos(), true, false, false, true, false, api::SPoint(320, 265),
+                          FONTE_TITULO, api::ALINHAMENTO_CENTRO);
+    builder.AddLabeledInputControl({{'C', "Confirmar seleção"}, {'D', "Retornar"}}, api::CApplication::s_areaTela,
+                                   false);
+    return GetFormularioInterativo(builder, "telaFiltragemCandidatosPorNumero");
 }
 
 std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMenuVisualizacaoCandidatos(
