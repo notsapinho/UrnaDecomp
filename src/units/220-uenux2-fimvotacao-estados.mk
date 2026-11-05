@@ -63,7 +63,8 @@
 # shifted by 32 over its address) with a string's argument code (13), where a std::string of 20 characters would be
 # built on the heap first (a reading of libc++'s short strings, not measured). The roots object compiles at app/vota/'s
 # flags; the target keeps 11260's copy from cgeradorbu.cpp's object (comum, no strict aliasing: its record @1575504 lies
-# in that object's run), a flag set not measured for it.
+# in that object's run). Measured on a whole link with the roots object built without strict aliasing: 11259, 11260,
+# 11974 and 5967 match either way, and 5980 alone leaves match (its callers 12039 and 12110 are app/vota/ code).
 # Chosen for these: the names ImprimeQuantidade, HeaderNominais, IncluiDadosFinaisCV, IncluiResultado and IsUltimo, the
 # template members' lines but the records' (the helper, CodVerificador and HeaderNominais after TrailerMajoritario), the
 # locals' names.

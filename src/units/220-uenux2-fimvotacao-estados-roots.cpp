@@ -5,9 +5,10 @@
 // callers it stands for, and goes when they are in splat/matched.txt or written in the link. The GetInst and operator-
 // callees are declared through asm labels; the others through their headers, since the stand-ins for fn 12110 and fn
 // 12039 instantiate code of those headers (CDataSourcesRelatorio's members, std::vector's destruction): this file
-// compiles at the flags of 12110's directory, app/vota/ (strict aliasing, the fragment's rule), the TSE flags of the
-// objects whose copies the target keeps (cgeradorresumozeresima.cpp's for CodVerificador, fn 11974, and its helper, fn
-// 5967; cmostraqrcodecertificado.cpp's for the vector's destruction, fn 5980).
+// compiles at the flags of 12110's directory, app/vota/ (strict aliasing, the fragment's rule), those of
+// cgeradorresumozeresima.cpp, whose copies of CodVerificador (fn 11974) and its helper (fn 5967) the target keeps,
+// and of cmostraqrcodecertificado.cpp, whose copy of the vector's destruction (fn 5980) it keeps by a reading of use
+// band 2; 11260's kept copy is cgeradorbu.cpp's, built without strict aliasing (the fragment has the measurement).
 #include <string>
 
 #include "api/gui/cpaperformbuilder.h"

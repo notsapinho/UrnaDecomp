@@ -105,7 +105,10 @@
 #   the RDV's entity (fn 5825), cconversorregistrodigitalvoto.cpp.o's copy now (unit 305's fragment says why). That
 #   object then holds 5680 before 5825 (names.tsv's ld_index), a pair the other way round from use band 2's: the
 #   target's 5825 sits among app/comum/gravadores/ objects' functions there (5823, 5824), as cgravadorrdv.cpp.o's
-#   copy, which our link drops, so the pair is two objects' in the target and says nothing of an order here.
+#   copy, which our link drops, so the pair is two objects' in the target and says nothing of an order here. The new
+#   object and cgravadorrdv.cpp.o are a pair our link holds against the target's data (codegen.md C4): cgravadorrdv's
+#   records of 5825 and 11587 (cfileasn.h's, @1556960 and @1557060) precede the new object's (@1571500), and it links
+#   after unit 13's list, as it does after cconversoreleicoesvota.cpp.o; so 5825's copy is the new object's.
 #   Chosen: 4660's enumerator name (euerdverror.h), the slots' lines but the throw's, the local's name and its spelled
 #   type, and the three equality operators' being defaulted members; SCargoInfo's comparing the id alone is evidence,
 #   its being the struct's operator== a choice (cvotoscargos.h).

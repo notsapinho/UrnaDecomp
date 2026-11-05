@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 28 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 29 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
@@ -31,7 +31,9 @@
 # LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o) and the five pointer blocks of
 # comum::CItemMenu over the vota menu items (vota::CMenuMaisInformacoesVota's constructor, which fn 6599 holds, in
 # app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, unit 110's list, from whose object 12209, 12202, 12194, 12183,
-# 12172, 12162 and the four's slot 2, 2932, match). Each block below: the
+# 12172, 12162 and the four's slot 2, 2932, match) and api::CDataImage<std::__bind<...>>'s over the photo reader of
+# vota::CTelasVota::CriaTelaVisualizacaoCandidato (6561, unit 110's ctelasvota.cpp, from which 12530 and 12529 match,
+# below). Each block below: the
 # T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
 # shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):

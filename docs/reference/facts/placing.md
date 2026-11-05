@@ -339,10 +339,10 @@ On `main` the file is stub-only, and each of its three recorded functions (6718,
 function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/dados/cfotos.cpp` is 32 lines, its records of 3755 are lines 39 and 51, and f3755's stub is
-line 30 (`LC_ALL=C /usr/bin/grep -n '^// f3755 ' <file>`; bbf27ac1); `stubs.py --check` passes. A function in a slot of
-a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
-vtable holds. A record inside a class body (a template
+At bbf27ac1, `src/uenux2/src/app/comum/dados/cfotos.cpp` was 32 lines, its records of 3755 lines 39 and 51, and f3755's
+stub line 30 (`LC_ALL=C /usr/bin/grep -n '^// f3755 ' <file>`; 3755 is written there since); `stubs.py --check`
+passed. A function in a slot of a vtable our link holds has no stub at all (how-to step 9), so such an example holds
+only for a function no linked vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
 though a record names the function: `stubs.py` takes only blank lines outside every function and class
 (`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).

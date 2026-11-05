@@ -485,16 +485,16 @@
 #   {20, 0}, {25, 0}, {20, 1} and {13, 0} at 3170 to 3173; FONTE_TITULO and FONTE_VERSAO take lines 3002 and 3003 (every
 #   one of these lines chosen). Use band 2 is the evidence for above: 6587 (TelaPorFavorAguarde), 6583, 6581, 6580 and
 #   6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix (names.tsv's
-#   ld_index 2785, 2788, 2794, 2797 and 2800, then 6569's 2806, 6561's 2808, 6557's 2813 and the destructor's 2814).
-# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA,
-#   FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and FONTE_SUPLENTE (build/out/wasm-map/vota_web/vota_web_wasm.map,
-#   0x6d948 to 0x6d970 and 0x6dd94), the target as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992, {15, 0} @475008,
-#   {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600: CriaTelaVisualizacaoCandidato reads {20, 1} above
-#   AdicionaLocal and TelaTextoConfirmaCorrige, the first readers of {15, 0} and {35, 0}, so two pairs more read
-#   inverted. What gives the target's order there is not read. The key vector went the other way: TelaTesteTeclado,
-#   which reads it, is above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO (0x1b83d8) before
-#   CTelasVota::s_mutex (0x1b83e4) and s_instancia (0x1b83fc), the target's order
-#   (src/units/217-uenux2-ctesteteclado.mk).
+#   ld_index 2800, 2803, 2809, 2812 and 2815, then 6569's 2821, 6561's 2823, 6557's 2828 and the destructor's 2829).
+# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE,
+#   FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA, FONTE_TEXTO_CONFIRMA_CORRIGE and FONTE_SUPLENTE
+#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6ef8c to 0x6efb4 and 0x6f3d4), the target as {30, 0} @474888,
+#   {20, 0} @474896, {25, 0} @474992, {15, 0} @475008, {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600:
+#   CriaTelaVisualizacaoCandidato reads {20, 1} above TelaTextoConfirmaCorrige, the first reader of {35, 0}, so one
+#   pair more reads inverted (FONTE_VERSAO's two are CriaTelaMaisInformacoes', below). What gives the target's order
+#   there is not read. The key vector went the other way: TelaTesteTeclado, which reads it, is above GetInst's line
+#   now, and the link holds TECLAS_TESTE_TECLADO (0x1b9f0c) before CTelasVota::s_mutex (0x1b9f18) and s_instancia
+#   (0x1b9f30), the target's order (src/units/217-uenux2-ctesteteclado.mk).
 # - Use band 1. Its members 12268 to 12276 (the std::function over the suplentes' lambda) and 12520 to 12530 (6561's
 #   CDataImage and its control block) link before 17 functions of this object that the target's index puts before them:
 #   CInputMenuField::AddItem's std::function (12277 to 12285) and the control blocks of CTextFieldMultiLine (12298,
@@ -524,7 +524,7 @@
 # - The libc++ copies cpe.cpp.o brings with it: CPleito's implicit copy constructor (1281), the CEleicaoPE vector's
 #   __uninitialized_allocator_copy (1953), the version map's hinted insert (3870) and its __find_equal (3869), all four
 #   matched (7, 4, 2 and 0 rows, all operand-only).
-#   Unit 280's roots read 1281's result for its callers that read it (5967 and 7787; 1543 and 11902, which read it too,
+#   Unit 280's roots read 1281's result for its callers that read it (7787; 1543, 5967 and 11902, which read it too,
 #   are in the link) and give 3869 a second
 #   caller for 5808 (11349, unit 140's, is in the link). DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787,
 #   now in the link.
@@ -564,8 +564,8 @@
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
 # - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
 #   operand rows only in the whole link (9 over 65, pnpm wasm score), named by its callers' calls (7481 and 11797) and
-#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2813 between
-#   6579's 2800 and the destructor's 2814 (2806 and 2807 when it landed); the five lines it adds take five of the blank
+#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2828 between
+#   6579's 2815 and the destructor's 2829 (2806 and 2807 when it landed); the five lines it adds take five of the blank
 #   lines above record 3530.
 # - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
 #   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
@@ -594,7 +594,7 @@
 # the class):
 # - 6599's file: use band 2 puts it among this object's functions (ledger/tu-clusters.tsv stretches 902 to 906: 6587
 #   below it, 6601 to 6608 with records 1049 to 1126 above it). Band 2 runs 6599 ahead of 6587, so it is defined above
-#   TelaNeutra: at line 3000, a choice inside the record-less lines 1127 to 3340 that keeps records 1741 and 2382 blank
+#   TelaNeutra: at line 3000, a choice inside the record-less lines 1127 to 3167 that keeps records 1741 and 2382 blank
 #   and leaves room above TelaNeutra for 6595, 6594 and 6592, which band 2 puts between 6599 and 6587.
 # - The constructor's TU, measured in the whole link (pnpm wasm score before step 8): in ctelasvota.cpp (clang keeps it
 #   a call: llvm-objdump -dr), 6599 drops its returned `this` and folds the menu's frame address into nine loads and
@@ -617,9 +617,10 @@
 #   FONTE_VERSAO's two pairs (below).
 # - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), are defined right above it, their old
 #   lines left blank. 6599 reads FONTE_VERSAO before AdicionaTelaAguarde reads FONTE_AGUARDE, so the object holds
-#   FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE and
-#   FONTE_TECLA in that order (wasm-objdump -x: segments 4, 9, 14, 45, 59 and 63), FONTE_VERSAO's two pairs against the
-#   target's order. The target's readers of @474896 (6660, 6671, records 850 and 887, and 3064, record 1585) and of
+#   FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA, FONTE_TEXTO_CONFIRMA_CORRIGE
+#   and FONTE_SUPLENTE in that order (wasm-objdump -x: segments 4, 9, 14, 32, 35, 76 and 289), FONTE_VERSAO's two pairs
+#   against the target's order (FONTE_TECLA ahead of FONTE_TEXTO_CONFIRMA_CORRIGE is CriaTelaVisualizacaoCandidato's).
+#   The target's readers of @474896 (6660, 6671, records 850 and 887, and 3064, record 1585) and of
 #   @474992 (6608, 6605, 6603, records 1049 to 1101) are defined above 6599's lines and not written: they can give the
 #   target's order (`/usr/bin/grep -rlE 'i32\.const 474992($|[^0-9])' build/out/splat/pieces/asm` lists the readers).
 # - 6599 differs: 306 over 2151 rows (278 operand-only replaced, 14 inserted, 14 deleted), every row a local's number, a

@@ -80,8 +80,9 @@
 # Not written:
 # - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.
-# Written elsewhere: 5680, which holds Desconverte<EntidadeRegistroDigitalVoto, ...> so after its call of fn 5825, is
-# comum::asn::Decodifica, and 11488 (comum::CRdvVota::Converte) holds that entity's Converte so: unit 13's fragment.
+# Written elsewhere: 5680, which holds Desconverte<EntidadeRegistroDigitalVoto, ...> so after its call of fn 5825, as
+# comum::asn::Decodifica (a chosen name), and 11488 (comum::CRdvVota::Converte), which holds that entity's Converte so:
+# unit 13's fragment.
 # CConversorHorarioVerao (11385, 11384), whose two slots were this unit's -pending.cpp, and CConversorCabecalhoEntidade
 # (11589, 11588) and CConversorDadoCorrespondencia (11399, 11400) are fragment 172's, matched; the -pending.cpp went.
 #

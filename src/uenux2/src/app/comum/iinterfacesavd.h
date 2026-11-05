@@ -100,9 +100,10 @@ struct ueRespostaSavd {
 // AssinarArquivo (fn 5891), ValidarPacote and EnviarAcaoHSM (no target functions: clang inlines ValidarPacote into
 // comum::ValidarUE, fn 5890, and binaryen into CPacoteArquivos::Validar, which fn 4625 holds; binaryen inlines
 // EnviarAcaoHSM into comum::EnviarAcaoHSM, fn 5889) check their arguments, build a request and store the failure's text
-// at +4. ValidarPacote takes the command as a ueint32 (4625 loads CPacoteArquivos's +28 whole and stores its low half)
-// and assigns the request's application before its command (4625 stores the command first), both measured; its key is
-// a uedword as VerificarArquivo's, a choice (the enum with an unsigned type gives the same objects: unit 95's
+// at +4. ValidarPacote takes the command in 32 bits (4625 loads CPacoteArquivos's +28 whole and stores its low half)
+// and assigns the request's application before its command (4625 stores the command first), both measured; that the
+// command is a signed ueint32 is a choice, and so is the key's uedword, as VerificarArquivo's (the enum with an
+// unsigned type gives the same objects: unit 95's
 // fragment). VerificarArquivo (fn 5892) does the same for a package and a file, over the request TLV of both, with the
 // command 0x1001; its name is chosen from the text it stores ("Argumento inválido assinar verificar arquivo."), and its
 // key is a uedword: fn 5892 or-s it with the ESavdAplic and compares unsigned, and of the two readings ESavdAplic's

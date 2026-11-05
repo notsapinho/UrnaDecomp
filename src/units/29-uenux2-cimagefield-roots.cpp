@@ -5,8 +5,9 @@
 // with different bodies (wasm-opt would merge identical ones and inline the ctor into the survivor) and different
 // anchors (so binaryen's dead-argument elimination folds no parameter), and are address-taken from a static
 // constructor. As unit 14's roots do, this TU includes the class header for make_shared: the control block it
-// instantiates, __shared_ptr_emplace<api::CImageField> (D0 12639 and D2 12640 in the target), comes from cformbuilder.cpp.o
-// now, ahead of this object, since 5547 instantiates it. The ctor's
+// instantiates, __shared_ptr_emplace<api::CImageField> (D0 12639 and D2 12640 in the target), comes from ctelasvota.cpp.o
+// now, the first object on the link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too).
+// The ctor's
 // destructors (fns 11099 and 11098) have no direct caller in the target: they are reached through the vtable the ctor
 // stores. Compiled with APP_CXXFLAGS, like the other stand-ins.
 #include <memory>

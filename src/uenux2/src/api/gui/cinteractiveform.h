@@ -18,7 +18,7 @@
 //   body, fn 425, takes as one word).
 // - WaitAndRead (line 62, its record's): vota::CVisualizarCandidatos::StartState (fn 11876) holds it inlined, the
 //   keyboard's instance kept, its slot 3 (HasKey) asked until it says yes, with api::CSystem::Dorme(10) between, then
-//   Read's code. Its lines but 62 and Slot2's, which moved down, are chosen.
+//   Read's code. WaitAndRead's lines but 62, and Slot2's (moved down), are chosen.
 // - GetEntradas: vota::CMostraQRCodeBU::ProcessInput and CMostraQRCodeCertificado::ProcessInput (fns 12051, 12038) read
 //   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name, its const reference
 //   result and its lines (original 116-119) are chosen.

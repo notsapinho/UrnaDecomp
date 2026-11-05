@@ -1,7 +1,7 @@
 // Pending of unit 220: the slots of its states not reconstructed, with trapping bodies so that the vtables link.
 // - vota::CGeraBU::StartState (slot 2, target fn 12110, 17349 B, record cgerabu.cpp:54). Its members 2248, 5634, 5635,
 //   5967, 5980, 11259, 11260 and 11974 are written (the fragment). It waits for fn 11975, whose table slot (1632) it
-//   hands to AddTextField and which is in flight elsewhere; for names of fns 5604 and 5622, which it and fn 1956 call
+//   hands to AddTextField and which is not written; for names of fns 5604 and 5622, which it and fn 1956 call
 //   and no body of ours re-points to; and for the code it holds of other objects (the records' files): cgeradorbu.cpp's
 //   (CriaQRCode, :124, DefineTipo, :161, the internal comum::CriaHeader, whose lambda's __func slots 11248 to 11252
 //   wait with it, and the generator's constructors), ccalculacv.cpp's (CCalculaCV's constructor, :58 to :74, and the

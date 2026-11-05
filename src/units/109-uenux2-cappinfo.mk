@@ -78,7 +78,7 @@
 #
 # 1903's singleton is unit 307's (vota::CParametrosImagemDigital, a chosen class). CJustificador's (1391, 2810, 11476,
 # 11477) is unit 113's, with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment).
-# 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp. 436, which calls
+# 5635 is written in md/estadoaplicacao/cestadogeral.cpp and matches (unit 215). 436, which calls
 # CPath::GetPathTrab (358), is unit 190's and matches.
 #
 # comum::CFotos::GetImagem (fn 3755, 4858 B), written and matched: the photo's bytes under the name
@@ -93,7 +93,7 @@
 #   inlined it there: the roots stand in for its other caller, 12641 (CDataImage<CCandidaturasDSFoto>'s, not written),
 #   which calls it twice, and it stays out of line.
 # - Use band 3 runs 3756 then 3755 (names.tsv's ld_index 2609 and 2617), the target's order, so GetImagem follows the
-#   constructor; its line after GetFotoPara is chosen. In band 4, 2858 (std::make_format_args over two strings, which
+#   constructor; its line after GetFotoPara is chosen. In band 4, 2858 (std::make_format_args over three strings, which
 #   csystem.cpp's 5455 calls too) links from this object now, after 2819 and 2818 (2613 against 2606 and 2610) where the
 #   target's index puts it before them: two pairs read inverted. Not measured: what puts it first in the target.
 #
