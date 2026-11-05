@@ -11035,7 +11035,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11169	_ZN5comum4impl12CValidaMidia23ContemArquivosResultadoEv	12138	symbol	match	readings: address string	388	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11170	_ZN5comum4impl12CValidaMidia15ContemResultadoEjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEjjjc	12139	symbol	match	readings: table slot,address string	887	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11171	_ZN5comum4impl12CValidaMidia30ContemApenasArquivosPermitidosEv	12140	symbol	match	-	259	addr	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
-11172	_ZN5comum4impl12CValidaMidia6ValidaENS_18EAplicativosDeUrnaENS_10EUrnaTurnoE	12141	symbol	differs	+0x8da target +0x8d9 local.tee 2 | ours +0x8d9 local.tee 0	2432	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
+11172	_ZN5comum4impl12CValidaMidia6ValidaENS_18EAplicativosDeUrnaENS_10EUrnaTurnoE	12141	symbol	match	readings: address string,table slot,address srcloc,address symbol	2432	none	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11173	_ZN5comum4impl12CValidaMidia8EhValidaENS_18EAplicativosDeUrnaENS_10EUrnaTurnoE	12142	symbol	match	-	47	byte	comum	1	app/uenux2/src/app/comum/validamidia/cvalidamidia.cpp.o
 11174	__cxx_global_array_dtor.7@app/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp.o	12033	symbol	match	readings: address symbol	10	addr	app	2	app/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp.o
 11175	__cxx_global_array_dtor@app/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp.o	12034	symbol	match	readings: address symbol	37	addr	app	1	app/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp.o
