@@ -551,9 +551,40 @@
 # structured binding's names (their lengths put the record's call at column 31), the local bool, the case spelling,
 # SetCargo, and the lines (StartState below the statics, the record's line fixing the switch's).
 # The roots' call of CMenuFiltrarCandidatosPorNumero::GetInst (5954) went: its target callers, 11881 and 11888, are in
-# the link. PorPartido's StartState (11884) is a trap in 104-uenux2-app-vota-estados-pending.cpp.
-# cmenufiltrarcandidatosporpartido.cpp sits in the list in name order beside the other auxiliares/ files, a choice not
-# measured; cmenufiltrarcandidatosporcargo.cpp is compiled from unit 110's list (above).
+# the link.
+#
+# vota::CMenuFiltrarCandidatosPorPartido::StartState (11884, slot 2, record cmenufiltrarcandidatosporpartido.cpp:39:31,
+# the CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and matches, with
+# std::any's handler for unsigned short (12888, slot 1109, which 11884 alone stores; ctelasvota.cpp.o's instance, named
+# by pair-addr), whose typeinfo id (`__unique_typeinfo<unsigned short>::__id`, .bss 481424, named by 12888's vote)
+# 11884's std::any_cast and 12888 alone address. It holds, in this order: CVisualizarCandidatos::GetInst() (1279) and
+# its GetPartidos (new, out of line in cvisualizarcandidatos.cpp and inlined by binaryen: it has no frame, and stores
+# the set at +0 and +4 of a local that holds its address, docs/reference/facts/reading.md R10), which calls
+# CarregaCandidaturas (5953) and fills a std::set<comum::TPartidoID>, the party read once, before its filter; the screen
+# TelaFiltragemCandidatosPorPartido (ctelasvota.cpp, inlined: a 160-byte frame; ctelasvota.h says what it holds), with
+# api::CMenuItem::SetFormatString and api::CInputMenuField::SetFormatString inside it (cinputmenufield.cpp, records 156
+# and 468, each behind a 16-byte prologue of its own: unit 84's fragment); the set destroyed after it (std::set<unsigned
+# short>'s destroy, 2872), a temporary of that full-expression; the form's slot 2 once; and the menu's loop, as 11888's:
+# CORRIGE goes back to CMenuVisualizarCandidatos, CONFIRMA stores the chosen item's party (std::any_cast) through
+# CVisualizarCandidatos::GetInst().SetPartido (new, inline: the flag at +38, then the 16-bit party at +36). Measured
+# with pnpm wasm score in the whole link (the tree's link, each changed object removed before its make), with this file
+# in this unit's list and the screen after TelaFiltragemCandidatosPorCargo: the item's rectangle passed to FillRect as
+# m_rect and the parties' loop variable a copy, 220 over 1654 rows (16 inserted, 20 deleted: the target fills from a
+# copy of the rectangle in the frame, which CMenuItem::GetRect gives, and reads the party from its node at each use,
+# which a reference gives); with those two, 669 over 1681 (43 inserted, 47 deleted, the locals); then with the file
+# compiled from unit 110's list after ctelasvota.cpp, 95 over 1638, every row a call, a data address or the handler's
+# table slot (unit 110's fragment has the places measured), and a match at step 9. With the party not held in a local in
+# GetPartidos, 106 over 1644 (6 inserted, 4 deleted), the rest as landed. The parties' items take the text ""
+# (std::string from an empty C string: two byte stores, the target's; std::string() and {} zero all twelve bytes in an
+# 8-byte and a 4-byte store, compared by function in the object). The screen's place in ctelasvota.cpp, after
+# TelaMenuVisualizacaoCandidatos, puts 12888 after 12894 (11881's handler) in band 1, the target's order: there 12888
+# inverts two pairs of the object's band-1 members, against 12875 and 12882 (CTelasVota's statics' exit destructors, as
+# 12893 does), and after TelaFiltragemCandidatosPorCargo three (12894 too); 11884 scores 95 over 1638 at both places.
+# Chosen: the structured binding's names, the case spelling, GetPartidos and SetPartido (names, membership, SetPartido
+# inline), and the lines (StartState below the statics, the record's line fixing the switch's). Unit 84's roots file
+# went (its three stand-ins stood for 11884's calls of 3655, 3675 and 3861), and so did one of this unit's roots' calls
+# of 2288 (the other stands for 11891). cmenufiltrarcandidatosporpartido.cpp is compiled from unit 110's list (above);
+# cmenufiltrarcandidatosporcargo.cpp too.
 # cmenufiltrarcandidatospornumero.cpp, this unit's, is compiled from unit 110's list after ctelasvota.cpp (unit 110's
 # fragment has the measurement).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
@@ -568,7 +599,6 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/ciniciozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp \

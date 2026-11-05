@@ -8,9 +8,9 @@
 //   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona, the
 //   constructor, GetInstructionTextRect (251) and SetInstructionText (477), which binaryen inlines into 3675
 //   (api::AddInputMenuField, in cinteractiveformbuilder.cpp), 5489 SelecionaItem(const std::string&), LimpaSelecao()
-//   (inlined everywhere), and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates. Records of
-//   functions not written keep their lines blank: 156 (CMenuItem) and 468 (CInputMenuField). The lines of the members
-//   with no record are a choice, in their use bands' order (src/units/84-uenux2-cinputmenufield.mk).
+//   (inlined everywhere), and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates; the two
+//   SetFormatString (CMenuItem's, record 156, and CInputMenuField's, 468), which binaryen inlines into 11884. The lines
+//   of the members with no record are a choice, in their use bands' order (src/units/84-uenux2-cinputmenufield.mk).
 
 #include "api/gui/cinputmenufield.h"
 
@@ -89,17 +89,23 @@ CMenuItem& CMenuItem::SetSearchText(const std::string& busca)
         }
         m_busca = busca;
         UpdateRect();
-        if (!m_menu->m_itens.empty()) {
-            const auto maior = std::max_element(m_menu->m_itens.begin(), m_menu->m_itens.end(),
-                                                [](const CMenuItem& a, const CMenuItem& b) { return a.m_busca.size() < b.m_busca.size(); });
-            m_menu->SetLength(maior->m_busca.size());
-        }
+        if (!m_menu->m_itens.empty()) m_menu->SetLength(std::max_element(m_menu->m_itens.begin(), m_menu->m_itens.end(), [](const CMenuItem& a, const CMenuItem& b) { return a.m_busca.size() < b.m_busca.size(); })->m_busca.size());
         m_menu->Invalidate();
     }
     return *this;
 }
 
-// (original lines 156-181: content not recovered)
+void CMenuItem::SetFormatString(const std::string& formato)
+{
+    if (formato != m_formato) {
+        m_formato = formato;
+        CPolySingleton<IScreen>::instance().FillRect(GetRect(), static_cast<TColor>(1));
+        UpdateRect();
+        m_menu->Invalidate();
+    }
+}
+
+// (original lines 162-181: content not recovered)
 #line 182
 void CMenuItem::Pisca()
 {
@@ -335,8 +341,17 @@ std::string CInputMenuField::GetTypeName() const
     return "CInputMenuField";
 }
 
-// (original lines 449-472: content not recovered)
-#line 473
+// (original lines 449-463: content not recovered)
+#line 464
+void CInputMenuField::SetFormatString(const std::string& formato)
+{
+    if (formato != m_formato) {
+        m_formato = formato;
+        CPolySingleton<IScreen>::instance().FillRect(Rect(), static_cast<TColor>(1));
+        Invalidate();
+    }
+}
+
 void CInputMenuField::SetInstructionText(const std::string& texto)
 {
     if (texto != m_instrucao) {

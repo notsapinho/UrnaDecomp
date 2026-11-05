@@ -65,14 +65,30 @@ public:
     // chosen.
     void SetCargo(comum::md::TCargoID cargo) { m_cargo = cargo; }
 
+    // The parties of the candidatures the filters let through, each once, in order:
+    // vota::CMenuFiltrarCandidatosPorPartido::StartState (fn 11884) holds it with no prologue of its own (it has no
+    // frame) and stores the set through a local that holds its address, at +0 and +4 from it, where code clang inlines
+    // addresses the caller's frame directly (docs/reference/facts/reading.md R10, the frame-address sign), so it is out
+    // of line here and binaryen inlines it into its one caller. Evidence, the body: CarregaCandidaturas (fn 5953), then
+    // for each candidature the candidate's and the post's filters (+28, +24, each only when set and not 0), the party
+    // (+2) read once, before its filter (+36), which a local declared there gives
+    // (src/units/104-uenux2-app-vota-estados.mk has the forms measured), and its insertion into a std::set of 16-bit
+    // values (std::set<unsigned short>'s tree destroy, fn 2872, frees it in 11884). The name, its being a member and
+    // public, and the local's name are chosen; the set is returned by value into 11884's frame.
+    std::set<comum::TPartidoID> GetPartidos();
+
+    // 11884's CONFIRMA case stores the chosen party's engaged flag (+38) and its value (+36), after std::any_cast and
+    // CVisualizarCandidatos::GetInst(): std::optional's assignment. The name and its being an inline member are chosen.
+    void SetPartido(comum::TPartidoID partido) { m_partido = partido; }
+
 private:
     // Fn 5953: when m_candidaturas is empty, the posts comum::CCargos::GetMapaCargos (fn 2834) gives and, over
     // comum::CCandidaturas' map, a push_back of each candidature whose post is there with a candidate's detail (CCargo
     // +84): its copy is std::construct_at (fn 5952, called twice, both paths) and its reallocation
     // std::__uninitialized_allocator_relocate (fn 5950), both instances this class's object emits first. Its two target
-    // callers are 11884 and 11888 (11888 through GetCargos, which it holds inlined); band 2 runs 5953, 5952, 5951
-    // (GetCargo), 5950 in reverse link order, so it is defined above GetCargo in the .cpp. The name and its being a
-    // private member are chosen.
+    // callers are 11884 and 11888 (through GetPartidos and GetCargos, which they hold inlined); band 2 runs 5953, 5952,
+    // 5951 (GetCargo), 5950 in reverse link order, so it is defined above GetCargo in the .cpp. The name and its being
+    // a private member are chosen.
     void CarregaCandidaturas();
 
     CVisualizarCandidatos();

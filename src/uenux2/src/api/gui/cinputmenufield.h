@@ -69,6 +69,9 @@
 // (fn 1763, action 1, the copy, first): GetItemSelecionado, GetDado and SetDado, names and forms chosen, but SetDado's
 // result: it returns the item, as fn 11888's AddItem("Todos").SetDado(...).SetSearchText("0") needs (its four
 // temporaries die after SetSearchText; src/units/104-uenux2-app-vota-estados.mk has the measurement).
+// SetFormatString, CMenuItem's and CInputMenuField's, have their names and types from their records
+// (cinputmenufield.cpp 156 and 468): they set the item's format (+96) and the menu's (+160); fn 11884 holds both
+// inlined (src/units/84-uenux2-cinputmenufield.mk has what it shows of them). Their parameters' names are chosen.
 
 #include <any>
 #include <functional>
@@ -118,6 +121,8 @@ public:
 
     CMenuItem& SetSearchText(const std::string& busca);
 
+    void SetFormatString(const std::string& formato);
+
     void UpdateRect();
 
     void Draw() const;
@@ -165,6 +170,8 @@ public:
     CMenuItem* GetItemSelecionado() const { return m_selecionado; }
 
     CMenuItem& AddItem(const std::string& texto, TMenuCallback acao = [](CMenuItem&) {});
+
+    void SetFormatString(const std::string& formato);
 
     void SetInstructionText(const std::string& texto);
 

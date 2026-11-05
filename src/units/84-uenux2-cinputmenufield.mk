@@ -87,12 +87,12 @@
 #   height or of the difference, `bottom + 1 - top`, `- 1 - (bottom - top)`, `-(height) + min`, `+ ~(bottom - top)`
 #   written out, std::min<int>, the minimum in a named int, `limite -=` in a second statement: each gives `top + ~bottom`,
 #   `top - bottom` with the constants joined, or the two loads ahead of GetHeight's call, none the target's
-#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from
-#   its callers' calls (step 8's `call by:11881,11888`), each caller named on its own (11881 by its vtable, 11888 by
-#   its record). The callers+content hand line on the four records only it loads (298, 320, 326, 339), needed while
-#   11881's vote was the only one, went once 11888 matched: with it out the scan run twice moved no row and the build
-#   verified, and with every line of the name out 11881, 11888, 12893 and 12894 are unresolved (docs/reference/
-#   splat.md "Reviewing a match").
+#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from its
+#   callers' calls (step 8's `call by:11881,11884,11888`), each caller named on its own (11881 by its vtable, 11884 and
+#   11888 by their records). The callers+content hand line on the four records only it loads (298, 320, 326, 339),
+#   needed while 11881's vote was the only one, went once 11888 matched: with it out the scan run twice moved no row and
+#   the build verified, and with every line of the name out 11881, 11888, 12893 and 12894 are unresolved
+#   (docs/reference/splat.md "Reviewing a match").
 # - The constructor, CMenuValidation's constructor, GetInstructionTextRect (record 251:21) and SetInstructionText
 #   (record 477:9), which binaryen inlines into AddInputMenuField (3675), defined in api/gui/cinteractiveformbuilder.cpp
 #   (unit 120's fragment has why: with it in this file it scored 162 over 528 rows, CMenuValidation's constructor's
@@ -172,13 +172,25 @@
 #   built without it, ahead of this file's) gives for the parser; the std::string constructor's chain, which
 #   roots_regex.cpp held, comes from ecourna's icompressor.cpp.o since its caller 5821 is in the link (unit 06's
 #   fragment).
+#
+# CMenuItem::SetFormatString (record 156:9) and CInputMenuField::SetFormatString (record 468:9), each record the
+# CPolySingleton<IScreen>::instance() of its member, are written at those lines and have no target function of their
+# own: vota::CMenuFiltrarCandidatosPorPartido::StartState (11884, unit 104's) holds both, inlined by binaryen, each
+# behind a 16-byte stack prologue of its own (docs/how-to-decompile.md step 3), CMenuItem's on the "Todos" item with the
+# format `%S - %T` and the menu's with `%S` after it. Evidence, 11884's body: each returns when the new format equals
+# the member's (the item's +96, the menu's +160; memcmp takes the argument's data first), assigns it, and has the screen
+# (slot 6) fill a rectangle in colour 1: the item a copy of its rectangle (+56, one 64-bit load into the frame, which
+# GetRect's by-value result gives; m_rect passed by reference gave its address, unit 104's fragment has the score), then
+# UpdateRect (3657); the menu its Rect() (slot 8); then each invalidates the menu (IFormFieldBase's Invalidate,
+# inlined). 11884 matches with them. SetSearchText's lines after its record (143 to 150) hold its tail with the length
+# update on one line, so that SetFormatString's record lands on its body's fourth line: the layout is a choice, and the
+# object's functions other than the two new ones compile as before (compared by function, relocated operands masked; the
+# static initializers' local numbers moved, which renamed 7753's match line to its libc++ locale.o qualifier at step 9).
+# Chosen: the parameters' names and the two members' lines around their records (152 to 160 and 464 to 471, in the blank
+# runs there).
+#
+# No roots: the file that stood for 11884's calls of 3655, 3675 and 3861 went with 11884 in the link.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINPUTMENUFIELD_SRCS := src/api/gui/cinputmenufield.cpp
 UENUX2_SRCS += $(CINPUTMENUFIELD_SRCS)
-# The companions read cinputmenufield.h, which includes headers of api/gui, api/hwil, api/util and api/pattern and
-# ecourna's: the set the generic rule uses. $(UENUX2_HDRS) is not set yet when src/Makefile reads the fragments
-CINPUTMENUFIELD_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-# The roots file stands for fn 11884, which is not written: its calls of fns 3675, 3655 and 3861
-$(ROOT)/$(APP)/84-uenux2-cinputmenufield-roots.o: $(ROOT)/src/units/84-uenux2-cinputmenufield-roots.cpp $(ROOT)/src/units/84-uenux2-cinputmenufield.mk $(ROOT)/src/Makefile $(CINPUTMENUFIELD_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/84-uenux2-cinputmenufield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/84-uenux2-cinputmenufield-roots.o

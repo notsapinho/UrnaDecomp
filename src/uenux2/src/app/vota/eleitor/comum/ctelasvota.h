@@ -31,6 +31,7 @@ class CCargo;
 
 namespace comum {
 class CAppState;
+using TPartidoID = ueword;
 } // namespace comum
 
 namespace comum::md {
@@ -320,6 +321,28 @@ CFormInterativoTelaVota TelaMRModoDemo();
 // last record are chosen.
 std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorCargo(
     bool todos, const std::set<comum::md::CCargo>& cargos);
+
+// The party filter's menu, which vota::CMenuFiltrarCandidatosPorPartido::StartState (fn 11884) holds behind a second
+// stack-pointer prologue (a 160-byte frame) with no call of CTelasVota::GetInst() before it: a free function, out of
+// line in the object and inlined by binaryen. Evidence, the body: the status header (5), "Visualização de candidatos"
+// at (320, 40) in the 30-point font (@474888) and "Filtragem por partido" at (320, 75) in the 25-point one (@474992),
+// centred, colours 2 over 1; with no party, "Nenhum partido disponível!" at (320, 200) in that font and the label of
+// CORRIGE ('D', "Retornar") through fn 653; else a menu at (10, 120) in the 20-point font (@474896) through
+// api::AddInputMenuField (fn 3675) with "Selecione o partido: " and 310, an item "Todos" whose std::any holds the party
+// 0 (std::any's handler for unsigned short, fn 12888), whose search text is "0" and whose format is "%S - %T"
+// (api::CMenuItem::SetFormatString, record cinputmenufield.cpp:156), then the menu's format "%S"
+// (api::CInputMenuField::SetFormatString, record :468; both held behind prologues of their own), one item per party of
+// the set (ordered, each read from its node at each use: a reference) with the text "" (two byte stores, where
+// std::string() zeroes all twelve bytes), the party in its std::any and its number as its search text
+// (std::to_string of an int, fn 296), and the labels of CONFIRMA ('C', "Confirmar seleção") and CORRIGE ('D',
+// "Retornar"); then "telaFiltragemCandidatosPorPartido" through GetFormularioInterativo (fn 576). It returns the form
+// and the menu, as TelaFiltragemCandidatosPorCargo does. Why ctelasvota.cpp: the three fonts are this file's
+// constants (the reading above). Its place there, after TelaMenuVisualizacaoCandidatos, puts std::any's handler for
+// unsigned short (fn 12888) after the pair's (12894) in the object, the target's band order (unit 104's fragment).
+// Chosen: the name (from the form's), the parameter's name, its being a free function of vota, and comum::TPartidoID
+// declared again above as ccandidatura.h declares it (an alias, so ctelasvota.h includes no header for it).
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorPartido(
+    const std::set<comum::TPartidoID>& partidos);
 
 // The keyboard test's screen and key sequence, which vota::testeteclado::CTesteTeclado::StartState (fn 11805) holds
 // behind second stack-pointer prologues, one caller each: TelaTesteTeclado and SorteiaTeclasTesteTeclado, defined in

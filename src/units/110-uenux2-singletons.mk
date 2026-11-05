@@ -792,12 +792,34 @@
 # cconversorcomplementomunicipio.cpp; eleven vota operador states (cfimaquisicaovotos.cpp, eight leidentidade/ ones,
 # cfinalizaoperador.cpp and csincronismooperador.cpp); and comparecimentomesario's cpedetitulomesario.cpp and
 # cgestordadomesario.cpp.
+#
+# cmenufiltrarcandidatosporpartido.cpp (unit 104's: vota::CMenuFiltrarCandidatosPorPartido::StartState, 11884) follows
+# cmenufiltrarcandidatosporcargo.cpp in this list: 11884 holds ctelasvota.cpp's TelaFiltragemCandidatosPorPartido
+# inlined by binaryen and matches with its object after ctelasvota.cpp.o; in unit 104's list, and before
+# ctelasvota.cpp.o here (after crespostas.cpp), it scored 669 over 1681 rows (43 inserted, 47 deleted: unit 104's
+# fragment has the forms). The move is needed for 11884, not the data's order. The target holds the class's vtable at
+# @1545520, after PorCargo's (@1545448) and before CMenuVisualizarCandidatos' (@1545592). Every place after
+# ctelasvota.cpp.o measured gives 95 over 1638 rows, every row an operand (measured with the screen after
+# TelaFiltragemCandidatosPorCargo; after TelaMenuVisualizacaoCandidatos, its place now, this one gives the same);
+# docs/reference/facts/codegen.md C4's count of objects out of the data's order against it, on this branch's link: 116
+# right after ctelasvota.cpp, 115 after cmenumaisinformacoesvota.cpp, 114 after cmenufiltrarcandidatospornumero.cpp, 113
+# here, 114 after cmenuvisualizarcandidatos.cpp, 94 at its place in unit 104's list. Against that old place it puts 6
+# pairs in order (cmunicipio.cpp, ctelasvota.cpp, cmenumaisinformacoesvota.cpp, celeitoroptouporvotaremtransito.cpp and
+# the PorNumero and PorCargo files) and inverts 25: unit 104's cdefinerotaposreinicio.cpp,
+# creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and cquerreimprimirzeresima.cpp; comum's
+# cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp, celeitores.cpp, cconversorabrangencia.cpp,
+# cconversorseguranca.cpp, cconversormunicipio.cpp and cconversorcomplementomunicipio.cpp; eleven vota operador states
+# (cfimaquisicaovotos.cpp, leidentidade/'s ccancelahabilitacaoeleitor, celeitorencontrado, celeitorimpedidojustificar,
+# celeitorimpedidojustificarvototransito, celeitorjavotou, celeitornaopossuicargosparavotar, celeitornaotemidademinima
+# and cprocuraeleitor, cfinalizaoperador.cpp and csincronismooperador.cpp); and comparecimentomesario's
+# cpedetitulomesario.cpp and cgestordadomesario.cpp.
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \
   src/app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
+  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
