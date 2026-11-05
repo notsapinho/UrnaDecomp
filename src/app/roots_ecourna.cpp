@@ -65,10 +65,8 @@ __attribute__((noinline)) std::string UsaPreenche1(const std::string& s) { retur
 __attribute__((noinline)) std::string UsaPreenche2(const std::string& s) { return CStringUtils::PreencheAEsquerda(s, ' ', 20) + "x"; }
 __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { return "y" + CStringUtils::PreencheAEsquerda(s, '*', 5); }
 
-// CStringUtils::PreencheADireita's copying form (target fn 1881) has five callers in the target: fn 1542 pads two strings
-// to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. 1542, 11188, 11253 and 11478 are in
-// the link; this stands for 2248.
-__attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { return "|" + CStringUtils::PreencheADireita(s, ' ', 34); }
+// CStringUtils::PreencheADireita's copying form (target fn 1881) has no call here: its five target callers, fns 1542,
+// 2248, 11188, 11253 and 11478, are in the link.
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
 // our link that these stand for: ToUpper's copying form (5156), 6592, and table slot 29,
@@ -107,7 +105,6 @@ int urna_roots_ecourna(int a)
     v.dados.assign(s.begin(), s.end());
     unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s) + UsaBase64A(v) + UsaBase64B(v);
     std::string out = UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
-    out += UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasB(out) + UsaSubstituiA(s) + UsaSubstituiB(out);
     std::string (*maiusculas)(const std::string&) = &CStringUtils::ToUpper;

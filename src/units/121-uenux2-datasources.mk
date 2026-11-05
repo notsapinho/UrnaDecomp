@@ -235,10 +235,10 @@
 #     11's roots no longer take Mac's address, nor CSiphashMac's DoMac and DoVerify (9498 and 9497 keep `match`, in the
 #     link through the vtable 3700 stores), and src/app/roots_ecourna.cpp's UsaConversoes3 no longer calls HexToQWord.
 #     Its other calls stay.
-# The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and w121_codigo for 11260 and
-# 11974, CalculaCodigo's: each goes when they land. 11260 and 11974 (CDataSourcesRelatorio<CRdvVota, CEleitores>'s
-# TrailerProporcionalPartido and CodVerificador, records cdatasourcesrelatorio.h:188 and 348) wait for fn 5967, which
-# loads IncluiString's record and calls fn 1281 (439 B, CPleito's copy constructor, matched: unit 280).
+# The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and goes when it lands. Its
+# w121_codigo (for 11260 and 11974, CalculaCodigo's callers) and w121_inclui (for 5967 and 11260, IncluiString's) went:
+# CDataSourcesRelatorio<CRdvVota, CEleitores>'s TrailerProporcionalPartido (11260, record cdatasourcesrelatorio.h:188),
+# CodVerificador (11974, :348) and IncluiDadosFinaisCV (5967) are in the link, from unit 220's roots.
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions

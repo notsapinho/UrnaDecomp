@@ -79,6 +79,16 @@ public:
     static std::string DSCodigoVerificador();
     static std::string GetSeparadorFase(const EUrnaFase fase);
     static void ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias);
+    // Target fn 2248: a report line of a label padded on the right to 34 characters (CStringUtils::PreencheADireita, fn
+    // 1881) and a count as "{:04}" (the tail of fn 11188's "Local ... {:04}", 8862), style 1, aligned left. Its one
+    // caller, vota::CGeraBU's slot 2 (fn 12110, not written), calls it five times, for the turnout, the three kinds of
+    // enabled voters and the absentees, inside comum::CriaHeader's code (cgeradorbu.cpp's internal function, which
+    // 12110 holds); the caller masks the absentees' count to 16 bits, so the count's type is 16 bits wide (the format's
+    // argument code says unsigned). Use band 5 puts the function after cgeradorbuqrcode.cpp's object and before
+    // api/gui's (fn 2251, CGeradorBUQRCode's destructor, above it; 2246, CFixedImage's constructor, below), where
+    // comum/relatorios' later objects sort (a reading); that it is a static member of this class in crelutil.cpp (the
+    // class's records name only static members), its name, its parameters' types and its line are chosen.
+    static void ImprimeQuantidade(api::CPaperFormBuilder& builder, const std::string& rotulo, ueword quantidade);
     static void IncluiCabecalhoEleicoesMZS(api::CPaperFormBuilder& builder, const std::string& titulo,
                                            const TMunicipioID municipio, const TZonaID zona, const TSecaoID secao,
                                            const std::string& nomeMunicipio, const ETipoCabecalho tipo,

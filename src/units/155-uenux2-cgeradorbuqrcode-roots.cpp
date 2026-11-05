@@ -6,10 +6,8 @@
 //   the link), so that binaryen keeps the three out of line, each with two call sites. It passes Gera a size that is
 //   not a constant, as 12110 passes another value than 1956's 2500, so that the parameter stays, and the constructor
 //   false and false for its two flags, as 1956 does: binaryen folds the two into the body, as the target's 5603 shows.
-// - w155_pkcs11 stands for fn 5635, the target caller not in our link of
-//   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, whose other callers, 5604 and 10273, are in the
-//   link): it calls it once, as 5635 does. The link takes the instance from the first object that emits it
-//   (gravadores/asn/cassinavotavelbu.cpp.o): this file only declares it.
+// - The stand-in for fn 5635, the third caller of api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704) beside
+//   5604 and 10273, went: 5635 is in the link (unit 215).
 // They are declared through __asm__ labels with the objects' signatures (a constructor and a destructor return this
 // there); this file includes no header and instantiates nothing.
 extern "C" {
@@ -19,8 +17,6 @@ int w155_constroi(void* gerador, const void* cabecalho, unsigned short compareci
 void w155_gera(void* resultado, const void* gerador, unsigned long tamanho)
     __asm__("_ZNK5comum16CGeradorBUQRCode4GeraEm");
 int w155_destroi_cabecalho(void* cabecalho) __asm__("_ZN5comum23CCabecalhoQRCodeBuilderD2Ev");
-void* w155_instancia_pkcs11(void* info, const void* local)
-    __asm__("_ZN3api14CPolySingletonINS_6pkcs117IPkcs11EE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE");
 }
 
 namespace {
@@ -35,19 +31,12 @@ __attribute__((noinline)) void w155_gerador(void* gerador, const void* cabecalho
     w155_destroi_cabecalho(cabecalho2);
 }
 
-// Stands for fn 5635 (CPolySingleton<IPkcs11>::instance; 5604 and 10273 are in the link).
-__attribute__((noinline)) void* w155_pkcs11(void* info, const void* local)
-{
-    return w155_instancia_pkcs11(info, local);
-}
-
 const void* volatile w155_sink;
 
 struct SW155Roots {
     SW155Roots()
     {
         w155_sink = reinterpret_cast<const void*>(&w155_gerador);
-        w155_sink = reinterpret_cast<const void*>(&w155_pkcs11);
     }
 } w155_roots;
 
