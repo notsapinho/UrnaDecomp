@@ -22,8 +22,9 @@
 // - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 6035, 6036, 7174, 7787, 12098; 1836 and 4657 (unit
 //   205's), 2890 (unit 156's), 11630 to 11634 (unit 122's), 11835 (unit 138's), 11852, 11855, 11991 and 12071 (unit
 //   104's) and 12068 and 12074 (unit 315's) are in the link.
-// - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451; 2298 and 3898 (unit 122's pathwsq.cpp) and 5382 (unit 135's,
-//   which holds GetPathWsqRegistradoExterno inlined) are in the link.
+// - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451, all in the link: 2298 and 3898 (unit 122's pathwsq.cpp),
+//   5382 (unit 135's, which holds GetPathWsqRegistradoExterno inlined) and 10451 (unit 221's, which holds
+//   GetPathWsqNaoRegistradoExterno inlined), so it has no stand-in.
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,
 // which fn 5968 (libc++'s operator/ of directory_iterator.o, in the link since unit 214's code brings it in) and fn
@@ -94,12 +95,6 @@ __attribute__((noinline)) void DoisTrabalhos(void* destino, comum::EFlashOrigem 
     ::new (destino) path(CPath::GetPathTrab(origem));
 }
 
-__attribute__((noinline)) void DoisWsq(void* destino, comum::EFlashOrigem origem, comum::EUrnaTurno turno)
-{
-    ::new (destino) path(CPath::GetPathWsq(origem, turno));
-    ::new (Em(destino, 144)) path(CPath::GetPathWsq(comum::FLASH_EXTERNA, comum::TURNO_1));
-}
-
 const void* volatile r190_sink;
 
 struct SRoots190 {
@@ -113,7 +108,6 @@ struct SRoots190 {
         r190_sink = reinterpret_cast<const void*>(&DuasChaves);
         r190_sink = reinterpret_cast<const void*>(&DoisResultadosAtuais);
         r190_sink = reinterpret_cast<const void*>(&DoisTrabalhos);
-        r190_sink = reinterpret_cast<const void*>(&DoisWsq);
     }
 } roots190;
 

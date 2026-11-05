@@ -106,6 +106,10 @@ public:
     // its place here, after LogaHabilitacaoCanceladaCapturaDigitalMesario, and in clogvota.cpp, right after
     // LogaEleitorImpedido, is chosen: it has no index to order.
     void LogaSolicitaDigitalMesario();
+    // Held inlined by vota::CRegistraDigitalOperador::ProcessTick (fn 10451), its one caller, the same shape: GetInst
+    // before the member's 16-byte frame, then fn 233 with "Capturada a digital do mesário". The name is chosen from its
+    // message, and its place here and in clogvota.cpp, right after LogaSolicitaDigitalMesario, is chosen.
+    void LogaCapturadaDigitalMesario();
     // Held inlined by vota::CPedeIdentidade::ProximoEstadoIdentidadeDigitada (inlined into fn 10677), its one caller,
     // which calls GetInst before the member's own stack frame opens; it calls api::CLoga::loga (fn 433) with +4 and
     // severity 1. The name is chosen from its message, and its place here and in clogvota.cpp is chosen: it has no
@@ -218,9 +222,10 @@ public:
     // thunk of one body binaryen merged (fn 6113: the string argument formatted into the message, then loga, fn 233),
     // with the message's end and begin as its two constants: 2502's "Operador selecionou: {}", called four times by
     // vota::CEscolheOpcao::ProcessInput (fn 10689) with GetInst's result and the text of the option chosen, and 3258's
-    // "Mesário {} habilitou o eleitor", called three times by vota::CRegistraDigitalOperador's slot 8 (fn 10451, not
-    // written). Their names are chosen from their messages. Their bands bound their places in clogvota.cpp, the line in
-    // them chosen: 2502 right before fn 2495 (band 4, after 2509), 3258 right after LogaQuantidade (fn 3268, band 3).
+    // "Mesário {} habilitou o eleitor", called three times by vota::CRegistraDigitalOperador's slot 8 (fn 10451,
+    // written in cregistradigitaloperador.cpp: one call in each search). Their names are chosen from their messages.
+    // Their bands bound their places in clogvota.cpp, the line in them chosen: 2502 right before fn 2495 (band 4, after
+    // 2509), 3258 right after LogaQuantidade (fn 3268, band 3).
     void LogaOperadorSelecionou(const std::string& opcao);
     void LogaMesarioHabilitouEleitor(const std::string& titulo);
     // The shape of the members held inlined above, GetInst called before the member's own stack frame opens:

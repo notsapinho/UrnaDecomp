@@ -182,9 +182,11 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.
 # and app/comum/dados/crdvvota.h, which holds the RDV's converter over generated ASN.1 modules: the generic uenux2 rule
 # does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-# the target callers of GetInst and of the vota:: functions are not reconstructed (random_device's constructor has its
-# two since unit 217's fn 11803):
-# 50-uenux2-cinformacaothreadoperador-roots.cpp stands in for them
-$(ROOT)/$(APP)/50-uenux2-cinformacaothreadoperador-roots.o: $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/50-uenux2-cinformacaothreadoperador-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/50-uenux2-cinformacaothreadoperador-roots.o
+# Roots: none. The roots file went with its last stand-in, w50_getinst's call of GetInst (599): its last target callers
+# not in the link, 10425 (unit 142's) and 10451 (unit 221's), are in it, as are 10676, 10680, 10646, 10523, 3616, 10481
+# and the 16 vota:: functions over it. The stand-ins for those functions went before, each when its callers were in the
+# link: GetIdentidadeEleitor (1535) and GetApresentacaoFotoEleitor (2745) with 10425; LimpaBiometria (3621),
+# SetEleitorSemFoto (5413) and SetFotoNaoApresentada (1904) with 5400, 10500, 10511 and 3616; IsAudioAtivado (2746) with
+# 10481, 3883, 10511 and 5400; the sink of GetTextoIdentidadeDigitada's slot (10586) with 10500. GetInst builds the
+# class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the destructors
+# (10552, 10551); fn 652 passes GetTextoAudio's and GetTextoComparecimento's table slots (10584, 10583).

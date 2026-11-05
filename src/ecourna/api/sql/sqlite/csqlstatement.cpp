@@ -14,7 +14,7 @@ namespace ecourna::api::sql::sqlite {
 
 namespace {
 
-std::mutex s_mutex;
+std::recursive_mutex s_mutex;
 
 } // namespace
 

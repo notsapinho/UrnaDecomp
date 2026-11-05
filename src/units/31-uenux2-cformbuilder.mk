@@ -195,7 +195,8 @@
 #   masked. A member by choice: it reaches the vector only through AddField.
 # - 3673 matches with api::ITimerScheduler::CreateTimer taking its callback by reference, as api/util/itimerscheduler.h
 #   has it now; unit 120's fragment scored it 12 over 211 rows with the callback by value.
-# The roots' ControleMT gives 395 its second call site; 3674 and 3673 have their three target callers in the link,
+# The roots' ControleMT, which gave 395 its second call site, went: 10451 (unit 221's), the last of 395's target
+# callers not in the link, is now. 3674 and 3673 have their three target callers in the link,
 # 395, 1151 and 5410, so EntradaMT, the roots' stand-in for 5410, went with 5410's landing. 1151, which builds an
 # api::CInputFieldMT over a CNumberValidation ("0123456789") and pushes it through 3674, is unit 121's (cescolheopcao.cpp,
 # vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). And 5410's code:

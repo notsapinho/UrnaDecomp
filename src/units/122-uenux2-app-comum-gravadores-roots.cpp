@@ -16,12 +16,12 @@
 //   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 4625, 5867
 //   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
 //   (fn 5867 returns nothing);
-// - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
-//   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
+// - comum::GetPathWsqNaoRegistrado (fn 3793) needs none now: its callers, fns 5374 (unit 214) and 10451 (unit 221),
+//   are written, and the stand-in for 10451 went.
 // - the other WSQ directories of pathwsq.cpp (fns 5819, 5818, 3795, 5817, 5816 and 3794) need none now: fns 5821 and
 //   10425 call each, and 5382 calls 3795 and 3794; 5821 (CGravadorWSQ::CompactaWsq), 5382 (unit 135) and 10425 (unit
 //   142) are written, and the stand-in for 10425 went.
-// - comum::GetPathWsqRegistrado (fn 5815): fns 3614 and 5382; 5382 is written (unit 135), the stand-in is for 3614.
+// - comum::GetPathWsqRegistrado (fn 5815) needs none now: fns 3614 (unit 221) and 5382 (unit 135) are written.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
 //   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
 // IGravador is abstract, so its constructor (declared with the object's int result) is called through an asm label.
@@ -83,23 +83,6 @@ __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::
     return static_cast<int>(copia.size()) + 11;
 }
 
-// stands for fn 10451 (5374 is written)
-__attribute__((noinline)) int w122_naoregistrado(void* destino)
-{
-    ::new (destino) std::filesystem::path(comum::GetPathWsqNaoRegistrado());
-    return 19;
-}
-
-// stands for fn 3614 (5382 is written)
-__attribute__((noinline)) int w122_registrado(void* destino)
-{
-    ::new (destino) std::filesystem::path(comum::GetPathWsqRegistrado());
-    return 41;
-}
-
-int (*volatile w122_sink_registrado)(void*);
-
-int (*volatile w122_sink_naoregistrado)(void*);
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
@@ -110,13 +93,11 @@ const void* volatile w122_sink_vt_rcsecao;
 struct SW122Roots {
     SW122Roots()
     {
-        w122_sink_registrado = w122_registrado;
         w122_sink_wsq = w122_wsq;
         w122_sink_gravador = w122_gravador;
         w122_sink_nome = w122_nome;
         w122_sink_versoes = w122_versoes;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
-        w122_sink_naoregistrado = w122_naoregistrado;
     }
 } w122_roots;
 

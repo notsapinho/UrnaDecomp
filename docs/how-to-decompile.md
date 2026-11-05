@@ -1444,19 +1444,19 @@ And with no source at fault, for one link's data layout, in four cases:
   constant below 1024 as a literal, so a seed pair that passed it falls to `shape` and its votes go: an edit of the
   executable TU moved an invoke's slot from 3 to 4, and 988 (`locale::classic`) and ten rows that rested on it left
   `match`. Compare `wasm-objdump -x -j Elem` slots 1 to 5 with the base's link's, and keep the object's first function
-  references in their order.
+  references in their order ([facts/splat.md](reference/facts/splat.md) §S10 item 28 has the check).
 
 Before calling a residue chance, compare the run the object sits in with the target's: the object our link puts right
 before the library's first `.bss`, `.data` and `.rodata` object, against the target's (the symbol file's `type:data`
 names by address). Data order is link order, so where the target's data put the library elsewhere on the link line, its
-place there is evidence: the target holds SQLite's `.bss` between OpenSSL's and libc's (`random_devices`, 0x1d7550 plus
-0x60, is followed by `sqlite3Stat` at 0x1d75b0, and `sqlite3SavedPrng`'s end by `__errno_storage`). Only a residue the
-two orders agree on is chance. The next landing that moves the data clears it. Never add or drop a string to move it,
-and add no hand line for the lost name: its only evidence is the lost row's operand ("Hand edits", below). A lane whose
-own link loses a match of its base so stops and reports it; at a landing, land the next lane first and retry (step 10).
-A small integer in a data object that equals a table slot of ours is not such a case: the operand-kind table reads it as
-the integer it is ([reference/splat.md](reference/splat.md) §3). Nor is a whole string whose address equals a table slot
-of ours, where the target's constant addresses the same string: step 8 reads it as an address.
+place there is evidence ([facts/link-order.md](reference/facts/link-order.md) §L3 has SQLite's between OpenSSL's and
+libc's in each segment, and the residue it fixed). Only a residue the two orders agree on is chance. The next landing
+that moves the data clears it. Never add or drop a string to move it, and add no hand line for the lost name: its only
+evidence is the lost row's operand ("Hand edits", below). A lane whose own link loses a match of its base so stops and
+reports it; at a landing, land the next lane first and retry (step 10). A small integer in a data object that equals a
+table slot of ours is not such a case: the operand-kind table reads it as the integer it is
+([reference/splat.md](reference/splat.md) §3). Nor is a whole string whose address equals a table slot of ours, where
+the target's constant addresses the same string: step 8 reads it as an address.
 
 The scan's first pass can also leave a new match `match` that the build's fixed point refuses: `make -C src splat` then
 stops on `UNCONFIRMED: self-voted`. Read it as `unresolved self-voted`: the callee's name has no voter but the match,
@@ -1495,8 +1495,8 @@ A row of another unit can turn `match` for a reason you can name:
   binaryen stops inlining it there (5445, `CTimer::~CTimer`, once `future.o`'s members came with a unit's
   `std::async`). The match is the body's unit's; show it with a link that swaps your unit's objects back to the base's.
   Such a row rests on the whole link: add it to [facts/splat.md](reference/facts/splat.md) §S10's list, with the objects
-  whose swap back loses it, in the same commit (4689, a libc++ `~__split_buffer`, kept the target's unused load once a
-  range moved the module).
+  whose swap back loses it, in the same commit (item 27: 4689, a libc++ `~__split_buffer`, kept the target's unused
+  load once a range moved the module).
 
 A match the scan found by its body or by the census's pair has `content` or `ledger` in the `source` column of
 `splat/scan.tsv`, in the first scan only. Once the match names the function, a later scan writes `symbol` there, so a

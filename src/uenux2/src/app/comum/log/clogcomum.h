@@ -37,6 +37,11 @@ public:
     void LogaNivelBateria(uebyte fonte, uebyte status);
     void LogaSuspensoMonitoramenteRepeticao(uebyte eventos);
     void LogaTipoBateria();
+    // Its record (clogcomum.cpp:214, column 18) is in fn 5372,
+    // comum::CControladorReconhecimentoMesario::ComparaDigitais, which holds it behind a 384-byte frame of its own
+    // (binaryen's inlining) after GetInst's call, whose result it drops; it formats the matcher's slot 4 as an int
+    // (argument code 3).
+    void LogaScoreReconhecimentoMesario(const ueint32 score);
 
 private:
     CLogComum();

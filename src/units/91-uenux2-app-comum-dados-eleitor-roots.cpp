@@ -7,15 +7,15 @@
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers): one stand-in with two call sites keeps it out of
 //   line, and no argument is the same constant at both, so dead-argument elimination folds nothing in. CriaComum's (fn
 //   2799) went: its one target caller, 11422 (fragment 335's), is in the link with its four call sites.
-//   CBiometriaEleitor::GetDedo (fn 3720) and TemDedo (fn 3719) have three callers each, 3614, not in the link, and
-//   10316 and 10465, units 135's and 282's, which are: one call each for 3614; the second calls went with 10316.
+//   CBiometriaEleitor::GetDedo (fn 3720) and TemDedo (fn 3719) need none: their three callers each, 3614 (unit 221's),
+//   10316 and 10465 (units 135's and 282's), are in the link, and the stand-ins went with 10316 and 3614.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.
 // - std::vector<CEleitorDinamico>'s instances that RecuperarTodos's push_back brings: its slow path (fn 5759) calls
 //   construct_at (fn 5760), __uninitialized_allocator_relocate (fn 3759) and __split_buffer's destructor (fn 3758), each
-//   with a second caller in the target: fn 3614 (CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores) for
-//   5760, fn 5761 (CEleitores::DynamicCreate) for 3759 and 3758. Neither is reconstructed; one stand-in each keeps the
-//   three out of line, and drops the results the target's callers drop. The labels name the instances
-//   celeitordinamicodao.cpp's object defines, so this TU instantiates none of them.
+//   with a second caller in the target: fn 3614 (CRegistraDigitalOperador::BiometriaMesarioPresente, unit 221's, in the
+//   link: 5760's stand-in went) for 5760, fn 5761 (CEleitores::DynamicCreate, not reconstructed) for 3759 and 3758. One
+//   stand-in keeps those two out of line, and drops the results the target's callers drop. The labels name the
+//   instances celeitordinamicodao.cpp's object defines, so this TU instantiates none of them.
 // The stand-ins differ from each other and call two things or add an offset, so none is a target function's body.
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2
 // header and instantiates nothing.
@@ -23,9 +23,6 @@ extern "C" {
 extern const char comparecimentomesariodao_vt[] __asm__("_ZTVN5comum3dao25CComparecimentoMesarioDAOE");
 int r91_dinamicodao_ctor(int, int) __asm__("_ZN5comum3dao19CEleitorDinamicoDAOC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void r91_identidade_por_tipo(int, int, int) __asm__("_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
-void r91_get_dedo(int, int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7GetDedoENS0_5CDedo8TipoDedoE");
-int r91_tem_dedo(int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7TemDedoENS0_5CDedo8TipoDedoE");
-int r91_constroi_copia(int, int) __asm__("_ZNSt3__212construct_atB8ne210108IN5comum2md16CEleitorDinamicoEJRKS3_EPS3_EEPT_S8_DpOT0_");
 void r91_realoca(int, int, int, int) __asm__("_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md16CEleitorDinamicoEEEPS4_EEvRT_T0_S9_S9_");
 int r91_libera_buffer(int) __asm__("_ZNSt3__214__split_bufferIN5comum2md16CEleitorDinamicoERNS_9allocatorIS3_EEED2Ev");
 }
@@ -48,21 +45,6 @@ __attribute__((noinline)) void DuasIdentidades(int resultado, int eleitor, int t
     r91_identidade_por_tipo(resultado + 16, eleitor, tipo + 1);
 }
 
-__attribute__((noinline)) void DoisDedos(int resultado, int biometria, int dedo)
-{
-    r91_get_dedo(resultado + 20, biometria, dedo + 1);
-}
-
-__attribute__((noinline)) int DedosPresentes(int biometria, int dedo)
-{
-    return 2 * r91_tem_dedo(biometria + 40, dedo + 1);
-}
-
-__attribute__((noinline)) void CopiaEleitor(int destino, int origem)
-{
-    r91_constroi_copia(destino + 84, origem);
-}
-
 __attribute__((noinline)) void CresceEleitores(int alocador, int inicio, int fim, int buffer)
 {
     r91_realoca(alocador, inicio, fim, buffer + 4);
@@ -78,9 +60,6 @@ struct SRoots91 {
         r91_sink = reinterpret_cast<const void*>(&AbreDinamicoA);
         r91_sink = reinterpret_cast<const void*>(&AbreDinamicoB);
         r91_sink = reinterpret_cast<const void*>(&DuasIdentidades);
-        r91_sink = reinterpret_cast<const void*>(&DedosPresentes);
-        r91_sink = reinterpret_cast<const void*>(&DoisDedos);
-        r91_sink = reinterpret_cast<const void*>(&CopiaEleitor);
         r91_sink = reinterpret_cast<const void*>(&CresceEleitores);
     }
 } roots91;

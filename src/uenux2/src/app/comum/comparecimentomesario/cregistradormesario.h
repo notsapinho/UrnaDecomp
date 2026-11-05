@@ -39,6 +39,18 @@ public:
     // its own. Its being public, called with no wrapper, is chosen.
     void SaveCurrentInternal();
 
+    // The three maps vota::CRegistraDigitalOperador's searches walk (fn 10451 holds each behind a frame of its own,
+    // binaryen's inlining): the section's mesarios with a finger of habilitation (m_mesariosSecao's records whose
+    // dedo_habilitacao is not 0), those without one, and the comparecimentos of mesarios not of the section, keyed by
+    // their identity. Each copies what it keeps into a new map through a std::insert_iterator, whose hint is the node
+    // after the last one inserted (the target's emplace calls, fn 5376 for the first two, take it so), and visits the
+    // records as a filter_view does: the first kept one, then the next kept one after each insertion. Their names,
+    // their being const members and the ranges' spelling are chosen; std::ranges::copy over the views gives those
+    // loops.
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> GetMesariosSecaoComBiometria() const;
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> GetMesariosSecaoSemBiometria() const;
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> GetMesariosForaSecao() const;
+
 private:
     CRegistradorMesario() : CDataMap("CRegistradorMesario") {}
 

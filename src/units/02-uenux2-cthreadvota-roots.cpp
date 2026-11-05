@@ -3,10 +3,10 @@
 // CVotacaoStateAudio::StartState and ProcessInput, fn 10220, fns 11825 and 11871, unit 138's, and 10468, unit 282's,
 // the last, among them), so it needs no stand-in: the address this file took so that the link kept it out of line
 // went.
-// CThreadVota::StopTick (fn 422) has 23 callers in the target, all but 10451 in the link, which ParaDoisTicks
-// stands for (10465, unit 282's, fn 10799, unit 119's slot 3, fn 7022, unit 97's CVotacaoStateAudio::FinishState, unit
-// 197's 7337, 7345, 7349, 7352 and 4454, unit 97's 7010 and 7029, unit 221's 10452, unit 152's 10404, 10405, 10407,
-// 10408 and 10409, unit 161's 10676 and 10678, and 10219, 11790, 11824 and 11868 are linked).
+// CThreadVota::StopTick (fn 422) needs none either: its 23 callers in the target are in the link, 10451 (unit 221's)
+// the last, whose stand-in ParaDoisTicks went (10465, unit 282's, fn 10799, unit 119's slot 3, fn 7022, unit 97's
+// CVotacaoStateAudio::FinishState, unit 197's 7337, 7345, 7349, 7352 and 4454, unit 97's 7010 and 7029, unit 221's
+// 10452, unit 152's 10404, 10405, 10407, 10408 and 10409, unit 161's 10676 and 10678, and 10219, 11790, 11824, 11868).
 // CThreadVota::AddStoppedTick (fn 807) needs none: of its 11 callers, unit 97's fn 1785 calls it twice, and 1165 and
 // 2880 (unit 199), 3229 (unit 197), 5343 (unit 165), 5936 (unit 138), 10409 and 652 (unit 161), 5396 (unit 221), 2740
 // (unit 282) and 10440 (unit 152) are linked.
@@ -23,10 +23,6 @@
 
 #include "api/util/cwait.h"
 
-extern "C" {
-void w02_para_thread(void*, int) __asm__("_ZN4vota11CThreadVota8StopTickEh");
-}
-
 namespace {
 
 void* volatile five700_sink;
@@ -37,18 +33,10 @@ __attribute__((noinline)) void EsperaUsando(size_t milissegundos, void (*usa)(ap
     usa(espera);
 }
 
-// stands for fn 422's callers other than fn 10799
-__attribute__((noinline)) void ParaDoisTicks(void* thread, int id)
-{
-    w02_para_thread(thread, id);
-    w02_para_thread(thread, id + 1);
-}
-
 struct SFive700Roots {
     SFive700Roots()
     {
         five700_sink = reinterpret_cast<void*>(&EsperaUsando);
-        five700_sink = reinterpret_cast<void*>(&ParaDoisTicks);
     }
 } five700_roots;
 

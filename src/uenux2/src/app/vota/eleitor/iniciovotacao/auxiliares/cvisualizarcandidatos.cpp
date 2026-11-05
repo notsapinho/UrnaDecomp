@@ -26,12 +26,12 @@ comum::md::TCargoID CVisualizarCandidatos::GetCargo() const
     return m_cargo.value_or(0);
 }
 
-
-
-
-
-
-
+void CVisualizarCandidatos::LimpaFiltros()
+{
+    m_cargo.reset();
+    m_partido.reset();
+    m_candidato.reset();
+}
 
 
 
