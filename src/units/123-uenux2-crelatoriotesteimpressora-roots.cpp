@@ -20,7 +20,7 @@
 //   7787 lands.
 // - GetSeparadorFase (slot 20, fn 11183) calls CRelUtil::GetSeparadorFase, fn 1919, which has six callers in the target
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
-//   three not reconstructed (11946, 12105, 12110; 2785, 11183 and 11943 are in the link).
+//   two not reconstructed (12105, 12110; 2785, 11183, 11943 and 11946 are in the link).
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
 //   did into 1919 alone. w123_erro stands for four of the other 13 (11968, 12110, 2791, 5967; 11181, 11212,
@@ -38,10 +38,6 @@
 //   ledger/callgraph.tsv), and CRelUtil::ImprimeSeparadorFase, fn 2785, four of them (11223, 11902, 11908, 12105);
 //   11902, 11223, 11908 and 5977 (unit 325's) are in the link, and w123_rodape stands for the others (12105 and 12110 for
 //   1541, 12105 for 2785) and calls each twice.
-// - CRelUtil::FormTituloPartido, which the target holds inlined by binaryen in fn 11946 (vota::CGeraZeresimaBase's slot
-//   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
-//   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181
-//   is reached as the target reaches it. It goes when 11946 lands.
 // - CRelUtil::ImprimeSeparadorVia, fn 5581, has one caller in the target, fn 12110 (vota::CGeraBU's slot 2, not
 //   reconstructed), which calls it twice (awk -F'\t' '$2==5581' ledger/callgraph.tsv): w123_vias stands for it with
 //   two call sites, so binaryen keeps 5581 out of line. 12110 passes no constant (the same builder at both calls, a
@@ -110,11 +106,6 @@ __attribute__((noinline)) void w123_rodape(api::CPaperFormBuilder& builder, api:
     comum::CRelUtil::ImprimeSeparadorFase(outro, comum::FASE_OFICIAL);
 }
 
-__attribute__((noinline)) unsigned w123_titulo(unsigned base)
-{
-    return comum::CRelUtil::FormTituloPartido() ? base + 123 : base;
-}
-
 __attribute__((noinline)) void w123_vias(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro, unsigned total)
 {
     comum::CRelUtil::ImprimeSeparadorVia(builder, 1, total);
@@ -129,7 +120,6 @@ unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
 void (*volatile w123_sink_cabecalho)(api::CPaperFormBuilder&, const std::string&, const std::string&, unsigned);
 void (*volatile w123_sink_rodape)(api::CPaperFormBuilder&, api::CPaperFormBuilder&,
                                   const comum::md::estadoaplicacao::CDadoCorrespondencia&, comum::EUrnaFase);
-unsigned (*volatile w123_sink_titulo)(unsigned);
 void (*volatile w123_sink_vias)(api::CPaperFormBuilder&, api::CPaperFormBuilder&, unsigned);
 
 struct SRelatorioTesteImpressoraRoots {
@@ -142,7 +132,6 @@ struct SRelatorioTesteImpressoraRoots {
         w123_sink_idcarga = w123_idcarga;
         w123_sink_cabecalho = w123_cabecalho;
         w123_sink_rodape = w123_rodape;
-        w123_sink_titulo = w123_titulo;
         w123_sink_vias = w123_vias;
     }
 } relatoriotesteimpressora_roots;

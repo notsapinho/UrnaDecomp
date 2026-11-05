@@ -13,6 +13,7 @@
 #include <vector>
 
 namespace api {
+class CPaperFormBuilder;
 class CReport;
 class IPaper;
 class IReportPart;
@@ -44,5 +45,24 @@ std::vector<std::shared_ptr<api::IReportPart>> CriaPartesExtratoRDV(const std::s
 api::CReport CriaRelatorioResumoZeresima(const std::string& separador,
                                          const comum::md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
 void GeraResumoZeresima();
+
+// Fn 11976 (table slot 1631, no record): the filter fn 11946 hands comum::CParteCandidatosProporcionais as its
+// std::function<bool()> (a __func<bool (*)(), bool ()> over the slot), true when the current party has candidates for
+// the current post (comum::CCandidaturas::GetCandidatosPartido, fn 2272) or, failing that, when its federation
+// (comum::CFederacoes::GetFederacao, fn 5799) has one (CCandidaturas::ExisteCandidatoFederacao, fn 5809).
+bool PartidoComCandidatos();
+
+// No target index: four forms of the zeresima's report, which fn 11946 holds behind stack frames of their own (32, 48,
+// 16 and 16 bytes, binaryen's inlining of a function with one caller: docs/reference/facts/reading.md R10).
+// FormSemCandidatos: "Não há candidatos concorrendo", a new line, the separator (vota::AdicionaSeparador, fn 1387),
+// comum::TrailerSemCandidatos (fn 11975, slot 1632) and a new line; FormSemCandidatoRegistrado: a new line, "Não há
+// candidato registrado" and the translated "para <P|este|este|esta> <PLSB>"; FormLinhaResposta: a field over
+// comum::LinhaRespostaCorrente (fn 11478, slot 3051); ImprimeTituloListaCandidatos: the list's title line and a new
+// line. Fn 11976's and these functions' names, their being free functions of vota, their external linkage and their
+// place in this file, another object than their caller's (cgeradorzeresima.cpp), are chosen.
+std::shared_ptr<api::IForm<api::IPaper>> FormSemCandidatos();
+std::shared_ptr<api::IForm<api::IPaper>> FormSemCandidatoRegistrado();
+std::shared_ptr<api::IForm<api::IPaper>> FormLinhaResposta();
+void ImprimeTituloListaCandidatos(api::CPaperFormBuilder& builder);
 
 } // namespace vota

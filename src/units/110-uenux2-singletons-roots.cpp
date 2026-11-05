@@ -19,8 +19,6 @@
 //                       in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
-//   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
-//                       it): its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
 //   MontaListas         comum::MontaCaminhos 1936: fns 6734 and 7787 (5772, GetEleitoresEstaticos, is in the link)
 //   LeEstaticos         CEleitores::GetEleitoresEstaticos 5772: fns 6734 and 7787
@@ -70,7 +68,6 @@ void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorER
 void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
-void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
 void w5772(int, int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
@@ -175,7 +172,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
-        singletons_sink = reinterpret_cast<const void*>(&s11478);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);
         singletons_sink = reinterpret_cast<const void*>(&LeEstaticos);

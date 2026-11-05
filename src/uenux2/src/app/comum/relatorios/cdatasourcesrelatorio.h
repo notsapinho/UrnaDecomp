@@ -178,3 +178,24 @@ public:
 };
 
 } // namespace comum
+
+// The reconstruction's note on fn 11975 (table slot 1632, no record), which fns 11946 (through
+// vota::FormSemCandidatos, inlined there) and 12110 pass to api::CPaperFormBuilder::AddTextField: the trailer of a
+// post with no candidate, CDataSourcesRelatorio<RDV, DSAptos>::GetLinhasEleitoresAptos's text and the comparecimento
+// for the current post, RDV's count (comum::CRdvVota::Cargo, fn 1930, slot 10). Its name, its being a free function
+// template of comum over the class's two parameters (no record, vtable or RTTI names a class) and its place, a block of
+// its own at this file's end, are chosen.
+namespace comum {
+
+template <typename RDV, typename DSAptos>
+std::string TrailerSemCandidatos()
+{
+    const md::TCargoID idCargo = CCargos::GetInst().GetCurrent().GetID();
+    const int comparecimento = RDV::GetInst().Cargo(idCargo);
+    std::string texto;
+    texto += CDataSourcesRelatorio<RDV, DSAptos>::GetLinhasEleitoresAptos();
+    texto += std::format("Comparecimento                    {:04}\n", comparecimento);
+    return texto;
+}
+
+} // namespace comum

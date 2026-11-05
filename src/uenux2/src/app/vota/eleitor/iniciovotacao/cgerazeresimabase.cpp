@@ -2,8 +2,10 @@
 
 #include <string>
 
+#include "api/gui/cinteractiveform.h"
 #include "api/gui/cpaperformbuilder.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/eleitor/iniciovotacao/cgeradorzeresima.h"
 
 namespace vota {
 
@@ -13,6 +15,15 @@ CGeraZeresimaBase::CGeraZeresimaBase()
 }
 
 CGeraZeresimaBase::~CGeraZeresimaBase() = default;
+
+void CGeraZeresimaBase::StartState()
+{
+    m_pNextState = this;
+    m_form->Slot2();
+    GeraZeresima();
+    AposGeracao();
+    m_pNextState = GetProximoEstado();
+}
 
 void ImprimeAvisoSemVotos(api::CPaperFormBuilder& builder)
 {
