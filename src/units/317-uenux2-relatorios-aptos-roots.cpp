@@ -8,35 +8,24 @@ extern "C" int w1922(int, int) __asm__("_ZN5comum15CEleitoresAptosC1ENSt3__28fun
 extern "C" void w1921(int, int) __asm__("_ZNK5comum15CEleitoresAptos7FormataEv");
 extern "C" int w2259(int, int) __asm__(
     "_ZN3api7CReportC1ENSt3__26vectorINS1_10shared_ptrINS_11IReportPartEEENS1_9allocatorIS5_EEEE");
-extern "C" void w3654(int, int) __asm__(
-    "_ZN3api20GeraArquivoRelatorioERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS_7CReportE");
 
 namespace {
 
-// Stands for fns 12105 and 12110, the target callers of 1922 and 1921 not written; fns 11223, 11908, 5977 and 3871
-// (unit 325's) are in the link.
+// Stands for fn 12110, the target caller of 1922 and 1921 not written; fns 11223, 11908, 5977 and 3871 (unit 325's)
+// and 12105 (fragment 372's) are in the link.
 __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* funcao)
 {
     w1921(reinterpret_cast<int>(texto), w1922(reinterpret_cast<int>(aptos), reinterpret_cast<int>(funcao) + 4));
     return texto[11];
 }
 
-// Stands for fns 7787 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns 11908,
-// 11943 and 11946 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
+// Stands for fn 7787, the target caller of api::CReport's constructor (fn 2259) not written; fns 11908, 11943 and
+// 11946 (unit 325's notes) and 12105 (fragment 372's) are in the link: the call that stood for 12105 went with it. The
+// second argument is the vector the constructor moves from.
 __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
 {
-    w2259(reinterpret_cast<int>(relatorios), reinterpret_cast<int>(partes));
     w2259(reinterpret_cast<int>(relatorios) + 12, reinterpret_cast<int>(partes) + 12);
-    return relatorios[3] + relatorios[15];
-}
-
-// Stands for fn 12105, the target caller of api::GeraArquivoRelatorio (fn 3654) not written (11943 and 11946, the
-// others, are in the link): one call, the one that stood for 11946 having gone with it. The
-// first argument is the address of the std::string the function takes as a const reference, the second the report.
-__attribute__((noinline)) int ArquivosRelatorios(char* arquivos, char* relatorio)
-{
-    w3654(reinterpret_cast<int>(arquivos) + 12, reinterpret_cast<int>(relatorio));
-    return arquivos[11] + arquivos[23];
+    return relatorios[15] + 3;
 }
 
 const void* volatile relatorios_aptos_sink;
@@ -46,7 +35,6 @@ struct SRelatoriosAptosRoots {
     {
         relatorios_aptos_sink = reinterpret_cast<const void*>(&LinhasAptos);
         relatorios_aptos_sink = reinterpret_cast<const void*>(&Relatorios);
-        relatorios_aptos_sink = reinterpret_cast<const void*>(&ArquivosRelatorios);
     }
 } relatorios_aptos_roots;
 

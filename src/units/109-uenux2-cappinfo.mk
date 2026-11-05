@@ -15,8 +15,9 @@
 #
 # CAppInfo::TemVota (2841) passes the literal "TemVota" and its turn to IndiceTurno and returns whether that turn's
 # m_vota holds a state (the byte at +380 + 104 * index, the optional's flag). Its name is the literal's, as GetVota's
-# is; that it is const and its line in cappinfo.cpp are chosen. Of its callers, 11242 (unit 155's) is written; 12105
-# and 12110 are not, and the roots' Votos stands for them. It matched with the plain body; nothing else was tried.
+# is; that it is const and its line in cappinfo.cpp are chosen. Of its callers, 11242 (unit 155's) and 12105
+# (fragment 372's, two calls) are written; 12110 is not, and the roots' Votos stands for it. It matched with the plain
+# body; nothing else was tried.
 # CAppInfo::SalvaVotaInterno and SalvaVotaExterno (3790, 3789, thunks of binaryen's merge 6039, which the two form here
 # too; its match line names our merge body, a name our link derives): each passes its literal ("SalvaVotaInterno",
 # "SalvaVotaExterno") and TURNO_ATUAL to IndiceTurno and, when that turn's m_vota holds a state, saves it through a

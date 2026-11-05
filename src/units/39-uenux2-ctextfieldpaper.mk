@@ -12,7 +12,6 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDPAPER_SRCS := src/api/gui/ctextfieldpaper.cpp
 UENUX2_SRCS += $(CTEXTFIELDPAPER_SRCS)
-# the ctor's four callers are not reconstructed: 39-uenux2-ctextfieldpaper-roots.cpp gives it two
-$(ROOT)/$(APP)/39-uenux2-ctextfieldpaper-roots.o: $(ROOT)/src/units/39-uenux2-ctextfieldpaper-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/39-uenux2-ctextfieldpaper-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/39-uenux2-ctextfieldpaper-roots.o
+# No roots: the ctor's four target callers (193, 604, 5613 and 12105, ledger/callgraph.tsv) are in the link, 193 and
+# 604 in cpaperformbuilder.cpp, 5613 from unit 139's roots and 12105 from fragment 372's (through
+# CPaperFormBuilder::AddTextField over a formatted source); the stand-ins that stood for 12105 went with it.

@@ -13,7 +13,6 @@ int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
 int w2838(int) __asm__("_ZN5comum19GetCandidaturaAtualERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 int w5806(int) __asm__("_ZNK5comum19CCandidaturasDSSexoclEv");
 void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
-int w2262(int) __asm__("_ZN5comum6CLocalC1Ev");
 int w5744(int) __asm__("_ZN5comum2md6CLocalD2Ev");
 void w5673(int) __asm__("_ZNK5comum2md6CLocal13ValidaCriacaoEv");
 int w1003(int) __asm__("_ZNK5comum6CLocal9GetZonaIDEv");
@@ -46,8 +45,8 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 7787, 12098, 12105, 12110, 12134 (4160 and 6599, unit 110's, 11242, unit 155's, 5579 and
-// 5977, unit
+// Stands for fn 401's callers: 7787, 12098, 12110, 12134 (12105, fragment 372's, 4160 and 6599, unit 110's, 11242, unit
+// 155's, 5579 and 5977, unit
 // 325's, 10500, unit 239's, 11223, unit 287's ImprimeTituloJE, 11908, unit 176's, written, 5584, CRelUtil's
 // ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, 3798, CGravadorUtil::DeterminaNomeArquivo, 10313, unit 71's
 // IPedeTituloMesario::ProcessInput, 11188 and 1543, unit 123's, 5591, unit 296's, 5604, unit 155's written Gera, 10689,
@@ -58,9 +57,8 @@ __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 7787, 11448 (2871, 5950 linked)
-// Construtores stands for 12105 (401, 1543, 4160 and 5738 are in the link). CLocal's destructor (fn 2261) needs none:
-// its target callers 401, 1543, 4160, 5738 and 11508 are in the link.
-__attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) * 2 - b; }
+// CLocal's constructor (fn 2262) and destructor (fn 2261) need none: their target callers, 401, 1543, 4160, 5738 and
+// 12105 (fragment 372's), and 401, 1543, 4160, 5738 and 11508, are in the link; Construtores went with 12105.
 __attribute__((noinline)) int LocaisDados(int a, int b) { return w5744(a) * 3 - w5744(b); }
 __attribute__((noinline)) int IndicesFoto(int a, int b, int c, int d)
 {
@@ -74,7 +72,8 @@ __attribute__((noinline)) void Valida(int a, int b)
 __attribute__((noinline)) int Zonas(int a, int b) { return w1003(a) + w1003(b); }
 __attribute__((noinline)) int Secoes(int a, int b) { return w1078(a) - w1078(b); }
 __attribute__((noinline)) int Municipios(int a, int b) { return w1004(a) ^ w1004(b); }
-__attribute__((noinline)) int Nomes(int a, int b) { return w1077(a) & w1077(b); }
+// Stands for fn 1077's caller 12110 (4160, 4161, 5591, 5977, 11223, 11902, 11908 and 12105 are in the link): one call.
+__attribute__((noinline)) int Nomes(int a, int b) { return w1077(a) & b; }
 __attribute__((noinline)) int UFs(int a, int b) { return w1702(a) | w1702(b); }
 __attribute__((noinline)) void UFsMinusculas(int r, int a, int s, int b)
 {
@@ -149,7 +148,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&CandidaturasAtuais);
         clocal_sink = reinterpret_cast<const void*>(&Sexos);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
-        clocal_sink = reinterpret_cast<const void*>(&Construtores);
         clocal_sink = reinterpret_cast<const void*>(&LocaisDados);
         clocal_sink = reinterpret_cast<const void*>(&IndicesFoto);
         clocal_sink = reinterpret_cast<const void*>(&Valida);

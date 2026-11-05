@@ -27,9 +27,9 @@
 # Chosen: the parameter's and the locals' names; 7025's local constant in the .cpp, as
 # app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp names a code the shared header lacks
 # (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line
-# within what its record leaves free. Of its six target callers, 12105 and 12110 are not in our link (5596, unit
-# 296's, 5604, unit 155's written Gera, 11908, unit 176's, and 5579, unit 325's, are):
-# 196-uenux2-api-util-cstringutils-roots.cpp stands for them.
+# within what its record leaves free. Of its six target callers, 12110 is not in our link (5596, unit 296's, 5604,
+# unit 155's written Gera, 11908, unit 176's, 5579, unit 325's, and 12105, fragment 372's, are):
+# 196-uenux2-api-util-cstringutils-roots.cpp stands for it.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTRINGUTILS_UENUX2_SRCS := src/api/util/cstringutils.cpp
 UENUX2_SRCS += $(CSTRINGUTILS_UENUX2_SRCS)

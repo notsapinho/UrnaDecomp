@@ -16,7 +16,7 @@ namespace comum {
 // allocates 40 before it calls 3742), with a comum::servico::CJustificadorServico at +28, whose vptr 3742 stores and
 // whose destructor (fn 3740) the destructor (fn 2810) calls on +28. The map as a base and not a member at +0 is a choice,
 // as for CRegistradorMesario (src/units/113-uenux2-cdatamap.mk). The path of this header and the member's name are
-// chosen. Fn 11474 is not written.
+// chosen.
 //
 // The singleton (fn 1391, GetInst, a chosen name) is the shape of comum::CFotos's (fn 2819): under the mutex at
 // 1838988, when the pointer at 1839012 is empty, it allocates 40 bytes, calls 3742 and stores the new object there. The
@@ -67,6 +67,16 @@ private:
 class CJustificadorDadoTitulo {
 public:
     static std::string Text();
+};
+
+// The count of justified voters in a format string, the word's last letter dropped for one (fn 11474, reached only by
+// table slot 2948, which comum::CGeradorBUJ hands over with "{:05} Justificativas": cgeradorbuj.cpp). Its body holds
+// GetInst inlined, as CJustificadorDadoTitulo::Text's does, so it is defined in cjustificador.cpp (a reading), after
+// it: band 1 puts 11474 after 11475. The class's name, its holding nothing else, Text's name and parameter are chosen,
+// after the class above and comum::CEleitorDadoSequencial::Text (celeitores.h).
+class CJustificadorDadoQuantidade {
+public:
+    static std::string Text(const std::string& formato);
 };
 
 } // namespace comum

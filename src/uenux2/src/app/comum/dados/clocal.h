@@ -59,8 +59,8 @@ public:
     // its type, through CIdentificacaoAgregada's constructor, fn 5672) and then its aggregated sections, a range insert.
     // The body reads the section's two scalars, copies its vector, and copies that copy again for the insert, freeing
     // the second copy and then the first: a local md::CSecaoEleitoral and a local vector, a form chosen for those two
-    // copies. The name is the literal's, as for the members above. Its callers, fns 12105 and 7787, are not written
-    // (unit 309's roots stand in for both).
+    // copies. The name is the literal's, as for the members above. Its callers are fns 12105 (fragment 372's, written) and
+    // 7787 (not written; unit 309's roots stand in for it).
     md::TVectorIdentificacaoAgregada GetTodasSecoes() const;
     ETipoLocalVotacao GetTipoLocalVotacao() const;
     // Whether the data hold a section, the byte at +120 of md::CLocal (its section optional's flag), read with no

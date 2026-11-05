@@ -11,8 +11,9 @@
 //   which stood for 10425 (ProcessKey's key its parameter), went.
 // - vota::EhTreinamentoMesario (fn 1823; callers 7306, 10465, 10474, 10478, 10500, 10512): its stand-in went, every
 //   caller in the link: 10512 (unit 161, written), 10465, 10474 and 10478 (unit 282), 7306 (unit 104) and 10500.
-// - vota::AdicionaSeparador (fn 1387; callers 11908 and 11946, written, 12105 and 12110, not written), with the
-//   alignments they pass, 0 and 2, so that dead-argument elimination keeps the parameter.
+// - vota::AdicionaSeparador (fn 1387; callers 11908, 11946 and 12105, written, the last fragment 372's, and 12110, not
+//   written): one call for 12110, with the alignment it passes, 0 (11946 passes 0, 11908 and 12105 2, so dead-argument
+//   elimination keeps the parameter); the call that stood for 12105 went with it.
 // - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450; callers 7061, unit 116's, in the link and calling it
 //   three times, and the static initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop
 //   what it returns) has no stand-in: the two calls that stood for 14478 went on a link without them that moved no row
@@ -29,10 +30,10 @@ __attribute__((noinline)) int w168_treinamento()
     return vota::EhTreinamento() ? 23 : 29;
 }
 
-__attribute__((noinline)) void w168_separadores(api::CPaperFormBuilder* builder, api::CPaperFormBuilder* outro)
+__attribute__((noinline)) int w168_separadores(api::CPaperFormBuilder* builder)
 {
     vota::AdicionaSeparador(*builder, api::ALINHAMENTO_ESQUERDA);
-    vota::AdicionaSeparador(*outro, api::ALINHAMENTO_CENTRO);
+    return 31;
 }
 
 // stands for fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2, not written), which calls VerificaAssinaturaMI

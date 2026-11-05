@@ -10,8 +10,8 @@ extern "C" void w3699(int, int) __asm__(
 
 namespace {
 
-// Stands for fns 12105 and 12110, the target callers of vota::CLogVota::LogaGerandoRelatorio (fn 1047) not written
-// (11943 and 11946 are in the link). They pass the report and 0 before it, the report and 1 after it.
+// Stands for fn 12110, the target caller of vota::CLogVota::LogaGerandoRelatorio (fn 1047) not written (11943, 11946
+// and fragment 372's 12105 are in the link). It passes the report and 0 before it, the report and 1 after it.
 __attribute__((noinline)) int GeracoesRelatorios(char* log, int relatorio)
 {
     w1047(reinterpret_cast<int>(log), relatorio, 0);

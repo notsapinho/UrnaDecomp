@@ -129,8 +129,7 @@
 # The generic uenux2 rule depends on the source and every uenux2 header.
 COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp
 UENUX2_SRCS += $(COMPARECIMENTOMESARIO_SRCS)
-# a caller not reconstructed (fn 12105): 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for it (the
-# stand-ins for 3614 and 10451 went with them)
-$(ROOT)/$(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o: $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o
+# No roots: GetNomeMesario's (fn 5385) one target caller, 12105 (fragment 372's, which calls it twice), is in the link,
+# so its stand-in went, as had those for ListaArquivosNaoRegistrados (5374), CControladorReconhecimentoMesario::GetInst
+# (1149) and GravaWsq (5371), whose target callers (1149 and 10451; 3614, 5382, 10316, 10337 and 10451; 5382 and 10451)
+# are in the link.

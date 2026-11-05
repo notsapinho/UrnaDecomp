@@ -13,7 +13,8 @@
 // std::source_location for the record a real caller's default argument makes: a record here would be none of the target's.
 // w100_todos has no call for api::IInputMT (383) or comum::IControladorRegistraMesarios (356): every target caller of the
 // two is in the link (10590 was 383's last, and 5382, 6008 and 10316 were 356's), and a link without their calls moves
-// no row (the fragment).
+// no row (the fragment). It calls api::IPaperRelatorios's (905) once (w100_usa_uma), for its one target caller not in
+// the link, 12110 (2890, 3654, 11006, 11852, 11855, 11991, 12068, 12071, 12074 and 12105 are).
 #include <memory>
 #include <source_location>
 #include <stdexcept>
@@ -64,6 +65,14 @@ inline int w100_usa()
     return &a == &b ? 3 : (api::CPolySingletonList::has<T>() ? 5 : 7);
 }
 
+template <typename T>
+inline int w100_usa_uma()
+{
+    const std::source_location local;
+    api::CPolySingleton<T>::instance(api::g_polySingletonsInfo(), local);
+    return api::CPolySingletonList::has<T>() ? 5 : 7;
+}
+
 [[noreturn]] __attribute__((noinline, cold)) void w100_falha(const char* detalhe)
 {
     using namespace std::string_literals;
@@ -73,7 +82,7 @@ inline int w100_usa()
 __attribute__((noinline)) int w100_todos()
 {
     return w100_usa<api::IScreen>() + w100_usa<api::IBeep>() + w100_usa<api::IPower>() + w100_usa<api::IUrna>() + w100_usa<api::IResource>() +
-        w100_usa<comum::CCalculaCV>() + w100_usa<api::IPaperRelatorios>() + w100_usa<comum::IEventosLog>() +
+        w100_usa<comum::CCalculaCV>() + w100_usa_uma<api::IPaperRelatorios>() + w100_usa<comum::IEventosLog>() +
         w100_usa<api::IAjusteDataHora>() + w100_usa<ecourna::api::security::IRng>() + w100_usa<api::CEscritorLog>() +
         w100_usa<comum::IInterfaceInit>() + w100_usa<api::IGenericFactory<api::ISemaphore>>() +
         w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
