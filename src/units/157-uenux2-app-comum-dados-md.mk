@@ -75,8 +75,8 @@
 # md::CCarga's constructor (fn 2802, no record) is in ccarga.cpp above ValidaCriacao, a chosen line, and matches: it
 # copies its arguments into the members in their order and calls ValidaCriacao, which it holds twice (one call on each
 # branch of the last string's copy). Its target callers are 10290 (fragment 172), 11587 (unit 305), 11626 (unit 160)
-# and 11629, for which 157-uenux2-app-comum-dados-md-roots.cpp's Cargas stands; with 10290 alone binaryen inlined it
-# there (fragment 172).
+# and 11629 (unit 200), all in the link: 157-uenux2-app-comum-dados-md-roots.cpp's Cargas, which stood for 11629, went
+# with it. With 10290 alone binaryen inlined it there (fragment 172).
 #
 # md::CEleitor::GetDataNascimento (no target index), out of line in celeitor.cpp after the constructors, for unit 91's
 # md::CEleitorDecorator::GetAnoNascimento (5665), which needs the call binaryen inlines (unit 91's fragment has the

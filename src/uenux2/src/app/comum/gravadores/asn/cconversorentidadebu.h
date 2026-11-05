@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "app/comum/asn/iconversorasn.h"
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
 #include "app/comum/dados/md/rdv/cvoto.h"
@@ -28,5 +30,9 @@ public:
 protected:
     TEntidade DoConverte(const TDado& dado) const override;
 };
+
+// The BU's entity converted with this class and coded with api::CFileASN::CodeObject: cconversorentidadebu.cpp says
+// what places it there; its name and its being a free function are chosen.
+std::vector<char> Codifica(const md::CEntidadeBU& entidade);
 
 } // namespace comum::asn

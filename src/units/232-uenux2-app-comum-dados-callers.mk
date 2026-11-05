@@ -12,8 +12,8 @@
 #   calls are inlined by clang, so without these the link drops 1923's body. With it in the link, binaryen merges it
 #   with md::CLocal::GetContingencia (3724, unit 89) into one body as the target's 6029 does, and 1923, 3724 and 6029
 #   match (fragments 88 and 89).
-# - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false, and 11629,
-#   which passes true; the stand-in passes both.
+# - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false (11629, unit
+#   200's, which passes true, is in the link); the stand-in passes both.
 # CopiaCargos, one call of std::vector<md::CCargo>'s copy constructor (2289), went: the last caller it stood for,
 # 11371, is in the link (fragment 299, through md::CEleicaoPE's constructor), as 1953 and 5777 are (unit 280).
 # - Suplentes: one call of std::vector<md::CDadosCandidato>::__init_with_size (2870), for 5808, 5952 and 7787;

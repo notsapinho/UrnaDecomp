@@ -12,7 +12,6 @@ int cepesc_cipheredout_ctor2(int, int, int) __asm__("_ZN7ecourna3api6cepesc12CCi
 int cepesc_cipheredout_ctor3(int, int, int, int) __asm__("_ZN7ecourna3api6cepesc12CCipheredOutC2ERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_RKNS1_9CInfoSaltE");
 int cepesc_plaintext_ctor(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_NS3_10shared_ptrINS1_9CInfoSaltEEE");
 int cepesc_plaintext_ctor_salt(int, int, int, int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EhhttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_RKNS1_9CInfoSaltE");
-int cepesc_plaintext_ctor_wsq(int, int, int, int, int, int, int) __asm__("_ZN7ecourna3api6cepesc10CPlainTextC2EttNSt3__26vectorIhNS3_9allocatorIhEEEES7_S7_S7_");
 void keyloader_decipher(int, int, int) __asm__("_ZN7ecourna3api8security10CKeyLoader19DecipherKeyIfNeededIN19ModuloEnvelopeChave13EntidadeChaveEEENSt3__26vectorIhNS6_9allocatorIhEEEERKT_");
 }
 
@@ -31,20 +30,5 @@ struct SCepescRoots {
         cepesc_sink = reinterpret_cast<void*>(&keyloader_decipher);
     }
 } cepesc_roots;
-
-// Stands for fn 5168's caller 11629, not in the link: CPlainText's constructor over two words and four vectors has two
-// direct callers, 2725 (unit 293's, in the link) and 11629, and 2725 reads its result. One call, for 11629: the call
-// that stood for 2725 went with it.
-__attribute__((noinline)) int TextosPlanos(int a, int zona, int secao, int v)
-{
-    return cepesc_plaintext_ctor_wsq(a, zona, secao, v, v + 12, v + 24, v + 36) - 5;
-}
-
-struct SCepescCallers {
-    SCepescCallers()
-    {
-        cepesc_sink = reinterpret_cast<void*>(&TextosPlanos);
-    }
-} cepesc_callers;
 
 } // namespace

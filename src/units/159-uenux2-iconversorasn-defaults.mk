@@ -17,8 +17,8 @@
 #   the directory its data class's and its link neighbours' records', docs/reference/facts/placing.md P3) and of
 #   CConversorEntidadeBU 10272 (its head is gravadores/asn/cconversorentidadebu.h, beside the .cpp its records name,
 #   over md::CEntidadeBU, gravadores/md/centidadebu.h, with which the default returns the TDado in memory, the target's
-#   (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, not written, is the one target function that
-#   stores its vptr, which the roots stand in for);
+#   (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, unit 200's, is the one target function that
+#   stores its vptr, which matches: the roots' sink went with it);
 # and 11418, IConversorBiometriaASN's default DoConverte, slot 2 of CConversorBiometriaEleitorCifrada. All of them come
 # from the headers' code; the pending object emits this fragment's classes' vtables, and the defaults with them, except
 # CConversorHistoricoVotoImpresso's and CConversorFotoCandidato's: fragment 172 writes their own slots (10276, 11440),

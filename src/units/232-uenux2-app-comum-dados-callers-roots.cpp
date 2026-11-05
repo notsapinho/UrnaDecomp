@@ -24,8 +24,8 @@ __attribute__((noinline)) int DetalhesConsulta(int cargos)
     return w232_1923(cargos) + 3 * w232_1923(cargos + 140);
 }
 
-// Stands for fns 5735, 7787 and 11629, which call CConfiguracaoEleicao::GetCargos (fn 3775) on GetInst()'s result (fn
-// 187): 5735 and 7787 pass false, 11629 true.
+// Stands for fns 5735 and 7787, which call CConfiguracaoEleicao::GetCargos (fn 3775) on GetInst()'s result (fn 187)
+// and pass false; 11629 (unit 200's), which passes true, is in the link. One call passes each value.
 __attribute__((noinline)) void CargosEleicao(int destino, unsigned eleicao)
 {
     w232_3775(destino, w232_187(), eleicao, false);

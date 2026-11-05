@@ -1,21 +1,21 @@
 # uenux2 comum::CGravadorBU (app/comum/gravadores/cgravadorbu.{h,cpp}, the files its records name) and the BU's result
 # data classes comum::md::CVotosCargo, md::CResultadoVotacao and md::CResultadoVotacaoPorEleicao
-# (app/comum/gravadores/md/cvotoscargo.h, cresultadovotacao.{h,cpp} and cresultadovotacaoporeleicao.h), paths relative
-# to src/uenux2. The sources are md/cresultadovotacao.cpp, then cgravadorbu.cpp: that order is the target's, where
-# CResultadoVotacao's constructor (fn 3824) is ahead of AcrescentaVotoVotavel (fn 3820) in their use band, other
-# objects' functions between them (fns 3821 to 3823).
+# (app/comum/gravadores/md/cvotoscargo.h, cresultadovotacao.{h,cpp} and cresultadovotacaoporeleicao.{h,cpp}), paths
+# relative to src/uenux2. The sources are md/cresultadovotacao.cpp, then cgravadorbu.cpp: that order is the target's,
+# where CResultadoVotacao's constructor (fn 3824) is ahead of AcrescentaVotoVotavel (fn 3820) in their use band, other
+# objects' functions between them (fns 3821 to 3823); md/cresultadovotacaoporeleicao.cpp's and md/cvotoscargo.cpp's
+# places between them are chosen (neither has a function of its own in the target).
 #
 # Matched:
 # - CGravadorBU's implicit destructors (target fns 5857 and 11628, slots 0 and 1) and the destroy of the tree of its
-#   std::map<md::TCargoID, uebyte> at +284 (fn 3814), emitted with the vtable in 200-uenux2-cgravadorbu-pending.cpp,
-#   whose trap of GravaResultado (fn 11629) is the class's key function; they move there with the vtable, under the same
-#   symbols, when GravaResultado lands. The D2's other callees are in the link: fn 1405 (unit 155's) and fn 857.
+#   std::map<md::TCargoID, uebyte> at +284 (fn 3814), emitted with the vtable in cgravadorbu.cpp's object, whose
+#   GravaResultado (fn 11629) is the class's key function. The D2's other callees are in the link: fn 1405 (unit 155's)
+#   and fn 857.
 # - libc++'s uninitialized copy of a range of md::CResultadoVotacaoPorEleicao (fn 2853) and
-#   std::vector<md::CResultadoVotacaoPorEleicao>'s __base_destruct_at_end (fn 5859): template instances the roots file's
-#   stand-in for their one target caller, CGravadorBU::GravaResultado (fn 11629), emits at the tree's flags (the roots
-#   rule compiles with UENUX2_CXXFLAGS). They come from cgravadorbu.cpp's object once GravaResultado lands, and the
-#   stand-in goes then. That the 20-byte elements they handle are md::CResultadoVotacaoPorEleicao is a reading:
-#   MontaEntidadeBU (record cgravadorbu.cpp:636, inlined into fn 11629) takes a const
+#   std::vector<md::CResultadoVotacaoPorEleicao>'s __base_destruct_at_end (fn 5859), template instances whose one target
+#   caller is fn 11629 (four calls of 2853, two of 5859): 2853 comes from md/centidadebu.cpp's object (unit 321's), whose
+#   four md::CEntidadeBU constructors copy the results, and 5859 from cgravadorbu.cpp's, which destroys them. That the
+#   20-byte elements are md::CResultadoVotacaoPorEleicao: MontaEntidadeBU's record (cgravadorbu.cpp:636) takes a const
 #   std::vector<md::CResultadoVotacaoPorEleicao> &, and fn 2853's nested copies have the three classes' layouts.
 # - CGravadorBU::AcrescentaVotoVotavel (fn 3820, record cgravadorbu.cpp:221:23, static) in cgravadorbu.cpp, and the
 #   std::vector<md::CVotosVotavel>::push_back it calls three times (fn 1944, from cgravadorbu.cpp.o; 3819 below calls
@@ -35,19 +35,16 @@
 # - md::CResultadoVotacao's constructor (fn 3824, no record) in md/cresultadovotacao.cpp, out of line in an object
 #   apart from its caller's (cresultadovotacao.cpp says what places it), and the copy of a std::vector<md::CVotosCargo>
 #   it calls (__init_with_size, fn 1556), from that object; and std::vector<md::CResultadoVotacao>'s
-#   __emplace_back_slow_path<const md::CResultadoVotacao &> (fn 3817), the push_back of a copy, which the roots file's
-#   stand-in for fn 11629 emits at the tree's flags. 11629 is the one target caller of 3824 and 3817 (three calls each)
-#   and calls 1556 six times; 3817 and 3824 call it too. The scan's content pass found 3817 (no line of
-#   splat/symbol_addrs.txt names it): its one caller is not in the link, and its body holds CResultadoVotacao's implicit
-#   copy constructor
-#   (the two words at +0 and +4 and fn 1556 over the vector at +8), so the name is the reading of a template instance
-#   the stand-in gives, as 2853's is; it comes from cgravadorbu.cpp's object once GravaResultado lands.
+#   __emplace_back_slow_path<const md::CResultadoVotacao &> (fn 3817), the push_back of a copy, from cgravadorbu.cpp's
+#   object (MontaResultadosVotacao's three push_backs). 11629 is the one target caller of 3824 and 3817 (three calls
+#   each) and calls 1556 six times; 3817 and 3824 call it too. 3817's body holds CResultadoVotacao's implicit copy
+#   constructor (the two words at +0 and +4 and fn 1556 over the vector at +8).
 # - comum::FiltraCargos (fn 3818, no record) in cgravadorbu.cpp after AcrescentaVotoVotavel, and the relocation of a
 #   std::vector<md::CCargo> it calls in its reserve and its push_back (std::__uninitialized_allocator_relocate, fn 3816,
 #   from cgravadorbu.cpp's object): cgravadorbu.cpp's notes say what it does, why it reads as an external function
-#   there, and what is chosen. Its one target caller, 11629, calls it three times; the roots file's w200_filtra stands
-#   for it, and 3816's other target caller, 11371 (comum::asn::CConversorEleicaoPE::DoDesconverte, written, fragment 299's), needs
-#   none: 3818 calls it twice. Measured in the whole link before step 8 (pnpm wasm score against the target): 3818 9
+#   there, and what is chosen. Its one target caller, 11629, calls it three times (MontaResultadosVotacao's calls), and
+#   3816's other target caller is 11371 (comum::asn::CConversorEleicaoPE::DoDesconverte, fragment 299's); 3818 calls it
+#   twice. Measured in the whole link before step 8 (pnpm wasm score against the target): 3818 9
 #   over 312 rows and 3816 2 over 243, operand-only, every operand a call's. It is the first form written; std::copy_if
 #   with a lambda was not tried.
 # - comum::MontaVotosCargos (fn 3819, no record, a chosen name) in cgravadorbu.cpp between AcrescentaVotoVotavel and
@@ -55,8 +52,8 @@
 #   header says what each does and what is chosen), and md::CVotosCargo's constructor, which it holds inlined too, in
 #   md/cvotoscargo.cpp (cvotoscargo.h says why it is out of line; the file's place in the list below is chosen). The
 #   libc++ code it holds (the copy assignment and the range insert of a std::vector<md::CVotosVotavel>, the push_back
-#   of a std::vector<md::CVotosCargo>, map::at) is its own; its one target caller, 11629, calls it three times, and the
-#   roots file's w200_monta stands for it. What the bytes decided, each measured in the whole link with pnpm wasm score
+#   of a std::vector<md::CVotosCargo>, map::at) is its own; its one target caller, 11629, calls it three times
+#   (MontaResultadoVotacao's call, inlined three times). What the bytes decided, each measured in the whole link with pnpm wasm score
 #   against the target (rows over rows, structural rows, at the state of the source then):
 #   - the party votes are appended with legendas.cbegin() and cend(): the target's range insert assigns through a
 #     temporary copy and constructs element by element, libc++'s path for const iterators; with
@@ -97,22 +94,66 @@
 # of cgravadorbu.h under -iquote, scored 3820 at 23 over 332 rows and 1944 at 4 over 137 with the form above, and 95
 # over 359 with a CBaseType count and the found candidacy tested first.
 #
-# Evidence and choices: cgravadorbu.h and the md headers say what each layout comes from and which types and names are
-# chosen; the paths of the md headers and of md/cresultadovotacao.cpp are chosen (beside cvotosvotavel.h).
+# Measured on this unit's link as it lands (pnpm wasm score against the target, every row operand-only): 5857 8 over
+# 101 rows, 11628 2 over 5, 3814 1 over 15, 2853 6 over 206, 5859 3 over 122, 3817 9 over 388, 3818 9 over 312, 3816 2
+# over 243, 3819 35 over 1951, 3820 23 over 332, 3824 1 over 30, 1556 4 over 109 and 1944 4 over 137.
 #
-# Not written, and what each waits for:
-# - GravaResultado (fn 11629, slot 7): the -pending.cpp header says what it calls and what it waits for.
-CGRAVADORBU_SRCS := src/app/comum/gravadores/md/cresultadovotacao.cpp src/app/comum/gravadores/md/cvotoscargo.cpp \
+# Evidence and choices: cgravadorbu.h and the md headers say what each layout comes from and which types and names are
+# chosen; the paths of the md headers, md/cresultadovotacao.cpp and md/cresultadovotacaoporeleicao.cpp are chosen
+# (beside cvotosvotavel.h).
+#
+# - comum::CGravadorBU::GravaResultado (fn 11629, slot 7, records cgravadorbu.cpp:484 and :485), with what it holds:
+#   LeChavePublica and MontaEntidadeBU (records :542 to :560 and :636), the results' helpers MontaResultadosVotacao,
+#   MontaResultadosVotacaoPorEleicao and MontaResultadoVotacao (no record), md::CResultadoVotacaoPorEleicao's constructor
+#   (md/cresultadovotacaoporeleicao.cpp), md::CEntidadeBU's four constructors and ValidaCriacao (unit 321's
+#   md/centidadebu.cpp, records :159 to :177) and comum::asn::Codifica (unit 321's asn/cconversorentidadebu.cpp, with
+#   IConversorASN's Converte and CFileASN::CodeObject for the BU's entity): cgravadorbu.cpp's header says what each does
+#   and what is read, cgravadorbu.h and the md headers what each member is. As it lands, fn 11629 is 423 over 7089 rows,
+#   every one operand-only: calls, data addresses, the packed format strings' addresses, and the constants 69 and 148
+#   (eleven and six rows), table slots of this link (the exception's destructor's and the format buffer's), as for fn
+#   3820. What the bytes decided, each measured in the whole link with pnpm wasm score against the target, with that one
+#   form changed from the source as it lands:
+#   - the CResultadoVotacao of each type built by MontaResultadoVotacao, so that the votes' vector is destroyed before
+#     the result is moved into the one MontaResultadosVotacao keeps: built in place (the first directly, the others by
+#     assigning a temporary), 1184 over 7153 rows (64 inserted, 42 deleted);
+#   - md::CResultadoVotacaoPorEleicao's constructor out of line, in its own object: defined in the class, 941 over 7196
+#     (107 inserted, 35 deleted); out of line, its copy of the vector calls fn 1556 per element, as the target's does;
+#   - its +4 an SQtdeAptos copied whole (one 32-bit load and store, the target's): with two ueword members set from
+#     the SQtdeAptos's fields, 429 over 7093 (4 inserted, 0 deleted: two 16-bit loads and stores);
+#   - the election's id read into a local before CConfiguracaoEleicao::GetInst() (the target loads it first): with
+#     eleicao.GetID() at each use, 456 over 7093 (4 inserted, 3 deleted);
+#   - MontaResultadosVotacaoPorEleicao's parameters with the posts' order map before the voters' map: the other way
+#     round, 425 over 7090 (1 inserted, 1 deleted: where fn 11629 copies `this` into the local the inlined code reads);
+#   - each result kept when GetTotaisVotosCargo().size() > 0 (the target loads the end first): with !empty(), 427 over
+#     7091 (2 and 2);
+#   - LeChavePublica's test of the decrypted key as size() == 0: with empty(), 427 over 7091 (2 and 2, the begin
+#     loaded first; CControlaArmazenamentoDeImagens::LeChavePublica, unit 293's, spells it empty(), and target fn 2725
+#     loads the end first there too);
+#   - the encrypted branch's copy of the coded bytes as std::vector<uebyte>(size) filled by std::copy (the begin's
+#     zero set before the end's, the target's order; the vector's zero fill is dead and goes): with the iterator-pair
+#     constructor, 427 over 7091 (2 and 2), the two sets the other way round; clang's output for this TU (its IR or its
+#     object) set the end first for cbegin()/cend(), data() to data() + size(), braces, auto, std::begin/std::end, a non-const
+#     copy and the copy declared after the table too, and the begin first for this form;
+#   - md::CEntidadeBU's constructors out of line in md/centidadebu.cpp, or defined in the class: 423 over 7089 both
+#     ways (the first is written, the form cenvelopegenerico.cpp has);
+#   - FiltraCargos defined after the results' helpers (declared before them): defined first, the same bytes, with 3816
+#     linked ahead of 3817 (cgravadorbu.cpp's header).
+#   Chosen, beyond those: every name the records do not give (the helpers, Codifica, the locals, the members of
+#   cgravadorbu.h), the helpers' being free functions of comum and their parameters' types and order beyond the
+#   target's, the four constructors' parameter lists, the place of each function without a record, and the comment
+#   lines of cgravadorbu.cpp's header. The roots file's stand-ins for fn 11629 (of fns 2853, 5859, 3817, 3818, 3819 and
+#   3824) went with it; its vtable sink stays, for the constructor 12098 holds.
+CGRAVADORBU_SRCS := src/app/comum/gravadores/md/cresultadovotacao.cpp \
+  src/app/comum/gravadores/md/cresultadovotacaoporeleicao.cpp src/app/comum/gravadores/md/cvotoscargo.cpp \
   src/app/comum/gravadores/cgravadorbu.cpp
 UENUX2_SRCS += $(CGRAVADORBU_SRCS)
+# cgravadorbu.cpp reads comum::CConfiguracaoEleicao, whose header includes Boost's ptime, and ecourna's media
+# information, whose converter's header includes its ASN.1 module by its bare name
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorbu.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Isrc/asn1/modules
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorbu.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 W200_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
-# CGravadorBU::GravaResultado is not reconstructed: 200-uenux2-cgravadorbu-pending.cpp gives it a trapping body,
-# compiled with the tree's flags, and emits the class's vtable and implicit destructors
-$(ROOT)/$(APP)/200-uenux2-cgravadorbu-pending.o: $(ROOT)/src/units/200-uenux2-cgravadorbu-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/200-uenux2-cgravadorbu.mk $(W200_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/200-uenux2-cgravadorbu-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/200-uenux2-cgravadorbu-pending.o
-# the constructor that stores the vtable and the callers of fns 2853, 3817, 3818, 3819 and 3824 are not written:
-# 200-uenux2-cgravadorbu-roots.cpp stands in for them; it compiles with the tree's flags
+# the constructor that stores the vtable is not written: 200-uenux2-cgravadorbu-roots.cpp stands in for it; it compiles
+# with the tree's flags
 $(ROOT)/$(APP)/200-uenux2-cgravadorbu-roots.o: $(ROOT)/src/units/200-uenux2-cgravadorbu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/200-uenux2-cgravadorbu.mk $(W200_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/200-uenux2-cgravadorbu-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/200-uenux2-cgravadorbu-roots.o
