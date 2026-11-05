@@ -222,7 +222,8 @@
 #   callers 12098 and 12110 (5604, unit 155's written Gera, is in the link).
 # - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
 #   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
-#   times, none written (those with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).
+#   times, of them 6569, 1588 and 12272 written (those with records, 6660, 6671, 6678, 7787 and 12272, are
+#   app/vota/eleitor/comum/ctelasvota.cpp's).
 #   Each reads the candidate detail's engaged flag at +84 and a field of the detail itself, the photo flag at +20 or the
 #   substitutes' vector at +72 (52-byte elements), not through GetDetalheCandidato, which those screens call elsewhere
 #   (fn 1388). That a caller's TU would inline a body this small is a reading, not compiled, so their TU is another

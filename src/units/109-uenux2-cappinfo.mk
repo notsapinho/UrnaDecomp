@@ -81,6 +81,22 @@
 # 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp. 436, which calls
 # CPath::GetPathTrab (358), is unit 190's and matches.
 #
+# comum::CFotos::GetImagem (fn 3755, 4858 B), written and matched: the photo's bytes under the name
+# "CFotos::GetImagem(id)", the literal it builds, through the two functions the records cfotos.cpp:39:15 and :51:15 name
+# (comum::GetFotoPara over the map's value and over an id, EUeComumDadosError's 7860 and 7861), each behind a stack
+# frame of its own in 3755, and through them comum::CLeitorASN::LeFotoCandidato (unit 280's carregaarquivo.cpp, compiled
+# in unit 89's list), which reads the photo's entity with legravaentidade.h's LeEntidadeEm (records :92 and :98,
+# EUeComumAsnError's 7667 and 7668): a seek to the index's position and a read of its length. cfotos.h says what the
+# map's value SIndiceFoto rests on and what is chosen; cleitorasn.h and legravaentidade.h say the same of theirs.
+# - Measured before step 8 (pnpm wasm score, whole link): 174 over 2032 rows, all operand-only; it matched at step 9. In
+#   its first link 3755 had one caller, 12520 (the candidate's screen's CDataImage, unit 110's file), and binaryen
+#   inlined it there: the roots stand in for its other caller, 12641 (CDataImage<CCandidaturasDSFoto>'s, not written),
+#   which calls it twice, and it stays out of line.
+# - Use band 3 runs 3756 then 3755 (names.tsv's ld_index 2609 and 2617), the target's order, so GetImagem follows the
+#   constructor; its line after GetFotoPara is chosen. In band 4, 2858 (std::make_format_args over two strings, which
+#   csystem.cpp's 5455 calls too) links from this object now, after 2819 and 2818 (2613 against 2606 and 2610) where the
+#   target's index puts it before them: two pairs read inverted. Not measured: what puts it first in the target.
+#
 # What decides the form, measured:
 # - The statics are class members defined after the accessor, pointer first: `.bss` then holds the mutex below the pointer,
 #   as the target does (1838640 and 1838664 for CAppInfo), because the accessor's first mention creates them, and the
@@ -117,9 +133,10 @@
 # EhTreinamentoEleitor and GetIdentificacaoUrna, from their bodies and the literal "Codigo identificacao UE"; the getters GetTurno,
 # GetFase, GetNumeroInternoUrna, GetCodigoCarga, GetTreinamentoEleitor, GetDadoCarga and GetCorrespondencia, from the members
 # they read, which no target string names; cappinfosingleton.cpp, cestadogeralgap.cpp, cpartidos.*, cfotos.h, cappinfo.h,
-# euecomumappinfoerror.h, eurnaturno.h and every enumerator's name; EUrnaTurno's values' spelling; CFotos::SFotoIndexada and
-# that its first 20 bytes are an md::CIndiceFoto; the types of the CEstadoGeral members no body reads; that 697 and 1942 are a
-# static member and a free function; m_turnoCarregado's name and type. The member order of CAppInfo is the offsets'.
+# euecomumappinfoerror.h, eurnaturno.h and every enumerator's name; EUrnaTurno's values' spelling; SIndiceFoto's members
+# and that its first 20 bytes are an md::CIndiceFoto; the types of the CEstadoGeral members no body reads; that 697 and
+# 1942 are a static member and a free function; m_turnoCarregado's name and type. The member order of CAppInfo is the
+# offsets'.
 #
 # Measured, the same code (the function's disassembly with object-local numbers masked, how-to step 3):
 # - 185, 401, 521, 819, 2819: std::make_unique or reset(new T()) or an explicit unique_ptr; std::lock_guard, std::unique_lock or

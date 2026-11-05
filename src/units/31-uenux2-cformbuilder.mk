@@ -84,7 +84,8 @@
 #
 # 3678 and 2243, AddLabeledKey over a key's name and over a key, and 2782, AddTextFieldMultiLine, match; the scan's
 # content pass names each (source `content`), as no vote reaches them. Their target callers are screens, none written
-# but 653 and 12055 (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the
+# but 653, 12055, 6569 and 1588 (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and
+# 12040): the
 # roots say which stand-in stands for which. Each measured in the link (`pnpm wasm score`, and `pnpm wasm
 # splat-remap`, which reads 3678 and 2782 IDENTICAL, and 2243 unresolved on its one call, of 3678, whose name only that
 # match gives):

@@ -27,6 +27,10 @@ namespace comum {
 class CAppState;
 } // namespace comum
 
+namespace comum::md {
+class CCandidatura;
+} // namespace comum::md
+
 namespace vota::testeteclado::impl {
 class IGeradorTeclas;
 } // namespace vota::testeteclado::impl
@@ -96,6 +100,14 @@ public:
     CFormInterativoTelaVota CriaTelaQRCodeBU(std::function<std::string()> ajuda, std::function<std::string()> qrcode,
                                              std::function<std::string()> pagina) const;
 
+    // The candidate's screen vota::CVisualizarCandidatos::StartState (fn 11876) shows for each candidature it pages
+    // through (fn 6569): the record of the lambda at ctelasvota.cpp:3366 (fn 12272) names it and its parameters, the
+    // lambda at :3323 is its $_0 (CDataImage<__bind<...$_0&, const comum::md::CDadosCandidato&>>'s RTTI), and 11876 calls
+    // it with no CTelasVota::GetInst() before it, so it is static. src/units/150-uenux2-eleitor-estados.mk has what each
+    // part of its body rests on; the parameters' names are chosen.
+    static CFormInterativoTelaVota CriaTelaVisualizacaoCandidato(const comum::md::CCandidatura& candidatura, size_t pagina,
+                                                                 size_t total);
+
     const CFormInterativoTelaVota& GetTelaAplicacaoEncerrada() const { return m_tela4; }
     const CFormInterativoTelaVota& GetTelaAlertaDesligamento() const { return m_tela5; }
     const CFormInterativoTelaVota& GetTelaConfirmaImpressaoZeresima() const { return m_tela6; }
@@ -159,7 +171,7 @@ public:
     // constructors (inlined with their GetInst into fns 7481 and 11797), call CTelasVota::GetInst() (fn 407) right
     // before it and drop the result, the reading made for fns 6580 and 6581: a static member called through the
     // instance. Use band 2 of ctelasvota.cpp.o puts it after the map instance 6579 and before the destructor 6548, so it
-    // is defined between SorteiaTeclasTesteTeclado and ~CTelasVota (ld_index 2806, between 2800 and 2807). Its name and
+    // is defined between SorteiaTeclasTesteTeclado and ~CTelasVota (ld_index 2813, between 2800 and 2814). Its name and
     // its being CTelasVota's are chosen.
     static std::shared_ptr<api::IForm<api::IScreen>> GetTelaContinuaVotacao();
     // The screens of vota::CInspecionaUrna and vota::CUrnaInspecionada (+12 of each): TelaTextoConfirmaCorrige("Por

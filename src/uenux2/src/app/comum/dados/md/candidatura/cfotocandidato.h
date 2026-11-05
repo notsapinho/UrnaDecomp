@@ -18,6 +18,10 @@ class CFotoCandidato {
 public:
     CFotoCandidato(const std::string& codigo, const ecourna::app::dados::CFoto& foto);
 
+    // comum::CFotos::GetImagem (target fn 3755) copies the image vector at +16 out of the photo GetFotoPara returns; the
+    // accessor's name is chosen.
+    const ecourna::app::dados::CFoto& GetFoto() const { return m_foto; }
+
 private:
     std::string m_codigo;
     ecourna::app::dados::CFoto m_foto;

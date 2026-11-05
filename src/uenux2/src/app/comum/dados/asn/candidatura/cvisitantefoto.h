@@ -27,7 +27,7 @@ private:
     // +4: 0 or 1, which of the two fields of a photo visit expects next (its throws: "Sequenciador com valor errado ...")
     int m_sequenciador;
     // +8: position and length of the photo being read
-    SIndiceFoto m_indice;
+    md::CIndexer m_indice;
     // +16: one entry per photo read (element type presumed, cindicesfotos.h)
     std::vector<md::CIndiceFoto> m_indices;
 };

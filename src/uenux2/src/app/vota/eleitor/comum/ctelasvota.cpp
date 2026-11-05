@@ -1,5 +1,6 @@
 #include "app/vota/eleitor/comum/ctelasvota.h"
 
+#include <algorithm>
 #include <format>
 #include <functional>
 #include <map>
@@ -10,17 +11,22 @@
 #include <vector>
 
 #include "api/gui/capplication.h"
+#include "api/gui/cdataimage.h"
 #include "api/gui/cformbuilder.h"
-#include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cimagefield.h"
 #include "api/gui/cinputmenufield.h"
+#include "api/gui/cinteractiveformbuilder.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldmultiline.h"
+#include "api/gui/iimagesurfaceops.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/cfotos.h"
 #include "app/comum/dados/clocal.h"
+#include "app/comum/dados/md/candidatura/ccandidatura.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/vota/comum/cpreshowformvota.h"
@@ -32,24 +38,40 @@
 
 namespace vota {
 
-// (original lines 35-290: content not recovered)
+// (original lines 41-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
 // void f13101(i32) { ... }
 // </stubs>
 
-// (original lines 296-483: content not recovered)
-#line 484
-// <stubs>
-// f4184 · 610 B · unmatched · name unknown
-// void f4184(i32, i32) { ... }
+// (original lines 296-469: content not recovered)
+#line 470
+namespace {
 
-// f4181 · 427 B · unmatched · name unknown
-// void f4181(i32, i32, i32, i32, i32) { ... }
-// </stubs>
+template <typename SRCFT>
+api::CFormBuilder::SharedField adicionaImagem(api::CFormBuilder& builder, SRCFT fonte, const api::SPoint& posicao)
+{
+    const auto imagem = std::make_shared<api::CDataImage<SRCFT>>(fonte);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CImageField>(posicao, imagem, api::ANCHOR_TOP_RIGHT);
+    builder.AddField(campo);
+    return campo;
+}
 
-// (original lines 492-800: content not recovered)
+template <typename SRCFT>
+api::SRect adicionaFotoEmoldurada(api::CFormBuilder& builder, const api::TPosition x, const api::TPosition y,
+                                  const api::TPosition largura, const api::TPosition altura, SRCFT fonte)
+{
+    const api::SPoint posicao(x + 1, y + 1);
+    adicionaImagem(builder, fonte, posicao);
+    const api::SRect area = api::CPolySingleton<api::IScreen>::instance().GetImageSurfaceOps().ImageRect(
+        largura, altura, posicao, api::ANCHOR_TOP_RIGHT);
+    return area;
+}
+
+} // namespace
+
+// (original lines 494-800: content not recovered)
 #line 801
 std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& cargo, const std::string& erro)
 {
@@ -182,8 +204,26 @@ const auto GetKeyboardLayout()
 // void f3064(i32, i32) { ... }
 // </stubs>
 
-// (original lines 1587-3340: content not recovered)
-#line 3341
+// (original lines 1587-2999: content not recovered)
+#line 3000
+namespace {
+
+const api::SFont FONTE_TITULO{30, 0};
+const api::SFont FONTE_VERSAO{15, 0};
+
+} // namespace
+
+// (original lines 3007-3167: content not recovered)
+#line 3168
+namespace {
+
+const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
+const api::SFont FONTE_AGUARDE{25, 0};
+const api::SFont FONTE_TECLA{20, 1};
+const api::SFont FONTE_SUPLENTE{13, 0};
+
+} // namespace
+
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes)
 {
@@ -208,16 +248,6 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
 {
     return TelaNeutra("Por favor, aguarde...", 35, 0);
 }
-
-// (original lines 3366-3369: content not recovered)
-#line 3370
-namespace {
-
-const api::SFont FONTE_TITULO{30, 0};
-const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
-const api::SFont FONTE_AGUARDE{25, 0};
-
-} // namespace
 
 void AdicionaTelaAguarde(api::CFormBuilder& builder, const std::string& mensagem)
 {
@@ -273,15 +303,6 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     return GetFormulario(builder, "telaEsperaRepetirTesteTeclado");
 }
 
-// (original lines 3432-3433: content not recovered)
-#line 3434
-SINGLETON_IMPL_GET_INST(CTelasVota, s_mutex, s_instancia)
-
-std::unique_ptr<CTelasVota> CTelasVota::s_instancia;
-std::mutex CTelasVota::s_mutex;
-
-const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
-
 CFormInterativoTelaVota CTelasVota::GetTelaTesteTecladoOpcional()
 {
     return TelaTextoConfirmaCorrige("Quer testar o teclado?", "Testar", "Não testar");
@@ -314,6 +335,129 @@ std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorT
     return gerador.GeraSequencia(TECLAS_TESTE_TECLADO);
 }
 
+CFormInterativoTelaVota CTelasVota::CriaTelaVisualizacaoCandidato(const comum::md::CCandidatura& candidatura,
+                                                                  size_t pagina, size_t total)
+{
+    using api::TPosition;
+    const comum::md::CCargo& cargo = comum::CConfiguracaoEleicao::GetInst().GetCargo(candidatura.GetCargoID());
+    api::CInteractiveFormBuilder builder;
+    auto limiteDireito = [&](const int topo, const int base) -> api::TPosition {
+        const api::TPosition inicioFotos =
+            644 - 111 * cargo.QtdSuplentes() - 5 * std::max<int>(cargo.QtdSuplentes(), 1);
+        return std::min<api::TPosition>(topo < 287 ? 478 : inicioFotos, base < 287 ? 478 : inicioFotos);
+    };
+    auto adicionaLinha = [&](api::TPosition y, const std::string& rotulo, const std::string& valor) {
+        const api::SRect area = builder
+                                    .AddTextField(rotulo + ": ", api::SPoint(1, y), FONTE_INSTRUCAO_TESTE_TECLADO,
+                                                  api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(6),
+                                                  static_cast<api::TColor>(1))
+                                    ->Rect();
+        const api::TPosition altura = (area.bottom - area.top) * 2 + 4;
+        const api::TPosition base = area.top + altura;
+        const api::SRect retangulo(area.right, area.top, limiteDireito(area.top, area.top + altura), base);
+        return builder
+            .AddTextFieldMultiLine(valor, retangulo, FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA)
+            ->Rect()
+            .bottom;
+    };
+    auto textoSexo = [](const auto sexo) {
+        switch (sexo) {
+        case comum::md::CSexo::SEXO_MASCULINO:
+            return "masculino";
+        case comum::md::CSexo::SEXO_FEMININO:
+            return "feminino";
+        default:
+            return "não informado";
+        }
+    };
+    auto lerFotoCandidato = [](const comum::md::CDadosCandidato& dados) {
+        return comum::CFotos::GetInst().GetImagem(dados.GetCodigo());
+    };
+    auto nomeSuplente = [&](const int suplente) {
+        return cargo.GetNomeSuplente(suplente, candidatura.GetSuplente(suplente).GetSexo());
+    };
+    auto adicionaFotoSuplente = [&](const int suplente) {
+        const api::TPosition x = suplente == cargo.QtdSuplentes() ? 639 : 523;
+        const api::SRect foto = adicionaFotoEmoldurada(builder, x, 253, 111, 155,
+                                                       std::bind(lerFotoCandidato, candidatura.GetSuplente(suplente)));
+        builder.AddTextField(nomeSuplente(suplente), api::SPoint(foto.Width() / 2 + foto.left, foto.bottom + 1),
+                             FONTE_SUPLENTE, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2),
+                             static_cast<api::TColor>(1));
+    };
+
+    // (original lines 3338-3360: content not recovered)
+#line 3361
+    std::function<void(TPosition, int)> adicionaSuplentes = [&](TPosition y, int suplente) {
+        if (suplente > cargo.QtdSuplentes()) {
+            return;
+        }
+        if (suplente > 2) {
+            throw CUeVotaError(EUE_VOTA_VISUALIZACAO_CANDIDATO_SUPLENTES_DEMAIS, "Sem suporte a mais de 2 suplentes");
+        }
+        if (cargo.GetDetalheCandidato().GetSuplente(suplente).TemFoto()) {
+            adicionaFotoSuplente(suplente);
+        }
+        y = adicionaLinha(y, nomeSuplente(suplente), candidatura.GetSuplente(suplente).GetNomeUrna());
+        y = adicionaLinha(y, "Gênero", textoSexo(candidatura.GetSuplente(suplente).GetSexo()));
+        adicionaSuplentes(y + 10, suplente + 1);
+    };
+    builder.AddFill(api::SPoint(0, 0), api::SPoint(250, 28), static_cast<api::TColor>(31));
+    const comum::md::CDadosCandidato& titular = candidatura.GetTitular();
+    auto adicionaFotoTitular = [&]() {
+        const api::SRect foto = adicionaFotoEmoldurada(builder, 639, 1, 161, 225, std::bind(lerFotoCandidato, titular));
+        if (cargo.QtdSuplentes() != 0) {
+            builder.AddTextField(cargo.GetNome(titular.GetSexo()),
+                                 api::SPoint(foto.Width() / 2 + foto.left, foto.bottom + 1),
+                                 FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO,
+                                 static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+        }
+    };
+    api::TPosition y = builder
+                           .AddTextField("VISUALIZAÇÃO", api::SPoint(125, 1), FONTE_TECLA, api::ALINHAMENTO_CENTRO,
+                                         static_cast<api::TColor>(29), static_cast<api::TColor>(0))
+                           ->Rect()
+                           .bottom;
+    y = builder
+            .AddTextField(cargo.GetNome(titular.GetSexo()), api::SPoint(1, 30), FONTE_TITULO, api::ALINHAMENTO_ESQUERDA,
+                          static_cast<api::TColor>(2), static_cast<api::TColor>(1))
+            ->Rect()
+            .bottom;
+    y = adicionaLinha(y + 10, "Partido", std::to_string(candidatura.GetPartidoID()));
+    y = adicionaLinha(y, "Número", std::format("{:0{}}", candidatura.GetCandidatoID(), cargo.GetNumeroDigitos()));
+    y = adicionaLinha(y, "Nome", titular.GetNomeUrna());
+    y = adicionaLinha(y, "Gênero", textoSexo(titular.GetSexo()));
+    if (titular.GetSituacao() == 0) {
+        if (cargo.TemFoto()) {
+            adicionaFotoTitular();
+        }
+        adicionaSuplentes(y + 10, 1);
+    } else {
+        builder.AddTextField("Candidato não concorre.", api::SPoint(320, 250), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+        builder.AddTextField("Não há outras informações.", api::SPoint(320, 280), FONTE_AGUARDE,
+                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    y = adicionaLinha(375, "Situação", titular.GetSituacao() != 0 ? "INAPTO" : "APTO");
+    adicionaLinha(y, "Página", std::format("{}/{}", pagina, total));
+    builder.AddLabeledInputControl({{'D', "Retornar"}}, api::CApplication::s_areaTela, false);
+    if (total > 1) {
+        builder.AddLabeledKey('4', pagina == 1 ? "Última página" : "Página anterior", api::ALINHAMENTO_ESQUERDA);
+        builder.AddLabeledKey('6', pagina == total ? "Primeira página" : "Próxima página", api::ALINHAMENTO_CENTRO);
+    }
+    return GetFormularioInterativo(builder, "telaVisualizacaoCandidato");
+}
+
+// (original lines 3421-3433: content not recovered)
+#line 3434
+SINGLETON_IMPL_GET_INST(CTelasVota, s_mutex, s_instancia)
+
+std::unique_ptr<CTelasVota> CTelasVota::s_instancia;
+std::mutex CTelasVota::s_mutex;
+
+const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
+
+// (original lines 3441-3472: content not recovered)
+#line 3473
 std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaContinuaVotacao()
 {
     return TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1);
@@ -323,9 +467,8 @@ CTelasVota::~CTelasVota() = default;
 
 namespace {
 
-const api::SFont FONTE_VERSAO{15, 0};
-const api::SFont FONTE_TECLA{20, 1};
-
+// (original lines 3482-3484: content not recovered)
+#line 3485
 api::SRect AreaTela()
 {
     return api::CApplication::s_areaTela;

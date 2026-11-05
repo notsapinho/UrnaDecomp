@@ -178,6 +178,16 @@ enum EUeVotaError {
     EUE_VOTA_TEMPO_LIMITE_BATERIA_INTERNA_INVALIDO = 9405,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_INVALIDO = 9406,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_MAIOR_QUE_LIMITE = 9407,
+    // the values are the codes vota::CVisualizarCandidatos::StartState (target fn 11876, records
+    // cvisualizarcandidatos.cpp:132 and :140) throws when no candidature passes the filters and when the screen does not
+    // hold one input field; the names are chosen from their messages, "Nenhuma candidatura a ser exibida" and "Número de
+    // inputs inválido", and the class: no evidence names them
+    EUE_VOTA_VISUALIZAR_CANDIDATOS_SEM_CANDIDATURA = 9378,
+    EUE_VOTA_VISUALIZAR_CANDIDATOS_NUMERO_INPUTS_INVALIDO = 9379,
+    // the value is the code the substitutes' lambda of vota::CTelasVota::CriaTelaVisualizacaoCandidato (target fn 12272,
+    // record ctelasvota.cpp:3366) throws; the name is chosen from its message, "Sem suporte a mais de 2 suplentes": no
+    // evidence names it
+    EUE_VOTA_VISUALIZACAO_CANDIDATO_SUPLENTES_DEMAIS = 9356,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

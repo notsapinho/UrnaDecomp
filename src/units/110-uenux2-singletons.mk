@@ -392,8 +392,8 @@
 # (grep of the split's pieces), so 11501's name waits on 2028 too. Each waiting for a caller in this file: fns 4129 and
 # 6528 (their only callers are 4181 and 4184, adicionaFotoEmoldurada over CCandidaturasDSFoto) build the
 # CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
-# vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
-# CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
+# vtables lie between this file's records in the data. Fn 6561, adicionaFotoEmoldurada over the photo reader of
+# CriaTelaVisualizacaoCandidato (record :487), matches: below.
 #
 # ctelasvota.cpp also holds six screen builders outside CTelasVota, free functions of vota that ctelasvota.h declares
 # (its comment says what places them in this file): AdicionaTelaAguarde (fn 4152), AdicionaCabecalhoTesteTeclado (fn
@@ -423,7 +423,7 @@
 # these have no record), their parameters' types and names, the fonts' names and their being file constants, the
 # interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
 # them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
-# lines (3370 to 3430, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
+# lines (3202 to 3254, chosen; below for what puts them above CriaTelaVisualizacaoCandidato).
 #
 # ctelasvota.cpp also holds, after the file's last record (3618, CInfoEleitorAudioHabilitado::LarguraMaxima's, kept
 # blank; lines and order chosen), the screens of the end of the vote that four functions hold inlined:
@@ -459,19 +459,48 @@
 # ctelasvota.cpp also holds unit 217's part of the keyboard test, written with vota::testeteclado::CTesteTeclado's
 # StartState (fn 11805), which holds it behind second stack-pointer prologues: the anonymous namespace's
 # GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado and vota::SorteiaTeclasTesteTeclado
-# (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font after
-# FONTE_TITULO, a line that moved the six builders above down by one. With them this object brings the destroy of
+# (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font
+# FONTE_INSTRUCAO_TESTE_TECLADO. With them this object brings the destroy of
 # GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, matched since this file builds
 # without strict aliasing, src/Makefile's UENUX2_NOTBAA_FILES: unit 217's fragment has its rows, and on the whole link
 # no other row moves, docs/reference/facts/app-flags.md F6) and the destroy of CTesteTeclado's map (2023, matched, now
-# linked from here). The key names, TelaTesteTeclado and
-# SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
-# 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
+# linked from here). The key names come after CTelasVota's statics (line 3439), TelaTesteTeclado and
+# SorteiaTeclasTesteTeclado before CriaTelaVisualizacaoCandidato (3266 to 3286), CTelasVota's destructor after both
+# (3478): src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 #
 # ctelasvota.cpp also holds the QR-code BU's screen, vota::CTelasVota::CriaTelaQRCodeBU, after GetTelaCargo, with the
 # free functions AdicionaTextoMultiLinha and AdicionaTexto, the file-local AreaTela and the fonts {15, 0} and {20, 1}
 # after CTelasVota's destructor; none has an index of its own (binaryen inlines them into fn 12055): ctelasvota.h and
 # src/units/37-uenux2-iqrcodebuds.mk have the evidence, the measurements and the choices.
+#
+# ctelasvota.cpp also holds the screen vota::CVisualizarCandidatos::StartState (fn 11876, unit 150's) pages through,
+# CTelasVota::CriaTelaVisualizacaoCandidato (fn 6569), at lines 3288 to 3419 over the record 3366:19 (12272's throw) and
+# the place 3323:29 that record :487 gives its photo reader's lambda, with its lambdas, the anonymous namespace's
+# templates adicionaImagem and adicionaFotoEmoldurada (6561, record :487) at lines 470 to 492, and the {13, 0} font
+# FONTE_SUPLENTE: src/units/150-uenux2-eleitor-estados.mk has the evidence for its body, the measurements and the
+# choices. Here, what its place changed:
+# - Code. The screen builders that stood in its lines (TelaNeutra and TelaPorFavorAguarde at 3341 to 3364, the six above
+#   with their fonts at 3370 to 3430) and the keyboard test's after CTelasVota's statics (GetTelaTesteTecladoOpcional to
+#   SorteiaTeclasTesteTeclado, 3441 to 3471) moved above it, in their order, to lines 3177 to 3286, with the fonts
+#   {20, 0}, {25, 0}, {20, 1} and {13, 0} at 3170 to 3173; FONTE_TITULO and FONTE_VERSAO take lines 3002 and 3003 (every
+#   one of these lines chosen). Use band 2 is the evidence for above: 6587 (TelaPorFavorAguarde), 6583, 6581, 6580 and
+#   6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix (names.tsv's
+#   ld_index 2785, 2788, 2794, 2797 and 2800, then 6569's 2806, 6561's 2808, 6557's 2813 and the destructor's 2814).
+# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TECLA,
+#   FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and FONTE_SUPLENTE (build/out/wasm-map/vota_web/vota_web_wasm.map,
+#   0x6d948 to 0x6d970 and 0x6dd94), the target as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992, {15, 0} @475008,
+#   {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600: CriaTelaVisualizacaoCandidato reads {20, 1} above
+#   AdicionaLocal and TelaTextoConfirmaCorrige, the first readers of {15, 0} and {35, 0}, so two pairs more read
+#   inverted. What gives the target's order there is not read. The key vector went the other way: TelaTesteTeclado,
+#   which reads it, is above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO (0x1b83d8) before
+#   CTelasVota::s_mutex (0x1b83e4) and s_instancia (0x1b83fc), the target's order
+#   (src/units/217-uenux2-ctesteteclado.mk).
+# - Use band 1. Its members 12268 to 12276 (the std::function over the suplentes' lambda) and 12520 to 12530 (6561's
+#   CDataImage and its control block) link before 17 functions of this object that the target's index puts before them:
+#   CInputMenuField::AddItem's std::function (12277 to 12285) and the control blocks of CTextFieldMultiLine (12298,
+#   12300), CDataText over a std::function (12301 to 12309), CQRCodeImage (12311, 12313), CTextField (12628, 12631) and
+#   CImageField (12639, 12640), 95 pairs (a script over names.tsv and ledger/ordinals.tsv). A reading, not measured:
+#   code above line 3288 not written yet mentions those first.
 #
 # ctelasvota.cpp also holds vota::TelaTextoConfirmaCorrige (fn 2376, a free function) after GetTelaCargo with its font
 # {35, 0}, and CTelasVota's static GetTelaTesteTecladoOpcional and GetTelaTesteTecladoObrigatorio (fns 6581, 6580)
@@ -510,16 +539,16 @@
 #   - Code: in link order use band 2 runs 6587, 6583, 6579, 6548 and band 3 4161, 4152, 4148, 4137, 4135 (names.tsv's
 #     ld_index rises along each). So 6587, which nothing in the file calls, is defined above
 #     TelaPreparandoDadosEncerramento, and 4161 is first mentioned above AdicionaTelaAguarde, by TelaNeutra's call:
-#     TelaNeutra and TelaPorFavorAguarde take lines 3341 to 3364. The run between record 3366 (12272, a lambda of
-#     CriaTelaVisualizacaoCandidato, scanned in libc++'s group, so no stub marks it) and GetInst's 3434 holds the
-#     file's other screen builders in 62 of its 67 lines, so the two sit above 3366.
+#     TelaNeutra and TelaPorFavorAguarde take lines 3177 to 3200, the first of the screen builders above
+#     CriaTelaVisualizacaoCandidato (its paragraph above).
 #   - Data: clang creates a file constant where the first body that reads it is compiled, in the definitions' order,
 #     not at that function's place in the code (AdicionaLocal's comes from TelaNeutra's call). The target holds the
 #     fonts as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992 and {15, 0} @475008, @474896 being
 #     FONTE_INSTRUCAO_TESTE_TECLADO (a reading: 11805, which holds TelaTesteTeclado, reads it). AdicionaLocal's body
 #     follows GetTelaCargo, ahead of TelaTextoConfirmaCorrige's and CTelasVota::CriaTelaQRCodeBU's, and the object holds
 #     FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and
-#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53). With the body above
+#     FONTE_TECLA in that order when they landed (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53; above for
+#     what CriaTelaVisualizacaoCandidato changed). With the body above
 #     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
 #     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
 #     before, which 3064 (record 1585, not written), a reader of @474896, can explain. The fonts after @475008, {35, 0}
@@ -533,8 +562,9 @@
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
 # - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
 #   operand rows only in the whole link (9 over 65, pnpm wasm score), named by its callers' calls (7481 and 11797) and
-#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2806 between
-#   6579's 2800 and the destructor's 2807; the five lines it adds take five of the blank lines above record 3530.
+#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2813 between
+#   6579's 2800 and the destructor's 2814 (2806 and 2807 when it landed); the five lines it adds take five of the blank
+#   lines above record 3530.
 # - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
 #   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
 #   and TelaErroTesteTeclado (over three named char arrays, ctelasvota.h says why): one caller each, which holds it

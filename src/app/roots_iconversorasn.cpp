@@ -31,7 +31,8 @@
 // (app/uenux2/src/app/comum/appinfo/servicos/cservicoestadogeralvota.cpp.o) gives the copy, so the explicit instance
 // this file held went: without it 679 matches from that object (steps 7 to 9). 3735, 3771, 5706, 5778 (unit 280),
 // 11517, 1937 (unit 110), 5825 (unit 305), 2280 (unit 293, ecourna's DeserializeFromBuffer inlined), 5740 (unit 89,
-// CarregaArquivo<CConversorLocal>'s reader inlined) and 11419 (fragment 335) are in our link too, the others not:
+// CarregaArquivo<CConversorLocal>'s reader inlined), 11419 (fragment 335) and 3755 (unit 109's cfotos.cpp, with
+// carregaarquivo.cpp's LeFotoCandidato inlined) are in our link too, the others not:
 // urna_roots_iconversorasn stands in for them with two calls, each passing defered as false, the constant binaryen
 // folded. The iterator type is DecodeObjectFunction's (api/io/asn/cfileasn.h), the begin() and end() of its const
 // std::vector<char>&, a chosen spelling: an instance over const char* gave the same function when this file held it.

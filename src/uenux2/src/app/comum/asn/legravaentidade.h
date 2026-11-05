@@ -1,8 +1,8 @@
 // The reconstruction's note, not TSE's text. The records name two function templates of an anonymous namespace in this
 // header, each over the converter it reads with: LeEntidadeEm(const std::string &, const comum::md::CIndexer &, const
 // std::string &) at lines 92 and 98 (target fn 3755, comum::CFotos::GetImagem, holds its instance for
-// comum::asn::CConversorFotoCandidato inside the frame of the reader that names itself "LeFotoCandidato("; not written,
-// so those lines stay blank) and LeEntidadeBiometria(const std::string &, const comum::md::CParametro &, const
+// comum::asn::CConversorFotoCandidato inside the frame of comum::CLeitorASN::LeFotoCandidato, carregaarquivo.cpp; the
+// same code with no parameter) and LeEntidadeBiometria(const std::string &, const comum::md::CParametro &, const
 // comum::md::CIndexer &, const std::string &) at lines 119 and 125, written from comum::CEleitorDetalhe::GetBiometria
 // (fn 1937), which holds its one instance, for comum::asn::CConversorBiometriaEleitorCifrada, inside the frame of
 // comum::CLeitorASN::LeBiometriaEleitor (cleitorasn.h), defined in the entity readers' TU, which the data show and this
@@ -25,7 +25,28 @@
 
 namespace {
 
-// (original lines 28-112: content not recovered)
+// (original lines 28-85: content not recovered)
+#line 86
+template <typename CONVERSOR>
+typename CONVERSOR::TDado LeEntidadeEm(const std::string& arquivo, const comum::md::CIndexer& indexer,
+    const std::string& nome)
+{
+    api::CFile leitor(arquivo, "rb");
+    if (!leitor.Seek(indexer.GetOffset(), SEEK_SET)) {
+        throw comum::CUeComumAsnError(comum::EUE_COMUM_ASN_LEITOR_EM_SEEK, std::format("CLeitorASN::{} - não foi possível fazer o seek em {}", nome, arquivo));
+    }
+
+    std::vector<char> buffer(indexer.GetTamanho());
+    const uedword lidos = leitor.RawRead(buffer.data(), buffer.size());
+    if (lidos != buffer.size()) {
+        throw comum::CUeComumAsnError(comum::EUE_COMUM_ASN_LEITOR_EM_LEITURA, std::format("CLeitorASN::{} - não foi possível ler a entidade de {}", nome, arquivo));
+    }
+
+    const CONVERSOR conversor;
+    return conversor.Desconverte(api::CFileASN::DecodeObject<typename CONVERSOR::TEntidade>(buffer));
+}
+
+// (original lines 105-112: content not recovered)
 #line 113
 template <typename CONVERSOR>
 typename CONVERSOR::TDado LeEntidadeBiometria(const std::string& arquivo, const comum::md::CParametro& parametro,

@@ -5,8 +5,9 @@
 // 6954) and fn 11683 (vota::CPedeMajoritario::ProcessInputAudio), both written: no stand-in.
 //
 // comum::md::CCargo::TemFoto (fn 1546) has six direct callers in the target, fns 1192, 4185, 6569, 6660, 6671 and
-// 6678, and CCargo::QtdSuplentes (fn 1157) seven, fns 1588, 6569, 6660, 6671, 6678, 7787 and 12272, none written
-// (those with records are app/vota/eleitor/comum/ctelasvota.cpp's). DetalheCargo stands for them with two calls of each.
+// 6678, and CCargo::QtdSuplentes (fn 1157) seven, fns 1588, 6569, 6660, 6671, 6678, 7787 and 12272, none written but
+// 6569, 1588 and 12272 (unit 110's; those with records are app/vota/eleitor/comum/ctelasvota.cpp's). DetalheCargo
+// stands for the others with two calls of each.
 //
 // vota::MensagemErroCargo (fn 690) has thirteen direct callers in the target, all of ctelasvota.cpp: fns 3064, 6602,
 // 6603, 6605, 6608, 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787, none written. MensagensCargo stands for them
@@ -25,8 +26,8 @@ namespace {
 
 const void* volatile app_vota_callers_sink;
 
-// stands for fns 1192, 4185, 6569, 6660, 6671, 6678 (TemFoto) and 1588, 6569, 6660, 6671, 6678, 7787, 12272
-// (QtdSuplentes)
+// stands for fns 1192, 4185, 6660, 6671, 6678 (TemFoto) and 6660, 6671, 6678, 7787 (QtdSuplentes); 6569, 1588 and
+// 12272 are in the link
 __attribute__((noinline)) int DetalheCargo(const void* cargo, const void* outro)
 {
     return w212_tem_foto(cargo) * 7 + w212_tem_foto(outro) + w212_suplentes(cargo) - w212_suplentes(outro) * 3;
