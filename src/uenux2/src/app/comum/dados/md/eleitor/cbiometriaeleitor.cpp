@@ -1,7 +1,7 @@
 // The reconstruction's note, not TSE's text: CriaComum (fn 2799, records at lines 25 and 31), GetDedo (fn 3720, record
 // at line 93), TemDedo (fn 3719, no record, its line a choice) and GetFoto (record at line 115, no target index:
-// binaryen inlines it into fn 3616, its one caller; its lines but the throw's are chosen). The constructors' places stay
-// blank.
+// binaryen inlines it into fn 3616, its one caller; its lines but the throw's are chosen). The three constructors (no
+// record; binaryen inlines them into fn 11422, fragment 335) and their lines, 37 to 50, are chosen.
 #include "app/comum/dados/md/eleitor/cbiometriaeleitor.h"
 
 #include <format>
@@ -27,7 +27,24 @@ void CBiometriaEleitor::CriaComum(std::vector<CDedo> dedos)
     }
 }
 
-// (original lines 36-88: content not recovered)
+
+CBiometriaEleitor::CBiometriaEleitor(const ecourna::app::dados::CFoto& foto, const std::vector<CDedo>& dedos)
+    : m_foto(foto), m_dedos(std::map<CDedo::TipoDedo, CDedo>()), m_erroDecifracao()
+{
+    CriaComum(dedos);
+}
+
+CBiometriaEleitor::CBiometriaEleitor(const ecourna::app::dados::CFoto& foto) : m_foto(foto), m_dedos(), m_erroDecifracao()
+{
+}
+
+CBiometriaEleitor::CBiometriaEleitor(const std::vector<CDedo>& dedos)
+    : m_foto(), m_dedos(std::map<CDedo::TipoDedo, CDedo>()), m_erroDecifracao()
+{
+    CriaComum(dedos);
+}
+
+// (original lines 53-88: content not recovered)
 #line 89
 CDedo CBiometriaEleitor::GetDedo(CDedo::TipoDedo tipo) const
 {

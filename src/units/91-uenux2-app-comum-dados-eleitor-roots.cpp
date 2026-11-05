@@ -4,11 +4,11 @@
 //   unit 66's roots do. CEleitorDinamicoDAO's vtable needs no root: its constructor stores the vptr.
 // - The CEleitorDinamicoDAO constructor (fn 3768): three direct callers in the target (5761, 6734, 7174), which use the
 //   returned `this`, so the two stand-ins use it too.
-// - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers) and CriaComum (fn 2799, one caller with four call
-//   sites, 11422): one stand-in each with two call sites keeps each out of line, and no argument is the same constant
-//   at both, so dead-argument elimination folds nothing in. CBiometriaEleitor::GetDedo (fn 3720) and TemDedo (fn 3719)
-//   have three callers each, 3614, not in the link, and 10316 and 10465, units 135's and 282's, which are: one call
-//   each for 3614; the second calls went with 10316.
+// - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers): one stand-in with two call sites keeps it out of
+//   line, and no argument is the same constant at both, so dead-argument elimination folds nothing in. CriaComum's (fn
+//   2799) went: its one target caller, 11422 (fragment 335's), is in the link with its four call sites.
+//   CBiometriaEleitor::GetDedo (fn 3720) and TemDedo (fn 3719) have three callers each, 3614, not in the link, and
+//   10316 and 10465, units 135's and 282's, which are: one call each for 3614; the second calls went with 10316.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.
 // - std::vector<CEleitorDinamico>'s instances that RecuperarTodos's push_back brings: its slow path (fn 5759) calls
 //   construct_at (fn 5760), __uninitialized_allocator_relocate (fn 3759) and __split_buffer's destructor (fn 3758), each
@@ -25,7 +25,6 @@ int r91_dinamicodao_ctor(int, int) __asm__("_ZN5comum3dao19CEleitorDinamicoDAOC1
 void r91_identidade_por_tipo(int, int, int) __asm__("_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r91_get_dedo(int, int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7GetDedoENS0_5CDedo8TipoDedoE");
 int r91_tem_dedo(int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7TemDedoENS0_5CDedo8TipoDedoE");
-void r91_cria_comum(int, int) __asm__("_ZN5comum2md17CBiometriaEleitor9CriaComumENSt3__26vectorINS0_5CDedoENS2_9allocatorIS4_EEEE");
 int r91_constroi_copia(int, int) __asm__("_ZNSt3__212construct_atB8ne210108IN5comum2md16CEleitorDinamicoEJRKS3_EPS3_EEPT_S8_DpOT0_");
 void r91_realoca(int, int, int, int) __asm__("_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md16CEleitorDinamicoEEEPS4_EEvRT_T0_S9_S9_");
 int r91_libera_buffer(int) __asm__("_ZNSt3__214__split_bufferIN5comum2md16CEleitorDinamicoERNS_9allocatorIS3_EEED2Ev");
@@ -59,12 +58,6 @@ __attribute__((noinline)) int DedosPresentes(int biometria, int dedo)
     return 2 * r91_tem_dedo(biometria + 40, dedo + 1);
 }
 
-__attribute__((noinline)) void DuasBiometrias(int biometria, int dedos)
-{
-    r91_cria_comum(biometria, dedos);
-    r91_cria_comum(biometria + 40, dedos + 12);
-}
-
 __attribute__((noinline)) void CopiaEleitor(int destino, int origem)
 {
     r91_constroi_copia(destino + 84, origem);
@@ -87,7 +80,6 @@ struct SRoots91 {
         r91_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r91_sink = reinterpret_cast<const void*>(&DedosPresentes);
         r91_sink = reinterpret_cast<const void*>(&DoisDedos);
-        r91_sink = reinterpret_cast<const void*>(&DuasBiometrias);
         r91_sink = reinterpret_cast<const void*>(&CopiaEleitor);
         r91_sink = reinterpret_cast<const void*>(&CresceEleitores);
     }

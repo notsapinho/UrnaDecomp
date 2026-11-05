@@ -70,13 +70,12 @@
 # - The merged body of CBlockCipher's Encrypt and Decrypt (6154) differs, at +0x1a on a local: 81 over 298 rows (10
 #   inserted, 28 deleted) at 441ae041, before CAesCipher's constructor and SetKey (9495, 9494) matched, and the same
 #   since. Not explained.
-# Roots: 137-ecourna-api-security-ciphers-roots.cpp (its header says how). Unit 100's roots include
+# No roots: CPrng's constructor is table slot 114, which the executable TU's main (10307, unit 170) passes to
+# invoke_iii, and the vtable sinks of CSymmetricCipherFactory and CCepescCipher went once 2725 (unit 293's) and 11419
+# (fragment 335's), which store both vptrs (1113840, 1115004), were in the link: a link without them moved no row. 11616
+# and 11629, which store both too, and 12110, the factory's, are not written. Unit 100's roots include
 # isymmetriccipherfactory.hpp, which gains the two pure slots and its private NonCopyable base: unit 100's and unit
 # 102's objects are byte-identical before and after (cmp).
 CIPHERS_SRCS := api/security/cprng.cpp api/security/ctrng.cpp api/security/csymmetriccipherfactory.cpp \
     api/security/cepesc/ccepesccipher.cpp
 ECOURNA_SRCS += $(CIPHERS_SRCS)
-$(ROOT)/$(APP)/137-ecourna-api-security-ciphers-roots.o: $(ROOT)/src/units/137-ecourna-api-security-ciphers-roots.cpp \
-    $(ROOT)/src/Makefile $(ROOT)/src/units/137-ecourna-api-security-ciphers.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/137-ecourna-api-security-ciphers-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/137-ecourna-api-security-ciphers-roots.o

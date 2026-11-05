@@ -52,6 +52,15 @@
 # counting up differs, int or unsigned, and so does an 8-, 16- or 64-bit one counting down. Its signedness is chosen
 # (unsigned gives the same code), and so is the order of the two locals ahead of the null test (swapped, or both after
 # it: the same code).
+# CBitArray(const std::vector<uebyte>&), out of line in cbitarray.cpp (fragment 335's 5702 holds it, inlined by binaryen):
+# its code in 5702 has a landing pad that destroys only the bit array's members, invoke_v and invoke_ii around
+# vector::at and the bitset's growth, so it is ecourna code compiled with -fexceptions, and the make_shared block whose
+# vptr it stores has its vtable (@1117736) in ecourna's run of the data. It pushes each byte's bits through
+# dynamic_bitset::push_back, MSB first, with the byte read through at(). It replaces the inline default constructor
+# cbitarray.hpp had, which nothing called; its lines in cbitarray.cpp and `explicit` are chosen. CBitArray's D2 and D0
+# (11417, 11414) match from cconversordedo.cpp.o now, which 5702 makes the first object to emit the vtable, and the
+# block's (9409, 9408) from cbitarray.cpp.o; the roots' stand-ins for them and for GetValor (1375) went: 5702 is in the
+# link, their one target caller and the vptrs' one storer.
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR)
 ECOURNA_SRCS += api/io/cfile.cpp
 ECOURNA_SRCS += api/io/cioerror.cpp

@@ -4,10 +4,11 @@
 // because the target inlines them into their single caller: CFile::SetFileMode (into Open), CFile::Flush/ReadLine (into
 // uenux2 callers), CFile::~CFile, CFile::WriteLine (dead), Description (into the CIoError ctor), CBitArray::GetValor(ueqword,
 // uebyte) const (into GetValor(uebyte)), CSynchronizer::CreateInst (into CFile::Sync). Compiled as uenux2 code.
+// CBitArray's stand-ins went: GetValor(uebyte) (fn 1375), its vtable and the make_shared<dynamic_bitset> block's
+// vtable, whose one target caller and vptr storer is 5702 (fragment 335's DesconverteMinucias), in the link now.
 #include <string>
 
 #include "ecourna/api/io/cfile.hpp"
-#include "ecourna/api/util/cbitarray.hpp"
 
 // The CFile constructor (fn 517) is defined in cfile.cpp. It has 23 direct callers in the target, of which
 // api::CEncryptedFile::Save and Load (2767, 3653, unit 128) are written; these optnone functions stand for the others
@@ -28,30 +29,6 @@ void rapimisc_root_8(int) __asm__("_ZNK7ecourna3api2io5CFile4SyncEv");
 int rapimisc_root_9(int, int, int) __asm__("_ZNK7ecourna3api2io5CFile7RawReadEPvj");
 int rapimisc_root_10(int) __asm__("_ZNK7ecourna3api2io5CFile8PositionEv");
 int rapimisc_root_11(int, int, int) __asm__("_ZNK7ecourna3api2io5CFile8RawWriteEPKvj");
-int rapimisc_root_12(int, int) __asm__("_ZN7ecourna3api4util9CBitArray8GetValorEh");
-extern const char rapimisc_bitarray_vt[] __asm__("_ZTVN7ecourna3api4util9CBitArrayE");
-extern const char rapimisc_bits_bloco_vt[] __asm__(
-    "_ZTVNSt3__220__shared_ptr_emplaceIN5boost14dynamic_bitsetIhNS_9allocatorIhEEEENS3_IS5_EEEE");
-}
-
-// CBitArray has no key function: its vtable, D2 (fn 11417) and D0 (11414) are emitted by a TU that uses the class, in
-// the target a uenux2 object of app/comum/dados/asn/eleitor/ (the vtable, 1566524, and typeinfo lie among that
-// directory's records), not written. Calling the destructor by its qualified name emits all three; the function is not
-// rooted and the link drops it, and the vtable's address below stands for the code that stores the vptr (5702, not
-// written, and the two destructors).
-__attribute__((optnone, noinline)) void rapimisc_destroi_bits(ecourna::api::util::CBitArray* bits)
-{
-    bits->CBitArray::~CBitArray();
-}
-
-// The control block of the std::make_shared<boost::dynamic_bitset<uebyte>>() in CBitArray's constructor: its D2 (fn
-// 9409) and D0 (9408), slots 0 and 1 of its vtable (@1117736), whose vptr only 5702 stores in the target (the
-// constructor inlined there, not written); its slot 2 holds 5047, matched as vector<uebyte>'s block's
-// __on_zero_shared. This builder is not rooted and the link drops it; the vtable's address below stands for 5702's
-// store (src/units/README.md "Companion files", "A control block").
-__attribute__((optnone, noinline)) void rapimisc_constroi_bits()
-{
-    std::make_shared<boost::dynamic_bitset<uebyte>>();
 }
 
 namespace {
@@ -72,12 +49,9 @@ struct SRapimiscRoots {
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_root_9);
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_root_10);
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_root_11);
-        rapimisc_sink = reinterpret_cast<void*>(&rapimisc_root_12);
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_use_cfile_1);
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_use_cfile_2);
         rapimisc_sink = reinterpret_cast<void*>(&rapimisc_use_cfile_3);
-        rapimisc_sink = const_cast<char*>(rapimisc_bitarray_vt);
-        rapimisc_sink = const_cast<char*>(rapimisc_bits_bloco_vt);
     }
 } rapimisc_roots;
 

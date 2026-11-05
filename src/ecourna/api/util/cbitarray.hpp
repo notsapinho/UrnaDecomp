@@ -11,7 +11,9 @@ namespace ecourna::api::util {
 // A bit stream read MSB-first: GetValor(n) returns the next n bits as a number and advances the cursor.
 class CBitArray {
 public:
-    CBitArray() : m_bits(std::make_shared<boost::dynamic_bitset<uebyte>>()), m_bytes(), m_escrita(true), m_leitura(false), m_posicao(0) {}
+    // Out of line in cbitarray.cpp: fn 5702 holds it inlined by binaryen, with an -fexceptions landing pad
+    // (src/units/03-ecourna-api-io-util.mk); `explicit` is chosen.
+    explicit CBitArray(const std::vector<uebyte>& bytes);
     virtual ~CBitArray() = default;
 
     ueword GetValor(const uebyte bits);

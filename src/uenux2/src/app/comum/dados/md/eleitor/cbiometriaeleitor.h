@@ -23,9 +23,14 @@ enum EErroDecifracaoBiometria {};
 // bytes at +36 it sets to 0, the decryption's error code (EErroDecifracaoBiometria above). The members' names are
 // chosen. CriaComum's parameter is the record's, a by-value std::vector<CDedo>; private is chosen.
 // TemDedos, the test of +32 that fn 10512 (vota::CControlaReconhecimento::StartState) reads on GetCurrentBiometriaEleitor's
-// result, and GetErroDecifracao, the read of +36 fn 10478 makes, are inline; their names are chosen.
+// result, and GetErroDecifracao, the read of +36 fn 10478 makes, are inline; their names are chosen. The three
+// constructors are 11422's, which holds them inlined (unit 91's fragment has their forms); `explicit` is chosen.
 class CBiometriaEleitor {
 public:
+    CBiometriaEleitor(const ecourna::app::dados::CFoto& foto, const std::vector<CDedo>& dedos);
+    explicit CBiometriaEleitor(const ecourna::app::dados::CFoto& foto);
+    explicit CBiometriaEleitor(const std::vector<CDedo>& dedos);
+
     CDedo GetDedo(CDedo::TipoDedo tipo) const;
     bool TemDedo(CDedo::TipoDedo tipo) const;
     bool TemDedos() const { return m_dedos.has_value(); }

@@ -4,7 +4,17 @@
 
 namespace ecourna::api::util {
 
-// (original lines 7-40: content not recovered)
+CBitArray::CBitArray(const std::vector<uebyte>& bytes)
+    : m_bits(std::make_shared<boost::dynamic_bitset<uebyte>>()), m_bytes(), m_escrita(true), m_leitura(false), m_posicao(0)
+{
+    for (size_t i = 0; i < bytes.size(); ++i) {
+        for (int bit = 7; bit >= 0; --bit) {
+            m_bits->push_back(bytes.at(i) & (1 << bit));
+        }
+    }
+}
+
+// (original lines 17-40: content not recovered)
 #line 41
 ueword CBitArray::GetValor(const uebyte bits)
 {
@@ -36,8 +46,3 @@ ueword CBitArray::GetValor(const ueqword posicao, const uebyte bits) const
 }
 
 } // namespace ecourna::api::util
-
-// <stubs>
-// f5702 · 2565 B · unmatched · placement: link order · name unknown
-// void f5702(i32, i32) { ... }
-// </stubs>
