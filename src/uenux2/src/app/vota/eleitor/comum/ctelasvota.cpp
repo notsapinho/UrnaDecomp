@@ -983,6 +983,34 @@ std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMe
     return {GetFormularioInterativo(builder, "telaMenuVisualizacaoCandidatos"), menu};
 }
 
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorPartido(
+    const std::set<comum::TPartidoID>& partidos)
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Visualização de candidatos", api::SPoint(320, 40), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Filtragem por partido", api::SPoint(320, 75), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    std::shared_ptr<api::CInputMenuField> menu;
+    if (partidos.empty()) {
+        builder.AddTextField("Nenhum partido disponível!", api::SPoint(320, 200), FONTE_AGUARDE,
+                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+        builder.AddLabeledInputControl({{'D', "Retornar"}}, api::CApplication::s_areaTela, false);
+    } else {
+        menu = api::AddInputMenuField(builder, api::SPoint(10, 120), FONTE_INSTRUCAO_TESTE_TECLADO,
+                                      "Selecione o partido: ", 310);
+        menu->AddItem("Todos").SetDado(comum::TPartidoID{0}).SetSearchText("0").SetFormatString("%S - %T");
+        menu->SetFormatString("%S");
+        for (const comum::TPartidoID& partido : partidos) {
+            menu->AddItem("").SetDado(partido).SetSearchText(std::to_string(partido));
+        }
+        builder.AddLabeledInputControl({{'C', "Confirmar seleção"}, {'D', "Retornar"}},
+                                       api::CApplication::s_areaTela, false);
+    }
+    return {GetFormularioInterativo(builder, "telaFiltragemCandidatosPorPartido"), menu};
+}
+
 
 void AdicionaCabecalhoLocal(api::CFormBuilder& builder)
 {

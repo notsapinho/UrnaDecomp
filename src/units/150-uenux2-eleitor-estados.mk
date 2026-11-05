@@ -132,9 +132,15 @@
 # and 4 over 184 (5950), all operand-only. Band 2 runs 5954, 5953, 5952, 5951 (GetCargo), 5950 (ledger/ordinals.tsv),
 # and our link gives 5953, 5952, GetCargo and 5950 rising ld_index (names.tsv), so CarregaCandidaturas is defined above
 # GetCargo and its first mention of construct_at puts 5952 between them; GetCargos after LimpaFiltros is a choice. The
-# roots stand in for 5953's other target caller, 11884 (pending in unit 104), and 5950's, 5710 (not written), with one
-# call each (CandidaturasCarregadas, CandidaturasRelocadas). The file reaches Boost through cconfiguracaoeleicao.h now
+# roots stand in for 5950's other target caller, 5710 (not written), with one call (CandidaturasRelocadas); 5953's,
+# 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through cconfiguracaoeleicao.h now
 # (the include path below).
+#
+# cvisualizarcandidatos.cpp also holds CVisualizarCandidatos::GetPartidos, defined after GetCargos (a choice), and the
+# header SetPartido, both for unit 104's 11884, which holds them inlined and matches: GetPartidos is out of line here
+# (binaryen inlines it into its one caller; it has no frame), and cvisualizarcandidatos.h says what each rests on.
+# GetPartidos has no target function of its own, and this object's other functions compile as before it (compared by
+# function, relocated operands masked).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \

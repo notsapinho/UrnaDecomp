@@ -11,7 +11,6 @@
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.h"
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 
@@ -49,16 +48,6 @@ void CGravaResultado::StartState()
 // the target releases it right after the call; in a block, an if's init-statement or a helper clang inlines, the form
 // shares their slot too, and discarded, the SPoint shares the form's.
 void CMenuFiltrarCandidatosPorNumero::ProcessInput()
-{
-    __builtin_trap();
-}
-
-// CMenuFiltrarCandidatosPorPartido::StartState: fn 11884 (3643 B), record cmenufiltrarcandidatosporpartido.cpp:39 (its
-// line stays blank there), not written: its menu holds api::CMenuItem::SetFormatString and
-// api::CInputMenuField::SetFormatString inlined (records cinputmenufield.cpp:156 and 468), which are not written, and
-// it calls fn 5953 (CVisualizarCandidatos::CarregaCandidaturas, written in cvisualizarcandidatos.cpp) before it collects
-// the candidatures' parties into a set in its frame.
-void CMenuFiltrarCandidatosPorPartido::StartState()
 {
     __builtin_trap();
 }

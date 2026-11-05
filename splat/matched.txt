@@ -8694,7 +8694,7 @@
 5813 _ZN5comum8CAppInfoC1Ev
 6040 byn$mgfn-shared$_ZN5comum8CAppInfo8GetGeralEv
 7751 __cxx_global_array_dtor.40
-7753 __cxx_global_array_dtor.38
+7753 __cxx_global_array_dtor.38@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)
 7755 __cxx_global_array_dtor.36@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)
 7757 __cxx_global_array_dtor.34@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)
 7759 __cxx_global_array_dtor.32@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)
@@ -12842,3 +12842,5 @@
 5737 _ZNK5comum4CRdv12SalvaInternoEv
 11802 __cxx_global_array_dtor.12@app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp.o
 11805 _ZN4vota12testeteclado13CTesteTeclado10StartStateEv
+11884 _ZN4vota32CMenuFiltrarCandidatosPorPartido10StartStateEv
+12888 _ZNSt3__29__any_imp13_SmallHandlerItE8__handleB8ne210108ENS0_7_ActionEPKNS_3anyEPS4_PKSt9type_infoPKv
