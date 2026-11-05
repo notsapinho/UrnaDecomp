@@ -2197,6 +2197,7 @@ _ZN4vota10TelaNeutraERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocato
 ctr_update = func:2381; // size:0xcfa evidence:pair-addr
 ossl_prov_drbg_instantiate = func:2382; // size:0x43d evidence:pair-addr
 ossl_DER_w_octet_string = func:2385; // size:0xac evidence:pair-addr
+_ZN4vota11CTelasCargoC2EhRKNSt3__23mapINS_12ETelaVotacaoENS1_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_9IInputKbdEEEEENS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_SA_EEEEEE = func:2386; // size:0x3ad evidence:srcloc-anchor
 HMAC_CTX_copy = func:2387; // size:0xad evidence:pair-addr
 HMAC_CTX_free = func:2388; // size:0x4a evidence:pair-addr
 HMAC_CTX_new = func:2389; // size:0xf7 evidence:pair-addr

@@ -2249,7 +2249,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2383	_ZN4vota21AdicionaCampoNumericoERN3api12CFormBuilderEmbbbbbRKNS0_6SPointERKNS0_5SFontENS0_14ETextAlignmentE	2375	symbol	match	readings: address symbol	297	none	api	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 2384	-	-	-	no-candidate	no symbol and no ledger pair	784	none	libc++	0	-
 2385	ossl_DER_w_octet_string	2426	symbol	match	-	172	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-der_writer.o)
-2386	-	-	-	no-candidate	no symbol and no ledger pair	941	none	ecourna	0	-
+2386	_ZN4vota11CTelasCargoC2EhRKNSt3__23mapINS_12ETelaVotacaoENS1_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_9IInputKbdEEEEENS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_SA_EEEEEE	5835	symbol	match	readings: table slot,address string,address srcloc,address symbol	941	none	ecourna	1	app/uenux2/src/app/vota/eleitor/comum/ctelascargo.cpp.o
 2387	HMAC_CTX_copy	2098	symbol	match	-	173	addr	openssl	1	openssl/O3/crypto/hmac/libcrypto-lib-hmac.o
 2388	HMAC_CTX_free	2099	symbol	match	readings: address string	74	addr	openssl	1	openssl/O3/crypto/hmac/libcrypto-lib-hmac.o
 2389	HMAC_CTX_new	2100	symbol	match	readings: address string	247	addr	openssl	1	openssl/O3/crypto/hmac/libcrypto-lib-hmac.o

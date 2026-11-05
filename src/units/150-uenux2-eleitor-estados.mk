@@ -11,21 +11,22 @@
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
 # name rests on. CVisualizarCandidatos::StartState is written and differs (below), so the pending file went.
 #
-# Written and not matched. CTelasCargo's constructor (fn 2386; records ctelascargo.cpp:67 and :72, codes 9328 and 9329,
-# euevotaerror.h): the scan reads it `no-candidate`. Its code, from its rows: the map copied (libc++'s map copy, whose
-# insert(first, last) binaryen inlines: a second prologue around the loop, which calls __find_equal, fn 3251, whose
-# match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings), the id formatted
-# once ("Cargo {} ", one unsigned) before both tests, the member's size tested, then the first element with a null
-# form (the member's begin walked) and its screen's name (NomeTela, 6718). In the whole link it scores 37 over 433
-# rows, 3 deleted (`pnpm wasm score`): the target reads `__child` again after libc++'s __insert_node_at stores the
-# begin node, a load strict aliasing lets clang drop (docs/reference/facts/app-flags.md F6), and src/app/vota/ builds
-# with it. A whole link with ctelascargo.cpp.o alone compiled with -fno-strict-aliasing scores 28 over 433, every one
-# an operand. Only this object defines that insert in our link: the target's copy is this file's built without strict
-# aliasing, or another object's the target links first (ctelasvota.cpp's, built without it, if 7787 copies a TMapa:
-# not shown). So 2386 waits for one of those; the flag is the user's decision. Chosen: std::find_if with a lambda
-# (other forms of the search not measured), the prefix's name, the enumerators' names, every line but the records'
-# (<algorithm> took a blank line of the run above NomeTela). NomesTela, the roots' stand-in for 2386's calls of
-# NomeTela, and unit 197's Procura, for its call of 3251, went; TelasCargo stands for 7787's five calls with two.
+# Matched since ctelascargo.cpp builds without strict aliasing. CTelasCargo's constructor (fn 2386; records
+# ctelascargo.cpp:67 and :72, codes 9328 and 9329, euevotaerror.h). Its code, from its rows: the map copied (libc++'s
+# map copy, whose insert(first, last) binaryen inlines: a second prologue around the loop, which calls __find_equal, fn
+# 3251, whose match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings), the id
+# formatted once ("Cargo {} ", one unsigned) before both tests, the member's size tested, then the first element with a
+# null form (the member's begin walked) and its screen's name (NomeTela, 6718). In the whole link with strict aliasing,
+# src/app/vota/'s setting, it scored 37 over 433 rows, 3 deleted (`pnpm wasm score`): the target reads `__child` again
+# after libc++'s __insert_node_at stores the begin node, a load strict aliasing lets clang drop
+# (docs/reference/facts/app-flags.md F6). A whole link with ctelascargo.cpp.o alone compiled with -fno-strict-aliasing
+# scored 28 over 433, every one an operand, and with the file in src/Makefile's UENUX2_NOTBAA_FILES (the user's
+# decision) 2386 matches and no other row moves. Only this object defines that insert in our link: that the target's
+# copy is this file's, not another object's the target links first and builds without it (ctelasvota.cpp's, if 7787
+# copies a TMapa: not shown), is a reading. Chosen: std::find_if with a lambda (other forms of the search not measured),
+# the prefix's name, the enumerators' names, every line but the records' (<algorithm> took a blank line of the run above
+# NomeTela). NomesTela, the roots' stand-in for 2386's calls of NomeTela, and unit 197's Procura, for its call of 3251,
+# went; TelasCargo stands for 7787's five calls with two.
 #
 # Written since. CConfirmaVotoSemCandidato's GetInst, its constructor and its two statics: the target holds GetInst,
 # the constructor inlined, in fn 4459 (vota::CEleitorVotando::ChamaEstadoProximoCargo, src/units/197-uenux2-celeitorvotando.mk),
