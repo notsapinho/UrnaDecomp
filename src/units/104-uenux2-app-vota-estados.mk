@@ -478,20 +478,27 @@
 # - Both files reach Boost through cconfiguracaoeleicao.h, as creimprimindozeresima.cpp does (the lines below).
 #
 # vota::CMenuVisualizarCandidatos::StartState (11881, record cmenuvisualizarcandidatos.cpp:55, the
-# CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and does not match: 115 over
-# 1088 rows in the plain link, 105 operand-only (its callees AddInputMenuField 3675 and AddItem 1693, written in unit 84
-# and not matched, have no symbol line, and the .bss statics of the two GetInst it holds have none either). Its two
-# other rows: the result's address, which the target sets in a local before the inlined menu screen's prologue and ours
-# computes at its first store (one local fewer), not explained; the CONFIRMA case written before CORRIGE gives the
-# target's block order (the other order, 129 over 1094). It holds, in this order: the log line, the GetInst of
-# CMenuFiltrarCandidatosPorCargo, CMenuFiltrarCandidatosPorPartido (both inlined by binaryen, written in their files
-# cmenufiltrarcandidatosporcargo.cpp and cmenufiltrarcandidatosporpartido.cpp, which the StartState records name; their
-# headers' paths are chosen) and PorNumero (5954), three pairs of those states that it copies, as by-value arguments (a
-# reading), for vota::TelaMenuVisualizacaoCandidatos (ctelasvota.cpp, inlined), and the menu's loop: CONFIRMA takes the
-# chosen item's pair from its std::any and chains the next states (its own, then the pair's first's, then the second's,
+# CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and matches, with the four
+# exit destructors of the GetInst statics it holds (11885, 11886 PorPartido's, 11889, 11890 PorCargo's; only they and
+# 11881 read the objects, whose names 11881's srcloc-anchor votes) and std::any's small handler for the option pair
+# (12894). It holds, in this order: the log line, the GetInst of CMenuFiltrarCandidatosPorCargo,
+# CMenuFiltrarCandidatosPorPartido (both inlined by binaryen, written in their files cmenufiltrarcandidatosporcargo.cpp
+# and cmenufiltrarcandidatosporpartido.cpp, which the StartState records name; their headers' paths are chosen) and
+# PorNumero (5954), three pairs of those states that it copies, as by-value arguments (a reading), for
+# vota::TelaMenuVisualizacaoCandidatos (ctelasvota.cpp, inlined), and the menu's loop: CONFIRMA takes the chosen item's
+# pair from its std::any and chains the next states (its own, then the pair's first's, then the second's,
 # CVisualizarCandidatos), CORRIGE goes back to CMaisInformacoes. The pairs' names, the locals and the case spelling are
-# chosen. The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp; their
-# statics' exit destructors (11885, 11886 PorPartido's, 11889, 11890 PorCargo's) differ: only 11881 reads the objects.
+# chosen. Measured with pnpm wasm score (scratch links of the plain link.cmd, docs/reference/facts/workflow.md W13,
+# then the tree): with this file in this unit's list, 115 over 1088 rows (3 inserted, 5 deleted: the result pair's
+# address, which the target sets in a local before the inlined screen's prologue, and the last of LimpaFiltros' three
+# tests a br_if where the target has an if); with cmenuvisualizarcandidatos.cpp.o after ctelasvota.cpp.o, the target's
+# data order (ctelasvota.cpp's vtables lie at @1539xxx, this class's at @1545592), 98 over 1085, the br_if left; with
+# CVisualizarCandidatos::LimpaFiltros also out of line in cvisualizarcandidatos.cpp, which binaryen then inlines into
+# its one caller, 95 over 1085, every row an operand. So the file is compiled from unit 110's list, after
+# ctelasvota.cpp, and stays this unit's. The CONFIRMA case written before CORRIGE gives the target's block order (the
+# other order, 129 over 1094, measured with the file in this unit's list). AddItem (1693), which differs, takes its
+# name from a hand line on its own records (unit 84's fragment): without it 11881 and 12894 are unresolved self-voted.
+# The two new classes' StartState (11888, 11884) are traps in 104-uenux2-app-vota-estados-pending.cpp.
 # The two files sit in the list in name order beside the other auxiliares/ files, a choice not measured.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
@@ -508,7 +515,6 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
-    src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp \
     src/app/vota/eleitor/cdefinerotaposreinicio.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp \

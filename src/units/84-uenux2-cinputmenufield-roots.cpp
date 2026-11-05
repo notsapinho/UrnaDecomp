@@ -15,6 +15,7 @@
 #include <string>
 
 #include "api/gui/cinputmenufield.h"
+#include "api/gui/cinteractiveformbuilder.h"
 
 extern "C" {
 void* cmenuitem_setsearchtext(void*, const void*) __asm__(

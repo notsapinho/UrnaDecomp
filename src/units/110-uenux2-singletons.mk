@@ -553,9 +553,14 @@
 #   gives the target's sequence (meio + ((-n * size) + (size / -4 & 65535)) + 240, the step unmasked).
 # - The three include lines this needs (clocal.h, ctradutorfrase.h, cstringutils.hpp) took blank lines above line 291.
 #
+# cmenuvisualizarcandidatos.cpp (unit 104's: vota::CMenuVisualizarCandidatos::StartState, 11881) is compiled from this
+# list, after ctelasvota.cpp: 11881 holds ctelasvota.cpp's TelaMenuVisualizacaoCandidatos inlined by binaryen, and
+# matches with its object linked after ctelasvota.cpp.o, the target's data order; with it in unit 104's list it keeps
+# the result's address in one more local (unit 104's fragment has the measurements).
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
-  src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp
+  src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \
+  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
 # reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the

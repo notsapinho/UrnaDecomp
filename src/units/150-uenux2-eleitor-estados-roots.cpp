@@ -6,7 +6,7 @@
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
-// and 11892, none reconstructed but 11881 (unit 104's, not matched): VisualizarCandidatos stands for the other four
+// and 11892, none reconstructed but 11881 (unit 104's): VisualizarCandidatos stands for the other four
 // with two calls. Its vptr store keeps that class's vtable.
 //
 // vota::NomeTela (fn 6718) has two direct callers in the target, CTelasCargo's constructor (fn 2386) and

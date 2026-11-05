@@ -5,12 +5,12 @@
 //   10900 CMenuValidation::isValid (with the two helpers it holds, records 198 and 210), 10899 isValidChar
 //   5491, 10898 CInputMenuField::~CInputMenuField() (the D2 matches with strict aliasing: see the fragment), 10897 Draw,
 //   10896 Rect() const, 10895 Move (record 278), 10894 Read(IInput&) (record 419), 10893 GetTypeName(), 1693 AddItem
-//   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona, 3675
-//   AddInputMenuField with the constructor, GetInstructionTextRect (251) and SetInstructionText (477), 5489
-//   SelecionaItem(const std::string&), LimpaSelecao() (inlined everywhere), and std::__destroy_at<CMenuItem> (5490),
-//   which the destructor's list instantiates. Records of functions not written keep their lines blank: 156 (CMenuItem)
-//   and 468 (CInputMenuField). The lines of the members with no record are a choice, in the order of their target
-//   indices in their use bands (src/units/84-uenux2-cinputmenufield.mk).
+//   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona, the
+//   constructor, GetInstructionTextRect (251) and SetInstructionText (477), which binaryen inlines into 3675
+//   (api::AddInputMenuField, in cinteractiveformbuilder.cpp), 5489 SelecionaItem(const std::string&), LimpaSelecao()
+//   (inlined everywhere), and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates. Records of
+//   functions not written keep their lines blank: 156 (CMenuItem) and 468 (CInputMenuField). The lines of the members
+//   with no record are a choice, in their use bands' order (src/units/84-uenux2-cinputmenufield.mk).
 
 #include "api/gui/cinputmenufield.h"
 
@@ -18,13 +18,13 @@
 #include <regex>
 
 #include "api/gui/cfixedtext.h"
-#include "api/gui/cformbuilder.h"
 #include "api/gui/eueguierror.h"
 #include "api/hwil/ibeep.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 
 namespace api {
+
 std::string CMenuItem::GetTextoFormatado() const
 {
     std::string texto;
@@ -369,15 +369,6 @@ CInputMenuField::CInputMenuField(const SPoint& posicao, const SFont& font, TPosi
       m_alturaMaxima(alturaMaxima),
       m_formato("[%S] - %T")
 {
-}
-
-std::shared_ptr<CInputMenuField> AddInputMenuField(CFormBuilder& builder, const SPoint& posicao, const SFont& font,
-                                                   const std::string& instrucao, TPosition alturaMaxima)
-{
-    std::shared_ptr<CInputMenuField> menu = std::make_shared<CInputMenuField>(posicao, font, alturaMaxima);
-    menu->SetInstructionText(instrucao);
-    builder.AddField(menu);
-    return menu;
 }
 
 } // namespace api
