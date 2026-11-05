@@ -4,24 +4,40 @@
 // Written here: the destructor, fns 3698 (D2) and 11258 (D0), which has no record; ImprimePreTexto, its instance() call
 // on its record's line; and the free functions ImprimeHistoricoCargas and ConcatenaHistoricoCargas, which fn 11256 holds
 // inlined by binaryen, declared above ImprimePreTexto and defined after it (src/units/139-uenux2-cgeradorbu.mk has the
-// measurement of that order and of their parameters). Every line but 257 is a choice.
+// measurement of that order and of their parameters). Every line but 257 is a choice. CriaTituloCargo (fn 3699), above
+// the destructor, is the zeresima and BU reports' title over the position's name:
+// src/units/325-uenux2-geradores-zeresima.mk has why it is here and what is chosen.
 #include "app/comum/relatorios/cgeradorbu.h"
 
 #include <format>
 #include <numeric>
 
 #include "api/gui/cpaperformbuilder.h"
+#include "app/comum/dados/ccargods.h"
 #include "app/comum/relatorios/ccalculacv.h"
 #include "app/comum/relatorios/crelutil.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
+
+std::shared_ptr<api::IForm<api::IPaper>> CriaTituloCargo(const std::string& titulo)
+{
+    api::CPaperFormBuilder builder;
+    builder.AddTextField(titulo, static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+    builder.AddTextField(CPadDS<CToUpperDS<CCargoDSNome>>(
+        38, '-',
+        CToUpperDS<CCargoDSNome>(CCargoDSNome(md::CSexo::SEXO_NAO_INFORMADO),
+                                 ecourna::api::util::CStringUtils::ToUpper)));
+    return builder.Build();
+}
 
 CGeradorBU::~CGeradorBU()
 {
     CCalculaCV::DestroyInst();
 }
 
-// (original lines 24-246: content not recovered)
+// (original lines 40-246: content not recovered)
 #line 247
 void ImprimeHistoricoCargas(api::CPaperFormBuilder& builder, const std::vector<std::string>& historicoCargas);
 std::string ConcatenaHistoricoCargas(const std::vector<std::string>& historicoCargas);

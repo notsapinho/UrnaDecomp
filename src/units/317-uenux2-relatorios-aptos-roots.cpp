@@ -13,7 +13,7 @@ extern "C" void w3654(int, int) __asm__(
 
 namespace {
 
-// Stands for fns 3871, 12105 and 12110, the target callers of 1922 and 1921 not written; fns 11223, 11908 and 5977
+// Stands for fns 12105 and 12110, the target callers of 1922 and 1921 not written; fns 11223, 11908, 5977 and 3871
 // (unit 325's) are in the link.
 __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* funcao)
 {
@@ -21,8 +21,8 @@ __attribute__((noinline)) int LinhasAptos(char* texto, char* aptos, const char* 
     return texto[11];
 }
 
-// Stands for fns 7787, 11943, 11946 and 12105, the target callers of api::CReport's constructor (fn 2259) not written;
-// fn 11908, the fifth, is in the link. The second argument is the vector the constructor moves from.
+// Stands for fns 7787, 11946 and 12105, the target callers of api::CReport's constructor (fn 2259) not written; fns
+// 11908 and 11943 (unit 325's notes) are in the link. The second argument is the vector the constructor moves from.
 __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
 {
     w2259(reinterpret_cast<int>(relatorios), reinterpret_cast<int>(partes));
@@ -30,7 +30,8 @@ __attribute__((noinline)) int Relatorios(char* relatorios, char* partes)
     return relatorios[3] + relatorios[15];
 }
 
-// Stands for fns 11943, 11946 and 12105, the target callers of api::GeraArquivoRelatorio (fn 3654), not written. The
+// Stands for fns 11946 and 12105, the target callers of api::GeraArquivoRelatorio (fn 3654), not written (11943, the
+// third, is in the link). The
 // first argument is the address of the std::string the function takes as a const reference, the second the report.
 __attribute__((noinline)) int ArquivosRelatorios(char* arquivos, char* relatorio)
 {

@@ -169,6 +169,10 @@ public:
     // vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491). No record or text names a setter: its being a setter,
     // its name, its parameter and its being defined in the class are chosen.
     void SetTecladoTestadoPosConversao(bool testado) { m_tecladoTestadoPosConversao = testado; }
+    // vota::CGeraResumoZeresimaBase::StartState (target fn 11943) stores 1 at +16 and the urna's internal number at
+    // +12, m_urnaIdGerouZeresima's flag and value, before fn 491. No record or text names a setter: its being a setter,
+    // its name and its being defined in the class are chosen.
+    void SetUrnaIdGerouZeresima(uedword urnaId) { m_urnaIdGerouZeresima = urnaId; }
 
 private:
     EEstadoVota m_estadoVota;

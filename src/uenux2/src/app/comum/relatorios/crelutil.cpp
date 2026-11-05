@@ -9,6 +9,8 @@
 // instantiates (fn 5582), 1543 before ImprimeDataHora (fn 1542), ImprimeTitulos (fn 3689) before
 // ImprimeAberturaFechamento (fn 3688), and FormTituloPartido last, TituloPartido's first mention, so that 11182's
 // ld_index is below 11181's. src/units/123-uenux2-crelatoriotesteimpressora.mk has the measurements.
+// FormCabecalhoEleicao (fn 5580) and FormRodapeZeresima (fn 5579), between ImprimeSeparadorVia and DSCodigoVerificador,
+// with 5580's internal helper ImprimeLinhaIgual: src/units/325-uenux2-geradores-zeresima.mk.
 #include "app/comum/relatorios/crelutil.h"
 
 #include <algorithm>
@@ -36,7 +38,7 @@
 
 namespace comum {
 
-// (original lines 39-50: content not recovered)
+// (original lines 41-50: content not recovered)
 #line 51
 namespace {
 
@@ -266,7 +268,26 @@ void CRelUtil::ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int
     builder.AddNewLine(1);
 }
 
-// (original lines 355-388: content not recovered)
+namespace {
+
+void ImprimeLinhaIgual(api::CPaperFormBuilder& builder)
+{
+    builder.AddTextField(std::string(38, '='), static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+}
+
+} // namespace
+
+std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormCabecalhoEleicao()
+{
+    api::CPaperFormBuilder builder;
+    ImprimeLinhaIgual(builder);
+    builder.AddTextField(NomeEleicaoCorrente, api::ALINHAMENTO_CENTRO);
+    ImprimeLinhaIgual(builder);
+    builder.AddNewLine(1);
+    return builder.Build();
+}
+
+// (original lines 374-388: content not recovered)
 #line 389
 std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormRodapeZeresima(
     const std::string& separador, const std::vector<ecourna::app::dados::CTituloRelatorio>& rodape,

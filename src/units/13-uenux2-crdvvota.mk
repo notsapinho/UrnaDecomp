@@ -36,8 +36,9 @@
 # them, CConversorEleicoesVota::DoConverte (11350) builds one from a md::CCargo, and the map's nodes hold the CVotos at
 # +28 (fn 3893's search, fn 1268, the map's destroy, matched since). The 1-byte form matched fn 2877 under this map's name:
 # 2877 is the destroy of another map, std::map<md::TCargoID, md::CVotos> (32-byte nodes, the CVotos at +20), which the
-# target's CRdvVota slot 0 (fn 5733, below) builds from the SCargoInfos' cargo bytes and fns 5971 (not written) and
-# 11514 (comum::VerificaVotos, unit 98) destroy; fragment 140's roots hold that instance, and 2877's line names it. 1159 (the map of CVotosCargos'
+# target's CRdvVota slot 0 (fn 5733, below) builds from the SCargoInfos' cargo bytes and fns 5971 (fragment 325's) and
+# 11514 (comum::VerificaVotos, unit 98) destroy; 5971's object, cgeradorresumozeresima.cpp.o, holds that instance now
+# (fragment 140's roots did until 5971 was written), and 2877's line names it. 1159 (the map of CVotosCargos'
 # destroy) and 11277 (a CVotosEleicoesVota::Cargo lambda) match over the 12-byte map too.
 # md::CVotos' constructor (fn 2794) takes the vector by value, moves it in and reserves 1000 votes (the body's 16000-byte
 # allocation); by value and its line, after Insere's record line (40), are chosen. CVotos::GetVotos and

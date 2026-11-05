@@ -17,6 +17,10 @@
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
+# - vota::CGeraResumoZeresimaBase::StartState (fn 11943) in cgeraresumozeresimabase.cpp, over two functions of
+#   cgeradorresumozeresima.cpp that binaryen inlines into it; fragment 325 holds its notes, as it holds those of that
+#   file. cgeraresumozeresimabase.cpp's object gets Boost's include path (below) for cconfiguracaoeleicao.h, as
+#   cconfirmaimpressaozeresima.cpp's and cgeradorresumozeresima.cpp's do.
 # - vota::CConfirmaImpressaoZeresima's constructor, GetInst (fn 5959, 14 over 69 rows, operand-only) and statics, whose
 #   exit destructors 11930 and 11929 match with it. The constructor copies CTelasVota's +52 (ctelasvota.h's
 #   GetTelaConfirmaImpressaoZeresima) and the 12-byte api::CDateTime at +544 of comum::CConfiguracaoEleicao
@@ -165,9 +169,13 @@ APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinfor
     src/app/vota/eleitor/iniciovotacao/cregeraresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cregerarzeresima.cpp
 UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS)
-# cconfirmaimpressaozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
-# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+# cconfirmaimpressaozeresima.cpp, cgeraresumozeresimabase.cpp and cgeradorresumozeresima.cpp include
+# app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include
+# path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cgeraresumozeresimabase.cpp.o: \
+    UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp gives the vtables trapping
 # bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o: $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

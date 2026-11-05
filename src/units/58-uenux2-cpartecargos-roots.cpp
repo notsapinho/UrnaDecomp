@@ -1,5 +1,6 @@
 // Roots: the comum::CParteCargos constructor (target fn 5587) has two direct callers in the target (fns 5971 and 11946,
-// ledger/callgraph.tsv), neither reconstructed and neither through the table. Both build the part with
+// ledger/callgraph.tsv), neither through the table; 5971 is in the link now (fragment 325), 11946 is not
+// reconstructed. Both build the part with
 // std::make_shared<comum::CParteCargos> (the __shared_ptr_emplace<comum::CParteCargos> vptr 1544352, then the
 // constructor at +12), moving two std::shared_ptr<api::IReportPart> into it, and keep the constructor's result (a
 // constructor returns this in the wasm ABI). These two stand-ins build it the same way, with different bodies (wasm-opt

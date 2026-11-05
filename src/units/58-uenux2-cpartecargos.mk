@@ -23,8 +23,9 @@
 # uenux2 header.
 CPARTECARGOS_SRCS := src/app/comum/relatorios/cpartecargos.cpp
 UENUX2_SRCS += $(CPARTECARGOS_SRCS)
-# the constructor's two callers (fns 5971 and 11946) are not reconstructed yet: 58-uenux2-cpartecargos-roots.cpp gives
-# it two direct callers that build the class with std::make_shared, as the target's do
+# of the constructor's two callers, fn 5971 is in the link (fragment 325's cgeradorresumozeresima.cpp) and fn 11946 is
+# not reconstructed yet: 58-uenux2-cpartecargos-roots.cpp, written before either, gives it two direct callers that build
+# the class with std::make_shared, as the target's do, and goes when 11946 is in the link
 $(ROOT)/$(APP)/58-uenux2-cpartecargos-roots.o: $(ROOT)/src/units/58-uenux2-cpartecargos-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/58-uenux2-cpartecargos.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/58-uenux2-cpartecargos-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/58-uenux2-cpartecargos-roots.o

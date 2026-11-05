@@ -25,8 +25,13 @@ namespace comum {
 // beyond its 32 bits and the pointer's type beyond the call 11247 makes are chosen. The operators are inline here
 // because 11247 holds them. CPadDS computes the right side's count before it builds the left string, as 11247 does
 // (src/units/129-uenux2-ccargods.mk has the measurement).
+// The constructors of CCargoDSNome, CToUpperDS and CPadDS are the ones fn 3699 (comum::CriaTituloCargo,
+// cgeradorbu.cpp) uses: it builds {38, '-', {{0}, table slot 2920}} in its frame. That they are constructors (the
+// members are private), their parameters' order and names, and that they are inline here are chosen.
 class CCargoDSNome {
 public:
+    explicit CCargoDSNome(md::CSexo::ESexo sexo) : m_sexo(sexo) {}
+
     std::string operator()() const;
 
 private:
@@ -61,6 +66,8 @@ public:
 template <typename TFonte>
 class CToUpperDS {
 public:
+    CToUpperDS(TFonte fonte, void (*converte)(std::string&)) : m_fonte(fonte), m_converte(converte) {}
+
     std::string operator()() const
     {
         std::string texto = m_fonte();
@@ -76,6 +83,11 @@ private:
 template <typename TFonte>
 class CPadDS {
 public:
+    CPadDS(size_t tamanho, char preenchimento, TFonte fonte)
+        : m_tamanho(tamanho), m_preenchimento(preenchimento), m_fonte(fonte)
+    {
+    }
+
     std::string operator()() const
     {
         std::string texto = m_fonte();
