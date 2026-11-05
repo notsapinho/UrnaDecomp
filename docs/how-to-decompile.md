@@ -560,7 +560,7 @@ units do, and say why in the fragment's header comment (step 6):
 2. else the directory of the objects linked beside a function only the class's own object defines: a constructor or a
    member defined out of line, the key function. A constructor counts only when its class's object shows it out of
    line (a record, or the key function beside it): an inline one's linkonce copy is kept from its first user and names
-   that user's directory (2738 and 2733 sit among vota operador objects; unit 221 names both readings). Read its
+   that user's directory (2738 sits among vota operador objects; unit 221 names both readings). Read its
    neighbours in link order and take the stretches of
    `ledger/tu-clusters.tsv` among them whose label is a record's. The vtable's slots, the inline members and, for a
    class with no key function, the destructors are linkonce: the link keeps the copy of the first object that emits

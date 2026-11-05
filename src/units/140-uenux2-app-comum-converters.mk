@@ -108,12 +108,16 @@
 # linkonce function, and 5681 (the map copy's __emplace_hint_unique_key_args, unit 13's fragment) matches with this
 # object's copy, built without strict aliasing (4 over 167 rows before step 8, operand rows only, where
 # md/rdv/cvotoscargos.cpp.o's copy, first before the move, is 15 over 167 with 5 deleted); 11349 scores the same in both
-# places. The move puts 19 objects that our link held ahead of it into the data's order (md/rdv/'s four,
-# md/eleitor/celeitordadoshabilitacaobiometrica.cpp, nine of comparecimentomesario/estados/, ctipoapuracaosa.cpp,
+# places. The move puts 22 objects that our link held ahead of it into the data's order: 19 by their records (md/rdv/'s
+# four, md/eleitor/celeitordadoshabilitacaobiometrica.cpp, nine of comparecimentomesario/estados/, ctipoapuracaosa.cpp,
 # correspondencia/ccorrespondenciaresultado.cpp, cconversortipoapuracaosa.cpp, cgeradorbu.cpp, ctextfieldmultiline.cpp)
-# and inverts six whose records lie before 1571240 and whose units' lists link after unit 13's:
-# nomearquivo/cnomearquivo.cpp, gravadores/md/curna.cpp, cenvelopegenerico.cpp and centidadehashes.cpp,
-# iniciovotacao/cverificahorariozeresima.cpp and testeteclado/cprezeresima.cpp. cconversorvotoscargo.cpp (vtable
+# and three by their vtables (comparecimentomesario/estados/cgestordadomesarioinicial.cpp, cgestordadomesariovotacao.cpp
+# and cgestordadomesariofinal.cpp, @1594988, @1595048, @1595108). It inverts eleven whose units' lists link after unit
+# 13's: six whose records lie before 1571240 (nomearquivo/cnomearquivo.cpp, gravadores/md/curna.cpp,
+# cenvelopegenerico.cpp and centidadehashes.cpp, iniciovotacao/cverificahorariozeresima.cpp and
+# testeteclado/cprezeresima.cpp) and five whose vtables do (fimvotacao/caplicacaoencerrada.cpp @1542024,
+# testeteclado/cbase.cpp @1545768, iniciovotacao/creiniciovotacao.cpp @1546628, testeteclado/cretomada.cpp @1546700
+# and testeteclado/cesperaretestar.cpp @1546772). cconversorvotoscargo.cpp (vtable
 # @1570996) stays after it, inverted as before. Steps 7 to 9 on the moved link added 11349, 5681 and 4454 and moved one
 # other row, 11445 (unit 159's trap of CConversorCandidaturas::DoDesconverte), from no-candidate to differs: with this
 # unit's trap gone, our link no longer holds the two traps as one body under this unit's name (names.tsv at the base

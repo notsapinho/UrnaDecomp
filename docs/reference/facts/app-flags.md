@@ -460,7 +460,10 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   (`comum::asn::CConversorEleicoesVota::DoDesconverte`), in `dados/asn/rdv/`, which builds without it. Both match since
   11349 was written and its object, `cconversoreleicoesvota.cpp.o`, links ahead of `md/rdv/` in unit 13's list, so the
   link keeps that object's copy of 5681: 4 over 167 rows before step 8, operand rows only, against 15 over 167 for
-  `cvotoscargos.cpp.o`'s (units 13 and 140 have the measurement and the pairs of objects the move inverts).
+  `cvotoscargos.cpp.o`'s (units 13 and 140 have the measurement and the pairs of objects the move inverts). The
+  target's use band 2 places 5681 there too: it runs 5681 between 5682 and 5680 (`awk -F'\t' '$1>=5678 && $1<=5684'
+  ledger/ordinals.tsv`), whose records, 1571152 and 1571548, bracket 11349's (1571272 to 1571484), while `md/rdv/`'s
+  band-2 functions are 5638 to 5645 (`cvotoscargos.cpp`'s records from 1573700: `ledger/source-locations.tsv`).
 
   Five files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
   `uenux2_cxxflags` leaves them out of the strict-aliasing test. The first four are each read from code that only their

@@ -280,8 +280,9 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/aguardaeleitor/celeitordemorando.cpp
 # link): a link without it moves no row in or out of match. What the roots file said needs no stand-in, and why:
 # - No sink keeps a vtable: the states' constructors are in the link. vota::CInspecionaUrna's, inlined with its GetInst
 #   into vota::CAguardaMensagem::ProcessKey (fn 7481, unit 104); vota::CDesabilitaAudioEleitor's and
-#   vota::CHorarioVotacaoTerminou's, inlined into their GetInst (fns 5393 and 5430), below; vota::CPerguntaFilaEleitorVazia's,
-#   inlined into its GetInst (fn 5426), which vota::CIniciaFinalizacao::StartState (fn 10706, unit 277) calls twice;
+#   vota::CHorarioVotacaoTerminou's, inlined into their GetInst (fns 5393 and 5430), below;
+#   vota::CPerguntaFilaEleitorVazia's, inlined into its GetInst (fn 5426), which vota::CIniciaFinalizacao::StartState
+#   (fn 10706, unit 277) calls twice;
 #   vota::CHabilitaAudioEleitor's, inlined into its GetInst (fn 2743), which CControlaReconhecimento::ProcessInput
 #   (10511, unit 161) and unit 282's states call; vota::CEleitorDemorando's, inlined into its GetInst (2734), which 10425
 #   calls; and vota::CSuspensaoAutomaticaEleitor's and vota::CPerguntaEleitorVotando's, inlined with their GetInst into

@@ -31,7 +31,8 @@
 //                       written; the sink goes when 7787 lands
 // LocalizaEleitores, for CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264), went: its
 // last target caller not in the link, fn 3616 (unit 319's), is. HabilitaEleitores, for
-// CEleitores::MarcaEleitorFoiHabilitado (fn 2825), went too: its one target caller, fn 10425 (unit 142's), is in the link.
+// CEleitores::MarcaEleitorFoiHabilitado (fn 2825), went too: its one target caller, fn 10425 (unit 142's), is in the
+// link.
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.

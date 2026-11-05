@@ -36,8 +36,8 @@
 #   the target fills each with eight-byte stores of 0x2D, where the title is copied from the data. The formatted line is
 #   a named local: the target frees the load code's text before AddTextField and the line after it.
 # - std::__introsort over ImprimeConsulta's comparator (5610, 5599 B, recursive), the instance its std::sort brings, in
-#   cgeradorbu.cpp's object: named by its census pair (pair-addr), so its recursive call did not wait for 11253, which
-#   matches since (below). It calls __sort4 (1920), __insertion_sort_incomplete (2790) and iter_swap (248), whose bodies are
+#   cgeradorbu.cpp's object: named by its census pair (pair-addr), so its recursive call did not wait for 11253,
+#   which matches since (below). It calls __sort4 (1920), __insertion_sort_incomplete (2790) and iter_swap (248), whose bodies are
 #   byte-identical in our link to CGeradorBUQRCode::GetCamposConsulta's instances (unit 155): iter_swap is one instance
 #   in both objects, and step 9 renamed the lines of 1920 and 2790 to this object's copies, which link first. The
 #   target's introsort keeps the comparator's address as its third parameter (5 parameters), where GetCamposConsulta's
@@ -56,8 +56,8 @@
 #   "{:04}{:02}{:02}T{:02}{:02}{:02}". With that literal added (a whole-link try-tu of one scratch TU that returns it),
 #   `pnpm wasm splat-remap ... --against 11254` printed IDENTICAL. Unit 75's 8168 waited for the same literal and
 #   matched with it.
-# - ImprimeConsulta (11253, slot 5, record :286), after it: the same first difference then, `+0xb3 target +0xb2
-#   i32.const 8975 | ours +0xb2 i32.const 8962`, its "{:02}" of the post's id. pnpm wasm score in the whole link, before steps 7
+# - ImprimeConsulta (11253, slot 5, record :286), after it: the same first difference then, `+0xb3 target
+#   +0xb2 i32.const 8975 | ours +0xb2 i32.const 8962`, its "{:02}" of the post's id. pnpm wasm score in the whole link, before steps 7
 #   to 9: 65 over 1218 rows, all operand-only; the operands that are no call and no data address are the format
 #   buffer's table slot (148 in the target), four times (11254, 11255 and 11256 load it too). Its other literals are
 #   in our link as the target holds them: "{:0{}}" the tail of "  {}{}{:0{}}" (1042, fn 11973's), "{:04}" of

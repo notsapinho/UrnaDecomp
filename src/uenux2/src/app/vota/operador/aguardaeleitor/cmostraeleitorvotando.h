@@ -17,8 +17,8 @@ namespace vota {
 
 // vota::CMostraEleitorVotando (RTTI: si_class of comum::CAppState; vtable @1593000 [448, 765, 10427, 7480, 1661, 218,
 // 10425, 10426, 425]). It overrides the destructors, StartState (slot 2, fn 10427), ProcessKey (slot 6, fn
-// 10425, which holds the private SalvaHabilitacaoEleitor inlined: its records, cmostraeleitorvotando.cpp:127 and 159)
-// and ProcessInput (slot 7, fn 10426, record cmostraeleitorvotando.cpp:64). A singleton: fn 1150 creates the 28-byte
+// 10425, which holds SalvaHabilitacaoEleitor inlined, its records cmostraeleitorvotando.cpp:127 and 159; its access is
+// chosen) and ProcessInput (slot 7, fn 10426, record :64). A singleton: fn 1150 creates the 28-byte
 // object on first use and keeps it in a static
 // std::unique_ptr (@1909316) under a static std::mutex (@1909292), destroyed at exit by fns 10429 and 10428; the
 // constructor, inlined there, passes comum::CAppState::EVENTO_TECLA | comum::CAppState::EVENTO_ENTRADA (3) to the base's

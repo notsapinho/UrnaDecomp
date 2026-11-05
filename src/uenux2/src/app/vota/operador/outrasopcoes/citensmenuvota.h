@@ -23,9 +23,9 @@ namespace vota {
 // record names it. The target's use band 1 runs these classes' slot 3, the fifth item's D0 and slot 2 (12267 to 12244)
 // between the members of CriaTelaVisualizacaoCandidato's lambda and the control blocks fn 6599 builds, and the data
 // hold their vtables in the same run (@1539636 to @1539780, after that lambda's @1539548, before the menu's and the
-// blocks'): this file's object links right after ctelasvota.cpp.o and ahead of the menu constructor's, so it is
-// compiled in unit 110's list there (src/units/110-uenux2-singletons.mk has the measurement); its path, unit 102's
-// choice, stays.
+// blocks'). This file's object links in unit 102's list all the same: compiled after ctelasvota.cpp.o, it inverted 34
+// pairs of objects and gained nothing (src/units/102-uenux2-control-blocks.mk has the measurement); the menu
+// constructor's file links there. Its path, unit 102's choice, stays.
 class CItemImprimeEstadoUrnaVota final : public comum::CItemImprimeEstadoUrna {
 public:
     explicit CItemImprimeEstadoUrnaVota(uebyte numViasImpressas)

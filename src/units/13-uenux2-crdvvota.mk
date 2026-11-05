@@ -192,6 +192,7 @@
 # The map copy brings 5681 (__emplace_hint_unique_key_args) and 3251 (__find_equal, which matches). 5681's other target
 # caller is 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, unit 140's), and 3251's are 2386, for which unit
 # 197's roots stand in, and 3266 (src/app/roots_set.cpp's, in the link). 5681 matches as the copy of 11349's object,
+# where use band 2 puts it too (5681 between 5682 and 5680, whose records bracket 11349's: app-flags.md F6),
 # app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp.o, which this list links after crdvvota.cpp and ahead of md/rdv/
 # (unit 140's fragment has the measurement and the pairs of objects the move inverts), in a directory built without
 # strict aliasing: libc++'s __insert_node_at reloads the child pointer after the begin node's store in the target, which

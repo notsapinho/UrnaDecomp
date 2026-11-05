@@ -120,7 +120,8 @@
 #   identical bodies for our std::vector<unsigned int>'s instance (a reading); its callers are 1269
 #   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each
 #   election's id with the id of each of its cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a
-#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando's, not written) and 7787 (which
+#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando::FinalizaEleitor, unit 197's,
+#   matched) and 7787 (which
 #   holds CCargos::CreateInst; ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})`
 #   gives it, 5 over 195 rows, all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores,
 #   33 over 201 rows (6 inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8).

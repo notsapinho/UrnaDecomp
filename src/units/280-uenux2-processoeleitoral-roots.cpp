@@ -86,7 +86,7 @@ __attribute__((noinline)) std::size_t w280_eleicoes(comum::md::TVectorEleicaoPE&
     return eleicoes.size() + 280;
 }
 
-// stands for fns 5808 and 11349, the other callers of the version map's __find_equal (fn 3869; 3870 is in the link)
+// stands for fn 5808, the other caller of the version map's __find_equal (fn 3869; 3870 and 11349 are in the link)
 __attribute__((noinline)) int w280_busca(comum::md::TMapVersaoPacoteEleicao& versoes, unsigned chave)
 {
     void* pai = nullptr;

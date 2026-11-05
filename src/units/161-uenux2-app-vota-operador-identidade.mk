@@ -135,8 +135,8 @@
 # the file statics StartState clears and before StartState, as band 1 orders their exit destructors (10518, 10517 and
 # 10516, then 10515 and 10514, then 10512: `awk -F'\t' '$1>=10511 && $1<=10518' ledger/ordinals.tsv`). Its callers in
 # the link are unit 282's 10474 and 10486, which drop the result, unit 239's 10500, which reads it, and unit 142's
-# 10425, which drops it (the roots' stand-in for it went). Before steps 7 to 9, 12 over 42 rows, operand-only. With it in the link, 5399 (unit
-# 282's CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
+# 10425, which drops it (the roots' stand-in for it went). Before steps 7 to 9, 12 over 42 rows, operand-only. With it
+# in the link, 5399 (unit 282's CInformaEleitorPodeVotar::GetInst) matched: 1256's call gave 5410's name a second vote.
 # CControlaReconhecimento::StartState (10512) is written and not matched: `unresolved self-voted` on
 # s_eleitoresTreinamento (@1908712), the first of the five training words, which no target function but 10512 reads or
 # writes (`/usr/bin/grep -rlE 'i32\.const 1908712($|[^0-9])' build/out/splat/pieces/asm` prints 10512 alone), so its
@@ -395,8 +395,9 @@
 #   read); binaryen inlines it into its one caller.
 # - Inline in the class: the reads 10425 makes with no call (the two vectors, the string, the third word's low byte).
 # Chosen: the names, their being static members, the order of the five (four orders gave 10425 the same score),
-# GetDadosBiometriaEleitor's being out of line (inline not measured), and the accessors' being inline. s_dedoRegistrado is the mesario's title by 10425's use; its name, an earlier choice,
-# stays.
+# GetDadosBiometriaEleitor's being out of line (inline not measured), and the accessors' being inline
+# (GetDadosSemBiometria's being out of line is measured, above). s_dedoRegistrado is the mesario's title by 10425's
+# use; its name, an earlier choice, stays.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeidentidade.cpp \

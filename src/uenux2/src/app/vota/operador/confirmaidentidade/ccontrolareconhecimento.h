@@ -123,13 +123,13 @@ public:
     static const std::string& GetDedoRegistrado() { return s_dedoRegistrado; }
     static uebyte GetTentativaRegistrada() { return s_tentativaRegistrada; }
     static comum::md::CDedo::TipoDedo GetDedoCorrente();
-    // The biometric part of the voter's enabling, one per kind, each called on GetInst()'s result in fn 10425 (its call
-    // of fn 1256, result dropped, comes right before each): without biometrics, all zero (fn 3718's constructor with
-    // four zeros); the voter's, the finger, the score and the third word's low byte; the mesario's, the first word's
-    // low byte and CEleitores::GetCurrentBiometriaEleitor's error code, with the string as the mesario's title
-    // (TipoIDInscricaoEleitoral) when it is not empty. The last two are behind a frame of their own each in 10425 (48
-    // and 64 bytes, the CBiometriaEleitor temporary's): out of line here, binaryen inlined each into its one caller.
-    // The names, their being static members of this class and the first two's being out of line are chosen.
+    // The biometric part of the voter's enabling, one per kind, each called on GetInst()'s result in fn 10425 (after a
+    // call of fn 1256 whose result it drops): without biometrics, all zero (fn 3718's constructor with four zeros); the
+    // voter's, the finger, the score and the third word's low byte; the mesario's, the first word's low byte and
+    // CEleitores::GetCurrentBiometriaEleitor's error code, with the string, if not empty, as the mesario's title
+    // (TipoIDInscricaoEleitoral). The last two are behind a frame of their own each in 10425 (48 and 64 bytes, the
+    // CBiometriaEleitor temporary's): out of line here, binaryen inlined each into its one caller. The first's being
+    // out of line is measured (unit 161); the names, their being static and the second's being out of line are chosen.
     static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosSemBiometria();
     static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosBiometriaEleitor();
     static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosBiometriaOperador();

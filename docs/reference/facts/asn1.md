@@ -246,7 +246,8 @@ rest on those two.
 More of the same kind, from the same tally of aligned calls:
 
 - `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
-- `callers+content`: 5306, 1497, 5076, 1067 and 1068. 2247 and 2249 had such lines: a probe object at the
+- `callers+content`: 5306, 1497 and 5076. 1067 and 1068 had such lines, which went when a scan and a build without
+  them moved nothing (the census names both by `pair-addr`). 2247 and 2249 had such lines too: a probe object at the
   executable TU's `-Oz -fexceptions`, first on the link line, matches them, so they are that flag set's, and they match
   since `src/app/roots_vector.cpp` emits them as `minsize` instances, generated lines naming them. 220 and 2706 had such
   lines too, and match since `src/app/roots_coderenv.cpp` holds them at that TU's rule (unit 229), generated lines naming

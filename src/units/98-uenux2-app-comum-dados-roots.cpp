@@ -62,7 +62,7 @@ __attribute__((noinline)) void VerificaDuasVezes(int vezes)
     }
 }
 
-// Stands for fn 2834's target callers but 2543: 5953, 7787 and 12244, none in the link
+// Stands for fn 2834's target callers 5953 and 7787, not in the link (2543 and 12244, unit 102's, are)
 // (comum::CCargos::GetMapaCargos, ccargos.cpp, unit 88's file). The two 12-byte maps are left undestroyed: nothing
 // calls this.
 __attribute__((noinline)) int MapasDeCargos(int a, int b)

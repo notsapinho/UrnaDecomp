@@ -10,8 +10,9 @@
 # and the empty shared_ptr zeroed twice, at +8 and at +0 of the frame with 8-byte alignment (the by-value argument's
 # copy), are the target's stores in the object as first written (wasm-objdump -d of a try-tu.sh --symbols run).
 # Its callers are 2725 (comum::CControlaArmazenamentoDeImagens', unit 293's) and 11629 (comum::CGravadorBU's, unit
-# 200's), both written and reading the result; the roots' TextosPlanos, which stood for 11629, went with it. Measured on the
-# whole link: 12 over 207 rows, every row an operand (calls, data addresses, the __THREW__ word's address), and it
+# 200's), both written and reading the result; the roots' TextosPlanos, which stood for 11629, went with it.
+# Measured on the whole link: 12 over 207 rows, every row an operand (calls, data addresses, the __THREW__ word's
+# address), and it
 # matches; its line after the other two constructors is a choice.
 ECOURNA_SRCS += api/security/cepesc/cinfosalt.cpp api/security/cepesc/ccipheredout.cpp api/security/cepesc/ccipheredin.cpp \
                 api/security/cepesc/cplaintext.cpp api/security/asn1/ckeyloader.cpp

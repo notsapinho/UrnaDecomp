@@ -8,12 +8,12 @@
 // None of these functions has a target index of its own. The constructors and ValidaCriacao are held by target fn 11629
 // (comum::CGravadorBU::GravaResultado), inside the frame of CGravadorBU::MontaEntidadeBU (record cgravadorbu.cpp:636),
 // which builds the entity in four branches, one per constructor: ValidaCriacao's 640-byte frame opens once, after the
-// four branches meet. Defined in the class instead of here, the constructors give the same fn 11629 (pnpm wasm score
-// in the whole link, 423 over 7089 rows both ways, every one operand-only); out of line is the form this directory's
+// four branches meet. Defined in the class instead of here, the constructors give the same fn 11629 (pnpm wasm score in
+// the whole link, 423 over 7089 rows both ways, every one operand-only); out of line is the form this directory's
 // classes with a ValidaCriacao have (cenvelopegenerico.cpp), a choice. The getters are held by
 // CConversorEntidadeBU::DoConverte (fn 10273), each behind a frame of its own. The constructors have no record: their
 // lines, above ValidaCriacao's, are a choice, and so is where ValidaCriacao and each getter start. ValidaCriacao's
-// test of the phase (48 rejected, and every value above 51) is cenvelopegenerico.cpp's spelling of the same test.
+// phase test (48 rejected, every value above 51) is cenvelopegenerico.cpp's, with FASE_INDEFINIDA, not '0' (chosen).
 
 #include "app/comum/gravadores/md/centidadebu.h"
 

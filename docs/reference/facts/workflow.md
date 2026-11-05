@@ -826,7 +826,7 @@ uenux2/src/api/util/cstringutils` prints 0 at bbf27ac1). It is on no link line, 
   /usr/bin/grep -q 10CBaseError "$o" && echo "$o"; done | sort`, then `comm -13` against the sorted list. Then read each
   listed source's `#include`s: add the directory's wildcard to its rule only when it includes the header, directly or
   through another. A roots file that reaches a class through `__asm__` labels alone holds the name with no header
-  (`LC_ALL=C /usr/bin/grep -c '#include' src/units/152-uenux2-app-vota-operador-estados-roots.cpp` prints 0 beside 10
+  (`LC_ALL=C /usr/bin/grep -c '#include' src/units/104-uenux2-app-vota-estados-roots.cpp` prints 0 beside 6
   `__asm__` lines), and so does a TU that holds a forward declaration: move such an object aside and rebuild it, and
   `cmp` is the check.
 - **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W

@@ -497,7 +497,8 @@
 #   matched (7, 4, 2 and 0 rows, all operand-only).
 #   Unit 280's roots read 1281's result for its callers that read it (5967 and 7787; 1543 and 11902, which read it too,
 #   are in the link) and give 3869 a second
-#   caller for 5808 and 11349. DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787, now in the link.
+#   caller for 5808 (11349, unit 140's, is in the link). DestroiTodos' ~CPE (5598) stand-in went: it stood for 2787,
+#   now in the link.
 # ctelasvota.cpp also holds the zerésima chain's screens, free functions of vota that ctelasvota.h declares and
 # describes: vota::AdicionaLocal (target fn 4161), vota::TelaNeutra (2380) and vota::TelaPorFavorAguarde (6587),
 # AdicionaLocal reading the file constant FONTE_VERSAO {15, 0}, which CTelasVota::CriaTelaQRCodeBU reads too (one
@@ -519,7 +520,7 @@
 #     FONTE_INSTRUCAO_TESTE_TECLADO (a reading: 11805, which holds TelaTesteTeclado, reads it). AdicionaLocal's body
 #     follows GetTelaCargo, ahead of TelaTextoConfirmaCorrige's and CTelasVota::CriaTelaQRCodeBU's, and the object held
 #     FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and
-#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53) until
+#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 37, 51, 52 and 56) until
 #     CriaTelaMaisInformacoes (below) was defined above TelaNeutra. With the body above
 #     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
 #     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
@@ -579,8 +580,9 @@
 #   ctelasvota.cpp, 306 over 2151, whether citensmenuvota.cpp is in unit 102's list or after it here (README "Names": a
 #   landed file goes into the list of the unit whose file its order decides against). citensmenuvota.cpp stays in unit
 #   102's list: moved here, it put 5 pairs of objects in the data's order, inverted 34 and gained nothing (unit 102's
-#   fragment). Left inverted against the target's data: comum::CItemMenu's vtable and typeinfo, which citensmenuvota.cpp's
-#   object emits, so our link holds them ahead of every object between unit 102's list and this one, where the target
+#   fragment). Left inverted against the target's data: comum::CItemMenu's vtable and typeinfo, which
+#   citensmenuvota.cpp's object emits, so our link holds them ahead of every object between unit 102's list and this
+#   one, where the target
 #   holds them after the menu's vtable and the first block (@1539884, @1539904), inside the constructor's run; and
 #   FONTE_VERSAO's two pairs (below).
 # - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), are defined right above it, their old
