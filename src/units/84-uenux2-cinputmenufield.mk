@@ -81,26 +81,38 @@
 #   constructed from "" (two byte stores, where a default std::string zeroes 12 bytes); 36 over 628 with the room held
 #   in a TPosition before the 5 is taken off. The instruction's height in a TPosition local of its own, or cast to
 #   TPosition in the expression, gives 82 over 648 and 80 over 647; written as `- (bottom - top) - 1`, the 1 and the 5
-#   fold into one constant (the object's code).
-# - AddInputMenuField (3675) with the constructor, CMenuValidation's constructor, GetInstructionTextRect (record 251:21)
-#   and SetInstructionText (record 477:9), all inlined into it: 162 over 528 rows in the plain link, 128 operand-only;
-#   the 16 inserted and 18 deleted are the same instructions under other locals' numbers but for CMenuValidation's
-#   constructor's stores: the target makes all four off a local that holds the object (+12, +4, +16, then the vptr at
-#   +0), ours the first off the object and the other three off the control block (+16, +28, +12). The target holds that
-#   constructor behind binaryen's inlining, which a constructor out of line in this file gives: with
-#   INSTRUCAO_PADRAO_MENU still in cinputmenufield.h, 161 over 526, all four stores off the object and the rest locals'
-#   numbers and operands; with it in this file (a choice: the target's one guarded initialisation shows that one TU
-#   defines it, not which; were 3675 to move, the variable's file is open again), 162 over 528 as above, not explained;
-#   inline in the class, clang inlines it and the stores are offsets off the block (235 over 535). The items' rectangle
-#   starts from m_posicao, read back from the member (the target loads the position once, as a 32-bit word, and shifts
-#   it); from the parameter it reloads both halves (243 over 538, with the inline constructor). With AddInputMenuField
-#   below its callees in the file (162 over 528) or above them (161 over 526), and with the two constructors in either
-#   order (162), the locals stay as they are: not explained. The four of AddItem's default argument's lambda (`__func`,
-#   vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy assignment (1763), std::__throw_bad_any_cast (3861)
-#   and std::bad_any_cast::what (8110, libc++'s any.o) match with vota::CMenuVisualizarCandidatos::StartState (11881) in
-#   the link, which their target callers or holders are: the lambda's members and 1763 come from comum/ctelasvota.cpp.o,
-#   whose TelaMenuVisualizacaoCandidatos uses the default argument and the copy assignment, 3861 from
-#   cmenuvisualizarcandidatos.cpp.o (11881's std::any_cast).
+#   fold into one constant (the object's code). Fifteen more forms of that statement, each compiled at the unit's flags
+#   (tools/round/try-tu.sh --symbols) and read in the object's NextItemPosition: the difference in an int or TPosition
+#   local, the rectangle copied to a local, a lambda that returns the height as TPosition, static_cast<TPosition> of the
+#   height or of the difference, `bottom + 1 - top`, `- 1 - (bottom - top)`, `-(height) + min`, `+ ~(bottom - top)`
+#   written out, std::min<int>, the minimum in a named int, `limite -=` in a second statement: each gives `top + ~bottom`,
+#   `top - bottom` with the constants joined, or the two loads ahead of GetHeight's call, none the target's
+#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from a
+#   callers+content hand line in splat/symbol_addrs.txt, on the four records only it loads (298, 320, 326, 339): its
+#   callers cannot name it, 11881's call vote being its own and 11884 and 11888 not written. Measured by the removal
+#   check (docs/reference/splat.md "Reviewing a match"): without the line, 11881 and 12894 are unresolved self-voted.
+# - The constructor, CMenuValidation's constructor, GetInstructionTextRect (record 251:21) and SetInstructionText
+#   (record 477:9), which binaryen inlines into AddInputMenuField (3675), defined in api/gui/cinteractiveformbuilder.cpp
+#   (unit 120's fragment has why: with it in this file it scored 162 over 528 rows, CMenuValidation's constructor's
+#   stores off the control block where the target makes them off the object; there it matches). Measured with 3675 in
+#   this file: CMenuValidation's constructor inline in the class, 235 over 535; the items' rectangle from the parameter
+#   rather than read back from m_posicao, 243 over 538 (the target loads the position once, as a 32-bit word, and shifts
+#   it). INSTRUCAO_PADRAO_MENU, the default instruction string the constructor copies (.bss 1832432, which only 3675,
+#   11662 and 14478 address): cinputmenufield.h has what the target shows of it, its copy the executable TU's (a
+#   reading). Measured in a whole link with it an inline variable of cinputmenufield.h and
+#   src/uenux2/wasm/vota_web/vota_web_wasm.cpp including that header (steps 7 to 9, on this file as landed): 11662
+#   matches from that TU's -Oz copy, 14478 votes the object's name too (vote:11 by:3675,14478), and twelve rows of other
+#   units match (2688, 2689, 3525, 3526, 5143, 5166, 5189, 5190, 8592, 9385, 9394, 9518; why not read), but that TU then
+#   instantiates api::CFormStack<IScreenMT>'s statics too (api/gui/iform.h), and 8177, their target destructor (an -O3
+#   copy, after the executable TU's .bss), leaves `match`. So the variable stays an inline variable of this file (a
+#   choice), and its name comes from a callers+content hand line in splat/symbol_addrs.txt (14478 builds it from the
+#   literal at 444366 and 11662 destroys it); without the line 3675 is unresolved self-voted (the removal check). 11662
+#   waits for the header that brings the variable into the executable TU without CFormStack<IScreenMT>. The four of
+#   AddItem's default argument's lambda (`__func`, vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy
+#   assignment (1763), std::__throw_bad_any_cast (3861) and std::bad_any_cast::what (8110, libc++'s any.o) match with
+#   vota::CMenuVisualizarCandidatos::StartState (11881) in the link, which their target callers or holders are: the
+#   lambda's members and 1763 come from comum/ctelasvota.cpp.o, whose TelaMenuVisualizacaoCandidatos uses the default
+#   argument and the copy assignment, 3861 from cmenuvisualizarcandidatos.cpp.o (11881's std::any_cast).
 #
 # CMenuItem's members in the same file: GetTextoFormatado (fn 5492, a chosen name), UpdateRect (3657, record 49:21, its
 # instance() line), Draw (record 74:21; binaryen inlines it into CInputMenuField::Draw, its one caller, whose body shows

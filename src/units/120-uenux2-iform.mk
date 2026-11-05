@@ -31,7 +31,7 @@
 #                     argument) and 5530 (the keys), with
 #                     what this object emits first of api/gui/cinputfieldcontrol.h and iinputfield.h:
 #                     CInputFieldControlBase<IScreen>'s constructor 5565 and IInputField<IScreen>'s 2024 (unit 92's
-#                     headers, whose notes they are)
+#                     headers, whose notes they are), and the free function api::AddInputMenuField 3675 (below)
 #   libc++ that the forms reach: std::__shared_mutex_base's lock 3328, unlock 3327 and constructor 4670
 #                     (FormControlBlock's std::shared_mutex), std::__call_once 2577, which the forms' callers keep out
 #                     of line, and with it std::locale::id::__get (514), which calls it and matches since __call_once
@@ -152,6 +152,14 @@
 #   6133, 9056, 10257, 10881 left `match`), docs/reference/facts/splat.md S8 item 1's case.
 # - 8872 matches (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
 #   since unit 170, whose copies of CPolySingletonList::find keep 305 and 608 apart (unit 100's fragment).
+# - api::AddInputMenuField (3675, a chosen name; cinteractiveformbuilder.h has its evidence and choices), defined last in
+#   cinteractiveformbuilder.cpp, matches, with CInputMenuField's constructor and the members whose records it loads
+#   (cinputmenufield.cpp 251 and 477) defined in unit 84's cinputmenufield.cpp and inlined into it by binaryen. Its file
+#   is a reading of its use bands (how-to step 3, rule 5), and measured with pnpm wasm score in the plain link: in
+#   cinputmenufield.cpp, 162 over 528 rows (16 inserted, 18 deleted); here, 29 over 512, every row an operand (calls,
+#   data, and the five rows of the default instruction string's .bss address, which a hand line names: unit 84's
+#   fragment). It is named by its srcloc-anchor. The stand-ins for its target callers not written (11884, 11888) stay in
+#   unit 84's roots (MenuPorPartido, MenuPorCargo).
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
 # no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of

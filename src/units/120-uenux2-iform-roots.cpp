@@ -12,8 +12,8 @@
 //                     gets two call sites
 //   RotulosA, RotulosB  the callers of 653, AddLabeledInputControl, none reconstructed but 2376 (ctelasvota.cpp), 2291
 //                     (CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo),
-//                     11804 and 11809 (unit 217's), 11881 (unit 104's) and 6599 (unit 110's), these two not
-//                     matched: 6569, 6592, 6595, 7787,
+//                     11804 and 11809 (unit 217's), 11881 (unit 104's) and 6599 (unit 110's, not matched): 6569,
+//                     6592, 6595, 7787,
 //                     11884, 11888, 11892 and 12040, which pass the same two constants as 2376 does: they stay while
 //                     those callers wait. The target's 653 has neither of its last two parameters, folded by binaryen:
 //                     it loads the area's corners from api::CApplication::s_areaTela (.data 1577200) and adds the keys'

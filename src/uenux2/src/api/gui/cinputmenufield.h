@@ -34,18 +34,29 @@
 // chosen. SetSearchText, UpdateRect and Draw have their names and types from their records (cinputmenufield.cpp 142,
 // 49, 74).
 //
-// The constructor is defined in cinputmenufield.cpp. fn 3675 builds the menu with std::make_shared, a 184-byte block,
-// and holds the constructor inlined, its second prologue among the block's stores: it stores the position's four bytes
-// at +92, the font's eight at +96, and its last argument (32767 from fn 11881, 310 from 11884 and 11888) as 16 bits at
-// +156, then sets the instruction text (SetInstructionText, record 477:9) after the constructor. So the constructor
-// reads those three; a parameter every caller passes as the same constant would leave no trace there
-// (docs/how-to-decompile.md step 2). It copies the instruction text from a std::string the target keeps in .bss at
-// 1832432, built in the global constructors from "Digite a sua opção: " under a guard byte (1832444) that only that
-// initialisation reads, and destroyed at exit by fn 11662 (table slot 1). A guard says an inline variable (or a
-// template's static member), and one initialisation in the target's global constructors says one TU defines it:
-// INSTRUCAO_PADRAO_MENU in cinputmenufield.cpp (in this header every TU that includes it emits its own guarded copy).
-// Its name and its being an inline variable of api rather than a template's member are chosen. The parameters' names
-// and order and TPosition for the last are chosen.
+// The constructor is defined in cinputmenufield.cpp. fn 3675 (api::AddInputMenuField, cinteractiveformbuilder.h)
+// builds the menu with std::make_shared, a 184-byte block, and holds the constructor inlined, its second prologue
+// among the block's stores: it stores the position's four bytes at +92, the font's eight at +96, and its last argument
+// (32767 from fn 11881, 310 from 11884 and 11888) as 16 bits at +156, then sets the instruction text
+// (SetInstructionText, record 477:9) after the constructor. So the constructor reads those three; a parameter every
+// caller passes as the same constant would leave no trace there (docs/how-to-decompile.md step 2). The parameters'
+// names and order and TPosition for the last are chosen.
+//
+// It copies the instruction text from a std::string the target keeps in .bss at 1832432, built in the global
+// constructors (fn 14478) from "Digite a sua opção: " under a guard byte (1832444) and destroyed at exit by fn 11662
+// (table slot 1). A guard says an inline variable (or a template's static member). Every TU that sees the definition
+// emits it with its guarded initialisation in the variable's COMDAT, since it has a destructor, and the link keeps the
+// first object's (clang's rule, a reading; the measurement below shows it for the executable TU). The target's copy
+// reads as the executable TU's (src/uenux2/wasm/vota_web/vota_web_wasm.cpp, first on the link line, -Oz), a reading:
+// its initialisation calls the string's constructor out of line (fn 148, that TU's copy) and 11662 its destructor (fn
+// 149), where this tree's -O3 objects inline both; in 14478 it comes first after libc++'s streams' and libc's
+// environment's; and 1832432 lies just before that TU's own .bss (api::polySingletonsInfoPadrao's static at 1832448).
+// Measured: with the variable in this header and the executable TU including it, that TU's copy gives the target's
+// initialisation and 11662, but the TU then also instantiates CFormStack<IScreenMT>'s statics (iform.h), whose target
+// destructor 8177 is another object's -O3 copy, and 8177 leaves `match` (src/units/84-uenux2-cinputmenufield.mk has the
+// run). So the variable stays in cinputmenufield.cpp, an inline variable there (a choice), until the header that brings
+// it into the executable TU is known, and 11662 waits for that; its name and its being an inline variable of api rather
+// than a template's member are chosen.
 //
 // What fn 3675 and fn 1693 show of the members they call (src/units/84-uenux2-cinputmenufield.mk has the measurements):
 // AddItem (records 320, 326 and 339) takes the item's text and a TMenuCallback, the record's type name, whose default
@@ -199,15 +210,5 @@ private:
 
     CInputMenuField* m_menu;
 };
-
-// fn 3675 (callers 11881, 11884 and 11888): builds a CInputMenuField with std::make_shared, gives it its instruction
-// text and adds it to the builder (api::CFormBuilder::AddField, fn 426), and returns it. No record names it (its
-// records are the inlined GetInstructionTextRect's and SetInstructionText's); its file, cinputmenufield.cpp, is a
-// choice the use bands contradict: in band 3, 3676 (cframedtext.cpp.o) and 3674 (cmtformbuilder.cpp.o) lie on either
-// side of it while this file's 3657 and 3655 link 17 indices on, and in band 1 the control block only it makes (11069,
-// 11070) sits by cinteractiveformbuilder.cpp.o's run (a file there was not measured). Its name, its being a free
-// function of api (it reads no private state of either class) and its parameters' names are chosen.
-std::shared_ptr<CInputMenuField> AddInputMenuField(CFormBuilder& builder, const SPoint& posicao, const SFont& font,
-                                                   const std::string& instrucao, TPosition alturaMaxima);
 
 } // namespace api
