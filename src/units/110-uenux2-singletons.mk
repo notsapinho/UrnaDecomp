@@ -516,9 +516,10 @@
 #     not at that function's place in the code (AdicionaLocal's comes from TelaNeutra's call). The target holds the
 #     fonts as {30, 0} @474888, {20, 0} @474896, {25, 0} @474992 and {15, 0} @475008, @474896 being
 #     FONTE_INSTRUCAO_TESTE_TECLADO (a reading: 11805, which holds TelaTesteTeclado, reads it). AdicionaLocal's body
-#     follows GetTelaCargo, ahead of TelaTextoConfirmaCorrige's and CTelasVota::CriaTelaQRCodeBU's, and the object holds
+#     follows GetTelaCargo, ahead of TelaTextoConfirmaCorrige's and CTelasVota::CriaTelaQRCodeBU's, and the object held
 #     FONTE_TITULO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_VERSAO, FONTE_TEXTO_CONFIRMA_CORRIGE and
-#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53). With the body above
+#     FONTE_TECLA in that order (wasm-objdump -x -j Data: segments 5, 6, 35, 48, 49 and 53) until
+#     CriaTelaMaisInformacoes (below) was defined above TelaNeutra. With the body above
 #     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
 #     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
 #     before, which 3064 (record 1585, not written), a reader of @474896, can explain. The fonts after @475008, {35, 0}
@@ -551,10 +552,52 @@
 #   `const int passo = meio + altura;` before `const ueword inicio = 240 - linhas.size() * altura + meio - tamanho / 4;`
 #   gives the target's sequence (meio + ((-n * size) + (size / -4 & 65535)) + 240, the step unmasked).
 # - The three include lines this needs (clocal.h, ctradutorfrase.h, cstringutils.hpp) took blank lines above line 291.
+# ctelasvota.cpp also holds vota::CTelasVota::CriaTelaMaisInformacoes (target fn 6599; ctelasvota.h has what its body
+# shows), and this unit's list compiles after it unit 102's citensmenuvota.cpp and the new
+# app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, vota::CMenuMaisInformacoesVota's constructor, which 6599 holds
+# inlined behind its 80-byte frame (citensmenuvota.h has the class):
+# - 6599's file: use band 2 puts it among this object's functions (ledger/tu-clusters.tsv stretches 902 to 906: 6587
+#   below it, 6601 to 6608 with records 1049 to 1126 above it). Band 2 runs 6599 ahead of 6587, so it is defined above
+#   TelaNeutra: at line 3000, a choice inside the record-less lines 1127 to 3340 that keeps records 1741 and 2382 blank
+#   and leaves room above TelaNeutra for 6595, 6594 and 6592, which band 2 puts between 6599 and 6587.
+# - The constructor's TU, measured in the whole link (pnpm wasm score before step 8): in ctelasvota.cpp (clang keeps it
+#   a call: llvm-objdump -dr), 6599 drops its returned `this` and folds the menu's frame address into nine loads and
+#   stores where the target keeps that pointer in a local, 324 over 2151 rows; in citensmenuvota.cpp, 6599 takes the
+#   returned `this` as the target does, but the fifth item's block slot 2 (12172), built there beside the destructor it
+#   deletes through, leaves match: the target's frees what the D2 returns, the shape how-to step 5 gives a block built
+#   outside the destructor's TU; in a file of its own, both hold. The data hold the items' vtables
+#   (citensmenuvota.cpp's), then the menu's and the five blocks' (the constructor's), right after
+#   CriaTelaVisualizacaoCandidato's lambda's (@1539548) and before fimvotacao's CCopiaResultadoParaMR (@1540072), and
+#   use band 1 runs the items' slots (12267 to 12244) between this object's lambda members and the blocks' members: so
+#   both files follow ctelasvota.cpp in this list, the order measured too. With citensmenuvota.cpp ahead of
+#   ctelasvota.cpp, as unit 102 listed it, and the constructor in it, 6599 scored 342 over 2152; after it, 306 over
+#   2151, with the constructor in it or in its own file (README "Names": a landed file goes into the list of the unit
+#   whose file its order decides against; unit 102's fragment says so).
+# - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), are defined right above it, their old
+#   lines left blank. 6599 reads FONTE_VERSAO before AdicionaTelaAguarde reads FONTE_AGUARDE, so the object holds
+#   FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE and
+#   FONTE_TECLA in that order (wasm-objdump -x: segments 4, 9, 14, 45, 59 and 63), FONTE_VERSAO's two pairs against the
+#   target's order. The target's readers of @474896 (6660, 6671, records 850 and 887, and 3064, record 1585) and of
+#   @474992 (6608, 6605, 6603, records 1049 to 1101) are defined above 6599's lines and not written: they can give the
+#   target's order (`/usr/bin/grep -rlE 'i32\.const 474992($|[^0-9])' build/out/splat/pieces/asm` lists the readers).
+# - 6599 differs: 306 over 2151 rows (278 operand-only replaced, 14 inserted, 14 deleted), every row a local's number, a
+#   call, a data address or the format buffer's table slot (148 against 43). In the fourth item the target keeps the
+#   comum constructor's 16-byte frame pointer in the local that held the vota state, ours the count GetNumViasPU
+#   returns, and binaryen numbers the locals otherwise from there. Not explained. Tried with the constructor in
+#   ctelasvota.cpp, each on a whole link: the constructor above 6599, the two orders of each comum class's constructors
+#   and the four classes in call order (app/comum/informacao/citemmenu.cpp's note), CMenuBase's constructor first or
+#   last in cmenubase.cpp, the menu as a named local in a block, the counts read through a reference to the vota state
+#   or to its CNumViasImpressasRelatorios: the same score. On the link's own binaryen input
+#   (docs/reference/facts/codegen.md C4): the constructor after 6599, ahead of it or at the module's head, and
+#   CMenuBase's constructor ahead of it, the same score; the comum constructors ahead of the menu's, 351 over 2145.
+#   11897 matches all the same: the symbol file names 6599 by its vptr stores (evidence:vptr-anchor), and 6599 stays
+#   written for it (how-to step 5).
+# - 6599's other target caller is 7787 (not written): unit 354's roots stand in for it.
 #
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
-  src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp
+  src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \
+  src/app/vota/operador/outrasopcoes/citensmenuvota.cpp src/app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
 # reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the

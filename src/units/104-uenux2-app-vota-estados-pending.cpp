@@ -9,7 +9,6 @@
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
@@ -24,12 +23,6 @@ namespace vota {
 // and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, fragment 227's 3825 and 3826, and
 // 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).
 void CGravaResultado::StartState()
-{
-    __builtin_trap();
-}
-
-// CMaisInformacoes::StartState: fn 11897 (182 B), callee with no name: 6599.
-void CMaisInformacoes::StartState()
 {
     __builtin_trap();
 }

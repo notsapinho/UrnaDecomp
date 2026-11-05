@@ -26,12 +26,13 @@
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
 #include "app/vota/euevotaerror.h"
+#include "app/vota/operador/outrasopcoes/citensmenuvota.h"
 #include "ecourna/api/pattern/singleton.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace vota {
 
-// (original lines 34-290: content not recovered)
+// (original lines 35-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -181,7 +182,37 @@ const auto GetKeyboardLayout()
 // void f3064(i32, i32) { ... }
 // </stubs>
 
-// (original lines 1587-3340: content not recovered)
+// (original lines 1587-2999: content not recovered)
+#line 3000
+namespace {
+
+const api::SFont FONTE_TITULO{30, 0};
+const api::SFont FONTE_VERSAO{15, 0};
+
+} // namespace
+
+CFormInterativoTelaVota CTelasVota::CriaTelaMaisInformacoes()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Mais informações", api::SPoint(320, 100), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    CMenuMaisInformacoesVota(builder).MontaMenu();
+    const std::string processo =
+        std::format("Processo eleitoral: {:05}", comum::CConfiguracaoEleicao::GetInst().GetProcessoEleitoral());
+    const std::string pleito = std::format("Pleito: {:05}", comum::CConfiguracaoEleicao::GetInst().GetPleito().GetID());
+    const std::string biometria = comum::CLocal::GetInst().UrnaBiometrica() ? "Sim" : "Não";
+    builder.AddTextField(processo, api::SPoint(25, 360), FONTE_VERSAO, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(pleito, api::SPoint(25, 380), FONTE_VERSAO, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Local com biometria: " + biometria, api::SPoint(25, 400), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Selecionar"}, {'D', "Retornar"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaMaisInformacoes");
+}
+
+// (original lines 3028-3340: content not recovered)
 #line 3341
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes)
@@ -212,7 +243,7 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaPorFavorAguarde()
 #line 3370
 namespace {
 
-const api::SFont FONTE_TITULO{30, 0};
+
 const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
 const api::SFont FONTE_AGUARDE{25, 0};
 
@@ -322,7 +353,7 @@ CTelasVota::~CTelasVota() = default;
 
 namespace {
 
-const api::SFont FONTE_VERSAO{15, 0};
+
 const api::SFont FONTE_TECLA{20, 1};
 
 api::SRect AreaTela()

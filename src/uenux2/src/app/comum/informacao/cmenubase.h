@@ -22,7 +22,12 @@
 //       pointer would give the same bytes.
 // - MontaMenu: no record, symbol or caller names slot 2, so the name is chosen from the body, which writes a line
 //   "[{}] - {}" for each item and the prompt "Escolha a sua op\xE7\xE3o:" into the form builder, then the input field.
-// - The constructor is declared only: binaryen inlined it into fn 6599, so the target has no function of it.
+// - The constructor: binaryen inlined it into vota::CMenuMaisInformacoesVota's constructor and that into fn 6599, so
+//   the target has no function of it. It clears +4 to +27, stores the builder at +28 and the vptr, and 6599 keeps that
+//   vptr store right before the derived class's, which overwrites it: so it is out of line in cmenubase.cpp, another TU
+//   than its caller's. Measured with that constructor then in ctelasvota.cpp: defined in the class, 6599 scored 361
+//   over 2151 rows against 324 over 2151 (pnpm wasm score in the whole link); its place in cmenubase.cpp, first or
+//   last, gave the same wasm (sha256 equal).
 // - The header's path is chosen: no record names a file of the class, and the stub comments' app/comum/dados/ is the
 //   tool's class convention. MontaMenu, the key function (ledger/tu-clusters.tsv stretch 853), is linked right after
 //   the functions of app/comum/informacao/cinformacaoeleicao.cpp (stretch 854) and before those of

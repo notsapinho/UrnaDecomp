@@ -166,6 +166,19 @@ public:
     // after the file's last record are chosen.
     static CFormInterativoTelaVota GetTelaInspecionaUrna();
     static std::shared_ptr<api::IForm<api::IScreen>> GetTelaInspecaoTerminada();
+    // Fn 6599, the "Mais informações" screen vota::CMaisInformacoes::StartState (fn 11897) shows, called right after
+    // CTelasVota::GetInst() (fn 407), whose result 11897 drops: a static member called through the instance, the
+    // reading made for fns 6580 and 6581 (as a const member, 11897 scored 6 over 83 rows against 2 over 83 as a static,
+    // pnpm wasm score in the whole link). Evidence, the body: the status header (5), "Mais informações" at (320, 100) in
+    // the 30-point font (@474888, FONTE_TITULO), comum::CMenuBase::MontaMenu (fn 5913) on a vota::CMenuMaisInformacoesVota
+    // over the builder, destroyed right after it (citensmenuvota.h), "Processo eleitoral: {:05}" and "Pleito: {:05}"
+    // (argument type 6: CConfiguracaoEleicao's words at +0 and +28, the process and the pleito's id) and "Local com
+    // biometria: " with "Sim" or "Não" (comum::CLocal::UrnaBiometrica, fn 820), at (25, 360), (25, 380) and (25, 400),
+    // left-aligned in the 15-point font (@475008, FONTE_VERSAO), colours 2 over 1, the labels of CONFIRMA ('C',
+    // "Selecionar") and CORRIGE ('D', "Retornar") through fn 653, and "telaMaisInformacoes" through
+    // GetFormularioInterativo (fn 576). Its other target caller is 7787. The name, after the class's recorded CriaTela*
+    // statics, and its place in ctelasvota.cpp are chosen; src/units/110-uenux2-singletons.mk has what it differs in.
+    static CFormInterativoTelaVota CriaTelaMaisInformacoes();
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

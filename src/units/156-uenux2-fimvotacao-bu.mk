@@ -11,7 +11,9 @@
 # - vota::CImprimindoBU: GetInst (fn 5986), the constructor, the destructor (fns 244, 387) and the statics (fns 12079,
 #   12080), and ImprimeBU (fn 2890, below);
 # - comum::CItemImprimeEstadoUrna, CItemImprimeListaEleitores, CItemParametrosUrna and CItemVersoesPacotes: slot 2 (fns
-#   11669, 11668, 11667, 11666), in app/comum/informacao/citemmenu.cpp, whose note says what it rests on;
+#   11669, 11668, 11667, 11666), in app/comum/informacao/citemmenu.cpp, whose note says what it rests on, and the
+#   classes' two constructors each, after the slots, with no index of their own: binaryen inlines them into
+#   vota::CTelasVota::CriaTelaMaisInformacoes (fn 6599, unit 110's), and citemmenu.h has their evidence;
 # - four vota::CLogVota members these states and others call, in app/vota/log/clogvota.cpp (unit 119's file), after
 #   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaQtdViasAdicionaisExcedeMaximo (fn 4556),
 #   LogaMesarioIndagadoQualidadeBU (fn 4551) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), 4556 and

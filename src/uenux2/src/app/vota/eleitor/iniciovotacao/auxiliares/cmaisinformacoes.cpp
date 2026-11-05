@@ -10,6 +10,7 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaolistaeleitores.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaopu.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoversaopacotes.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
@@ -37,6 +38,13 @@ CMaisInformacoes& CMaisInformacoes::GetInst(comum::CAppState* pRetorno)
 
 std::unique_ptr<CMaisInformacoes> CMaisInformacoes::s_inst;
 std::mutex CMaisInformacoes::s_mutex;
+
+void CMaisInformacoes::StartState()
+{
+    m_form = CTelasVota::GetInst().CriaTelaMaisInformacoes();
+    m_form->Slot2();
+    m_pNextState = this;
+}
 
 void CMaisInformacoes::ProcessInput()
 {

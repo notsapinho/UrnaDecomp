@@ -279,11 +279,6 @@
 // f6592 · 942 B · unmatched · placement: link order · name unknown
 // void f6592(i32, i32) { ... }
 
-// link-order cluster 904 · uses=2
-
-// f6599 · 4974 B · unmatched · placement: link order · name unknown
-// void f6599(i32) { ... }
-
 // link-order cluster 905 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 
 // f6601 · 504 B · unmatched · placement: link order · name unknown
