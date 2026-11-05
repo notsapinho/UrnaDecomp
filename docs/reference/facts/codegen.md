@@ -494,15 +494,16 @@ It ranks each object by its first vtable or typeinfo in our map (`.data.rel.ro`,
 target address the symbol file gives them, and the lines above the count (`sort -n` them) name the objects; those
 printed at one place and not at the other are the pairs the move inverts or restores. The target's `.rodata` (`_ZTS`
 names, strings) orders apart, so never mix the two segments, and an object with records and no vtable is read from
-`ledger/source-locations.tsv` by its file. A destination neighbour that is itself out of the data's order with the
-objects crossed makes every crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data
-neighbour, crossed 56 objects and inverted 34 with 6599 at `306 over 2151` either way, so it stayed in unit 102's list.
-A function moved between two files that stay in place reorders no object: its code and the linkonce data it emits change
-object, so read the target's neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not
-a count over our order. 3675 (`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control
-block, whose vtable (1579316) follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between
-`cframedtext.cpp`'s 3676 and `cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's
-order in our link goes between them where they are adjacent, and names the pairs it leaves.
+`ledger/source-locations.tsv` by its file ([link-order.md](link-order.md) §L7 item 15 reads one object's run). A
+destination neighbour that is itself out of the data's order with the objects crossed makes every crossed pair an
+inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour, crossed 56 objects and inverted 34
+with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function moved between two files that stay
+in place reorders no object: its code and the linkonce data it emits change object, so read the target's neighbours of
+that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count over our order. 3675
+(`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316)
+follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
+`cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's order in our link goes
+between them where they are adjacent, and names the pairs it leaves.
 
 **Trying orders on binaryen alone.** A relink costs about 40 s an order, and a chain of several inlined functions has
 many. The link's own `wasm-opt -Oz` step can run alone instead: `link-map` writes it as line 3 of
