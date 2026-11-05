@@ -232,7 +232,7 @@ bool IInterfaceSavd::AssinarArquivo(ESavdAplic aplic, ueint32 comando, uebyte op
 }
 
 
-bool IInterfaceSavd::ValidarPacote(ESavdAplic aplic, ESavdChaveValidar chave, ueword comando, const std::string& pacote)
+bool IInterfaceSavd::ValidarPacote(ESavdAplic aplic, uedword chave, ueint32 comando, const std::string& pacote)
 {
     if (aplic > 0xFF || chave > 0xFF || pacote.empty()) {
         m_mensagem = "Argumento inválido validar assinar o pacote.";
@@ -241,8 +241,8 @@ bool IInterfaceSavd::ValidarPacote(ESavdAplic aplic, ESavdChaveValidar chave, ue
 
     const std::string dados = MontaRequisicaoTLV(pacote, chave);
     ueRequisicaoSavd requisicao = {};
-    requisicao.comando = comando;
     requisicao.aplicacao = aplic;
+    requisicao.comando = comando;
     return EnviarRequisicao(m_codigo, requisicao, dados);
 }
 

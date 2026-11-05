@@ -17,10 +17,17 @@ enum EUeComumError {
     EUE_COMUM_ARQUIVO_ASSINATURA_NAO_ENCONTRADO = 7201,
     // CArquivosSavd::operator[](ESavdArquivoUE) (fn 680), "Arquivo assinado associado ao identificador {} não encontrado"
     EUE_COMUM_ARQUIVO_ASSINADO_NAO_ENCONTRADO = 7203,
+    // CPacoteArquivos::ValidarChaveEAplicacaoValida (fn 4625 holds it), "A chave informada não é válida: {}"
+    EUE_COMUM_CHAVE_INVALIDA = 7219,
+    // CPacoteArquivos::ValidarChaveEAplicacaoValida (fn 4625 holds it), "A aplicação informada não é válida: {}"
+    EUE_COMUM_APLICACAO_INVALIDA = 7220,
     // CPacoteArquivos::RetornaNomeChave (fn 5900), "Chave desconhecida: {}"
     EUE_COMUM_CHAVE_DESCONHECIDA = 7221,
     // CPacoteArquivos::TrataErroPacote (fn 5901), "Falha ao validar assinatura {}\npacote: ({})\nErro SAVD: ({} - {})"
     EUE_COMUM_VALIDAR_ASSINATURA_PACOTE = 7222,
+    // CPacoteArquivos::TrataErroPacoteArquivo (fn 4625 holds it), "Falha ao validar assinatura {}\npacote:
+    // ({})\narquivo: ({})\nErro SAVD: ({} - {})"
+    EUE_COMUM_VALIDAR_ASSINATURA_ARQUIVO = 7223,
     // CPath::GetPathRootSemSA (fn 634), "Mídia inválida: {}"
     EUE_COMUM_PATH_MIDIA_INVALIDA = 7224,
     // CPath::GetPathResult (fn 1399), "Turno invalido: {}"

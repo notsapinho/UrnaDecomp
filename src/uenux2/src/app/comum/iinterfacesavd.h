@@ -98,9 +98,12 @@ struct ueRespostaSavd {
 // second EnviarRequisicao (fn 3829, an overload by choice) sends a byte vector and returns the failure's text, empty
 // when the SAVD accepts, where fn 3830 throws; it builds the header in place (unit 95's fragment says why).
 // AssinarArquivo (fn 5891), ValidarPacote and EnviarAcaoHSM (no target functions: clang inlines ValidarPacote into
-// comum::ValidarUE, fn 5890, and fn 4625 holds the same code behind a prologue of its own; binaryen inlines
+// comum::ValidarUE, fn 5890, and binaryen into CPacoteArquivos::Validar, which fn 4625 holds; binaryen inlines
 // EnviarAcaoHSM into comum::EnviarAcaoHSM, fn 5889) check their arguments, build a request and store the failure's text
-// at +4. VerificarArquivo (fn 5892) does the same for a package and a file, over the request TLV of both, with the
+// at +4. ValidarPacote takes the command as a ueint32 (4625 loads CPacoteArquivos's +28 whole and stores its low half)
+// and assigns the request's application before its command (4625 stores the command first), both measured; its key is
+// a uedword as VerificarArquivo's, a choice (the enum with an unsigned type gives the same objects: unit 95's
+// fragment). VerificarArquivo (fn 5892) does the same for a package and a file, over the request TLV of both, with the
 // command 0x1001; its name is chosen from the text it stores ("Argumento inválido assinar verificar arquivo."), and its
 // key is a uedword: fn 5892 or-s it with the ESavdAplic and compares unsigned, and of the two readings ESavdAplic's
 // comment gives, the unsigned parameter is the one chosen (the other is not measured in the landed order). They are
@@ -122,7 +125,7 @@ public:
 
     bool AssinarArquivo(ESavdAplic aplic, ueint32 comando, uebyte operacao, ueint32 arquivo);
     bool VerificarArquivo(ESavdAplic aplic, uedword chave, const std::string& pacote, const std::string& arquivo);
-    bool ValidarPacote(ESavdAplic aplic, ESavdChaveValidar chave, ueword comando, const std::string& pacote);
+    bool ValidarPacote(ESavdAplic aplic, uedword chave, ueint32 comando, const std::string& pacote);
     bool EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao);
 
     const std::string& GetMensagem() const { return m_mensagem; }
@@ -162,11 +165,12 @@ void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao);
 } // namespace comum
 
 // These enums format as their unsigned value: the target's std::format calls pass them as a handle (argument type 15,
-// fns 275, 680 and 5900), and the handle's body, fn 536, tests `>= 128` unsigned for the char presentation, as
-// formatter<unsigned int> does: an unsigned value. ESavdPacote and ESavdArquivoUE keep their opaque `: int` declarations
-// while their enumerators are not recovered, and ESavdChaveValidar is a plain enum, so these specializations state the
-// unsigned value themselves. Their form is chosen, the one app/dados/tiposbasicos.hpp has: binaryen keeps one body for
-// every such enum.
+// fns 275, 680 and 5900, and ESavdAplic's in CPacoteArquivos::ValidarChaveEAplicacaoValida, which fn 4625 holds), and
+// the handle's body, fn 536, tests `>= 128` unsigned for the char presentation, as formatter<unsigned int> does: an
+// unsigned value. ESavdPacote and ESavdArquivoUE keep their opaque `: int` declarations while their enumerators are not
+// recovered, ESavdChaveValidar is a plain enum and ESavdAplic has no formatter of its own, so these specializations
+// state the unsigned value themselves. Their form is chosen, the one app/dados/tiposbasicos.hpp has: binaryen keeps one
+// body for every such enum.
 template <>
 struct std::formatter<comum::ESavdPacote> : std::formatter<unsigned int> {
     template <typename FormatContext>
@@ -189,6 +193,15 @@ template <>
 struct std::formatter<comum::ESavdChaveValidar> : std::formatter<unsigned int> {
     template <typename FormatContext>
     auto format(comum::ESavdChaveValidar valor, FormatContext& contexto) const
+    {
+        return std::formatter<unsigned int>::format(static_cast<unsigned int>(valor), contexto);
+    }
+};
+
+template <>
+struct std::formatter<comum::ESavdAplic> : std::formatter<unsigned int> {
+    template <typename FormatContext>
+    auto format(comum::ESavdAplic valor, FormatContext& contexto) const
     {
         return std::formatter<unsigned int>::format(static_cast<unsigned int>(valor), contexto);
     }
