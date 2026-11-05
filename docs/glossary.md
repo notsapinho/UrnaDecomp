@@ -205,13 +205,13 @@ when its sources are under `src/` and a fragment `src/units/<name>.mk` adds them
 `src/Makefile` (the comment above `SKIP_UNITS`).
 
 **placeholder, pending TU** — a landed TU that holds definitions belonging elsewhere.
-`src/units/40-uenux2-cprogressbar-pending.cpp` defines the `CProgressBar` members not reconstructed yet with
-`__builtin_trap()` bodies, because the class's vtable needs them defined; each moves into the real source when
-reconstructed. Such a member has no stub, so its pending file's header is the note that it is left to do. When the
-pending member is the class's key function, the vtable and the implicit members it names are emitted in the pending
-object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds three reconstructed
+`src/units/69-uenux2-cwasmimagesurfaceops-pending.cpp` defines the `simulador::CWasmScreen` member not reconstructed
+yet with a `__builtin_trap()` body, because the class's vtable needs it defined; a pending member moves into the real
+source when reconstructed. Such a member has no stub, so its pending file's header is the note that it is left to do.
+When the pending member is the class's key function, the vtable and the implicit members it names are emitted in the
+pending object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds three reconstructed
 `CStringUtils` functions of `api/util/cstringutils.cpp` (its header says which). *Where:* those files' headers,
-`src/units/40-uenux2-cprogressbar.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
+`src/units/69-uenux2-cwasmimagesurfaceops.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
 
 **stand-in** — two uses. In the benchmark, a hand-written root or stub object (`src/app/*`,
 `src/units/*-roots.cpp`) that also defines a name, which disqualifies that name from deciding a row's setup

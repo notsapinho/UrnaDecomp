@@ -72,12 +72,11 @@ __attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { 
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
 // our link that these stand for: ToUpper's copying form (5156), 6592, and table slot 29,
-// which the executable TU's code takes; the copying Replace (2677), 3651 and api::CProgressBar::Draw
-// (10977) (3689 is in the link). Split's (1880) went: its callers 654, 2380, 3689, 5869, 11377 and 12065 are in the
-// link.
+// which the executable TU's code takes; the copying Replace (2677), 3651 (3689 and api::CProgressBar::Draw, 10977, are
+// in the link: Draw's stand-in went with it). Split's (1880) went: its callers 654, 2380, 3689, 5869, 11377 and 12065
+// are in the link.
 __attribute__((noinline)) std::string UsaMaiusculasB(const std::string& s) { return "b" + CStringUtils::ToUpper(s); }
 __attribute__((noinline)) std::string UsaSubstituiA(const std::string& s) { return CStringUtils::Replace(s, "a", "b") + "c"; }
-__attribute__((noinline)) std::string UsaSubstituiB(const std::string& s) { return "d" + CStringUtils::Replace(s, s, "e"); }
 __attribute__((noinline)) int UsaBase64A(const SComResumo& v)
 {
     int resumo[3];
@@ -109,7 +108,7 @@ int urna_roots_ecourna(int a)
     std::string out = UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
     out += UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
-    out += UsaMaiusculasB(out) + UsaSubstituiA(s) + UsaSubstituiB(out);
+    out += UsaMaiusculasB(out) + UsaSubstituiA(s);
     std::string (*maiusculas)(const std::string&) = &CStringUtils::ToUpper;
     acc += reinterpret_cast<uintptr_t>(maiusculas);
     return static_cast<int>(acc) + static_cast<int>(out.size());
