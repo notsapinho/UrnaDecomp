@@ -9360,6 +9360,7 @@ _ZN3api17CStepsProgressBarD0Ev = func:10973; // size:0xd evidence:pair-addr
 _ZNK3api12CProgressBar4RectEv = func:10974; // size:0xc evidence:pair-fingerprint
 _ZNK3api12CProgressBar11GetTypeNameEv = func:10975; // size:0x3d evidence:vtable
 _ZN3api12CProgressBar4MoveERKNS_6SPointE = func:10976; // size:0x61 evidence:pair-addr
+_ZNK3api12CProgressBar4DrawERNS_7IScreenE = func:10977; // size:0x77a evidence:vtable
 _ZN3api12CProgressBarD0Ev = func:10978; // size:0xd evidence:pair-addr
 _ZNKSt3__210__function6__funcIZN3api21BatteryIconDataSourceILNS2_17CPowerInformation15IconOrientationE0EEC1EvEUlvE_FvvEE11target_typeEv = func:10979; // size:0x7 evidence:vtable
 _ZNKSt3__210__function6__funcIZN3api21BatteryIconDataSourceILNS2_17CPowerInformation15IconOrientationE0EEC1EvEUlvE_FvvEE6targetERKSt9type_info = func:10980; // size:0x14 evidence:content-anchor
