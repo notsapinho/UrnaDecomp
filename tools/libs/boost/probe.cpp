@@ -1,12 +1,23 @@
 // Boost probe: the header-only parts the vota app instantiates (docs/reference/facts/libraries.md §B7: regex with
-// re_detail_600::parser_buf<char>, signals2, date_time gregorian/posix_time, function, lexical_cast, optional),
+// re_detail_600::parser_buf<char>, signals2, function, optional, and bad_weekday's typeinfo for a toolkit test),
 // instantiated the way an app would and kept alive through exported entry points.
+// No date parsing, clock or lexical_cast call: what the app links of them comes from its own objects, and the probe's
+// calls changed it. Boost's parse_iso_time<ptime> (target fn 5851, uenux2's copy, which only 11616 calls directly)
+// holds parse_undelimited_date, gregorian::date's constructor from a year, a month and a day, and
+// lcast_ret_unsigned<..., unsigned int, char>::convert inlined, and the probe gave each a second caller in the app link
+// (from_undelimited_string the first, its two clocks the second, its lexical_cast<int> and <unsigned> the third); its
+// lexical_cast calls from other source types kept that type a parameter of bad_lexical_cast's constructor (2849), which
+// the target holds as std::string's typeinfo; and the copies of the two other converters (3811, 5833) it gave
+// src/app/roots_boost.o, at APP_CXXFLAGS, linked ahead of uenux2's, which are the target's
+// (src/units/122-uenux2-app-comum-gravadores.mk has the measurements). That date and lexical_cast code also emitted
+// wrapexcept<std::runtime_error>, whose target copies are ecourna's
+// (src/units/00-ecourna-app-dados-identificadoreleitor.mk), and the other date_time copies the app links are ecourna's
+// too (src/units/265-ecourna-boost-datetime.mk).
 #include <emscripten.h>
 
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/gregorian/greg_weekday.hpp>
+#include <typeinfo>
 #include <boost/function.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <boost/regex.hpp>
 #include <boost/make_shared.hpp>
@@ -75,34 +86,12 @@ EMSCRIPTEN_KEEPALIVE int probe_signals(int x) {
   return acc + (last ? *last : 0);
 }
 
-EMSCRIPTEN_KEEPALIVE int probe_datetime(const char *text) {
-  using namespace boost::posix_time;
-  using namespace boost::gregorian;
-  // no time_from_string or from_simple_string: both split their text with boost::char_separator<char>
-  // (date_time/time_parsing.hpp, date_parsing.hpp), whose operator() holds a call of ispunct, and ledger/functions.tsv
-  // pairs no target function with that operator or with ispunct; musl's ispunct calls isalnum, so with them isalnum
-  // keeps a second call site in the app link, where its one target caller, api::CStringUtils::CasaCaractere (fn 5464),
-  // holds it inlined (measured: src/units/179-uenux2-cvalidamidia.mk). from_undelimited_string splits with
-  // offset_separator, whose token_iterator constructor (fn 5838) matches from this probe.
-  date d = from_undelimited_string(text);
-  ptime now = second_clock::local_time();
-  ptime u = microsec_clock::universal_time();
-  // no gregorian date in iso_extended format: the target's ymd_to_string in that format has one caller, ecourna's
-  // CSqlStatement::SetDateTime (fn 9422), which holds it inlined; a call here would give it a second in the app link
-  // (src/units/265-ecourna-boost-datetime.mk)
-  std::string out = to_simple_string(now) + to_iso_string(d) + to_simple_string(u.time_of_day());
-  time_duration diff = now - u;
-  date_duration dd = now.date() - d;
-  return (int)out.size() + (int)diff.total_seconds() + (int)dd.days() + (int)d.day_of_week() + (int)now.date().year();
-}
-
-EMSCRIPTEN_KEEPALIVE int probe_lexical(const char *text) {
-  int i = boost::lexical_cast<int>(text);
-  long long l = boost::lexical_cast<long long>(text);
-  unsigned u = boost::lexical_cast<unsigned>(text);
-  double dbl = boost::lexical_cast<double>(text);
-  std::string s = boost::lexical_cast<std::string>(i) + boost::lexical_cast<std::string>(dbl) + boost::lexical_cast<std::string>(l);
-  return i + (int)u + (int)s.size() + (int)dbl;
+// Takes bad_weekday's typeinfo and nothing else (splat/symbol_addrs.txt names no bad_weekday object of the target):
+// asmlift-wasm/test/splat-symbols.test.ts ("offers every place of read-only content it finds more than once") reads it
+// (asmlift-wasm/README.md "Tests": a real-link case's object stays in for the test). A call of greg_weekday's range
+// check would emit bad_weekday's members too, twins of bad_year's that binaryen's fold would keep from this object.
+EMSCRIPTEN_KEEPALIVE int probe_weekday(int x) {
+  return (int)(long)&typeid(boost::gregorian::bad_weekday);
 }
 
 EMSCRIPTEN_KEEPALIVE int probe_function(int x) {

@@ -1,9 +1,6 @@
 // The Boost lane's probe (the header-only parts the app instantiates) compiled as app code (see roots_7zip.cpp).
 // It supplies no copy of the templates below, whose target copies are an -fexceptions object's code (landing pads in
 // the target's bodies): declared extern template here, they come from the first ecourna object that emits them.
-// - date_time (target fns 1376 and 9415): from_day_number from app/dados/asn/datahoraasn.cpp.o and
-//   to_simple_string_type over a time_duration from api/sql/sqlite/csqlstatement.cpp.o
-//   (src/units/265-ecourna-boost-datetime.mk has the evidence and the measurements).
 // - the app's signal (ICompressor's, src/units/06-ecourna-api-compression.mk): signal_impl's constructor (9536) and
 //   sp_counted_impl_p<signal_impl>::dispose (9519) from api/compression/icompressor.cpp.o; make_shared of its
 //   invocation_state from a copy (9558), its operator() (9583), connection_body_base::dec_slot_refcount over a lock of
@@ -17,16 +14,10 @@
 #include <emscripten.h>
 #undef EMSCRIPTEN_KEEPALIVE
 #define EMSCRIPTEN_KEEPALIVE
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/regex.hpp>
 #include <boost/signals2.hpp>
 #include <map>
 #include <string>
-using UrnaYmd = boost::date_time::year_month_day_base<boost::gregorian::greg_year, boost::gregorian::greg_month,
-                                                      boost::gregorian::greg_day>;
-extern template UrnaYmd boost::date_time::gregorian_calendar_base<UrnaYmd, unsigned int>::from_day_number(unsigned int);
-extern template std::string boost::posix_time::to_simple_string_type<char>(boost::posix_time::time_duration);
 using UrnaSignalImpl =
     boost::signals2::detail::signal_impl<void(unsigned long, unsigned long, const std::string &),
                                          boost::signals2::optional_last_value<void>, int, std::less<int>,

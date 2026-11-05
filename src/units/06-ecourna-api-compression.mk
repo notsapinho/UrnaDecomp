@@ -62,7 +62,10 @@
 # throw_exception<bad_function_call> (9571) declared extern as well adds 5197 5198 5199 5200 9566 9567 9569 and takes
 # 9537, 9583 and 9585 out of match (9571 then reads no-candidate, 2223 and 9378 unresolved, and 9334 differs where it
 # read no-candidate); 9577 (slot_call_iterator_t's dereference) stays unresolved self-voted on 9571, whose only name
-# is 9577's table operand.
+# is 9577's table operand. 5197 to 5200 match now with no such line, as wrapexcept<std::runtime_error>'s members from
+# cstringutils.cpp.o, whose vtable holds them too (unit 00's fragment); 9567, wrapexcept<bad_function_call>'s rethrow,
+# reads `unresolved` since: the table slot it passes is that class's D2, which the symbol file names for no target
+# function now.
 # The rtti-vptr hand line that named 5192 for 5193's call (the only target function that holds ICompressor's vtable
 # address point) went: with 5192 matched, a generated `call` line names it, and without the hand line steps 8 to 10 move
 # no scan row and build the target's sha256 with every match.
