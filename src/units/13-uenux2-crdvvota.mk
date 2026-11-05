@@ -123,14 +123,23 @@
 # first row, as at the base: the lambda's cargo load precedes CVotosCargos::Candidato's stack frame in the target.
 #
 # md::CVoto's constructor (fn 2256, record cvoto.cpp:80) is written and `differs`: it trims the number and checks it
-# against the type, with a name per type joined into two tails of the message, " com digitado vazio" for the nominal
-# and legenda votes and " com digitado nao vazio" for the others, NULO unchecked, and code 4661. What is written, a
-# helper that sets the name per case and returns the message or "", is 405 over 668 rows; the name returned per group
-# by an inline NomeTipo is 610 over 831; inline helpers per case give the eight copies of the tail the target merges
-# into two (the object, read with wasm-objdump). -fstrict-aliasing leaves cvoto.cpp's object byte-identical. It stays
-# written because comum::asn::CConversorVoto::DoDesconverte (fn 11354, unit 124) calls it; the record names it.
-# The error codes' names (euerdverror.h), Compativel, QuantidadeEscolhas, Comparecimento's and the helpers' names are
-# chosen.
+# against the type, with a name per type joined into two tails of the message, " com digitado vazio" for the legenda,
+# nominal and void-by-repetition votes (the target's NULO_POR_REPETICAO case, "repetido nulo", branches to that tail's
+# test of the number) and " com digitado nao vazio" for the others, NULO unchecked, and code 4661. What is written, a
+# helper that sets the name per case and returns the message or "", is 329 over 667 rows (165 replaced, 81 inserted, 83
+# deleted); with the void-by-repetition vote in the other group, as written before, 405 over 668. The target builds each
+# case's name straight into one frame slot (+48, which the invalid type's std::to_string shares), reads the number's
+# size before its one switch, whose cases include NULO's and the invalid type's, and joins the cases at the two tails.
+# No form measured gives that (pnpm wasm score on the whole link, each a rewrite of the helper): the name from
+# a function of its own called once after NULO and the invalid type are tested, 306 over 690 (the names built as the
+# target builds them, the two tests ahead of the switch and that function's default case a case of its own); the same
+# with the two tests a switch of their own, 314 over 698 (that switch compiled as bit tests); that function called once
+# per group, 429 over 671 (left out of line), and declared `inline`, 507 over 846; a helper per group called in each
+# case with the name a temporary, 502 over 680, and declared `inline`, 681 over 895. Before: the name returned per group
+# by an inline NomeTipo, 610 over 831; inline helpers per case give eight copies of the tail in the object (read with
+# wasm-objdump). -fstrict-aliasing leaves cvoto.cpp's object byte-identical. It stays written because
+# comum::asn::CConversorVoto::DoDesconverte (fn 11354, unit 124) calls it; the record names it. The error codes' names
+# (euerdverror.h), Compativel, QuantidadeEscolhas, Comparecimento's and the helpers' names are chosen.
 #
 # comum::CRdvVota::Comparecimento() (target fn 1269, 145 B), in crdvvota.cpp: no slot, called directly on GetInst()'s
 # result by eight vota functions (1956, 5972, 10569, 10797, 11835, 11849, 12098, 12110). Its body takes the ids
@@ -148,7 +157,7 @@
 # stand-ins the roots file lists by target caller.
 #
 # The way a voter's ballot (comum::md::CCedula, unit 197's ccedula.h) enters the RDV, which vota::CEleitorVotando's
-# FinalizaEleitor (fn 4454, unit 197, written and not matched) holds, each member here out of line with one caller and
+# FinalizaEleitor (fn 4454, unit 197) holds, each member here out of line with one caller and
 # inlined there by binaryen (a prologue of its own where it has a frame):
 # - CRdvVota::RecebeCedula(const CCedula&) (crdvvota.cpp, no record, a chosen name, a member as it reads m_votos and
 #   m_posicionador): a std::map from election to ballot (+20 of its 32-byte frame, declared first) and the posts'
@@ -179,29 +188,35 @@
 #   is a function of its own), then m_votos.insert, which clang keeps out of line (-Rpass-missed=inline: cost 925,
 #   threshold 250; the target's 32-byte prologue there). The constructor moved from line 39 to after them (its line
 #   is a choice).
-# The map copy brings 5681 (__emplace_hint_unique_key_args) and 3251 (__find_equal, which matches): unit 197's roots
-# stand in for their other target callers (11349; 2386, 3266 being in the link: src/app/roots_set.cpp). 5681 is written
-# and differs, 15 over 167 rows (5 deleted): libc++'s __insert_node_at reloads the child pointer after the begin node's
-# store in the target, which a TU without strict aliasing gives (the reload GetIDsCargos had in unit 88 before md/ built
-# with strict aliasing); with md/rdv/'s objects built with -fno-strict-aliasing in a probe link, 4 over 167 rows,
-# operand rows only. 5681's other caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, in
-# app/comum/dados/asn/rdv/, a directory without strict aliasing), is not written; that its object holds the target's
-# copy is a reading. No flag changes here (docs/reference/facts/app-flags.md F6). The error codes 4662, 4669, 4672 to
-# 4677 and 4735 (euerdverror.h) are named from their messages; the names ErroPosicao, InsereCedula's and ConfereCedula's
-# locals are chosen. The list's order is the target's: its data hold the records of celeitorvotando.cpp (1533188),
-# crdvvota.cpp (1560132) and md/rdv/'s cvoto.cpp (1573404), cvotos.cpp (1573420), cvotoscargos.cpp (1573700) and
-# cvotoseleicoesvota.cpp (1573908) in that order (LC_ALL=C awk -F'\t' '$2 ~
-# /crdvvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}' ledger/source-locations.tsv | sort -n), and the order
-# of these objects decides what binaryen makes of fn 4454, which holds this list's RecebeCedula chain inlined
-# (docs/reference/facts/codegen.md C4). Unit 197's celeitorvotando.cpp is listed here, ahead of crdvvota.cpp, moved from
-# unit 197's own list (its fragment says what the file holds). Measured on 4454 with pnpm wasm score, each against the
-# link before it: 958 over 2759 rows (73 inserted, 79 deleted) with crdvvota.cpp, cvotoseleicoesvota.cpp,
-# cvotoscargos.cpp, cvotos.cpp, cvoto.cpp and celeitorvotando.cpp in unit 197's list after them; 830 over 2767 (81, 80)
-# with celeitorvotando.cpp first; 562 over 2719 (33, 34) with md/rdv/ in this order, where binaryen keeps the inlined
-# ConfereCedula's and InsereCedula's ballot (the map node + 20) in a local and loads at small offsets from it, as the
-# target does; before, it folded the offsets onto the node. The 112 matched functions of these objects and of unit 197's
-# scored the same at each step.
-CRDVVOTA_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvoto.cpp \
+# The map copy brings 5681 (__emplace_hint_unique_key_args) and 3251 (__find_equal, which matches). 5681's other target
+# caller is 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, unit 140's), and 3251's are 2386, for which unit
+# 197's roots stand in, and 3266 (src/app/roots_set.cpp's, in the link). 5681 matches as the copy of 11349's object,
+# app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp.o, which this list links after crdvvota.cpp and ahead of md/rdv/
+# (unit 140's fragment has the measurement and the pairs of objects the move inverts), in a directory built without
+# strict aliasing: libc++'s __insert_node_at reloads the child pointer after the begin node's store in the target, which
+# a TU without strict aliasing gives (the reload GetIDsCargos had in unit 88 before md/ built with strict aliasing).
+# md/rdv/cvotoscargos.cpp.o's copy, which the link kept while it came first, is 15 over 167 rows (5 deleted); that
+# object's is 4 over 167, operand rows only, as md/rdv/'s objects built with -fno-strict-aliasing gave in a probe link.
+# No flag changes here (docs/reference/facts/app-flags.md F6). The error codes 4662, 4669, 4672 to 4677 and 4735
+# (euerdverror.h) are named from their messages; the names ErroPosicao, InsereCedula's and ConfereCedula's locals are
+# chosen. The list's order is the target's: its data hold the records of celeitorvotando.cpp (1533188), crdvvota.cpp
+# (1560132), asn/rdv/cconversoreleicoesvota.cpp (1571240) and md/rdv/'s cvoto.cpp (1573404), cvotos.cpp (1573420),
+# cvotoscargos.cpp (1573700) and cvotoseleicoesvota.cpp (1573908) in that order (LC_ALL=C awk -F'\t' '$2 ~
+# /crdvvota\.cpp$|cconversoreleicoesvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}'
+# ledger/source-locations.tsv | sort -n), and the order of these objects decides what binaryen makes of fn 4454, which
+# holds this list's RecebeCedula chain inlined (docs/reference/facts/codegen.md C4), and which copy of 5681 the link
+# keeps. Unit 197's celeitorvotando.cpp is listed here, ahead of crdvvota.cpp, moved from unit 197's own list (its
+# fragment says what the file holds), and unit 140's cconversoreleicoesvota.cpp after crdvvota.cpp, moved from unit
+# 140's (its fragment says what the file holds). Measured on 4454 with pnpm wasm score, each against the link before it:
+# 958 over 2759 rows (73 inserted, 79 deleted) with crdvvota.cpp, cvotoseleicoesvota.cpp, cvotoscargos.cpp, cvotos.cpp,
+# cvoto.cpp and celeitorvotando.cpp in unit 197's list after them; 830 over 2767 (81, 80) with celeitorvotando.cpp
+# first; 562 over 2719 (33, 34) with md/rdv/ in this order, where binaryen keeps the inlined ConfereCedula's and
+# InsereCedula's ballot (the map node + 20) in a local and loads at small offsets from it, as the target does; before,
+# it folded the offsets onto the node. The 112 matched functions of these objects and of unit 197's scored the same at
+# each step. With cconversoreleicoesvota.cpp listed after crdvvota.cpp, 4454 scores as before (178 over 2686, operand
+# rows only) and matches (unit 197's fragment).
+CRDVVOTA_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/comum/dados/crdvvota.cpp \
+  src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp src/app/comum/dados/md/rdv/cvoto.cpp \
   src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
 # crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them

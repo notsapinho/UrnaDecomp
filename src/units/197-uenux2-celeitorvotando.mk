@@ -8,10 +8,10 @@
 # Matched, by object (target fns):
 # - celeitorvotando.cpp: GetInst 3229 with the constructor inlined, its statics' exit destructors 7416 (s_inst) and
 #   7405 (s_mutex), the D2 2483 and D0 7385, StartState 7377 (slot 2) with IniciaCiclo inlined, NeedChangeState 7352
-#   (slot 3, over a callers+content hand line for FinalizaEleitor), FinishState 7370 (slot 5), RegistraVoto 4471, the
-#   free MostraCargoNoOperador 4464, ChamaEstadoProximoCargo 4459 (EUeVotaError 9310), ProcessTick 7349 (slot 8),
-#   ProcessInput 7345 (slot 7), ProcessKey 7337 (slot 6), DescartaVotos 4449 and suspenderEleitor 4442 (EUeVotaError
-#   9312 and 9313), below;
+#   (slot 3), FinishState 7370 (slot 5), RegistraVoto 4471, the free MostraCargoNoOperador 4464,
+#   ChamaEstadoProximoCargo 4459 (EUeVotaError 9310), ProcessTick 7349 (slot 8), ProcessInput 7345 (slot 7), ProcessKey
+#   7337 (slot 6), DescartaVotos 4449, suspenderEleitor 4442 (EUeVotaError 9312 and 9313) and FinalizaEleitor 4454,
+#   below;
 # - cinformacaoeleitor.cpp: the exit destructors of g_numeroDigitado (13593) and g_votosEleitor (13588), and
 #   AdicionaVoto 4192 with comum::md::CCedula::Adiciona inlined by binaryen;
 # - ccedula.cpp: CCedula's constructor, one body with api::CFormBuilder's (fn 203): this object links ahead of
@@ -24,8 +24,7 @@
 # GetCurrentAbrangenciaEleitor), unit 91 (celeitordecorator.cpp: GetAbrangencia, 3721), unit 13 (md/rdv/ and
 # crdvvota.cpp: the ballot's way into the RDV), unit 93 (cestadogeralvota.cpp: MarcaUltimoVoto) and unit 192
 # (csincronismoeleitor.cpp: GetInst).
-# Written, not matched: FinalizaEleitor 4454 (below), every row an operand row, waiting for the name of fn 5681. Every
-# slot is written.
+# Every slot is written.
 # celeitorvotando.cpp is compiled through unit 13's list, ahead of crdvvota.cpp and md/rdv/ (that fragment has the order
 # and its measurements); the rest of this unit's sources are in its own list (below).
 #
@@ -152,7 +151,7 @@
 #   operand rows only. Its call of FinalizaEleitor resolves on 4454's srcloc-anchor name: 4454's own records, with
 #   the same opcodes on both sides now (docs/reference/splat.md section 2). The callers+content hand line that named
 #   4454 from its own body before went: with it removed, splat-match added no match and moved no verdict.
-# - FinalizaEleitor (fn 4454, celeitorvotando.h says what it does), written and not matched. In the target its band (use
+# - FinalizaEleitor (fn 4454, celeitorvotando.h says what it does). In the target its band (use
 #   band 2 of ledger/ordinals.tsv) puts it after ChamaEstadoProximoCargo (4459) and before DescartaVotos (4449), but the
 #   lines between them do not hold it: 4459 ends at :240, below its record :229, and DescartaVotos' records :253 and
 #   :254 follow five calls of its own, so it begins at :246 at the latest, which leaves five lines. It is defined above
@@ -178,19 +177,21 @@
 #   deleted); with the form above and cvotoscargos.cpp alone built so, 222 over 2696 (10 inserted, 1 deleted): the
 #   inlined ConfereCedula's map insert reloads the child pointer after the begin node's store, and the swap reloads a
 #   word, reloads the target's 4454 does not have. So the md/rdv/ code it holds reads as compiled with strict aliasing,
-#   as md/ builds. The row reads `unresolved self-voted` on its call of 5681, the map copy's
-#   __emplace_hint_unique_key_args: 4454's call is the only vote for 5681's name (`evidence:call by:4454` in
-#   splat/symbol_addrs.txt), and 5681 does not match (unit 13's fragment). 4454 waits for a second voter: 5681's other
-#   target caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, not written), or 5681's own match. 5681's
-#   target body has the reload that cvotoscargos.cpp gives without strict aliasing (measured), which 4454's does not; a
-#   reload is no proof by itself (docs/reference/facts/app-flags.md F9 item 8), so that the two are copies of different
-#   TUs is a reading: 11349's object, app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp, is outside UENUX2_TBAA_DIRS
-#   and its records (1571240) lie ahead of md/rdv/'s in the target's data, so a reading, not measured, is that the
-#   target keeps that object's copy of 5681. 3709, the destroy of ConfereCedula's count map (written by it,
-#   std::map<TCargoID, size_t>), matches: 4454's srcloc-anchor name casts its call votes. So do the exit destructors of
-#   vota::CSincronismoEleitor's statics, 7195 (s_inst) and 7187 (s_mutex), unit 192's: 4454's anchor votes the two
-#   objects' names (1833160 and 1833136), and 4454, 7195 and 7187 are the three target functions that hold those
-#   addresses (/usr/bin/grep -rlE 'i32\.const (1833160|1833136)($|[^0-9])' build/out/splat/pieces/asm).
+#   as md/ builds. The row read `unresolved self-voted` on its call of 5681, the map copy's
+#   __emplace_hint_unique_key_args, while 4454's call was the only vote for 5681's name and 5681 did not match. It
+#   matches since 5681's other target caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, unit 140's), is
+#   written and its object, app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp, outside UENUX2_TBAA_DIRS, links in unit
+#   13's list ahead of md/rdv/: 11349's call is a second vote for 5681's name (`evidence:call by:4454,11349` in
+#   splat/symbol_addrs.txt), and 5681 matches as that object's copy, which has the reload cvotoscargos.cpp gives without
+#   strict aliasing (unit 13's fragment has the measurement), where 4454's inlined md/rdv/ code matches built with it.
+#   In our link the two now match as the code of two objects, one built with strict aliasing and one without, which is
+#   what this note read from the reload before (a reload alone is no proof, docs/reference/facts/app-flags.md F9 item
+#   8). 4454 scored 178 over 2686 rows, operand rows only, before and after the move. 3709, the destroy of
+#   ConfereCedula's count map (written by it, std::map<TCargoID, size_t>), matches: 4454's srcloc-anchor name casts its
+#   call votes. So do the exit destructors of vota::CSincronismoEleitor's statics, 7195 (s_inst) and 7187 (s_mutex),
+#   unit 192's: 4454's anchor votes the two objects' names (1833160 and 1833136), and 4454, 7195 and 7187 are the three
+#   target functions that hold those addresses (/usr/bin/grep -rlE 'i32\.const (1833160|1833136)($|[^0-9])'
+#   build/out/splat/pieces/asm).
 #
 # The lines of members with no record are a choice: the constructor, GetInst, the statics and the destructor first,
 # RegistraVoto before StartState and IniciaCiclo's records (:125, :131), FinishState and MostraCargoNoOperador after
@@ -206,12 +207,12 @@
 # whose slots are all written: the pending file went with ProcessKey.
 # 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem, which stood for GetInst's fn 7481,
 # went when unit 104 wrote 7481 (7428 and 11754 were in the link; Registra, which stood for 11754's RegistraVoto calls,
-# went before), Abrange for GetAbrangencia's
-# (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 12098 and 12110; 5604 is in the link), Converte
-# for 5681's (fn 11349) and Procura for 3251's (fn 2386; 3266 is in the link, src/app/roots_set.cpp). Precisa and
-# Inicia, which stood for 7352 and 7377, went with them, and Suspende, which stood for suspenderEleitor's (fn 4442)
-# calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442. GetInst's constructor stores the vptr, the
-# target's one reference to the vtable, so no root takes it.
+# went before), Abrange for GetAbrangencia's (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 12098
+# and 12110; 5604 is in the link) and Procura for 3251's (fn 2386; 3266 is in the link, src/app/roots_set.cpp). Precisa
+# and Inicia, which stood for 7352 and 7377, went with them, Suspende, which stood for suspenderEleitor's (fn 4442)
+# calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442, and Converte, which stood for 5681's caller
+# 11349, with 11349 (unit 140's). GetInst's constructor stores the vptr, the target's one reference to the vtable, so no
+# root takes it.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
 # g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's members' names, SVotoCargo and its members' names,

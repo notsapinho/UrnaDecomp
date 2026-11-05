@@ -9,8 +9,8 @@
 #   vota::CSincronismoEleitor::ProcessKey (slot 6)              7181
 #   the exit destructors of s_inst and s_mutex                  7195, 7187
 # CSincronismoEleitor's GetInst, statics and constructor are in csincronismoeleitor.cpp, the constructor out of line
-# (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is
-# written and not matched (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.
+# (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and
+# matches (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.
 # No roots: CSincronismoEleitor's vptr store is in the link, inlined into FinalizaEleitor, so its vtable's stand-in
 # went (the link without it moves no row into or out of match).
 #

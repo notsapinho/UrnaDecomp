@@ -5,9 +5,6 @@
 // CConversorProcessoEleitoral's vtable (@1570408; fns 11362 and 11363) is not here: fn 3771 (unit 280's
 // CarregaProcessoEleitoral), the one target function that stores its vptr, is written and in the link, and a link
 // without its sink moves no row.
-// w140_conversores calls CConversorVotosCargo's constructor (fn 5683), standing for its target caller 11349
-// (CConversorEleicoesVota::DoDesconverte, not written); 11350 is the other call site. The constructor stores the
-// converter's vptr, so its slots (11352, 11351) are kept the way the target keeps them.
 // w140_votos calls md::CVotos' constructor (fn 2794), standing for its target caller 7787 (not written); 11351 and
 // comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) are the other call sites.
 // w140_mapa destroys a std::map<md::TCargoID, md::CVotos>, standing for fn 5971 (not written), which destroys the map
@@ -23,16 +20,10 @@
 
 extern "C" {
 extern const char w140_eleicoes_vt[] __asm__("_ZTVN5comum3asn22CConversorEleicoesVotaE");
-int w140_votoscargo(void*, const void*) __asm__("_ZN5comum3asn20CConversorVotosCargoC1ERKNS_2md12CVotosCargos10SCargoInfoE");
 int w140_cvotos(void*, void*) __asm__("_ZN5comum2md6CVotosC1ENSt3__26vectorINS0_5CVotoENS2_9allocatorIS4_EEEE");
 }
 
 namespace {
-
-__attribute__((noinline)) int w140_conversores(char* destino, const char* info)
-{
-    return w140_votoscargo(destino + 20, info + 12) * 5;
-}
 
 __attribute__((noinline)) int w140_votos(char* destino, char* votos)
 {
@@ -50,7 +41,6 @@ struct SRoots140 {
     SRoots140()
     {
         w140_sink = w140_eleicoes_vt;
-        w140_sink = reinterpret_cast<const void*>(&w140_conversores);
         w140_sink = reinterpret_cast<const void*>(&w140_votos);
         w140_sink = reinterpret_cast<const void*>(&w140_mapa);
     }

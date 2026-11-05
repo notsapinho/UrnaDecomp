@@ -60,7 +60,7 @@
 # CEstadoGeralVota and CDadoCorrespondencia, and the converters' callers of 5628 and 5630.
 #
 # CEstadoGeralVota::MarcaUltimoVoto (records cestadogeralvota.cpp:131 and :136, 8086 and 8087) is written: unit 197's
-# FinalizaEleitor (fn 4454, written and not matched) holds it behind a 48-byte prologue: it throws unless the
+# FinalizaEleitor (fn 4454, matched) holds it behind a 48-byte prologue: it throws unless the
 # acquisition began and has not ended (`if (m_dhFimAquisicao)` reads as the flag compared with 1, reading.md R14), sets
 # m_dhUltimoVoto to api::CDateTime::Now() and adds one to m_comparecimento. Its second test is written in place,
 # `if (m_dhFimAquisicao)`: written through IsFimAquisicaoMarcado() (below), the TU's object is the same byte for byte
