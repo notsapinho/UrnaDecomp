@@ -54,7 +54,9 @@
 # splat/symbol_addrs.txt holds hand edits for this unit, by the method of docs/reference/facts/asn1.md A5: pair the
 # calls of every named function whose rows equal ours up to callees. 2182, 3464, 3469, 2650, 5054, 376, 220 and
 # 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2650 stayed
-# unmatched until unit 229's root (its hand edit went then: a generated line names it), 376 matches from unit 109, 2182, 5034, 8976 and 8987 with unit 115's edits, 2247 from
+# unmatched until unit 229's root (its hand edit went then: a generated line names it), 376 matches from unit 109
+# (its hand edit went when unit 179's 11172, a caller, matched: removed alone it moved no row of a scan run twice
+# and the build verified, as the generated `call` line names it), 2182, 5034, 8976 and 8987 with unit 115's edits, 2247 from
 # src/app/roots_vector.cpp's minsize instance, whose census pair names it now, so its hand edit went, and 220 and 2706
 # from unit 229's root, whose generated lines name them now, so their hand edits went too.
 # _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static

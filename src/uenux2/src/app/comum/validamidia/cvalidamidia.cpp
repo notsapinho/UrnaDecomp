@@ -29,11 +29,12 @@ SResultadoValidacao CValidaMidia::Valida(EAplicativosDeUrna aplicativo, EUrnaTur
         return {false, 4};
     }
 
-    if (turno != TURNO_1 && turno != TURNO_2 &&
-        (aplicativo == eAplicativo07 || aplicativo == eAplicativo08 || aplicativo == eAplicativo09 ||
-         aplicativo == eAplicativo10 || aplicativo == eAplicativo16 || aplicativo == eAplicativo17 ||
-         aplicativo == eAplicativo15)) {
-        return {false, 5};
+    if (aplicativo == eAplicativo07 || aplicativo == eAplicativo08 || aplicativo == eAplicativo09 ||
+        aplicativo == eAplicativo10 || aplicativo == eAplicativo16 || aplicativo == eAplicativo17 ||
+        aplicativo == eAplicativo15) {
+        if (turno != TURNO_1 && turno != TURNO_2) {
+            return {false, 5};
+        }
     }
 
     const std::vector<std::string> conteudo = CFabricaConteudoMidiaStart::ConteudoIncializacao(aplicativo, turno);
@@ -84,7 +85,7 @@ void CValidaMidia::LimpaMidia()
     RemoveArquivosDeSistema(CPath::GetPathMR());
 }
 
-// (original lines 87-181: content not recovered)
+// (original lines 88-181: content not recovered)
 #line 182
 POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO(IValidaMidia, CValidaMidia)
 
