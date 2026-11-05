@@ -254,9 +254,6 @@
 // f3778 · 361 B · unmatched · placement: link order · name unknown
 // void f3778(i32, i32, i32) { ... }
 
-// f3777 · 2274 B · unmatched · placement: link order · name unknown
-// void f3777(i32, i32) { ... }
-
 // f3776 · 278 B · unmatched · placement: link order · name unknown
 // void f3776(i32, i32) { ... }
 

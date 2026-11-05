@@ -11,6 +11,7 @@ extern const char cv105_parametrizacao[] __asm__("_ZTVN7ecourna3app5dados3asn28C
 extern const char cv105_configuracoes[] __asm__("_ZTVN7ecourna3app5dados3asn32CConversorConfiguracaoMunicipiosE");
 void cv105_federacoes_dealloc(int) __asm__("_ZNSt3__26vectorIN7ecourna3app5dados10CFederacaoENS_9allocatorIS4_EEE13__vdeallocateEv");
 int cv105_detalhamento_ctor(int, int, int, int) __asm__("_ZN7ecourna3app5dados27CDetalhamentoComparecimentoC1E9CBaseTypeItLt0ELt9999ELi15EES4_S4_");
+int cv105_copia_parametros(int, int) __asm__("_ZN7ecourna3app5dados15CParametrosUrnaC2ERKS2_");
 }
 
 namespace {
@@ -31,11 +32,22 @@ __attribute__((noinline)) int UsaFederacoes(int vetor)
     return vetor * 9;
 }
 
+// CParametrosUrna's implicit copy constructor (3777) has two target callers, 9029 (in the link) and 7787, which calls it
+// twice (at code of comum::CConfiguracaoEleicao that binaryen inlined there, a reading): this stands for 7787. The copy
+// itself is src/app/roots_iconversorasn.cpp's, uenux2's, ahead of ecourna's objects.
+__attribute__((noinline)) int UsaCopiaParametros(int destino, int origem)
+{
+    cv105_copia_parametros(destino + 88, origem);
+    cv105_copia_parametros(destino + 288, origem + 16);
+    return destino + origem;
+}
+
 struct SCv105Roots {
     SCv105Roots()
     {
         cv105_sink = reinterpret_cast<const void*>(&UsaFederacoes);
         cv105_sink = reinterpret_cast<const void*>(&UsaDetalhamento);
+        cv105_sink = reinterpret_cast<const void*>(&UsaCopiaParametros);
         cv105_sink = cv105_federacoes;
         cv105_sink = cv105_parametrizacao;
         cv105_sink = cv105_configuracoes;
