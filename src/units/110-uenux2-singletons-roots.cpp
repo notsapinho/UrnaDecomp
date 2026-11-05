@@ -14,7 +14,6 @@
 //                       stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
-//   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
 //                       in the link)
@@ -31,7 +30,9 @@
 //                       the target stores its vptr in fn 7787 alone (a constructor inlined there), which is not
 //                       written; the sink goes when 7787 lands
 // LocalizaEleitores, for CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264), went: its
-// last target caller not in the link, fn 3616 (unit 319's), is.
+// last target caller not in the link, fn 3616 (unit 319's), is. HabilitaEleitores, for
+// CEleitores::MarcaEleitorFoiHabilitado (fn 2825), went too: its one target caller, fn 10425 (unit 142's), is in the
+// link.
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -67,7 +68,6 @@ int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
 
 void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
 void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
-void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoERKNS_24CEleitorDadosHabilitacaoE");
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
@@ -118,12 +118,6 @@ __attribute__((noinline)) void ValidaEleitores(int eleitores, int eleitor)
 {
     w5765(eleitores, eleitor);
     w5765(eleitores, eleitor + 108);
-}
-
-__attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
-{
-    w2825(eleitores, dados);
-    w2825(eleitores, dados + 64);
 }
 
 // Stands for fn 12110, the target caller of CEleitores::QuantidadeAptos (fn 2823) not in the link (652, 2881 and
@@ -179,7 +173,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w407);
         singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
-        singletons_sink = reinterpret_cast<const void*>(&HabilitaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&s11478);

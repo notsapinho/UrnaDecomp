@@ -311,7 +311,8 @@ layout puts there ([facts/libraries.md](facts/libraries.md) §B10). Otherwise th
   points at a string's NUL, is the empty tail, found in more places than that, so it resolves only to the end of the
   whole string our link merged it into (`resolveString`). A short literal the target tail-merged into another string
   then differs at its end pointer alone, until our link holds the string the target merged it into: unit 75's
-  `ModeloAbreviado` (8168), whose `"{:02}"` waits for fn 10425's `"-{:02}-{:02}"`. A `wchar_t` literal is read the
+  `ModeloAbreviado` (8168), whose `"{:02}"` waited for fn 10425's `"-{:02}-{:02}"` and matched when unit 142 wrote
+  10425. A `wchar_t` literal is read the
   same way, so only up to its first zero byte, its first character: `L"%I:%M:%S %p"` has the copies of `"%"`;
 - a `std::source_location` record by what it records: its file, function, line and column. A header-inline throw has
   its record once per TU that inlines it, so the target holds 10 such keys at more than one address. Each address is a

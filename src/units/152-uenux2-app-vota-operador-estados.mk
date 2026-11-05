@@ -167,7 +167,7 @@
 #   (IsAudioAtivadoCadastro) and on CONFIRMA clears the operator's audio flag (5415), posts 8 or 9 and then 1 to the
 #   eleitor's queue, goes to CMostraEleitorVotando::GetInst (1150, unit 142's) and, when the record's audio is on, logs
 #   "Áudio ativado conforme cadastro" through a CLogVota member binaryen inlines (unit 119's file).
-# - The roots' stand-in for 4535's caller 10407 went with 10407 (the roots' header).
+# - The roots' stand-in for 4535's caller 10407 went with 10407 (the last note).
 # - Member order: in csuspensaoautomaticaeleitor.cpp InicializaTick comes before AtualizaMensagem, above the gap: the
 #   target's uses-3 band links 3613 (the map's destroy, which InicializaTick mentions first) ahead of 3612, and the
 #   object gives that order only so (ld_index in build/out/wasm-map/vota_web/names.tsv; the bytes are the same).
@@ -200,7 +200,7 @@
 # vota::CEleitorDemorando (app/vota/operador/aguardaeleitor/celeitordemorando.{h,cpp}, new) and the GetInst its slots
 # hold inlined:
 # - Matched: CEleitorDemorando::GetInst (2734, vptr-anchor), whose one target caller, CMostraEleitorVotando::ProcessKey
-#   (10425, unit 142's trap), the roots stand in for, with its statics' exit destructors (10441, s_mutex's; 10442,
+#   (10425, unit 142's, written), calls it four times, with its statics' exit destructors (10441, s_mutex's; 10442,
 #   s_inst's, a thunk into 2903, below); StartState (10440) and ProcessInput (10439, vptr-anchors); ProcessKey (5394,
 #   one body with CPerguntaEleitorVotando's, the match line renamed to CEleitorDemorando's, the survivor now that
 #   celeitordemorando.cpp links first); CPerguntaEleitorVotando::GetInst, inlined into 10439, with its statics' exit
@@ -275,9 +275,23 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # celeitordemorando.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (an
 # include path, not a flag)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/aguardaeleitor/celeitordemorando.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# two GetInst have callers not reconstructed: 152-uenux2-app-vota-operador-estados-roots.cpp stands in for those callers
-# (IIniciaJustificativa's constructor, 3624, and CLogVota::LogaAudioDesativadoFimVotacao, 4529, need none: 10631 and
-# 10635, unit 104, and 10435 and unit 104's 10646 are in the link)
-$(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-roots.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-roots.o
+# No roots file. Its last stand-in, two calls of vota::CEleitorDemorando::GetInst (2734) for its one target caller,
+# CMostraEleitorVotando::ProcessKey (10425, which calls it four times), went once 10425 was written (unit 142, in the
+# link): a link without it moves no row in or out of match. What the roots file said needs no stand-in, and why:
+# - No sink keeps a vtable: the states' constructors are in the link. vota::CInspecionaUrna's, inlined with its GetInst
+#   into vota::CAguardaMensagem::ProcessKey (fn 7481, unit 104); vota::CDesabilitaAudioEleitor's and
+#   vota::CHorarioVotacaoTerminou's, inlined into their GetInst (fns 5393 and 5430), below;
+#   vota::CPerguntaFilaEleitorVazia's, inlined into its GetInst (fn 5426), which vota::CIniciaFinalizacao::StartState
+#   (fn 10706, unit 277) calls twice;
+#   vota::CHabilitaAudioEleitor's, inlined into its GetInst (fn 2743), which CControlaReconhecimento::ProcessInput
+#   (10511, unit 161) and unit 282's states call; vota::CEleitorDemorando's, inlined into its GetInst (2734), which 10425
+#   calls; and vota::CSuspensaoAutomaticaEleitor's and vota::CPerguntaEleitorVotando's, inlined with their GetInst into
+#   CEleitorDemorando's StartState and ProcessInput (fns 10440 and 10439).
+# - The GetInst of CDesabilitaAudioEleitor (fn 5393): its two target callers, 10209 (CSincronismoOperador::ProcessKey,
+#   unit 104) and 10430 (unit 71), are in the link. CHorarioVotacaoTerminou::GetInst (fn 5430): its two target callers,
+#   10677 (unit 161) and 10689 (CEscolheOpcao::ProcessInput, written in unit 277's list), are in the link.
+# - vota::IIniciaJustificativa's constructor (target fn 3624): its two target callers, 10631 and 10635, are in the link
+#   (unit 104, through unit 243's and unit 283's constructors of the derived states).
+# - vota::CLogVota::LogaAudioDesativadoFimVotacao (fn 4529) and LogaSuspensaoAbortada (fn 4535): their callers, 10435
+#   (CDesabilitaAudioEleitor::ProcessInput) and 10646 (unit 104's CCancelaHabilitacaoEleitor::StartState), and 10407
+#   (CSuspensaoAutomaticaEleitor::ProcessInput) and 10420 (CPerguntaCodigoSuspensao::ProcessInput), are in the link.

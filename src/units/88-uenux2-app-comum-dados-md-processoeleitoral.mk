@@ -120,7 +120,8 @@
 #   identical bodies for our std::vector<unsigned int>'s instance (a reading); its callers are 1269
 #   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each
 #   election's id with the id of each of its cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a
-#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando's, not written) and 7787 (which
+#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando::FinalizaEleitor, unit 197's,
+#   matched) and 7787 (which
 #   holds CCargos::CreateInst; ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})`
 #   gives it, 5 over 195 rows, all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores,
 #   33 over 201 rows (6 inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8).
@@ -134,7 +135,8 @@
 #   5651, then CEleicaoPE::GetCargos, 2257), empty when the pleito has none, and when its bool is set a copy of that copy
 #   (std::vector<md::CCargo>'s copy constructor, fn 2289, out of line) sorted by std::sort with a function passed by table
 #   slot 2363 (fn 11547: CCargo's byte at +16 compared unsigned, ccargo.h's GetOrdemImpressao). Its callers, 5735 and 7787
-#   (false) and 11629 (true), on GetInst()'s result, are not written: fragment 232's roots stand in for them; 2289's
+#   (false) and 11629 (true, unit 200's), call it on GetInst()'s result; fragment 232's roots stand in for the first two,
+#   not written; 2289's
 #   other callers (1953, 5777, and 11371 through md::CEleicaoPE's constructor, fragment 299) are in the link. The sort
 #   brings libc++'s instances over md::CCargo with that comparator, and each matches from this object: __introsort
 #   (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),

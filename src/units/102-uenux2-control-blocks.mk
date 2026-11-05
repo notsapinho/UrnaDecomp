@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 43 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 23 come from the objects of units 31, 120, 101, 165,
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 38 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 28 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
@@ -28,7 +28,10 @@
 # ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 321's gravadores/asn/cassinavotavelbu.cpp,
 # from which 10277 and 10279 match) and comum::asn::CVisitanteEleitor's pointer block (11523, the lambda of
 # CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp, which holds unit 280's carregaarquivo.cpp's
-# LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o). Each block below: the
+# LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o) and the five pointer blocks of
+# comum::CItemMenu over the vota menu items (vota::CMenuMaisInformacoesVota's constructor, which fn 6599 holds, in
+# app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, unit 110's list, from whose object 12209, 12202, 12194, 12183,
+# 12172, 12162 and the four's slot 2, 2932, match). Each block below: the
 # T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
 # shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
@@ -76,9 +79,13 @@
 #   target's rows); its spelling, unsigned int, is chosen. Slot 3 is these classes' key function, so their vtables, and
 #   with them their
 #   shared D0 (fn 2939, the implicit destructor, a thunk into fn 1969 in both links, whose match line now names the
-#   merge after this D0, its first member in link order), are emitted in citensmenuvota.cpp's object; the sink keeps the
-#   four vtables, which fn 6599 stores. They link with comum's slot 2, which unit 156 defines in
+#   merge after this D0, its first member in link order), are emitted in citensmenuvota.cpp's object, and stored by
+#   vota::CMenuMaisInformacoesVota's constructor (cmenumaisinformacoesvota.cpp), which fn 6599 holds; the sink's lines
+#   for the five items' vtables went with it. They link with comum's slot 2, which unit 156 defines in
 #   app/comum/informacao/citemmenu.cpp.
+# - vota::CItemVisualizarCandidatosVota's slot 2 (12244) matches, written in citensmenuvota.cpp after the destructor
+#   (use band 1 runs 12251 before 12244; citensmenuvota.h says what it reads and what was measured); the
+#   -pending.cpp, whose one member it was, went with its rule.
 # - ecourna::app::dados: 3803, slot 2 of the three CNumero* blocks, with the D2 (3492) and D0 (3491) of those classes.
 # - ecourna::api::security::CAesKey's D2 (3517).
 # Landed headers this unit changes, and what says so:
@@ -127,8 +134,6 @@
 # there; 3602 is written now, in gravadores/asn/cassinavotavelbu.cpp at the tree's flags, and 10279 matches from its
 # object, which measures it.
 # Pending, each with what it waits for:
-# - 12244, vota::CItemVisualizarCandidatosVota's slot 2, a trap in 102-uenux2-control-blocks-pending.cpp, the one slot
-#   this unit leaves with no body, and no stub.
 # - 12530, 12529, CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its
 #   function, so they land with fn 6561 (11109 and 11108, CDataText<AddStatusHeader's lambda>'s, landed with fn 502,
 #   unit 31).
@@ -140,12 +145,16 @@
 # in the builder, matched from unit 121's roots and match now from cinputmenufield.cpp.o, whose fn 3675 (unit 84) builds
 # the block.
 # Paths relative to src/uenux2. citensmenuvota.cpp holds the out-of-line destructor the block of the fifth item needs.
+# It links here, ahead of the units whose data the target holds before the items' run: compiled in unit 110's list
+# after ctelasvota.cpp instead, the items' run's place in the target's data, it put 5 pairs of objects in the data's
+# order and inverted 34 (ctelasvota.cpp.o itself sits after 34 objects whose data the target holds after its own), and
+# gained nothing: fn 6599 scores 306 over 2151 rows in both places, and the link with this list's order moves no match
+# row against the one with the file moved. The pairs this place leaves inverted are in unit 110's fragment (CItemMenu's
+# vtable and typeinfo, which this object emits).
 W102_SRCS := src/app/vota/operador/outrasopcoes/citensmenuvota.cpp
 UENUX2_SRCS += $(W102_SRCS)
-# Both companions read headers of both trees, and the roots file the ASN.1 runtime's, OpenSSL's and RHVoice's.
+# The roots file reads headers of both trees, the ASN.1 runtime's, OpenSSL's and RHVoice's.
 W102_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h)
-$(ROOT)/$(APP)/102-uenux2-control-blocks-pending.o: $(ROOT)/src/units/102-uenux2-control-blocks-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/102-uenux2-control-blocks.mk $(W102_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/102-uenux2-control-blocks-pending.cpp -o $(R)
 $(ROOT)/$(APP)/102-uenux2-control-blocks-roots.o: $(ROOT)/src/units/102-uenux2-control-blocks-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/102-uenux2-control-blocks.mk $(W102_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) $(OPENSSL_INCLUDES) -Ithird_party/RHVoice/src/include -I$(BOOST_HDR) -c src/units/102-uenux2-control-blocks-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/102-uenux2-control-blocks-pending.o $(APP)/102-uenux2-control-blocks-roots.o
+override EXTRA_OBJS += $(APP)/102-uenux2-control-blocks-roots.o

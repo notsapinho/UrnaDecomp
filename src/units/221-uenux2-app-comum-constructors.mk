@@ -3,8 +3,8 @@
 # app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp, and comum::md::CComparecimentoMesarioPK's (2738) in
 # app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp, vota::CRegistraDigitalOperador's file (its records'
 # path), which no unit compiled before (the class's members came later: below). All three match. The fourth
-# constructor of the kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's cmostraeleitorvotando.cpp, which
-# has its evidence.
+# constructor of the kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's
+# aguardaeleitor/celeitordadoshabilitacao.cpp, a TU of its own, and unit 142's fragment has its evidence.
 #
 # Evidence, read in the target:
 # - The layout is unit 91's ccomparecimentomesario.h: each constructor stores its arguments at those offsets, copying

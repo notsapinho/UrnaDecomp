@@ -16,12 +16,13 @@
 #   (8144), Slot5 (8134), Semente (8131) and the implicit destructors (8130, 8129).
 # - round (fn 2953): the libc body Slot5 calls; it is not this unit's code. RHVoice's do_synthesize calls it too, and
 #   binaryen inlined it into that one caller until Slot5 gave it a second, so the function keeps its own body.
-# Pending, unmatched with its real body in curnamock.h: ModeloAbreviado (8168). It waits for the literal "-{:02}-{:02}"
-# in the link, the format string of vota::CMostraEleitorVotando's slot 6 (fn 10425), which is not reconstructed. The
-# target's linker merged this member's "{:02}" as the tail of that string (begin 8970, end 8975); ours merges it into the
-# one longer string our link holds, "{:04}{:02}{:02}T{:02}{:02}{:02}", and the scan re-points the end pointer, a pointer
-# to a NUL, to that string's end, 8944, so the row is `differs` at +0x69. A real body that `differs` is the member's
-# state: with that literal added to a scratch link the remap of 8168 prints IDENTICAL, so nothing here needs an edit.
+# Matched since, with its real body in curnamock.h: ModeloAbreviado (8168). It waited for the literal "-{:02}-{:02}" in
+# the link, the format string of vota::CMostraEleitorVotando's slot 6 (fn 10425): the target's linker merged this
+# member's "{:02}" as the tail of that string (begin 8970, end 8975), where our link merged it into the one longer string
+# it held, "{:04}{:02}{:02}T{:02}{:02}{:02}", and the scan re-pointed the end pointer, a pointer to a NUL, to that
+# string's end, so the row was `differs` at +0x69. Unit 142's 10425, written (its helper ArmazenaImagemHabilitado
+# formats with the literal), brought the literal, and the row turned `match` with no edit here (how-to step 9, "A
+# literal your unit brings").
 # Why the headers, and evidence against choice:
 # - No key function (evidence): both vtables lie in the data of the TU of fn 8302, simulador's init, each with its typeinfo
 #   and then its base's (1530924, 1530936; 1531020, 1531032), and fn 8302 is the one function that loads CPowerMock's vptr

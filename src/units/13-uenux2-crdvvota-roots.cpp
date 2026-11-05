@@ -11,9 +11,9 @@
 //   (fn 11835, unit 138), fn 5972 (unit 199) and vota::CControladorRegistraMesariosVota's slot 5 (fn 10797, unit 119)
 //   are the other call sites. md::CVotosEleicoesVota::Comparecimento
 //   (fn 5639) needs no stand-in now: its target callers, 1269 and CRdvVota's slot 2 (fn 11492), are both in the link.
-// - w13_cria and w13_desconverte call md::CVotosCargos' and md::CVotosEleicoesVota's constructors (fns 5643, 5640),
-//   standing for their two target callers, 7787 (CreateInst) and 11349 (CConversorEleicoesVota::DoDesconverte, trapped
-//   in fragment 140's -pending.cpp).
+// - w13_cria calls md::CVotosCargos' and md::CVotosEleicoesVota's constructors (fns 5643, 5640), standing for their
+//   target caller 7787 (CreateInst); the other, 11349 (CConversorEleicoesVota::DoDesconverte, unit 140's), is in the
+//   link, and w13_desconverte, which stood for it, went.
 // - w13_desconverte_rdv and w13_confere call md::CVotosEleicoesVota::Compativel (fn 5638), standing for its two target
 //   callers, CRdvVota's Desconverte and Confere (fns 11487, 11486, trapped in this unit's -pending.cpp).
 // - md::CVoto's constructor (fn 2256) needs none: its target callers, 4442, 4471 and 4454 (unit 197's) and
@@ -48,12 +48,6 @@ __attribute__((noinline)) int w13_cria(char* destino, char* mapas)
     return w13_votoscargos(destino + 24, mapas) + 3;
 }
 
-__attribute__((noinline)) int w13_desconverte(char* destino, char* mapas)
-{
-    w13_votoseleicoes(destino + 4, mapas + 36);
-    return w13_votoscargos(destino + 28, mapas + 48) * 5;
-}
-
 __attribute__((noinline)) int w13_desconverte_rdv(const char* rdv, const char* outro)
 {
     return w13_compativel(rdv + 20, outro) + 9;
@@ -73,7 +67,6 @@ struct SW13Roots {
         w13_sink = const_cast<char*>(w11496_vt);
         w13_sink = reinterpret_cast<void*>(&w13_comparecimento);
         w13_sink = reinterpret_cast<void*>(&w13_cria);
-        w13_sink = reinterpret_cast<void*>(&w13_desconverte);
         w13_sink = reinterpret_cast<void*>(&w13_desconverte_rdv);
         w13_sink = reinterpret_cast<void*>(&w13_confere);
     }

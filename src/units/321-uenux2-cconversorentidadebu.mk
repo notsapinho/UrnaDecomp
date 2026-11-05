@@ -70,12 +70,21 @@
 # ConverteDadosSA and their being static members, GetInst's and the statics' names, the last hash a file static and a
 # parameter of the hash members, the getters, the members of md::CEntidadeBU, md::CDadosBUVota and md::CDadosBUSA),
 # their access, the hash members' parameter types beyond the format's argument types, the place of the functions with
-# no record in their files, and the paths of md/cdadosbuvota.h, md/cdadosbusa.h and asn/cassinavotavelbu.h. The records
-# of md::CEntidadeBU::ValidaCriacao (centidadebu.cpp:159 to :177), which fn 11629 holds (unit 200's pending member),
-# keep their lines blank.
+# no record in their files, and the paths of md/cdadosbuvota.h, md/cdadosbusa.h and asn/cassinavotavelbu.h.
 #
-# Not written: md::CEntidadeBU's and md::CDadosBUVota's constructors (comum::CGravadorBU::MontaEntidadeBU, record
-# cgravadorbu.cpp:636, holds the first inlined into fn 11629, unit 200's pending member), so nothing may construct them.
+# Unit 200's comum::CGravadorBU::GravaResultado (fn 11629) holds more functions of this unit's files, which match with
+# it (unit 200's fragment has the measurements): md::CEntidadeBU's four constructors and ValidaCriacao
+# (md/centidadebu.cpp, records :159 to :177; centidadebu.h and centidadebu.cpp say what each is read from and what is
+# chosen), and comum::asn::Codifica, appended to asn/cconversorentidadebu.cpp after ConverteDadosSA, which converts the
+# entity and codes it (cconversorentidadebu.cpp's header says why its code is this object's: the records of the BU's
+# Converte and CodeObject instances lie in this object's data, 1598692 to 1598724). No record moved: in
+# asn/cconversorentidadebu.cpp the include of api/io/asn/cfileasn.h and the header's six new comment lines took the
+# place of seven blank lines below the file's statics. fn 2853, the copy of the results' vector the constructors make, comes from
+# md/centidadebu.cpp's object now (unit 200's fragment). 10273 is 425 over 5378 rows with them, every one operand-only,
+# as before.
+#
+# Not written: md::CDadosBUVota's and md::CDadosBUSA's constructors (fn 12098, not written, builds the recorder whose
+# optionals hold them), so nothing may construct them.
 CCONVERSORENTIDADEBU_SRCS := src/app/comum/gravadores/md/cdadosbuvota.cpp src/app/comum/gravadores/md/centidadebu.cpp \
   src/app/comum/gravadores/asn/cassinavotavelbu.cpp src/app/comum/gravadores/asn/cconversorentidadebu.cpp
 UENUX2_SRCS += $(CCONVERSORENTIDADEBU_SRCS)

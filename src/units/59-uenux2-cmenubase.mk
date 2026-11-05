@@ -17,7 +17,12 @@
 # citemmenu.h's.
 # MontaMenu, the key function, is written in cmenubase.cpp (below), so that object emits the vtable and both
 # destructors, which the pending object emitted before (their symbols, and so their match lines, are the same); the
-# pending file went with it. The constructor (inlined into fn 6599) is not reconstructed. Paths relative to src/uenux2.
+# pending file went with it. Since vota::CMenuMaisInformacoesVota's constructor is written
+# (app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, in unit 110's list, which links ahead of cmenubase.cpp.o and
+# emits that class's vtable), 12235 and the D0 twin 6188 match from that object, and 6188's line names the derived
+# class's D0, the first copy in link order.
+# The constructor is out of line in cmenubase.cpp, which binaryen inlines into the derived class's constructor and that
+# into fn 6599 (cmenubase.h has the evidence and the measurement). Paths relative to src/uenux2.
 # The class's source, app/comum/informacao/cmenubase.cpp (the chosen path above), holds AdicionaItem (fn 2285, a chosen
 # name), which fn 6599 calls for each item, and AdicionaOpcao (a chosen name), which binaryen inlined into it in the
 # target: the append to +16 sits after a stack prologue of its own inside fn 2285 (docs/reference/facts/reading.md
@@ -27,7 +32,7 @@
 # `i32.const 8152` in 2285 is its "{}", that literal's tail, which our link held elsewhere before (body byte 140 of
 # `splat-remap --against 2285`; 10 over 239 rows, all operand-only, in `pnpm wasm score`).
 # MontaMenu (fn 5913, 1334 B, slot 2 of the class's vtable and of vota::CMenuMaisInformacoesVota's, which overrides
-# nothing; its one direct caller, 6599, is not written), matched, with what its body holds:
+# nothing; its one direct caller is 6599, unit 110's), matched, with what its body holds:
 # - For each item, a line "[{}] - {}" of the item's key and text (argument types 6 and 13), behind a stack prologue of
 #   its own (docs/reference/facts/reading.md R10), so the format is an out-of-line function binaryen inlines:
 #   FormataItem, a free function of this file (it reads the item's getters only; its name, its being free and not a
@@ -55,11 +60,7 @@
 #   build/out/splat/pieces/asm`). Our FONTE_PERGUNTA (its name and internal linkage chosen) re-points as
 #   `address same-content 0x7869c` (`pnpm wasm splat-remap ... --against 5913`), the target's bytes, no name. CItemMenu's point (+20) and font (+24)
 #   are added to citemmenu.h, their types AddTextField's parameters'.
+# 59-uenux2-cmenubase-roots.cpp went: it kept the vtable for the constructor and stood for AdicionaItem's one target
+# caller, 6599, both in the link now (a whole link without it, steps 6 to 10: no row left match).
 CMENUBASE_SRCS := src/app/comum/informacao/cmenubase.cpp
 UENUX2_SRCS += $(CMENUBASE_SRCS)
-# nothing calls the destructors directly in the target, which reaches them through the vtable only:
-# 59-uenux2-cmenubase-roots.cpp keeps the vtable, as the constructor inlined into fn 6599 does, and stands in for
-# AdicionaItem's one caller, fn 6599 (not reconstructed)
-$(ROOT)/$(APP)/59-uenux2-cmenubase-roots.o: $(ROOT)/src/units/59-uenux2-cmenubase-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/59-uenux2-cmenubase.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/informacao/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/59-uenux2-cmenubase-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/59-uenux2-cmenubase-roots.o

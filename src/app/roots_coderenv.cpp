@@ -6,10 +6,10 @@
 //   rule, second on the link line) instantiated both through comum::IServicoEstado's save (unit 206). That object gives
 //   those copies now, and the instances here went, with the stand-in that took CodeObjectFunction's four addresses for
 //   2891's thunks, which are in the link too: steps 7 to 9 on the link without them moved no row.
-// - 1532, encodeBER, has seven direct target callers besides 9770; 11488 and 11629 are not in our link (11582 is, unit
-//   122, 6006, unit 293's merge of the two writers, 11587, unit 305, and 11616 and 5366, unit 122): the call below
-//   stands for the two not written; without it, binaryen inlined 1532 into 9770, its one caller then (measured while
-//   this file held 9770). encodeBER is protected, so the call goes through an __asm__ label.
+// - 1532, encodeBER, has seven direct target callers besides 9770; 11488 is not in our link (11582 is, unit 122, 6006,
+//   unit 293's merge of the two writers, 11587, unit 305, 11616 and 5366, unit 122, and 11629, unit 200): the call
+//   below stands for it; without it, binaryen inlined 1532 into 9770, its one caller then (measured while this file
+//   held 9770). encodeBER is protected, so the call goes through an __asm__ label.
 // - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290, all three out of line in our link and
 //   calling it (1681 from roots_vector.cpp, unit 11; 5496, whose other caller 5702 is fragment 335's, in the link),
 //   so nothing here calls it. A call of it stood here while 1681 was not in the link: without it then, binaryen inlined

@@ -117,11 +117,6 @@
 // f3067 · 507 B · unmatched · placement: link order · name unknown
 // void f3067(i32, i32) { ... }
 
-// link-order cluster 1134 · uses=4
-
-// f3078 · 10 B · unmatched · placement: link order · name unknown
-// ? f3078(i32) { ... }
-
 // link-order cluster 1137 · uses=5
 
 // f2072 · 16 B · unmatched · placement: link order · name unknown
@@ -230,11 +225,6 @@
 
 // f6592 · 942 B · unmatched · placement: link order · name unknown
 // void f6592(i32, i32) { ... }
-
-// link-order cluster 904 · uses=2
-
-// f6599 · 4974 B · unmatched · placement: link order · name unknown
-// void f6599(i32) { ... }
 
 // link-order cluster 905 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 

@@ -33,6 +33,7 @@ std::string Valida(CVoto::ETipo tipo, const std::string& digitado)
             break;
         case CVoto::NULO_POR_REPETICAO:
             nome = std::string("repetido nulo");
+            comDigitado = true;
             break;
         case CVoto::NULO_CARGO_SEM_CANDIDATO:
             nome = std::string("em cargo sem candidato");
@@ -55,7 +56,7 @@ std::string Valida(CVoto::ETipo tipo, const std::string& digitado)
 
 } // namespace
 
-// (original lines 58-75: content not recovered)
+// (original lines 59-75: content not recovered)
 #line 76
 CVoto::CVoto(ETipo tipo, const std::string& numero) : m_tipo(tipo), m_numero(ecourna::api::util::CStringUtils::Trim(numero))
 {

@@ -178,6 +178,12 @@ enum EUeVotaError {
     EUE_VOTA_TEMPO_LIMITE_BATERIA_INTERNA_INVALIDO = 9405,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_INVALIDO = 9406,
     EUE_VOTA_TEMPO_AVISO_DESLIGAMENTO_MAIOR_QUE_LIMITE = 9407,
+    // the values are the codes vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (records
+    // cmostraeleitorvotando.cpp:127 and :159, inlined into target fn 10425) throws when the voter's captured biometrics
+    // and the mesario's registered ones are empty; the names are chosen from their messages, "Não há dados salvos de
+    // biometria do eleitor." and "Não há dados salvos de biometria do mesário.": no evidence names them
+    EUE_VOTA_SEM_DADOS_BIOMETRIA_ELEITOR = 9392,
+    EUE_VOTA_SEM_DADOS_BIOMETRIA_MESARIO = 9393,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

@@ -73,7 +73,8 @@
 # No roots: CPrng's constructor is table slot 114, which the executable TU's main (10307, unit 170) passes to
 # invoke_iii, and the vtable sinks of CSymmetricCipherFactory and CCepescCipher went once 2725 (unit 293's) and 11419
 # (fragment 335's), which store both vptrs (1113840, 1115004), were in the link: a link without them moved no row. 11616
-# (unit 122's), which stores both too, is written since; 11629, which does too, and 12110, the factory's, are not. Unit 100's roots include
+# (unit 122's) and 11629 (unit 200's), which store both too, are written since; 12110, the factory's, is not. Unit 100's
+# roots include
 # isymmetriccipherfactory.hpp, which gains the two pure slots and its private NonCopyable base: unit 100's and unit
 # 102's objects are byte-identical before and after (cmp).
 CIPHERS_SRCS := api/security/cprng.cpp api/security/ctrng.cpp api/security/csymmetriccipherfactory.cpp \

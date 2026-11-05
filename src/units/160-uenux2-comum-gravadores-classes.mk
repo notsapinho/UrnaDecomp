@@ -59,7 +59,7 @@
 # - comum::asn::GravaArquivo for the envelope (fn 2724, a thunk into fn 6006), in cconversorenvelopegenerico.cpp after
 #   the static members (its line a choice): a converter on the stack, Converte and api::CFileASN::WriteToFile, which
 #   binaryen inlines. Its notes, and the merge 6006 it forms with the hashes' writer, are in its header and unit 293's
-#   fragment, whose roots stand for its caller 11629 (2725, unit 293's, and 11626, this unit's, are in the link). It
+#   fragment; its callers 2725 (unit 293's), 11626 (this unit's) and 11629 (unit 200's) are in the link. It
 #   stores CConversorEnvelopeGenerico's vptr, so the vtable's sink in this unit's roots went with it.
 # The data classes gain the inline getters these bodies read (ccorrespondenciaresultado.h, curna.h, cenvelopegenerico.h;
 # unit 136's headers): their names are chosen.

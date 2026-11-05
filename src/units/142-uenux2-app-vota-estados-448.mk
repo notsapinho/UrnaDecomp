@@ -3,12 +3,14 @@
 # of six other states) and ProcessKey (11794, slot 6); vota::CJustificativaEfetuada's StartState (10594) and
 # ProcessInput (10593, slot 7: on Read()'s 9, api::INPUT_CONFIRMA, it goes to vota::CCancelaHabilitacaoEleitor::GetInst,
 # fn 1536; Read() is unit 135's, in api/gui/cinteractiveform.h);
-# vota::CPedeAnoNascimentoSemBiometria's StartState (10490); vota::CMostraEleitorVotando's ProcessInput (10426, slot 7);
+# vota::CPedeAnoNascimentoSemBiometria's StartState (10490); vota::CMostraEleitorVotando's ProcessInput (10426, slot 7)
+# and ProcessKey (10425, slot 6, written and not matched: its paragraph below);
 # vota::CPerguntaCodigoSuspensao's StartState (10421); and the destructor and deleting destructor every one of them holds
 # (fns 448 and 765, slots 0 and 1, matched under CUrnaInspecionada's symbols, the first of the five classes in link
 # order; the target holds these two bodies once for 19 classes). vota::CLogVota gains the three members
 # 10594 and 10421 hold inlined (app/vota/log/clogvota.cpp, unit 119's file). The class headers say what each layout
-# rests on; 142-uenux2-app-vota-estados-448-pending.cpp names every slot left and what it waits for.
+# rests on. Every slot of the five classes is written, so the unit has no pending file, and no roots file: every
+# vtable is stored by a constructor in the link and every function has its target callers there.
 #
 # Evidence, each read in the target:
 # - final, and the destructor out of line in each class's .cpp: fn 765 is `f448(p0); drop; f136(p0)`, the 13-B shape of
@@ -142,31 +144,103 @@
 # `if` around the switch was measured only with `size() > 0`).
 #
 # comum::CEleitorDadosHabilitacao's constructor (target fn 2733, no record) matches, defined out of line in
-# cmostraeleitorvotando.cpp after the file's last record line (159), at chosen lines (src/README.md "Gaps").
+# aguardaeleitor/celeitordadoshabilitacao.cpp, a TU of its own listed after cmostraeleitorvotando.cpp.
 # - Its layout is unit 130's celeitordadoshabilitacao.h: it copies the identity (its std::string inline or through
 #   __init_copy_ctor_external, fn 138), stores the kind and the audio word, and copies the biometric part with its
 #   std::optional and the photo's 8 bytes, in the members' order; the parameters' order is the wasm signature's.
-# - Out of line: its one caller, ProcessKey (10425, slot 6, pending; its records are those of SalvaHabilitacaoEleitor,
-#   which it holds inlined), calls it four times, with the kinds 1, 2, 2 and 0, and keeps the returned `this` each time.
-#   A probe caller with those four constructions, compiled at the tree's flags, inlines the constructor at all four when
-#   the header defines it in its class, and keeps the four calls when it is defined out of line, in another TU or in the
-#   caller's (docs/reference/facts/codegen.md C6).
+# - Out of line: its one caller, ProcessKey (10425, slot 6; its records are those of SalvaHabilitacaoEleitor, which it
+#   holds inlined), calls it four times, with the kinds 1, 2, 2 and 0, and keeps the returned `this` each time
+#   (`local.set` after the call), the address it passes on to CEleitores::MarcaEleitorFoiHabilitado and reads the members
+#   through for their destruction. A probe caller with those four constructions, compiled at the tree's flags, inlines
+#   the constructor at all four when the header defines it in its class, and keeps the four calls when it is defined out
+#   of line, in another TU or in the caller's (docs/reference/facts/codegen.md C6). Another TU, measured: with the
+#   constructor in cmostraeleitorvotando.cpp, SalvaHabilitacaoEleitor's object drops the four results and passes the
+#   frame address again (wasm-objdump -d of the object: `call` then `drop`); with it removed from that TU, the object
+#   keeps them (`local.set 2` after each call), as the target does. With the constructor in the caller's file 10425 scored
+#   860 over 2294 rows in the whole link, and in a file of its own 457 over 2246 (with GetDedoCorrente's move below).
 # - Placement, by how-to step 3's rule 2: in its use band (uses 4, ledger/ordinals.tsv) 2733 links after 2735,
 #   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (CEleitorDemorando::GetInst, unit 152's), and before
 #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 (stretch 1080 of ledger/tu-clusters.tsv, labelled that file).
-#   In the data the one recorded file between those ends is this one (record @1593044), and the lower end is
-#   aguardaeleitor's too: so the directory is app/vota/operador/aguardaeleitor/, against the class's namespace. The file
-#   is a choice there: it holds the one caller, and a small class one file constructs can be defined there
-#   (docs/reference/facts/placing.md P2); a file named after the class there (rule 4) is the other reading, which no
-#   data place.
-# - The roots file stands in for ProcessKey with two calls whose results it reads: with a stand-in that dropped them,
-#   our body lost its i32 result, 4 over 98 rows (one deleted), against 2 over 98, all operand-only, with the results
-#   read (pnpm wasm score, before steps 7 to 9, the constructor then in a file of its own).
+#   In the data the one recorded file between those ends is cmostraeleitorvotando.cpp (record @1593044), and the lower
+#   end is aguardaeleitor's too: so the directory is app/vota/operador/aguardaeleitor/, against the class's namespace.
+#   The file is rule 4's, named after the class there, and a choice against the data: aguardaeleitor/'s objects run in
+#   name order in the data (celeitordemorando.cpp's vtable @1592784, celeitorvotounaovotou.cpp's @1592928,
+#   cmostraeleitorvotando.cpp's record @1593044, cperguntacodigosuspensao.cpp's vtable @1593120,
+#   csuspensaoautomaticaeleitor.cpp's records @1593320), and celeitordadoshabilitacao.cpp sorts before
+#   celeitordemorando.cpp, where the band puts 2733 after 2734. A file that sorts between celeitordemorando.cpp and
+#   csuspensaoautomaticaeleitor.cpp and is not cmostraeleitorvotando.cpp is the other reading; no evidence names it.
 # Chosen too: the parameters' names; the photo taken by reference (the caller passes the address of a temporary, which a
 # by-value photo takes too); the member-initializer list; the header's path, unit 130's (a choice against rule 1, which
-# would move it beside this file: celeitores.cpp and celeitordetalhe.cpp include it there). This file builds with strict
-# aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with -fno-strict-aliasing too, the file gives the
-# constructor the same code.
+# would move it beside this file: celeitores.cpp and celeitordetalhe.cpp include it there). The file builds with strict
+# aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with -fno-strict-aliasing too, its object is cmp-equal.
+#
+# vota::CMostraEleitorVotando::ProcessKey (fn 10425, slot 6, 4809 B), written in cmostraeleitorvotando.cpp after
+# ProcessInput (the band's order: 10426 links before 10425), and not matched. What the target shows:
+# - The keys, a br_table on the key less 2, written as literals (no evidence names them) in the target's block order,
+#   13, 3, 4, 2, 9, 6 (as 10419's cases are): 13 clears vota::CSincronismoOperador's +11 (SetSincronizado(false)), goes
+#   there and move-assigns " " to the string +12 points to (the long buffer freed, then " " stored short:
+#   `*m_nome = std::string(" ")`; `*m_nome = " "` keeps the buffer: our first link's readout); 3 and 4 set CEleitorDemorando's +11 to
+#   false and true through SetVotou, a setter added to celeitordemorando.h (its name chosen, as CEleitorVotouNaoVotou's)
+#   and go there; 2 sets CEleitorVotouNaoVotou's to false and goes there; 9 copies CThreadOperador's text into +12 and
+#   shows +20's form, as StartState does; 6 calls SalvaHabilitacaoEleitor.
+# - SalvaHabilitacaoEleitor is the records' function (cmostraeleitorvotando.cpp:127 and :159, column 31, `void
+#   vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor()`: a non-static member that reads no member of the object),
+#   out of line: clang keeps it so in this file (-Rpass-missed=inline: cost 4225, threshold 250) and binaryen inlines it
+#   behind its 144-byte frame. In the training of the voters (fase 51 and the vota state's byte at +72, the test
+#   CSincronismoOperador::StartState spells) it does nothing; else it switches on impl::IInformacaoThreadOperador's
+#   GetEstadoBiometria (slot 15), the cases in the target's block order: BiometriaEleitor, BiometriaOperador,
+#   SemBiometria. Each case builds a const comum::CEleitorDadosHabilitacao from GetIdentidadeEleitor (1535), the kind 1,
+#   2 or 0, the audio word, the biometric part through CControlaReconhecimento::GetInst()'s result (1256, dropped) and
+#   GetApresentacaoFotoEleitor (2745), in argument order, and passes it to CEleitores::MarcaEleitorFoiHabilitado (2825)
+#   after its temporaries are destroyed. The audio word is 0 in vota::CEstadoAudio's mode 0, else 1 in mode 1, else 2
+#   (the tests 215 and 3078, four calls each, unit 116's): TipoAtivacaoAudio, a free function of vota declared in
+#   cmostraeleitorvotando.h and defined after SalvaHabilitacaoEleitor, which clang inlines at the four calls.
+# - In the voter's kind, when vota::EhTreinamento (1485) is false: a copy of CControlaReconhecimento's captured vector,
+#   CUeVotaError 9392 ("Não há dados salvos de biometria do eleitor.", line 127) when the copy is empty, and
+#   ArmazenaImagemHabilitado of the copy, the third word's low byte and the finger. The copy comes before the test: the
+#   target loads the end before the begin and throws inline, the copy constructor's size test (the static tested first
+#   loads the begin first and moves the throw out of line: our first link's readout). In the
+#   mesario's kind: the captured vector copied and, when not empty, ArmazenaImagemNaoHabilitado; the registered vector
+#   copied, 9393 ("Não há dados salvos de biometria do mesário.", line 159) when it is empty, ArmazenaImagemOperador;
+#   then, when CControlaReconhecimento's string is not empty, the biometric part with the mesario's title, else without
+#   it (two constructions).
+# - ArmazenaImagemHabilitado, ArmazenaImagemNaoHabilitado and ArmazenaImagemOperador are behind frames of their own
+#   (448, 432 and 112 bytes): out of line, which clang keeps in this file (costs 1745, 1740 and 1220), inlined by
+#   binaryen. Each copies the current voter's identifier (CEleitorDecorator::GetIdentidadePorTipo, fn 708), pads it with
+#   '0' to 12 (PreencheAEsquerda, 753), appends "-{:02}-{:02}" of the attempt and the finger, "-{:02}Err" of the attempt
+#   or "_Operador", and calls comum::CControlaArmazenamentoDeImagens::ArmazenaImagem (2725) with the kind's GetPathWsq*
+#   directories (5819 and 5817, 5818 and 5816, 3795 and 3794) and an empty prefix, the result dropped.
+# - The biometric parts are four static members of CControlaReconhecimento, and the finger the first helper gets is a
+#   fifth, GetDedoCorrente, all out of line in ccontrolareconhecimento.cpp (unit 161's paragraph has their evidence).
+# Chosen: SalvaHabilitacaoEleitor's access; the helpers' names, their being free functions of vota declared in
+# cmostraeleitorvotando.h, their parameters and lines; TipoAtivacaoAudio's name, linkage and form; the error names
+# (euevotaerror.h); the lines of everything but the two throws, at the records' line and column through blank lines
+# between them (the column's 30 characters given as nesting with indented case labels, docs/reference/facts/reading.md
+# R19); `if (!(...)) { switch }`; ProcessKey's switch with no `default:` label. TipoAtivacaoAudio in the file's
+# anonymous namespace above SalvaHabilitacaoEleitor together with a `default:` label gave the same score as the form
+# written (222 over 2205); external and below, it leaves room for ProcessKey above the first record.
+# Measured with pnpm wasm score in the whole link before steps 7 to 9: the first form (the vectors tested before their
+# copy, `" "` assigned) `890 over 2307 rows`; those two fixed 860 over 2294; the constructor in a TU of its own and
+# GetDedoCorrente out of line 457 over 2246; the mesario's parts reading into locals 392 over 2218; the title's
+# constructor out of line 360 over 2205 (ArmazenaImagemHabilitado above SalvaHabilitacaoEleitor, ProcessKey last).
+# The definition order is measured (docs/reference/facts/codegen.md C4): SalvaHabilitacaoEleitor above the three
+# helpers 350 over 2203, ProcessKey above it, as written, `222 over 2205 rows (same 1983, replaced 196 [195
+# operand-only], inserted 13, deleted 13)`. What is left is not explained, in two parts:
+# - The object order. The target's data put ccontrolareconhecimento.cpp (records @1591028) before
+#   cmostraeleitorvotando.cpp (@1593044), and this unit's list links it before unit 161's: a scratch link of the plain
+#   link.cmd with ccontrolareconhecimento.cpp.o moved just ahead of cmostraeleitorvotando.cpp.o, or
+#   cmostraeleitorvotando.cpp.o moved after unit 161's last object, gives 198 over 2194 rows (2 inserted, 2 deleted).
+#   The file stays in this list: the move gains no match. In that scratch order the helpers above SalvaHabilitacaoEleitor
+#   and below ProcessKey give 198 too, above ProcessKey 248 over 2209; an if/else chain on the state, a ternary in
+#   TipoAtivacaoAudio, an early return for the training test and four orders of ccontrolareconhecimento.cpp's new
+#   members give 198 each; GetDadosSemBiometria inline in its class 216 over 2198, the SemBiometria case written first
+#   475 over 2301.
+# - The audio word's zero in the SemBiometria case: there the target reads the local the inlined code zeroes on entry,
+#   where our object sets 0 after GetIdentidadeEleitor. Patched out of a copy of our object (with
+#   IInformacaoThreadOperador's instance moved to another local), in that scratch order: 194 over 2192 rows, every one
+#   an operand. So the target's object had no such set; no form tried gives it (object reads: the training test in a
+#   named bool and GetDadosSemBiometria inline keep the set; TipoAtivacaoAudio leaving its result unset in mode 0 drops
+#   it in all four cases, where the target keeps three).
 #
 # Matched since: CPedeAnoNascimentoSemBiometria::StartState (fn 10490). The target stores +4 (the next state) first,
 # then +32 and +28. Each of the six orders of the three statements written as assignments compiles at the tree's flags
@@ -240,15 +314,7 @@ APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/cinspecionaurna.cpp \
     src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
     src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp \
+    src/app/vota/operador/aguardaeleitor/celeitordadoshabilitacao.cpp \
     src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp \
     src/app/vota/operador/aguardaeleitor/validatitulosuspensao.cpp
 UENUX2_SRCS += $(APP_VOTA_ESTADOS_448_SRCS)
-# The members not reconstructed: 142-uenux2-app-vota-estados-448-pending.cpp gives the vtables trapping bodies, compiled
-# with the unit's flags
-$(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-pending.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-pending.cpp -o $(R)
-# 142-uenux2-app-vota-estados-448-roots.cpp keeps no vtable (every class's constructor is in the link) and stands in
-# for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
-$(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-roots.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/142-uenux2-app-vota-estados-448-pending.o $(APP)/142-uenux2-app-vota-estados-448-roots.o

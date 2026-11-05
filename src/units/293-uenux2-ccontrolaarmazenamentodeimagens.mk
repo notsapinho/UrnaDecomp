@@ -15,16 +15,17 @@
 # - std::filesystem::path::string() (fn 1555, 49 B), which 2725 calls out of line for each throw's message.
 # - comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266), in cconversorentidadehashes.cpp: the file's header
 #   comment and centidadehashes.h say what it holds and what its rows were.
-# The two templates' instances, and CBaseError<comum::EUeComumReconhecimentoBiometricoError, ...>'s constructor (fn
-# 5369, unit 186), come from ccontrolaarmazenamentodeimagens.cpp.o now, the first object to instantiate them in our link
-# (this unit's roots object and unit 186's gave them before, with the same bodies: the scan matches them from either).
-# The target's copies of the templates are cgravadorbu.cpp's by a reading of the data (their records lie in that
-# object's run of the data, before IGravadorEnvelope's vtable @1554456), a uenux2 object without strict aliasing, the
-# flags both ccontrolaarmazenamentodeimagens.cpp.o and the roots rule below compile with. serialization.hpp's
-# ReadWholeFile is static, so the three TUs that include the header (this unit's roots,
-# ccontrolaarmazenamentodeimagens.cpp and fragment 335's cconversorbiometriaeleitorcifrada.cpp) each have their own (the
-# ODR question below); the link keeps ccontrolaarmazenamentodeimagens.cpp.o's instance of DeserializeFromFile, which
-# calls that TU's copy, for 2725 and 11419 both.
+# CBaseError<comum::EUeComumReconhecimentoBiometricoError, ...>'s constructor (fn 5369, unit 186) comes from
+# ccontrolaarmazenamentodeimagens.cpp.o, the first object to instantiate it in our link (unit 186's gave it before, with
+# the same body). The two templates' instances come from unit 122's cgravadorrcsecao.cpp.o, the first object to
+# instantiate them in our link (link.cmd puts it ahead of cgravadorbu.cpp.o, which instantiates them for
+# comum::CGravadorBU::LeChavePublica, held by fn 11629); that the target's copies are cgravadorbu.cpp's is a reading of
+# the data (their records lie in that object's run of the data, before IGravadorEnvelope's vtable @1554456), a uenux2
+# object without strict aliasing, the flags both ccontrolaarmazenamentodeimagens.cpp.o and the roots rule below compile
+# with. serialization.hpp's ReadWholeFile is static, so each TU that includes the header has its own (the ODR question
+# below): four include it now (ccontrolaarmazenamentodeimagens.cpp, cgravadorbu.cpp, unit 122's cgravadorrcsecao.cpp
+# and fragment 335's cconversorbiometriaeleitorcifrada.cpp), and the link keeps cgravadorrcsecao.cpp.o's instance of
+# DeserializeFromFile, which calls that TU's copy, for 2725, 11419, 11616 and 11629.
 #
 # Measured on this link (pnpm wasm score against the target, then the scan):
 # - 2280 with the file read in DeserializeFromFile's own scope, the CFile alive across the decode: 117 over 319 rows
@@ -42,8 +43,8 @@
 #   definition must refer to the same entity in every TU that defines the template, so a function of internal linkage
 #   that DeserializeFromFile calls makes the program ill-formed (no diagnostic required) as soon as a second TU includes
 #   the header, whether it instantiates the template or not; the failure one would see, the one instance the linker
-#   keeps calling one TU's helper, needs two TUs to instantiate the same specialization. Three TUs include the header
-#   now and two of them instantiate it (above), so the program breaks the rule; the copies are the same code, and
+#   keeps calling one TU's helper, needs two TUs to instantiate the same specialization. Four TUs include the header
+#   now and each instantiates it (above), so the program breaks the rule; the copies are the same code, and
 #   `static` stays because `inline` and a lambda called in place each lose 2280 and 11419 (fragment 335 measured both).
 # - 2279 82 over 900 rows, 5367 and 2724 6 over 10 each, 6006 58 over 712, every row an operand.
 # - 6236 against our __futimesat: with the stand-in reading the result, 11 over 69 rows (its i32 result, which the
@@ -82,14 +83,15 @@
 #   GravaEnvelope's 304 against 320. The rest is not explained.
 # - Its name: a callers+content hand line in splat/symbol_addrs.txt, led by the six records only 2725 loads, whose
 #   copies only our ArmazenaImagem loads (`check_srcloc.py --strict` lists them as the target's); 5382 (unit 135),
-#   its one caller in our link, needs it, and falls without it (weighed by removal: unit 135's fragment). Its other
-#   caller, fn 10425 (vota::CMostraEleitorVotando's, not written), has a stand-in in the roots.
+#   its one caller in our link then, needs it, and falls without it (weighed by removal: unit 135's fragment). Its other
+#   caller, fn 10425 (vota::CMostraEleitorVotando's), is written in unit 142 and not matched; the roots' stand-in for it
+#   went.
 # - Chosen besides: the names of GravaWsqCifrado, GravaEnvelope and ZeraDataHora, their being static members,
 #   ID_INVALIDO and its type, every local's name, PreparaWsq's name and its being an inline member of
 #   vota::CConversorWsq, the access of each member, and the lines and order of the functions without a record (after
 #   CifrarWsq: GravaEnvelope, GravaWsqCifrado, ZeraDataHora, ArmazenaImagem).
 #
-# The roots stand in for 2725's other caller, fn 10425, and for the other callers of the instances above
+# The roots stand in for the other callers of the instances above
 # (293-uenux2-ccontrolaarmazenamentodeimagens-roots.cpp). The stand-in for 2725's call of utimes went: 2725 is in the
 # link, beside SQLite's dotlockLock, and libc's __futimesat (6236) still matches.
 CCONTROLAARMAZENAMENTO_SRCS := src/app/comum/gravadores/asn/cconversorentidadehashes.cpp \

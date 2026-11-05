@@ -36,8 +36,8 @@
 #   the target fills each with eight-byte stores of 0x2D, where the title is copied from the data. The formatted line is
 #   a named local: the target frees the load code's text before AddTextField and the line after it.
 # - std::__introsort over ImprimeConsulta's comparator (5610, 5599 B, recursive), the instance its std::sort brings, in
-#   cgeradorbu.cpp's object: named by its census pair (pair-addr), so its recursive call does not wait for 11253, which
-#   does not match. It calls __sort4 (1920), __insertion_sort_incomplete (2790) and iter_swap (248), whose bodies are
+#   cgeradorbu.cpp's object: named by its census pair (pair-addr), so its recursive call did not wait for 11253,
+#   which matches since (below). It calls __sort4 (1920), __insertion_sort_incomplete (2790) and iter_swap (248), whose bodies are
 #   byte-identical in our link to CGeradorBUQRCode::GetCamposConsulta's instances (unit 155): iter_swap is one instance
 #   in both objects, and step 9 renamed the lines of 1920 and 2790 to this object's copies, which link first. The
 #   target's introsort keeps the comparator's address as its third parameter (5 parameters), where GetCamposConsulta's
@@ -47,22 +47,23 @@
 #   (a reading: its recursive call passes it on). pnpm wasm score in the whole link, before steps 7 to 9: 73 over 2732
 #   rows, all operand-only, each a call or a data address.
 #
-# Written and not matched, both waiting for one literal:
-# - ImprimeMajoritario (11254, slot 4, record :246), beside it. The scan's first difference, `+0xae target +0xad
-#   i32.const 8975 | ours +0xad i32.const 8962` (splat/scan.tsv at this landing; our side moves with the data), is the
-#   end of its literal "{:02}", which the target's linker merged as the tail of "-{:02}-{:02}" (8963, begin 8970, end
-#   8975), the format string of fn 10425, vota::CMostraEleitorVotando's slot 6, not written; our link holds no such
-#   string and merges "{:02}" into "{:04}{:02}{:02}T{:02}{:02}{:02}". With that literal added (a whole-link try-tu of
-#   one scratch TU that returns it), `pnpm wasm splat-remap ... --against 11254` prints IDENTICAL. Unit 75's 8168 waits
-#   for the same literal.
-# - ImprimeConsulta (11253, slot 5, record :286), after it: the same first difference, `+0xb3 target +0xb2 i32.const
-#   8975 | ours +0xb2 i32.const 8962`, its "{:02}" of the post's id. pnpm wasm score in the whole link, before steps 7
+# Matched since fn 10425 (vota::CMostraEleitorVotando's slot 6, unit 142's) was written with the one literal both
+# waited for; until then each was written and `differs`:
+# - ImprimeMajoritario (11254, slot 4, record :246), beside it. The scan's first difference was `+0xae target +0xad
+#   i32.const 8975 | ours +0xad i32.const 8962` (splat/scan.tsv at this unit's landing; our side moves with the data),
+#   the end of its literal "{:02}", which the target's linker merged as the tail of "-{:02}-{:02}" (8963, begin 8970,
+#   end 8975), the format string 10425 holds; our link held no such string then and merged "{:02}" into
+#   "{:04}{:02}{:02}T{:02}{:02}{:02}". With that literal added (a whole-link try-tu of one scratch TU that returns it),
+#   `pnpm wasm splat-remap ... --against 11254` printed IDENTICAL. Unit 75's 8168 waited for the same literal and
+#   matched with it.
+# - ImprimeConsulta (11253, slot 5, record :286), after it: the same first difference then, `+0xb3 target
+#   +0xb2 i32.const 8975 | ours +0xb2 i32.const 8962`, its "{:02}" of the post's id. pnpm wasm score in the whole link, before steps 7
 #   to 9: 65 over 1218 rows, all operand-only; the operands that are no call and no data address are the format
 #   buffer's table slot (148 in the target), four times (11254, 11255 and 11256 load it too). Its other literals are
 #   in our link as the target holds them: "{:0{}}" the tail of "  {}{}{:0{}}" (1042, fn 11973's), "{:04}" of
 #   "Local ... {:04}" (8828, fn 11188's), "  " of ",\n  " (445546, sqlite3EndTable's). With "-{:02}-{:02}" added (a
 #   whole-link try-tu of one scratch TU that returns it, link-map, link-kinds, splat-kinds), `pnpm wasm splat-remap
-#   ... --against 11253` prints IDENTICAL, as it does for 11254 and 5610 in that link. Its record anchors it
+#   ... --against 11253` printed IDENTICAL, as it did for 11254 and 5610 in that link. Its record anchors it
 #   (evidence:srcloc-anchor); its call votes give fn 1923 (CCargo::GetDetalheConsulta) a `call` line and add 11253 to
 #   IncluiString's (942) voters, and both matched before it was written.
 #

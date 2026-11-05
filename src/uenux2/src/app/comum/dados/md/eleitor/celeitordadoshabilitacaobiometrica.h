@@ -20,6 +20,10 @@ namespace comum::md {
 class CEleitorDadosHabilitacaoBiometrica {
 public:
     CEleitorDadosHabilitacaoBiometrica(CDedo::TipoDedo dedo, ueword score, uebyte numeroTentativa, int erroDecifrarBiometria);
+    // With the mesario's title: vota::CControlaReconhecimento::GetDadosBiometriaMesario, inlined into target fn 10425,
+    // holds it inlined. The parameter's name and its being a reference are chosen.
+    CEleitorDadosHabilitacaoBiometrica(CDedo::TipoDedo dedo, ueword score, uebyte numeroTentativa, int erroDecifrarBiometria,
+                                       const CEleitorIdentidade& tituloMesario);
 
     CDedo::TipoDedo GetDedo() const { return m_dedo; }
     ueword GetScore() const { return m_score; }

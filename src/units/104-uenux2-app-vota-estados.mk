@@ -102,6 +102,15 @@
 # (m_pEstado)`; uebyte for the +11 bool. Statics defined before GetInst give the same functions and the other .bss
 # order.
 #
+# vota::CMaisInformacoes::StartState (fn 11897, slot 2) matches, written in cmaisinformacoes.cpp between the statics and
+# ProcessInput, where use band 1 puts it (11899, 11898, 11897, 11896 at consecutive ld_index in names.tsv, 2334 to
+# 2337 at this landing).
+# It replaces the form at +12 with vota::CTelasVota::CriaTelaMaisInformacoes()'s (fn 6599, unit 110's ctelasvota.cpp,
+# its std::shared_ptr moved in: the old one released, then the empty temporary), calls the form's slot 2 and stores
+# `this` at +4. It calls CTelasVota::GetInst() (fn 407) first and drops the result: the static member called through the
+# instance (ctelasvota.h has the measurement against a const member). Before step 8 it scored 2 over 83 rows, both
+# operand-only (the two calls). Its trap left 104-uenux2-app-vota-estados-pending.cpp, with the include it used.
+#
 # Two slots written since, each measured in the whole link with pnpm wasm score against
 # build/out/wasm-map/vota_web/names.tsv:
 # - vota::CMaisInformacoes::ProcessInput (fn 11896) matches. Its form's pointee is the records' CInteractiveForm<IScreen,

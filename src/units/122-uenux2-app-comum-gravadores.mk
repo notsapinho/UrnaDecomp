@@ -118,8 +118,8 @@
 #   roots_coderenv.cpp's instantiation of it gives our link that copy first, 5585 against it reads 8 over 69 rows,
 #   operand-only (5585 stays unresolved: its callees 11180 and 11177 have no name), and 9531's line now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
 #   step 10, "A symbol that stays while its body moves").
-# - The roots stand in for the other target callers of the directories (fn 10425; 5382 is in the link, unit 135), so
-#   binaryen keeps them out of line as the target does; 3793's stand-in for 10451 stays, and 5815's for 3614.
+# - The directories' other target callers are in the link (5382, unit 135's, and 10425, unit 142's), so the roots'
+#   stand-in for 10425 went; 3793's stand-in for 10451 stays, and 5815's for 3614.
 #
 # comum::CGravadorVersoesArquivos::GravaResultado (target fn 11582, slot 7, the class's key function, which unit 136's
 # pending object trapped), in cgravadorversoesarquivos.cpp: the class's name in lower case, chosen, in

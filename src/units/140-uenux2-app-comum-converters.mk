@@ -77,11 +77,55 @@
 #
 # The base's default DoConverte of CConversorPleito and CConversorProcessoEleitoral (11364, 11362) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
-# Pending (this unit's -pending.cpp traps it and says what waits for it): 11349, CConversorEleicoesVota::DoDesconverte
-# (records :69, :74, :94 and :104, not written).
-# Matched: 11482, that class's DoDesconverte, the class template's member in rdv/cconversorregistrodigitalvoto.h, which
-# unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte over the entity's elections, an instance
-# binaryen inlines (its 640-byte frame opens in the frameless 11482), and that instance's slot 3 through the vtable.
+# 11349, CConversorEleicoesVota::DoDesconverte (slot 3), matches since, in cconversoreleicoesvota.cpp at its records
+# (:69 EUE_COMUM_DADOS_7967 "Dado não é do Vota", :74 7968 "Eleições incompatíveis", :94 7969 and :104 7970, the two
+# std::format messages, each argument an unsigned, type code 6). What the target's body holds, read from its rows: the
+# entity's choice tested for eleicoesVota (selection 0), the elections' count against m_cargos' size, an
+# ecourna::app::dados::asn::CConversorCargoID on the stack (its vptr, 1122576, stored once, before the loop) and a map
+# from each election to its md::CVotosCargos; per election a local map of SCargoInfo to md::CVotos, the election's id,
+# its post list found in m_cargos, and per VotosCargo the post's id through the CConversorCargoID's Deconverte
+# (ecourna's IConversorASN::Deconverte, record iconversorasn.hpp:66, inlined), compared with each 140-byte md::CCargo's
+# id byte after a mask to 8 bits (so the converted id is held in a md::TCargoID, a uebyte), a CConversorVotosCargo built
+# on the post's SCargoInfo (fn 5683) and its Desconverte (comum's IConversorASN::Desconverte, record iconversorasn.h:71,
+# which binaryen inlines: its 640-byte frame) inserted into the local map; then md::CVotosCargos built from a copy of
+# that map (fn 5643, a by-value parameter) is moved into a pair and the pair into the elections' map, and the result is
+# md::CVotosEleicoesVota built from a copy of that map (fn 5640). Measured with pnpm wasm score in the whole link,
+# before steps 7 to 9: the SCargoInfo a temporary of the converter's construction, 98 over 2277 rows, operand rows only
+# (calls, data addresses, the std::format pieces' packed addresses and table slots), against 106 over 2279 (2 inserted,
+# 1 deleted) with it a named local as DoConverte has it: the target keeps it in the frame slot of Desconverte's result
+# (+232), and a temporary's slot is free again once its full-expression ends (a reading of why the temporary gives it).
+# Compared on the objects (the function's disassembly with call indices, types and env. stripped, against the written
+# form; docs/how-to-decompile.md step 3), the same bytes: the elections' insert spelled insert({eleicao, ...}),
+# emplace(std::make_pair(...)) or insert(TMapa::value_type(...)); the post's emplace for its insert; the lambda
+# capturing [&]; `const auto&` loop variables; currentSelection() != eid for the choice's test. Other code:
+# emplace(eleicao, md::CVotosCargos(...)) (no pair, where the target moves the CVotosCargos into one at +232),
+# std::ranges::find_if, std::ranges::find with &md::CCargo::GetID as projection, the local map declared after the
+# election's find or after its id, the count test's operands swapped, the converter a temporary of its Desconverte call,
+# and Desconverte's result in a named local. Chosen: the local names, std::find_if with a lambda (no loop written out
+# was tried) and the lines between the records.
+# The object is compiled through unit 13's list, between crdvvota.cpp and md/rdv/cvoto.cpp, where its records (1571240
+# on) lie in the target's data between crdvvota.cpp's and md/rdv/'s: our link keeps the first object's copy of a
+# linkonce function, and 5681 (the map copy's __emplace_hint_unique_key_args, unit 13's fragment) matches with this
+# object's copy, built without strict aliasing (4 over 167 rows before step 8, operand rows only, where
+# md/rdv/cvotoscargos.cpp.o's copy, first before the move, is 15 over 167 with 5 deleted); 11349 scores the same in both
+# places. The move puts 22 objects that our link held ahead of it into the data's order: 19 by their records (md/rdv/'s
+# four, md/eleitor/celeitordadoshabilitacaobiometrica.cpp, nine of comparecimentomesario/estados/, ctipoapuracaosa.cpp,
+# correspondencia/ccorrespondenciaresultado.cpp, cconversortipoapuracaosa.cpp, cgeradorbu.cpp, ctextfieldmultiline.cpp)
+# and three by their vtables (comparecimentomesario/estados/cgestordadomesarioinicial.cpp, cgestordadomesariovotacao.cpp
+# and cgestordadomesariofinal.cpp, @1594988, @1595048, @1595108). It inverts eleven whose units' lists link after unit
+# 13's: six whose records lie before 1571240 (nomearquivo/cnomearquivo.cpp, gravadores/md/curna.cpp,
+# cenvelopegenerico.cpp and centidadehashes.cpp, iniciovotacao/cverificahorariozeresima.cpp and
+# testeteclado/cprezeresima.cpp) and five whose vtables do (fimvotacao/caplicacaoencerrada.cpp @1542024,
+# testeteclado/cbase.cpp @1545768, iniciovotacao/creiniciovotacao.cpp @1546628, testeteclado/cretomada.cpp @1546700
+# and testeteclado/cesperaretestar.cpp @1546772). cconversorvotoscargo.cpp (vtable
+# @1570996) stays after it, inverted as before. Steps 7 to 9 on the moved link added 11349, 5681 and 4454 and moved one
+# other row, 11445 (unit 159's trap of CConversorCandidaturas::DoDesconverte), from no-candidate to differs: with this
+# unit's trap gone, our link no longer holds the two traps as one body under this unit's name (names.tsv at the base
+# names 5369 from 140-uenux2-app-comum-converters-pending.o and nothing from 159's), so the vtable slot names 159's.
+# Matched: 11482, CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoDesconverte, the class template's member in
+# rdv/cconversorregistrodigitalvoto.h, which unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte
+# over the entity's elections, an instance binaryen inlines (its 640-byte frame opens in the frameless 11482), and that
+# instance's slot 3 through the vtable.
 #
 # 11437 and 11438, the DoDesconverte and DoConverte of comum::asn::CConversorCabecalhoPacote (RTTI at the typeinfo
 # 1562760; vtable @1562736, slots 3 and 2, table slots 2546 and 2545), match since: unit 245's file, which unit 96 lists,
@@ -123,8 +167,7 @@
 #
 # The converters include generated ASN.1 modules; paths relative to src/uenux2; the generic uenux2 rule depends on the
 # sources and every uenux2 header.
-CONVERSORES_140_SRCS := src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp \
-  src/app/comum/dados/asn/rdv/cconversorvotoscargo.cpp \
+CONVERSORES_140_SRCS := src/app/comum/dados/asn/rdv/cconversorvotoscargo.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversorpleito.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversorprocessoeleitoral.cpp \
   src/app/comum/dados/md/processoeleitoral/cpleitodto.cpp \
@@ -132,15 +175,14 @@ CONVERSORES_140_SRCS := src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp \
 UENUX2_SRCS += $(CONVERSORES_140_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(CONVERSORES_140_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
+# cconversoreleicoesvota.cpp is compiled through unit 13's list, ahead of md/rdv/ (this fragment's header says why)
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # cconversorvotoscargo.cpp includes ecourna's app/dados/asn/cconversorcargoid.hpp, which includes its ASN.1 module by
 # its bare name, as the ecourna objects' include path finds it
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversorvotoscargo.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
-# the slots not written: 140-uenux2-app-comum-converters-pending.cpp traps them, compiled with the tree's flags
-$(ROOT)/$(APP)/140-uenux2-app-comum-converters-pending.o: $(ROOT)/src/units/140-uenux2-app-comum-converters-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/140-uenux2-app-comum-converters.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/140-uenux2-app-comum-converters-pending.cpp -o $(R)
 # the converters' users are not reconstructed yet: 140-uenux2-app-comum-converters-roots.cpp reaches them the way the
 # target does. It compiles at the tree's flags: it holds the link's copy of a std::map instance (the file says which)
 $(ROOT)/$(APP)/140-uenux2-app-comum-converters-roots.o: $(ROOT)/src/units/140-uenux2-app-comum-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/140-uenux2-app-comum-converters.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/140-uenux2-app-comum-converters-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/140-uenux2-app-comum-converters-pending.o $(APP)/140-uenux2-app-comum-converters-roots.o
+override EXTRA_OBJS += $(APP)/140-uenux2-app-comum-converters-roots.o

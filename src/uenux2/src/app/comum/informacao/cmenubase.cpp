@@ -27,6 +27,11 @@ void AdicionaCampoOpcao(api::CFormBuilder& form, const std::shared_ptr<api::IInp
 
 } // namespace
 
+CMenuBase::CMenuBase(api::CFormBuilder& form)
+    : m_form(form)
+{
+}
+
 void CMenuBase::AdicionaItem(std::shared_ptr<CItemMenu> item)
 {
     m_itens.push_back(item);

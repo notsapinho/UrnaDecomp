@@ -421,7 +421,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for four files whose
   own rows say the other way (below); `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
-  directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, written), which holds
+  directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, matched), which holds
   `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
   row of it is an operand row, and with `md/rdv/` or `cvotoscargos.cpp` alone built with `-fno-strict-aliasing` it
   scores worse, the reloads inserted (unit 197's fragment). 5725 and 5377,
@@ -455,10 +455,15 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   holds the file's `InsereCedula` and `ConfereCedula` inlined, the same carve-out gains 5681 and loses 7187 and 7195,
   which 4454's srcloc-anchor names, leaves 3709 named by its own match line alone, and loses 7352 too unless 4454's
   hand line names 4454; 4454 scores 178 over 2686 rows, every one an operand row, with the file at strict aliasing,
-  and 222 over 2696 (10 inserted, the reloads) without it. So the file keeps strict aliasing, and the two rows are
-  read as two TUs' code, a reading: 4454's as built with strict aliasing, and 5681's as another TU's copy, that of
-  11349 (`comum::asn::CConversorEleicoesVota::DoDesconverte`, not written), in `dados/asn/rdv/`, which builds without
-  it. 5681 waits for 11349.
+  and 222 over 2696 (10 inserted, the reloads) without it. So the file keeps strict aliasing, and the two rows were read
+  as two TUs' code: 4454's as built with strict aliasing, and 5681's as another TU's copy, that of 11349
+  (`comum::asn::CConversorEleicoesVota::DoDesconverte`), in `dados/asn/rdv/`, which builds without it. Both match since
+  11349 was written and its object, `cconversoreleicoesvota.cpp.o`, links ahead of `md/rdv/` in unit 13's list, so the
+  link keeps that object's copy of 5681: 4 over 167 rows before step 8, operand rows only, against 15 over 167 for
+  `cvotoscargos.cpp.o`'s (units 13 and 140 have the measurement and the pairs of objects the move inverts). The
+  target's use band 2 places 5681 there too: it runs 5681 between 5682 and 5680 (`awk -F'\t' '$1>=5678 && $1<=5684'
+  ledger/ordinals.tsv`), whose records, 1571152 and 1571548, bracket 11349's (1571272 to 1571484), while `md/rdv/`'s
+  band-2 functions are 5638 to 5645 (`cvotoscargos.cpp`'s records from 1573700: `ledger/source-locations.tsv`).
 
   Five files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
   `uenux2_cxxflags` leaves them out of the strict-aliasing test. The first four are each read from code that only their

@@ -18,8 +18,8 @@
 //   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
 //   5715 and 5716 need none: their callers 11423 and 11452 are written.
 //   5828: 11445 (11373 is written).
-// w107_dados gives a constructor its second call site, and stands for: 3823 11629 (2725, unit 293's, is in the link). 5672's call went: its callers
-// 5741 and 11455 are written. 3712 needs none:
+// 3823 needs none: its callers 2725 (unit 293's), 11412 and 11629 (unit 200's) are in the link, and w107_dados, which
+// stood for 11629, went. 5672's call went: its callers 5741 and 11455 are written. 3712 needs none:
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
 //
@@ -49,7 +49,6 @@
 #include "asn1/modules/ModuloTiposResultadosEcoUrna.h"
 
 extern "C" {
-int w3823(void*, int, int, const void*) __asm__("_ZN5comum2md10CSegurancaC1EhhRKNSt3__26vectorIhNS2_9allocatorIhEEEE");
 int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE");
 extern const char w107_municipio_vt[] __asm__("_ZTVN5comum3asn19CConversorMunicipioE");
 extern const char w107_agregada_vt[] __asm__("_ZTVN5comum3asn31CConversorIdentificacaoAgregadaE");
@@ -78,20 +77,13 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     return d;
 }
 
-__attribute__((noinline)) int w107_dados(char* d, int a, int b, const char* e)
-{
-    return w3823(d + 64, b, a, e + 16);
-}
-
 char* (*volatile w107_sink)(char*, const char*);
-int (*volatile w107_sink_dados)(char*, int, int, const char*);
 const void* volatile w107_sink_vt;
 
 struct SIConversorRoots {
     SIConversorRoots()
     {
         w107_sink = &w107_todos;
-        w107_sink_dados = &w107_dados;
         w107_sink_vt = reinterpret_cast<const void*>(&w5632);
         w107_sink_vt = w107_municipio_vt;
         w107_sink_vt = w107_agregada_vt;

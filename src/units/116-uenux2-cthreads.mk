@@ -33,7 +33,8 @@
 #   pairs: __assoc_sub_state::set_value 4771 (its second call site, for 11151, is the roots file's), its D2 5559, D0 8056,
 #   __execute 8057 and __sub_wait 8058, future_error's destructor and constructor 8060 and 8061, the future category's
 #   message and name 8062 and 8063, and std::exception_ptr's destructor 3367 (libc++.a's).
-# - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
+# - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195; the tests
+#   of modes 0 and 1, 215 and 3078 (their paragraph below).
 # Not matched, and why: CThreadVota's slots 3 and 4 are traps, listed in the -pending.cpp with what they wait for.
 # CThreadEleitor's slot 2, Run (7061), is written (its paragraph below). ProcessaEventos 4349 is written and reads
 # unresolved on 2072 (below), and the two debug
@@ -154,6 +155,11 @@
 # bool, `|` for `||`, an early return for the guarded block, a static ticks helper. Not explained. 4349 stays written:
 # the three setters, which match, are in the link only through it.
 # - CEstadoAudio's setters are out of line in cestadoaudio.cpp, each called twice by 4349, and match byte for byte.
+#   Modo0Selecionado and Modo1Selecionado, the tests of +4 against 0 and 1 (names chosen), are out of line there too:
+#   vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (inlined into fn 10425, unit 142's, written) calls each four
+#   times on GetInst()'s result. 3078 matches (byte for byte, `pnpm wasm score`: 0 over 6 rows). 215, 8 bytes,
+#   `i32.eqz(i32.load offset=4)` with 66 target callers, was matched as SQLite's pragmaVtabEof, its twin, and step 9
+#   renamed its line to Modo0Selecionado, which links first (how-to step 10, "A twin whose name moved").
 #   SetTeclasTesteTeclado and GetTeclasTesteTeclado (+9 and +10, the keyboard test's expected and pressed keys) are out
 #   of line there too, each with one target caller that holds it inlined (fns 11804 and 12903, unit 217's and unit
 #   110's ctelasvota.cpp): cestadoaudio.h says what of them is evidence; m_campo9 and m_campo10 are renamed for that

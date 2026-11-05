@@ -65,14 +65,6 @@ __attribute__((noinline)) std::size_t w280_cabecalho(const std::string& arquivo)
     return comum::CarregaArquivo<comum::asn::CConversorCabecalhoPacote>(arquivo).GetVersao().size() + 280;
 }
 
-// stands for fn 11629 (comum::CGravadorBU::GravaResultado), the caller of CarregaArquivoEcourna<CConversorInformacaoMidia>
-// (fn 3735) besides 11587 (unit 305's) and 11626 (unit 160's)
-__attribute__((noinline)) std::size_t w280_informacao(const std::string& arquivo)
-{
-    return comum::CarregaArquivoEcourna<ecourna::app::dados::asn::CConversorInformacaoMidia>(arquivo).GetUF().size() +
-        280;
-}
-
 // stands for fn 7787, the other caller of api::TrocaExtensao (fn 5461)
 __attribute__((noinline)) std::size_t w280_extensao(const std::string& arquivo)
 {
@@ -94,7 +86,7 @@ __attribute__((noinline)) std::size_t w280_eleicoes(comum::md::TVectorEleicaoPE&
     return eleicoes.size() + 280;
 }
 
-// stands for fns 5808 and 11349, the other callers of the version map's __find_equal (fn 3869; 3870 is in the link)
+// stands for fn 5808, the other caller of the version map's __find_equal (fn 3869; 3870 and 11349 are in the link)
 __attribute__((noinline)) int w280_busca(comum::md::TMapVersaoPacoteEleicao& versoes, unsigned chave)
 {
     void* pai = nullptr;
@@ -114,7 +106,6 @@ comum::SIdentificacaoArquivo* (*volatile w280_sink_identificacao)(void*, comum::
     const comum::md::CPleito&);
 std::size_t (*volatile w280_sink_copia)(void*, const comum::md::CPleito&);
 std::size_t (*volatile w280_sink_cabecalho)(const std::string&);
-std::size_t (*volatile w280_sink_informacao)(const std::string&);
 std::size_t (*volatile w280_sink_extensao)(const std::string&);
 void (*volatile w280_sink_pleito)(void*, const comum::md::TVectorEleicaoPE&, const comum::md::TMapVersaoPacoteEleicao&,
     const std::vector<comum::md::CSituacoesEleicoes>&, const std::string&, const api::CDate&);
@@ -130,7 +121,6 @@ struct SProcessoEleitoralRoots {
         w280_sink_identificacao = w280_identificacao;
         w280_sink_copia = w280_copia;
         w280_sink_cabecalho = w280_cabecalho;
-        w280_sink_informacao = w280_informacao;
         w280_sink_extensao = w280_extensao;
         w280_sink_pleito = w280_pleito;
         w280_sink_eleicoes = w280_eleicoes;
