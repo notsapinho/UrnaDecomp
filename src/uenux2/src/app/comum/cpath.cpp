@@ -60,7 +60,27 @@ std::filesystem::path CPath::GetPathTrabExterno()
     return s_pathRoot / path.relative_path();
 }
 
-// (original lines 63-140: content not recovered)
+std::filesystem::path CPath::GetPathTmp()
+{
+    std::filesystem::path path("/tmp/");
+    return s_pathRoot / path.relative_path();
+}
+
+std::set<std::string> CPath::GetDiretoriosSemHash()
+{
+    return {
+        GetPathRoot() / "dev/",
+        GetPathRoot() / "dsk/",
+        GetPathRoot() / "proc/",
+        GetPathRoot() / "sys/",
+        GetPathTmp(),
+        GetPathDinamico(FLASH_INTERNA),
+        GetPathDinamico(FLASH_EXTERNA),
+        GetPathDinamico(FLASH_INTERNA) / "tmp/",
+    };
+}
+
+// (original lines 83-140: content not recovered)
 #line 141
 std::filesystem::path CPath::GetPathRootSemSA(EFlashOrigem origem)
 {

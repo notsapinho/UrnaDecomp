@@ -26,32 +26,15 @@ __attribute__((noinline)) std::size_t w227_dependencias(comum::md::CDependencias
     return dependencias.GetValor(chave).size() * dependencias.GetValor(outra).size();
 }
 
-// api::hash::ListaHashesArquivos (fn 5358): its target callers are itself and fn 5359, which is not written (it calls
-// CriaHashesDiretorio, fn 5360).
-__attribute__((noinline)) std::size_t w227_hashes(const api::hash::CHashDiretorio& diretorio)
-{
-    return api::hash::ListaHashesArquivos(diretorio).size() + 3;
-}
-
-// std::vector<api::hash::CHashArquivo>'s range insert (fn 5854), which ListaHashesArquivos calls: its other target
-// caller is fn 11620 (CGravadorHashes::GravaResultado).
-__attribute__((noinline)) void w227_insere(std::vector<api::hash::CHashArquivo>& hashes,
-    std::vector<api::hash::CHashArquivo>& outros)
-{
-    hashes.insert(hashes.end(), outros.begin(), outros.end());
-}
-
 namespace {
 
-void* volatile w227_sink[4];
+void* volatile w227_sink[2];
 
 struct SW227Roots {
     SW227Roots()
     {
         w227_sink[0] = reinterpret_cast<void*>(&w227_versoes);
         w227_sink[1] = reinterpret_cast<void*>(&w227_dependencias);
-        w227_sink[2] = reinterpret_cast<void*>(&w227_hashes);
-        w227_sink[3] = reinterpret_cast<void*>(&w227_insere);
     }
 } w227_roots;
 

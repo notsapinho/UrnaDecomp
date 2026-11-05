@@ -609,7 +609,7 @@ the landing re-reads it. An item's command quotes an output that moves at every 
 at.
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689 183 3679 5549 4789 6233 7884 3984 11180", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -901,6 +901,45 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     awk -F'\t' '$1==988 {print $1, $8}' ledger/functions.tsv
     # 988 addr
     ```
+
+29. **183, 3679, 5549, 4789, 6233, 7884, 3984 and 11180, by `CMontadorHash::CriaHashesDiretorio`'s (5360) libc++ and
+    libc callees.** Unit 227's 5360 (written, `no-candidate`) brings into the link the `libc++.a` code it reaches
+    through `weakly_canonical` and `read_symlink`, `path.o`'s and `operations.o`'s 7738, 7742, 7744, 7748
+    (`__canonical`, which holds libc's `realpath`), 7749, 4674, 4676 and 4686. None of the eight rows' bodies changed
+    with it; what binaryen keeps of them did. Each callee below has those functions for its other target callers, and
+    our link holds the same calls (how-to step 10's `wasm-objdump` awk on each callee's `ours`):
+
+    ```sh
+    for c in 2552 3679 5549 5570 6250 6253; do echo "$c: $(awk -F'\t' -v c=$c '$2==c {print $1}' ledger/callgraph.tsv | sort -un | tr '\n' ' ')"; done
+    # 2552: 7738 7742 7744 7884
+    # 3679: 183 7738 7742
+    # 5549: 183 7749
+    # 5570: 4674 11180
+    # 6250: 6233 7748
+    # 6253: 3984 7748
+    ```
+
+    Without them each callee had one caller in our link, and binaryen inlined it there: `path::operator/=` (183) held
+    `has_root_directory` (5549) and `has_filename` (3679), `printf_core` (6233) `strnlen` (6250),
+    `money_get::do_get` (7884) `string::clear` (2552), `getcwd` (3984) `strdup` (6253), and `roots_coderenv.o`'s
+    `vector<string>::__vallocate` (11180) `allocator<string>::allocate` (5570). And `path`'s constructor from a
+    `string_view` (4789) was a body of its own: with 4676 and 4686, constructors of the same shape, binaryen merges the
+    three into one body, 1085, and 4789 is the 15-byte thunk into it that the target has. Each row's size, the
+    target's against ours (at 28b4914d, a link without 5360, the census paired none of them; by symbol in that link's
+    `names.tsv` each is the body in parentheses):
+
+    ```sh
+    (cd asmlift-wasm && for i in 183 4789 6233 7884 3984 11180; do o=$(awk -F'\t' -v i=$i '$1==i {print $7}' ../ledger/functions.tsv); echo "$i $(pnpm --silent wasm fn ../target/vota_web_wasm.wasm $i 2>/dev/null | head -1 | /usr/bin/grep -oE 'size [0-9]+') ours $o $(pnpm --silent wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm $o 2>/dev/null | head -1 | /usr/bin/grep -oE 'size [0-9]+')"; done)
+    # 183 size 46 ours 207 size 46          (ours 212 at 28b4914d, size 100)
+    # 4789 size 15 ours 6400 size 15        (6454, size 74)
+    # 6233 size 2432 ours 6437 size 2432    (6491, size 2446)
+    # 7884 size 637 ours 13198 size 637     (13080, size 679)
+    # 3984 size 144 ours 6476 size 145      (13330, size 170)
+    # 11180 size 52 ours 11334 size 52      (11224, size 70)
+    ```
+
+    The `ours` numbers were read on the link of the merge that landed 5360. What holds the eight is binaryen's choice
+    over the whole module: a landing that takes 5360's library code out of the link takes them out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

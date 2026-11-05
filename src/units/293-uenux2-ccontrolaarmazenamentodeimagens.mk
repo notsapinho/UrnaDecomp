@@ -93,7 +93,8 @@
 #
 # The roots stand in for the other callers of the instances above
 # (293-uenux2-ccontrolaarmazenamentodeimagens-roots.cpp). The stand-in for 2725's call of utimes went: 2725 is in the
-# link, beside SQLite's dotlockLock, and libc's __futimesat (6236) still matches.
+# link, beside SQLite's dotlockLock, and libc's __futimesat (6236) still matches. So did the stand-in for 5367's one
+# target caller, 11620 (unit 136's CGravadorHashes::GravaResultado, written), which calls it twice.
 CCONTROLAARMAZENAMENTO_SRCS := src/app/comum/gravadores/asn/cconversorentidadehashes.cpp \
     src/app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.cpp
 UENUX2_SRCS += $(CCONTROLAARMAZENAMENTO_SRCS)
