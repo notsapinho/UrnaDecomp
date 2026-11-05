@@ -1,5 +1,6 @@
-// The WSQ directories of comum (target fns 5819, 5818, 5817, 5816, 3795, 3794, 3793 and 5815, and the external
-// "registrado/" directory, which fn 5382 holds inlined). No record names a function
+// The WSQ directories of comum (target fns 5819, 5818, 5817, 5816, 3795, 3794, 3793 and 5815, the external
+// "registrado/" directory, which fn 5382 holds inlined, and the external "nao-registrado/" one, which fn 10451 holds
+// inlined: pathwsq.h says how). No record names a function
 // here: the file, its name and every function's name and line are chosen (src/units/122-uenux2-app-comum-gravadores.mk
 // says what the codegen and the use bands show of them).
 
@@ -107,6 +108,17 @@ std::filesystem::path GetPathWsqRegistradoExterno()
 {
     const CAppInfo& appInfo = CAppInfo::GetInst();
     return GetPathWsqRegistradoExterno(appInfo.GetGeral().GetDadoCarga().GetTurno());
+}
+
+std::filesystem::path GetPathWsqNaoRegistradoExterno(EUrnaTurno turno)
+{
+    return CPath::GetPathWsq(FLASH_EXTERNA, turno) / "nao-registrado/";
+}
+
+std::filesystem::path GetPathWsqNaoRegistradoExterno()
+{
+    const CAppInfo& appInfo = CAppInfo::GetInst();
+    return GetPathWsqNaoRegistradoExterno(appInfo.GetGeral().GetDadoCarga().GetTurno());
 }
 
 } // namespace comum

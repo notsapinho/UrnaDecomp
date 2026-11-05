@@ -273,8 +273,11 @@ APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o wasm_shim.o roots.
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
 # app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk),
-# with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there)
-LINK_OBJS := $(VOTA_WEB_OBJS) $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
+# with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there).
+# LINK_LAST links after libcrypto's objects and archive (the recipe below): SQLite, whose data the target holds
+# between OpenSSL's and libc's in .rodata, .data and .bss (docs/reference/facts/link-order.md §L3)
+LINK_LAST := $(ROOT)/$(SQLITE_O)
+LINK_OBJS := $(VOTA_WEB_OBJS) $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS)) $(LINK_LAST)
 EXPORTS := _main,_votaInit,_votaPressKey,_votaTick,_votaSetAudioEnabled,_votaGetStateJson,_uenux_wasm_web_sound_wait_cancel_requested,_uenux_wasm_web_sound_wait_finished
 LINK_FLAGS := -Oz -fexceptions -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sEXPORTED_FUNCTIONS=$(EXPORTS) -sEXPORTED_RUNTIME_METHODS=ccall,FS,callMain
 OUT := build/out/wasm/vota_web
@@ -288,7 +291,7 @@ OUT_NAMED := build/out/wasm-named/vota_web
 link: $(ROOT)/$(OUT)/vota_web_wasm.wasm $(ROOT)/$(OUT_NAMED)/vota_web_wasm.wasm
 $(ROOT)/$(OUT)/vota_web_wasm.wasm $(ROOT)/$(OUT_NAMED)/vota_web_wasm.wasm: $(LINK_OBJS) $(ROOT)/$(OSSL_OBJS_FILE) $(ROOT)/$(LIBCRYPTO) $(ROOT)/src/Makefile
 	@test -n "$(SEVENZIP_OBJS)" -a -n "$(RHVOICE_OBJS)" || { echo "no 7-Zip or RHVoice objects: run make -C src libs, then link again" >&2; exit 2; }
-	$(H) mkdir -p $(OUT) $(OUT_NAMED) && objs="$(patsubst $(ROOT)/build/out/%,%,$(LINK_OBJS)) $$(sed 's#^build/out/##' $(OSSL_OBJS_FILE) | tr '\n' ' ') $(patsubst build/out/%,%,$(LIBCRYPTO))" \
+	$(H) mkdir -p $(OUT) $(OUT_NAMED) && objs="$(patsubst $(ROOT)/build/out/%,%,$(filter-out $(LINK_LAST),$(LINK_OBJS))) $$(sed 's#^build/out/##' $(OSSL_OBJS_FILE) | tr '\n' ' ') $(patsubst build/out/%,%,$(LIBCRYPTO)) $(patsubst $(ROOT)/build/out/%,%,$(LINK_LAST))" \
 	  && echo "em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT))/vota_web_wasm.js --preload-file ../../target/fs@/" > $(OUT)/link.cmd \
 	  && build/docker-build.sh bash -c "cd build/out && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT))/vota_web_wasm.js --preload-file ../../target/fs@/" \
 	  && build/docker-build.sh bash -c "cd build/out && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT_NAMED))/vota_web_wasm.js --preload-file ../../target/fs@/ --emit-symbol-map" \

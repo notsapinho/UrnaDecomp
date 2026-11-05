@@ -106,8 +106,9 @@
 #   pathwsq.cpp, the functions' names, the turn overloads, their being free functions of comum and their order (the
 #   bands' 5819, 5818, 5817, 5816 and 3795, 3794, 3793) are chosen.
 # - GetPathWsqRegistrado (fn 5815, "registrado/" on the internal flash, the same form), a thunk into 2298 as the
-#   target's: its callers are 3614, not written, and 5382 (unit 135's match), so a roots stand-in gives it its second
-#   call site, and it matches (`3 over 6 rows`, operand-only, before step 8). Its external twin,
+#   target's: its callers are 3614 (unit 221's) and 5382 (unit 135's), both matched; a roots stand-in gave it its
+#   second call site until 3614 was in the link. It matches (`3 over 6 rows`, operand-only, before step 8). Its
+#   external twin,
 #   GetPathWsqRegistradoExterno, has no index: 5382 holds it inlined behind its 32-byte frame, its one caller. Both are
 #   after GetPathWsqNaoRegistrado, at the end of pathwsq.cpp, and their names are chosen.
 # - 9531 (vector<std::filesystem::path>::__init_with_size<const path*, const path*>, 5821's only user of its table slot
@@ -118,8 +119,8 @@
 #   roots_coderenv.cpp's instantiation of it gives our link that copy first, 5585 against it reads 8 over 69 rows,
 #   operand-only (5585 stays unresolved: its callees 11180 and 11177 have no name), and 9531's line now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
 #   step 10, "A symbol that stays while its body moves").
-# - The directories' other target callers are in the link (5382, unit 135's, and 10425, unit 142's), so the roots'
-#   stand-in for 10425 went; 3793's stand-in for 10451 stays, and 5815's for 3614.
+# - The directories' other target callers are in the link (5382, unit 135's, 10425, unit 142's, and 10451 and 3614,
+#   unit 221's), so the roots' stand-ins for 10425, for 10451 (3793's) and for 3614 (5815's) went.
 #
 # comum::CGravadorVersoesArquivos::GravaResultado (target fn 11582, slot 7, the class's key function, which unit 136's
 # pending object trapped), in cgravadorversoesarquivos.cpp: the class's name in lower case, chosen, in

@@ -1,5 +1,5 @@
-# uenux2: two of the biometry callees vota's identification states and comum's mesario states wait for, kept in the link
-# by this unit's roots (291-uenux2-biometria-eleitor-roots.cpp), with no source of their own here:
+# uenux2: two of the biometry callees vota's identification states and comum's mesario states wait for, with no source
+# of their own here; this unit's roots kept them in the link until their callers came into it, and went with the last:
 # - comum::CEleitores::GetCurrentBiometriaEleitor (target fn 1393, 15 B, no record): `f1937(p0, f656(p1 + 4))`, the
 #   current record's CEleitorDetalhe::GetBiometria (fn 1937, unit 98) returned through the result's address. Its six
 #   callers (10425, 10465, 10474, 10478, 10500, 10512, vota's identification states; all six are in the link, 10425
@@ -18,13 +18,10 @@
 #   binaryen merged IFingerScanner's and IFingerMatcher's into 6013: `pnpm --silent wasm score
 #   ../target/vota_web_wasm.wasm 3615 ../target/vota_web_wasm.wasm 6013` shows the copy of the typeid name built with
 #   another allocation and other stores ("N3api16IFingerDetectionE", 24 characters, against 22), which no merge's
-#   parameters cover. Of its three callers (10316, 10451, 10465) 10451 is not written (10316 is unit 135's):
-#   DetectaDigital calls it once with an empty std::source_location (unit 135's ReconheceDigital does the same). The
-#   head api/hwil/ifingerdetection.h is new and says what its slots rest on.
-# The roots object compiles at uenux2's flags ($(UENUX2_CXXFLAGS), with -fno-strict-aliasing), since it emits 3615, TSE
-# code that matches. With strict aliasing on, the instance's code is the same: wasm-objdump -d of the function in the
-# two objects, call and global indices masked, gives 154 identical lines.
-# Chosen: the fragment, the roots' stand-ins, and every name and path the two notes above call chosen.
-$(ROOT)/$(APP)/291-uenux2-biometria-eleitor-roots.o: $(ROOT)/src/units/291-uenux2-biometria-eleitor-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/291-uenux2-biometria-eleitor.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/291-uenux2-biometria-eleitor-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/291-uenux2-biometria-eleitor-roots.o
+#   parameters cover. Its three callers (10316, 10451, 10465) are in the link (units 135, 221 and 282): the roots'
+#   DetectaDigital, which called it once with an empty std::source_location for 10451 (as unit 135's ReconheceDigital
+#   does), went with the roots file. The header api/hwil/ifingerdetection.h is new and says what its slots rest on.
+# The roots object compiled at uenux2's flags ($(UENUX2_CXXFLAGS), with -fno-strict-aliasing): it emitted 3615, TSE
+# code that matches. With strict aliasing on, the instance's code was the same: wasm-objdump -d of the function in the
+# two objects, call and global indices masked, gave 154 identical lines.
+# Chosen: the fragment, and every name and path the two notes above call chosen.

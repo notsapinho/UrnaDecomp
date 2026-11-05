@@ -263,9 +263,9 @@ then aligns the two links by function name, not index, and writes `build/out/was
 function whose instructions are the same in both links, an operand that moved by exactly D is an **address**, by
 exactly T a **table slot**, and one that did not move a **literal**. A `-fPIC` object (sqlite's) adds `__table_base`
 to a slot relative to it, and binaryen leaves the sum unfolded when the relative part is not one constant
-(`vdbeSorterSort`: `select(2035, 2036, 2037) + 1`). That base constant is followed to its use: the base reads as the
-target's table base, and the constants added to it as target slots minus that base. Every other moved slot is
-followed too, to see whether it is added to constants or to another slot.
+(`vdbeSorterSort`: `select(12685, 12686, 12687) + 1` on a8807f0a's link). That base constant is followed to its use:
+the base reads as the target's table base, and the constants added to it as target slots minus that base. Every other
+moved slot is followed too, to see whether it is added to constants or to another slot.
 
 Our data is compared the same way, word by word (`classifyDataWords`): an aligned word whose value reads as one of
 our addresses or table slots is an address if the shifted link holds it moved by D, a slot if by T (both slots holding
@@ -780,20 +780,20 @@ pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/v
 # the gate is the match's own bytes: pass (3.4 s)
 ```
 
-12829 `sqlite3_bind_pointer` passes the gate and fails the preferred-readings way legitimately. Its `i32.const 2044`
-points to the function in our slot 2044 (named `probe_client::done` in our link), which the target's table holds in
-126 slots, binaryen's merged empty function ([facts/splat.md](facts/splat.md) §S5 item 4). The target body picked
-slot 11892, and the first reading is slot 316:
+12829 `sqlite3_bind_pointer` passes the gate and fails the preferred-readings way legitimately. Its `i32.const 12694`
+(on a8807f0a's link) points to the function in our slot 12694 (named `CFingerPrepareSimulador::Prepara` in our link),
+which the target's table holds in 126 slots, binaryen's merged empty function ([facts/splat.md](facts/splat.md) §S5
+item 4). The target body picked slot 11892, and the first reading is slot 316:
 
 ```sh
 pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 12829
-# function 12829 (sqlite3_bind_pointer) ← sqlite3_bind_pointer (ours 4854), line 7225 of ../splat/matched.txt; operand kinds verified
+# function 12829 (sqlite3_bind_pointer) ← sqlite3_bind_pointer (ours 6801), line 7224 of ../splat/matched.txt; operand kinds verified
 # blanked: asm/libc++/12829-sqlite3_bind_pointer.bin (135 B) → no locals, unreachable, end; the blanked split is sha256 737990be702d6a69184e193f64fe5b8ff96ec3db8960233f2f46ec8b1b1d6520, written to ../build/out/splat-review/12829/vota_web_wasm.wasm
 # the match's own bytes: REPRODUCES the target, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (135 B; 3 ambiguous operands at the readings the target body picked, 1 of them not the first)
 # preferred readings:    DIFFERS, sha256 96a6cbe5d01c21a6ab560dae90dbdddc6f4bf7587f40c9556c5a26c85f40017a (134 B against the match's 135 B, from body byte 43)
 #   legitimately: the match needs the target body's choice among our readings of 1 operand (docs/reference/splat.md §3):
-#   ours +0x2a i32.const 2044 (target body byte 43): the target body read table slot copy 11892 of symbol _ZN12_GLOBAL__N_112probe_client4doneEv; the first reading is table slot copy 316 of symbol _ZN12_GLOBAL__N_112probe_client4doneEv
-# the gate is the match's own bytes: pass (1.7 s)
+#   ours +0x2a i32.const 12694 (target body byte 43): the target body read table slot copy 11892 of symbol _ZN9simulador23CFingerPrepareSimulador7PreparaEv; the first reading is table slot copy 316 of symbol _ZN9simulador23CFingerPrepareSimulador7PreparaEv
+# the gate is the match's own bytes: pass (2.1 s)
 ```
 
 A preferred-readings failure with no such operand listed (`NOT explained by a reading the target picked`) is not

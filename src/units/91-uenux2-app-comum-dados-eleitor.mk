@@ -16,8 +16,8 @@
 #
 # - CBiometriaEleitor::TemDedo (3719, no record): whether the map is there and holds the finger, `m_dedos.has_value() &&
 #   m_dedos->contains(tipo)`. Its body reads the flag at +32 (compared with 1) and then searches the map at +20 for the
-#   key, signed. Its three target callers (3614, 10316, 10465) are GetDedo's three; 10465 and 10316 (units 282's and
-#   135's) are in the link, and the roots' DedosPresentes stands in for 3614, one call. It scored 0 over 55 rows
+#   key, signed. Its three target callers (3614, 10316, 10465) are GetDedo's three, all in the link (units 221's, 135's
+#   and 282's), and the roots' stand-ins for 3614 went. It scored 0 over 55 rows
 #   (byte-exact) before steps 7 to 9 and matches. 3720 and 3719 are neighbours in band 3, 3720 first in link order, so
 #   TemDedo is defined after GetDedo. Its line, between GetDedo and GetFoto's record, is a choice; so are its name, its
 #   const and the `contains` spelling.
@@ -74,10 +74,10 @@
 #   (5760 is the copy), where a temporary would be moved.
 # - std::vector<CEleitorDinamico>'s instances that RecuperarTodos brings match: the push_back slow path (5759), and
 #   construct_at, __uninitialized_allocator_relocate and __split_buffer's destructor (5760, 3759, 3758), which the slow
-#   path calls out of line. The target gives each of those three a second caller (3614 for 5760, 5761 for 3759 and
-#   3758), and so do the roots: with only the slow path calling them binaryen inlined all three into it (410 over 507
-#   rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), has no instance of ours: its callers 5761
-#   (CEleitores::DynamicCreate) and 6734 are not written.
+#   path calls out of line. The target gives each of those three a second caller (3614 for 5760, in the link, 5761 for
+#   3759 and 3758, for which the roots stand): with only the slow path calling them binaryen inlined all three into it
+#   (410 over 507 rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), has no instance of ours:
+#   its callers 5761 (CEleitores::DynamicCreate) and 6734 are not written.
 #
 # CComparecimentoMesarioDAO's slots 7 and 8, RecuperarID (10402) and RecuperarTodos (10401), names chosen as
 # CEleitorDinamicoDAO's are, are written in ccomparecimentomesariodao.cpp between Inserir and Clone, the band's order

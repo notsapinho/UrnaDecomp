@@ -214,7 +214,8 @@
 # - that copy a std::vector<api::SXYT>, the CDedo's vector through its copy constructor, which zeroes the result before
 #   it reads the source as the target does, where a std::vector<uebyte> built from the two pointers reads them first:
 #   162 over 1992, operand-only. This needs md::CDedo::GetMinucias (cdedo.h);
-# - unit 307's stand-ins for the callers of 2224, 2742 and 1379 that are not written (unit 307's roots say which).
+# - unit 307's stand-ins for the callers of 2224, 2742 and 1379 not written then (they went with unit 307's roots once
+#   those callers were in the link: unit 307's fragment).
 # VerificaDigital and VerificaDigitalTreinamento's lines put their instance calls on records 262 and 279 (column 25
 # inside the loop, 21 in the function), and the three ProcessTick's on 162 to 164 (the variables' names' lengths give
 # the columns 27, 26 and 23); the other lines of the three are chosen. ObtemDuasVezes, the roots' stand-in for 10465's
@@ -258,8 +259,5 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalreconheci
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # Every slot of these classes is written: the -pending.cpp that trapped CDigitalReconhecida::ProcessInput and
-# CPedeDigital::ProcessTick went with them. One callee has a caller not reconstructed (5399's 10451; 6269's 10316 is in
-# the link, unit 135's): 282-uenux2-confirmaidentidade-estados-roots.cpp stands in for it; it keeps no vtable.
-$(ROOT)/$(APP)/282-uenux2-confirmaidentidade-estados-roots.o: $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/282-uenux2-confirmaidentidade-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/282-uenux2-confirmaidentidade-estados-roots.o
+# CPedeDigital::ProcessTick went with them. No roots: the last stand-in, for 5399's caller 10451, went once 10451 was in
+# the link (unit 221's).

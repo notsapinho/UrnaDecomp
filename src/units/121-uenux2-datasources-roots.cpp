@@ -12,7 +12,7 @@
 //   so the target holds one body for both and does not tell which source defines it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fn
 //   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link). The one of api::CInputMenuField
-//   (1579324) went: its builder, fn 3675 (unit 84), is in the link.
+//   (1579324) went: its builder, fn 3675 (unit 120's file), is in the link.
 // And four stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, kept by their
 // addresses: each comment names the target callers it stands for. The one of vota::AdicionaCampoNumerico (fn 1151) went:
 // its last target caller not in the link, fn 10500 (unit 239's), is.

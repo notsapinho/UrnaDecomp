@@ -191,18 +191,20 @@
 #   rows (same 164, replaced 11 [11 operand-only], inserted 35, deleted 6)`. With this unit's four files at -O3 in a
 #   whole-link try (`tools/round/try-tu.sh --flags -O3 --skip-units 119-uenux2-ccontroladorregistramesariosvota.mk
 #   --component uenux2/src/app/vota/eleitor/fimvotacao --roots <this unit's -roots.cpp>` over clogvota.cpp,
-#   ccontroladorregistramesariosvota.cpp, cregistromesarioencerrado.cpp and the -pending.cpp), the
-#   score is `11 over 181 rows (same 170, replaced 11 [11 operand-only], inserted 0, deleted 0)`, and `pnpm wasm
-#   splat-remap --against 10774` prints IDENTICAL, operand kinds verified, with logaAlerta's name for 1398 added to a
-#   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
+#   ccontroladorregistramesariosvota.cpp, cregistromesarioencerrado.cpp and the -pending.cpp, both companions gone
+#   since), the score is `11 over 181 rows (same 170, replaced 11 [11 operand-only], inserted 0, deleted 0)`, and `pnpm
+#   wasm splat-remap --against 10774` prints IDENTICAL, operand kinds verified, with logaAlerta's name for 1398 added to
+#   a copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
-# Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names it and what it waits for): the controller's
-# slot 16 (fn 10786).
+# The controller's slot 16 (fn 10786, 5 B): one call of vota::CSincronizaVota::SincronizaBancoDados (fn 4662, unit
+# 205's), written after Slot15, the header's order of the slots (its place in the file is chosen); it matches, and the
+# -pending.cpp went with it. Its name is chosen after its slot.
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762, slot 6, in cregistromesarioencerrado.cpp after StartState, a chosen
 # line): for key 12 the next state is CPedeIdentidade::GetInst() (fn 652, unit 161). 1 over 10 rows, an operand row,
 # before step 8; matched at step 9, named by its vtable slot.
 #
-# Roots: the controller's vtable sink went: fn 7160, its builder (unit 329), is in the link. CLogVota::GetInst's callers
+# Roots: none. The controller's vtable sink went: fn 7160, its builder (unit 329), is in the link; so did the stand-in
+# for LogaMesarioHabilitouEleitor's caller (below). CLogVota::GetInst's callers
 # are the slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in. The stand-ins of the
 # CLogVota members are named in their paragraphs.
 #
@@ -231,17 +233,10 @@
 # 2502 passes "Operador selecionou: {}", 3258 "Mesário {} habilitou o eleitor". With both in our link it forms the same
 # merge, and 6113 (the byn$mgfn-shared$ body named after LogaOperadorSelecionou), 2502 and 3258 match by the content
 # pass. 2502's one target caller, vota::CEscolheOpcao::ProcessInput (10689, unit 121's, written), is in the link and calls
-# it four times; 3258's, vota::CRegistraDigitalOperador::ProcessTick (10451), is not written, and this unit's roots
-# stand for it (LogaHabilitacoes, three calls, as 10451 makes). Their names are chosen from their messages.
+# it four times; 3258's, vota::CRegistraDigitalOperador::ProcessTick (10451), is in the link (unit 221's) and calls it
+# three times, so the roots' LogaHabilitacoes, which stood for it, went. Their names are chosen from their messages.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
 # through CConfiguracaoMunicipio's CHorariosUrna: an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/vota/log/clogvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-CCONTROLADORREGISTRAMESARIOSVOTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/119-uenux2-ccontroladorregistramesariosvota-pending.o: $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota.mk $(CCONTROLADORREGISTRAMESARIOSVOTA_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/119-uenux2-ccontroladorregistramesariosvota-pending.o
-$(ROOT)/$(APP)/119-uenux2-ccontroladorregistramesariosvota-roots.o: $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/119-uenux2-ccontroladorregistramesariosvota-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/119-uenux2-ccontroladorregistramesariosvota-roots.o

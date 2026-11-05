@@ -606,10 +606,34 @@
 #   written for it (how-to step 5).
 # - 6599's other target caller is 7787 (not written): unit 354's roots stand in for it.
 #
+# cmenuvisualizarcandidatos.cpp (unit 104's: vota::CMenuVisualizarCandidatos::StartState, 11881) is compiled from this
+# list, after ctelasvota.cpp and cmenumaisinformacoesvota.cpp: 11881 holds ctelasvota.cpp's
+# TelaMenuVisualizacaoCandidatos inlined by binaryen and matches with its object linked after ctelasvota.cpp.o; with it
+# in unit 104's list it keeps the result's address in one more local (measured: unit 104's fragment). The move is
+# needed for 11881, not the data's order. The target holds this class's data at @1545592 to @1545652, after
+# ctelasvota.cpp's and cmenumaisinformacoesvota.cpp's (the two pairs the move puts in order) and before the data of the
+# 36 objects below, which it now links after, each a pair the move inverts (the target addresses of each object's named
+# .data.rel.ro symbols and records, on the merged link; of the 43 objects it crosses, cmunicipio.cpp.o's data span this
+# class's and 4 have none):
+# - unit 104's cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
+#   cquerreimprimirzeresima.cpp (@1546124 to @1546400);
+# - twelve vota operador states (@1587212 to @1601188): outrasopcoes/cfimaquisicaovotos.cpp, nine leidentidade/ ones
+#   (celeitoroptouporvotaremtransito, celeitorimpedidojustificar, celeitornaotemidademinima,
+#   celeitornaopossuicargosparavotar, ccancelahabilitacaoeleitor, celeitorjavotou,
+#   celeitorimpedidojustificarvototransito, celeitorencontrado, cprocuraeleitor), cfinalizaoperador.cpp and
+#   csincronismooperador.cpp;
+# - comparecimentomesario's cpedetitulomesario.cpp and cgestordadomesario.cpp (@1593720 to @1595228);
+# - eleven comum objects (@1553796 to @1571900): cconversormunicipio.cpp, md/csecaoeleitoral.cpp,
+#   cconversoridentificacaoagregada.cpp, cconversorcomplementomunicipio.cpp, md/cseguranca.cpp,
+#   cconversorseguranca.cpp, md/cabrangencia.cpp, cconversorabrangencia.cpp, cconversordadolocal.cpp,
+#   appinfo/cappinfo.cpp and dados/cfotos.cpp;
+# - api/gui/primitives.cpp (@1583624);
+# - this list's six files ahead of ctelasvota.cpp (@1558832 to @1576260).
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \
-  src/app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp
+  src/app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp \
+  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
 # reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the

@@ -51,15 +51,34 @@
 #   recovered, which moves the constructor (no record) to line 27. binaryen inlines it into its one caller.
 # - CSqlStatement's constructor takes the file's mutex and Close releases it. Prepare calls the constructor through
 #   an invoke_ thunk (slot 6338), which emscripten keeps only for a callee that may throw when it runs, and the
-#   constructor's own code (stores and sqlite3_bind_parameter_count) cannot: std::mutex::lock can, and its code goes
+#   constructor's own code (stores and sqlite3_bind_parameter_count) cannot: the mutex's lock can, and its code goes
 #   once pthread_mutex_lock, a stub in this single-threaded build, is inlined. Without the lock the call is direct and
 #   neither 9430 nor 9460 matches. The body places the lock too: 9430 stores m_stmt and then reloads it from +8 for
 #   sqlite3_bind_parameter_count, which LLVM does only with an opaque call between the store and the count. Compiled
 #   with ecourna's flags, the object of this form (member stores, lock, then the count) reloads `i32.load 2 8` after
-#   `call std::mutex::lock`; the base's form (the count in the initializer list, no lock) and the same with the lock in
+#   the lock's call (std::mutex::lock, and std::recursive_mutex::lock since); the base's form (the count in the
+#   initializer list, no lock) and the same with the lock in
 #   the body both pass the parameter (`local.get 2`). A std::lock_guard, or the count before the lock, does not match
 #   in the whole link either (measured by this unit's verification). That Close does not take the lock again is
 #   chosen: a second lock there gives the same bytes.
+# - The file's mutex (s_mutex) is read as a std::recursive_mutex. Evidence: the target's static initializers (fn
+#   14478, __wasm_call_ctors) hold libc++'s recursive_mutex constructor inlined at +0x13b9, after CTrng's DISPOSITIVO
+#   (1911784) is built and before the CBaseType names (1911992 on): it tests the results of libc's
+#   pthread_mutexattr_init (3977) and pthread_mutexattr_settype (3976) and calls __throw_system_error (1223) with
+#   "recursive_mutex constructor failed" (202274); a std::mutex is constant-initialized, with no such code. That code
+#   addresses nothing but its frame, so which static it builds is a reading. The init and .bss orders allow two:
+#   this file's s_mutex (1911796, 24 bytes) and the 24-byte object at 1911964, whose exit destructor is 9267, beside
+#   CSynchronizer::s_instancia (1911988, 9268), read by that place and that adjacency as a static of csynchronizer.cpp's
+#   TU (a reading) our source does not declare. What
+#   favours s_mutex: the target keeps "recursive_mutex lock failed" (202681), so code the link kept locked the one
+#   recursive mutex, and s_mutex is locked (9430) and unlocked (9429), while no target body but 9267 refers to 1911964.
+#   Measured in the whole link against 21a541d4: with the recursive mutex, 3977 keeps its i32 result, and 3977,
+#   SQLite's pthreadMutexAlloc (12936), api::CPosixMutex's constructor (10254, unit 01) and
+#   CDefaultGenericFactory<ISyncCtl, CPosixMutex>::Create (10869, unit 170) match, none lost; 9429, 9430, 9431 and
+#   9460 still match. A static recursive_mutex in csynchronizer.cpp's TU would give the four the same 3977 (reasoned,
+#   not measured). Merged onto 93c63667, 12936's pair took SQLite's 962 and 2352 out until sqlite3.o linked after
+#   libcrypto (docs/reference/facts/link-order.md §L3). Our link puts this unit's objects ahead of ctrng.cpp's (unit
+#   137), the reverse of the target's data; 14478 is `unresolved` before and after.
 # - GetBlob returns an empty vector before building one when the column has no bytes: the target tests the size
 #   before the vector's exception guard is set up.
 #
@@ -85,7 +104,7 @@
 #   this unit's object gives 9415 and month_formatter's format_month in iso_extended_format (9414); 9422 reaches 1376
 #   and 9415 through their table slots, which re-point by name whichever copy fills them, so its bytes do not rest on
 #   those two lines (measured: a whole link without either line keeps 9422 verified).
-# - CSqlStatement::Close (9429) waited for a target name of the file-static std::mutex it unlocks (our .bss `s_mutex`;
+# - CSqlStatement::Close (9429) waited for a target name of the file-static mutex it unlocks (our .bss `s_mutex`;
 #   the target's is at 1911796): a .bss object gets a name only from a vote of a census-paired function, and the census
 #   paired neither 9429 nor 9431, the mutex's exit-time destructor. 9429 is a `srcloc-anchor` now, and its vote names
 #   the mutex (above).

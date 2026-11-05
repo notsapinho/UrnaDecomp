@@ -33,5 +33,11 @@ std::filesystem::path GetPathWsqRegistrado(EUrnaTurno turno);
 std::filesystem::path GetPathWsqRegistrado();
 std::filesystem::path GetPathWsqRegistradoExterno(EUrnaTurno turno);
 std::filesystem::path GetPathWsqRegistradoExterno();
+// The external "nao-registrado/" directory, which comum::CControladorReconhecimentoMesario's
+// SalvarBiometriaMesarioNaoRegistrado passes GravaWsq (fn 10451 holds both inlined: the turn read from CAppInfo before
+// the overload's 32-byte frame, which calls CPath::GetPathWsq with FLASH_EXTERNA, fn 2864). Their names follow the
+// others', chosen.
+std::filesystem::path GetPathWsqNaoRegistradoExterno(EUrnaTurno turno);
+std::filesystem::path GetPathWsqNaoRegistradoExterno();
 
 } // namespace comum

@@ -37,13 +37,10 @@ public:
 
     // Clears the three filters: vota::CMenuVisualizarCandidatos::StartState (fn 11881) resets the optionals' flags at
     // +25, +38 and +32, in that order, on GetInst()'s result (each `if (flag == 1) flag = 0`, std::optional::reset).
-    // The name, and that it is one inline member, are chosen.
-    void LimpaFiltros()
-    {
-        m_cargo.reset();
-        m_partido.reset();
-        m_candidato.reset();
-    }
+    // Out of line in cvisualizarcandidatos.cpp, so binaryen inlines it into its one caller, as the target's last test
+    // (an `if` where an inline member gives a `br_if`) shows: measured in src/units/104-uenux2-app-vota-estados.mk. The
+    // name, its being one member and its line in the .cpp (after GetCargo, in the blank run there) are chosen.
+    void LimpaFiltros();
 
 private:
     CVisualizarCandidatos();

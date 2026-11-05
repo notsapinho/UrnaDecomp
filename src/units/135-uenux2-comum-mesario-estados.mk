@@ -126,11 +126,8 @@
 # CTituloMesarioJaRegistrado and CPedeDigitalMesario went, since their constructors are in the link (inlined through
 # GetInst into 5389 and 10313). ConfirmaFimRegistro, which called 5389 for fn 6011, went: 6011's two callers, the
 # ProcessInput of comum::CRegistrarMesarios and CMesarioRegistrado (10391, 10338), are written (units 247 and 279).
-# ReconheceDigital calls CPolySingleton<api::IFingerMatcher>::instance twice for its two callers not written, 3614 and
-# 5372 (10316, 10465, 10474 and 10482 are in the link, and the link takes 1686 from cpededigitalmesario.cpp.o); binaryen
-# forms 6013 from 1686 and 816, as the target does. The roots object compiles at uenux2's flags
-# for this directory ($(UENUX2_CXXFLAGS)), so no match rests on a flag the tree lacks; with strict aliasing on the
-# instance's code is the same (wasm-objdump -d of the function in the two objects: 154 identical lines).
+# ReconheceDigital, which called CPolySingleton<api::IFingerMatcher>::instance twice for 3614 and 5372, went with the
+# roots file: both are in the link (unit 221's and unit 214's files), with 10316, 10465, 10474 and 10482.
 # api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
 #
 # Written, not matching:
@@ -247,10 +244,4 @@ COMUM_MESARIO_ESTADOS_SRCS := src/app/comum/comparecimentomesario/estados/cconfi
     src/app/comum/comparecimentomesario/estados/ctitulomesariojaregistrado.cpp \
     src/app/comum/comparecimentomesario/estados/ctitulomesariovazio.cpp
 UENUX2_SRCS += $(COMUM_MESARIO_ESTADOS_SRCS)
-# nothing reconstructed references one of the states' vtables, nor calls 5389, CLimiteMesariosRegistradosAtingido::GetInst
-# and IFingerMatcher's instance as the target does: 135-uenux2-comum-mesario-estados-roots.cpp takes that address and
-# stands in for those callers, at the directory's uenux2 flags, since it emits the instance; its header set is the one
-# the generic rules use
-$(ROOT)/$(APP)/135-uenux2-comum-mesario-estados-roots.o: $(ROOT)/src/units/135-uenux2-comum-mesario-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/135-uenux2-comum-mesario-estados.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/135-uenux2-comum-mesario-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/135-uenux2-comum-mesario-estados-roots.o
+# no roots: the last stand-in went (above)

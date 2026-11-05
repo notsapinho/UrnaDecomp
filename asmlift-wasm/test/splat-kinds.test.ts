@@ -7,7 +7,10 @@
 //
 // Every landing moves our data and our table, so no address or slot of our link is written here: each is found in
 // the link the suite runs on, from the target's number for the same thing or from a symbol name (the "our link's
-// numbers" helpers below). The target's numbers never move and are literals.
+// numbers" helpers below). The target's numbers never move and are literals. An offset in a function of ours moves when
+// an operand ahead of it takes another LEB length (a table slot past 8191 takes a third byte), so the cases in
+// vdbeSorterSort and sqlite3AddDefaultValue, whose operands are table slots, read theirs from the target's offset of the
+// same instruction (ourAt).
 import { copyFileSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -204,6 +207,29 @@ function ourSlotOf(l: Loaded, targetSlot: number): number {
     .map(([s]) => s);
   expect(slots, `our slots of the function in target slot ${targetSlot}`).toHaveLength(1);
   return slots[0];
+}
+
+/** The body offset in our function `name` of the instruction the target holds at `at` in its function `target`, which
+ *  ours matches: the same instruction sequence, but an operand ahead of it may take another LEB length in our link
+ *  than in the target, so the offset is our link's. The target's offset never moves. */
+function ourAt(l: Loaded, name: string, target: number, at: number): number {
+  const theirs = disassemble(funcOf(l.maps.target.module, target));
+  const k = theirs.findIndex((x) => x.offset === at);
+  expect(k, `an instruction at the target's +0x${at.toString(16)} in function ${target}`).toBeGreaterThanOrEqual(0);
+  const mine = disassemble(funcOf(l.plain.module, indexOf(l.plain, name)));
+  expect(
+    mine.map((x) => x.opcode),
+    `${name}'s instructions against the target's ${target}`,
+  ).toEqual(theirs.map((x) => x.opcode));
+  return mine[k].offset;
+}
+
+/** Our offsets of vdbeSorterSort's unfolded __table_base sum, `select(int, text, compare) + base`: the slots of
+ *  vdbeSorterCompareInt, vdbeSorterCompareText and vdbeSorterCompare relative to the base, and the base, which the
+ *  target (6458) holds at +0xa8, +0xac, +0xb0 and +0xc0. */
+function sorterSum(l: Loaded): { int: number; text: number; compare: number; base: number } {
+  const at = (x: number): number => ourAt(l, 'vdbeSorterSort', 6458, x);
+  return { int: at(0xa8), text: at(0xac), compare: at(0xb0), base: at(0xc0) };
 }
 
 /** Our address of the C string the target keeps at `addr`: the one place our data holds those bytes as a whole
@@ -510,10 +536,11 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
 
   it.skipIf(!real)("reads an unfolded __table_base sum's base and the slots relative to it", () => {
     // sqlite's -fPIC objects add __table_base to a select of three slots relative to it: the base moves by T, the
-    // relative operands do not, and alone they would read as literals
+    // relative operands do not, and alone they would read as literals. Their offsets are our link's (sorterSum)
     const k = kindsOf('vdbeSorterSort');
     expect(k.verified).toBe(true);
-    expect([0xa8, 0xab, 0xae, 0xbd].map((at) => operandKind(k, at))).toEqual([
+    const { int, text, compare, base } = sorterSum(load());
+    expect([int, text, compare, base].map((at) => operandKind(k, at))).toEqual([
       'table-rel',
       'table-rel',
       'table-rel',
@@ -529,14 +556,15 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
     const { plain, shifted } = l;
     const p = indexOf(plain, 'vdbeSorterSort');
     const s = indexOf(shifted, 'vdbeSorterSort');
-    // +0xae is vdbeSorterCompare's slot relative to the base
+    // vdbeSorterCompare's slot relative to the base, and the base it is added to
+    const { compare, base } = sorterSum(l);
     const rel = relativeSlotOf(l, 'vdbeSorterCompare');
-    expect(valueAt(plain.module, p, 0xae)).toBe(rel);
-    const k = kindsOf('vdbeSorterSort', undefined, patched(shifted.module, s, shiftedAt(p, s, 0xae), rel + T));
+    expect(valueAt(plain.module, p, compare)).toBe(rel);
+    const k = kindsOf('vdbeSorterSort', undefined, patched(shifted.module, s, shiftedAt(p, s, compare), rel + T));
     expect(k).toEqual({
       verified: false,
       // the relative slot moved as a table slot: the base added to a slot, neither part can be told
-      why: "+0xbd i32.const is the link's base itself, added to a table slot",
+      why: `+0x${base.toString(16)} i32.const is the link's base itself, added to a table slot`,
     });
   });
 
@@ -649,8 +677,9 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
     const r = remapBody(maps, maps.ours.fnByKey.get('vdbeSorterSort')!);
     const ambiguous = r.ok ? r.pieces.filter((p): p is Exclude<Piece, Uint8Array> => !(p instanceof Uint8Array)) : [];
     const at = (x: number) => ambiguous.find((p) => p.at === x)!.readings;
-    expect(at(0xbd)).toEqual(['table base']);
-    for (const x of [0xa8, 0xab, 0xae]) {
+    const { int, text, compare, base } = sorterSum(load());
+    expect(at(base)).toEqual(['table base']);
+    for (const x of [int, text, compare]) {
       expect(at(x).every((y) => /^table slot (copy \d+ )?of .* − the table base$/.test(y)), x.toString(16)).toBe(true);
     }
   });
@@ -663,7 +692,8 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
 // original value, the value in the plain link and the value the shifted relink would have (by the operand's kind in
 // the source). A value of our link (an original address or slot, a slot or address of ours a case writes) is a
 // function of the links, found as the helpers above say; the target's numbers are literals, but c9's, which has to stay
-// past our data and is chosen from the link (pastOurData), and I2's offset (stringViewCase).
+// past our data and is chosen from the link (pastOurData), and the offsets of I2 (stringViewCase) and of V1 and V2
+// (relativeSlotCase).
 type Value = number | bigint | ((l: Loaded) => number | bigint);
 interface Case {
   name: string;
@@ -752,27 +782,7 @@ const CASES: Case[] = [
     plain: ourSlot7010,
     shifted: (l) => ourSlot7010(l) + T,
   },
-  // vdbeSorterSort's relative slots (+0xa8, +0xae) written as integers past our table: the table reads them as
-  // table-rel, relative to the base, and the slots that makes of them (our base + each) are no slots of ours. Ours are
-  // vdbeSorterCompare's slot (+0xae) and vdbeSorterCompareInt's (+0xa8), relative to the base.
-  {
-    name: 'V1 a relative slot as an integer',
-    symbol: 'vdbeSorterSort',
-    target: 6458,
-    at: 0xae,
-    was: (l) => relativeSlotOf(l, 'vdbeSorterCompare'),
-    plain: (l) => relativePastOurTable(l, 2),
-    shifted: (l) => relativePastOurTable(l, 2),
-  },
-  {
-    name: 'V2 another',
-    symbol: 'vdbeSorterSort',
-    target: 6458,
-    at: 0xa8,
-    was: (l) => relativeSlotOf(l, 'vdbeSorterCompareInt'),
-    plain: (l) => relativePastOurTable(l, 0),
-    shifted: (l) => relativePastOurTable(l, 0),
-  },
+  // V1 and V2, over vdbeSorterSort's relative slots, are relativeSlotCase below: their offsets are our link's
   {
     name: 'U c2 in a function the relink does not name',
     symbol: NEXT_ENTRY,
@@ -840,6 +850,20 @@ function stringViewCase(l: Loaded): Case {
     plain: (9n << 32n) | 3395n,
     shifted: (9n << 32n) | 3395n,
   };
+}
+
+/** V1, V2: vdbeSorterSort's relative slots written as integers past our table, V1 vdbeSorterCompare's two slots past
+ *  it, V2 vdbeSorterCompareInt's just past it. The table reads them as table-rel, relative to the base, and the slots
+ *  that makes of them (our base + each) are no slots of ours. The offsets are our link's (sorterSum): a table slot
+ *  ahead of them that takes another LEB length moves them, as SQLite's past 8191 did (+0xae to +0xb0). */
+function relativeSlotCase(l: Loaded, name: 'V1' | 'V2'): Case {
+  const { int, compare } = sorterSum(l);
+  const [title, at, fn, past] =
+    name === 'V1'
+      ? (['V1 a relative slot as an integer', compare, 'vdbeSorterCompare', 2] as const)
+      : (['V2 another', int, 'vdbeSorterCompareInt', 0] as const);
+  const value = relativePastOurTable(l, past);
+  return { name: title, symbol: 'vdbeSorterSort', target: 6458, at, was: relativeSlotOf(l, fn), plain: value, shifted: value };
 }
 
 /** The maps of the case: our module patched, and its function's kinds from the patched pair of links. */
@@ -1029,13 +1053,14 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
   });
 
   it.skipIf(!real)("V1, V2: an integer over vdbeSorterSort's relative slots is read relative to the base and rejected", () => {
-    const unchanged = build(byName('V1'), load().maps);
+    const unchanged = build(relativeSlotCase(load(), 'V1'), load().maps);
     expect([unchanged.assembled.sha256, unchanged.kindUnverified]).toEqual([TARGET_SHA, []]);
+    const { int, compare } = sorterSum(load());
     for (const [name, at, past] of [
-      ['V1', 0xae, 2],
-      ['V2', 0xa8, 0],
+      ['V1', compare, 2],
+      ['V2', int, 0],
     ] as const) {
-      const c = byName(name);
+      const c = relativeSlotCase(load(), name);
       const value = relativePastOurTable(load(), past);
       const { maps, kinds } = caseMaps(c);
       expect(kinds, name).toEqual({ verified: true, ops: expect.any(Map) });
@@ -1069,8 +1094,9 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
     const refs = referencedFunctionsAt(maps, ours, a.verdict === 'match' ? a.chosen : []);
     const named = (at: number) => refs.filter((r) => r.at === at).map((r) => maps.ours.fns.get(r.f)?.key);
     // each operand is relative to the base: our table base (1) plus it is the slot of the function named, the
-    // operand alone the slot before it
-    expect([0xa8, 0xab, 0xae].map(named)).toEqual([['vdbeSorterCompareInt'], ['vdbeSorterCompareText'], ['vdbeSorterCompare']]);
+    // operand alone the slot before it. The offsets are our link's (sorterSum)
+    const { int, text, compare } = sorterSum(load());
+    expect([int, text, compare].map(named)).toEqual([['vdbeSorterCompareInt'], ['vdbeSorterCompareText'], ['vdbeSorterCompare']]);
   });
 
   it.skipIf(!real)('offers a table slot every target slot of its function, however many', () => {
@@ -1101,12 +1127,14 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
   });
 
   it.skipIf(!real)("reads renameUnmapSelectCb's slot in sqlite3AddDefaultValue as a table slot, as both links' tables say", () => {
-    // its object as a whole has address relocations, which does not make this operand an address
+    // its object as a whole has address relocations, which does not make this operand an address. The target (2003)
+    // holds it at +0x296; ours is our link's offset of that instruction, which table slots ahead of it move
     const l = load();
     const { kinds, plain } = l;
     const p = indexOf(plain, 'sqlite3AddDefaultValue');
-    expect(valueAt(plain.module, p, 0x292)).toBe(slotOf(l, 'renameUnmapSelectCb'));
-    expect(operandKind(kinds.functions.get(p), 0x292)).toBe('slot');
+    const at = ourAt(l, 'sqlite3AddDefaultValue', 2003, 0x296);
+    expect(valueAt(plain.module, p, at)).toBe(slotOf(l, 'renameUnmapSelectCb'));
+    expect(operandKind(kinds.functions.get(p), at)).toBe('slot');
   });
 });
 

@@ -365,14 +365,16 @@
 # Before steps 7 to 9, 19 over 109 rows, all operand-only (pnpm wasm score). CControlaReconhecimento::GetTentativa, an
 # inline accessor of the first counter that vota::CPedeDigital::StartState (unit 282) reads, is chosen.
 #
-# Roots: three classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
-# CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735; CEleitorJaVotou's went:
-# its constructor is in the link, inlined into its GetInst, which 10635 holds; CIdentidadeInvalida's went: its
-# constructor is in the link, inlined into its GetInst, which unit 278's 10627 holds), and stand-ins for the target
-# callers of 5403, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link); those of 5404 to
-# 5406 went, their callers 10447, 10448, 10473 and 10485 being in the link. ccontrolareconhecimento.cpp reaches Boost
-# through cconfiguracaoeleicao.h, so its object takes
-# the include path below, as unit 88's do.
+# Roots: none; the roots file went with its last stand-ins, each when every target caller it stood for was in the link.
+# The vtable sinks: CEleitorNaoEncontrado's (5424, its GetInst, stores it; 10631 and 10635, unit 104's, call 5424),
+# CPedeIdentidade's, CVerificaDadoEleitor's, CEleitorJaVotou's, CIdentidadeInvalida's, CDadoEleitorNaoConfere's,
+# CInformaAnoNascimentoErrado's and CControlaReconhecimento's (their constructors are in the link, inlined into 652,
+# 2735, CEleitorJaVotou's GetInst that 10635 holds, the GetInst unit 278's 10627 holds, 10443, 10489 and 1256);
+# IEleitorImpedidoVotar's comes with its constructor (1905), which 5424 calls. The stand-ins for the target callers of
+# 4661 (10443, 10489), 5410 (1256, 5399), 5404 to 5406 (10447, 10448, 10473, 10485), 5403 (10465), 2097 (10500, 10443,
+# 10447, 10489, 10626), 652 (10209 the last), 1256 (10425, which drops the result) and 4522 (10451, 10452).
+# ccontrolareconhecimento.cpp reaches Boost through cconfiguracaoeleicao.h, so its object takes the include path below,
+# as unit 88's do.
 #
 # CControlaReconhecimento's members for vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (inlined into fn 10425,
 # unit 142's, written and not matched), at chosen lines after RegistraDigitalCapturada, none with a target index of its
@@ -414,8 +416,3 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_IDENTIDADE_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # celeitornaoencontrado.cpp includes it too, for the identifier type the urna takes first (an include path, not a flag)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# nothing reconstructed calls the members the roots stand for: the roots file
-# (161-uenux2-app-vota-operador-identidade-roots.cpp) gives those members call sites
-$(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-roots.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/log/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/log/*.h $(ROOT)/src/uenux2/src/api/uelog/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/161-uenux2-app-vota-operador-identidade-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/161-uenux2-app-vota-operador-identidade-roots.o

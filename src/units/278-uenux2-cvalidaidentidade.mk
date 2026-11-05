@@ -33,8 +33,9 @@
 # - CDigitalNaoCapturada (vtable @1592352) and CTentativaCapturaDigitalEsgotada (@1592280): each final over CAppState
 #   with the 49 states' shared destructors (244, 387) and StartState (1070), its form at +12. 10458 goes to
 #   CRegistraDigitalOperador::GetInst's state (fn 5396, unit 221's) on CONFIRMA (9); 10461 is `f2295(p0, 9, 1592336)`,
-#   its Read() record. Their GetInst and constructors are held inlined by CRegistraDigitalOperador::ProcessTick (10451,
-#   pending: unit 221), the one store of each vptr (1592288, 1592360), and are not written.
+#   its Read() record. Their GetInst and constructors, written now, are held inlined by
+#   CRegistraDigitalOperador::ProcessTick (10451, unit 221's), the one store of each vptr (1592288, 1592360); their
+#   statics' exit destructors (10459, 10460, 10462, 10463) wait for 10451's match (unit 221's fragment says why).
 # - StartState (10627, slot 2) matches. In the target's order: vota::GetIdentidadeDigitada (fn 3623) into a local;
 #   comum::md::CValidadorIdentidade::GetInst (fn 1926) and a 16-byte frame binaryen inlined, the member TiposValidos
 #   added to unit 110's cvalidadoridentidade.cpp (the types of the rules whose IRegraIdentidade::EhValida, fn 3723,
@@ -101,7 +102,10 @@
 # CValidaIdentidade's vtable and typeinfo (@1589064, @1589108) lie between CProcuraEleitor's (@1589008) and
 # IEleitorImpedidoVotar's (@1589136), leidentidade/ objects.
 #
-# Roots: the two states' vtables (for 10451). The stand-ins for two members other units' sources hold went, their
+# Roots: none. The two states' vtable sinks went, their one storer, 10451, being in the link. Their files stay in this
+# list, after cvalidaidentidade.cpp: compiled from unit 221's list ahead of cregistradigitaloperador.cpp, where the
+# target holds their vtables, each would invert 34 object pairs against the target's data, and no match needs it (unit
+# 221's fragment has the measurement). The stand-ins for two members other units' sources hold went before, their
 # target callers being in the link: unit 221's CRegistraDigitalOperador::GetInst's two, 10458 (this unit's) and 10443
 # (unit 161's), and unit 161's CVerificaDadoEleitor::GetInst's four, 10447 (unit 161) and 10473, 10477 and 10485
 # (unit 282).
@@ -111,7 +115,3 @@ APP_VOTA_VALIDAIDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cvalidaiden
     src/app/vota/operador/confirmaidentidade/ctentativacapturadigitalesgotada.cpp \
     src/app/vota/operador/confirmaidentidade/cdigitalnaocapturada.cpp
 UENUX2_SRCS += $(APP_VOTA_VALIDAIDENTIDADE_SRCS)
-# The roots file (278-uenux2-cvalidaidentidade-roots.cpp) takes two vtables' addresses and stands for target callers
-$(ROOT)/$(APP)/278-uenux2-cvalidaidentidade-roots.o: $(ROOT)/src/units/278-uenux2-cvalidaidentidade-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/278-uenux2-cvalidaidentidade.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/278-uenux2-cvalidaidentidade-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/278-uenux2-cvalidaidentidade-roots.o
