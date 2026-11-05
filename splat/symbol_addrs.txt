@@ -38430,11 +38430,6 @@ _ZN4ASN1L14badEndOfStreamE = 0x1d3650; // type:data size:0xc evidence:callers+co
 # against 239, 3 blocks and 3 ifs against 1 and 5), so no match can name it, and the name of any match of 543 would otherwise drop it.
 _ZNSt3__26vectorIPN4ASN112AbstractDataENS_9allocatorIS3_EEE9push_backB8ne210108EOS3_ = func:543; // evidence:merged-body the target merged this body into 543 (2656 and 5066 call it at the site where ours calls this symbol); 8811, named by its vtable and unmatched, calls it too; our own body differs from 543 (263 B against 239, 3 blocks and 3 ifs against 1 and 5), so no match can name it (docs/reference/facts/asn1.md A5)
 _ZN9simulador10CWasmTimer4FireEPv = func:7909; // size:0xe7 evidence:pair-depth0 the only target and the only ours with this depth-0 shape (normalizeModule depth 0, `shape`: target [7909], ours [_ZN9simulador10CWasmTimer4FireEPv]; their fingerprint and addr differ at the table slot alone), and its only other referrer is 7918, slot 2 of simulador::CWasmTimer's vtable (elem[838] = ref.func:7909, i32.const 838 in 7918 and 7909); the call and data votes cannot reach it: 7918 is named by vtable evidence, which casts none
-# unit 100: the word at 0x174a30 is table slot 284 (the data segment; wasm-objdump -x -j Elem: elem[284] = ref.func:11265, the only slot of 11265).
-# unit 100: 11265 sets the byte at +12 of the object at 0x1bf600 and returns the object, and 14476 reads that +12 of what the word's function returns. 282 functions
-# unit 100: read the address, 554 uses: 538 are i32.load, call_indirect ()->(i32), 15 go through invoke_i, 1 keeps the value in a local first. Our only .data word that
-# unit 100: holds the slot of that body is this one. No match is read to get here.
-_ZN3api20g_polySingletonsInfoE = 0x174a30; // type:data size:0x4 evidence:content holds table slot 284, func:11265, the body of our polySingletonsInfoPadrao
 # unit 100: each has<T> below: the function of type (i32)->(i32) that holds T's type name address (for a class with a key function, the address of its typeinfo's name
 # unit 100: pointer), by i32.const in the split's pieces. The other holders are instance<T>, (i32 i32)->(i32), T's push or 8302, and for comum::CCalculaCV 3698 of the
 # unit 100: same type, which reads the pointer itself where has<T> takes the info as its parameter.
