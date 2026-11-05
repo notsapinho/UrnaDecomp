@@ -6,12 +6,12 @@
 //   11888 pass the 20-point font (@474896) and 310 where 11881 passes the 25-point one and 32767, so the position, the
 //   font, the text and the height stay parameters: the stand-in passes 310.
 // - api::CMenuItem::SetSearchText (fn 3655; target callers 11884, twice, and 11888, in the link): BuscaItem calls it
-//   twice.
+//   once, for 11884.
 // - std::__throw_bad_any_cast (fn 3861; target callers 11881, 11884, 11888; 11881's and 11888's std::any_cast are in
 //   the link).
 // The stand-in for 11888's calls of AddInputMenuField and __throw_bad_any_cast went: 11888 is in the link.
-// Each stand-in names the target callers it stands for, and its body is no target function's (two calls, or a branch
-// and a call).
+// Each stand-in names the target callers it stands for, and its body is no target function's (a branch and a call, or
+// an offset added to an argument).
 // Compiled with APP_CXXFLAGS, like the other stand-ins; the labels' signatures are the objects'.
 #include <string>
 
@@ -26,11 +26,10 @@ void* cmenuitem_setsearchtext(void*, const void*) __asm__(
 
 namespace {
 
-// fn 11884: its two calls of SetSearchText
+// fn 11884: its calls of SetSearchText
 __attribute__((noinline)) void* BuscaItem(void* item, const void* busca)
 {
-    cmenuitem_setsearchtext(item, busca);
-    return cmenuitem_setsearchtext(item, busca);
+    return cmenuitem_setsearchtext(static_cast<char*>(item) + 152, busca);
 }
 
 // fn 11884: its call of AddInputMenuField and its std::any_cast's throw

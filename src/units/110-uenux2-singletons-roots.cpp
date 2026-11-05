@@ -12,7 +12,8 @@
 //   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
 //                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
 //                       stand-in reads it (R18)
-//   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
+//   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, CHV::GetHorarioVerao 5745, and GetCargo 861 once, for
+//                       13550 (its 11 other callers are in the link)
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
@@ -103,7 +104,7 @@ __attribute__((noinline)) void DestroiTodos(int p)
 __attribute__((noinline)) int ConsultaTodos(int cargos, int configuracao, int hv)
 {
     return (w332(cargos) ^ w332(cargos + 28) * 3) + (w2836(cargos) ^ w2836(cargos + 28) * 5) +
-           (w861(configuracao, 1) ^ w861(configuracao, 2) * 7) + (w5745(hv) ^ w5745(hv + 28) * 9);
+           w861(configuracao, 1) * 7 + (w5745(hv) ^ w5745(hv + 28) * 9);
 }
 
 __attribute__((noinline)) int DestroiDecoradores(int p)

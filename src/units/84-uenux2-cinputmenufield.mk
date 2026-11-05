@@ -178,7 +178,7 @@ UENUX2_SRCS += $(CINPUTMENUFIELD_SRCS)
 # The companions read cinputmenufield.h, which includes headers of api/gui, api/hwil, api/util and api/pattern and
 # ecourna's: the set the generic rule uses. $(UENUX2_HDRS) is not set yet when src/Makefile reads the fragments
 CINPUTMENUFIELD_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-# The roots file stands for fns 11884 and 11888, which are not written: their calls of fns 3675, 3655 and 3861
+# The roots file stands for fn 11884, which is not written: its calls of fns 3675, 3655 and 3861
 $(ROOT)/$(APP)/84-uenux2-cinputmenufield-roots.o: $(ROOT)/src/units/84-uenux2-cinputmenufield-roots.cpp $(ROOT)/src/units/84-uenux2-cinputmenufield.mk $(ROOT)/src/Makefile $(CINPUTMENUFIELD_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/84-uenux2-cinputmenufield-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/84-uenux2-cinputmenufield-roots.o
