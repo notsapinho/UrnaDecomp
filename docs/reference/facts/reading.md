@@ -358,6 +358,9 @@ visibility). `wasm-objdump -d -r` names such a call D2 whichever alias it holds;
 A class with no D0 (no vtable, or no destructor slot in it) shows the form in a caller instead: at `-fPIC` a caller in
 the destructor's own TU keeps a call of an out-of-line D1 (C6), where an implicit or in-class destructor of a small
 body is inlined. `comum::CCargos`'s exit destructor calls `~CCargos` (5805) so, which `ccargos.cpp` defines `= default`.
+So does a caller in another TU that keeps the D2 call where `-Rpass=inline` shows the in-class definition inlined at
+that site. In ecourna's code such a caller decides even for a class with a D0, which can take either shape there
+(`~CZip`, 2690, called twice by 5821).
 
 What separates the first two rows is the inline hint. Only an implicit destructor and one declared `inline` carry it
 before optimization:

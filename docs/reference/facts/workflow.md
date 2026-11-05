@@ -1036,17 +1036,16 @@ they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W
     git diff $B HEAD -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
 
 The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
-from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The
-callee search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing)
-and the companions' lines that name a callee, among them every caller list; the last two list the deleted files' names
-(at 3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to
-search with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold
-coordinates and counts, no notes. Each hit is to read: an index also matches a line number or a size. The third
-index search reads the trees' comments, where a header of any class can list a new match among callees "with no name";
-a fix keeps the paragraph's line count, so no `#line` moves. A stand-in whose callers are now all in the link goes in
-the merge; one found otherwise goes when a link without it moves no row (W13, "One variant object in the whole link"). A
-lane runs the same searches on its own range before it commits, and fixes what it finds, comment lines only, in files
-it claims (how-to step 10).
+from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
+search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing) and the
+companions' lines that name a callee, among them every caller list; the last two list the deleted files' names (at
+3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to search
+with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold coordinates
+and counts, no notes. Each hit is to read: an index also matches a line number or a size. The third index search reads
+the trees' comments, where a header of any class can list a new match among callees "with no name"; a fix keeps the
+paragraph's line count, so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says
+("When it goes", "Going earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it
+commits, and fixes what it finds, comment lines only, in files it claims (how-to step 10).
 
 A note's count of a function's callees "with no name" counts against both name files, imports aside (callees below
 136), and says so beside the count: a match line can be a function's only name (2745). For 10425 at 182dc6c1, 5 of 45:

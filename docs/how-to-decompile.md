@@ -457,17 +457,15 @@ hand-written loop that gives the same bytes beside it (unit 13's fragment does).
 bytes (clang keeps the library body out of line where the target has it inlined), the loop is scaffolding: write the
 call, leave the row `differs`, and put both measurements in the fragment (unit 137's `CPrng::GetInt`, 9500).
 
-To measure "the same bytes" for one function of a TU, compare that function's disassembly between the two objects
-with the object-local numbers masked (the `call` and `global.get` indices, every `i32.const` added to `__memory_base`,
-` (type N)` and `env.`), and count the lines each cut takes before reading a 0
-([facts/tool-traps.md](reference/facts/tool-traps.md) §X12). Compare a variant with an unchanged copy compiled from the
-same directory under a name of the same length, not with the landed object: the records' file names lie in the
-object's read-only data, so a path of another length moves every `i32.const` addend after them (11349's variants: 22
-lines against the landed object, 0 against such a copy). Mask with Python, or `[[:<:]]` in `sed`: macOS `sed` has no
-`\b` ([facts/workflow.md](reference/facts/workflow.md) §W9). `cmp` of two objects compares the whole TU, and a variant
-of one member then fails it. Change one occurrence per variant: a text substitution that matches twice rewrites another
-member too. [facts/codegen.md](reference/facts/codegen.md) §C1 lists the other ways such a comparison lies (a copy's
-path moves every offset, the edit can sit in a callee, a compare's operand order is the link's).
+To measure "the same bytes" for one function of a TU, compare that function's disassembly between the two objects with
+the object-local numbers masked, against a control compiled beside the variants under a name of the same length, not the
+landed object, and count the lines each cut takes before reading a 0
+([facts/tool-traps.md](reference/facts/tool-traps.md) §X12 has the masks and the control). Mask with Python, or
+`[[:<:]]` in `sed`: macOS `sed` has no `\b` ([facts/workflow.md](reference/facts/workflow.md) §W9). `cmp` of two objects
+compares the whole TU, and a variant of one member then fails it. Change one occurrence per variant: a text substitution
+that matches twice rewrites another member too. [facts/codegen.md](reference/facts/codegen.md) §C1 lists the other ways
+such a comparison lies (a copy's path moves every offset, the edit can sit in a callee, a compare's operand order is the
+link's).
 
 The lifter names a callee from the ledger's pairs, not from the symbol file, so a callee can be `extern "C" …
 f219(…)` although `splat/symbol_addrs.txt` names it (`_ZN4ASN18SEQUENCEC2EPKv = func:219;`, the
@@ -632,19 +630,17 @@ the call site in that file's TU (§P2).
 
 **Keep every throw on its record's line.** A decompiled function's `std::source_location` records are bytes of the
 target, so each throw site must sit at the line and column its record gives; above it, blank lines and *gaps* hold the
-place of the code not written yet. A gap is a generated comment and a `#line`, `// (original lines 9-16: content not
-recovered)` over `#line 17`, that stands for a run of blank lines ([src/README.md](../src/README.md) "Gaps"). The
-compiler numbers lines through each `#line`, so an error or warning below a gap names the line of TSE's file, not the
-line an editor shows. If the file holds stubs or gaps, turn them back into blank lines before editing it: `python3 -I -B
-tools/round/stubs.py --strip <file>` moves no line of a file step 9 wrote. Strip first, then edit: on a file edited
-since, it pads each gap's run so that the line after it lands on the gap's `#line`, which absorbs lines added above, so
-read the throws' lines after it before deleting any. Once stripped, the file has no `#line` left: a line you then delete
-or add moves every record below it until you put the count back, and `make -C src stubs` does not move it back. A
-definition you move leaves its lines blank: two statics moved below a `GetInst` by deleting their lines took the
-constructor's `instance()` record three lines up. Write the function where the stub or the gap was, delete the blank
-lines it replaces, add some where a throw would land too early. A line you add above a blank run, an `#include` above
-all, moves every record below it ([src/README.md](../src/README.md) "Gaps" says how a moved record shows): delete as
-many blank lines of that run, and compare every record's line with the stripped file before the link. A `throw` is not
+place of the code not written yet. A gap is a generated comment and a `#line` that stands for a run of blank lines
+([src/README.md](../src/README.md) "Gaps": its form, the `#line` numbering, and how a line added or deleted above a
+record moves it and shows). If the file holds stubs or gaps, turn them back into blank lines before editing it: `python3
+-I -B tools/round/stubs.py --strip <file>` moves no line of a file step 9 wrote. Strip first, then edit: on a file
+edited since, it pads each gap's run so that the line after it lands on the gap's `#line`, which absorbs lines added
+above, so read the throws' lines after it before deleting any. Once stripped, the file has no `#line` left: a line you
+then delete or add moves every record below it until you put the count back, and `make -C src stubs` does not move it
+back (two statics moved below a `GetInst` by deleting their lines took the constructor's `instance()` record three
+lines up). Write the function where the stub or the gap was, delete the blank lines it replaces, add some where a throw
+would land too early, delete one blank line of the run below for each line you add above it (an `#include` above all),
+and compare every record's line with the stripped file before the link. A `throw` is not
 the only maker: a default argument's records (`CPolySingleton<T>::instance()`'s `std::source_location`) sit on lines
 `/throw/` does not find, so list each record's line, column and functions (`f=<file>; awk -F'\t' -v f="${f#src/uenux2/}"
 'index($2, f) {print $3, $4, $6}' ledger/source-locations.tsv | sort -n`) and read each line (`awk 'NR==<line>' $f`).
@@ -1146,11 +1142,8 @@ D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7):
   1378: an inline base, merged by binaryen, or an out-of-line base in the same TU, which only the classes' files tell
   apart), or a D2 of one call of the base's (884 over 1035: a base in another object; §R5).
 - **These shapes are uenux2's, at `-fPIC`**, where a call of the D1 alias stays a call in its own TU (§C6). In
-  ecourna's code an out-of-line destructor over an out-of-line base can take the in-class row's shape, `f136(f778(p0))`
-  (3491). A class with no D0 shows its form in a caller: a caller in the destructor's TU that keeps the call means out
-  of line (5805, `~CCargos`, `= default` in `ccargos.cpp`; §R5), and so does a caller in another TU that keeps the D2
-  call where `-Rpass=inline` shows the in-class definition inlined at that site; in ecourna's code that caller decides,
-  since the D0 can take either shape (`~CZip`, 2690, called twice by 5821).
+  ecourna's code an out-of-line destructor over an out-of-line base can take the in-class row's shape (3491), and
+  there, as for a class with no D0, a caller that keeps the call decides (§R5: `~CCargos`, `~CZip`).
 - **The shapes are those of the destructor's own TU.** A `delete` elsewhere (a control block's `__on_zero_shared`)
   frees the D2's result where its TU only declares the destructor and `this` where it defines it, so a target body of
   the second kind was compiled in the destructor's TU, which a roots file cannot give (11263 over 5614, unit 121). An
@@ -1687,21 +1680,18 @@ what a fragment's forms were measured on: run each "differs" the fragment lists 
 tree, and move a form that now gives the same bytes to that list, naming the function that still shows the difference.
 
 Your new matches, and the functions your unit writes that do not match, can make other units' notes false: a callee
-"with no name", a member that "waits for" one, a stand-in whose callers are now all in the link, a hand line's "our
-body differs", a doc's example. Search for them as a landing does ([facts/workflow.md](reference/facts/workflow.md)
-§W23 has the seven kinds and a search for each) and fix them in your commit, comment lines only, after a claim of
-those files, with three exceptions. A stand-in whose last caller your unit brings into the link goes in your commit,
-code and comment, call by call for one that calls several callees (`src/units/README.md` "Companion files"); when its
-note is in a file an unlanded branch changed, the code goes and the note is left to the landing, and when its own file
-is such a branch's, both are. A stand-in or sink idle since an earlier landing, in a file you claim, may go in your
-commit with a link that puts it back and moves no row, named in the commit and the result. And a hand line whose
-function your match now names by a generated line is yours to weigh (the caught-up `awk` of "Reviewing a match"
-first). A file another active stage claims, or a sentence an unlanded branch has changed whatever its stage (`git diff
-<base> <branch> -- <file>`), is left to the landing and named in your result with the indices that make it stale. A
-lane whose branch has not landed is such a stage, on either machine; when its branch is not on yours, take the files
-and line ranges its result names outside its unit. A gap step 9 writes and a README row are yours to commit even where
-such a branch changes the same lines: name them in the result as conflicts the landing resolves (it runs step 9 again
-after the merge), and put a paragraph you add away from where the branch adds its own.
+"with no name", a member that "waits for" one, a stand-in whose callers are now all in the link, a hand line's "our body
+differs", a doc's example. Search for them as a landing does ([facts/workflow.md](reference/facts/workflow.md) §W23 has
+the seven kinds and a search for each) and fix them in your commit, comment lines only, after a claim of those files,
+with two exceptions. A stand-in or sink your unit makes idle goes in your commit, code and comment, call by call; one
+idle since an earlier landing, or in a file another stage holds, goes as `src/units/README.md` "Finding the idle ones"
+says. And a hand line whose function your match now names by a generated line is yours to weigh (the caught-up `awk` of
+"Reviewing a match" first). A file another active stage claims, or a sentence an unlanded branch has changed whatever
+its stage (`git diff <base> <branch> -- <file>`), is left to the landing and named in your result with the indices that
+make it stale. A lane whose branch has not landed is such a stage, on either machine; when its branch is not on yours,
+take the files and line ranges its result names outside its unit. A gap step 9 writes and a README row are yours to
+commit even where such a branch changes the same lines: name them in the result as conflicts the landing resolves (it
+runs step 9 again after the merge), and put a paragraph you add away from where the branch adds its own.
 
 Commit in one commit: the sources, the fragment and its companion files, the fragment's row in
 `src/units/README.md`, the `ledger/functions.tsv` the census rewrote,
@@ -1851,22 +1841,20 @@ row lost to one link's data layout, with the cause shown (step 9's four cases), 
 land the next lane first, which moves the data, and retry the merge; stop if the row is still out. Read each roots
 file's reasons again too, since a stand-in beside its real caller passes every check: a stand-in, or a call of one,
 whose every target caller is now in the link goes in this merge, before these steps, and one whose callers landed in
-part stays (`src/units/README.md` "Companion files" has the rule and its cases). A caller in the link counts whether its
-row matches or not: search `splat/matched.txt` for the callers, `names.tsv` for a written one with no name, and our link
-for their calls, by the callee's `ours` index (for 5103, ours 5303 at bbf27ac1, `wasm-objdump -d
-build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5303 '/ func\[/ {f=$2} $0 ~ " call " c "( |$)" {print f}' | sort
--u` prints `func[10515]:`, 9052's, and `func[10667]:`). Read the callers from the scan, not from the comment, which can
-be stale either way, and check each call, not each comment. A stand-in can also stand for references that are no call
-(an address taken in a static constructor, or for a vtable slot), and other units' notes can name a function the merge
-matched as one that waits: run the searches of [facts/workflow.md](reference/facts/workflow.md) §W23, whose kinds a
-search by the new indices misses (an address root, a sink, a caller list, a removed stand-in's name), and fix what is
-stale in the merge or a comments-only commit after it. A stale note in a hunk that a branch of a later batch changes, or
-on a line next to one it changes, is left to that branch's landing and named in the result: git joins adjacent lines
-into one hunk. Commit it all as the merge commit. A merge commit takes no pathspec (`fatal: cannot do a partial commit
-during a merge`): stage everything, read `git status --short`, and commit with a bare `git commit -F -`, owning the
-checkout while you do, since nothing else may be staged ([facts/workflow.md](reference/facts/workflow.md) §W18). To
-leave a merge after step 9, `git merge --abort` needs everything staged first (§W22). Two branches that each took "the
-next free NN" collide too; `src/units/README.md` "Names" says how to avoid that.
+part stays (`src/units/README.md` "Companion files" has the rule, its cases and the per-callee search, "Finding the idle
+ones"). A caller's call in our link is found by the callee's `ours` index (for 5103, ours 5303 at bbf27ac1,
+`wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5303 '/ func\[/ {f=$2} $0 ~ " call " c "( |$)"
+{print f}' | sort -u` prints `func[10515]:`, 9052's, and `func[10667]:`). A stand-in can also stand for references that
+are no call (an address taken in a static constructor, or for a vtable slot), and other units' notes can name a function
+the merge matched as one that waits: run the searches of [facts/workflow.md](reference/facts/workflow.md) §W23, whose
+kinds a search by the new indices misses (an address root, a sink, a caller list, a removed stand-in's name), and fix
+what is stale in the merge or a comments-only commit after it. A stale note in a hunk that a branch of a later batch
+changes, or on a line next to one it changes, is left to that branch's landing and named in the result: git joins
+adjacent lines into one hunk. Commit it all as the merge commit. A merge commit takes no pathspec (`fatal: cannot do a
+partial commit during a merge`): stage everything, read `git status --short`, and commit with a bare `git commit -F -`,
+owning the checkout while you do, since nothing else may be staged ([facts/workflow.md](reference/facts/workflow.md)
+§W18). To leave a merge after step 9, `git merge --abort` needs everything staged first (§W22). Two branches that each
+took "the next free NN" collide too; `src/units/README.md` "Names" says how to avoid that.
 
 ## Library functions
 

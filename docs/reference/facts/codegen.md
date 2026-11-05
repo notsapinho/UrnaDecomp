@@ -471,14 +471,12 @@ on its record's line. Say in the fragment that the order is measured. The same b
 `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals swapped, with `label.at(0)` as the argument or bound
 to a `const char&`, and `12 over 91` with `const char token`.
 
-**Which place a moved object takes.** The target's data give the objects' order ([placing.md](placing.md) §P4): when
-both orders give the bytes, keep the data's. A move lands only when a measured form needs it, a body that matches only
-so; one that gains nothing keeps the old place. The places that count are those `src/units/README.md` "Names" allows the
-file, and among them the one with the fewest objects out of the data's order against the moved one; the fragment names
-the pairs left inverted, and a place outside those lists with fewer is reported, not taken. Measure each place in a
-scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object").
-Count over every object with target data, not a window, which can flip the answer: run this on the link of each place,
-`x` the moved object's path (at 3c1ef19d):
+**Which place a moved object takes.** The target's data give the objects' order ([placing.md](placing.md) §P4). When a
+move lands and which places count is `src/units/README.md` "Names"' rule; among those places that give the bytes, take
+the one with the fewest objects out of the data's order against the moved one. Measure each place in a scratch link of
+the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). Count over every
+object with target data, not a window, which can flip the answer: run this on the link of each place, `x` the moved
+object's path (at 3c1ef19d):
 
 ```sh
 awk -v x=/citensmenuvota.cpp.o 'NR==FNR { if ($2 == "=") { a = $3; sub(/;$/, "", a); t[$1] = a }; next }

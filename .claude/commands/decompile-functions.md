@@ -264,15 +264,11 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   callers 170, 210, 235, 255 and 331, `pnpm wasm fn ../target/vota_web_wasm.wasm 2294`; 170's is
   `CBaseError<comum::EUeComumDadosError, {7800, 8600}>`, by the vptr 1528096 it passes), and no caller of those five
   is matched yet: a pick past one of them is a measurement, and the pick post says so. The name that resolves can be
-  a *twin*'s: binaryen merges byte-identical bodies and keeps one
-  name, so 760, matched as `vector<pair<unsigned long, unsigned long>>::push_back`, is also the `push_back` of
-  another vector of an 8-byte element in the target: 11361, `CConversorSituacoesEleicoes`'s converter, which builds a
-  `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
-  caller that uses that other instantiation still resolves when its body is the same (how-to step 3, "A callee can
-  be a twin"). A callee written and `differs` resolves for a lane that writes two of its callers from two target
-  bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller): their `call` votes
-  name it, and the two hold each other (`docs/reference/splat.md` §3); the pick names the two, and they land together.
-  A caller with no record, vptr or census pair votes for nothing (1255 over 502).
+  a *twin*'s, which a caller of another instantiation with the same body still resolves to (how-to step 3, "A callee
+  can be a twin", 760 under 11361). A callee written and `differs` resolves for a lane that writes two of its callers
+  from two target bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller):
+  their `call` votes name it, and the two hold each other (`docs/reference/splat.md` §3); the pick names the two, and
+  they land together. A caller with no record, vptr or census pair votes for nothing (1255 over 502).
 - **And every data operand.** A row with a body of ours already (the scan's `ours`, or a symbol of its name in
   `names.tsv` when it reads `no-candidate`) also needs each data object it reads: from `asmlift-wasm/`, `pnpm wasm
   splat-remap <target> <plain> sym:<its symbol> --against <row>` prints no `no target symbol` for it. Such an object
@@ -445,9 +441,8 @@ number or a premise the merge moved is no toolkit fix: it changes to read the ru
 toolkit fix the merge needs is a commit of its own on `main`, with a VERIFY of its own before the push, and the batch
 then goes on from there: a merge already staged when the need shows is aborted (`git merge --abort`, everything staged
 first: `docs/reference/facts/workflow.md` §W22), the fix committed on `main`, and the lane merged again. A row lost to
-one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as a
-table slot, a folded array base whose vote names the object before the array with our padding), may wait for the next
-lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the top of the result.
+one link's data layout, the cause shown (how-to step 9's four cases), may wait for the next lane of the batch: land
+that lane first, retry, stop if the row is still out, and say so at the top of the result.
 First compare the objects around it with the target's data order: a residue that comes from an object's place on the
 link line, which the target's data put elsewhere, is fixed by that place
 (`docs/reference/facts/link-order.md` §L3), not waited out.

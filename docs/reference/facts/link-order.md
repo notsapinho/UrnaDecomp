@@ -403,9 +403,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     The same listing over each object a link-order move crosses gives the pairs it inverts: an object whose target
     addresses lie on the other side of the moved object's, read one segment at a time (`.data` for vtables, typeinfos
     and records at `-fPIC`; `.rodata` for `_ZTS` names, strings and ecourna's data), since each segment is in link
-    order on its own. Two objects our link holds far apart say nothing of a function moved between them that leaves
-    both in place: its code and the linkonce data it emits change object, and the target's neighbours of that data
-    place it ([placing.md](placing.md) §P4).
+    order on its own. [codegen.md](codegen.md) §C4 counts them over the whole link, and places a function moved
+    between two files that stay.
 16. **A function that calls an EM_JS import can be placed by the glue.** The glue lists the EM_JS functions in link order
     of the `em_js` sections (`/usr/bin/grep -oE 'function (js|wasm)_[a-z0-9_]+\(' target/vota_web_wasm.js`). The run
     `js_thread_log`, `js_emit_event`, `js_push_key`, `js_console_error`, `js_wasm_web_sound_play_wav` puts the wrappers of

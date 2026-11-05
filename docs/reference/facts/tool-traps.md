@@ -7,7 +7,8 @@ traps stay with their topic: [toolchain.md §T7](toolchain.md) (comparing bodies
 ## X1. binaryen never inlines an exported function, so exporting library code to keep it alive changes its bodies
 
 binaryen's Inlining pass inlines a function of **any** size when it has exactly one call site and is not used
-globally (exported, or in the table). With `-sEXPORTED_FUNCTIONS` covering a library's symbols that rule never
+globally (exported, or in the table), and a body of a few instructions into every direct caller whatever their count
+([reading.md](reading.md) §R10, 11442). With `-sEXPORTED_FUNCTIONS` covering a library's symbols that rule never
 fires. Measured: target func 444 (`BN_div`) is 866 rows = `BN_div` with its only callee `bn_div_fixed_top` inlined;
 in a probe that exports `bn_div_fixed_top`, `BN_div` stays 65 rows at every -O level (817/866 rows differ). Target
 981 is `BN_mod_exp` with `BN_mod_exp_mont_word` and `BN_mod_exp_recp` inlined (their ERR strings share the

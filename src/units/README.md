@@ -498,10 +498,11 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     `build/out/wasm-map/vota_web/names.tsv`, and its call in our link (how-to step 10's `wasm-objdump` awk). A sink's
     storers are the functions that load its vptr (the address-point grep below). A note that names a removed stand-in is
     found by that name (`LC_ALL=C git grep -n -w <stand-in> -- src docs`). A stand-in whose last caller a lane brings
-    into the link goes in the lane's commit (how-to step 10). One a lane finds idle since before its base goes there too
-    when the lane claims its file, with a link that puts it back and moves no row, named in the commit and the result;
-    otherwise the lane names it and the landing removes it. One in a file another active stage claims is left to the
-    landing, with a link without it measured and its lines named in the result;
+    into the link goes in the lane's commit, code and comment (how-to step 10). One a lane finds idle since before its
+    base goes there too when the lane claims its file, with a link that puts it back and moves no row, named in the
+    commit and the result; otherwise the lane names it and the landing removes it. One in a file another active stage
+    claims is left to the landing, with a link without it measured and its lines named in the result; when only its
+    note is in a file an unlanded branch changed, the code goes and the note is left to the landing;
 - a function the target inlines into its only caller is left unrooted, so it is inlined here too. It can be a
   function the source defined out of line that binaryen inlined, which `docs/how-to-decompile.md` step 3 tells from
   the caller's body: write it out of line, in the file that step says, and leave it unrooted. When such a function
