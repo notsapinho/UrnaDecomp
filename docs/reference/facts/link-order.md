@@ -382,6 +382,30 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
 
     That place is a reading of the data order, measured through the three objects' data; the records exist once each
     and lie in the run of the `CarregaArquivo` instances' records, which is evidence of the TU.
+
+    Our side of the same run is the object's input sections in our map, in order, each with the target address the
+    symbol file gives its name. A record has no name there (`.L.constant.102`): `pnpm wasm splat-maps <target> <ours>
+    --data <our address>` gives its target address on its `target` line. The run's order holds where the target
+    addresses rise with ours. As a script (bash), from the repository root:
+
+    ```sh
+    O=app/uenux2/src/app/comum/dados/carregaarquivo.cpp.o
+    awk -v o="$O:(.data.rel.ro." 'index($4, o) == 1 {s = substr($4, length(o) + 1); sub(/\)$/, "", s); print $1, s}' build/out/wasm-map/vota_web/vota_web_wasm.map | while read a s; do echo "$a $(awk -v s=$s '$1==s {print $3}' splat/symbol_addrs.txt) $s"; done
+    # 180d3c 0x17db3c; _ZTIN23ModuloProcessoEleitoral25EntidadeProcessoEleitoralE     (at 3c1ef19d; our addresses move)
+    # 180d48 0x17dbcc; _ZTIN23ModuloSituacoesEleicoes25EntidadeSituacoesEleicoesE
+    # …
+    # 180d6c  .L.constant.102
+    (cd asmlift-wasm && pnpm --silent wasm splat-maps ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --data 1576300)
+    # ours 0x180d6c: .L.constant.102@app/uenux2/src/app/comum/dados/carregaarquivo.cpp.o+0 (size 16, …)
+    # target 0x17db2c = 1563436 (srcloc)
+    ```
+
+    The same listing over each object a link-order move crosses gives the pairs it inverts: an object whose target
+    addresses lie on the other side of the moved object's, read one segment at a time (`.data` for vtables, typeinfos
+    and records at `-fPIC`; `.rodata` for `_ZTS` names, strings and ecourna's data), since each segment is in link
+    order on its own. Two objects our link holds far apart say nothing of a function moved between them that leaves
+    both in place: its code and the linkonce data it emits change object, and the target's neighbours of that data
+    place it ([placing.md](placing.md) §P4).
 16. **A function that calls an EM_JS import can be placed by the glue.** The glue lists the EM_JS functions in link order
     of the `em_js` sections (`/usr/bin/grep -oE 'function (js|wasm)_[a-z0-9_]+\(' target/vota_web_wasm.js`). The run
     `js_thread_log`, `js_emit_event`, `js_push_key`, `js_console_error`, `js_wasm_web_sound_play_wav` puts the wrappers of

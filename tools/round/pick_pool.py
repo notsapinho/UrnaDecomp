@@ -12,7 +12,9 @@ Go by the tree that holds the stub, not by the `group` column, which says who ca
 compiled from src/uenux2, src/ecourna or src/asn1 (the `object` column), printed as `index symbol detail size group
 object`. It needs both, so a TSE tree's body whose group names a library, `app` or `unknown` is not in it (3392,
 group `7zip`, from simulador.cpp.o, was such a row); step 1 has the `awk` that lists those rows. Both pools are sorted
-by size, then index. Reads the tracked files only; the sources are Latin-1.
+by size, then index. Reads the tracked files only; the sources are Latin-1. Neither pool knows of a batch still
+landing: leave out the rows its branches match with the round's in-flight list, one index per line
+(`... | cut -f1 | sort | comm -23 - <(sort <list>)`, .claude/commands/decompile-functions.md "The pool").
 
 Neither pool lists the scan's `unresolved` rows: a body of ours with an operand the target lacks, which the `detail`
 column names (a callee the target inlined, or a binaryen merge body with another set of members than the target's).
