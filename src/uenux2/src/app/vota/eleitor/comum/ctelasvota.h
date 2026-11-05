@@ -346,6 +346,24 @@ using TOpcaoMenuCandidatos = std::pair<comum::CAppState*, comum::CAppState*>;
 std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaMenuVisualizacaoCandidatos(
     TOpcaoMenuCandidatos porCargo, TOpcaoMenuCandidatos porPartido, TOpcaoMenuCandidatos candidato);
 
+// The candidate-number filter, which vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892) holds behind a
+// second stack-pointer prologue (a 240-byte frame), after the call of CVisualizarCandidatos::GetInst().GetCargo()
+// (fns 1279, 5951) whose result it takes, and with no call of CTelasVota::GetInst() before it: a free function, out of
+// line in its object and inlined by binaryen. Evidence, the body: a copy of comum::CConfiguracaoEleicao::GetCargo's
+// md::CCargo (fn 861; the 140 bytes and the two optionals' copies, fns 365 and 374) at +96, the frame's highest offset,
+// which the first object a function creates takes (docs/reference/facts/codegen.md C5), the status header (5),
+// "Visualização de candidatos" at (320, 40) in the 30-point font (@474888, FONTE_TITULO), "Filtragem por número do
+// candidato" at (320, 75) and "Número do " with the cargo's GetNome(SEXO_MASCULINO) (fn 2796, its argument 1) and ": "
+// (the tail of " : " @445416) at (320, 215) in the 25-point one (@474992, FONTE_AGUARDE), AdicionaCampoNumerico (fn
+// 2383) with the cargo's number of digits (its byte +12) and the flags 1, 0, 0, 1, 0 at (320, 265) in the 30-point
+// font, all centred, the labels of CONFIRMA ('C', "Confirmar seleção") and CORRIGE ('D', "Retornar") through fn 653,
+// and "telaFiltragemCandidatosPorNumero" through GetFormularioInterativo (fn 576). Why ctelasvota.cpp: it passes the
+// two fonts the file's other screens pass, a reading that rests on the fonts being file constants (above).
+// AdicionaCampoNumerico is defined in ctelasvota.cpp and not declared here; src/units/110-uenux2-singletons.mk has its
+// evidence and the measurements of both. Chosen: the names, the parameter's, the copy's being a named local, its being
+// a free function of vota and its place in ctelasvota.cpp (after TelaErroTesteTeclado, past the file's last record).
+CFormInterativoTelaVota TelaFiltragemCandidatosPorNumero(const comum::TCargoID idCargo);
+
 void AdicionaLocal(api::CFormBuilder& builder);
 std::shared_ptr<api::IForm<api::IScreen>> TelaNeutra(const std::string& mensagem, const int16_t tamanho,
     const int opcoes);

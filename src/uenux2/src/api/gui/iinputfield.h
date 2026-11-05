@@ -46,10 +46,12 @@
 // and the form's Refresh into one call through a computed slot, as fn 1401 does; Ativa and Desativa written apart give
 // neither (src/units/120-uenux2-iform.mk has the scores). The names are chosen.
 //
-// The constructor for IScreen, fn 2024, matches from api/gui/cinteractiveformbuilder.cpp's object, where
-// CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901) call it with the length 0 and the
-// flags true and false; its other target callers (2383, 3675, 5913, 7787) pass others, 5913 and 3675 in the link
-// (units 59 and 120), and unit 92's roots stand for 2383 and 7787 so that binaryen folds none of its parameters. 3673,
+// The constructor for IScreen, fn 2024, matches from app/vota/eleitor/comum/ctelasvota.cpp's object (unit 110), the
+// first on the link line to emit it, whose vota::AdicionaCampoNumerico (2383) calls it with its own parameters; in
+// api/gui/cinteractiveformbuilder.cpp's, CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901)
+// call it with the length 0 and the flags true and false; its other target callers (3675, 5913, 7787) pass others,
+// 5913 and 3675 in the link (units 59 and 120), and unit 92's roots stand for 7787 so that binaryen folds none of its
+// parameters. 3673,
 // IInputField<IScreenMT>'s, matches from unit 121's cescolheopcao.cpp object, which links first;
 // api::CMTFormBuilder::AddInputControl (395) calls it with the length 0 and the confirm flag true, 1151 is in the link,
 // and unit 31's roots stand for 5410, not written, with a varied length and flag, so that binaryen folds the four flags

@@ -18,8 +18,10 @@
 #   __shared_ptr_pointer's __get_deleter for CInputField<CFramedText> (12350), CMaskedTextField<CFramedText> (12340),
 #   CControlValidation (11152) and CInputFieldControl<IScreenMT> (11019); and IInputField's constructor's lambda, the
 #   __func members 12381, 12374, 12361, 12355 for IScreen and 11023, 11022, 11021, 11020 for IScreenMT, with
-#   operator() 6306, one body for both. Of these, 11071, 11072, 11152, the IScreen __func members and 6306 come from
-#   api/gui/cinteractiveformbuilder.cpp's object (unit 120), and 11019 and 11020 to 11023 from
+#   operator() 6306, one body for both. Of these, 11071, 11072 and 11152 come from api/gui/cinteractiveformbuilder.cpp's
+#   object (unit 120); 12350, the IScreen __func members and 6306 from app/vota/eleitor/comum/ctelasvota.cpp's (unit
+#   110), the first on the link line to instantiate them: its vota::AdicionaCampoNumerico (fn 2383) builds that block and
+#   calls IInputField<IScreen>'s constructor, whose copy there stores the __func vtable; and 11019 and 11020 to 11023 from
 #   api/gui/cmtformbuilder.cpp's, whose AddInputControl (fn 395) builds that block and whose copy of
 #   IInputField<IScreenMT>'s constructor (fn 3673) stores the __func vtable (src/units/31-uenux2-cformbuilder.mk).
 #   The roots' builders and sinks that stood for 395 and 3673 went when those two landed, though 5410 stores
@@ -67,8 +69,9 @@
 #   at 523132): an object no source of ours defines. Measured: `SFont{40, 0}` written in the call compiles to a stack
 #   temporary, and a namespace-scope or function-local constant of this file lands in its own data.
 #   the constructors of the other classes, in the headers: only dropped functions or stand-ins reach them, so nothing has
-#   measured them. IInputField<IScreen>'s (2024) and CInputFieldControlBase<IScreen>'s (5565) match from unit 120's
-#   object, whose AddInputControl (901, 5530) calls them.
+#   measured them. IInputField<IScreen>'s (2024) matches from unit 110's ctelasvota.cpp object, the first to emit it
+#   (its fn 2383 calls it), and CInputFieldControlBase<IScreen>'s (5565) from unit 120's, whose AddInputControl (901,
+#   5530) calls them both.
 # CInputMenuField's own members, among them 10893 (GetTypeName) and 5491, are unit 84's, with CMenuItem and the list of
 #   them at +140. CInputFieldMT is unit 146's.
 # Evidence for the forms is in the headers; what follows is what the bytes do not decide, measured by compiling each variant
