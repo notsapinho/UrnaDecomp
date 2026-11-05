@@ -12840,3 +12840,5 @@
 6036 byn$mgfn-shared$_ZN5comum27GetArquivoBancoDadosInternoEv
 5736 _ZNK5comum4CRdv12SalvaExternoEv
 5737 _ZNK5comum4CRdv12SalvaInternoEv
+11802 __cxx_global_array_dtor.12@app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp.o
+11805 _ZN4vota12testeteclado13CTesteTeclado10StartStateEv

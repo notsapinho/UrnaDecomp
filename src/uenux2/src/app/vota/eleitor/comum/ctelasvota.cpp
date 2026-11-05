@@ -456,11 +456,8 @@ std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado()
     return {GetFormularioInterativo(builder, "telaTesteTeclado"), teclas};
 }
 
-std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador)
-{
-    return gerador.GeraSequencia(TECLAS_TESTE_TECLADO);
-}
-
+// (original lines 3283-3287: content not recovered)
+#line 3288
 CFormInterativoTelaVota CTelasVota::CriaTelaVisualizacaoCandidato(const comum::md::CCandidatura& candidatura,
                                                                   size_t pagina, size_t total)
 {
