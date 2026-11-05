@@ -15,16 +15,18 @@
 // caller (fn 3698) calls it, so the bytes do not tell its form, and reading.md R5 says to leave it implicit in a class
 // with a base. The access of the members and where the class declares its data members are chosen.
 //
-// Written here: ImprimeProporcionalPartido, ImprimeVotosCandidatos (record line 222, inlined by binaryen into fn 11255)
-// and ImprimeMajoritario. Each record is the default std::source_location of a CPolySingleton<CCalculaCV>::instance()
-// call. src/units/139-uenux2-cgeradorbu.mk has what the bytes decide and what is chosen. Not reconstructed: the
-// constructor and ImprimeConsulta (a trap in src/units/139-uenux2-cgeradorbu-pending.cpp); their lines stay blank.
+// Written here: ImprimeProporcionalPartido, ImprimeVotosCandidatos (record line 222, inlined by binaryen into fn
+// 11255), ImprimeMajoritario and ImprimeConsulta. Each record is the default std::source_location of a
+// CPolySingleton<CCalculaCV>::instance() call. src/units/139-uenux2-cgeradorbu.mk has what the bytes decide and what is
+// chosen. Not reconstructed: the constructor; its lines stay blank.
 
+#include <algorithm>
 #include <format>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "api/gui/cpaperformbuilder.h"
 #include "api/gui/iform.h"
 #include "api/gui/ipaper.h"
 #include "api/pattern/cpolysingleton.h"
@@ -33,6 +35,7 @@
 #include "app/comum/dados/cpartidos.h"
 #include "app/comum/relatorios/ccalculacv.h"
 #include "app/comum/relatorios/cgeradorrelbase.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
 
@@ -52,7 +55,7 @@ public:
                    std::shared_ptr<api::IForm<api::IPaper>> detalheCandidato,
                    std::shared_ptr<api::IForm<api::IPaper>> trailerMajoritario);
 
-// (original lines 55-178: content not recovered)
+// (original lines 58-178: content not recovered)
 #line 179
 protected:
     virtual void ImprimeProporcionalPartido() const override
@@ -145,21 +148,42 @@ protected:
         m_trailerMajoritario->Slot2();
     }
 
-    virtual void ImprimeConsulta() const override;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // (original lines 274-279: content not recovered)
+#line 280
+    virtual void ImprimeConsulta() const override
+    {
+        m_headerMajoritario->Slot2();
+        const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
+        const uebyte digitos = cargo.GetNumeroDigitos();
+        const TCargoID idCargo = cargo.GetID();
+        CCalculaCV& calculadoraCV = api::CPolySingleton<CCalculaCV>::instance();
+        const std::string cargoCV = std::format("{:02}", idCargo);
+        calculadoraCV.IncluiString(cargoCV);
+        md::TVectorRespostaConsulta respostas = cargo.GetDetalheConsulta().GetRespostas();
+        std::sort(respostas.begin(), respostas.end(),
+                  [](const md::CRespostaConsulta& a, const md::CRespostaConsulta& b) {
+                      return a.GetNumero() < b.GetNumero();
+                  });
+        for (std::size_t i = 0; i < respostas.size(); ++i) {
+            const md::CRespostaConsulta& resposta = respostas[i];
+            const TCandidatoID numero = resposta.GetNumero();
+            const md::TQtdVoto votos = RDV::GetInst().Candidato(idCargo, numero, digitos);
+            if (votos == 0) {
+                continue;
+            }
+            const std::string votosResposta = std::format("{:05}{:04}", numero, votos);
+            calculadoraCV.IncluiString(votosResposta);
+            api::CPaperFormBuilder builder;
+            const std::string numeroResposta = std::format("{:0{}}", numero, digitos);
+            builder.AddTextField(
+                "  " + ecourna::api::util::CStringUtils::PreencheADireita(resposta.GetResposta(), ' ', 26) +
+                    ecourna::api::util::CStringUtils::PreencheAEsquerda(numeroResposta, ' ', 4) + "  " +
+                    std::format("{:04}", votos),
+                static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+            builder.Build()->Slot2();
+        }
+        m_trailerMajoritario->Slot2();
+    }
 
     std::shared_ptr<api::IForm<api::IPaper>> m_headerProporcional;
     std::shared_ptr<api::IForm<api::IPaper>> m_headerProporcionalPartido;
