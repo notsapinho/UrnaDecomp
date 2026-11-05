@@ -20,7 +20,7 @@
 //   7787 lands.
 // - GetSeparadorFase (slot 20, fn 11183) calls CRelUtil::GetSeparadorFase, fn 1919, which has six callers in the target
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
-//   four not reconstructed (11943, 11946, 12105, 12110; 2785 and 11183 are in the link).
+//   three not reconstructed (11946, 12105, 12110; 2785, 11183 and 11943 are in the link).
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
 //   did into 1919 alone. w123_erro stands for four of the other 13 (11968, 12110, 2791, 5967; 11181, 11212,

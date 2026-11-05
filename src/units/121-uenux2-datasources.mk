@@ -202,7 +202,8 @@
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
 # function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) unit 139's 11254, 11255 and 11256 are in our link: the roots file's stand-in calls it twice for the other five.
+# 11981) unit 139's 11254, 11255 and 11256 and fragment 325's 11980 and 11981 are in our link: the roots file's stand-in
+# calls it twice for the other three.
 #
 # Reinicia, CalculaCodigo and GeraMacHexa have no record, and their names are chosen: CalculaCodigo is the function
 # CRelUtil::DSCodigoVerificador (fn 11182, unit 123) formats as the verification code. Scores are `pnpm wasm score`

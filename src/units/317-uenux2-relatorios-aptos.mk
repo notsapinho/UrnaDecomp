@@ -98,9 +98,9 @@
 #   legend's separator is unit 168's vota::AdicionaSeparador (fn 1387), whose namespace is that unit's choice, called
 #   from this comum file.
 #
-# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's callers 3871, 12105 and 12110 (11223, 11908
-# and unit 325's 5977 are in the link), for 2259's callers 7787, 11943, 11946 and 12105 (11908 is in the link) and,
-# since unit 325, for 3654's callers 11943, 11946 and 12105. Unit 57's and
+# Roots: 317-uenux2-relatorios-aptos-roots.cpp stands for 1921's and 1922's callers 12105 and 12110 (11223, 11908 and
+# unit 325's 5977 and 3871 are in the link), for 2259's callers 7787, 11946 and 12105 (11908 and unit 325's 11943 are
+# in the link) and, since unit 325, for 3654's callers 11946 and 12105 (11943 is in the link). Unit 57's and
 # unit 219's roots, unit 77's CParteEleitores stand-in and unit 280's w280_cpe, which stood for 11908 or 11223 alone,
 # went with this unit, and unit 176's and 287's pending files with their last traps (11908, 11223).
 RELATORIOS_APTOS_SRCS := src/api/gui/reports/creport.cpp src/api/gui/reports/creportprinter.cpp \

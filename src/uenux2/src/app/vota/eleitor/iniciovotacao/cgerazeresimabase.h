@@ -5,6 +5,7 @@
 #include "app/comum/cappstate.h"
 
 namespace api {
+class CPaperFormBuilder;
 class IScreen;
 class IInputKbd;
 template <typename MEDIA, typename INPUT>
@@ -22,8 +23,10 @@ namespace vota {
 // pointee's type is chosen, the type of vota::CTelasVota's members. The destructor is out of line, in another object
 // than the derived classes': their destructors (fns 5961 and 5960) call fn 1720, which stores this class's vptr and
 // releases +12 (through binaryen's fn 2902). The constructor reads the member through a getter chosen for it
-// (ctelasvota.h). Not recovered: StartState (6878 B; it calls fns 183 and 436, which have names, and others that have
-// no name; src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// (ctelasvota.h). Not recovered: StartState (6878 B: the zeresima's report and file, through fns 5971, 3699, 3873,
+// 3872, 5977, 5580 and 5579, which are written, and 11975 and 11976, which are not;
+// src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp, and src/units/325-uenux2-geradores-zeresima.mk for
+// the forms measured).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CGeraZeresimaBase : public comum::CAppState {
 public:
@@ -41,5 +44,15 @@ protected:
 private:
     std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
 };
+
+// No target index: two parts of the RDV extract's title, which fn 5971 (vota::CriaPartesExtratoRDV,
+// cgeradorresumozeresima.cpp) holds behind stack frames of their own, binaryen's inlining of a function with one caller
+// (docs/reference/facts/reading.md R10). ImprimeAvisoSemVotos adds "Não há votos ou justificativas registrados" in
+// IPaper's style 2 between two centred lines of 38 '=' and a new line; ImprimeTituloExtratoRDV the extract's title line
+// and a new line. Their object links after 5971's (measured: src/units/325-uenux2-geradores-zeresima.mk), so they are
+// in another file than their caller; this file, the object after it in the data and in our link, their names and
+// their being free functions of vota (they read no state) are chosen.
+void ImprimeAvisoSemVotos(api::CPaperFormBuilder& builder);
+void ImprimeTituloExtratoRDV(api::CPaperFormBuilder& builder);
 
 } // namespace vota

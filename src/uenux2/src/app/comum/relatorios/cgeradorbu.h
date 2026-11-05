@@ -12,6 +12,7 @@
 // cgeradorbu.cpp: the D0 calls the D2 and then frees (R5). The constructor's parameter list is not recovered, and
 // nothing here declares it.
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,13 @@
 #include "app/comum/relatorios/cgeradorbubase.h"
 
 namespace comum {
+
+// Fn 3699, no record: a form of the title it is given (style 1, left), a new line and the current position's name
+// upper-cased and centred in 38 columns of '-' (comum::CPadDS over CToUpperDS over CCargoDSNome, fn 5613's instance).
+// Its callers are fns 5971 (vota::CriaPartesExtratoRDV, with the phase's separator), 11946 and 12110. Its name,
+// its parameter's type, its being a free function of comum and its file (cgeradorbu.cpp, one of the two the use band
+// leaves: src/units/325-uenux2-geradores-zeresima.mk) are chosen.
+std::shared_ptr<api::IForm<api::IPaper>> CriaTituloCargo(const std::string& titulo);
 
 class CGeradorBU final : public CGeradorBUBase<CRdvVota, CEleitores> {
 public:

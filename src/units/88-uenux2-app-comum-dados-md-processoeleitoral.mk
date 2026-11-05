@@ -63,7 +63,8 @@
 # comum::NomeEleicaoCorrente (fn 11556), the name of the current position's election, is in ccargos.cpp: it holds
 # GetInst's code (record 24), which only that TU can inline, then calls GetCurrentEleicao (2836) and copies the string at
 # +12 of the CEleicaoPE it returns (md/processoeleitoral/celeicaope.h's GetNome). The target reaches it only through
-# table slot 3049, which fn 5580 passes to api::CPaperFormBuilder::AddTextField (604): the roots take its address. In
+# table slot 3049, which fn 5580 passes to api::CPaperFormBuilder::AddTextField (604); the roots took its address until
+# 5580 was written (fragment 325's comum::CRelUtil::FormCabecalhoEleicao), which takes it. In
 # band 1 (ledger/ordinals.tsv) it follows ccargos.cpp's exit destructors (11561, 11560) and two comparators of the
 # cargo pairs, 11559 and 11558, whose table slots fns 7377 (which holds code of this file's line 249) and 3782 store: so
 # it is defined after the statics and after OrdenaPorAquisicao and OrdenaPorImpressao, which mention the comparators

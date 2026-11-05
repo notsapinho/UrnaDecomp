@@ -1,5 +1,6 @@
 # uenux2: helpers of the zerÃ©sima reports (fns 11946 and 11943, vota::CGeraZeresimaBase's and
-# vota::CGeraResumoZeresimaBase's StartState, unit 169's traps), written in landed units' files and in
+# vota::CGeraResumoZeresimaBase's StartState; 11943 is written since, 11946 is unit 169's trap), and 11943, written in
+# landed units' files and in
 # app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.{h,cpp} (new; unit 169's list compiles the .cpp, below); this
 # fragment holds their notes and their roots. Paths relative to src/uenux2.
 #
@@ -89,19 +90,85 @@
 #   with the UF). Its name and parameters' types are chosen. The include of api/util/cstringutils.h takes one blank line
 #   of the gap after `namespace comum {`.
 #
-# Roots: 325-uenux2-geradores-zeresima-roots.cpp stands for the target callers not written: 11943, 11946, 12105 and
-# 12110 for 1047; 11943 and 11946 for 5977 and 5579; 11946 and 12110 for 3873 and 3872. Stand-ins of other units whose
-# every caller is now in the link went: unit 111's w111_relatorio (for 1047; 1127 is matched), unit 230's w230_titulos
-# (for 5579) and unit 183's two address sinks (for 3872). Those of units 89, 123, 196 and 317 keep callers that still
-# wait, and their comments name the ones now in the link.
+# Matched since, each scored with pnpm wasm score against the whole link's names.tsv before steps 7 to 9, all
+# operand-only (calls, data, and two table slots of matched functions: 7324, the format buffer's __prepare_write, and
+# the assert error's destructor):
+# - vota::CriaPartesExtratoRDV (fn 5971, 85 over 1132 rows) in cgeradorresumozeresima.cpp, over the file's internal
+#   CriaTituloExtratoRDV, whose records are the file's two (:43:94 and :47:100, codes 3479 and 3480 of
+#   api/util/eueasserterror.h) and which clang inlines into it (one frame: its builder is at +200 of 5971's), and
+#   vota::(anonymous namespace)::CriaTrailerMajoritario (5970, 5 over 88), which 5971 calls twice (its
+#   CriaTrailerProporcional, called once, is inlined). 5971 returns {CFormPart(the title), CParteCargos(CFormPart(5580's
+#   form), CParteRdv(CFormPart(3699's form), CFormPart(5970's), CFormPart(the proportional trailer's),
+#   CFormPart(5970's), CFormPart(an empty form)))}. Two parts of the title, vota::ImprimeAvisoSemVotos and
+#   ImprimeTituloExtratoRDV (no index: 5971 holds each behind a frame of its own), are in unit 169's
+#   cgerazeresimabase.cpp, measured: in votadefs.cpp, whose object links ahead of 5971's, 5971 scores 155 over 1141 (9
+#   inserted, 9 deleted, local numbers in the two helpers); in a scratch link of the same objects with votadefs.cpp.o
+#   moved after cgeradorresumozeresima.cpp.o, 85 over 1132 (docs/reference/facts/codegen.md C4). cgerazeresimabase.cpp's
+#   object is the one after 5971's in the data (vota::CGeraZeresimaBase's vtable @1544384) and in our link; the file,
+#   the two names and their being free functions of vota (they read no state) are chosen. The two functions' names,
+#   CriaPartesExtratoRDV's and the trailers', are chosen; the title's is its records'.
+# - CDataSourcesRelatorio<CRdvVota, CEleitores>'s TrailerProporcional (fn 11981, 65 over 1242) and TrailerMajoritario
+#   (11980, 56 over 1054) at their records' lines (241 and 305), and GetLinhasEleitoresAptos (3871, 4 over 104) with its
+#   lambda's call operator (11968, record 212, 22 over 294) and that lambda's __func slots 11966, 11967, 11969 and
+#   11970, in cdatasourcesrelatorio.h; cgeradorresumozeresima.cpp's object emits them (5970 and 5971 take the trailers'
+#   addresses, table slots 1626 and 1625).
+# - comum::CriaTituloCargo (fn 3699, 6 over 112) in unit 139's cgeradorbu.cpp, above the destructor, over
+#   AddTextField<CPadDS<...>> (5613) and the inline constructors of app/comum/dados/ccargods.h. In use band 3 it lies
+#   between CCalculaCV::CalculaCodigo (3700, ccalculacv.cpp) and CGeradorBU's D2 (3698, cgeradorbu.cpp), the end of the
+#   one object or the start of the other; no record names either, and cgeradorbu.cpp, the BU report's file, is chosen.
+# - comum::CRelUtil::FormCabecalhoEleicao (fn 5580, 11 over 184) in unit 123's crelutil.cpp, between ImprimeSeparadorVia
+#   (5581) and FormRodapeZeresima (5579), use band 2's order. The two lines of 38 '=' come from the file's internal
+#   ImprimeLinhaIgual, which clang inlines into both calls: written in place, the strings' temporaries take +8 and the
+#   builder +20 of the 32-byte frame (33 over 184, the frame rows), where the target has the builder at +8 and the
+#   strings at +20, the helper's frame (the object's stores read so; a callee clang inlines brings its locals above the
+#   caller's, codegen.md C5). The helper, its name and its linkage are chosen.
+# - vota::CGeraResumoZeresimaBase::StartState (fn 11943, 54 over 801) in unit 169's cgeraresumozeresimabase.cpp: the
+#   next state set to this, the form's slot 2, vota::GeraResumoZeresima, slot 9, and slot 10's result stored as the next
+#   state. GeraResumoZeresima (the phase's separator, the report, LogaGerandoRelatorio with RELATORIO_RESUMO_ZERESIMA
+#   around writing rze.dat, SincronizaRelatorios, the urna's number stored as CEstadoGeralVota's urnaIdGerouZeresima, fn
+#   491) and CriaRelatorioResumoZeresima ({CFormPart(CriaCabecalho("Resumo da Zerésima")), CFormPart(5579's form)},
+#   5971's parts inserted after the first) have no index: 11943 holds each behind an 80-byte frame. Measured: both in
+#   cgeraresumozeresimabase.cpp, 835 over 1390 (589 inserted: binaryen inlined the vector's insert, below); with a roots
+#   stand-in for that insert that read the call's result (no target caller reads it: reading.md R18), 202 over 813; the builder in cgeradorresumozeresima.cpp and the generator in
+#   cgeraresumozeresimabase.cpp, 62 over 805 (4 inserted, 4 deleted: the report's address taken at the call, where the
+#   target takes it in the builder); both in cgeradorresumozeresima.cpp, the generator above or below the builder, 54
+#   over 801. The target's builder keeps 5971's result's begin and end in locals across its calls and drops that
+#   vector's last store, which ours does only in 5971's TU: a reading, that clang sees there that 5971 does not capture
+#   its result's address. The two names, their being free functions of vota, their file and their order are chosen, and
+#   so is CEstadoGeralVota::SetUrnaIdGerouZeresima.
+# - The insert: the builder calls std::vector<std::shared_ptr<api::IReportPart>>::__insert_with_size, which clang keeps
+#   out of line (-Rpass-missed=inline: cost 1090, threshold 250). The target's 2875 is that body, one with RHVoice's
+#   vector<shared_ptr<correction>> instance, called by 11943, 11946, 1245 and 813; our instance is RHVoice's code in
+#   the objects (wasm-objdump -d, the object-local numbers masked), and our link inlined it into its one caller all the
+#   same, so the roots stand in for 11946's call. With two callers ours is out of line, and step 9 renamed 2875's line
+#   from RHVoice's instance to it, the copy binaryen keeps (it links first). With 5971 in the link, step 9
+#   renamed 5969's line (one body for CParteCandidatos's and CParteRdv's __shared_ptr_emplace::__on_zero_shared, slot 2
+#   of both blocks' vtables) to CParteRdv's, which 5971's object emits.
+#
+# Roots: 325-uenux2-geradores-zeresima-roots.cpp stands for the target callers not written: 11946, 12105 and 12110 for
+# 1047; 11946 for 5977, 5579, 5971, 5580 and the insert (2875's instance); 11946 and 12110 for 3873, 3872 and 3699.
+# Stand-ins of other units whose every caller is now in the link went: unit 111's w111_relatorio (for 1047; 1127 is
+# matched), unit 230's w230_titulos (for 5579), unit 183's two address sinks (for 3872), unit 88's s11556 (5580 passes
+# 11556's slot), unit 77's CParteRdv builder (5971), unit 129's Totais (5801's callers 11980 and 11981) and unit 140's
+# w140_mapa (2877's caller 5971). Those of units 58, 77, 89, 109, 110, 121, 123, 162, 168, 196, 205, 216 and 317 keep
+# callers that still wait; the comments of those with callers now in the link name them.
 #
 # Not written, with what each waits for:
-# - 11946 and 11943 call fn 5971 (the RDV extract's parts; records iniciovotacao/cgeradorresumozeresima.cpp:43 and :47
-#   of its internal CriaTituloExtratoRDV, blank lines of that file), which takes the address of 11981 (table slot 1625)
-#   and, through 5970, of 11980 (slot 1626), cdatasourcesrelatorio.h's TrailerProporcional and TrailerMajoritario (2762
-#   and 2326 bytes), and calls 5580 and 3699; none of them is written. 11946 also stores 11976's slot (1631) in a
-#   std::function<bool()> (__func slots 11953 to 11957).
-# - 3871 with 11980, 11981 and its lambda's slots 11966 to 11970; 11975; 12105 and its helpers: not attempted.
+# - 11946 (vota::CGeraZeresimaBase::StartState, unit 169's pending trap), and what only it reaches: 11975 and 11976
+#   (table slots 1632 and 1631, read as a CDataSourcesRelatorio text of the comparecimento over 3871 and a parties'
+#   filter over CCandidaturas::GetCandidatosPartido and ExisteCandidatoFederacao, 2272 and 5809) and the __func<bool (*)(),
+#   bool ()> slots 11953 to 11957. A form written as 11943's (StartState, a generator writing ze.dat with
+#   RELATORIO_ZERESIMA, a builder of the header, the candidates' list, CParteCargos over CParteCandidatos's four parts
+#   and the footer, and five forms of other functions binaryen inlines) scored on whole links: builder and generator in
+#   cgeradorresumozeresima.cpp, 250 over 3011 (3 inserted, 14 deleted), 234 over 3008 with crelutil.cpp.o moved after
+#   that object; both in cgerazeresimabase.cpp and the forms in cgeradorresumozeresima.cpp, 502 over 3053, 157 over 3008
+#   operand-only with crelutil.cpp.o moved after cgerazeresimabase.cpp.o, twelve of those rows two locals swapped. The
+#   data put crelutil.cpp's records (@1576792 on) after cparterdv.cpp's and crelatoriotesteimpressora.cpp's, after both
+#   objects; our link has it in unit 123's list, ahead of them. 11946 hands the parts forms (shared_ptr<IForm<IPaper>>)
+#   with no CFormPart around them where cpartecandidatos.h's constructors take IReportPart (all of
+#   CParteCandidatosMajoritarios's and CParteCandidatosConsultas's, six of CParteCandidatosProporcionais's seven, the
+#   first two of CParteCandidatos's), so those types change with it.
+# - 12105, 12110 and the stretch: not attempted.
 #
 # nothing in the skeleton gives these functions their target's call sites: the roots stand for those callers, through
 # asm labels, so the rule needs no header

@@ -19,7 +19,8 @@
 # - CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s D2 and D0 (fns 11485, 11484), implicit, emitted with
 #   comum::CRdvVota's destructor (unit 13, fn 5734), whose member at +44 the class is, in
 #   app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.h.
-# - std::__tree<md::TCargoID, md::CVotos>::destroy (fn 2877), from this unit's roots (below).
+# - std::__tree<md::TCargoID, md::CVotos>::destroy (fn 2877), from this unit's roots until its target caller 5971 was
+#   written (fragment 325): it comes from 5971's object now, and the roots' stand-in for 5971 went.
 # - Copies of library and ecourna template code this unit's objects bring first: 858, 1074 and 1075 (the error path of
 #   ecourna's IConversorASN, basic_stringstream and CBaseError<EApiAsnError>) from cconversorvotoscargo.cpp.o.
 #

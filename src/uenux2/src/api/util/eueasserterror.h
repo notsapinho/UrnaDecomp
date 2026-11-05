@@ -102,6 +102,12 @@ enum EUeAssertError {
     // CImprimindoBim's two, the columns leaving 33 characters for each name, chosen to that length
     EUA_IMPRIMINDOBEHB_ESTADOINVALIDO = 3484,
     EUA_IMPRIMINDOBEHB_ENCERRINVALIDO = 3485,
+    // vota::(anonymous namespace)::CriaTituloExtratoRDV (held by fn 5971, records cgeradorresumozeresima.cpp 43:94 and
+    // 47:100): the texts "Assert (qtdJustificativas == 0)" and "Assert (votosCargos.Total() == 0)". With the first
+    // invocation indented four columns, the second eight (inside the loop over the cargos' votes, a reading), and the
+    // codes qualified api::, the columns leave 53 characters for each name, chosen to that length
+    EUA_GERADORRESUMOZERESIMA_EXTRATORDV_COM_JUSTIFICADOS = 3479,
+    EUA_GERADORRESUMOZERESIMA_EXTRATORDV_CARGOS_COM_VOTOS = 3480,
 };
 
 using CUeAssertError = ecourna::api::exception::CBaseError<EUeAssertError, ecourna::api::exception::SErrorLimits{3400, 4200}>;

@@ -9,22 +9,30 @@
 // api::CPaperFormBuilder::AddTextField (fn 604), which makes a report line's text field of it.
 //
 // Written: DetalheCandidatoZE (fn 11973), DetalheCandidato (fn 11972, no record of its own) and LinhaPartido (fn 11261,
-// no record: src/units/296-uenux2-relatorios-impressao.mk has it). The other members are not reconstructed: their lines
-// stay blank, past the end of this file. src/units/183-uenux2-relatorios.mk lists what the bytes decide and what is
-// chosen.
+// no record: src/units/296-uenux2-relatorios-impressao.mk has it), and since, at their records' lines,
+// TrailerProporcional (fn 11981), TrailerMajoritario (fn 11980) and GetLinhasEleitoresAptos's lambda (fn 11968), with
+// GetLinhasEleitoresAptos (fn 3871, no record; the trailers call it): src/units/325-uenux2-geradores-zeresima.mk.
+// The other members, TrailerProporcionalPartido and CodVerificador, are not reconstructed: their lines stay blank.
+// src/units/183-uenux2-relatorios.mk lists what the bytes decide and what is chosen for the first three.
 //
 // Chosen: DetalheCandidato's name and its lines (11972 is DetalheCandidatoZE's body with the vote count printed and no
 // assert), where the class is closed, the members' access and that they are defined in the class.
 
 #include <format>
+#include <map>
 #include <string>
 
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/eueasserterror.h"
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
+#include "app/comum/relatorios/ccalculacv.h"
+#include "app/comum/relatorios/celeitoresaptos.h"
+#include "app/comum/relatorios/cgeradorbuqrcode.h"
+#include "app/comum/relatorios/euecomumrelatorioserror.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
@@ -33,7 +41,7 @@ template <typename RDV, typename DSAptos>
 class CDataSourcesRelatorio {
 public:
 
-    // (original lines 36-105: content not recovered)
+    // (original lines 44-105: content not recovered)
 #line 106
     static std::string DetalheCandidato()
     {
@@ -98,6 +106,73 @@ public:
             texto += CCargoDSLabelRelatorio::HeaderDetalhe();
             texto += "\n";
         }
+        return texto;
+    }
+
+    // (original lines 172-205: content not recovered)
+#line 206
+    static std::string GetLinhasEleitoresAptos()
+    {
+        const auto qtdeAptos = []() {
+            const auto aptos = DSAptos::GetInst().QuantidadeAptosPorAbrangencia();
+            const md::ETipoAbrangencia abrangencia = CCargos::GetInst().GetCurrent().GetAbrangencia();
+            if (!aptos.contains(abrangencia)) {
+                throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9089,
+                                              std::format("Abrangência inválida: {}", static_cast<int>(abrangencia)));
+            }
+            return aptos.at(abrangencia);
+        };
+        return CEleitoresAptos(qtdeAptos).Formata() + "\n";
+    }
+
+    // (original lines 220-230: content not recovered)
+#line 231
+    static std::string TrailerProporcional()
+    {
+        const md::TCargoID idCargo = CCargos::GetInst().GetCurrent().GetID();
+        const RDV& rdv = RDV::GetInst();
+        const int nominais = rdv.Nominais(idCargo);
+        const int legendas = rdv.Legendas(idCargo);
+        const int brancos = rdv.Brancos(idCargo);
+        const int nulos = rdv.Nulos(idCargo);
+        const int total = rdv.Cargo(idCargo);
+        if (api::CPolySingletonList::has<CCalculaCV>()) {
+            CCalculaCV& calculadoraCV = api::CPolySingleton<CCalculaCV>::instance();
+            const std::string votos =
+                std::format("{:04}{:04}{:04}{:04}{:04}", nominais, legendas, brancos, nulos, total);
+            calculadoraCV.IncluiString(votos);
+        }
+        std::string texto;
+        texto += GetLinhasEleitoresAptos();
+        texto += std::vformat(CCargoDSLabelRelatorio::TotalVotoNominal(), std::make_format_args(nominais));
+        texto += std::format("Total de votos de Legenda         {:04}\n", legendas);
+        texto += std::format("Brancos                           {:04}\n", brancos);
+        texto += std::format("Nulos                             {:04}\n", nulos);
+        texto += std::format("Total Apurado                     {:04}", total);
+        return texto;
+    }
+
+    // (original lines 256-295: content not recovered)
+#line 296
+    static std::string TrailerMajoritario()
+    {
+        const md::TCargoID idCargo = CCargos::GetInst().GetCurrent().GetID();
+        const RDV& rdv = RDV::GetInst();
+        const int nominais = rdv.Nominais(idCargo);
+        const int brancos = rdv.Brancos(idCargo);
+        const int nulos = rdv.Nulos(idCargo);
+        const int total = rdv.Cargo(idCargo);
+        if (api::CPolySingletonList::has<CCalculaCV>()) {
+            CCalculaCV& calculadoraCV = api::CPolySingleton<CCalculaCV>::instance();
+            const std::string votos = std::format("{:04}{:04}{:04}{:04}", nominais, brancos, nulos, total);
+            calculadoraCV.IncluiString(votos);
+        }
+        std::string texto;
+        texto += GetLinhasEleitoresAptos();
+        texto += std::vformat(CCargoDSLabelRelatorio::TotalVotoNominal(), std::make_format_args(nominais));
+        texto += std::format("Brancos                           {:04}\n", brancos);
+        texto += std::format("Nulos                             {:04}\n", nulos);
+        texto += std::format("Total Apurado                     {:04}", total);
         return texto;
     }
 };
