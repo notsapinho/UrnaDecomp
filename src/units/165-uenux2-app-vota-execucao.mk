@@ -31,8 +31,8 @@
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so);
 #   CPreShowFormVota::PreShow (7707, slot 2, the class's key function) and DesenhaDescricaoModo (4620), below.
-# Not matched: CAguardaInicio::GetInst (5343, below). The roots file says what stands for the unwritten caller of
-# IExecucaoVota's GetInst (5408 for 3594) and for 576's 16 callers.
+# Not matched: CAguardaInicio::GetInst (5343, below). The roots file says what stands for 576's 16 callers;
+# IExecucaoVota's GetInst (3594) has both its target callers in the link (7030, and 5408, unit 170's).
 #
 # CAguardaInicio::ProcessKey (10217, slot 6): key 8 logs "Urna pronta para receber votos" (comum::IEventosLog::loga, fn
 # 233, on vota::CLogVota::GetInst, 184) and goes to vota::CPedeIdentidade::GetInst (652), key 7 to

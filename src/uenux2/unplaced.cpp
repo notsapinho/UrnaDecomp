@@ -21,16 +21,6 @@
 // f5376 · 343 B · unmatched · placement: link order · name unknown
 // void f5376(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 756 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp
-
-// f5408 · 55 B · unmatched · placement: link order · name unknown
-// void f5408(i32) { ... }
-
-// link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
-
-// f5521 · 72 B · unmatched · placement: link order · name unknown
-// void f5521(i32, i32) { ... }
-
 // link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
 
 // f5579 · 638 B · unmatched · placement: link order · name unknown
@@ -160,11 +150,6 @@
 // f2248 · 554 B · unmatched · placement: link order · name unknown
 // void f2248(i32, i32, i32) { ... }
 
-// link-order cluster 1164 · uses=5
-
-// f2369 · 11 B · unmatched · placement: link order · name unknown
-// void f2369(i32) { ... }
-
 // link-order cluster 1219 · uses=7
 
 // f1763 · 248 B · unmatched · placement: link order · name unknown
@@ -184,11 +169,6 @@
 
 // f1047 · 635 B · unmatched · placement: link order · name unknown
 // void f1047(i32, i32, i32) { ... }
-
-// link-order cluster 1278 · uses=13
-
-// f977 · 140 B · unmatched · placement: link order · name unknown
-// ? f977(i32, i32, i32, i32) { ... }
 
 // component comum
 

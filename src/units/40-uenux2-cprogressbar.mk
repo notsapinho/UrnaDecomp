@@ -11,7 +11,7 @@
 # emits the vtable. Move (10976) is here, over SRect::Move, and SetValor and Incrementa (3667, 5508, chosen names, with the
 # chosen helper Limita): the increment and the setter differ only in the setter's first test. Limita's statements in
 # place give the same object code; std::clamp differs (27 lines). `m_valor == valor` is the operand order the link
-# gives the target's compare. The roots stand in for fn 2369, the second caller of Incrementa. GetTypeName (10975,
+# gives the target's compare. Incrementa's two target callers, 2369 and 12101, are in the link. GetTypeName (10975,
 # `return "CProgressBar";`) is defined between Move and Rect, the order of their target indices in the use band (10976,
 # 10975, 10974), which names.tsv's ld_index follows. Draw (10977) is pending (40-uenux2-cprogressbar-pending.cpp says
 # what it waits for). Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

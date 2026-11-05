@@ -19,8 +19,8 @@
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target that are not in our link (2793 5500 6004 7840 8592 10155 10205 10256 10261;
-// 2891, unit 206's writer, is): two call sites, since binaryen inlines a function called once
+// Stands in for 520's callers in the target that are not in our link (2793 6004 7840 8592 10155 10205 10256 10261;
+// 2891, unit 206's writer, and 5500, unit 170's, are): two call sites, since binaryen inlines a function called once
 // (docs/reference/facts/tool-traps.md X1). 857, 1249, 1532, 2927 and 9770, the others, call it now: 857 and 1249
 // from mock/app/comum/cappinfobuilder.cpp's object (unit 253), 1532, 2927 and 9770 from src/app/roots_coderenv.cpp. The
 // instantiation above keeps clang from inlining ~vector here.

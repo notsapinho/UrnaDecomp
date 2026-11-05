@@ -12,6 +12,7 @@
 #include "api/gui/capplication.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveformbuilder.h"
+#include "api/gui/cprogressbar.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldmultiline.h"
@@ -31,7 +32,7 @@
 
 namespace vota {
 
-// (original lines 34-290: content not recovered)
+// (original lines 35-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -354,7 +355,12 @@ api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::fu
     return campo;
 }
 
-// (original lines 3514-3529: content not recovered)
+void CTelasVota::IncrementaBarraSincronismo()
+{
+    m_barraSincronismo->Incrementa();
+}
+
+// (original lines 3519-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {

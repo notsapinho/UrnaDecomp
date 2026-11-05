@@ -1,7 +1,6 @@
 // Roots: keep fragment 165's functions in the skeleton link the way the target reaches them.
 // - vota::IExecucaoVota::GetInst (fn 3594) has two direct callers in the target, 7030
-//   (vota::CThreadEleitor::ParaOutrasThreads, unit 116's) and 5408, not reconstructed: w165_execucao stands for 5408
-//   with one call, so GetInst has two call sites and binaryen keeps it out of line.
+//   (vota::CThreadEleitor::ParaOutrasThreads, unit 116's) and 5408 (unit 170's), both in the link: no stand-in.
 //   vota::impl::IPoliticaExecucaoEleitor::GetInst has one caller in the target, fn 5925 (unit 97's slot 17 of
 //   CConfirmaVotoNominal and CMajoritarioValido, one body), which holds it inlined, with the has<T> and push<T> thunks it
 //   calls (2744 twice and 5407 once), and is in the link: no stand-in. Each GetInst stores its class's vptr
@@ -17,7 +16,6 @@
 // Declared through asm labels with the objects' signatures; no header.
 extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioInterativoERN3api23CInteractiveFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");
-extern "C" int w165_getinst_execucao() __asm__("_ZN4vota13IExecucaoVota7GetInstEv");
 extern "C" void w4620_modo(int, int) __asm__("_ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE");
 
 namespace {
@@ -46,12 +44,6 @@ __attribute__((noinline)) int ModoProgressBar(int tela, int ponto)
     return ponto - 3;
 }
 
-// stands for fn 5408, which calls vota::IExecucaoVota::GetInst once
-__attribute__((noinline)) int w165_execucao(int vezes)
-{
-    return vezes > 1 ? w165_getinst_execucao() + vezes : 31;
-}
-
 const void* volatile w165_sink;
 
 struct SW165Roots {
@@ -61,7 +53,6 @@ struct SW165Roots {
         w165_sink = reinterpret_cast<const void*>(&FormularioVota);
         w165_sink = reinterpret_cast<const void*>(&FormulariosVota);
         w165_sink = reinterpret_cast<const void*>(&ModoProgressBar);
-        w165_sink = reinterpret_cast<const void*>(&w165_execucao);
     }
 } w165_roots;
 

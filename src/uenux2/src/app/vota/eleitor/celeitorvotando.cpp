@@ -397,8 +397,3 @@ void CEleitorVotando::suspenderEleitor(const EOrigemSuspensao origem)
 
 } // namespace vota
 
-
-// <stubs>
-// f5500 · 6871 B · unmatched · placement: link order · name unknown
-// void f5500(i32, i32) { ... }
-// </stubs>

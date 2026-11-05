@@ -106,6 +106,7 @@ public:
     const CFormInterativoTelaVota& GetTelaInicioVotacao() const { return m_tela14; }
     const CFormInterativoTelaVota& GetTelaSincronismo() const { return m_tela21; }
     const std::shared_ptr<api::CProgressBar>& GetBarraSincronismo() const { return m_barraSincronismo; }
+    void IncrementaBarraSincronismo();
     const CFormInterativoTelaVota& GetTelaQuerImprimirBU() const { return m_tela29; }
     const CFormInterativoTelaVota& GetTelaQuerReimprimirZeresima() const { return m_tela30; }
     // +84, which vota::CConfirmaRegerarZeresima's constructor copies (its GetInst inlined into fn 11835); the getter's
