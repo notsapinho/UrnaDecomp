@@ -11,7 +11,9 @@
 # - vota::CImprimindoBU: GetInst (fn 5986), the constructor, the destructor (fns 244, 387) and the statics (fns 12079,
 #   12080), and ImprimeBU (fn 2890, below);
 # - comum::CItemImprimeEstadoUrna, CItemImprimeListaEleitores, CItemParametrosUrna and CItemVersoesPacotes: slot 2 (fns
-#   11669, 11668, 11667, 11666), in app/comum/informacao/citemmenu.cpp, whose note says what it rests on;
+#   11669, 11668, 11667, 11666), in app/comum/informacao/citemmenu.cpp, whose note says what it rests on, and the
+#   classes' two constructors each, after the slots, with no index of their own: binaryen inlines them into
+#   vota::CTelasVota::CriaTelaMaisInformacoes (fn 6599, unit 110's), and citemmenu.h has their evidence;
 # - four vota::CLogVota members these states and others call, in app/vota/log/clogvota.cpp (unit 119's file), after
 #   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaQtdViasAdicionaisExcedeMaximo (fn 4556),
 #   LogaMesarioIndagadoQualidadeBU (fn 4551) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), 4556 and
@@ -207,9 +209,15 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/informacao/citemmenu.cpp.o: UENUX2_CXXFLAGS 
 # the unit's flags
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
-# nothing reconstructed builds comum's items yet (fn 6599): 156-uenux2-fimvotacao-bu-roots.cpp keeps their vtables,
-# the way the target reaches their slots (CRetirarMR's vptr is stored by 2291, CLimiteCopiasBUAtingido's by unit 185's
-# 12023, CQuerImprimirBU's by unit 104's 12062, CMostraQRCodeCertificado's by unit 37's 12051)
-$(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-roots.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/156-uenux2-fimvotacao-bu-pending.o $(APP)/156-uenux2-fimvotacao-bu-roots.o
+# No roots file. Its last stand-ins, the vtable sinks of comum's four menu items (@1550780 to @1550888), went once
+# their constructors were written and reached (citemmenu.cpp, through vota::CMenuMaisInformacoesVota's constructor,
+# which fn 6599, unit 110's, holds): those constructors store the vptrs, and a link without the sinks moves no row in
+# or out of match. No other vtable of this unit needs a sink: CRetirarMR's constructor is inlined into its GetInst (fn
+# 2291), which the print states' StartState (fns 12065, 12068, 12071 and 12074) call; CMostraQRCodeCertificado's GetInst
+# into CMostraQRCodeBU::ProcessInput (fn 12051, unit 37), CQuerImprimirBU's into CInicioBU::StartState (fn 12062, unit
+# 104) and CLimiteCopiasBUAtingido's into CVerificaQtdBUsAdicionais::StartState (fn 12023, unit 185), each storing its
+# vptr. The six vota::CLogVota members of this unit (fns 1127, 4551, 4556, 2495, 4563 and 4557, in
+# app/vota/log/clogvota.cpp) have their two or more direct call sites in the link from their written callers: 4551,
+# 4556, 4563 and 4557 from 12077, 12078, 12081, 12027 and 12082, 2495 from 10466, 10473, 10477 and 10485 (unit 282), and
+# 1127 from the printing states 11852, 11855, 11991, 12065, 12068, 12071, 12074, 12077, 12078 and 12081.
+override EXTRA_OBJS += $(APP)/156-uenux2-fimvotacao-bu-pending.o

@@ -9,9 +9,7 @@
 // - the w102_ functions and SFonte hold the std::make_shared<T> of a __shared_ptr_emplace<T>. They need T's constructor
 //   declared, not defined, and the block does not depend on its parameters: each is what the class's header declares.
 // clang emits the block in this object with the builder. The target reaches its members only through its vtable, whose
-// address the builder stores, so the sink below is the reference the target has. The last five lines of the sink are
-// the vota menu items' own vtables, which fn 6599 stores: vota::CItemVisualizarCandidatosVota's keeps that class's D0,
-// and the other four keep their slot 3 (fns 12267, 12266, 12259, 12255) and their shared D0 (fn 2939).
+// address the builder stores, so the sink below is the reference the target has.
 //
 // Every block's kind was checked against the target's own vptr store: emplace where the builder calls make_shared,
 // pointer where it allocates the T and the block apart. No stand-in stays in the link
@@ -62,7 +60,6 @@
 #include "app/comum/md/cidentificacaournacontingencia.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/fimvotacao/cprogressoencerramento.h"
-#include "app/vota/operador/outrasopcoes/citensmenuvota.h"
 #include "ecourna/api/security/caescipher.hpp"
 #include "ecourna/api/security/cblockcipher.hpp"
 #include "ecourna/api/security/ctrng.hpp"
@@ -91,11 +88,6 @@ extern const char w102_vt_ctextfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_p
 extern const char w102_vt_coptionvalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17COptionValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cnewlinefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_citemparametrosurnavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemParametrosUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_citemversoespacotesvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemVersoesPacotesVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_citemimprimeestadournavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota26CItemImprimeEstadoUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_citemvisualizarcandidatosvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota29CItemVisualizarCandidatosVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_citemimprimelistaeleitoresvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota30CItemImprimeListaEleitoresVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorbu[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum11CGravadorBUENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorlog[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorLogENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorrdv[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorRDVENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
@@ -112,11 +104,6 @@ extern const char w102_vt_icomparecimentomesariodao_idao[] __asm__("_ZTVNSt3__22
 extern const char w102_vt_cblockcipher_caescipher_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security12CBlockCipherINS3_10CAesCipherENS3_5CTrngEEENS_10shared_ptrINS3_16ISymmetricCipherEE27__shared_ptr_default_deleteISA_S7_EENS_9allocatorIS7_EEEE");
 extern const char w102_vt_cidentificacaojustificativa[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3app5dados27CIdentificacaoJustificativaENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIS6_E27__shared_ptr_default_deleteIS6_S6_EENS4_IS6_EEEE");
-extern const char w102_vt_item_visualizar[] __asm__("_ZTVN4vota29CItemVisualizarCandidatosVotaE");
-extern const char w102_vt_item_estadourna[] __asm__("_ZTVN4vota26CItemImprimeEstadoUrnaVotaE");
-extern const char w102_vt_item_listaeleitores[] __asm__("_ZTVN4vota30CItemImprimeListaEleitoresVotaE");
-extern const char w102_vt_item_versoespacotes[] __asm__("_ZTVN4vota23CItemVersoesPacotesVotaE");
-extern const char w102_vt_item_parametrosurna[] __asm__("_ZTVN4vota23CItemParametrosUrnaVotaE");
 }
 
 namespace api {
@@ -188,7 +175,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CWavFile> w102_wav(const
 }
 
 using TGravador = comum::IGravador;
-using TItem = comum::CItemMenu;
 using TPreShow = api::IPreShow<api::IScreen>;
 template struct SBloco<TGravador, comum::CGravadorBU>;
 template struct SBloco<TGravador, comum::CGravadorRDV>;
@@ -197,11 +183,6 @@ template struct SBloco<TGravador, comum::CGravadorEnvelopeArquivo>;
 template struct SBloco<TGravador, comum::CGravadorHashes>;
 template struct SBloco<TGravador, comum::CGravadorVersoesArquivos>;
 template struct SBloco<TGravador, comum::CGravadorLog>;
-template struct SBloco<TItem, vota::CItemImprimeEstadoUrnaVota>;
-template struct SBloco<TItem, vota::CItemImprimeListaEleitoresVota>;
-template struct SBloco<TItem, vota::CItemVersoesPacotesVota>;
-template struct SBloco<TItem, vota::CItemParametrosUrnaVota>;
-template struct SBloco<TItem, vota::CItemVisualizarCandidatosVota>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w102_preshow()
@@ -264,11 +245,6 @@ struct SW102Roots {
         w102_sink = w102_vt_coptionvalidation;
         w102_sink = w102_vt_cnewlinefieldpaper;
         w102_sink = w102_vt_cqrcodeimagefieldpaper;
-        w102_sink = w102_vt_citemparametrosurnavota;
-        w102_sink = w102_vt_citemversoespacotesvota;
-        w102_sink = w102_vt_citemimprimeestadournavota;
-        w102_sink = w102_vt_citemvisualizarcandidatosvota;
-        w102_sink = w102_vt_citemimprimelistaeleitoresvota;
         w102_sink = w102_vt_cgravadorbu;
         w102_sink = w102_vt_cgravadorlog;
         w102_sink = w102_vt_cgravadorrdv;
@@ -285,11 +261,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cblockcipher_caescipher_ctrng;
         w102_sink = w102_vt_cidentificacaojustificativa;
         w102_sink = w102_vt_string;
-        w102_sink = w102_vt_item_visualizar;
-        w102_sink = w102_vt_item_estadourna;
-        w102_sink = w102_vt_item_listaeleitores;
-        w102_sink = w102_vt_item_versoespacotes;
-        w102_sink = w102_vt_item_parametrosurna;
     }
 } w102_roots;
 
