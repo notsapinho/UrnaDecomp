@@ -13,7 +13,11 @@
 //   ITimerScheduler::GetInst() (fn 1259, record itimerscheduler.cpp:23) returns for the interval and a lambda of the
 //   constructor (the std::function<void()> __func of typeinfo 1579116). Show (fn 11089) and Hide (fn 11088) call that
 //   object's slots 2 and 3. RTTI names api::ITimer; it is only declared here, though api/util/itimer.h defines it.
-// The member names are chosen, as in cimagefield.h; no evidence gives them.
+// The member names are chosen, as in cimagefield.h; no evidence gives them. The constructor is written in
+// cimagefieldupdate.cpp, its throw on its record's line: the members from its parameters, m_tamanho left null, and
+// the timer from ITimerScheduler::CreateTimer over a lambda that calls IFormField's Invalidate (the __func's slots,
+// fns 11080 to 11084, match from that object; slot 6, fn 11082, is the lambda's body: under the form's mutex it reads
+// the form's visible flag, then marks the field and calls the form's slot 4, Refresh).
 //
 // The destructor is defined in the class: the deleting destructor (fn 11086) is free(D2(this)), a direct call to a D2
 // that was not inlined into it. An out-of-line destructor is called through the D1 alias, whose result clang does not

@@ -17,8 +17,8 @@ using ecourna::api::util::CStringUtils;
 
 // ecourna::api::security::EncodeBase64's one caller in the target is comum::md::estadoaplicacao::CEstadoGeral::
 // GetResumoHashVersoesPacotes (fn 3703, in unit 215's cestadogeral.cpp, its name chosen), which holds it inlined.
-// 3703's target callers not in our link: 3059 and 7787 (11222, unit 287's, is in the link). UsaBase64A and UsaBase64B
-// stand for them, through its label, on an object whose +168 is the hash vector, as CEstadoGeral's is, so that this TU
+// 3703's target caller not in our link: 7787 (11222, unit 287's, and 3059, unit 110's, are in the link). UsaBase64B
+// stands for it, through its label, on an object whose +168 is the hash vector, as CEstadoGeral's is, so that this TU
 // needs no uenux2 header.
 struct SComResumo {
     char preenchimento[168];
@@ -75,12 +75,6 @@ __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { retur
 // are in the link.
 __attribute__((noinline)) std::string UsaMaiusculasB(const std::string& s) { return "b" + CStringUtils::ToUpper(s); }
 __attribute__((noinline)) std::string UsaSubstituiA(const std::string& s) { return CStringUtils::Replace(s, "a", "b") + "c"; }
-__attribute__((noinline)) int UsaBase64A(const SComResumo& v)
-{
-    int resumo[3];
-    urna_resumo_hash(resumo, v);
-    return resumo[0] + resumo[1];
-}
 __attribute__((noinline)) int UsaBase64B(const SComResumo& v)
 {
     int resumo[3];
@@ -102,7 +96,7 @@ int urna_roots_ecourna(int a)
     std::string s(static_cast<size_t>(a), '1');
     SComResumo v{};
     v.dados.assign(s.begin(), s.end());
-    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s) + UsaBase64A(v) + UsaBase64B(v);
+    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s) + UsaBase64B(v);
     std::string out = UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasB(out) + UsaSubstituiA(s);

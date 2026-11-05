@@ -11,9 +11,7 @@
 #include "app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.h"
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/carregaprocessoeleitoral.h"
-#include "app/comum/dados/clocal.h"
 #include "app/comum/nomearquivo/cnomearquivo.h"
-#include "app/comum/relatorios/crelatoriotesteimpressora.h"
 #include "ecourna/app/dados/asn/midias/cconversorinformacaomidia.hpp"
 
 extern "C" {
@@ -28,16 +26,6 @@ int w280_find_equal(void* arvore, void* dica, void** pai, void** vazio, const un
 }
 
 namespace {
-
-// stands for fn 11869 (vota::CVerificaHorarioZeresima's slot 7), one of the two callers of CRelatorioTesteImpressora's
-// constructor (fn 5586), which read its returned this, as this one does; the other, fn 11911
-// (vota::CImpressaoEstadoUrna's slot 2), is in the link
-__attribute__((noinline)) bool w280_relatorio(void* primeiro, void* segundo, int vias)
-{
-    const comum::CRelatorioTesteImpressora* a = ::new (primeiro) comum::CRelatorioTesteImpressora();
-    const comum::CRelatorioTesteImpressora* b = ::new (segundo) comum::CRelatorioTesteImpressora();
-    return a->TemQRCode() && b->TemQRCode() && vias > 280;
-}
 
 // stands for fn 7787, the other caller of CarregaProcessoEleitoral (fn 3771)
 __attribute__((noinline)) unsigned w280_processo(const comum::md::estadoaplicacao::CEstadoGeral& geral)
@@ -94,13 +82,6 @@ __attribute__((noinline)) int w280_busca(comum::md::TMapVersaoPacoteEleicao& ver
     return w280_find_equal(&versoes, nullptr, &pai, &vazio, &chave) + 280;
 }
 
-// stands for fn 4160, the other caller of CLocal::GetAgregadas (fn 3752; 5738 and 11242, unit 155's, are in the link)
-__attribute__((noinline)) std::size_t w280_agregadas(const comum::CLocal& local)
-{
-    return local.GetAgregadas().size() + 280;
-}
-
-bool (*volatile w280_sink_relatorio)(void*, void*, int);
 unsigned (*volatile w280_sink_processo)(const comum::md::estadoaplicacao::CEstadoGeral&);
 comum::SIdentificacaoArquivo* (*volatile w280_sink_identificacao)(void*, comum::EUrnaFase, uedword, const std::string&,
     const comum::md::CPleito&);
@@ -111,12 +92,10 @@ void (*volatile w280_sink_pleito)(void*, const comum::md::TVectorEleicaoPE&, con
     const std::vector<comum::md::CSituacoesEleicoes>&, const std::string&, const api::CDate&);
 std::size_t (*volatile w280_sink_eleicoes)(comum::md::TVectorEleicaoPE&, const comum::md::CEleicaoPE&);
 int (*volatile w280_sink_busca)(comum::md::TMapVersaoPacoteEleicao&, unsigned);
-std::size_t (*volatile w280_sink_agregadas)(const comum::CLocal&);
 
 struct SProcessoEleitoralRoots {
     SProcessoEleitoralRoots()
     {
-        w280_sink_relatorio = w280_relatorio;
         w280_sink_processo = w280_processo;
         w280_sink_identificacao = w280_identificacao;
         w280_sink_copia = w280_copia;
@@ -125,7 +104,6 @@ struct SProcessoEleitoralRoots {
         w280_sink_pleito = w280_pleito;
         w280_sink_eleicoes = w280_eleicoes;
         w280_sink_busca = w280_busca;
-        w280_sink_agregadas = w280_agregadas;
     }
 } processoeleitoral_roots;
 

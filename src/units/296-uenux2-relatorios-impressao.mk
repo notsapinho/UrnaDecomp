@@ -96,11 +96,12 @@
 # TrailerProporcionalPartido); CPleito::GetNome (the string at
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
-# Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 5591's caller 11869 (11911 is in the link) and for 2792's
-# callers 3059 and 7787 (5591 and 1541 are in the link), and for 2273's caller 12110 (1543, 5740, 11902 and, since
+# Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 2792's caller 7787 (5591, 1541 and 3059, unit 110's,
+# are in the link), and for 2273's caller 12110 (1543, 5740, 11902 and, since
 # fragment 317, 11223 are in the link). 11261's
 # address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
-# api::CQRCodeGuard's constructor, went.
+# api::CQRCodeGuard's constructor, went, and so did the stand-in for 5591's caller 11869 once 11869 (unit 138's) was
+# in the link with 11911.
 RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp src/api/gui/cqrcodeimagepaper.cpp
 UENUX2_SRCS += $(RELATORIOS_IMPRESSAO_SRCS)
 # cqrcodeimagepaper.cpp includes api/gui/cqrcodeguard.h, which includes libqrencode's qrencode.h, and UENUX2_CXXFLAGS

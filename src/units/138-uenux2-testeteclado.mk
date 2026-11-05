@@ -15,7 +15,7 @@
 #     12059, the first a thunk of binaryen's 1564, which forms with it (and with which unit 37's 2888 and 12057 match)
 #   vota::CVerificaHorarioZeresima (iniciovotacao/cverificahorariozeresima.{h,cpp}): FinishState 11868; GetInst 5947,
 #     with its constructor inlined by binaryen, and its statics' exit destructors 11873 and 11872; StartState 11871;
-#     ProcessTickNaoDesligamento 11870
+#     ProcessTickNaoDesligamento 11870; ProcessInput 11869 (below)
 #   vota::testeteclado::CEsperaRetestar (testeteclado/cesperaretestar.{h,cpp}): StartState 11825 (below); FinishState
 #     11824
 #   The D2 785 and D0 1560 of CErroTesteTecladoFim (unit 97) are also CAplicacaoEncerrada's, CEsperaRetestar's and
@@ -79,7 +79,7 @@
 # - CMostraQRCodeCertificado's StartState (12040; its ProcessInput, 12038, matches since in unit 156, and
 #   CMostraQRCodeBU's slots are unit 37's: 12051 matches, 12055 is written): callees with no name (455 has one since
 #   unit 237, 576 since unit 165, 502 since unit 220, 653 since unit 120); CTesteTeclado is unit 217's;
-# - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
+# The unit's -pending.cpp went with its last trap, CVerificaHorarioZeresima::ProcessInput (11869, written since: below).
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
@@ -138,6 +138,21 @@
 #   const (fn 903), so a const reference. 5947 14 over 86 rows, 11871 23 over 130, 11870 11 over 58, all operand-only.
 #   GetInst's other target caller, vota::CGeraDadosDinamicos::StartState (fn 11865, pending in unit 199), has a stand-in
 #   in the roots: with 5945 alone binaryen inlined GetInst into it (5945 scored 111 over 169 rows, 83 inserted).
+# - CVerificaHorarioZeresima::ProcessInput (fn 11869, slot 7), between ProcessTickNaoDesligamento and FinishState, the
+#   band's order (11871, 11870, 11869, 11868; no pair of the object's matched members inverted in the link): Read() on
+#   the form; on INPUT_CONFIRMA (9) comum::CInformacaoEleicao over CConfiguracaoEleicao's parameters (+88), then
+#   comum::CAppInfo::GetVota once, a reference kept, and when its count of state reports printed (+73) is below
+#   CInformacaoEleicao::GetNumViasEstadoUrna (fn 2865) it prints the report as vota::CImpressaoEstadoUrna::StartState
+#   (fn 11911, unit 296's) does: comum::CRelatorioTesteImpressora (fn 5586), the log member LogaImprimindoRelatorio-
+#   EstadoUrna (fn 5880), Imprime (fn 5591) with "estado da urna" and std::format("{}ª via", the count + 1), the
+#   count's increment and vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491); then, in both cases, the form
+#   CTelasVota::CriaTelaAntesHorarioZeresima builds (fn 6595, unit 110's ctelasvota.cpp, after CTelasVota::GetInst,
+#   whose result it drops), moved into +28, and its slot 2 (Slot2); on INPUT_BRANCO (3) vota::CMaisInformacoes with
+#   this state (fn 1280). The CONFIRMA case is written first: with BRANCO's first, the switch's table and its two
+#   blocks came out the other way round (6 rows inserted and 6 deleted). 29 over 374 rows, operand-only (pnpm wasm
+#   score in the whole link), and matched once 6595 has its name (6595 matches through the content pass once 3059 has
+#   its hand line, unit 110's fragment; 11869 is named by vtable, which casts no vote). Chosen: the locals' names and
+#   the reference's type spelling.
 # - CBase::ProcessInput (fn 11874, slot 7 of CBase, CPreZeresima and CRetomada): Read() on the form (record
 #   cinteractiveform.h:57, inlined); on INPUT_CORRIGE (5) slot 12's state, and when that is not this state (slot 4,
 #   GetNextState, compared with `this`) the log of the string at @137526 through a vota::CLogVota member binaryen
@@ -207,7 +222,8 @@
 # auxiliares/cvisualizarcandidatos.cpp's and cverificahorariozeresima.cpp's; CReinicioVotacao's after
 # cquerreimprimirzeresima.cpp's, with three unrecorded classes between); the lines of the functions written in
 # cverificahorariozeresima.cpp other than StartState and ProcessTickNaoDesligamento (GetInst, the constructor and the
-# statics above them, FinishState and the destructor after), and of cprezeresima.cpp's functions above
+# statics above them, ProcessInput, FinishState and the destructor after; ProcessInput's six includes took blank lines
+# of the run after the statics), and of cprezeresima.cpp's functions above
 # GetEstadoPassouNoTeste; the names GetInst, GetTelaVerificaHorarioZeresima, LogaAguardandoHorarioZeresima, the
 # AddStoppedTick overload, the assert codes' and 9377's enumerators, and 5945's local estado; the switch in 5945 with
 # its cases indented, which puts the throw at its record's column 19; `Now() >= m_horario` for the tick's test (another
@@ -224,10 +240,6 @@ UENUX2_SRCS += $(TESTETECLADO_SRCS)
 # through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cprezeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# the pending traps compile at the tree's flags, as the members will
-TESTETECLADO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/138-uenux2-testeteclado-pending.o: $(ROOT)/src/units/138-uenux2-testeteclado-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk $(TESTETECLADO_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/138-uenux2-testeteclado-pending.cpp -o $(R)
 $(ROOT)/$(APP)/138-uenux2-testeteclado-roots.o: $(ROOT)/src/units/138-uenux2-testeteclado-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/138-uenux2-testeteclado-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/138-uenux2-testeteclado-pending.o $(APP)/138-uenux2-testeteclado-roots.o
+override EXTRA_OBJS += $(APP)/138-uenux2-testeteclado-roots.o

@@ -97,14 +97,15 @@
 #   constructors' parameters, and CDetalheCandidato's constructor being inline. CEleicaoPE's and CConversorCargo's
 #   being out of line is not chosen: the measurements above decide it.
 #
-# Roots (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp): stand-ins for target callers not in our link, each going
-# when they are: QRCodeTela for fn 3059 (the constructor, so 1300 keeps two call sites, and SetOrigem); ConteudoQRCode
-# for fn 12553 (operator()). ParDeTextos stood for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant
-# first argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted) and went when unit 168
-# wrote 4625, whose votadefs.cpp.o, linked ahead of this object, now names 1348's match line (pair<const std::string,
-# std::string> from two char[9], a twin of this object's instance). CargosRealocados, for fn 3818 (3816's other caller),
-# went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's check). Stand-ins of
-# other units that my rows end went (fragments 88, 107, 124 and 232 say which).
+# The roots file (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp) went with its rule when its last two stand-ins'
+# callers were in the link: QRCodeTela stood for fn 3059 (the constructor, so 1300 kept two call sites, and SetOrigem)
+# and ConteudoQRCode for fn 12553 (operator()), which unit 110's ctelasvota.cpp holds. ParDeTextos stood for fn 4625
+# (1348: with HRVR's calls alone binaryen folds the constant first argument into the body, `(i32 i32)->(i32)`, 41 over
+# 124 rows, 4 inserted, 4 deleted) and went when unit 168 wrote 4625, whose votadefs.cpp.o, linked ahead of this object,
+# now names 1348's match line (pair<const std::string, std::string> from two char[9], a twin of this object's instance).
+# CargosRealocados, for fn 3818 (3816's other caller), went when unit 200 wrote 3818. The census paired no target
+# function with a stand-in (step 7's check). Stand-ins of other units that my rows end went (fragments 88, 107, 124 and
+# 232 say which).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CQRCODEDS_SRCS := src/app/comum/dados/cqrcodeds.cpp
 CONVERSORES299_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.cpp \
@@ -113,8 +114,3 @@ UENUX2_SRCS += $(CQRCODEDS_SRCS) $(CONVERSORES299_SRCS)
 # cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (units 88 and 123 add the path the
 # same way)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(CQRCODEDS_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# the roots declare what they call through asm labels, so their rule needs no header
-$(ROOT)/$(APP)/299-uenux2-cqrcodeds-processoeleitoral-roots.o: $(ROOT)/src/units/299-uenux2-cqrcodeds-processoeleitoral-roots.cpp $(ROOT)/src/Makefile \
-    $(ROOT)/src/units/299-uenux2-cqrcodeds-processoeleitoral.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/299-uenux2-cqrcodeds-processoeleitoral-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/299-uenux2-cqrcodeds-processoeleitoral-roots.o

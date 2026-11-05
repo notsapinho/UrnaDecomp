@@ -1212,6 +1212,7 @@ jsonBlobEdit = func:1296; // size:0x289 evidence:pair-addr
 jsonTranslateBlobToText = func:1297; // size:0xb67 evidence:pair-addr
 jsonReturnString = func:1298; // size:0x49c evidence:pair-addr
 computeYMD_HMS = func:1299; // size:0x1a6 evidence:pair-addr
+_ZNSt3__26vectorINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_EENS5_IS8_EEEC2B8ne210108ERKSA_ = func:1300; // size:0xeb evidence:call
 sqlite3BeginWriteOperation = func:1301; // size:0x55 evidence:pair-addr
 sqlite3FindDb = func:1302; // size:0x1cd evidence:pair-addr
 sqlite3ExprFunction = func:1303; // size:0xb0 evidence:pair-addr
@@ -9462,6 +9463,11 @@ _ZN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEE5Slot3Ev = func:11075; // s
 _ZN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEE5Slot2Ev = func:11077; // size:0x88 evidence:vtable
 _ZN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEED0Ev = func:11078; // size:0x32 evidence:pair-addr
 _ZN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEED2Ev = func:11079; // size:0x2f evidence:pair-addr
+_ZNKSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEE11target_typeEv = func:11080; // size:0x7 evidence:vtable
+_ZNKSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEE6targetERKSt9type_info = func:11081; // size:0x14 evidence:content-anchor
+_ZNSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEclEv = func:11082; // size:0x41 evidence:pair-addr
+_ZNKSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEE7__cloneEPNS0_6__baseISL_EE = func:11083; // size:0x16 evidence:vtable
+_ZNKSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEE7__cloneEv = func:11084; // size:0xc evidence:vtable
 _ZNK3api17CImageFieldUpdate11GetTypeNameEv = func:11085; // size:0x49 evidence:vtable
 _ZN3api17CImageFieldUpdateD0Ev = func:11086; // size:0xa evidence:pair-addr
 _ZNK3api17CImageFieldUpdate4RectEv = func:11087; // size:0x61 evidence:srcloc-anchor
@@ -10069,6 +10075,7 @@ _ZN4vota22CDefineRotaPosReinicio15NeedChangeStateEv = func:11858; // size:0x232 
 _ZN4vota12testeteclado12CPreZeresima17GetEstadoSemTesteEv = func:11861; // size:0x46 evidence:vtable
 _ZN4vota12testeteclado12CPreZeresima7GetTelaEv = func:11862; // size:0x6b evidence:vtable
 _ZN4vota24CVerificaHorarioZeresima11FinishStateEv = func:11868; // size:0xd evidence:vtable
+_ZN4vota24CVerificaHorarioZeresima12ProcessInputEv = func:11869; // size:0x35d evidence:vtable
 _ZN4vota24CVerificaHorarioZeresima26ProcessTickNaoDesligamentoEh = func:11870; // size:0x7c evidence:srcloc-anchor
 _ZN4vota24CVerificaHorarioZeresima10StartStateEv = func:11871; // size:0x138 evidence:srcloc-anchor
 _ZN4vota12testeteclado5CBase12ProcessInputEv = func:11874; // size:0x160 evidence:vtable
@@ -10634,9 +10641,17 @@ _ZNKSt3__220__shared_ptr_pointerIPN3api12CQRCodeImageENS_10shared_ptrINS1_6IImag
 sqlite3ExprDeleteGeneric = func:12547; // size:0xe evidence:pair-addr
 impliesNotNullRow = func:12548; // size:0x1f5 evidence:pair-addr
 sqlite3SelectPopWith = func:12549; // size:0x3f evidence:pair-fingerprint
+_ZNKSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEE11target_typeEv = func:12550; // size:0x7 evidence:vtable
 exprNodeCanReturnSubtype = func:12551; // size:0x5c evidence:pair-addr
+_ZNKSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEE6targetERKSt9type_info = func:12552; // size:0x14 evidence:content-anchor
+_ZNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEclEv = func:12553; // size:0xc evidence:vtable
+_ZNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEE7destroyEv = func:12554; // size:0x8a evidence:pair-addr
+_ZNKSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEE7__cloneEPNS0_6__baseISA_EE = func:12555; // size:0x1a evidence:pair-addr
+_ZNKSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEE7__cloneEv = func:12556; // size:0x23 evidence:vtable
+_ZNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEED0Ev = func:12557; // size:0x99 evidence:pair-addr
 checkConstraintExprNode = func:12558; // size:0x42 evidence:pair-fingerprint
 sqlite3DeleteReturning = func:12559; // size:0x33 evidence:pair-addr
+_ZNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEED2Ev = func:12560; // size:0x96 evidence:pair-addr
 resolveSelectStep = func:12561; // size:0xbeb evidence:pair-addr
 sqlite3SelectDeleteGeneric = func:12562; // size:0x10 evidence:pair-addr
 sqlite3DeleteTableGeneric = func:12563; // size:0x30 evidence:pair-addr
@@ -25396,11 +25411,11 @@ _ZTSNSt3__220__shared_ptr_emplaceIN3api12CDataTextFmtIPFKNS_12basic_stringIcNS_1
 str.3e006072247a = 0x74872; // type:data size:0x83 evidence:string "NSt3__220__shared_ptr_emplaceIN3api12CDa"…
 _ZTSN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EEE = 0x748f5; // type:data size:0x5f evidence:rtti
 str.438e96f52796 = 0x748f5; // type:data size:0x5f evidence:string "N3api12CDataTextFmtIPFKNSt3__212basic_st"…
-_ZTSNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x74954; // type:data evidence:rtti
+_ZTSNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x74954; // type:data size:0x6d evidence:rtti
 str.527f8e354a5d = 0x74954; // type:data size:0x6d evidence:string "NSt3__210__function6__funcIN5comum9CQRCo"…
 _ZTSNSt3__210__function6__baseIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x749c1; // type:data size:0x5b evidence:rtti
 str.623ea2f9dd05 = 0x749c1; // type:data size:0x5b evidence:string "NSt3__210__function6__baseIFNS_12basic_s"…
-_ZTSN5comum9CQRCodeDSE = 0x74a1c; // type:data evidence:rtti
+_ZTSN5comum9CQRCodeDSE = 0x74a1c; // type:data size:0x13 evidence:rtti
 str.6c6c19465fea = 0x74a1c; // type:data size:0x13 evidence:string "N5comum9CQRCodeDSE"
 _ZTSNSt3__220__shared_ptr_pointerIPN3api12CQRCodeImageENS_10shared_ptrINS1_6IImageEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE = 0x74a2f; // type:data size:0x8c evidence:rtti
 str.919b39b45528 = 0x74a2f; // type:data size:0x8c evidence:string "NSt3__220__shared_ptr_pointerIPN3api12CQ"…
@@ -26736,9 +26751,9 @@ _ZTSN3api13CDSImageFieldE = 0x7fbaa; // type:data size:0x16 evidence:rtti
 str.76b3fd34d2a6 = 0x7fbaa; // type:data size:0x16 evidence:string "N3api13CDSImageFieldE"
 _ZTSN3api17CImageFieldUpdateE = 0x7fbc0; // type:data size:0x1a evidence:rtti
 str.feb641545c64 = 0x7fbc0; // type:data size:0x1a evidence:string "N3api17CImageFieldUpdateE"
-_ZTSNSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x7fbda; // type:data evidence:rtti
+_ZTSNSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x7fbda; // type:data size:0xb4 evidence:rtti
 str.4f19824f50b6 = 0x7fbda; // type:data size:0xb4 evidence:string "NSt3__210__function6__funcIZN3api17CImag"…
-_ZTSZN3api17CImageFieldUpdateC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6IImageEEERKNS4_6chrono8durationIxNS4_5ratioILx1ELx1000EEEEENS_12EAnchorPointEE3$_0 = 0x7fc8e; // type:data evidence:rtti
+_ZTSZN3api17CImageFieldUpdateC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6IImageEEERKNS4_6chrono8durationIxNS4_5ratioILx1ELx1000EEEEENS_12EAnchorPointEE3$_0 = 0x7fc8e; // type:data size:0x96 evidence:rtti
 str.8495fa8c15db = 0x7fc8e; // type:data size:0x96 evidence:string "ZN3api17CImageFieldUpdateC1ERKNS_6SPoint"…
 _ZTSN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEEE = 0x7fd24; // type:data size:0x35 evidence:rtti
 str.381918f7ea78 = 0x7fd24; // type:data size:0x35 evidence:string "N3api16CInteractiveFormINS_7IScreenENS_9"…
@@ -29530,6 +29545,7 @@ _ZTSN7ecourna3app5dados3asn25CConversorTituloRelatorioE = 0x113b38; // type:data
 str.5cbcf9823e45 = 0x113b38; // type:data size:0x34 evidence:string "N7ecourna3app5dados3asn25CConversorTitul"…
 _ZTIN7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna15TituloRelatorioENS_3app5dados16CTituloRelatorioEEE = 0x113b6c; // type:data size:0x8 evidence:rtti
 _ZTSN7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna15TituloRelatorioENS_3app5dados16CTituloRelatorioEEE = 0x113b74; // type:data size:0x71 evidence:rtti
+g_MidAlloc = 0x113bf4; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn31CConversorConfiguracaoMunicipioE = 0x113c00; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn31CConversorConfiguracaoMunicipioE = 0x113c0c; // type:data size:0x3a evidence:rtti
 str.b50c8bcc2edc = 0x113c0c; // type:data size:0x3a evidence:string "N7ecourna3app5dados3asn31CConversorConfi"…
@@ -33042,10 +33058,10 @@ _ZTINSt3__220__shared_ptr_emplaceIN3api12CDataTextFmtIPFKNS_12basic_stringIcNS_1
 _ZTVN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EEE = 0x1778e0; // type:data size:0x18 evidence:rtti
 _ZTIN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EEE = 0x1778f8; // type:data size:0xc evidence:rtti
 srcloc.4835b57656d8 = 0x177904; // type:data size:0x10 evidence:srcloc ctelasvota.cpp:1126:15
-_ZTVNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x177914; // type:data evidence:rtti
-_ZTINSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x177940; // type:data evidence:rtti
+_ZTVNSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x177914; // type:data size:0x2c evidence:vote:3+rtti by:12555,12557,12560
+_ZTINSt3__210__function6__funcIN5comum9CQRCodeDSEFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x177940; // type:data size:0xc evidence:rtti
 _ZTINSt3__210__function6__baseIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEE = 0x17794c; // type:data size:0x8 evidence:rtti
-_ZTIN5comum9CQRCodeDSE = 0x177954; // type:data evidence:rtti
+_ZTIN5comum9CQRCodeDSE = 0x177954; // type:data size:0x8 evidence:rtti
 _ZTVNSt3__220__shared_ptr_pointerIPN3api12CQRCodeImageENS_10shared_ptrINS1_6IImageEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE = 0x17795c; // type:data size:0x1c evidence:rtti
 _ZTINSt3__220__shared_ptr_pointerIPN3api12CQRCodeImageENS_10shared_ptrINS1_6IImageEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE = 0x177978; // type:data size:0xc evidence:rtti
 _ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE = 0x177984; // type:data size:0x1c evidence:rtti
@@ -35065,9 +35081,9 @@ _ZTVN3api17CImageFieldUpdateE = 0x1817e4; // type:data size:0x30 evidence:vote:1
 srcloc.40861d3229bc = 0x181814; // type:data size:0x10 evidence:srcloc cimagefieldupdate.cpp:32:15
 srcloc.107813c0b2cc = 0x181824; // type:data size:0x10 evidence:srcloc cimagefieldupdate.cpp:80:12
 _ZTIN3api17CImageFieldUpdateE = 0x181834; // type:data size:0xc evidence:rtti
-_ZTVNSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x181840; // type:data evidence:rtti
-_ZTINSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x18186c; // type:data evidence:rtti
-_ZTIZN3api17CImageFieldUpdateC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6IImageEEERKNS4_6chrono8durationIxNS4_5ratioILx1ELx1000EEEEENS_12EAnchorPointEE3$_0 = 0x181878; // type:data evidence:rtti
+_ZTVNSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x181840; // type:data size:0x2c evidence:rtti
+_ZTINSt3__210__function6__funcIZN3api17CImageFieldUpdateC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6IImageEEERKNS_6chrono8durationIxNS_5ratioILx1ELx1000EEEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x18186c; // type:data size:0xc evidence:rtti
+_ZTIZN3api17CImageFieldUpdateC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6IImageEEERKNS4_6chrono8durationIxNS4_5ratioILx1ELx1000EEEEENS_12EAnchorPointEE3$_0 = 0x181878; // type:data size:0x8 evidence:rtti
 srcloc.8450dea7b981 = 0x181880; // type:data size:0x10 evidence:srcloc cinteractiveformbuilder.cpp:86:15
 srcloc.ecffc580f6d0 = 0x181890; // type:data size:0x10 evidence:srcloc cinteractiveformbuilder.cpp:76:23
 _ZTVN3api16CInteractiveFormINS_7IScreenENS_9IInputKbdEEE = 0x1818a0; // type:data size:0x28 evidence:vote:2+rtti by:11078,11079
@@ -38518,3 +38534,13 @@ _ZN5comum31CControlaArmazenamentoDeImagens14ArmazenaImagemERKNSt3__26vectorIhNS1
 _ZNK12_GLOBAL__N_114CVotaWebEngine10EstadoJsonEv = func:5500; // evidence:callers+content its body, read without the match, loads the JSON texts @339711 "{\"initialized\":", @339687 "\"done\":", @339727 "\"audioEnabled\":", @339624 "\"audioEleitorHabilitado\":", @439232 "\"state\":\"", @439264 ",\"guide\":{\"voteMode\":\"", @339743 ",\"legendaValida\":", @339650 ",\"confirmacao\":", @439218 ",\"substate\":\"", @439206 ",\"screen\":\"", @304128 ",\"candidates\":[]", @339695 ",\"cargo\":{\"id\":", @439242 "\"name\":\"", @339580 "\"digits\":", @439197 "\"tipo\":\"", @350200 ",\"legendaDigits\":2", @339590 ",\"candidates\":", @339605 "{\"number\":", @339494 "\"party\":" and @339503 "\"apt\":", and @192188 "CInstrucaoVotacaoAcessibilidade", @156594 "legendaOuNominal" and @9898 "accessibility", which no other target function loads (the grep of each i32.const in build/out/splat/pieces/asm), and ours, (anonymous namespace)::CVotaWebEngine::EstadoJson (wasm/vota_web/vota_web_wasm.cpp), loads our copies of the same 48 strings the target's body loads. Ours scores 1220 over 2837 rows (same 1617, replaced 869 [759 operand-only], inserted 104, deleted 247) against it (pnpm wasm score, at the executable TU's rule), the remainder not explained (src/units/170-uenux2-wasm-vota-web.mk says what was measured), so this line matches no 5500. Its target callers are 10171 (votaGetStateJson, named by its export, which casts no call vote), 10619 (votaTick, by table slot 58, not matched) and 7840 (votaInit, slot 58, not written): 10171 is the row it carries, which reads unresolved without it.
 _ZN3api21INSTRUCAO_PADRAO_MENUE = 0x1bf5f0; // type:data size:0xc evidence:callers+content 14478, the static constructors, builds a std::string at 1832432 from the 20-byte literal at 444366 ("Digite a sua op..o: ", ledger/strings.tsv; no other target function loads it) under the guard byte at 1832444, and 11662 destroys it through 149 (the body binaryen shares between ~basic_string and CEleitorIdentidade's D2, which our match names); no other target function but 3675 reads the address, which copies it into the menu at +112 where ours copies this symbol (src/units/84-uenux2-cinputmenufield.mk)
 _ZN3api15CInputMenuField7AddItemERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS1_8functionIFvRNS_9CMenuItemEEEE = func:1693; // evidence:callers+content its body loads the four std::source_location records at 1583448 (cinputmenufield.cpp:298, CInputMenuField::NextItemPosition, binaryen-inlined), 1583464, 1583480 and 1583496 (cinputmenufield.cpp:320, 326 and 339, CInputMenuField::AddItem), which no other target function loads (the funcs column of ledger/source-locations.tsv), and ours loads the same four from the same code; written and not matched, 36 over 628 rows at the tree's flags, the remainder one expression of NextItemPosition not explained (src/units/84-uenux2-cinputmenufield.mk); its target callers 11881, 11884 and 11888 count for nothing here (11881 is unresolved self-voted without the line; 11884 and 11888 are not written)
+# 3059: the only target function holding 1538404, the address point of the vtable of
+# __shared_ptr_pointer<api::CQRCodeImage*, shared_ptr<api::IImage>::__shared_ptr_default_delete<api::IImage,
+# api::CQRCodeImage>, allocator<api::CQRCodeImage>> (ledger/vtables.json, 1538396 + 8), and loading 1579028, the record
+# cimagefieldupdate.cpp:32 of api::CImageFieldUpdate's constructor, which binaryen inlined into it (/usr/bin/grep -rlE
+# 'i32\.const (1538404|1579028)($|[^0-9])' build/out/splat/pieces/asm prints 3059.wat alone for each); ours holds both
+# likewise. No vote reaches it: its caller in our link, 6595, matches through the content pass (no census pair or
+# anchor, so it casts no vote at step 8), and its other target callers, 6592 and 7787, are not written. Our body differs
+# from the target's (src/units/110-*.mk). Without this line (a scan of copies without it and without the match lines
+# of 6595 and 11869, beside a control) 6595 reads no-candidate and 11869, which calls it, unresolved.
+_ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_SB_N5comum9CQRCodeDS7EOrigemE = func:3059; // size:0xaf1 evidence:rtti-vptr

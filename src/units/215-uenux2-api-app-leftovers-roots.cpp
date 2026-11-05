@@ -19,21 +19,6 @@ __attribute__((noinline)) int LinhasContinuam(const char* linha, const char* pro
 
 } // namespace
 
-// comum::md::estadoaplicacao::CEstadoGeral::GetDadosQRCode (target fn 5636) has two direct callers in the target, fns
-// 11200 (unit 123, in our link) and 3059, which builds the screen's QR code. This stands for 3059.
-extern "C" void w5636_dados(void*, const void*) __asm__(
-    "_ZNK5comum2md15estadoaplicacao12CEstadoGeral14GetDadosQRCodeEv");
-
-namespace {
-
-__attribute__((noinline)) int DadosDaTela(char* dados, const char* geral)
-{
-    w5636_dados(dados + 12, geral);
-    return dados[16];
-}
-
-} // namespace
-
 // comum::md::estadoaplicacao::CEstadoGeral's constructor from its eight parts (target fn 5637) has one direct caller in
 // the target, fn 11398 (unit 124, in our link), and a table slot, 427, which fn 10205 (not written) alone passes to
 // invoke_iiiiiiiiii (docs/reference/facts/units.md U11's script): its address is the reference the target has. Declared
@@ -51,7 +36,6 @@ struct SLeftoversRoots {
     SLeftoversRoots()
     {
         leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
-        leftovers_sink = reinterpret_cast<const void*>(&DadosDaTela);
         leftovers_sink = reinterpret_cast<const void*>(&w5637_geral);
     }
 } leftovers_roots;

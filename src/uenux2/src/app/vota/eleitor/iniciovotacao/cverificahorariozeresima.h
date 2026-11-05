@@ -11,7 +11,7 @@ namespace vota {
 
 // vota::CVerificaHorarioZeresima (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1545856 [785, 1560,
 // 11871, 7480, 1661, 11868, 425, 11869, 12061, 11870]): the wait for the time set for the zerésima. It overrides
-// StartState (fn 11871, record :64), FinishState (fn 11868), ProcessInput (fn 11869, pending) and
+// StartState (fn 11871, record :64), FinishState (fn 11868), ProcessInput (fn 11869) and
 // ProcessTickNaoDesligamento (fn 11870, record :80), the base's slot 9. The layout is what GetInst (fn 5947) stores: +28
 // the form, from vota::CTelasVota::GetInst()'s +20 and +24; +36 the time, from comum::CConfiguracaoEleicao's +544; +48
 // the id of a 2000-ms tick added stopped, which StartState starts and FinishState stops. The D2 (fn 785,
