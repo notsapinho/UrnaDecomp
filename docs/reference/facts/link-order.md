@@ -145,10 +145,12 @@ Where that differs from the table, and what is known to turn on it:
   `staticMutexes`. After `roots_asn1.o`'s 4-byte sink our `sqlite3BuiltinFunctions` sat at 4 mod 8 (0x1bafcc with
   7cfe8385 merged, `vota_web_wasm.map`). The constant then read `+ 52` and its vote contradicted 962's and 2352's,
   so the name went (step 8's `dataVoteConflicts` 2, against 1 with SQLite last), and 962, 2352 and 12936 read
-  `unresolved` (`status.py`: `matched.txt only: [962, 2352, 12936]`). After `random_devices` it is at 0x1c2a28,
-  0 mod 8. There the three match, with 250, 12506 and 12776 besides, and no row leaves `match` ([splat.md](splat.md)
-  §S10 item 26 has the six). The move also renames fifteen match lines of SQLite functions to the byte-identical
-  OpenSSL or 7-Zip twins that link ahead of them now (how-to step 10, "A twin whose name moved"; 7722 is
+  `unresolved` (`status.py`: `matched.txt only: [962, 2352, 12936]`). After `random_devices` it is at 0 mod 8
+  (0x1c2a28 then, 0x1c3cc8 at a8807f0a: 0xe8 into SQLite's `.bss` both times). There the three match, with 250, 12506
+  and 12776 besides, and no row leaves `match` ([splat.md](splat.md) §S10 item 26 has the six). The move also renames
+  fifteen match lines of SQLite functions to the byte-identical OpenSSL or 7-Zip twins that link ahead of them now
+  (fourteen onto b1711c89, whose 215 already named `vota::CEstadoAudio::Modo0Selecionado`, which links ahead of both;
+  how-to step 10, "A twin whose name moved"; 7722 is
   [splat.md](splat.md) §S11's), and step 9 matched two OpenSSL getters under each other's names, corrected by hand
   ([splat.md](splat.md) §S11).
 

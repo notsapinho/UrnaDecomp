@@ -81,7 +81,6 @@
 
 namespace api {
 
-class CFormBuilder;
 class CInputMenuField;
 class CMenuItem;
 

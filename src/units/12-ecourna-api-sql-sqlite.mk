@@ -68,7 +68,8 @@
 #   "recursive_mutex constructor failed" (202274); a std::mutex is constant-initialized, with no such code. That code
 #   addresses nothing but its frame, so which static it builds is a reading. The init and .bss orders allow two:
 #   this file's s_mutex (1911796, 24 bytes) and the 24-byte object at 1911964, whose exit destructor is 9267, beside
-#   CSynchronizer::s_instancia (1911988, 9268), a static of csynchronizer.cpp's TU our source does not declare. What
+#   CSynchronizer::s_instancia (1911988, 9268), read by that place and that adjacency as a static of csynchronizer.cpp's
+#   TU (a reading) our source does not declare. What
 #   favours s_mutex: the target keeps "recursive_mutex lock failed" (202681), so code the link kept locked the one
 #   recursive mutex, and s_mutex is locked (9430) and unlocked (9429), while no target body but 9267 refers to 1911964.
 #   Measured in the whole link against 21a541d4: with the recursive mutex, 3977 keeps its i32 result, and 3977,

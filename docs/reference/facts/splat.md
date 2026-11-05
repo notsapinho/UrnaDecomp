@@ -192,11 +192,12 @@ moved by neither shift` on the data words' line.
      limit of any check that compares bytes.
    - V1 and V2 (an integer written over one of `vdbeSorterSort`'s slots relative to `__table_base`) are read relative
      to the base and rejected.
-   - Where a reading of the objects' relocations disagrees with the table, the table is right. `i32.const 2077` in
-     `sqlite3AddDefaultValue` +0x292 is a table slot (both links' slot holds `renameUnmapSelectCb`), although a
-     relocation reading takes it for an address. `vdbeSorterSort`'s 2035, 2036 and 2037 are relative to
-     `__table_base` and name `vdbeSorterCompareInt`, `vdbeSorterCompareText` and `vdbeSorterCompare`, not the
-     functions in slots 2035 to 2037.
+   - Where a reading of the objects' relocations disagrees with the table, the table is right. `i32.const 12727` in
+     `sqlite3AddDefaultValue` +0x296 is a table slot (both links' slot holds `renameUnmapSelectCb`: the target's 11925),
+     although a relocation reading takes it for an address. `vdbeSorterSort`'s 12685, 12686 and 12687 (+0xa8, +0xac,
+     +0xb0) are relative to `__table_base` and name `vdbeSorterCompareInt`, `vdbeSorterCompareText` and
+     `vdbeSorterCompare`, not the functions in slots 12685 to 12687 (`sqlite3InitCallback` is 12685's). The numbers are
+     a8807f0a's link (`pnpm --silent wasm fn` of ours); a landing that adds table slots ahead of SQLite's moves them.
 4. **A table slot of known kind is offered every target slot of its function.** Binaryen merged identical
    functions, and the target's table holds its empty `(i32) -> ()` function (target 218, a 2-byte body) in 126 slots.
    Each slot holds the same function, so a pointer of ours to it is offered all 126; an operand of a kind-unverified
@@ -215,8 +216,8 @@ moved by neither shift` on the data words' line.
    `sqlite3_bind_pointer`, 12863 `sqlite3_result_pointer` and 12932 `sqlite3_mutex_alloc`;
    `grep -c 'fills 126 slots' splat/scan.tsv` prints 0. The target body picks which of the 126 slots each pointer
    becomes, so check each pick against the two links' tables (read both element segments): every slot the target
-   body uses has the same neighbours as our slot. For example our 12718 and the target's 11892 both
-   sit between `getPageNormal` and `sqlite3RCStrUnref`, and `sqlite3_mutex_alloc`'s slots 12692 to 12703 line up
+   body uses has the same neighbours as our slot. For example our 12694 (a8807f0a's link) and the target's 11892 both
+   sit between `getPageNormal` and `sqlite3RCStrUnref`, and `sqlite3_mutex_alloc`'s slots 12668 to 12679 line up
    with 11866 to 11877, `pthreadMutexFree` and `pthreadMutexEnd` included (`pthreadMutexEnd`'s under the name of its
    byte-identical twin `EVP_aes_128_cbc_hmac_sha1`, which our link keeps since OpenSSL links ahead of SQLite,
    [link-order.md](link-order.md) §L3, and which 1624's match line now holds). The one copied
@@ -861,13 +862,15 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 10362 10369 10374 12
 26. **962, 2352 and 12936, by `sqlite3BuiltinFunctions`'s place mod 8, and 12506, 12776 and 250, by
     `sqlite3_version`'s place mod 4.** Both places follow from `sqlite3.o`'s after libcrypto
     ([link-order.md](link-order.md) §L3). 12936's `staticMutexes - 48` votes for `sqlite3BuiltinFunctions` with 962's
-    and 2352's only while our object sits at 0 mod 8, as the target's 0x1d7698 does. Ours (0x1c2a28) is 0xe8 into
-    SQLite's `.bss`, as the target's is, and its first object, `sqlite3Stat`, follows `rand_unix.o`'s `random_devices`,
-    8-aligned and 0x60 bytes: an object that brings `.bss` between them can move it. 12776 (`sqlite3_libversion`, which
+    and 2352's only while our object sits at 0 mod 8, as the target's 0x1d7698 does. Ours (0x1c3cc8 at a8807f0a) is
+    0xe8 into SQLite's `.bss`, as the target's is, and its first object, `sqlite3Stat`, follows `rand_unix.o`'s
+    `random_devices`, 8-aligned and 0x60 bytes: an object that brings `.bss` between them can move it.
+    12776 (`sqlite3_libversion`, which
     the content pass found; no symbol-file line names it) and 12506 (`versionFunc`) load `sqlite3_version`, which step
     8 places by its bytes (`evidence:content`) at the target's 0x16952a only while our copy is at an address that is not
-    a multiple of 4 (§S9 item 1). Ours is at 0x145ae9, after `der_wrap_gen.o`'s 11-byte OIDs. After `asn1.o`'s typeinfo
-    names it was at 0x8d11c (93c63667), where 12506 read `unresolved` (`sqlite3_version: no target symbol; bytes not in
+    a multiple of 4 (§S9 item 1). Ours is at 0x146b69 at a8807f0a, after `der_wrap_gen.o`'s 11-byte OIDs. After
+    `asn1.o`'s typeinfo names it was at 0x8d11c (93c63667), where 12506 read `unresolved`
+    (`sqlite3_version: no target symbol; bytes not in
     the target`), 12776 `differs` and 250 `unresolved self-voted`. 250 (`sqlite3_initialize`) is the one voter of
     `sqlite3RegisterBuiltinFunctions.aBuiltinFunc`, so it holds only while that object's bytes agree with the target's
     ([../splat.md](../splat.md) §3, "No circular evidence"), and they agree through 12506's match: `compareObject`

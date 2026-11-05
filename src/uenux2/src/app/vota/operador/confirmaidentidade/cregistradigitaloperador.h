@@ -68,8 +68,8 @@ private:
     // cregistradigitaloperador.cpp:328 and :371) behind a 96-byte frame inside its own 416-byte one, binaryen's
     // inlining, and then looks for the mesario's registered digital file. Its wasm type is `(i32 i32)->(i32)`, and the
     // three searches pass it the map node's identity and the comparecimento's id_arquivo, or 999999 when it has none (a
-    // `select`): those are its parameters. Its name and its being a member of this class, like the member it calls, are
-    // chosen.
+    // `select`): those are its parameters. Its name and its being a member of this class are chosen; the member it
+    // calls takes both from its records (328, 371: CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores).
     bool BiometriaMesarioPresente(const comum::md::CEleitorIdentidade& mesario, int idArquivo);
     bool BiometriaMesarioPresenteNosEleitores(const comum::md::CEleitorIdentidade& mesario);
 

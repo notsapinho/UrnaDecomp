@@ -5,9 +5,9 @@
 // before this object's first use of api::CInteractiveForm<api::IScreen, api::IInputKbd> (its vtable @1579168), which
 // GetInteractiveForm (fn 554) makes, and GetInteractiveForm follows it, a choice. AddInputControl (fns 901 and 5530)
 // follows that, a choice too: the control field's block, which 901, 5530 and 653 build, has its vtable @1579276 among
-// this object's data, after that vtable, and no record places the two. AddInputMenuField (fn 3675) comes last: in use
-// band 1 the block of the menu it builds (11070, 11069) follows the control field's (11072, 11071), and
-// src/units/84-uenux2-cinputmenufield.mk has why the function is this file's.
+// this object's data, after that vtable, and no record places the two. AddInputMenuField (fn 3675) comes after them, a
+// choice: use band 1 asks only that the block of the menu it builds (11070, 11069) follow the control field's (11072,
+// 11071). src/units/84-uenux2-cinputmenufield.mk has why the function is this file's.
 
 #include "api/gui/cinteractiveformbuilder.h"
 

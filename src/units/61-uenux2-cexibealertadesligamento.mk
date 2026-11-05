@@ -49,8 +49,8 @@
 #
 # CAppState::SetNextState, out of line in cappstate.cpp, has no target function: binaryen inlines its one store into
 # every caller. Twenty functions call it for their next-state stores (the definition around each call that
-# `/usr/bin/grep -rn 'SetNextState(' src/uenux2/src` lists, cappstate.{h,cpp} aside), eighteen matched and 10512 and
-# 11881 written (11881, unit 104's, calls it on two other states it holds, why it is public: cappstate.h). Seven are
+# `/usr/bin/grep -rn 'SetNextState(' src/uenux2/src` lists, cappstate.{h,cpp} aside), nineteen matched and 10512
+# written (11881, unit 104's, calls it on two other states it holds, why it is public: cappstate.h). Seven are
 # measured here: vota::CEncerramentoAntecipado::ProcessInput (10731)
 # and CEncerramentoHorarioInvalido::StartState (10710), unit 277's; CFimAquisicaoVotos::StartState (10737), unit 104's;
 # comum::CConfirmaFimRegistroMesarios::ProcessInput (10383), unit 135's; CMesarioRegistrado::StartState (10339), unit

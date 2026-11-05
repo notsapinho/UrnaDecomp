@@ -292,7 +292,7 @@ bool CRegistraDigitalOperador::BiometriaMesarioPresente(const comum::md::CEleito
 }
 
 namespace {
-
+// Chosen: this function, its name and its internal linkage (the target holds the map in ProcessTick's own frame).
 double CalculaEntropia(const api::TSharedImageVector& imagem)
 {
     const auto inicio = imagem->cbegin();
