@@ -109,9 +109,9 @@
 #   122's). 3816 (the relocation of a vector of comum::md::CCargo; fns 3818 and 11371) and 5868 (a tree insertion with a
 #   string key), which were among them, match: 3816 from unit 200's cgravadorbu.cpp.o (3818's object; fragment 299's
 #   cconversoreleicaope.cpp.o, 11371's, held the copy before), 5868 from fragment 268's object, its caller fn 5869's.
-# - 5852 and 5854 (std::vector<api::hash::CHashArquivo>'s range insert and its helper; fns 5358 and 11620 call 5854) are
-#   fragment 227's: 5852 matches from cmontadorhash.cpp's object, and 5854 waits for 11620, whose object, built without
-#   strict aliasing, reads as the one that holds the target's copy (fragment 227 has the measurement).
+# - 5852 and 5854 (std::vector<api::hash::CHashArquivo>'s range insert and its helper; fns 5358 and 11620 call 5854)
+#   match from unit 136's cgravadorhashes.cpp.o, 11620's object, built without strict aliasing (fragments 136 and 227
+#   have the measurements).
 GRAVADORES_CLASSES_SRCS := src/app/comum/gravadores/ccopiadormr.cpp src/app/comum/gravadores/ccopiadorwsqmr.cpp \
 	src/app/comum/gravadores/igravadorenvelope.cpp src/app/comum/gravadores/cgravadorenvelopearquivo.cpp \
 	src/app/comum/gravadores/md/cvotosvotavel.cpp

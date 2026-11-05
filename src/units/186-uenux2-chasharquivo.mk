@@ -3,8 +3,11 @@
 # CBaseError<api::EUeHashError, SErrorLimits{5100, 5150}> constructor its two throws instantiate (2723, a thunk into
 # binaryen's 710, named by the vptr it passes) and the new header api/hash/euehasherror.h. The class header,
 # api/hash/chasharquivo.h, is unit 46's, whose DoDesconverte (10269) is the constructor's one caller written.
-# The roots file also held two template instances the target keeps from uenux2 objects not written, each matched from
-# the roots object as code a landed header defines (src/units/README.md "Companion files"):
+# The roots file, which went with fn 5360 (unit 227's CMontadorHash::CriaHashesDiretorio, written): its last stand-in,
+# w186_hash, stood for that caller of the constructor (3600), whose other callers, 10269 and 5358, were in the link;
+# 5358 and 5360 read the constructor's result, as the stand-in did. It also held two template instances the target keeps
+# from uenux2 objects not written, each matched from the roots object as code a landed header defines
+# (src/units/README.md "Companion files"):
 # - std::vector<comum::md::CComparecimentoMesario>::__emplace_back_slow_path (5375), found by the content pass (no
 #   step-8 name). The target body moves a 52-byte element, a std::string at +0 (zeroed
 #   after the move), words at +12 and +16 and 29 bytes from +20 copied as four i64 (+20, +28, +36, +41), the layout
@@ -26,8 +29,8 @@
 #   target's body does, so binaryen keeps 5364 out of line with two call sites in one caller.
 # - 5364 tests the string at +0, then the one at +12, and throws code 5100 with "CHashArquivo: nome inválido." on line
 #   26 and 5101 with "CHashArquivo: hash inválido." on line 30, column 15 each (ledger/source-locations.tsv).
-# - 2723's callers are 5364 (twice) and 5360 (not written); the typeinfo of the class whose vptr it passes gives the
-#   enum's name, namespace (api) and limits.
+# - 2723's callers are 5364 (twice) and 5360 (unit 227's, written); the typeinfo of the class whose vptr it passes
+#   gives the enum's name, namespace (api) and limits.
 # - Measured with `pnpm wasm score` against the links before step 8 named anything: 3600 4 over 56 rows, 5364 14 over
 #   64, 2723 2 over 8, 5375 5 over 216, 5369 2 over 8, every row operand-only; step 9 matched all five.
 #
@@ -39,8 +42,3 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CHASHARQUIVO_SRCS := src/api/hash/chasharquivo.cpp
 UENUX2_SRCS += $(CHASHARQUIVO_SRCS)
-# callers not reconstructed: 186-uenux2-chasharquivo-roots.cpp stands for them (its header says which), compiled at the
-# tree's flags since it instantiates template code the target keeps from uenux2 objects
-$(ROOT)/$(APP)/186-uenux2-chasharquivo-roots.o: $(ROOT)/src/units/186-uenux2-chasharquivo-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/186-uenux2-chasharquivo.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/186-uenux2-chasharquivo-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/186-uenux2-chasharquivo-roots.o

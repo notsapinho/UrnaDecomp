@@ -21,9 +21,9 @@ loses its stub at that unit's step 9, since the record's line is then code of ou
 
 A stub is not always a TSE source to write. Its tree follows its callers' component, so a library's code that TSE calls
 gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp`, and libc++'s 2547 and
-3335 (owner `libcxx`, called by 5360 and 7741) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in
-`ledger/functions.tsv` (column 4) first: a library there means the library's build, not a source, and the row lands with
-its caller (182dc6c1):
+3335 (owner `libcxx`, called by 5360 and 7741) had theirs in `src/ecourna/unplaced.cpp` until unit 227 wrote 5360, and
+matched with it. Read the row's `owner` in `ledger/functions.tsv` (column 4) first: a library there means the library's
+build, not a source, and the row lands with its caller (182dc6c1):
 
 ```sh
 awk -F'\t' '$1==410 || $1==2134 || $1==2199 || $1==2546 || $1==2547 || $1==2578 {print $1, $4, $5}' ledger/functions.tsv

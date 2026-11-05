@@ -24,11 +24,23 @@ namespace comum::md {
 // std::vector<api::hash::CHashArquivo> at +88 (24-byte elements). That the two identifications are those classes (the
 // type at +0 of each, which 10266 does not read, fills their 20 and 12 bytes) is a reading of the offsets: the hashes'
 // writer, comum::CGravadorHashes, holds one or the other of those two classes (cgravadorhashes.h), and its
-// GravaResultado (fn 11620, not written) builds this entity. The getters' names and
-// forms (GetFase by value, as 10266 copies the phase into a temporary for Utils::ConverteFase; the rest by reference)
-// and the members' names are chosen. The constructor is not recovered, so nothing may construct the class.
+// GravaResultado (fn 11620, written) builds this entity. The getters' names and forms (GetFase by value, as 10266
+// copies the phase into a temporary for Utils::ConverteFase; the rest by reference) and the members' names are chosen.
+// The two constructors, one per identification, are written in centidadehashes.cpp, which binaryen inlines into fn
+// 11620, their one caller (a choice: written in the class, for clang to inline, they were not measured): each copies
+// the header, stores the phase, copies the UF's string, fills its own identification and leaves the other one empty,
+// copies the version's string and the hashes, and calls ValidaCriacao. Their parameters' forms (references, the phase
+// by value) are the copies'; their order follows the members', a choice, as is their being two constructors (one taking
+// both optionals was not measured).
 class CEntidadeHashes {
 public:
+    CEntidadeHashes(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const std::string& siglaUF,
+        const CIdentificacaoSecao& identificacaoSecao, const std::string& versaoUENUX,
+        const std::vector<api::hash::CHashArquivo>& hashesArquivos);
+    CEntidadeHashes(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const std::string& siglaUF,
+        const CIdentificacaoUrnaContingencia& identificacaoContingencia, const std::string& versaoUENUX,
+        const std::vector<api::hash::CHashArquivo>& hashesArquivos);
+
     const CCabecalhoEntidade& GetCabecalho() const { return m_cabecalho; }
     EUrnaFase GetFase() const { return m_fase; }
     const std::string& GetSiglaUF() const { return m_siglaUF; }

@@ -233,7 +233,7 @@
 # 2763 does in its band; GetDirName after GetMemInfo, at the end of the file, which keeps 5463 ahead of it as band 2 does
 # and, like GetMemInfo, takes it after ExistDir where the band has it before (a choice, the same one GetMemInfo's place
 # makes). 1501 (vota::CAssinadorVota's constructor, comum::CAssinador's inlined) calls each once: PartesDoCaminho in the
-# roots stands for 12098 and 5360 (5461 is in the link), so binaryen keeps both out of line as the target does.
+# roots stands for 12098 (5461 and 5360 are in the link), so binaryen keeps both out of line as the target does.
 # GetMemTotal and GetMemFree (no target index, chosen names, free functions after GetMemInfo, a choice): 10226 calls
 # GetMemInfo twice, each time after a 16-B stack frame of its own that builds the field's name, "MemTotal" or
 # "MemFree", as a std::string, so each call sits in a function binaryen inlined into its one caller; clang would inline

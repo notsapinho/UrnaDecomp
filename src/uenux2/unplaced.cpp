@@ -216,11 +216,6 @@
 // f5808 · 501 B · unmatched · placement: link order · name unknown
 // void f5808(i32, i32, i32) { ... }
 
-// link-order cluster 837 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/centidadehashes.cpp
-
-// f5854 · 1843 B · unmatched · placement: link order · name unknown
-// void f5854(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 903 · uses=2
 
 // f6592 · 942 B · unmatched · placement: link order · name unknown
