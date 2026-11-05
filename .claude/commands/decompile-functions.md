@@ -250,10 +250,12 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   a body of library calls shaped like a header member (183 is `std::filesystem::path::operator/=`). A body that also
   fits a TSE accessor (1555, a copy of the `std::string` at `this`+0, matched as `std::filesystem::path::string()`) is
   told by the type its callers' `this` has, read from their other calls on that object. The other is a library
-  archive's member our link does not hold yet (its owner a library in `ledger/functions.tsv`, its name in no line of
-  `build/out/wasm-map/vota_web/names.tsv`): the candidate's call pulls it in, and the toolchain alone decides its
-  match (6222, libc++abi's `__cxa_demangle`, under 5521). The pick lists it with the lane as a library row and names
-  the archive. A merge thunk of a stub-less
+  function (its owner a library in `ledger/functions.tsv`) with no line in `build/out/wasm-map/vota_web/names.tsv`:
+  our link holds it inlined into the one caller it gives it (how-to step 1, "Inlined into the one caller our link
+  gives it"), or no object pulls it yet. The candidate's call gives it its second call site, or pulls the archive
+  member in, and the toolchain alone decides its match: 6222, libc++abi's `__cxa_demangle`, inlined into 212 until
+  5521 was written. Read its target callers (`pnpm wasm fn <target> <index>`) and the link's objects for its symbol,
+  not `names.tsv` alone; the pick lists it with the lane as a library row. A merge thunk of a stub-less
   TSE body is work, not one (412). A `CBaseError<E, SErrorLimits{…}>`
   constructor is one, even when the target's is a binaryen merge thunk: 1889, `push f710(p0, p1, p2, p3, 1528452)`,
   is named `evidence:call by:1684,10250`. A name only the candidate's own call votes for is self-voted, and the match

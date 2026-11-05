@@ -6,7 +6,10 @@ these files for the evidence behind a rule; read the section a rule cites before
 Cite a fact as `docs/reference/facts/<file>.md §<id>`, for example `docs/reference/facts/link-order.md §L1`. A
 command a fact gives runs as written and prints what the fact quotes. One that reads a file a landing can change (a
 companion file, a stand-in a landing retires) names the commit its output was taken at and reads the file there
-(`git show <commit>:<path>`), or builds a probe file of its own under `build/out/`.
+(`git show <commit>:<path>`), or builds a probe file of its own under `build/out/`. So does an output that prints our
+link's numbers (an index of ours, a table slot, an address, an instruction offset), which any link change moves: a
+sentence states the claim (a slot at or above 1024, two slots side by side) and the quoted number carries its commit.
+An example that names a row in a state (a trap, a `differs` body, a pending file) is re-read when that row lands.
 
 | file | ids | what it covers |
 | --- | --- | --- |
