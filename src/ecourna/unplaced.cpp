@@ -42,12 +42,6 @@
 // f5751 · 951 B · unmatched · placement: link order · name unknown
 // ? f5751(i32, i32, i32) { ... }
 
-// f5749 · 538 B · unmatched · placement: link order · name unknown
-// void f5749(i32, i32, i32, i32, i32) { ... }
-
-// f5748 · 989 B · unmatched · placement: link order · name unknown
-// ? f5748(i32, i32) { ... }
-
 // link-order cluster 828 · uses=2 · neighbours' file uenux2/src/app/comum/dados/celeitores.cpp
 
 // f5766 · 5577 B · unmatched · placement: link order · name unknown
@@ -73,24 +67,6 @@
 // f3651 · 232 B · unmatched · placement: link order · name unknown
 // void f3651(i32, i32) { ... }
 
-// link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
-
-// f3757 · 406 B · unmatched · placement: link order · name unknown
-// void f3757(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1009 · uses=3 · neighbours' file uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp
-
-// f3763 · 195 B · unmatched · placement: link order · name unknown
-// void f3763(i32) { ... }
-
-// f3762 · 7621 B · unmatched · placement: link order · name unknown
-// void f3762(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1103 · uses=4 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp
-
-// f2800 · 193 B · unmatched · placement: link order · name unknown
-// ? f2800(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1106 · uses=4 · neighbours' file uenux2/src/app/comum/dados/chv.cpp
 
 // f2820 · 189 B · unmatched · placement: link order · name unknown
@@ -107,23 +83,8 @@
 // f2234 · 493 B · unmatched · placement: link order · name unknown
 // ? f2234(i32, i32) { ... }
 
-// link-order cluster 1247 · uses=9 · neighbours' file uenux2/src/app/comum/dados/md/candidatura/ccandidatura.cpp
-
-// f1392 · 608 B · unmatched · placement: link order · name unknown
-// void f1392(i32, i32, i32) { ... }
-
 // link-order cluster 1248 · uses=9 · neighbours' file uenux2/src/app/comum/gravadores/iresultado.cpp
 
 // f1397 · 107 B · unmatched · placement: link order · name unknown
 // void f1397(i32, i32) { ... }
-
-// link-order cluster 1332 · uses=37
-
-// f470 · 371 B · unmatched · placement: link order · name unknown
-// void f470(i32, i32) { ... }
-
-// link-order cluster 1361 · uses=78
-
-// f282 · 340 B · unmatched · placement: link order · name unknown
-// void f282(i32, i32) { ... }
 // </stubs>

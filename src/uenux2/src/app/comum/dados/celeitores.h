@@ -59,6 +59,13 @@ public:
     CEleitorDetalhe* LocalizaEleitor(const md::CEleitorIdentidade& identidade);
     CEleitorDetalhe* LocalizaEleitor(const std::string& identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo);
 
+    // fn 5761, records celeitores.cpp:301, :305 and :358, which give the signature and its const: with records and no
+    // dynamic data yet, one md::CEleitorDinamico per record (state 0 when the set at +52 holds the voter's coverage or
+    // a wider one, else 1), then the table of the database file named: written when it is empty, else both lists sorted
+    // by voter and compared (code 7839 when they differ). Its one target caller is fn 6737, twice, with two database
+    // files' paths; src/units/383-uenux2-celeitores-dinamicos.mk has the evidence and the forms measured.
+    void DynamicCreate(const std::string& banco) const;
+
     void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
     // MarcaVotou: the records celeitores.cpp:456 and 460 (vota::CSincronismoOperador::StartState, target fn 10210, holds
     // it inlined by binaryen, one call). It counts the voter at +104 (an increment of that word). The counter's name is
@@ -133,7 +140,10 @@ private:
     std::string m_uf;
     uedword m_municipio;
     int m_naoRecuperado2;
-    std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;
+    // The set at +52 holds coverages, a reading: DynamicCreate (fn 5761) looks for 0, 1 and 2 in it and tests the
+    // result against GetAbrangencia's 0, 1 and 2, where the identifier types run 1 to 3, and its destroy, fn 1594, is
+    // CConfiguracaoEleicao's set's at +604 too (cconfiguracaoeleicao.h). The name is chosen.
+    std::set<md::ETipoAbrangencia> m_tipos;
     std::vector<std::string> m_lista1;
     std::vector<std::string> m_lista2;
     std::vector<std::string> m_lista3;

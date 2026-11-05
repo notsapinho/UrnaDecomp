@@ -485,7 +485,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   11788) store the vptr first too: 11782 and 11787 score 6 over 12 rows with strict aliasing (3 inserted, 3 deleted) and
   1 over 9, operand-only, without it, and the four `__clone()` slots 2 over 5, operand-only, both ways; it was listed
   fourth (below). In `operador/leidentidade/celeitorencontrado.cpp` (unit 104), the copy of
-  `std::set<ETipoIdentificadorEleitor>`'s range insert over two `const_iterator`s (6733) that
+  `std::set<md::ETipoAbrangencia>`'s range insert over two `const_iterator`s (6733) that
   `CEleitorEncontrado::StartState` (10635) calls has the target's six locals only without TBAA: in variant links
   ([workflow.md](workflow.md) §W13) it scores 49 over 186 rows with strict aliasing (7 locals) and 1 over 181,
   operand-only, without it, and 10635, every row an operand, reads `unresolved self-voted` on 6733's name until 6733

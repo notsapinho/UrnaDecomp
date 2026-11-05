@@ -239,10 +239,11 @@
 #   private (celeitores.h) and its lines, after MontaCaminhos and before GetEleitoresImpedidos, as band 2's order
 #   (5773, 5772, 5771, 5770, 5767 in link order) allows. The roots' LeEstaticos stands for its callers 6734 and 7787.
 # - Not written. CompleteLoad (6734, records 205, 219, 238) copies an md::CEleitor through fn 946; it calls 5772, 2543
-#   (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3763, 3765,
-#   5723, 5763 and 5766, none written, and 5725 (unit 113's api::CDataMap<...>::Add, matched).
-#   DynamicCreate (5761) waits for md::CEleitorDinamico's third constructor (fn 2800: two identities and the state,
-#   the rest defaulted) and the equality and order it sorts and compares by, which no header holds.
+#   (comum::VerificaIntegridadeVotos, unit 98, written, with no name or match yet) and 1551, 1692, 2826, 3765, 5723,
+#   5763 and 5766, none written, 3763 (std::vector<md::CEleitorDinamico>'s __destroy_vector, matched from this object
+#   since DynamicCreate) and 5725 (unit 113's api::CDataMap<...>::Add, matched).
+# - DynamicCreate (5761, records 301, 305, 358) is written and matches, with the instances it brings and the files
+#   it needs beside this one: src/units/383-uenux2-celeitores-dinamicos.mk has its evidence and forms.
 #
 # CEleitores's slot 0, its impediments' reader and the path list both readers build (celeitores.cpp; scores are pnpm
 # wasm score of the target's index against ours in build/out/wasm/vota_web/vota_web_wasm.wasm, before steps 7 to 9):
@@ -718,7 +719,13 @@
 #   appinfo/cappinfo.cpp and dados/cfotos.cpp;
 # - api/gui/primitives.cpp (@1583624);
 # - this list's six files ahead of ctelasvota.cpp (@1558832 to @1576260).
-SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
+# dao/celeitordinamicodao.cpp (unit 91's: dao::CEleitorDinamicoDAO) is compiled from this list, between
+# celeitordetalhe.cpp and celeitores.cpp, the target's data order (records @1558832, @1558940, @1559096): DynamicCreate
+# (5761) holds its InserirTodos inlined by binaryen and matches with that object linked right before celeitores.cpp.o;
+# after it, as unit 91's list put it, 5761 differs in local numbers only (src/units/383-uenux2-celeitores-dinamicos.mk
+# has the measurement and codegen.md C4's count of objects out of the data order at both places).
+SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/dao/celeitordinamicodao.cpp \
+  src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \
   src/app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp \

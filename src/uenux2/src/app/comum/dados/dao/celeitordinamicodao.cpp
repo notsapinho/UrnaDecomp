@@ -1,8 +1,8 @@
 // The reconstruction's note, not TSE's text. Target functions: the constructor (3768), the destructors (1704, 3767, one
 // body each with the other two DAOs'), Inserir (5776, slot 3), ExcluirID (11543, slot 5, record at line 130), Atualizar
-// (5775, slot 6), Clone (11541, slot 2, a thunk into 3894). Their order is what the bands give and the lines but 130's
-// are chosen: src/units/91-uenux2-app-comum-dados-eleitor.mk says so. Slots 7 and 8, RecuperarID (11542) and RecuperarTodos
-// (3766), match since the literal they read the tail of, fn 5890's, is in the link (the fragment says so).
+// (5775, slot 6), Clone (11541, slot 2, a thunk into 3894); InserirTodos has none (inlined into 5761: unit 383).
+// Their order is what the bands give, the lines but 130's are chosen (unit 91's fragment). RecuperarID (11542, slot 7)
+// and RecuperarTodos (3766, slot 8) match since the literal they read the tail of, fn 5890's, is in the link.
 #include "app/comum/dados/dao/celeitordinamicodao.h"
 
 #include <format>
@@ -106,7 +106,17 @@ std::vector<CEleitorDinamicoDAO::TDado> CEleitorDinamicoDAO::RecuperarTodos() co
     return dados;
 }
 
-// (original lines 109-127: content not recovered)
+
+void CEleitorDinamicoDAO::InserirTodos(const std::vector<TDado>& dados) const
+{
+    m_conexao->BeginTransaction();
+    for (const TDado dado : dados) {
+        Inserir(dado);
+    }
+    m_conexao->CommitTransaction();
+}
+
+// (original lines 119-127: content not recovered)
 #line 128
 void CEleitorDinamicoDAO::ExcluirID(const TDadoID&) const
 {
