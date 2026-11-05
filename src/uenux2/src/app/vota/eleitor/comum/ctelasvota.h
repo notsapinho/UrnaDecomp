@@ -314,10 +314,10 @@ CFormInterativoTelaVota TelaMRModoDemo();
 // unsigned char, fn 12893), and the labels of CONFIRMA ('C', "Confirmar seleção") and CORRIGE ('D', "Retornar");
 // then "telaFiltragemCandidatosPorCargo" through GetFormularioInterativo (fn 576). It returns the form and the menu,
 // as TelaMenuVisualizacaoCandidatos (below) does. Why ctelasvota.cpp: the three fonts are this file's constants (the
-// reading above). The name (from the form's), the parameters' names and order (the other order scored the same, 194
-// over 1385 rows, before 11888's object moved after ctelasvota.cpp.o),
-// the local that holds the item's name (a temporary in the call is not measured), its being a free function of vota and
-// its place after the file's last record are chosen.
+// reading above). The name (from the form's), the parameters' names, their order (the other order gives the same
+// bytes, measured), the name of the local that holds the item's name (the copy into a local is what the target shows:
+// a temporary in the call scored 124 over 1384 rows), its being a free function of vota and its place after the file's
+// last record are chosen.
 std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorCargo(
     bool todos, const std::set<comum::md::CCargo>& cargos);
 

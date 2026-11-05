@@ -23,13 +23,14 @@
 //                     1905, 941's 13 and 728's 16), and the link without those calls moved no row (steps 6 to 10)
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
-//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
-//                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and
-//                     6599, unit 110's, 11812, unit 217's, and 11881, unit 104's, are in the link); TelaB for 7787,
-//                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
-//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
-//                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
-//                     (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the other adders too
+//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040, 12055, 12065 and
+//                     12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and 6599, unit 110's,
+//                     11812, unit 217's, and 11881, 11888 and 11892, unit 104's, are in the link); TelaB for 7787, the
+//                     caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
+//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243
+//                     (AddLabeledKey over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the
+//                     alignments 0 and 2 (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the
+//                     other adders too
 //   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
 //                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
 //                     their defaults

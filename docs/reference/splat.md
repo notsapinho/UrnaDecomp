@@ -162,8 +162,9 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
   merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store. It suits a callee no vote
-  reaches: its callers in the link all named by `vtable` and its other target callers not written (1150,
-  `CMostraEleitorVotando::GetInst`, alone holds 1593008; its comment names both kinds of caller).
+  reaches: its callers in the link all named by `vtable` and its other target callers not written. Once such a
+  function matches, step 8's `vptr-anchor` names it from the same operand: 1150, `CMostraEleitorVotando::GetInst`, the
+  one holder of 1593008, is `vptr-anchor` since it matched.
 - `rtti-operand`: the only target function holding a class's vtable and typeinfo addresses.
 - `pair-depth0`: the only pair with that hash at depth 0, where a callee's body does not count, so a callee that
   differs or is inlined leaves the pair standing while deeper hashes part (`pnpm wasm fingerprint <wasm> --depth 0`, on

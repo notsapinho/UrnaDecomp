@@ -172,19 +172,24 @@
 #   cregistradormesario.cpp after this file too, 198 over 3254, every row an operand (the four statics' addresses and
 #   CControlaReconhecimento's s_digitalRegistrada, before step 8 named them). The comum file ahead of this one gives 348
 #   over 3271; ccontrolareconhecimento.cpp or cinformaeleitorpodevotar.cpp moved beside the group, 267 over 3258 both;
-#   the servico's object moves with cregistradormesario.cpp, ahead of it as unit 113 measured for 815 (55 over 519 in
-#   each order it was scored in here, the landed one among them); this unit's ccomparecimentomesariopk.cpp stays in its
-#   list (198 over 3254 moved with them too). Against the target's data (each object's lowest record address, or the
-#   address of the vtable of its own class), the move puts 478 object pairs into the data's order and inverts 31, all of
-#   one kind: ccomparecimentomesarioservico.cpp and cregistradormesario.cpp now follow 15 objects whose data the target
-#   holds after theirs (comum/util/cmonitoraalimentacao.cpp, vota/monitor/cthreadmonitor.cpp, api/ipc/cthread.cpp,
-#   api/hash/chasharquivo.cpp and cmontadorhash.cpp, vota/operador/cthreadoperador.cpp and caguardainicio.cpp,
-#   vota/iexecucaovota.cpp, and comum/gravadores/asn/util.cpp, cconversorcorrespresultado.cpp, cconversorurna.cpp,
-#   cconversorenvelopegenerico.cpp, cconversorhistoricovotoimpresso.cpp, cconversortipoapuracaosa.cpp and
-#   md/ctipoapuracaosa.cpp, which link in units between unit 113's and unit 278's), and
-#   ccontroladorreconhecimetomesario.cpp follows cmontadorhash.cpp; 68 pairs hold an object with no such address. Placed
-#   with this unit instead (the states moved up into this list), the group gives 10451 the same 198 rows and the move
-#   384 pairs in the data's order against 94 inverted;
+#   the servico's object moves with cregistradormesario.cpp, right before it, a choice of the data's order and not a
+#   byte need: 815 needs it ahead of cregistradormesario.cpp (unit 113's fragment), and with the servico left in unit
+#   113's list 10451 is still 198 over 3254 and 815 still 55 over 519, both operand-only (that order puts 232 fewer
+#   pairs in the data's order and inverts 18 fewer); this unit's ccomparecimentomesariopk.cpp stays in its list (198
+#   over 3254 moved with them too). Against the target's data (each object's lowest record address, or the address of
+#   the vtable of its own class), the move puts 537 object pairs into the data's order and inverts 39:
+#   ccomparecimentomesarioservico.cpp and cregistradormesario.cpp now follow 18 objects whose data the target holds
+#   after theirs (comum/util/cmonitoraalimentacao.cpp, vota/monitor/cthreadmonitor.cpp, api/ipc/cthread.cpp,
+#   api/hwil/euedesligandoerror.cpp, api/hash/chasharquivo.cpp, chashdiretorio.cpp and cmontadorhash.cpp,
+#   vota/operador/cthreadoperador.cpp and caguardainicio.cpp, vota/iexecucaovota.cpp, and comum/gravadores/asn/util.cpp,
+#   cconversorcorrespresultado.cpp, cconversorurna.cpp, cconversorenvelopegenerico.cpp,
+#   cconversorhistoricovotoimpresso.cpp, cconversortipoapuracaosa.cpp, cconversorversoesarquivos.cpp and
+#   md/ctipoapuracaosa.cpp, which link in units between unit 113's and unit 278's); ccontroladorreconhecimetomesario.cpp
+#   follows cmontadorhash.cpp; and cregistradigitaloperador.cpp follows api/hash/cmontadorhash.cpp and
+#   comum/comparecimentomesario/estados/cregistrarmesarios.cpp; 50 pairs hold an object with no such address (counted on
+#   the merged link with the pair count of the move's measurement). Placed with this unit instead (the states moved up
+#   into this list), the group gives 10451 the same 198 rows and the move 384 pairs in the data's order against 94
+#   inverted (counted at b3b6d4bb, where the landed order gave 515 against 33);
 # - 2738 in a file of its own (above);
 # - the fingers built by reserve(2) and four push_back, where a vector of {1, 6} move-assigned lets clang fold away the
 #   8-byte buffer the target keeps (3614 is 144 over 2174 so, 11 rows deleted), and `dedos = {1, 6}` calls

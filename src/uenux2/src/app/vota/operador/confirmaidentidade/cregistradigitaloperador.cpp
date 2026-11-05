@@ -4,6 +4,8 @@
 // three singletons (143 to 145) and BiometriaMesarioPresenteNosEleitores's two (328 and 371); every other line is a
 // choice, the blank ones the original's unknown lines. src/units/221-uenux2-app-comum-constructors.mk has the notes,
 // and those on comum::md::CComparecimentoMesarioPK's constructor, which ccomparecimentomesariopk.cpp defines now.
+// Chosen in it: ContaOcorrencias and CalculaEntropia, their names and their internal linkage (the target holds the map
+// in ProcessTick's own frame); the counts come back by value for the map's stores.
 #include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
 
 #include <algorithm>
@@ -84,7 +86,7 @@ CRegistraDigitalOperador& CRegistraDigitalOperador::GetInst()
     return *s_inst;
 }
 
-// (original lines 87-90: content not recovered)
+// (original lines 89-90: content not recovered)
 #line 91
 void CRegistraDigitalOperador::StartState()
 {
@@ -292,8 +294,6 @@ bool CRegistraDigitalOperador::BiometriaMesarioPresente(const comum::md::CEleito
 }
 
 namespace {
-// Chosen: these two functions, their names and their internal linkage (the target holds the map in ProcessTick's own
-// frame). The counts come back by value for the map's stores (src/units/221-uenux2-app-comum-constructors.mk).
 std::map<uebyte, int> ContaOcorrencias(const std::vector<uebyte>::const_iterator inicio,
                                        const std::vector<uebyte>::const_iterator fim)
 {
@@ -317,7 +317,7 @@ double CalculaEntropia(const api::TSharedImageVector& imagem)
 
 } // namespace
 
-// (original lines 322-324: content not recovered)
+// (original lines 320-324: content not recovered)
 #line 325
 bool CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores(const comum::md::CEleitorIdentidade& mesario)
 {

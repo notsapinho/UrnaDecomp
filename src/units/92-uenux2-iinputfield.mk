@@ -17,11 +17,11 @@
 #   <IScreenMT> (11018, 11017), CMaskedTextField<CFramedText> (12618, 12613) and <CGrayedFramedText> (12735, 12727);
 #   __shared_ptr_pointer's __get_deleter for CInputField<CFramedText> (12350), CMaskedTextField<CFramedText> (12340),
 #   CControlValidation (11152) and CInputFieldControl<IScreenMT> (11019); and IInputField's constructor's lambda, the
-#   __func members 12381, 12374, 12361, 12355 for IScreen and 11023, 11022, 11021, 11020 for IScreenMT, with
-#   operator() 6306, one body for both. Of these, 11071, 11072 and 11152 come from api/gui/cinteractiveformbuilder.cpp's
-#   object (unit 120); 12350, the IScreen __func members and 6306 from app/vota/eleitor/comum/ctelasvota.cpp's (unit
-#   110), the first on the link line to instantiate them: its vota::AdicionaCampoNumerico (fn 2383) builds that block and
-#   calls IInputField<IScreen>'s constructor, whose copy there stores the __func vtable; and 11019 and 11020 to 11023 from
+#   __func members 12381, 12374, 12361, 12355 for IScreen and 11023, 11022, 11021, 11020 for IScreenMT, with operator()
+#   6306, one body for both. Of these, 11071, 11072 and 11152 come from api/gui/cinteractiveformbuilder.cpp's object
+#   (unit 120); 12350, the IScreen __func members and 6306 from app/vota/eleitor/comum/ctelasvota.cpp's (unit 110), the
+#   first on the link line to instantiate them: its vota::AdicionaCampoNumerico (fn 2383) builds that block and calls
+#   IInputField<IScreen>'s constructor, whose copy there stores the __func vtable; and 11019 and 11020 to 11023 from
 #   api/gui/cmtformbuilder.cpp's, whose AddInputControl (fn 395) builds that block and whose copy of
 #   IInputField<IScreenMT>'s constructor (fn 3673) stores the __func vtable (src/units/31-uenux2-cformbuilder.mk).
 #   The roots' builders and sinks that stood for 395 and 3673 went when those two landed, though 5410 stores

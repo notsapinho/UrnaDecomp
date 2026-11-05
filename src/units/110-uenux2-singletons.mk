@@ -744,15 +744,15 @@
 #   (@1538652 to @1539000) lie in this object's data run (records @1538492 and @1539612), so no object linked before
 #   this one emits them: 2383's object is this one or a later one (7787, this file's, builds them too). In this file the
 #   helper and 2383 take lines 777 to 799 of the blank run above MensagemErroCargo, a choice, and the band's order holds
-#   against 2380, 2376 and 2369 (ld_index 2789, 2793, 2805 and 2828 in names.tsv at this landing). The three includes
+#   against 2380, 2376 and 2369 (ld_index 2783, 2787, 2805 and 2828 in names.tsv at this landing). The three includes
 #   they need (api/gui/cframedtext.h, cinputfield.h, cnumbervalidation.h) took three blank lines of the run above line
 #   291.
 # - Chosen: the names (AdicionaCampoNumerico after cescolheopcao.cpp's overload for api::CMTFormBuilder), the helper's
 #   being file-static and its parameters' order, the parameters' names and types (size_t and the bools, as CInputField's
-#   constructor takes them), 2383's being a free function of vota and its external linkage (its callers are this file's
-#   but 11892, whose screen calls it, so the roots can give it its other call sites; a file-static function with one
-#   call is inlined), its declaration in this file only, and the lines. Unit 373's roots stand in for 1591, 2384 and
-#   7787.
+#   constructor takes them), 2383's being a free function of vota and its external linkage (its other callers read as
+#   this file's: 7787 as CTelasVota's constructor, 1591 and 2384 by the font @474880 of this file's run of constants;
+#   11892's screen calls it, and the roots give it its other call sites; a file-static function with one call is
+#   inlined), its declaration in this file only, and the lines. Unit 373's roots stand in for 1591, 2384 and 7787.
 # - cmenufiltrarcandidatospornumero.cpp follows cmenumaisinformacoesvota.cpp in this list, as
 #   cmenuvisualizarcandidatos.cpp does: with it in unit 104's list, 11892 scored 86 over 752 rows (6 inserted, 7
 #   deleted: ours computes the address of StartState's result at its one use, where the target keeps it on the stack
@@ -767,6 +767,31 @@
 #   cconversordadolocal; cappinfo.cpp and celeitores.cpp), celeitoroptouporvotaremtransito.cpp's span it and 15 have
 #   none there (the target addresses of the map's data symbols of each object, by name in splat/symbol_addrs.txt). The
 #   move is needed for 11892, not for the data's order.
+# - The instances 2383's code and the two filter screens bring link from this object first now, each at its first user's
+#   place (how-to step 3): IInputField<IScreen>'s, CInputField<CFramedText>'s and CNumberValidation's members and blocks
+#   (band 1's 12350 to 12502, band 3's 4021) and std::any's handler for unsigned char (12893, the cargo screen's). They
+#   add 293 pairs of this object's matched members that the use bands invert (569 against 276 before: pairs of one use
+#   band whose ld_index order is not the target's, how-to step 3, "The order of two members"): 288 of band 1's 13
+#   instances against the object's later band-1 rows (the CDataImage block 12520 to 12530, 3059's blocks 12535 to 12560,
+#   12628, 12631, 12639, 12640 and 12658), 2 of 4021 against 4022 and 4118, and 3 of 12893 against 12875 and 12882
+#   (CTelasVota's statics' exit destructors) and 12894 (11881's handler).
+#
+# cmenufiltrarcandidatosporcargo.cpp (unit 104's: vota::CMenuFiltrarCandidatosPorCargo::StartState, 11888) follows
+# cmenufiltrarcandidatospornumero.cpp in this list: 11888 holds ctelasvota.cpp's TelaFiltragemCandidatosPorCargo inlined
+# by binaryen and matches with its object after ctelasvota.cpp.o; at its place in unit 104's list, and at two places
+# before ctelasvota.cpp.o, it scored 194 over 1385 rows (4 inserted, 4 deleted: unit 104's fragment has the forms). The
+# move is needed for 11888, not the data's order. The target holds the class's vtable at @1545448, after PorNumero's
+# (@1545376) and before PorPartido's (@1545520) and CMenuVisualizarCandidatos' (@1545592). Of the places after
+# ctelasvota.cpp.o this one has the fewest objects out of the data's order against it (docs/reference/facts/ codegen.md
+# C4's count on the merged link: 113 here, at least 114 at the others; 93 at its old place in unit 104's list). Against
+# that old place it puts 5 pairs in order (cmunicipio.cpp, ctelasvota.cpp, celeitoroptouporvotaremtransito.cpp,
+# cmenumaisinformacoesvota.cpp and cmenufiltrarcandidatospornumero.cpp) and inverts 25, objects whose target data lie
+# after @1545448: unit 104's cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
+# cquerreimprimirzeresima.cpp; comum's cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp,
+# celeitores.cpp, cconversorabrangencia.cpp, cconversorseguranca.cpp, cconversormunicipio.cpp and
+# cconversorcomplementomunicipio.cpp; eleven vota operador states (cfimaquisicaovotos.cpp, eight leidentidade/ ones,
+# cfinalizaoperador.cpp and csincronismooperador.cpp); and comparecimentomesario's cpedetitulomesario.cpp and
+# cgestordadomesario.cpp.
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp \

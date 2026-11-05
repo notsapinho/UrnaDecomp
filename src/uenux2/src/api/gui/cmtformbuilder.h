@@ -19,17 +19,17 @@
 // constructor in cmtformbuilder.cpp is fn 203's body. Over CMTFormBuilderBase, 10214, 5341, 5343, 10676 and 1150 match
 // (4633 is not measured over it). Measured with pnpm wasm score in the whole link, over CMTFormBuilderBase and then
 // with only the four screens' builders made CMTFormBuilders: 10214 21 over 299 rows and 128 over 307, 5341 36 over 450
-// and 86 over 458, 5343 66 over 950 and 145 over 962, 10676 51 over 507 and 96 over 510; units 104's, 165's and 161's
-// fragments say what the rows are. Chosen: two classes rather than one CMTFormBuilder with a second, inline constructor
-// beside the out-of-line one (`explicit CMTFormBuilder(int) {}`, the four screens building `builder(0)`), which gives
-// the same objects function by function (cfinalizaoperador.cpp's, caguardainicio.cpp's, caguardainspecao.cpp's,
-// csincronismooperador.cpp's and cmtformbuilder.cpp's at the link's compile lines, the class names masked); deriving
-// rather than holding the base; GetInteractiveForm, AddInputControl and AddTextFieldUpdate being the derived class's
-// (in the target only the builders fn 203 builds use them: 301's 49 callers, 395's 39, 5410 and 652, which hold the
-// other two inlined) and AddField the base's (its three callers, 395, 1151 and 5410, take the derived class); m_campos
-// being protected; the base declaring no constructor. The other naming, CMTFormBuilder as the base and a new name for
-// the derived class (as api::CInteractiveFormBuilder derives from api::CFormBuilder), renames the class of every
-// builder fn 203 builds; this one renames the members of the six callers' class.
+// and 86 over 458, 5343 66 over 950 and 145 over 962, 10676 51 over 507 and 96 over 510; units 104's, 165's, 161's and
+// 142's (1150's) fragments say what the rows are. Chosen: two classes rather than one CMTFormBuilder with a second,
+// inline constructor beside the out-of-line one (`explicit CMTFormBuilder(int) {}`, the four screens building
+// `builder(0)`), which gives the same objects function by function (cfinalizaoperador.cpp's, caguardainicio.cpp's,
+// caguardainspecao.cpp's, csincronismooperador.cpp's and cmtformbuilder.cpp's at the link's compile lines, the class
+// names masked); deriving rather than holding the base; GetInteractiveForm, AddInputControl and AddTextFieldUpdate
+// being the derived class's (in the target only the builders fn 203 builds use them: 301's 49 callers, 395's 39, 5410
+// and 652, which hold the other two inlined) and AddField the base's (its three callers, 395, 1151 and 5410, take the
+// derived class); m_campos being protected; the base declaring no constructor. The other naming, CMTFormBuilder as the
+// base and a new name for the derived class (as api::CInteractiveFormBuilder derives from api::CFormBuilder), renames
+// the class of every builder fn 203 builds; this one renames the members of the six callers' class.
 //
 // Each adder's name, and which overloads share a name, are chosen from the field it builds. CTextSource goes by value: the
 // adders release its reference at their end, and a class holding a libc++ shared_ptr is trivial-ABI here, so the callee

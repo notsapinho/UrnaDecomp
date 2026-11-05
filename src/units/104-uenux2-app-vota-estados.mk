@@ -113,7 +113,7 @@
 #
 # vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892, slot 2, no record) matches, written in
 # cmenufiltrarcandidatospornumero.cpp after the statics, where use band 1 puts it (11894, 11893 and 11892 at ld_index
-# 2980, 2981 and 2982 in names.tsv at this landing). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
+# 3000, 3001 and 3002 in names.tsv at this landing). It replaces the form at +12 with what unit 110's ctelasvota.cpp's
 # vota::TelaFiltragemCandidatosPorNumero returns for CVisualizarCandidatos::GetInst().GetCargo() (fns 1279, 5951, called
 # before the screen's prologue), the screen inlined by binaryen behind a 240-byte prologue (ctelasvota.h has its
 # evidence), then calls the form's slot 2 and stores `this` at +4, as CMaisInformacoes::StartState does. The screen
@@ -542,8 +542,8 @@
 # filter and GetCargo, with the CORRIGE case first (the target's br_table [0 1 1 1 2]; CONFIRMA first gives
 # [2 1 1 1 0]), 194 over 1385 (4 inserted, 4 deleted: the bool computed inside the inlined screen), and the same with
 # the screen's parameters in the other order; the screen's non-empty branch first, 643 over 1571; with this file
-# compiled from unit 110's list after ctelasvota.cpp, the target's data order (ctelasvota.cpp's run at @1539xxx, this
-# class's vtable at @1545448, CMenuVisualizarCandidatos' at @1545592), 82 over 1381, every row a call or a data
+# compiled from unit 110's list after ctelasvota.cpp, a place needed for 11888 and not the data's order (unit 110's
+# fragment names the 25 object pairs it inverts and the 5 it puts in order), 82 over 1381, every row a call or a data
 # address, then a match at step 9. The "Todos" item's four temporaries ("Todos", the default callback, the std::any and
 # "0") die after SetSearchText, so the item is one chain, AddItem("Todos").SetDado(...).SetSearchText("0"), and
 # api::CMenuItem::SetDado returns the item (api/gui/cinputmenufield.h): the item bound to a reference with SetDado and

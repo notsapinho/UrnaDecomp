@@ -14,7 +14,9 @@
 # - std::__tree members: 2222 (find<PK>), 3741 (find<CNumeroInscricaoEleitoral>), 5379
 #   (__emplace_unique_key_args<CEleitorIdentidade>), 1703 (find<CEleitorIdentidade>), 860 (__find_equal<CEleitorIdentidade>).
 #   1703 and 860 do not depend on the mapped type: in the target each is one body for every map of this key, and the
-#   match line names this unit's instance (docs/how-to-decompile.md step 3, "A callee can be a twin").
+#   match line names the instance of the first object on the link line that emits one (docs/how-to-decompile.md step 3,
+#   "A callee can be a twin"): 860's is unit 225's cvisitanteeleitor.cpp's, the CIndexer map's, since unit 278's list
+#   compiles cregistradormesario.cpp.
 # - 3743, an out-of-line 2-byte copy of the map's pair's second member, read as CJustificadorDetalhe's copy constructor.
 # - comum::CJustificador's constructor, 3742 (app/comum/justificativa/cjustificador.cpp; the class in cjustificador.h
 #   beside it): CDataMap's constructor from the name "CJustificador", then the comum::servico::CJustificadorServico

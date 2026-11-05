@@ -7,8 +7,8 @@
 //   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
 //   2835  GetCurrentEleicaoID         11209 13550 (5604, unit 155's, is in the link)
 //   1267  CProcessoEleitoral::GetPleito2  7787 (2787, 5586, 11191, 1543, 11902 and 11223 are in the link)
-//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888, and 5747, written (3715 holds it inlined), and 12272
-//         (unit 110's), in the link
+//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787, and 5747, written (3715 holds it inlined), 12272 (unit
+//         110's) and 11888 (unit 104's), in the link
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
 //   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,

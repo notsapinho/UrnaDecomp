@@ -184,8 +184,9 @@
 #   __uninitialized_allocator_copy_impl out of line (cost 225 against 225), and at -O3 the threshold is 250, which keeps
 #   __init_with_size (2870) out of line as the target does (a try link of this unit with a second caller of 2870 scored
 #   236 over 667 rows at -O2, against 63 over 519, all operand-only, at -O3). It needs that second caller, which the target has
-#   (5808, 5952, 7787, none written): with 5660 its one caller binaryen inlined 2870 there, and 5660 scored 220 over 669
-#   rows. Fragment 232's roots stand in for those callers, and 5660 and 2870 match.
+#   (5808, 5952, 7787; 5952, unit 150's construct_at<CCandidatura>, is in the link since): with 5660 its one caller
+#   binaryen inlined 2870 there, and 5660 scored 220 over 669 rows. Fragment 232's roots stand in for 5808 and 7787, and
+#   5660 and 2870 match.
 #
 # CMunicipio's constructor (3712, unit 107) and CEleitor::ValidaCriacao (5667, unit 157), which call 1374, a copying
 # wrapper of the trim body 9406 that binaryen merges into 3942 with the copying CStringUtils::ToLower, are written and

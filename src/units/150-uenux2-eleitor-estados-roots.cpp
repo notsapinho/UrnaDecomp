@@ -6,8 +6,8 @@
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
-// and 11892, none reconstructed but 11881 (unit 104's): VisualizarCandidatos stands for the other four
-// with two calls. Its vptr store keeps that class's vtable.
+// and 11892, none reconstructed but 11881, 11888 and 11892 (unit 104's): VisualizarCandidatos stands for 11884 and
+// 11891 with two calls. Its vptr store keeps that class's vtable.
 //
 // vota::NomeTela (fn 6718) has two direct callers in the target, CTelasCargo's constructor (fn 2386) and
 // CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. 4135 is written; NomesTela stands for
@@ -53,7 +53,7 @@ namespace {
 
 const void* volatile eleitor_estados_sink;
 
-// stands for fns 11884, 11888, 11891 and 11892 (11881 is in the link)
+// stands for fns 11884 and 11891 (11881, 11888 and 11892 are in the link)
 __attribute__((noinline)) int VisualizarCandidatos(int vezes)
 {
     return w150_visualizar() + (vezes > 1 ? w150_visualizar() : 3);
