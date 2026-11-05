@@ -98,10 +98,12 @@
 #
 # Roots (299-uenux2-cqrcodeds-processoeleitoral-roots.cpp): stand-ins for target callers not in our link, each going
 # when they are: QRCodeTela for fn 3059 (the constructor, so 1300 keeps two call sites, and SetOrigem); ConteudoQRCode
-# for fn 12553 (operator()); ParDeTextos for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant first
-# argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted). CargosRealocados, for fn 3818
-# (3816's other caller), went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's
-# check). Stand-ins of other units that my rows end went (fragments 88, 107, 124 and 232 say which).
+# for fn 12553 (operator()). ParDeTextos stood for fn 4625 (1348: with HRVR's calls alone binaryen folds the constant
+# first argument into the body, `(i32 i32)->(i32)`, 41 over 124 rows, 4 inserted, 4 deleted) and went when unit 168
+# wrote 4625, whose votadefs.cpp.o, linked ahead of this object, now names 1348's match line (pair<const std::string,
+# std::string> from two char[9], a twin of this object's instance). CargosRealocados, for fn 3818 (3816's other caller),
+# went when unit 200 wrote 3818. The census pairs no target function with a stand-in (step 7's check). Stand-ins of
+# other units that my rows end went (fragments 88, 107, 124 and 232 say which).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CQRCODEDS_SRCS := src/app/comum/dados/cqrcodeds.cpp
 CONVERSORES299_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.cpp \

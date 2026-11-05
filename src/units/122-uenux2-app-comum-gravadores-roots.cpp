@@ -13,8 +13,8 @@
 // - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604) need none: their callers, fns 10287,
 //   10291 and 11399, and 10284, 10290 and 11400, are written (units 160 and 172);
 // - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
-//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 4625, 5867
-//   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
+//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 5867 and
+//   12098 (3689 and 4625 are in the link). The constructors' results are not read, as the target's callers do not read them
 //   (fn 5867 returns nothing);
 // - comum::GetPathWsqNaoRegistrado (fn 3793) needs none now: its callers, fns 5374 (unit 214) and 10451 (unit 221),
 //   are written, and the stand-in for 10451 went.
@@ -72,15 +72,14 @@ __attribute__((noinline)) int w122_nome(comum::TMunicipioID municipio, comum::TZ
     return static_cast<int>(comum::CGravadorUtil::DeterminaNomeArquivo(municipio, zona, secao, fase, extensao).size()) + 7;
 }
 
-// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fn 4625 (3689 is in the link), which
-// calls libc++'s hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
+// stands for fn 12098 (10263 is in the link); its copy of a map, which stood for fn 4625's call of libc++'s hinted
+// emplace into a std::map<std::string, std::string> (fn 1221), went: 4625 is in the link (unit 168)
 __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::md::CVersoesArquivos::TMapVersoes& versoes,
     const std::string& outra)
 {
     new comum::md::CVersoesArquivos(tag, versoes);
     new comum::md::CVersoesArquivos(outra, versoes);
-    const comum::md::CVersoesArquivos::TMapVersoes copia(versoes);
-    return static_cast<int>(copia.size()) + 11;
+    return static_cast<int>(versoes.size()) + 11;
 }
 
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include "api/gui/itext.h"
@@ -28,6 +29,14 @@ namespace vota {
 // the internal and the external flash, through comum::ValidarUE.
 void VerificaAssinaturaMI(const std::string& arquivo);
 void VerificaAssinaturaMV(const std::string& arquivo);
+
+// Target fn 4625: the signature check of the vota files (vota.bin, rdv.dat, ze.dat, rze.dat, bu.dat, buj.dat, bim.dat)
+// that exist in a directory, each against its package (vota.vsu, ...) through a comum::CPacoteArquivos of the urna's
+// key and vota's application. Its one target caller, fn 7787, calls it twice, with comum::CPath::GetPathTrab (fn 358)
+// of the internal and the external flash. No record, slot or string names it: its name, its parameter's type (a
+// std::filesystem::path, which it copies to append to) and its being a free function of namespace vota are chosen, and
+// its file is a reading of where its data lie (src/units/168-uenux2-app-helpers.mk).
+void VerificaAssinaturaArquivos(const std::filesystem::path& diretorio);
 
 // Target fn 4582 (record votadefs.cpp:135): how many more copies of the BU may be printed.
 comum::TQtdImpresso GetQuantidadeMaximaBUsAdicionais();

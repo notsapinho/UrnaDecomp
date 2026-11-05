@@ -17,6 +17,9 @@
 //   three times, and the static initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop
 //   what it returns) has no stand-in: the two calls that stood for 14478 went on a link without them that moved no row
 //   (unit 168's fragment), and the instance our link keeps is unit 329's cajusteinicial.cpp.o's.
+// - vota::VerificaAssinaturaArquivos (fn 4625; one target caller, 7787, not written, which calls it twice):
+//   w168_arquivos stands for 7787, with the two directories 7787 passes, comum::CPath::GetPathTrab's (fn 358) of the
+//   internal and the external flash, taken as parameters.
 #include "app/vota/comum/votadefs.h"
 
 namespace {
@@ -49,6 +52,13 @@ __attribute__((noinline)) int w168_qtdbu(int base)
     return vota::GetQuantidadeMaximaBUsAdicionais() + base;
 }
 
+// stands for fn 7787, not written, which calls VerificaAssinaturaArquivos (fn 4625) twice
+__attribute__((noinline)) void w168_arquivos(const std::filesystem::path& interno, const std::filesystem::path& externo)
+{
+    vota::VerificaAssinaturaArquivos(interno);
+    vota::VerificaAssinaturaArquivos(externo);
+}
+
 const void* volatile w168_sink;
 
 struct SW168Roots {
@@ -58,6 +68,7 @@ struct SW168Roots {
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
         w168_sink = reinterpret_cast<const void*>(&w168_assinaturas);
         w168_sink = reinterpret_cast<const void*>(&w168_qtdbu);
+        w168_sink = reinterpret_cast<const void*>(&w168_arquivos);
     }
 } w168_roots;
 
