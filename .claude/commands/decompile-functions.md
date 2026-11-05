@@ -188,10 +188,14 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
 
   The first lists the stubs of 40 to 600 B, smallest first; a pick by class reads them all (`--min 0 --max 1000000`
   gives 1511 rows for `--tse` at 4487d6b, against 757). The `differs` rows of TSE code (the second) are the other pool:
-  a body of ours exists and the work is fixing its C++. The static destructors of a class's statics are in no pool:
+  a body of ours exists and the work is fixing its C++. It lists the rows a batch still landing matches too; drop them
+  with the board's in-flight list, `python3 -I -B tools/round/pick_pool.py --differs | cut -f1 | sort | comm -23 -
+  <(sort <board>/shared/inflight-indices.txt)`. The static destructors of a class's statics are in no pool:
   a 10-B or 12-B body with no stub and no reader but the table, whose `.bss` address names its singleton, so it goes
-  to the lane of that class. A third pool is in neither listing: the pending members of landed units. They have no stub, each row is `no-candidate` or `differs` with
-  the `-pending.o` as its object (how-to step 9), and the class's vtable and layout are already on `main`, so a whole
+  to the lane of that class. A third pool is in neither listing: the pending members of landed units. They have no
+  stub; a trap `splat-symbols` names by its slot reads `differs` with the `-pending.o` as its object, and one no
+  evidence names (binaryen merged it with other traps) reads `no-candidate` with object `-` (how-to step 9), so the
+  scan's object column misses those. The class's vtable and layout are already on `main`, so a whole
   class can be taken at once. Each `src/units/*-pending.cpp`
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
   `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
@@ -200,15 +204,21 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
 
   A row with no stub and no class of its own (group `app`, `libc++` or `unknown`, or a lambda's `__func` slot) is no
   target by itself: it goes to the lane of its unmatched callers when they are all in one lane, a `__func` slot to the
-  lane of a function that builds it (below), and is counted there; otherwise it is in no lane. The executable TU's
+  lane of a function that builds it (below), and is counted there; otherwise it is in no lane, unless a lead needs it
+  as a callee (a call, an `invoke_*` slot, a function pointer it passes or stores): then it goes to one of those
+  leads' lanes, the pick says which, and the other lanes that need it wait for that one or measure with a copy they
+  drop at the landing (11975, slot 1632, which 11946 and 12110 pass). The executable TU's
   copies (`-Oz`, landing pads, no stub: 388, 518, 679, 1091) are picked like any other row: their source is that TU
   (unit 170) or a tree root at `VOTA_WEB_CXXFLAGS`, and a copy whose shape depends on a reader (a destructor's kept
   `this`, `docs/reference/facts/reading.md` §R2) needs that reader in the link.
 
   A batch still landing moves the pool of a pick whose base is before it. Count as resolved what its branches match or
-  name (`git show <branch>:splat/symbol_addrs.txt`). The rows they write or trap without matching (their diff removes
+  name (`git show <branch>:splat/symbol_addrs.txt`; for a branch on the other machine, the board's in-flight list and
+  the lane's result post). The rows they write or trap without matching (their diff removes
   the row's stub, or adds the member to a `-pending.cpp`) are out of the pool until they land, and the pick says which
-  lane would take them after; a row a pending comment only mentions is not taken.
+  lane would take them after; a row a pending comment only mentions is not taken. A member a lane's result reports as
+  not attempted, whose row its branch leaves as it was, is in the pool again once that result is posted, unless the
+  round's in-flight list keeps it: then the pick lists the rows that need it as waiting for its release.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -216,12 +226,17 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   `/usr/bin/grep -nE '\$[0-9]' .claude/commands/decompile-functions.md` must print nothing.
 - **Every callee must resolve.** Read each candidate with `pnpm wasm fn` and lift it with `pnpm wasm lift … --check`
   (how-to steps 2 and 3). `fn` does not name the function behind an `invoke_*` table slot; the lift does
-  (`/* &fN */`). Neither names a function pointer passed as a plain argument (a thread routine, a callback): `fn`
-  lists its slot among the strings referenced, and the element section names it
+  (`/* &fN */`). Neither names a function pointer passed as a plain argument (a thread routine, a callback) or stored
+  (a `std::function` built from a function pointer holds the slot beside its `__func` vptr: 12040 stores 1529, which
+  is 12039): `fn` lists its slot among the strings referenced, and the element section names it
   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
   `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). Count it as a callee, and put it
   in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
-  named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A slot of a lambda's
+  named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A callee the lane writes, which the link
+  keeps, resolves only when its own callees do: wasm-ld stops on an undefined symbol that live code calls. So follow
+  every callee the lane writes down to code our link defines, and count that closure as the lane's core: 5359 (47 B)
+  calls 5360 (9613 B), so 11620's lane writes both. A large function at the bottom of it is written, plausibly at
+  least, or the lead stays pending (`src/units/README.md` "Pending members"). A slot of a lambda's
   `std::__function::__func` vtable is written with the function that builds the lambda, the one whose body stores that
   vtable's vptr (`pnpm wasm fn` of it shows the `i32.const`): count that builder as the slot's callee, since the
   closure type is local to it. binaryen merges identical slot bodies, so one row can be a slot of several `__func`
@@ -230,9 +245,17 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   together, blocks nothing:
   the name comes from a caller's vote once the caller matches (how-to step 1, "The row's own symbol"), so the row goes
   in its caller's lane. A function whose callees are unnamed
-  needs those first, with one kind of exception: a callee the candidate's own TU instantiates, which step 8 names by
-  `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). Its signs: no stub, owner `-`, a body of
-  library calls shaped like a header member (183 is `std::filesystem::path::operator/=`). A merge thunk of a stub-less
+  needs those first, with two kinds of exception. One is a callee the candidate's own TU instantiates, which step 8
+  names by `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). Its signs: no stub, owner `-`,
+  a body of library calls shaped like a header member (183 is `std::filesystem::path::operator/=`). A body that also
+  fits a TSE accessor (1555, a copy of the `std::string` at `this`+0, matched as `std::filesystem::path::string()`) is
+  told by the type its callers' `this` has, read from their other calls on that object. The other is a library
+  function (its owner a library in `ledger/functions.tsv`) with no line in `build/out/wasm-map/vota_web/names.tsv`:
+  our link holds it inlined into the one caller it gives it (how-to step 1, "Inlined into the one caller our link
+  gives it"), or no object pulls it yet. The candidate's call gives it its second call site, or pulls the archive
+  member in, and the toolchain alone decides its match: 6222, libc++abi's `__cxa_demangle`, inlined into 212 until
+  5521 was written. Read its target callers (`pnpm wasm fn <target> <index>`) and the link's objects for its symbol,
+  not `names.tsv` alone; the pick lists it with the lane as a library row. A merge thunk of a stub-less
   TSE body is work, not one (412). A `CBaseError<E, SErrorLimits{…}>`
   constructor is one, even when the target's is a binaryen merge thunk: 1889, `push f710(p0, p1, p2, p3, 1528452)`,
   is named `evidence:call by:1684,10250`. A name only the candidate's own call votes for is self-voted, and the match
@@ -241,20 +264,34 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   callers 170, 210, 235, 255 and 331, `pnpm wasm fn ../target/vota_web_wasm.wasm 2294`; 170's is
   `CBaseError<comum::EUeComumDadosError, {7800, 8600}>`, by the vptr 1528096 it passes), and no caller of those five
   is matched yet: a pick past one of them is a measurement, and the pick post says so. The name that resolves can be
-  a *twin*'s: binaryen merges byte-identical bodies and keeps one
-  name, so 760, matched as `vector<pair<unsigned long, unsigned long>>::push_back`, is also the `push_back` of
-  another vector of an 8-byte element in the target: 11361, `CConversorSituacoesEleicoes`'s converter, which builds a
-  `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
-  caller that uses that other instantiation still resolves when its body is the same (how-to step 3, "A callee can
-  be a twin"). A callee written and `differs` resolves for a lane that writes two of its callers from two target
-  bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller): their `call` votes
-  name it, and the two hold each other (`docs/reference/splat.md` §3); the pick names the two, and they land together.
-  A caller with no record, vptr or census pair votes for nothing (1255 over 502).
+  a *twin*'s, which a caller of another instantiation with the same body still resolves to (how-to step 3, "A callee
+  can be a twin", 760 under 11361). A callee written and `differs` resolves for a lane that writes two of its callers
+  from two target bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller):
+  their `call` votes name it, and the two hold each other (`docs/reference/splat.md` §3); the pick names the two, and
+  they land together. A caller with no record, vptr or census pair votes for nothing (1255 over 502).
 - **And every data operand.** A row with a body of ours already (the scan's `ours`, or a symbol of its name in
   `names.tsv` when it reads `no-candidate`) also needs each data object it reads: from `asmlift-wasm/`, `pnpm wasm
   splat-remap <target> <plain> sym:<its symbol> --against <row>` prints no `no target symbol` for it. Such an object
   resolves when a matched or lane-written reader votes for it, or a hand line names it (how-to step 9); else the row
-  waits with it (1558 and 3923 on `__format_spec`'s 2-byte field sets).
+  waits with it (1558 and 3923 on `__format_spec`'s 2-byte field sets). The same remap lists our calls and table slots
+  that have no target function (`has no target function`), which the callee bullet, reading the target's call graph,
+  does not see: read each against the target's call at that offset (how-to step 1, "The third verdict") before
+  counting the row as ready. A row with no body of ours is read from its target piece:
+  - its `.bss` operands, the constants past the target's last data segment
+    (`wasm-objdump -x -j Data target/vota_web_wasm.wasm | /usr/bin/grep -E 'segment\[' | tail -1` ends at 1811674), each
+    grepped in the pieces (`/usr/bin/grep -rlE 'i32\.const <addr>($|[^0-9])' build/out/splat/pieces/asm`). An object
+    that only the row reads, with no static destructor or other reader, rules the row out (`docs/reference/splat.md` §3,
+    12134's buffers). An address only the row loads can be a field of a named object: look for a
+    `splat/symbol_addrs.txt` line whose address and `size:` cover it before calling it lone (11620's 1838592 is
+    `CPath::s_pathFlash` + 16). An object the row and its exit destructor alone read is named by the row's own vote,
+    which an anchor or a `vtable` pair casts only when the two bodies are the same opcodes (`docs/reference/splat.md`
+    §2): the row, the object and the destructor land together, and a row written one remainder off stays `unresolved` on
+    it (7160). The row's unit's pending notes are the other place to read first;
+  - its literals' tails. Most `(+N into M)` lines `pnpm wasm fn` lists are integers in the data range or a tail's
+    start, which re-points by content. A loaded end pointer (`M + len` among its operands, `len` from
+    `ledger/strings.tsv`) waits for the host's writer when no code of our link holds the host and its text is not in
+    our plain wasm (11253, 11254 and 8168 waited so for 10425's `"-{:02}-{:02}"`, 8963). One whose host our link holds
+    can still read `string tail occurs N times` (2725), which only the written row's scan shows: list it as a risk.
 - **And every row has a keeper.** A row lands only if our link keeps it: a caller, a store of its vtable's vptr, or
   a function that passes its table slot, each matched, written, in the lane, or a roots stand-in (an external
   function; a vtable through a sink). A template copy or an internal helper whose callers are all unwritten waits for
@@ -280,7 +317,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
 - **Lanes must not overlap.** A lane takes a whole class or family where it can: its vtable, its file, its pending
   members and its statics' destructors. Different classes and different files, so no two lanes edit one file or emit
-  one vtable. A header
+  one vtable. A member that loads another file's constant (a font, a table) holds that file's code, inlined: list the
+  readers of each candidate's data operands (the grep above) and put the members that read one file's constants in
+  the lane that owns that file (eleven state classes read `ctelasvota.cpp`'s fonts). A header
   several lanes need (a shared enum, a type a record names) is listed in the pick post, with one copy on the board's
   `shared/` that every lane takes byte for byte.
 
@@ -402,9 +441,11 @@ number or a premise the merge moved is no toolkit fix: it changes to read the ru
 toolkit fix the merge needs is a commit of its own on `main`, with a VERIFY of its own before the push, and the batch
 then goes on from there: a merge already staged when the need shows is aborted (`git merge --abort`, everything staged
 first: `docs/reference/facts/workflow.md` §W22), the fix committed on `main`, and the lane merged again. A row lost to
-one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as a
-table slot), may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say
-so at the top of the result.
+one link's data layout, the cause shown (how-to step 9's four cases), may wait for the next lane of the batch: land
+that lane first, retry, stop if the row is still out, and say so at the top of the result.
+First compare the objects around it with the target's data order: a residue that comes from an object's place on the
+link line, which the target's data put elsewhere, is fixed by that place
+(`docs/reference/facts/link-order.md` §L3), not waited out.
 
 The commit to land is the one the verdict confirmed. A lane branch's tip can differ from it: a pause can leave the
 worktree on another branch (`wip/<lane>`), and the lane branch then points at an older commit. Check
@@ -429,8 +470,10 @@ lands ("Pausing and resuming" below).
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
    stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
    name, and which side of a twin's line to keep, with the check after step 9. A stand-in, or a call of one, whose
-   every target caller is now in the link goes in the merge; one whose callers landed in part stays, with its comment
-   saying which still wait, unless a link without it moves no row (`src/units/README.md` "Companion files").
+   every target caller is now in the link goes in the merge, and a roots file with its last stand-in; one whose callers
+   landed in part keeps one call per caller still waiting, its comment saying which, unless a link without it moves
+   no row. Removals that go for one reason share one variant link (`src/units/README.md` "Companion files", which
+   says how to find them call by call).
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The

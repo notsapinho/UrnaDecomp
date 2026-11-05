@@ -441,18 +441,11 @@ after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Co
 
 ## V5. Strict aliasing by directory and file: a body that differs only by it
 
-uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile`
-(`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`,
-`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp`,
-`src/app/comum/justificativa/cjustificador.cpp`)
-but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
-`ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp` and
-`operador/leidentidade/celeitorencontrado.cpp`), and without it elsewhere; [app-flags.md](app-flags.md) §F6 has the
-evidence and the measurement of the split, and [reading.md](reading.md) §R21 reads the setting from a body. Measured
-at bbf27ac1 for the four directories, at 36dda756 for `carquivossavd.cpp`, at b7c2e8a5 for the first two files
-`UENUX2_NOTBAA_FILES` lists, at fbf5698f for `cvotacaostateaudio.cpp`, at a3ab1f25 for `cconferevotoemcargo.cpp`, at
-b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos.cpp`, at 6df50018 for
-`cfabricaconteudomidiastart.cpp` and at a98e8aac for `cjustificador.cpp` (§F6 has each).
+uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile` but
+the files `UENUX2_NOTBAA_FILES` lists, and without it elsewhere: `make -s -C src print-UENUX2_TBAA_DIRS
+print-UENUX2_NOTBAA_FILES` prints both lists (eight entries and five at 3c1ef19d). [app-flags.md](app-flags.md) §F6 has
+the evidence and the measurement of each entry, with the commit it was measured at, and [reading.md](reading.md) §R21
+reads the setting from a body.
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
