@@ -89,17 +89,18 @@
 #   +0), ours the first off the object and the other three off the control block (+16, +28, +12). The target holds that
 #   constructor behind binaryen's inlining, which a constructor out of line in this file gives: with
 #   INSTRUCAO_PADRAO_MENU still in cinputmenufield.h, 161 over 526, all four stores off the object and the rest locals'
-#   numbers and operands; with it in this file (where the target's one guarded initialisation puts it), 162 over 528 as
-#   above, not explained; inline in the class, clang inlines it and the stores are offsets off the block (235 over 535).
-#   The items' rectangle starts from m_posicao, read back from the member (the target loads the position once, as a
-#   32-bit word, and shifts it); from the parameter it reloads both halves (243 over 538, with the inline constructor).
-#   With AddInputMenuField below its callees in the file (162 over 528) or above them (161 over 526), and with the two
-#   constructors in either order (162), the locals stay as they are: not explained. The four of AddItem's default
-#   argument's lambda (`__func`, vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy assignment (1763),
-#   std::__throw_bad_any_cast (3861) and std::bad_any_cast::what (8110, libc++'s any.o) match with
-#   vota::CMenuVisualizarCandidatos::StartState (11881) in the link, which their target callers or holders are: the
-#   lambda's members and 1763 come from comum/ctelasvota.cpp.o, whose TelaMenuVisualizacaoCandidatos uses the default
-#   argument and the copy assignment, 3861 from cmenuvisualizarcandidatos.cpp.o (11881's std::any_cast).
+#   numbers and operands; with it in this file (a choice: the target's one guarded initialisation shows that one TU
+#   defines it, not which; were 3675 to move, the variable's file is open again), 162 over 528 as above, not explained;
+#   inline in the class, clang inlines it and the stores are offsets off the block (235 over 535). The items' rectangle
+#   starts from m_posicao, read back from the member (the target loads the position once, as a 32-bit word, and shifts
+#   it); from the parameter it reloads both halves (243 over 538, with the inline constructor). With AddInputMenuField
+#   below its callees in the file (162 over 528) or above them (161 over 526), and with the two constructors in either
+#   order (162), the locals stay as they are: not explained. The four of AddItem's default argument's lambda (`__func`,
+#   vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy assignment (1763), std::__throw_bad_any_cast (3861)
+#   and std::bad_any_cast::what (8110, libc++'s any.o) match with vota::CMenuVisualizarCandidatos::StartState (11881) in
+#   the link, which their target callers or holders are: the lambda's members and 1763 come from comum/ctelasvota.cpp.o,
+#   whose TelaMenuVisualizacaoCandidatos uses the default argument and the copy assignment, 3861 from
+#   cmenuvisualizarcandidatos.cpp.o (11881's std::any_cast).
 #
 # CMenuItem's members in the same file: GetTextoFormatado (fn 5492, a chosen name), UpdateRect (3657, record 49:21, its
 # instance() line), Draw (record 74:21; binaryen inlines it into CInputMenuField::Draw, its one caller, whose body shows
@@ -118,8 +119,10 @@
 # GetTextoFormatado, the iterator type (std::sregex_token_iterator over the string, whose __wrap_iter<const char*> names
 # the six instances; std::cregex_* over const char* gives the same bytes), the lambdas, std::find_if and
 # std::max_element (their loops are inlined; a hand loop was not tried), CMenuItem::Draw's local corTexto (the target
-# reads m_habilitado before the FillRect call), and the lines of the members with no record (GetTextoFormatado's, 28 to
-# 45). Measured, by `pnpm wasm score` in the whole link with the companions below and src/app/roots_regex.cpp:
+# reads m_habilitado before the FillRect call), the lines of the members with no record (GetTextoFormatado's, 28 to
+# 45), and the blank line the include of api/gui/cformbuilder.h (AddInputMenuField's) took: the one after
+# `namespace api {` in cinputmenufield.cpp (no record moves). Measured, by `pnpm wasm score` in the whole link with the
+# companions below and src/app/roots_regex.cpp:
 # - 5492, 3655, 3657, 10897, 1202, 3137, 6970 and 6939 differ in call and data operands only (5492 34 over 660 rows,
 #   3655 11 over 322, 3657 5 over 109, 10897 14 over 284). In the scan all but 5492 match, with two more instances
 #   this file brings, 6897 (std::deque<std::__state<char>>::clear) and 6942 (std::ssub_match's compare).

@@ -7,7 +7,7 @@
 #   of the map at +404 (fn 1405, std::map<md::ETipoAbrangencia, SQtdeAptos>'s; in the target it calls itself and has
 #   five more callers, 2251, 5603, 5857, 11968 and 12098, and before this unit our link's candidate for it was another
 #   tree's) and CCabecalhoQRCodeBuilder's implicit destructor (fn 2885), which clang keeps out of line, a weak function
-#   of this object.
+#   this object emits; the link takes it from vota's cmostraqrcodebu.cpp.o, the first object in link order to emit it.
 # - GetCamposAptos (fn 3696), which formats the coverage counts of the current post; it calls GetQtdAptos (record
 #   cgeradorbuqrcode.cpp:80), out of line in the object, and binaryen inlines that into its one caller, as the target's
 #   second stack frame inside 3696 shows (docs/reference/facts/reading.md R10).
@@ -23,11 +23,13 @@
 #   its callers 5603 and 5604 are both here). cgeradorbuqrcodevota.h says why the constructor takes two flags its
 #   callers pass as false.
 # - Of Gera (fn 5604, below): preBuild's lambda (fn 2791, record ccabecalhoqrcodebuilder.cpp:284, unit 93's file),
-#   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, a template instance of this object; its records are
-#   the header's), and std::sort's instances over the consulta's answers with GetCamposConsulta's comparator lambda:
-#   __introsort (5605), __insertion_sort_incomplete (2790), __sort4 (1920) and iter_swap (248). 2790, 1920 and 248 are
-#   also called by fn 5610 (another introsort of the same element, fn 11253's, not written); binaryen merges the
-#   identical instances, so these are ours.
+#   api::CPolySingleton<api::pkcs11::IPkcs11>::instance (fn 3704, a template instance; its records are the header's;
+#   the link takes it from gravadores/asn/cassinavotavelbu.cpp.o, the first object in link order to emit it), and
+#   std::sort's instances over the consulta's answers with GetCamposConsulta's comparator lambda:
+#   __introsort (5605), __insertion_sort_incomplete (2790), __sort4 (1920) and iter_swap (248). 2790, 1920 and 248
+#   serve fn 5610 too (unit 139's introsort of the same element over ImprimeConsulta's comparator, 11253's): binaryen
+#   merges the identical instances, and the link takes them from unit 139's cgeradorbu.cpp.o, which links first; 5605
+#   is this object's.
 # - CGeradorBUQRCodeVota's Slot2 (fn 11242, no record of its own; the vtable's slot 2 names it): it fills the QR code
 #   header's fields of the builder Gera passes it, ORIG to HREM, with CEstadoGeralVota::GetDtHrInicioAquisicao and
 #   GetDtHrFimAquisicao inlined from their header (records cestadogeralvota.h:90 and :106, in this object's data), and
@@ -42,11 +44,21 @@
 #     alone, 1466 over 4510; with both moved, or with this unit's two objects moved after unit 93's list, 230 over
 #     4398, every row operand-only and every operand a call, a data address, a table slot (the format buffer's 148
 #     against our 43, the exception destructor's) or a packed string address (scratch links of the plain link.cmd
-#     with the objects moved). The target's data give that order: clocal.cpp's records @1559828, the builder's
-#     @1574996, cgeradorbuqrcode.cpp's @1575936, this class's vtable @1575976. So unit 93's list compiles the two
-#     sources, at its end (src/units/README.md "Names"): right after the builder measured the same, and the end
-#     keeps unit 93's other files, whose records lie at @1574836 to @1574932, ahead of them, as the data have them.
-#     Gera's rows moved with it (below).
+#     with the objects moved). The target's data put clocal.cpp's records @1559828, the builder's @1574996,
+#     cgeradorbuqrcode.cpp's @1575936 and this class's vtable @1575976 in that order, so unit 93's list compiles the
+#     two sources, at its end (src/units/README.md "Names"; right after the builder measured the same), which keeps
+#     unit 93's other files, whose records lie at @1574836 to @1574932, ahead of them. Counted at 404e9c80 over every
+#     uenux2 object with records or a strong vtable (ledger/source-locations.tsv, ledger/vtables.json), the two objects'
+#     pairs out of the data's order are 257 at this unit's place, 246 with the builder and clocal.cpp moved into this
+#     unit's list instead, and 232 at the end of unit 93's: the fewest among the places "Names" allows
+#     (docs/reference/facts/codegen.md C4). The end of the uenux2 objects would give 199 and keeps the match too (a
+#     scratch link), but lies in no unit's list, which "Names" rules out. The move from this unit's place fixes 157
+#     pairs and inverts 132, whose objects' data lie after the pair's (@1575912 to @1575976): api/gui 40 and gui/reports
+#     2; vota/operador's confirmaidentidade 19, outrasopcoes 12, justificativa 11 and leidentidade 5; comum/relatorios
+#     8, among them unit 89's cpartecandidatos.cpp, cparteeleitores.cpp and cparterdv.cpp; api/util 6 and gravadores/asn
+#     6, among them cassinavotavelbu.cpp; comparecimentomesario 6; validamidia, api/hash, api/io, vota/operador and
+#     operador/comum 2 each; api/audio, alsa, api/hwil, api/ipc, uelog, iexecucaovota and aguardaeleitor 1 each. Gera's
+#     rows moved with it (below).
 #   - GetIdentificacoesAgregadas tests for no section first and returns the empty vector there: with the copy's
 #     return first, 249 over 4406 (8 inserted, 9 deleted, the branch order).
 #   - The acquisition's start and end are copies, two const api::CDateTime locals read before the first of their

@@ -16,8 +16,8 @@ protected:
     TDado DoDesconverte(const TEntidade& entidade, const md::CParametro& parametro) const override;
 
 private:
-    // LeChave's records name it, its const and its result (cconversorbiometriaeleitorcifrada.cpp:91, :101, :109); Decifra
-    // has none: its name, its parameters and its being a member (it calls LeChave) are chosen, and so is private.
+    // LeChave's records name it, its const and its result (cconversorbiometriaeleitorcifrada.cpp:91, :101, :109);
+    // Decifra has none: its name, parameters, being a member (it calls LeChave) and being private are chosen.
     std::vector<uebyte> Decifra(const TEntidade& entidade, const md::CParametro& parametro,
                                 const std::vector<uebyte>& chaveSessao) const;
     std::vector<uebyte> LeChave() const;

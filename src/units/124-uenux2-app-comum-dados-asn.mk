@@ -79,7 +79,8 @@
 # reference) and TEntidade's name (the record prints TDado and TVisitor); the typedef ModuloTiposEleitorais::CodigoSexo's place (ModuloCandidatos.h says why it is a typedef); the
 # order of this list (with each data class ahead of its converter 11381 and 11359 score the same, 56 and 10 rows, all
 # operand-only); DoDesconverte's locals being const (without const the object's DoDesconverte is the same, measured
-# as above); where DoDesconverte and DoConverte start, and the lines of DesconverteEstadoUrna above its record 87;
+# as above); DesconverteEstadoUrna's switch with no default (a `default: break;` gives the same object, cmp, as
+# ConverteEstadoUrna has one); where DoDesconverte and DoConverte start, and the lines of DesconverteEstadoUrna above its record 87;
 # the include of enumeradoasn.h, which takes a blank line of the run between DoConverte and DesconverteEstadoUrna.
 #
 # Not matched, and what each waits for (the -pending.cpp went with its last trap, 11398):

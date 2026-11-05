@@ -31,9 +31,9 @@ public:
     // (docs/reference/facts/app-flags.md F6), so this code is an ecourna object's, and a constructor's: the pads
     // destroy the members and the base, not the object. The level is a parameter: written as ENivelCompressao::PADRAO
     // in the initializer, clang stores +28 and +32 as one i64 (measured in the whole link), where the target's three
-    // stores are those of a level the caller passes, which binaryen folds once it inlines the one call (a reading). Its
-    // file, czip.cpp, and its parameters' forms (references) and order are chosen
-    // (src/units/136-uenux2-app-comum-gravadores-md.mk).
+    // stores are those of a level the caller passes, which binaryen's dead-argument elimination, run before its
+    // inlining, folds into this body from the one call's constant (a reading). Its file, czip.cpp, and its parameters'
+    // forms (references) and order are chosen (src/units/136-uenux2-app-comum-gravadores-md.mk).
     CZip(const std::filesystem::path& arquivo, const std::map<std::filesystem::path, std::filesystem::path>& arquivos,
         ENivelCompressao nivel);
     ~CZip() override;

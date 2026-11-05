@@ -52,10 +52,11 @@
 #   CRelUtil::ImprimeDataHora shares the frame slot of 1921's result, where with a const reference it took the
 #   std::function temporary's (docs/reference/facts/codegen.md C10). The class, its name, Formata's name and const, the
 #   members' names, the header's path and the file's name are chosen. The file's place: in use band 6, 1922 and 1921 lie
-#   between ccargo.cpp's 1923 and cgeradorbuqrcode.cpp's 1920 (its __sort4 over GetCamposConsulta's local lambda, which
-#   only that TU instantiates), so the object links there (rule 2 of how-to step 3); app/comum/relatorios/ is the
-#   directory of 1920's object and of the report callers, and the file's name sorts before cgeradorbuqrcode.cpp, as that
-#   directory's data run in name order: a choice within the window. The constructor is defined first (1922 above 1921 in
+#   between ccargo.cpp's 1923 and 1920 (a __sort4 that serves both GetCamposConsulta's introsort, 5605, and
+#   ImprimeConsulta's, 5610: binaryen merges the two TUs' identical instances, and the link takes cgeradorbu.cpp.o's,
+#   which links first), so the object links there (rule 2 of how-to step 3); app/comum/relatorios/ is the directory of
+#   1920's objects and of the report callers, and the file's name sorts before both cgeradorbu.cpp and
+#   cgeradorbuqrcode.cpp, as that directory's data run in name order: a choice within the window. The constructor is defined first (1922 above 1921 in
 #   the band; ld_index 6111 and 6112).
 # - ImprimeTituloJE (unit 287's class header has the slot): CGeradorRelPU::ImprimeTituloJE's shape (unit 183), with the
 #   aptos lines when the urna is no contingency's and a new line otherwise, and the process and pleito codes, "{:<32s}

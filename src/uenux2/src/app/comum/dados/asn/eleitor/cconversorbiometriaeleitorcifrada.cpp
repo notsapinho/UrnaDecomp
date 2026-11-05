@@ -1,8 +1,8 @@
-// Reconstruction: comum::asn::CConversorBiometriaEleitorCifrada's slot 3 (target fn 11419) and the two members it
-// holds inlined by binaryen behind frames of their own, Decifra (no record) and LeChave (records at lines 91, 101 and
-// 109), fragment 335. The records place LeChave's throws (line 91 and 109, column 15) and the singleton's call (line
-// 101, column 40); every other line of this file is chosen. The three functions' order is measured (fragment 335): of
-// the four orders tried, DoDesconverte, Decifra, LeChave alone gave 11419 the target's locals.
+// Reconstruction: comum::asn::CConversorBiometriaEleitorCifrada's slot 3 (target fn 11419) and the two members it holds
+// inlined by binaryen behind frames of their own, Decifra (no record) and LeChave (records at lines 91, 101 and 109),
+// fragment 335. The records place LeChave's throws (line 91 and 109, column 15) and the singleton's call (line 101,
+// column 40); every other line of this file is chosen. DoDesconverte first is measured (fragment 335); Decifra above
+// LeChave is chosen: DoDesconverte, LeChave, Decifra compiles to the same object.
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 
 #include <filesystem>

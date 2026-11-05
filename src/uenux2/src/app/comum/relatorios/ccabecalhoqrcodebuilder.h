@@ -13,25 +13,25 @@ namespace comum {
 
 // The header of the boletim de urna's QR code. The class and its file come from the record of fn 2791, the lambda of
 // preBuild() in ccabecalhoqrcodebuilder.cpp, line 284 (preBuild's const is chosen: clang's record prints a const
-// member's name the same way). 2791's only caller is fn 5604, which passes it the fields of this
-// object: comum::CGeradorBUQRCodeVota's constructor (fn 5603, by the vptrs it stores) copies the object to its +4 with fn
-// 5608, and fns 1956 and 12110 fill it through fns 5618, 5620, 5621, 5623 and 5622 first.
+// member's name the same way). 2791's only caller is fn 5604, which passes it the fields of this object:
+// comum::CGeradorBUQRCodeVota's constructor (fn 5603, by the vptrs it stores) copies the object to its +4 with fn 5608,
+// and fns 1956 and 12110 fill it through fns 5618, 5620, 5621, 5623 and 5622 first.
 //
 // The layout: fn 5608 copies 33 std::strings at a stride of 12 and fn 5624, which those two callers construct it with,
 // zeroes 396 bytes, so nothing else fits. 25 of the strings are named after the labels 5604 passes with them, in the
 // four tables it gives fn 2791, and the other eight (+132 and the seven from +264, which no table names) after the
 // labels comum::CGeradorBUQRCodeVota::Slot2 (fn 11242) formats into them (AGRE, HBBM, HBBG, HBSB, DTAB, HRAB, DTFC,
-// HRFC); every name is chosen. The setters' names are chosen from the same labels: no record names them. The two tests (fns 5617, 5616, which fn
-// 5604 calls on its copy of the object) compare m_origem with "ORIG:{} " over "SA" and over "RED"; their names are
-// chosen from those texts. The setters' integer types are chosen beyond their widths: fn 12110 loads zona and secao as
-// 16-bit values. comum::CGeradorBUQRCode::GetCabecalho (inlined into fn 5604) calls eight more setters on its copy,
-// each binaryen-inlined there with a frame of its own, then build(), which checks the fields in four tables through
-// preBuild's lambda (fn 2791) and appends them; build() and preBuild() leave no frame, so their being separate
-// functions is a choice. The ORLC field takes "COM" or "LEG" in two inlined frames, one per branch on the
-// configuration's origin, each with its literal as a constant: two one-caller setters give that, one setter called with
-// either text gives one frame and a select (measured), so there are two; their names are chosen from the texts, as the
-// tests' are. DefineTurno's parameter is the load's EUrnaTurno, cast to char inside: GetCabecalho loads the turn as a
-// 32-bit word.
+// HRFC); every name is chosen. The setters' names are chosen from the same labels: no record names them. The two tests
+// (fns 5617, 5616, which fn 5604 calls on its copy of the object) compare m_origem with "ORIG:{} " over "SA" and over
+// "RED"; their names are chosen from those texts. The setters' integer types are chosen beyond their widths: fn 12110
+// loads zona and secao as 16-bit values. comum::CGeradorBUQRCode::GetCabecalho (inlined into fn 5604) calls eight more
+// setters on its copy, each binaryen-inlined there with a frame of its own, then build(), which checks the fields in
+// four tables through preBuild's lambda (fn 2791) and appends them; build() and preBuild() leave no frame, so their
+// being separate functions is a choice. The ORLC field takes "COM" or "LEG" in two inlined frames, one per branch on
+// the configuration's origin, each with its literal as a constant: two one-caller setters give that, one setter called
+// with either text gives one frame and a select (measured), so there are two; their names are chosen from the texts, as
+// the tests' are. DefineTurno's parameter is the load's EUrnaTurno, cast to char inside: GetCabecalho loads the turn as
+// a 32-bit word.
 class CCabecalhoQRCodeBuilder {
 public:
     CCabecalhoQRCodeBuilder();
@@ -54,10 +54,10 @@ public:
 
     // The setters comum::CGeradorBUQRCodeVota::Slot2 (target fn 11242) calls, each binaryen-inlined there with a frame
     // of its own (the class's header note has the reading): the ORIG field takes "RED" or "VOTA" in two frames, one per
-    // branch on the generator's flag, each with its literal as a constant, so there are two, as for ORLC; DefineAbertura,
-    // DefineFechamento and DefineEmissao each set a date and a time field in one 416-byte frame, from one
-    // api::CDateTime. The names are chosen from the labels, as the others'; the integer types beyond their widths too
-    // (APTO and FALT are masked to 16 bits at the call, LOCA and MUNI are 32-bit loads).
+    // branch on the generator's flag, each with its literal as a constant, so there are two, as for ORLC;
+    // DefineAbertura, DefineFechamento and DefineEmissao each set a date and a time field in one 416-byte frame, from
+    // one api::CDateTime. The names are chosen from the labels, as the others'; the integer types beyond their widths
+    // too (APTO and FALT are masked to 16 bits at the call, LOCA and MUNI are 32-bit loads).
     void DefineOrigemRED();
     void DefineOrigemVOTA();
     void DefineAgregadas(const std::vector<ueword>& agregadas);

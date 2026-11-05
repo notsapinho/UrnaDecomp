@@ -217,7 +217,8 @@
 # comum::CLocal's aggregated sections, for comum::CRelatorioTesteImpressora::GetDadosLocal (fn 11188, unit 123), in
 # clocal.cpp after GetLocalID, in the blank run above VerificaLido's record (no record moves; their lines are chosen):
 # - GetQtdAgregadas (target fn 2816; callers 1543, 4160, 11188) and GetAgregadas (3752; callers 4160, 5738, 11242), named
-#   by their literals as the members above are: each is EhSecao(literal) and the section's vector at +24 of
+#   by their literals as the members above are (GetIdentificacoesAgregadas, below, passes "GetAgregadas" too, so for
+#   3752 the literal is one reading of two and the name a choice): each is EhSecao(literal) and the section's vector at +24 of
 #   md::CSecaoEleitoral (8-byte elements), the count as a byte (the target masks it with 255) and the 16-bit numbers in
 #   a std::vector<ueword> (the element type is chosen; its width is the target's). In the use bands they sit beside this
 #   file's functions: 2816 between chv.cpp's 2817 and cpartidos.cpp's 2815 (uses 4), 3752 right after GetUFMinuscula

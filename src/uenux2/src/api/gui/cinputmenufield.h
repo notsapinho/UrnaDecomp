@@ -202,10 +202,11 @@ private:
 
 // fn 3675 (callers 11881, 11884 and 11888): builds a CInputMenuField with std::make_shared, gives it its instruction
 // text and adds it to the builder (api::CFormBuilder::AddField, fn 426), and returns it. No record names it (its
-// records are the inlined GetInstructionTextRect's and SetInstructionText's); that it is cinputmenufield.cpp.o's code
-// is a reading of its use band, where 3676 (cframedtext.cpp.o) and 3674 (cmtformbuilder.cpp.o) lie on either side of
-// it. Its name, its being a free function of api (it reads no private state of either class) and its parameters' names
-// are chosen.
+// records are the inlined GetInstructionTextRect's and SetInstructionText's); its file, cinputmenufield.cpp, is a
+// choice the use bands contradict: in band 3, 3676 (cframedtext.cpp.o) and 3674 (cmtformbuilder.cpp.o) lie on either
+// side of it while this file's 3657 and 3655 link 17 indices on, and in band 1 the control block only it makes (11069,
+// 11070) sits by cinteractiveformbuilder.cpp.o's run (a file there was not measured). Its name, its being a free
+// function of api (it reads no private state of either class) and its parameters' names are chosen.
 std::shared_ptr<CInputMenuField> AddInputMenuField(CFormBuilder& builder, const SPoint& posicao, const SFont& font,
                                                    const std::string& instrucao, TPosition alturaMaxima);
 

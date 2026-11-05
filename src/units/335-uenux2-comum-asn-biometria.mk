@@ -64,16 +64,20 @@
 #   (its loads come before the vector's stores in the target) and the password vector declared in the singleton's
 #   statement: 448 over 2594. The order of the three members in the file, the records' lines fixed: LeChave, Decifra,
 #   DoDesconverte 448; Decifra, DoDesconverte, LeChave 448; LeChave, DoDesconverte, Decifra 409 over 2592;
-#   DoDesconverte, Decifra, LeChave 246 over 2574, every row an operand (the written order).
+#   DoDesconverte, Decifra, LeChave 246 over 2574, every row an operand (the written order). Of the two not tried
+#   then, Decifra, LeChave, DoDesconverte gives 448 over 2594 (20 inserted, 19 deleted) and DoDesconverte, LeChave,
+#   Decifra the written order's object byte for byte: DoDesconverte names Decifra and Decifra LeChave, and a function
+#   takes its place at its first mention (docs/how-to-decompile.md step 3). So DoDesconverte first is evidence and
+#   Decifra above LeChave a choice.
 # - 11416 and 11422 scored operand rows only as first written.
 #
 # Chosen, no evidence names them: 5702's name, its being a free function of comum::asn (it reads no class state:
 # docs/how-to-decompile.md step 3, the member rule), its external linkage and its place at the head of
 # cconversordedo.cpp; CMinuciasCompactadas, SPar, their members, Descompacta (and its being a member), GetMinucias and
-# their file; Decifra (name, being a member, the order of its parameters); DesconverteTipo's and LeChave's being
-# private and DesconverteTipo's ten cases (CDedo::TipoDedo has no enumerators: the casts); the limit 200 as a literal
-# in CDedo's constructor; every local's name, `listaDedos` among them; and every line but the records'. The layout of
-# line 101 is chosen too: the record fixes the call's column.
+# their file; Decifra (name, being a member, the order of its parameters, its place above LeChave); DesconverteTipo's
+# and LeChave's being private and DesconverteTipo's ten cases (CDedo::TipoDedo has no enumerators: the casts); the limit
+# 200 as a literal in CDedo's constructor; every local's name, `listaDedos` among them; and every line but the records'.
+# The layout of line 101 is chosen too: the record fixes the call's column.
 #
 # The stand-ins this unit's members ended went with it: unit 03's CBitArray roots, unit 91's CriaComum pair, unit 137's
 # vtable sinks for CSymmetricCipherFactory and CCepescCipher, whose vptrs 11419 stores (unit 137's roots file with

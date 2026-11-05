@@ -17,9 +17,9 @@ namespace comum {
 // roles. The destructor is defined in the class without `inline`: the deleting one (fn 11583, slot 1) calls the
 // base-object one and frees what it returns, where the implicit destructor, measured in unit 136's link, inlines that
 // body into it (docs/reference/facts/reading.md R5). R5's probe gives `= default` and `{}` the same object; `=
-// default` is a choice. GravaResultado (slot 7, fn 11584) is out of line, so it is the key function, in
-// cgravadorlog.cpp, whose object emits the vtable and the two destructors. The constructor is not declared; every
-// member name is chosen.
+// default` is a choice. GravaResultado (slot 7, fn 11584) is out of line, so it is the key function; its file,
+// cgravadorlog.cpp, is chosen (no record names this class's file), and its object emits the vtable and the two
+// destructors. The constructor is not declared; every member name is chosen.
 class CGravadorLog : public IGravador {
 public:
     ~CGravadorLog() override = default;

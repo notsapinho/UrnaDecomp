@@ -73,7 +73,8 @@
 # object code as written equals the target's 5637 but the call (wasm-objdump of the object beside pnpm wasm fn's
 # disassembly); whole link before step 8: `score 1 over 91 rows (same 90, replaced 1 [1 operand-only], inserted 0,
 # deleted 0)`, the call of 1249. Step 8 names it by 11398's call vote (`evidence:call by:11398`). Chosen: the parameter
-# names and its lines.
+# names, its lines, and copying the load and the adjustment: std::move on m_dadoCarga's and m_ajusteDataHora's
+# arguments gives the same object (cmp).
 #
 # 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 5480 (twice) for 5484, 3059 for 5636 (11200, unit
 # 123's, is in the link) and 10205 for 5637 (its address); 3705's stand-in went, its callers 7160, 7306 and 10710

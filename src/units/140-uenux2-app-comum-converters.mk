@@ -61,7 +61,8 @@
 #   168 over 526, where -Rpass=inline gives that call (std::__invoke of the lambda) cost 325 against 250;
 #   std::ranges::transform with a lambda that takes the string by value and returns the GeneralString, 84 over 514 (12
 #   inserted, 7 deleted: the copy is destroyed before the push, and clone goes through the vtable). The lambda's
-#   parameter type and the local names are chosen. What the earlier forms gave (the -pending.cpp's note before this
+#   parameter type is the bytes': taking the string by value and returning it gives 64 over 510 (8 inserted), the
+#   written const reference 53 over 502, every row an operand; the local names are chosen. What the earlier forms gave (the -pending.cpp's note before this
 #   landing): std::copy into a back_inserter 253 over 588, the transform with a by-value lambda 279 over 625,
 #   ranges::for_each 273 over 620, each then with clone through the vtable, the vector's growth inlined and
 #   HistoricoCodigosCarga a class of the module's.
@@ -111,8 +112,7 @@
 #   copy of the vector (CVotos(votos), a by-value parameter).
 # Chosen, no evidence names them: every member's name in the new heads, md::CProcessoEleitoralDTO's id type
 # (uedword), the format casts (static_cast<int> in 11363, which formats an int, type code 3; cargo.Get() in 11351, an
-# unsigned, code 6), CConversorEleicoesVota's map alias, the lines of every function no throw of which has a record, and
-# std::make_pair in 11350.
+# unsigned, code 6), CConversorEleicoesVota's map alias and the lines of every function no throw of which has a record.
 #
 # md::CProcessoEleitoralDTO::GetPleito2 (record cprocessoeleitoraldto.cpp:57:15, EUE_COMUM_DADOS_8166 "Não há pleito
 # 2.") is written on that line, out of line in cprocessoeleitoraldto.cpp: unit 280's comum load (fn 3771) holds its

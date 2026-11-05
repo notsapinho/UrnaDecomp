@@ -4,14 +4,14 @@
 // functions the target inlines: ICompressor::Add(const path&), CZip::ConvertToOpen, CZip::AssertZipIsOpened, the 7-Zip
 // context ctor; plus the CLzmaCompress destructors the header defines inline). Compiled as uenux2 code.
 // Not taken here, since every target reference to them is in the link with comum::CGravadorLog::GravaResultado (fn
-// 11584, unit 136), which these lines stood for: ICompressor::Add(map), CZip::SafeClose and CZip::CreateZipFile, reached
-// only through the invoke_* slots 6050, 6122 and 6119, whose users are 11584 and, for 6119, CZip's constructor (fn
-// 5193); ICompressor's constructor (fn 5192), called by 5193 and 11584, which no table slot holds; and ICompressor's
-// destructor (fn 1526, called by 2690, 5193, 9540, 9581, 9582 and 11584), CZip::Close (2691) and CZip's destructor
-// (2690, both called twice by 5821 and once by 11584), which the vtables 5192 and 5193 store hold too.
-// Nor these, whose every target reference is in the link: ICompressor::Add(const vector<path>&) (fn 9530, table slot
-// 6151, which 5821 uses), CZip::AtualizaProgresso and ConvertToCompressLevel (9537, 9539, in the table slots 6129 and
-// 6123 that DoAdd uses), DoAdd (9538) and CZip's D0 (9540), slots of the vtable CZip's constructor 5193 stores.
+// 11584, unit 136), which these lines stood for: ICompressor::Add(map), CZip::SafeClose and CZip::CreateZipFile,
+// reached only through the invoke_* slots 6050, 6122 and 6119, whose users are 11584 and, for 6119, CZip's constructor
+// (fn 5193); ICompressor's constructor (fn 5192), called by 5193 and 11584, which no table slot holds; and
+// ICompressor's destructor (fn 1526, called by 2690, 5193, 9540, 9581, 9582 and 11584), CZip::Close (2691) and CZip's
+// destructor (2690, both called twice by 5821 and once by 11584), which the vtables 5192 and 5193 store hold too. Nor
+// these, whose every target reference is in the link: ICompressor::Add(const vector<path>&) (fn 9530, table slot 6151,
+// which 5821 uses), CZip::AtualizaProgresso and ConvertToCompressLevel (9537, 9539, in the table slots 6129 and 6123
+// that DoAdd uses), DoAdd (9538) and CZip's D0 (9540), slots of the vtable CZip's constructor 5193 stores.
 extern "C" {
 void rcomp_root_3(int) __asm__("_ZN7ecourna3api11compression11ICompressorD0Ev");
 void rcomp_root_13(int, long long, int) __asm__("_ZN7ecourna3api11compression13CLzmaCompress17AtualizaProgressoEyRKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");

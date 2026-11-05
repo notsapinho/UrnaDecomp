@@ -5,9 +5,9 @@
 // - comum::CGravadorHashes::GravaResultado, fn 11620 (slot 7, 4622 B, record cgravadorhashes.cpp:112): it builds the
 //   hashes entity, with two md::CEntidadeHashes (fn 5855 twice), and writes it.
 // It goes in cgravadorhashes.cpp (the record's file) when it is reconstructed; the vtable and the implicit destructors
-// move with it, under the same symbols. cgravadorhashes.cpp was a stub-only file, and it went with its stubs (fns 11620,
-// 11619, 5853): its one record is GravaResultado's, line 112, column 15, so writing that member writes the file again.
-// Delete this file with it. (comum::CGravadorLog::GravaResultado, fn 11584, trapped here before, is written in
+// move with it, under the same symbols. cgravadorhashes.cpp was a stub-only file, and it went with its stubs (fns
+// 11620, 11619, 5853): its one record is GravaResultado's, line 112, column 15, so writing that member writes the file
+// again. Delete this file with it. (comum::CGravadorLog::GravaResultado, fn 11584, trapped here before, is written in
 // app/comum/gravadores/cgravadorlog.cpp.)
 #include "app/comum/gravadores/cgravadorhashes.h"
 

@@ -62,8 +62,8 @@ __attribute__((noinline)) void w121_destroi_calcula(comum::CCalculaCV* primeiro,
     segundo->~CCalculaCV();
 }
 
-// Stands for five of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11253, 11260, 11980 and
-// 11981 (11254, 11255 and 11256 are in the link).
+// Stands for four of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11260, 11980 and 11981
+// (11253, 11254, 11255 and 11256 are in the link).
 __attribute__((noinline)) void w121_inclui(comum::CCalculaCV& calcula, const std::string& primeira, const std::string& segunda)
 {
     calcula.IncluiString(primeira);

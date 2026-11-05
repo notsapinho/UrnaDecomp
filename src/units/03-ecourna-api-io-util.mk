@@ -8,9 +8,10 @@
 # numbers masked; at ECOURNA_CXXFLAGS both differ (55 and 57 rows against 48 and 50, the address arithmetic). The
 # target's copies are a uenux2 object's: their vtable lies among app/comum/dados/asn/eleitor/ records.
 # The std::make_shared<boost::dynamic_bitset<uebyte>>() in CBitArray's constructor builds a __shared_ptr_emplace block
-# whose vptr (vtable @1117736) only fn 5702 stores in the target (not written; it holds the constructor inlined). Its
-# D2 and D0 (9409, 9408) match from the roots object: a builder there that the link drops instantiates the block, and
-# the vtable's address in the sink stands for 5702's store (src/units/README.md "A control block"); slot 2 holds 5047,
+# whose vptr (vtable @1117736) only fn 5702 stores in the target (fragment 335's; it holds the constructor inlined). Its
+# D2 and D0 (9409, 9408) matched from the roots object while 5702 was not written, a builder there that the link
+# dropped instantiating the block and the vtable's address in a sink standing for 5702's store (src/units/README.md "A
+# control block"); they match from cbitarray.cpp.o now, and the builder and the sink went. Slot 2 holds 5047,
 # matched as vector<uebyte>'s block's __on_zero_shared. The two bodies store the vptr and return or
 # free: compiled at UENUX2_CXXFLAGS too, the roots object's D2 and D0 give the same rows (wasm-objdump -d, function by
 # function, indices masked).
@@ -52,10 +53,10 @@
 # counting up differs, int or unsigned, and so does an 8-, 16- or 64-bit one counting down. Its signedness is chosen
 # (unsigned gives the same code), and so is the order of the two locals ahead of the null test (swapped, or both after
 # it: the same code).
-# CBitArray(const std::vector<uebyte>&), out of line in cbitarray.cpp (fragment 335's 5702 holds it, inlined by binaryen):
-# its code in 5702 has a landing pad that destroys only the bit array's members, invoke_v and invoke_ii around
-# vector::at and the bitset's growth, so it is ecourna code compiled with -fexceptions, and the make_shared block whose
-# vptr it stores has its vtable (@1117736) in ecourna's run of the data. It pushes each byte's bits through
+# CBitArray(const std::vector<uebyte>&), out of line in cbitarray.cpp (fragment 335's 5702 holds it, inlined by
+# binaryen): its code in 5702 has a landing pad that destroys only the bit array's members, invoke_v and invoke_ii
+# around vector::at and the bitset's growth, so it is ecourna code compiled with -fexceptions, and the make_shared block
+# whose vptr it stores has its vtable (@1117736) in ecourna's run of the data. It pushes each byte's bits through
 # dynamic_bitset::push_back, MSB first, with the byte read through at(). It replaces the inline default constructor
 # cbitarray.hpp had, which nothing called; its lines in cbitarray.cpp and `explicit` are chosen. CBitArray's D2 and D0
 # (11417, 11414) match from cconversordedo.cpp.o now, which 5702 makes the first object to emit the vtable, and the
