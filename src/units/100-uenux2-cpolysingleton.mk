@@ -1,14 +1,16 @@
 # uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 18 of its 32 plain instantiations,
 # set, its wrapper of push, with api::CPolySingletonList's has<T>, instance<T>, push<T> and remove (cpolysingletonlist.h),
 # their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. The roots
-# object instantiates 16 of the 18 and stands in for the real callers, and the link keeps the first copy, so a copy moves
+# object instantiates 15 of the 18 and stands in for the real callers, and the link keeps the first copy, so a copy moves
 # to a real object as its users land (the object column of splat/scan.tsv):
-#   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 383 IInputMT, 905 IPaperRelatorios, 3204 IAjusteDataHora,
-#   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 1282 comum::CCalculaCV,
-#   837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios, 1822 comum::IInterfaceSavd.
-# Of those, 356, 383, 512, 611, 837, 862, 905, 923, 925, 2030, 4356 and 11157 come from real objects now. The other two
-# come from real objects alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
-# Ten of the 16 classes are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
+#   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 905 IPaperRelatorios, 3204 IAjusteDataHora,
+#   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 3164 IGenericFactory<ISyncCtl>,
+#   1282 comum::CCalculaCV, 837 comum::IEventosLog, 611 comum::IInterfaceInit, 1822 comum::IInterfaceSavd.
+# All 15 come from real objects now. The other three come from real objects alone: 5443 ITimerScheduler from
+# itimerscheduler.cpp.o, and 383 IInputMT and 356 comum::IControladorRegistraMesarios, whose calls in the roots went once
+# every target caller of each was in the link (10590 was 383's last; 5382, 6008 and 10316 were 356's): a link without
+# the two calls moves no row in or out of match, the symbol file and the match list the same (measured).
+# Ten of the 16 classes the unit landed with are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
 # IGenericFactory got their heads here (unit 119 adds IControladorRegistraMesarios' slots, CCalculaCV's header has its
 # layout and destructor since unit 121, and the other two headers say they are heads alone): typeid needs a complete
 # class, and a control block needs a virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and

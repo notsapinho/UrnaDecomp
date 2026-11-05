@@ -11,6 +11,9 @@
 //
 // w100_usa and w100_todos are stand-ins with a body no target function has. w100_usa passes both arguments, an empty
 // std::source_location for the record a real caller's default argument makes: a record here would be none of the target's.
+// w100_todos has no call for api::IInputMT (383) or comum::IControladorRegistraMesarios (356): every target caller of the
+// two is in the link (10590 was 383's last, and 5382, 6008 and 10316 were 356's), and a link without their calls moves
+// no row (the fragment).
 #include <memory>
 #include <source_location>
 #include <stdexcept>
@@ -23,7 +26,6 @@
 #include "api/hwil/ibeep.h"
 #include "api/hwil/ifingerprepare.h"
 #include "api/hwil/iimpressorarelatorios.h"
-#include "api/hwil/iinput.h"
 #include "api/hwil/ipower.h"
 #include "api/hwil/iurna.h"
 #include "api/ipc/irwsyncctl.h"
@@ -36,7 +38,6 @@
 #include "api/util/cajustedatahora.h"
 #include "api/util/iajustedatahora.h"
 #include "api/util/itimerscheduler.h"
-#include "app/comum/comparecimentomesario/estados/icontroladorregistramesarios.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/log/ieventoslog.h"
@@ -72,10 +73,10 @@ inline int w100_usa()
 __attribute__((noinline)) int w100_todos()
 {
     return w100_usa<api::IScreen>() + w100_usa<api::IBeep>() + w100_usa<api::IPower>() + w100_usa<api::IUrna>() + w100_usa<api::IResource>() +
-        w100_usa<api::IInputMT>() + w100_usa<comum::CCalculaCV>() + w100_usa<api::IPaperRelatorios>() + w100_usa<comum::IEventosLog>() +
+        w100_usa<comum::CCalculaCV>() + w100_usa<api::IPaperRelatorios>() + w100_usa<comum::IEventosLog>() +
         w100_usa<api::IAjusteDataHora>() + w100_usa<ecourna::api::security::IRng>() + w100_usa<api::CEscritorLog>() +
         w100_usa<comum::IInterfaceInit>() + w100_usa<api::IGenericFactory<api::ISemaphore>>() +
-        w100_usa<comum::IControladorRegistraMesarios>() + w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
+        w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
 // Stands for the callers of the GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024,
