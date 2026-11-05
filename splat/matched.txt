@@ -12794,3 +12794,5 @@
 11180 _ZNSt3__26vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEE11__vallocateB8ne210108Em
 13315 poly1305_gettable_params
 13342 gmac_gettable_params
+11802 __cxx_global_array_dtor.12@app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp.o
+11805 _ZN4vota12testeteclado13CTesteTeclado10StartStateEv

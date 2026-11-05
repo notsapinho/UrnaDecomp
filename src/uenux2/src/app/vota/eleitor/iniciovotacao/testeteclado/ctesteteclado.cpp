@@ -112,6 +112,11 @@ POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO(IGeradorTeclas, CGeradorTeclasA
 
 namespace vota {
 
+std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador)
+{
+    return gerador.GeraSequencia(TECLAS_TESTE_TECLADO);
+}
+
 std::shared_ptr<api::CTextBox> AdicionaCaixaTecla(api::CFormBuilder& builder, const std::string& texto, api::SPoint posicao,
                                                   api::SFont fonte, api::SPoint tamanho)
 {
