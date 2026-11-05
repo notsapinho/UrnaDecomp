@@ -354,8 +354,9 @@ On `main` the file is stub-only, and each of its three recorded functions (6718,
 function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` is 90 lines, its record of 3744 is line 208, and f3744's stub is
-line 88 (`LC_ALL=C /usr/bin/grep -n '^// f3744 ' <file>`; 3c1ef19d); `stubs.py --check` passes. A function in a slot of
+`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` was 90 lines at 3c1ef19d, its record of 3744 line 208, and
+f3744's stub line 88 (`git show 3c1ef19d:<file> | LC_ALL=C /usr/bin/grep -n '^// f3744 '`); `stubs.py --check` passed. Its
+writer laid out the lines up to 208 (fragment 388). A function in a slot of
 a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
 vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,

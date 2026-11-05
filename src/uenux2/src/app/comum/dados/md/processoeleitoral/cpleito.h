@@ -40,8 +40,17 @@ public:
     bool ExisteEleicao(const TEleicaoID id) const;
     const std::string& GetVersaoPacoteEleicao(const TEleicaoID id) const;
     const CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID id) const;
+    // fn 5649: a copy of the elections, all of them for the municipality 0, else those whose municipalities hold it or
+    // 0 (CEleicaoPE::PossuiMunicipio). fn 3713: a copy of the pleito with those elections and, for each, its situations
+    // (all of them for 0). In use band 2, 5649 lies between GetEleicao (5651) and GetSituacoesEleicoes (5648), so in
+    // cpleito.cpp, and they read m_eleicoes, m_versoesPacote and m_situacoes. No record names them: their names, their
+    // being members and the parameters' type (uedword, as wide as the bodies' 32-bit compares) are chosen.
+    TVectorEleicaoPE GetEleicoesMunicipio(const uedword municipio) const;
+    CPleito FiltraMunicipio(const uedword municipio) const;
 
 private:
+    std::vector<CSituacoesEleicoes> GetSituacoesMunicipio(const uedword municipio) const;
+
     TPleitoID m_id;
     std::string m_nome;
     api::CDate m_data;

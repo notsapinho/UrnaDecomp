@@ -16,11 +16,13 @@
 //   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
-//   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
-//   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
+//   5651  CPleito::GetEleicao: no stand-in, its callers 3744 (fragment 388's) and 3775
+//         (CConfiguracaoEleicao::GetCargos) are in the link
+//   5648  CPleito::GetSituacoesEleicoes: no stand-in, its callers 3713 (fragment 388's) and 271
+//         (cconfiguracaoeleicao.cpp) are in the link
 //   5655  CCargo::operator<=>: no stand-in, its caller 11888 (unit 104's, two call sites) is in the link
 //   5654  CEleicaoPE::GetIDsCargos    7787
-//   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
+//   5653  CEleicaoPE::PossuiCargoCandidato  7787 (3744, fragment 388's, is in the link)
 //   3784  CCargos::RemoveFiltro       12098 12110
 //   271   CConfiguracaoEleicao::GetSituacoesEleicoes: no stand-in, its callers 1386, 3687, 5577, 5578, 5582 (unit
 //         123's crelutil.cpp.o), 11558 and 11559 are in the link
@@ -46,8 +48,6 @@ int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
 void w1547(int, int) __asm__("_ZNK5comum2md6CCargo13GetNomeNeutroEv");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
-int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
-int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
 void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
@@ -105,25 +105,15 @@ __attribute__((noinline)) void Ordinais(int saida, int cargo, int a)
     w2258(saida + 48, cargo, a + 2);
 }
 
-__attribute__((noinline)) int SomaEleicoesDoPleito(int pleito, int a, int b)
-{
-    return w5651(pleito, a) + w5651(pleito, b) * 3;
-}
-
-__attribute__((noinline)) int SomaSituacoes(int pleito, int a)
-{
-    return w5648(pleito, a) * 5;
-}
-
 __attribute__((noinline)) void IDsDuasEleicoes(int saida, int a, int b)
 {
     w5654(saida, a);
     w5654(saida + 12, b + 52);
 }
 
-__attribute__((noinline)) int ContaCandidatos(int a, int b)
+__attribute__((noinline)) int ContaCandidatos(int a)
 {
-    return w5653(a) * 11 + w5653(b + 52);
+    return w5653(a + 52) * 11;
 }
 
 __attribute__((noinline)) void RemoveFiltroDuas(int a, int b)
@@ -157,8 +147,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesNeutros);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);

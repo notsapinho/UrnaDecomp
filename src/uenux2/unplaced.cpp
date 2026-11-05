@@ -126,11 +126,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 808 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp
-
-// f5649 · 257 B · unmatched · placement: link order · name unknown
-// void f5649(i32, i32, i32) { ... }
-
 // link-order cluster 821 · uses=2 · neighbours' file uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp
 
 // f5712 · 35 B · unmatched · placement: link order · name unknown
@@ -180,11 +175,6 @@
 // f6601 · 504 B · unmatched · placement: link order · name unknown
 // void f6601(i32, i32) { ... }
 
-// link-order cluster 1000 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp
-
-// f3713 · 437 B · unmatched · placement: link order · name unknown
-// void f3713(i32, i32, i32) { ... }
-
 // link-order cluster 1012 · uses=3 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
 
 // f3780 · 235 B · unmatched · placement: link order · name unknown
@@ -218,11 +208,6 @@
 
 // f2839 · 57 B · unmatched · placement: link order · name unknown
 // void f2839(i32, i32) { ... }
-
-// link-order cluster 1142 · uses=5
-
-// f2135 · 136 B · unmatched · placement: link order · name unknown
-// ? f2135(i32, i32) { ... }
 
 // link-order cluster 1224 · uses=8
 

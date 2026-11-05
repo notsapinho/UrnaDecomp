@@ -77,6 +77,10 @@
 #   constructor fn 11371 holds (fragment 299, which writes both in celeicaope.cpp); the roots' stand-in that stood
 #   for those calls went with it.
 # The later members, what the target fixes (no record names any of them, so every name and line here is chosen):
+# - CPleito::GetEleicoesMunicipio and FiltraMunicipio (fns 5649 and 3713) with the private GetSituacoesMunicipio, in
+#   cpleito.cpp, and CEleicaoPE::PossuiMunicipio, inline in celeicaope.h: fragment 388
+#   (src/units/388-uenux2-nomesarquivos.mk) has their evidence, forms and stand-ins. 5649's place between GetEleicao and
+#   GetSituacoesEleicoes (band 2) moved ExisteEleicao's chosen line above GetEleicao; 3775 still matches.
 # - 5655 compares the bytes at +0 of its two arguments and gives -1, 0 or 1; its one caller, fn 11888
 #   (vota::CMenuFiltrarCandidatosPorCargo's slot 2), calls it twice to place a copy of CConfiguracaoEleicao::GetCargo's
 #   result in a tree of 156-byte nodes (16 + CCargo's 140) and tests the result's low byte below 0. So it orders CCargo
@@ -111,8 +115,8 @@
 #   GetCargo (861) as well (pnpm wasm fn), so it is the class's member, out of line in cconfiguracaoeleicao.cpp; its line
 #   there, after GetCargo's, and its parameter's TEleicaoID (5648's) are chosen. Its stub was an ecourna/unplaced.cpp
 #   row: the ledger's component for it is ecourna, which says which code calls it, not where it is written. The scan
-#   pairs it by content. None of its callers is written, so the roots give it two call sites, and the stand-in for 5648
-#   now stands for 3713 alone.
+#   pairs it by content. None of its callers is written, so the roots give it two call sites; 5648's other caller is
+#   3713, fragment 388's CPleito::FiltraMunicipio.
 # - comum::CConfiguracaoEleicao::GetIDsEleicoes (fn 5791, 87 B) and GetCargosEleicoes (fn 3774, 389 B), in
 #   cconfiguracaoeleicao.cpp after the destructor. 5791 pushes the id (+0) of each 52-byte CEleicaoPE of m_pleito into
 #   a vector through push_back(const&): the target calls fn 543, matched as std::vector<long>'s, and our body's call
@@ -165,8 +169,8 @@
 # - CPleito's constructor (fn 5652, records cpleito.cpp:64, 67 and 70) copies its six arguments into the members, then
 #   takes the elections' ids in a std::set<TEleicaoID> and throws 8159 when the set is smaller than the elections, 8160
 #   when it is larger than the version map and 8161 when it is not the situations' size (the records' codes and
-#   messages). Its callers are comum::CarregaPleito (5778, unit 280), under CPE::CreateInst (2787), and 3713 (not
-#   written; unit 280's roots stand in for it). The target calls fn 1953, the uninitialized copy of CEleicaoPE, and fn
+#   messages). Its callers are comum::CarregaPleito (5778, unit 280), under CPE::CreateInst (2787), and 3713
+#   (CPleito::FiltraMunicipio, fragment 388's). The target calls fn 1953, the uninitialized copy of CEleicaoPE, and fn
 #   2289 calls no __init_with_size; at -O3, the tree's level, cpleito.cpp gives those calls, and 1953 and 3870 have
 #   their second callers in the link (unit 110's CPE brings CPleito's copy constructor, 1281). The target loads
 #   m_eleicoes' end and begin (+28, +24) before it builds the set, stores the set's begin pointer before the i64 zero of
