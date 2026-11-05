@@ -9,7 +9,7 @@
 # records): the destructor (D2 2871, D0 11877), GetInst (1279), its constructor inlined, and its statics' exit-time
 # destructors (11878, 11880). vota::NomeTela (6718, comum/ctelascargo.cpp, record :60), with ETelaVotacao's enumerators
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
-# name rests on; the member not written is in 150-uenux2-eleitor-estados-pending.cpp with what it waits for.
+# name rests on. CVisualizarCandidatos::StartState is written and differs (below), so the pending file went.
 #
 # Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name. 3251 matches now; its
 # match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings, ahead of
@@ -77,19 +77,60 @@
 # CConfirmaVotoSemCandidato's slot 15 at line 90, CInstrucaoVotacaoAcessibilidade's slot 15 after GetKeyboardPosition),
 # and NomeTela's place above its record so that the throw sits on line 60, column 11.
 #
+# CVisualizarCandidatos::StartState (fn 11876, slot 2, records :132:15 and :140:19 with EUeVotaError's 9378 and 9379):
+# the next state is CMenuVisualizarCandidatos' instance; the candidatures whose candidate, post and party match the
+# filters that are set and not 0 are collected as pointers, and 9378 is thrown when none is left; then, for the current
+# one, the screen CTelasVota::CriaTelaVisualizacaoCandidato builds (below) with its page number and the count, 9379
+# thrown unless the form has one input field, the form shown (Slot2) and read with CInteractiveForm::WaitAndRead
+# (api/gui/cinteractiveform.h, its record :62:25, which 11876 alone holds inlined): CORRIGE returns, and on
+# INPUT_SEM_TECLA the field's last key '4' or '6' moves to the previous or next candidature, wrapping around.
+# - It differs in the numbering of its locals only: 96 over 448 rows in the whole link (pnpm wasm score: 59 rows of
+#   local indices; the rest are operand-only, calls, data addresses and the error's destructor's table slot; the 4
+#   inserted and 4 deleted rows are one sequence renumbered). Forms compiled, with the local the iterator over the
+#   candidatures takes in the object (wasm-objdump -d; 2 as written): an if chain for the filters, a for loop, the wait
+#   loop written in StartState, a non-const screen, std::distance for the page and the cases in another order give 2 as
+#   well; the iterator over data pointers, `continue` in the loop, ++ and -- in ifs, a const_iterator, and the screen
+#   named last give 6 or 7, and the last of those, in the whole link, 131 over 458 rows. No form compiled gives the
+#   target's numbering; it stays as first written.
+# CTelasVota::CriaTelaVisualizacaoCandidato (fn 6569, in ctelasvota.cpp, unit 110's: a static member, ctelasvota.h says
+# why) builds the screen: a fill in colour 31, "VISUALIZAÇÃO" and the post's name for the holder's sex, then label and
+# value lines (Partido, Número padded to the post's digits, Nome, Gênero), each below the last, the value a multi-line
+# field whose right edge is 478, or where the photos start (644 less 111 and 5 per suplente, 5 at least) when the line
+# reaches below 287; for a candidate who runs (situação 0) the holder's photo at (639, 1), 161 by 225, with the post's
+# name under it when the post has suplentes, then each suplente through the std::function lambda (12272, record :3366,
+# 9356 thrown past two): its photo at y 253 when the post's detail says the suplente has one, its title and Gênero
+# lines; for one who does not, two lines in the {25, 0} font; then Situação at 375, Página "n/total", the key D and,
+# past one page, the keys 4 and 6. The photos are adicionaFotoEmoldurada (6561, record :487) over a std::bind of the
+# reader lambda (record :487's 3323:29), which reads comum::CFotos::GetImagem (3755, unit 109); the target's RTTI names
+# the reader $_0 (CDataImage<__bind<...$_0&, const CDadosCandidato&>>, @478246) and the suplentes' lambda $_2
+# (__func<$_2, void (short, int)>, @481428).
+# - Matched at step 9: 6569; 1588, the line's lambda ($_3); 6561; 12268, 12271, 12272, 12273 and 12276, the
+#   std::function's; and 6561's CDataImage, 12520, 12522 and 12524, and its control block, 12529 and 12530. Measured
+#   before (pnpm wasm score, whole link): 6569, with the holder's photo written in its body, 382 over 1732 rows (381
+#   operand-only; its frame 592 bytes, the target's 528), and with that photo in a lambda of its own, 109 over 1732, all
+#   operand-only; 1588, with the photos' start a lambda called after the label's rectangle, 67 over 320 (8 inserted, 5
+#   deleted), with the right edge a lambda called in the rectangle's arguments, 11 over 314, and as written (the bottom
+#   a named TPosition, the edge's lambda over ints), 8 over 312, all operand-only; 6561 25 over 593 and 12272 39 over
+#   520, all operand-only.
+# - The lambdas' numbers: llvm-nm of the object named the suplentes' lambda $_1 with textoSexo taking a CSexo::ESexo and
+#   $_2, the target's, with textoSexo generic (`const auto`); a reading: clang numbers a function's lambdas in the order
+#   it mangles them, and it mangles the reader's (in std::bind's instantiation) and the generic one's early. Other ways
+#   to that number were not compiled. The record :3366 spells the parameters `(TPosition, int)`: a using-declaration
+#   of api::TPosition in the body and an int parameter give that spelling.
+# - Chosen: every name (the lambdas', the locals', the enumerators 9356, 9378 and 9379, whose values are the target's,
+#   the accessor csuplencia.h adds for the suplente's photo, and FONTE_SUPLENTE, the {13, 0} font, @476600), which parts
+#   are lambdas beyond the two the records give (measured above for the holder's photo and the right edge), the helper
+#   adicionaImagem, inlined into 6561, the filters' form and StartState's loop, and every line but the records'.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \
     src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp \
     src/app/vota/eleitor/comum/ctelascargo.cpp
 UENUX2_SRCS += $(ELEITOR_ESTADOS_SRCS)
-# one member is not reconstructed: 150-uenux2-eleitor-estados-pending.cpp gives the vtable a trapping body, compiled
-# with the unit's flags
-$(ROOT)/$(APP)/150-uenux2-eleitor-estados-pending.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/candidatura/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-pending.cpp -o $(R)
 # nothing reconstructed calls CVisualizarCandidatos::GetInst, CInstrucaoVotacaoAcessibilidade::GetInst, NomeTela,
 # CVisualizarCandidatos::GetCargo or has<api::ITextToSpeech> from all of their target callers yet:
 # 150-uenux2-eleitor-estados-roots.cpp stands in for the missing callers
 $(ROOT)/$(APP)/150-uenux2-eleitor-estados-roots.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/150-uenux2-eleitor-estados-pending.o $(APP)/150-uenux2-eleitor-estados-roots.o
+override EXTRA_OBJS += $(APP)/150-uenux2-eleitor-estados-roots.o

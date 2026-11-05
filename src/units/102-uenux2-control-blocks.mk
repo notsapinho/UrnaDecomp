@@ -134,13 +134,12 @@
 # there; 3602 is written now, in gravadores/asn/cassinavotavelbu.cpp at the tree's flags, and 10279 matches from its
 # object, which measures it.
 # Pending, each with what it waits for:
-# - 12530, 12529, CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its
-#   function, so they land with fn 6561 (11109 and 11108, CDataText<AddStatusHeader's lambda>'s, landed with fn 502,
-#   unit 31).
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
 #   another TU's anonymous namespace, so they come with fns 6627 and 10388. 10388 is written (unit 104) and its three
 #   blocks are in the link; their __get_deleter rows still differ (unit 97's fragment).
+# 12530 and 12529, the block of CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>, which waited here for
+# fn 6561 (a lambda is spelled only in its function), match from ctelasvota.cpp.o with it (unit 150's fragment).
 # 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
 # in the builder, matched from unit 121's roots and match now from cinteractiveformbuilder.cpp.o, whose fn 3675 (unit
 # 120's file) builds the block.

@@ -299,21 +299,6 @@
 // f10842 · 23822 B · unmatched · placement: link order · name unknown
 // ? f10842(i32, i32) { ... }
 
-// link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
-
-// f12520 · 16 B · unmatched · placement: link order · name unknown
-// void f12520(i32, i32) { ... }
-
-// link-order cluster 646 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
-
-// f12522 · 104 B · unmatched · placement: link order · name unknown
-// void f12522(i32) { ... }
-
-// link-order cluster 647 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
-
-// f12524 · 101 B · unmatched · placement: link order · name unknown
-// ? f12524(i32) { ... }
-
 // link-order cluster 651 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f12589 · 54 B · unmatched · placement: link order · name unknown

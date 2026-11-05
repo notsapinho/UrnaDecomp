@@ -41,6 +41,10 @@ enum EUeComumAsnError {
     EUE_COMUM_ASN_TIPO_LOCAL_INVALIDO_DESCONVERTE = 7688,
     EUE_COMUM_ASN_TURNO_INVALIDO_CONVERTE = 7689,
     EUE_COMUM_ASN_TURNO_INVALIDO_DESCONVERTE = 7690,
+    // the codes of legravaentidade.h's LeEntidadeEm (records :92 and :98, held by target fn 3755 for the candidates'
+    // photos); its messages are LeEntidadeBiometria's, so the names are chosen from them and from the function
+    EUE_COMUM_ASN_LEITOR_EM_SEEK = 7667,
+    EUE_COMUM_ASN_LEITOR_EM_LEITURA = 7668,
 };
 
 using CUeComumAsnError =

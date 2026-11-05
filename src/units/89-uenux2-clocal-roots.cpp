@@ -36,7 +36,7 @@ int w3711(int, int, int) __asm__("_ZN5comum2md21CComplementoMunicipioC1Ejs");
 int w3710(int, int, int, int) __asm__("_ZN5comum2md21CComplementoMunicipioC1EjsRKNS0_13CHorarioVeraoE");
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
 int w5660(int, int, int, int, int, int) __asm__("_ZN5comum2md12CCandidaturaC1EhtjRKNS0_15CDadosCandidatoERKNSt3__26vectorIS2_NS5_9allocatorIS2_EEEE");
-int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS_11SIndiceFotoE");
+int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS0_8CIndexerE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");

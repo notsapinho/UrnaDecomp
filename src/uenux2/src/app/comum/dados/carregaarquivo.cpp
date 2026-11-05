@@ -16,6 +16,7 @@
 #include "app/comum/asn/cleitorasn.h"
 #include "app/comum/asn/legravaentidade.h"
 #include "app/comum/dados/asn/cconversorlocal.h"
+#include "app/comum/dados/asn/candidatura/cconversorfotocandidato.h"
 #include "app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversorentidadeeleitores.h"
@@ -69,6 +70,12 @@ md::CBiometriaEleitor CLeitorASN::LeBiometriaEleitor(const std::string& arquivo,
 }
 
 template std::vector<md::CImpedido> CarregaArquivo<asn::CConversorImpedido>(const std::string& arquivo);
+
+md::CFotoCandidato CLeitorASN::LeFotoCandidato(const std::string& arquivo, const md::CIndiceFoto& indice)
+{
+    return LeEntidadeEm<asn::CConversorFotoCandidato>(arquivo, indice.GetIndexer(),
+                                                      "LeFotoCandidato(" + indice.GetCodigo() + ")");
+}
 
 template md::CCabecalhoPacote CarregaArquivo<asn::CConversorCabecalhoPacote>(const std::string& arquivo);
 

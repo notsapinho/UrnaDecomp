@@ -160,15 +160,18 @@
 # the return's temporaries and before the map (a temporary was not compiled). The insert of a value_type temporary is
 # the target's +112 object (emplace was not compiled).
 # Placement: GetKeyboardLayout's `if` on line 1301, with SLayoutTecla above it in the anonymous namespace; the {20, 0}
-# font's line after FONTE_TITULO is a choice: the target holds it at @474896, after FONTE_TITULO's @474888, but clang
-# emits such a constant at its first reader, not by its line (our object holds it after TECLAS_TESTE_TECLADO), and
-# the line moved unit 110's six builders down one; TECLAS_TESTE_TECLADO,
-# TelaTesteTeclado and SorteiaTeclasTesteTeclado after CTelasVota's statics, and CTelasVota's destructor after them
-# (line 3463; it was on 3439): the band order above; and in band 1 the index runs 12882, 12875, 12862, the statics'
-# exit destructors before the vector's, so its definition follows theirs, and ctelasvota.h declares it extern for line
-# 1303. The data leave that open: the target holds TECLAS_TESTE_TECLADO (0x1bf990) before CTelasVota::s_mutex
-# (0x1bf99c) and s_instancia (0x1bf9b4), our link after them; clang lays a file's globals out by first use, so the
-# original read the vector above line 3434, which this layout does not give (no match depends on it).
+# font's line (3170, with the fonts of the screen builders that unit 110's fragment places above
+# CriaTelaVisualizacaoCandidato) is a choice: the target holds it at @474896, after FONTE_TITULO's @474888, but clang
+# emits such a constant at its first reader, not by its line. TelaTesteTeclado and SorteiaTeclasTesteTeclado sit after
+# AdicionaTelaAguarde and before CriaTelaVisualizacaoCandidato (lines 3266 to 3286; use band 2 puts 6579, which
+# TelaTesteTeclado first mentions, before 6569, whose lines the records fix: unit 110's fragment), CTelasVota's
+# destructor below (line 3478): the band order above. TECLAS_TESTE_TECLADO follows CTelasVota's statics (line 3439): in
+# band 1 the index runs 12882, 12875, 12862, the statics' exit destructors before the vector's, so its definition
+# follows theirs, and ctelasvota.h declares it extern for line 1303. The data agree: the target holds
+# TECLAS_TESTE_TECLADO (0x1bf990) before CTelasVota::s_mutex (0x1bf99c) and s_instancia (0x1bf9b4), and since
+# TelaTesteTeclado, which reads the vector, moved above GetInst's line 3434, our link does too (0x1b83d8, 0x1b83e4,
+# 0x1b83fc in build/out/wasm-map/vota_web/vota_web_wasm.map; it held them after the statics before), which fits the
+# reading that clang lays a file's globals out by first use.
 # In ctesteteclado.cpp, GetInst, the statics and the D0 above StartState (record :38), the constructor (no index)
 # below ProcessInput's blank record lines 50, 60 and 81, GeraSequencia above the macro (its static std::mt19937,
 # @1835152, lies below the macro's mutex in .bss), AdicionaCaixaTecla last; api/gui/ctextbox.h and

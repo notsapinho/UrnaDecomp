@@ -17,7 +17,7 @@ ASN1::IAbstractVisitor::EVisitorResult CVisitanteFoto::visit(int /*indice*/, con
         if (m_sequenciador != 0)
             throw CUeComumDadosError(EUE_COMUM_DADOS_7883, "Sequenciador com valor errado para o carregamento de fotos do candidato.");
         m_sequenciador = 1;
-        m_indice = SIndiceFoto(posicao, tamanho);
+        m_indice = md::CIndexer(posicao, tamanho);
 
 
     } else if (caminho == "EntidadeFotosCandidatos.fotos.codigoCandidato") {
