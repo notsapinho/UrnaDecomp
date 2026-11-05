@@ -204,8 +204,8 @@
 #
 # Pending: nothing; the -pending.cpp went with slot 8's trap, the last, and no other row of the scan moved with it
 # (step 9's join against the base: 11167 and 11172 only). An earlier trap of this unit shared a wasm type with unit 13's
-# CRdvVota::Confere trap (11486), which is a function of its own since slot 7 was written, named by vtable evidence,
-# its row differs on the pending object (how-to step 9).
+# CRdvVota::Confere trap (11486), which was a function of its own once slot 7 was written, named by vtable evidence,
+# its row differing on the pending object (how-to step 9), until unit 13 wrote Confere, which matches.
 #
 # libc++'s std::filesystem members 5571 reaches, which unit 261's roots kept in the link with a stand-in for 5571 until
 # 5571 was written (that unit is gone with its stand-in): 5571 holds __remove_all inlined (its ErrorHandler<uintmax_t>

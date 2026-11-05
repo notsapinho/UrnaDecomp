@@ -84,4 +84,31 @@ CConversorRegistroDigitalVoto<CONVERSOR>::DoConverte(const TDado& dado) const
     return entidade;
 }
 
+// An RDV's votes to and from its BER bytes, through the RDV's converter (comum::CRdvVota's m_conversor). Codifica
+// converts the votes (IConversorASN::Converte) and codes the entity with api::CFileASN::CodeObject into the bytes it
+// returns. Decodifica (target fn 5680, called by CRdvVota's Desconverte and Confere, fns 11487 and 11486) copies the
+// bytes into a std::vector<char>, decodes them with api::CFileASN::DecodeObject (fn 5825) and converts the entity back
+// (IConversorASN::Desconverte, whose code sits behind a 640-byte frame of its own in 5680). Codifica has no target
+// index: binaryen inlines it into its one caller, CRdvVota::Converte (fn 11488), whose code is one outer block holding
+// a 64-byte frame (Codifica's: the entity at +12, the coded vector at +0) and inside it the frames of Converte (640
+// bytes), CodeObject (32) and CodeObjectFunction (656).
+// Where they are defined, evidence then reading. The records those frames hold lie after the run of
+// asn/rdv/cconversoreleicoesvota.cpp's (@1571240 to @1571484) and before md/cdataje.cpp's (@1571564):
+// iconversorasn.h:56 (@1571500), cfileasn.h:161 and :171 (@1571516, @1571532), then 5680's iconversorasn.h:71
+// (@1571548); crdvvota.cpp's, the object of CRdvVota's slots (use band 1: 11490, 11488, 11487, 11486, 11485), run from
+// @1560132 to @1560616. In use band 2 the target runs 5682, 5681, 5680, 5679 in link order (ledger/ordinals.tsv), and
+// 5681 matches from cconversoreleicoesvota.cpp.o's copy, which that object emits after every function it defines
+// (names.tsv's ld_index). Read together: CRdvVota's slots call functions an object after that one defines out of line,
+// each holding these instances, which a template or inline function crdvvota.cpp.o emitted would have kept in its own
+// run; that they are two external functions of an object of their own, cconversorregistrodigitalvoto.cpp, is chosen.
+// Chosen too: their names, their being free functions of comum::asn (they use the converter's public interface only),
+// the converter's type (the base the calls go through; the derived class gives the same object) and their order,
+// Codifica first (its records come first).
+std::vector<uebyte> Codifica(
+    const IConversorASN<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, md::CVotosEleicoesVota>& conversor,
+    const md::CVotosEleicoesVota& votos);
+md::CVotosEleicoesVota Decodifica(
+    const IConversorASN<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, md::CVotosEleicoesVota>& conversor,
+    const std::vector<uebyte>& dados);
+
 } // namespace comum::asn

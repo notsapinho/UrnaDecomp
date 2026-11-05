@@ -33,6 +33,9 @@ public:
     // comum::CRdvVota's Desconverte and Confere (fns 11487, 11486) test a decoded RDV against theirs with it (fn 5638).
     // The name is chosen.
     bool Compativel(const CVotosEleicoesVota& outro) const;
+    // comum::CRdvVota::Confere (fn 11486) holds it inlined after Compativel: m_votos, then m_eleicoes, each map's size
+    // and then its pairs.
+    bool operator==(const CVotosEleicoesVota& outro) const = default;
     // Record cvotoseleicoesvota.cpp:215, column 27: the Votos call with that location, error 4735; fn 4454 holds it.
     void RecebeCedula(const CRdvPosicionador& posicionador, TEleicaoID eleicao, const CCedula& cedula);
 
