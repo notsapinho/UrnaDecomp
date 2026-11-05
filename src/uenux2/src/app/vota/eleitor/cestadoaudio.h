@@ -40,6 +40,13 @@ public:
     void SelecionaModo1();
     void Desativa();
 
+    // The tests of modes 0 and 1: fns 215 (8 bytes that SQLite's pragmaVtabEof, a twin, shares) and 3078, which
+    // vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (inlined into fn 10425) calls four times each on
+    // GetInst()'s result for the audio word of comum::CEleitorDadosHabilitacao: 0 in mode 0, else 1 in mode 1, else 2.
+    // Out of line here, where no caller of this TU inlines them, as the setters; their names are chosen.
+    bool Modo0Selecionado() const;
+    bool Modo1Selecionado() const;
+
     // Out of line in cestadoaudio.cpp, one caller each (fns 11804 and 12903), which hold them inlined by binaryen: the
     // getter's std::pair, returned through the caller's frame, is the copy of +9 and +10 into fn 12903's frame (two
     // store8 at +30 and +31, then two signed loads), a reading of that shape; inline forms were not measured. The

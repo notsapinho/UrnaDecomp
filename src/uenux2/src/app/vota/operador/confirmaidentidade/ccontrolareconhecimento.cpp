@@ -217,4 +217,38 @@ void CControlaReconhecimento::RegistraDigitalCapturada(const std::vector<uebyte>
     s_tentativaRegistrada = s_tentativa;
 }
 
+comum::md::CDedo::TipoDedo CControlaReconhecimento::GetDedoCorrente()
+{
+    return s_dedosVerificacao[s_indiceDedo];
+}
+
+comum::md::CEleitorDadosHabilitacaoBiometrica CControlaReconhecimento::GetDadosSemBiometria()
+{
+    return comum::md::CEleitorDadosHabilitacaoBiometrica(static_cast<comum::md::CDedo::TipoDedo>(0), 0, 0, 0);
+}
+
+comum::md::CEleitorDadosHabilitacaoBiometrica CControlaReconhecimento::GetDadosBiometriaEleitor()
+{
+    return comum::md::CEleitorDadosHabilitacaoBiometrica(s_dedosVerificacao[s_indiceDedo], s_qualidadeCapturada,
+                                                         s_tentativaRegistrada, 0);
+}
+
+comum::md::CEleitorDadosHabilitacaoBiometrica CControlaReconhecimento::GetDadosBiometriaOperador()
+{
+    const uebyte tentativa = s_tentativa;
+    const comum::md::EErroDecifracaoBiometria erro =
+        comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().GetErroDecifracao();
+    return comum::md::CEleitorDadosHabilitacaoBiometrica(static_cast<comum::md::CDedo::TipoDedo>(0), 0, tentativa, erro);
+}
+
+comum::md::CEleitorDadosHabilitacaoBiometrica CControlaReconhecimento::GetDadosBiometriaMesario()
+{
+    const uebyte tentativa = s_tentativa;
+    const comum::md::EErroDecifracaoBiometria erro =
+        comum::CEleitores::GetInst().GetCurrentBiometriaEleitor().GetErroDecifracao();
+    return comum::md::CEleitorDadosHabilitacaoBiometrica(
+        static_cast<comum::md::CDedo::TipoDedo>(0), 0, tentativa, erro,
+        comum::md::CEleitorIdentidade(s_dedoRegistrado, ecourna::app::dados::TipoIDInscricaoEleitoral));
+}
+
 } // namespace vota

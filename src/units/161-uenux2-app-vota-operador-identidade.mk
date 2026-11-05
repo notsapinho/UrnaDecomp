@@ -372,6 +372,30 @@
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #
+# CControlaReconhecimento's members for vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (inlined into fn 10425,
+# unit 142's, written and not matched), at chosen lines after RegistraDigitalCapturada, none with a target index of its
+# own: 10425 holds each inlined.
+# - GetDadosSemBiometria, GetDadosBiometriaEleitor, GetDadosBiometriaOperador and GetDadosBiometriaMesario, the
+#   biometric part of each kind of enabling: 10425 calls CControlaReconhecimento::GetInst (1256) and drops its result
+#   right before each, so they are called through it (static members, as GetLimiteTentativas). Without biometrics the
+#   four zeros of the constructor 3718; the voter's, s_dedosVerificacao[s_indiceDedo], s_qualidadeCapturada and the
+#   third word's low byte; the mesario's, the first word's low byte and CEleitores::GetCurrentBiometriaEleitor's error
+#   code (1393, its +36), with s_dedoRegistrado as the mesario's title (CEleitorIdentidade of TipoIDInscricaoEleitoral,
+#   566) when that string is not empty. The two mesario parts are behind frames of their own (48 and 64 bytes, the
+#   CBiometriaEleitor temporary's): out of line here, binaryen inlines each. They read the attempt and the error code
+#   into named locals before the constructor's call: the target destroys the CBiometriaEleitor temporary before it
+#   (10425 `392 over 2218` rows against `457 over 2246` with one return expression, pnpm wasm score in the whole link)
+#   and loads the first word whole, masking it at the call. The other two are frameless, out of line as their siblings
+#   (inline in the class, GetDadosSemBiometria gave 10425 216 over 2198 rows against 198, in a scratch link with this
+#   object ahead of cmostraeleitorvotando.cpp's).
+# - GetDedoCorrente, s_dedosVerificacao[s_indiceDedo]: out of line here, so 10425 loads the word and masks it
+#   (`i32.and 255`) for the uebyte its first WSQ helper takes, where an inline accessor gave `i32.load8_u` (our link,
+#   read); binaryen inlines it into its one caller.
+# - Inline in the class: the reads 10425 makes with no call (the two vectors, the string, the third word's low byte).
+# Chosen: the names, their being static members, the order of the five (four orders gave 10425 the same score),
+# GetDadosBiometriaEleitor's being out of line (inline not measured), and the accessors' being inline. s_dedoRegistrado is the mesario's title by 10425's use; its name, an earlier choice,
+# stays.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeidentidade.cpp \
     src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp \

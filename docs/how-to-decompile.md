@@ -1022,8 +1022,9 @@ flags: [facts/levels.md](reference/facts/levels.md) §V1). When the flag alone i
 unwritten caller of an instance the flag shapes), the body stays unwritten when nothing needs it, with both measurements
 in the fragment (5869, unit 227). A callee that is written but has no name yet, or that only an unlanded branch names,
 is something outside the body too: a body measured right lands written, not as a trap (11861 over 3648, unit 138).
-`ModeloAbreviado` (8168, unit 75) is `differs` until the literal it shares a tail with is in the link, and with that
-literal in a scratch link `splat-remap` prints `IDENTICAL`, once code the link keeps references the literal and its
+`ModeloAbreviado` (8168, unit 75) was `differs` until the literal it shares a tail with was in the link (it matched when
+unit 142 wrote 10425, which holds it), and with that literal in a scratch link `splat-remap` printed `IDENTICAL`, once
+code the link keeps references the literal and its
 bytes are in the wasm ([facts/workflow.md](reference/facts/workflow.md) §W13). `splat-remap` applies no match line and
 no self-vote rule, so a callee only `splat/matched.txt` names reads `UNRESOLVED` there, and a `.bss` name only the
 body's own vote holds leaves the row `unresolved self-voted` once the literal lands (652's `s_inst`; §W28). Such a row

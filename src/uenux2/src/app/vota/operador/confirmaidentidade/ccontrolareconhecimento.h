@@ -7,6 +7,7 @@
 
 #include "app/comum/cappstate.h"
 #include "app/comum/dados/md/eleitor/cdedo.h"
+#include "app/comum/dados/md/eleitor/celeitordadoshabilitacaobiometrica.h"
 
 namespace api {
 class IScreenMT;
@@ -112,6 +113,27 @@ public:
     static bool DigitalReconhecidaTreinamento();
     static void RegistraDigitalCapturada(const std::vector<uebyte>& digital);
     static void SetQualidadeCapturada(ueword qualidade) { s_qualidadeCapturada = qualidade; }
+    // What vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (inlined into target fn 10425) reads of the statics
+    // with no call: the two vectors (the voter's capture and the mesario's registered one, each tested for empty and
+    // copied), the string (tested for empty), the third word's low byte and the finger of s_indiceDedo in
+    // s_dedosVerificacao. Inline here but the finger's, which is out of line in the .cpp (10425 masks the word it loads:
+    // src/units/161-uenux2-app-vota-operador-identidade.mk); their names are chosen.
+    static const std::vector<uebyte>& GetDigitalCapturada() { return s_digitalCapturada; }
+    static const std::vector<uebyte>& GetDigitalRegistrada() { return s_digitalRegistrada; }
+    static const std::string& GetDedoRegistrado() { return s_dedoRegistrado; }
+    static uebyte GetTentativaRegistrada() { return s_tentativaRegistrada; }
+    static comum::md::CDedo::TipoDedo GetDedoCorrente();
+    // The biometric part of the voter's enabling, one per kind, each called on GetInst()'s result in fn 10425 (its call
+    // of fn 1256, result dropped, comes right before each): without biometrics, all zero (fn 3718's constructor with
+    // four zeros); the voter's, the finger, the score and the third word's low byte; the mesario's, the first word's
+    // low byte and CEleitores::GetCurrentBiometriaEleitor's error code, with the string as the mesario's title
+    // (TipoIDInscricaoEleitoral) when it is not empty. The last two are behind a frame of their own each in 10425 (48
+    // and 64 bytes, the CBiometriaEleitor temporary's): out of line here, binaryen inlined each into its one caller.
+    // The names, their being static members of this class and the first two's being out of line are chosen.
+    static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosSemBiometria();
+    static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosBiometriaEleitor();
+    static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosBiometriaOperador();
+    static comum::md::CEleitorDadosHabilitacaoBiometrica GetDadosBiometriaMesario();
 
 private:
     CControlaReconhecimento();

@@ -14,10 +14,11 @@ namespace comum {
 // part at +24 whose members it reads, and the photo's 8 bytes at +56. The kinds' names, the members' names and the
 // getters are chosen. The constructor is fn 2733 (no record): its one caller, vota::CMostraEleitorVotando::ProcessKey
 // (fn 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), passes the identity, the kind (0, 1 or
-// 2), the audio word, the biometric part and the photo, in the order of the members it stores; it is out of line in its
-// caller's file, app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp
-// (src/units/142-uenux2-app-vota-estados-448.mk says why: the directory is the band's and the data's, the file among
-// its neighbours is chosen). The parameters' names, and the reference for the photo (the
+// 2), the audio word, the biometric part and the photo, in the order of the members it stores; it is out of line in a
+// TU of its own, app/vota/operador/aguardaeleitor/celeitordadoshabilitacao.cpp
+// (src/units/142-uenux2-app-vota-estados-448.mk says why: the caller keeps the returned `this`, as it does only for a
+// constructor of another TU; the directory is the band's and the data's, the file's name is chosen). The parameters'
+// names, and the reference for the photo (the
 // caller passes the address of a temporary, which a by-value photo takes too), are chosen.
 class CEleitorDadosHabilitacao {
 public:
