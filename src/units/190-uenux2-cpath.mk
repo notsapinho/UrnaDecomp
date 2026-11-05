@@ -83,10 +83,11 @@
 # Not CPath's: 1487 and 1488, the "dinamico/imprimindo" marker, which call 634 and fn 620 (CSynchronizer::Sync, unit
 # 154), written as vota's free functions in app/vota/comum/votadefs.cpp (unit 168); 3896, the merge body of
 # CServicoEstadoGeralSA's, Gap's and Vota's GetPathArquivo (11565, 11567, 11568), those classes' slots, which unit 206
-# writes. Not written: 6035 and 6036, the merge bodies of 1701, 5762, 1551 and
+# writes. Not CPath's: 6035 and 6036, the merge bodies of 1701, 5762, 1551 and
 # 2826, which build a string from GetPathTrab(EFlashOrigem) and "rdv.dat" or "uenux.db" and call 436: a probe
 # function of cpath.cpp that does the same holds 436 inlined (calls of GetInst, GetGeral and 358), so they are read as
-# another file's. Not CPath's either: 5907, which destroys three members of the object at 1838544 and builds no path,
+# another file's; their bands put them in crdv.cpp and celeitores.cpp, where unit 381 writes them. Not CPath's
+# either: 5907, which destroys three members of the object at 1838544 and builds no path,
 # is comum::CArquivosSavd's destructor (unit 95). The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
