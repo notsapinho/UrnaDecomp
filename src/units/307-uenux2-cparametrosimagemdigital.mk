@@ -14,9 +14,10 @@
 # So it has a file of its own here, named after the class.
 #
 # Its five target callers (fns 1256, 3614, 5372, 10316, 10465) drop its result, and the target keeps it all the same
-# (`()->(i32)`). Fns 1256 (CControlaReconhecimento::GetInst, unit 161) and 10465 (unit 282) are in the link;
-# 307-uenux2-cparametrosimagemdigital-roots.cpp stands in for the other three and reads the result, so that binaryen
-# keeps both the function and its result.
+# (`()->(i32)`). All five are in the link (units 161, 221, 214, 135 and 282), and the roots went: with the roots'
+# object emptied, the link keeps 1903 and 2742 as `()->(i32)` and pnpm wasm score gives them the rows it gives them
+# with it (8 over 33 and 3 over 5, operand-only; 2224 byte-exact), measured on a copy of link.cmd
+# (docs/reference/facts/workflow.md W13).
 #
 # 2742 and unit 282's 10465, with 10465's callee 2223, hold each other: 2742's and 2223's names are `call by:10465`
 # only, and splat-build without either match line refuses 10465 as self-voted, so the three land or leave together.
@@ -28,13 +29,9 @@
 # and what is chosen. CConversorWsq's GetInst and statics come first in the file: the target's .bss holds its mutex and
 # pointer right below CParametrosImagemDigital's, and band 1 links their exit destructors first (10522 and 10521 above
 # 10520 and 10519); the file's local destructor names moved with them (CParametrosImagemDigital's are now
-# __cxx_global_array_dtor.4 and .6, the match lines of 10520 and 10519 edited to them). Their callers that are not
-# written (2224's 3614 and 5372; 2742's and ConverteParaWsq's 10451: 10316 and 2725, units 135 and 293, are written
-# now) have stand-ins in the roots, since binaryen inlines a function its link calls once; they go when those callers
-# are in the link. The header's vota::CConversorWsq::PreparaWsq, inline, is unit 293's: 2725 holds it.
+# __cxx_global_array_dtor.4 and .6, the match lines of 10520 and 10519 edited to them). Their callers are all in the
+# link (2224's 3614 and 5372, units 221 and 214; 2742's and ConverteParaWsq's 10451, unit 221, with 10316 and 2725,
+# units 135 and 293), so the stand-ins the roots gave them went (above). The header's vota::CConversorWsq::PreparaWsq,
+# inline, is unit 293's: 2725 holds it.
 CPARAMETROSIMAGEMDIGITAL_SRCS := src/app/vota/operador/confirmaidentidade/cparametrosimagemdigital.cpp
 UENUX2_SRCS += $(CPARAMETROSIMAGEMDIGITAL_SRCS)
-# The roots declare what they call through an asm label, so they include no header; compiled with APP_CXXFLAGS.
-$(ROOT)/$(APP)/307-uenux2-cparametrosimagemdigital-roots.o: $(ROOT)/src/units/307-uenux2-cparametrosimagemdigital-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/307-uenux2-cparametrosimagemdigital.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/307-uenux2-cparametrosimagemdigital-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/307-uenux2-cparametrosimagemdigital-roots.o

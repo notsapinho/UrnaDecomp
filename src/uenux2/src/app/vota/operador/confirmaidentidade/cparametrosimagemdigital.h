@@ -7,6 +7,10 @@
 
 #include "ecourna/api/uetypes.hpp"
 
+namespace api {
+struct SXYT;
+} // namespace api
+
 namespace vota {
 
 // Target fn 2742: the GetInst of a singleton with no vtable, record or RTTI, `f2900(1908612, 1908636)`, a thunk into
@@ -63,6 +67,15 @@ public:
     // a member whose object and image binaryen's dead-argument elimination dropped, its body the output's clear() (a
     // reading). Chosen: its name, its being const, its parameters and that it is this class's.
     void ExtraiTemplate(const std::vector<uebyte>& imagem, std::vector<uebyte>& modelo) const;
+    // In 3614 and 5372 the call of fn 2224 comes after GetInst and after the scanner's slots 2 and 1, whose results
+    // they drop: a member that takes the image's width and height too, which dead-argument elimination dropped with the
+    // object and the image. 5372's second call fills the vector it hands api::IFingerMatcher's slot 2 as its second
+    // argument, the minutiae fn 10465 passes there: ExtraiMinucias. Both bodies clear their output, as the first
+    // overload does, so after that elimination binaryen keeps one body for the three (measured: names.tsv holds the
+    // first overload's symbol alone). Chosen: the overload, ExtraiMinucias's name, their parameters' order and types.
+    void ExtraiTemplate(const std::vector<uebyte>& imagem, int largura, int altura, std::vector<uebyte>& modelo) const;
+    void ExtraiMinucias(const std::vector<uebyte>& imagem, int largura, int altura,
+                        std::vector<api::SXYT>& minucias) const;
 
 private:
     CParametrosImagemDigital();

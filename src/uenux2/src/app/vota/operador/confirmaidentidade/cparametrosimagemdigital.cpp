@@ -2,6 +2,8 @@
 // class or its function, so every line is a choice (src/units/307-uenux2-cparametrosimagemdigital.mk).
 #include "app/vota/operador/confirmaidentidade/cparametrosimagemdigital.h"
 
+#include "app/comum/dados/md/eleitor/cdedo.h"
+
 namespace vota {
 
 CConversorWsq& CConversorWsq::GetInst()
@@ -40,6 +42,17 @@ CParametrosImagemDigital::CParametrosImagemDigital() = default;
 void CParametrosImagemDigital::ExtraiTemplate(const std::vector<uebyte>&, std::vector<uebyte>& modelo) const
 {
     modelo.clear();
+}
+
+void CParametrosImagemDigital::ExtraiTemplate(const std::vector<uebyte>&, int, int, std::vector<uebyte>& modelo) const
+{
+    modelo.clear();
+}
+
+void CParametrosImagemDigital::ExtraiMinucias(const std::vector<uebyte>&, int, int,
+                                              std::vector<api::SXYT>& minucias) const
+{
+    minucias.clear();
 }
 
 } // namespace vota

@@ -21,7 +21,6 @@ extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTip
 void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
-void w1937_root(void*, int) __asm__("_ZNK5comum15CEleitorDetalhe12GetBiometriaEv");
 void w2543_root() __asm__("_ZN5comum24VerificaIntegridadeVotosEv");
 void w2834_root(void*, int) __asm__("_ZNK5comum7CCargos13GetMapaCargosEv");
 }
@@ -48,17 +47,6 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
 __attribute__((noinline)) int SemImpedimentoEmOutro(int detalhe)
 {
     return w2266_root(detalhe + 208) * 5;
-}
-
-// Stands for a target caller of CEleitorDetalhe::GetBiometria (fn 1937), fn 3614, not in the link, and stood for 10316,
-// in it now (unit 135's); the others, fn 1393 (CEleitores::GetCurrentBiometriaEleitor, unit 110's celeitores.cpp) and
-// fn 3616 (unit 319's), are. The two 40-byte results are md::CBiometriaEleitor's, left undestroyed: nothing calls this.
-__attribute__((noinline)) int BiometriasDosDois(int a, int b)
-{
-    int biometrias[20];
-    w1937_root(biometrias, a);
-    w1937_root(biometrias + 10, b + 112);
-    return biometrias[9] + biometrias[19];
 }
 
 // Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos): 6734, 7174 (twice) and 12098, none in the
@@ -91,7 +79,6 @@ struct SComumDadosRoots {
         comum_dados_sink = reinterpret_cast<const void*>(&TraduzOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);
-        comum_dados_sink = reinterpret_cast<const void*>(&BiometriasDosDois);
         comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
         comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);
     }

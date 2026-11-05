@@ -3,9 +3,9 @@
 // table slot has its address taken. Declared through asm labels, so this TU needs no uenux2 header
 // and instantiates nothing; a function that returns a class takes the result's address first, as the target's do.
 // - vota::impl::IInformacaoThreadOperador::GetInst (target fn 599): the 16 vota:: functions over it and
-//   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its callers not written yet,
-//   fns 10425 and 10451 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10676 and 10680, unit 161's, 10646, unit
-//   104's, 10523, unit 152's, 3616, unit 319's, and 10481, unit 282's, are in the link). GetInst
+//   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its caller not written yet,
+//   fn 10425 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10676 and 10680, unit 161's, 10646, unit 104's, 10523, unit
+//   152's, 3616, unit 319's, 10481, unit 282's, and 10451, unit 221's, are in the link). GetInst
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: GetIdentidadeEleitor (1535;
@@ -35,8 +35,7 @@ namespace {
 
 __attribute__((noinline)) int w50_getinst(int salto)
 {
-    const int primeira = informacaothreadoperador_getinst();
-    return primeira == informacaothreadoperador_getinst() ? salto + 3 : salto + 5;
+    return informacaothreadoperador_getinst() == salto ? salto + 3 : salto + 5;
 }
 
 __attribute__((noinline)) int w50_fachada(int salto, void* resultado)

@@ -1,6 +1,9 @@
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
 
 #include <algorithm>
+#include <iterator>
+#include <ranges>
+#include <utility>
 
 #include "app/comum/comparecimentomesario/euecomumcomparecimentomesarioerror.h"
 
@@ -61,7 +64,7 @@ bool CRegistradorMesario::HasInst()
 std::unique_ptr<CRegistradorMesario> CRegistradorMesario::s_inst;
 std::mutex CRegistradorMesario::s_mutex;
 
-// (original lines 64-81: content not recovered)
+// (original lines 67-81: content not recovered)
 #line 82
 void CRegistradorMesario::SaveCurrentInternal()
 {
@@ -69,6 +72,38 @@ void CRegistradorMesario::SaveCurrentInternal()
         throw CUeComumComparecimentoMesarioError(EUE_COMUM_COMPARECIMENTO_MESARIO_CONTAINER_VAZIO, "O contêiner estava vazio");
     }
     m_servico.Inserir(m_corrente->second);
+}
+
+std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> CRegistradorMesario::GetMesariosSecaoComBiometria() const
+{
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> mesarios;
+    std::ranges::copy(m_mesariosSecao | std::views::filter([](const auto& mesario) {
+                          return mesario.second.GetDedoHabilitacao() != 0;
+                      }),
+                      std::inserter(mesarios, mesarios.end()));
+    return mesarios;
+}
+
+std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> CRegistradorMesario::GetMesariosSecaoSemBiometria() const
+{
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> mesarios;
+    std::ranges::copy(m_mesariosSecao | std::views::filter([](const auto& mesario) {
+                          return mesario.second.GetDedoHabilitacao() == 0;
+                      }),
+                      std::inserter(mesarios, mesarios.end()));
+    return mesarios;
+}
+
+std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> CRegistradorMesario::GetMesariosForaSecao() const
+{
+    std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> mesarios;
+    std::ranges::copy(m_registros |
+                          std::views::filter([](const auto& registro) { return !registro.second.PertenceSecao(); }) |
+                          std::views::transform([](const auto& registro) {
+                              return std::make_pair(registro.second.GetMesario(), registro.second);
+                          }),
+                      std::inserter(mesarios, mesarios.end()));
+    return mesarios;
 }
 
 } // namespace comum

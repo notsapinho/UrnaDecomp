@@ -1,5 +1,5 @@
 // vota::CControladorRegistraMesariosVota: no record names this file or any of its members. The reconstruction's notes
-// are in unit 119's fragment, and the members it leaves pending are in its -pending.cpp.
+// are in unit 119's fragment.
 
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"
 
@@ -139,6 +139,11 @@ const std::string& CControladorRegistraMesariosVota::GetTituloMesario() const
 void CControladorRegistraMesariosVota::Slot15() const
 {
     CThreadEleitor::GetInst().GetMensagens().Post(7);
+}
+
+void CControladorRegistraMesariosVota::Slot16() const
+{
+    CSincronizaVota::SincronizaBancoDados();
 }
 
 void CControladorRegistraMesariosVota::SetTituloMesario(const std::string& titulo)

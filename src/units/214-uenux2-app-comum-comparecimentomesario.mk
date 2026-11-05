@@ -105,25 +105,29 @@
 #   `46 over 702 rows (same 656, replaced 45 [44 operand-only], inserted 0, deleted 1)` so, the test the one row not an
 #   operand. With the parameter our GravaWsq has the target's five-parameter type in the link, `pnpm wasm score` gives
 #   `44 over 702 rows (same 658, replaced 44 [44 operand-only], inserted 0, deleted 0)`, and step 9 matches it.
-#   SalvarBiometriaMesarioRegistrado passes 5 * 1024 * 1024; the other caller, fn 10451, is not written, and its
-#   stand-in in the roots passes the same. Chosen: the parameter's name, its type (a double, the compare's), its place
+#   SalvarBiometriaMesarioRegistrado passes 5 * 1024 * 1024, and so does SalvarBiometriaMesarioNaoRegistrado, which the
+#   other caller, fn 10451, holds inlined. Chosen: the parameter's name, its type (a double, the compare's), its place
 #   last, the literal's spelling, and its being passed by each caller rather than as a default argument.
 #   The callers+content hand line that named it while it differed went: on copies of the symbol file and the match
 #   list without 5371, 5382 and 10316, the line alone out, or with the generated name too, moves no row in two scans
 #   beside a control, and splat-build gives the target's sha256 with 12476 matches.
 #
-# Not written, and what each waits for:
-# - CControladorReconhecimentoMesario::ComparaDigitais (5372, records 65 and 76): not tried; its callers are fns 3614
-#   and 10451, which pass it 1149's result.
-# - 5376, a hinted emplace into a std::map of a string key and a 68-byte value: its one caller, fn 10451, calls it twice
-#   and holds the instance's only use.
+# - CControladorReconhecimentoMesario::ComparaDigitais (5372, records 65 and 76, column 22: the scanner's and the
+#   matcher's instance) matches, with CLogComum::LogaScoreReconhecimentoMesario (record clogcomum.cpp:214, unit 111's
+#   file) inlined; its callers are fns 3614 and 10451, which pass it 1149's result (unit 221's fragment). Written in
+#   ccontroladorreconhecimetomesario.cpp at its records, after GetInst; GetInst's statics follow it, since the records
+#   leave them no lines before it (a choice). Its members BiometriaPresenteNosRegistrados, BiometriaPresenteNoArquivo,
+#   BiometriaPresenteNosNaoRegistrados and SalvarBiometriaMesarioNaoRegistrado (no index: 3614 and 10451 hold them)
+#   follow GravaWsq, chosen lines; the header says what each rests on. The lambda of SalvarBiometriaMesarioNaoRegistrado
+#   brings its std::function's five members, which match (10294 to 10298).
+# ccontroladorreconhecimetomesario.cpp is compiled by unit 221's list now, after cregistradigitaloperador.cpp, where the
+# target's data put its records (unit 221's fragment has the measurement).
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
-COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp \
-    src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
+COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp
 UENUX2_SRCS += $(COMPARECIMENTOMESARIO_SRCS)
-# the functions' callers not reconstructed (fns 3614, 10451 and 12105):
-# 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for them
+# a caller not reconstructed (fn 12105): 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for it (the
+# stand-ins for 3614 and 10451 went with them)
 $(ROOT)/$(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o: $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o

@@ -5,7 +5,9 @@
 //   5875  LogaNivelBateria(uebyte, uebyte)                                                 record at line 106, column 18
 //         LogaSuspensoMonitoramenteRepeticao(uebyte)                                     record at line 136, column 18
 //         LogaTipoBateria()                                                              records at lines 144, 145, 158
-// (the last two have no target index: binaryen inlined them into fn 10226, vota::CThreadMonitor's slot 2)
+//         LogaScoreReconhecimentoMesario(const ueint32)                                  record at line 214, column 18
+// (the last three have no target index: binaryen inlined the first two into fn 10226, vota::CThreadMonitor's slot 2,
+// and the third into fn 5372, comum::CControladorReconhecimentoMesario::ComparaDigitais)
 // The reconstruction's notes are in unit 111's fragment.
 
 #include "app/comum/log/clogcomum.h"
@@ -36,7 +38,7 @@ CLogComum::CLogComum() = default;
 
 CLogComum::~CLogComum() = default;
 
-// (original lines 39-73: content not recovered)
+// (original lines 41-73: content not recovered)
 #line 74
 void CLogComum::LogaCopiandoArqResParaFI(EExtensaoArquivoResultado extensao)
 {
@@ -98,6 +100,14 @@ void CLogComum::LogaTipoBateria()
         default:
             throw CUeComumLogError(EUE_COMUM_LOG_8850, "Tipo de alimentação não implementado");
     }
+}
+
+// (original lines 162-211: content not recovered)
+#line 212
+void CLogComum::LogaScoreReconhecimentoMesario(const ueint32 score)
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga(std::format("Batimento de digitais retornou o score {}", score));
 }
 
 } // namespace comum

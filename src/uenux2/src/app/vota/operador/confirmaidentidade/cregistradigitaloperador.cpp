@@ -1,17 +1,38 @@
 // vota::CRegistraDigitalOperador's file, the path its records give:
 // /home/rubio/tse/uenux2/src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp. The reconstruction's
-// note, not TSE's text: the records fix StartState's lines (95 and 98) and FinishState's (104 and 105); ProcessTick's
-// (143 to 145) and BiometriaMesarioPresenteNosEleitores's (328 and 371) hold no code of ours, those members not written.
-// Every other line is a choice. comum::md::CComparecimentoMesarioPK's constructor (target fn 2738) is at chosen lines
-// after the records. src/units/221-uenux2-app-comum-constructors.mk has the notes on both classes.
+// note, not TSE's text: the records fix StartState's lines (95 and 98), FinishState's (104 and 105), ProcessTick's
+// three singletons (143 to 145) and BiometriaMesarioPresenteNosEleitores's two (328 and 371); every other line is a
+// choice, the blank ones the original's unknown lines. src/units/221-uenux2-app-comum-constructors.mk has the notes,
+// and those on comum::md::CComparecimentoMesarioPK's constructor, which ccomparecimentomesariopk.cpp defines now.
 #include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
 
+#include <algorithm>
+#include <cmath>
+#include <format>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "api/gui/cbmpconversor.h"
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "api/hwil/ifingerdetection.h"
+#include "api/hwil/ifingermatcher.h"
 #include "api/hwil/ifingerscanner.h"
+#include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.h"
+#include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
+#include "app/comum/dados/celeitores.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
+#include "app/vota/operador/confirmaidentidade/cdigitalnaocapturada.h"
+#include "app/vota/operador/confirmaidentidade/cinformaeleitorpodevotar.h"
+#include "app/vota/operador/confirmaidentidade/cparametrosimagemdigital.h"
+#include "app/vota/operador/confirmaidentidade/ctentativacapturadigitalesgotada.h"
 #include "app/vota/operador/cthreadoperador.h"
 #include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
@@ -63,7 +84,7 @@ CRegistraDigitalOperador& CRegistraDigitalOperador::GetInst()
     return *s_inst;
 }
 
-// (original lines 66-90: content not recovered)
+// (original lines 87-90: content not recovered)
 #line 91
 void CRegistraDigitalOperador::StartState()
 {
@@ -92,64 +113,247 @@ void CRegistraDigitalOperador::ProcessInput()
     }
 }
 
-} // namespace vota
+namespace {
+double CalculaEntropia(const api::TSharedImageVector& imagem);
+} // namespace
 
-// (original lines 120-324: content not recovered)
-#line 325
-// <stubs>
-// f3614 · 4765 B · unmatched · name unknown
-// ? f3614(i32, i32) { ... }
-// </stubs>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-namespace comum::md {
-
-CComparecimentoMesarioPK::CComparecimentoMesarioPK(const CEleitorIdentidade& mesario, int periodoPresente)
-    : m_mesario(mesario)
-    , m_periodoPresente(periodoPresente)
+void CRegistraDigitalOperador::ProcessTick(uebyte tick)
 {
+    if (tick != m_tickCaptura && tick != m_tickEspera) {
+        return;
+    }
+    if (tick == m_tickCaptura) {
+        CThreadOperador::GetInst().StopTick(m_tickCaptura);
+        CThreadOperador::GetInst().StopTick(m_tickEspera);
+        if (--m_tentativasRestantes == 0) {
+            m_tentativasRestantes = 3;
+            m_pNextState = &CTentativaCapturaDigitalEsgotada::GetInst();
+            CLogVota::GetInst().LogaHabilitacaoCanceladaCapturaDigitalMesario();
+        } else {
+            m_pNextState = &CDigitalNaoCapturada::GetInst();
+        }
+        return;
+    }
+    if (tick != m_tickEspera) {
+        return;
+    }
+
+    auto& detectorDedos = api::CPolySingleton<api::IFingerDetection>::instance();
+    auto& scannerDedos = api::CPolySingleton<api::IFingerScanner>::instance();
+    auto& urnaAtual = api::CPolySingleton<api::IUrna>::instance();
+
+    api::TSharedImageVector imagem;
+    double maiorEntropia = 0;
+    int amostras = 0;
+    while (amostras < 3) {
+        const api::TSharedImageVector captura = scannerDedos.Slot4();
+        if (captura->size() != static_cast<std::size_t>(scannerDedos.Slot0())) {
+            return;
+        }
+        const double entropia = CalculaEntropia(captura);
+        if (urnaAtual.Modelo() == 2009 || urnaAtual.Modelo() == 2010 || urnaAtual.Modelo() == 2020 ||
+            urnaAtual.Modelo() == 2022) {
+            imagem = captura;
+            break;
+        }
+        if (entropia > 4.0) {
+            if (entropia > maiorEntropia) {
+                imagem = api::TSharedImageVector(captura);
+                maiorEntropia = entropia;
+            }
+            ++amostras;
+        } else {
+            return;
+        }
+    }
+    if (detectorDedos.Slot2(imagem.get())) {
+        m_formCapturada->Slot2();
+        scannerDedos.Slot7(1);
+        if (urnaAtual.Modelo() <= 2019) {
+            api::CBmpConversor::InvertColors(imagem->data(), scannerDedos.Slot2(), scannerDedos.Slot1());
+        }
+        api::CBmpConversor::VerticalFlip(imagem->data(), scannerDedos.Slot2(), scannerDedos.Slot1());
+        const std::vector<uebyte> wsq =
+            CConversorWsq::GetInst().ConverteParaWsq(*imagem, scannerDedos.Slot2(), scannerDedos.Slot1(), "");
+        const api::TSharedImageVector digital = std::make_shared<std::vector<uebyte>>(wsq.begin(), wsq.end());
+        CControlaReconhecimento::RegistraDigitalMesario(*digital);
+        IdentificaMesario();
+        CThreadOperador::GetInst().StopTick(m_tickCaptura);
+        CThreadOperador::GetInst().StopTick(m_tickEspera);
+        impl::IInformacaoThreadOperador::GetInst().SetBiometriaOperador();
+        m_pNextState = &CInformaEleitorPodeVotar::GetInst();
+    }
 }
 
-} // namespace comum::md
+void CRegistraDigitalOperador::IdentificaMesario()
+{
+    if (BuscaMesarioSecaoComBiometria() || BuscaMesarioSecaoSemBiometria() || BuscaMesarioForaSecao()) {
+        return;
+    }
+    const bool coletada = comum::CControladorReconhecimentoMesario::GetInst().BiometriaPresenteNosNaoRegistrados(
+        CControlaReconhecimento::GetDigitalRegistrada());
+    if (!coletada) {
+        CLogVota::GetInst().LogaCapturadaDigitalMesario();
+        CLogVota::GetInst().loga(
+            "Não encontrou digital coletada em nenhum dos arquivos, vai salvar a digital em novo arquivo.");
+        comum::CControladorReconhecimentoMesario::GetInst().SalvarBiometriaMesarioNaoRegistrado(
+            CControlaReconhecimento::GetDigitalRegistrada());
+    } else {
+        CLogVota::GetInst().loga("Digital coletada bate com uma digital gravada após o registro inicial de mesário. "
+                                 "Não é possível associar a habilitação a um mesário.");
+    }
+}
+
+bool CRegistraDigitalOperador::BuscaMesarioSecaoComBiometria()
+{
+    const auto mesarios = comum::CRegistradorMesario::GetInst().GetMesariosSecaoComBiometria();
+    const comum::md::CEleitorIdentidade* encontrado = nullptr;
+    for (const auto& [mesario, comparecimento] : mesarios) {
+        if (BiometriaMesarioPresente(mesario, comparecimento.GetIdArquivo().value_or(999999))) {
+            encontrado = &mesario;
+            break;
+        }
+    }
+    if (encontrado == nullptr) {
+        return false;
+    }
+    CLogVota::GetInst().LogaMesarioHabilitouEleitor(encontrado->GetIdentificador());
+    return true;
+}
+
+bool CRegistraDigitalOperador::BuscaMesarioSecaoSemBiometria()
+{
+    const auto mesarios = comum::CRegistradorMesario::GetInst().GetMesariosSecaoSemBiometria();
+    const comum::md::CEleitorIdentidade* encontrado = nullptr;
+    for (const auto& [mesario, comparecimento] : mesarios) {
+        if (BiometriaMesarioPresente(mesario, comparecimento.GetIdArquivo().value_or(999999))) {
+            encontrado = &mesario;
+            break;
+        }
+    }
+    if (encontrado == nullptr) {
+        return false;
+    }
+    CLogVota::GetInst().LogaMesarioHabilitouEleitor(encontrado->GetIdentificador());
+    return true;
+}
+
+bool CRegistraDigitalOperador::BuscaMesarioForaSecao()
+{
+    const auto mesarios = comum::CRegistradorMesario::GetInst().GetMesariosForaSecao();
+    const comum::md::CEleitorIdentidade* encontrado = nullptr;
+    for (const auto& [mesario, comparecimento] : mesarios) {
+        if (BiometriaMesarioPresente(mesario, comparecimento.GetIdArquivo().value_or(999999))) {
+            encontrado = &mesario;
+            break;
+        }
+    }
+    if (encontrado == nullptr) {
+        return false;
+    }
+    CLogVota::GetInst().LogaMesarioHabilitouEleitor(encontrado->GetIdentificador());
+    return true;
+}
+
+bool CRegistraDigitalOperador::BiometriaMesarioPresente(const comum::md::CEleitorIdentidade& mesario, int idArquivo)
+{
+    const bool presenteNosEleitores = BiometriaMesarioPresenteNosEleitores(mesario);
+    CControlaReconhecimento::SetMesarioRegistrado("");
+    if (presenteNosEleitores) {
+        if (idArquivo != 999999) {
+            const std::string mensagem = std::format("Biometria do mesário {} encontrada em eleitores ({})",
+                                                     mesario.GetIdentificador(), idArquivo);
+            CLogVota::GetInst().loga(mensagem);
+        } else {
+            const std::string mensagem =
+                std::format("Biometria do mesário {} encontrada em eleitores", mesario.GetIdentificador());
+            CLogVota::GetInst().loga(mensagem);
+        }
+        CControlaReconhecimento::SetMesarioRegistrado(mesario.GetIdentificador());
+        return true;
+    }
+    const std::vector<uebyte> digital = CControlaReconhecimento::GetDigitalRegistrada();
+    if (comum::CControladorReconhecimentoMesario::GetInst().BiometriaPresenteNosRegistrados(digital, idArquivo)) {
+        const std::string mensagem = std::format("Biometria do mesário {} encontrada nos arquivos coletados ({})",
+                                                 mesario.GetIdentificador(), idArquivo);
+        CLogVota::GetInst().loga(mensagem);
+        CControlaReconhecimento::SetMesarioRegistrado(mesario.GetIdentificador());
+        return true;
+    }
+    if (idArquivo != 999999) {
+        const std::string mensagem =
+            std::format("Biometria coletada não é do mesário {} ({})", mesario.GetIdentificador(), idArquivo);
+        CLogVota::GetInst().loga(mensagem);
+    } else {
+        const std::string mensagem = std::format("Biometria coletada não é do mesário {}", mesario.GetIdentificador());
+        CLogVota::GetInst().loga(mensagem);
+    }
+    return false;
+}
+
+namespace {
+
+double CalculaEntropia(const api::TSharedImageVector& imagem)
+{
+    const auto inicio = imagem->cbegin();
+    const auto fim = imagem->cend();
+    std::map<uebyte, int> ocorrencias;
+    for (auto it = inicio; it != fim; ++it) {
+        ++ocorrencias[*it];
+    }
+    double soma = 0;
+    for (const auto& [valor, quantidade] : ocorrencias) {
+        const double probabilidade = static_cast<double>(quantidade) / static_cast<int>(imagem->size());
+        soma += probabilidade * std::log2(probabilidade);
+    }
+    return -soma;
+}
+
+} // namespace
+
+// (original lines 316-324: content not recovered)
+#line 325
+bool CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores(const comum::md::CEleitorIdentidade& mesario)
+{
+
+    auto& digitais = api::CPolySingleton<api::IFingerScanner>::instance();
+    std::vector<uebyte> modelo;
+    CParametrosImagemDigital::GetInst().ExtraiTemplate(CControlaReconhecimento::GetDigitalRegistrada(), digitais.Slot2(),
+                                                       digitais.Slot1(), modelo);
+    const comum::md::CComparecimentoMesario* comparecimento =
+        comum::CRegistradorMesario::GetInst().Find(comum::md::CComparecimentoMesarioPK(mesario, 1));
+    std::vector<comum::md::CDedo::TipoDedo> dedos;
+    if (comparecimento == nullptr) {
+        dedos.reserve(2);
+        dedos.push_back(static_cast<comum::md::CDedo::TipoDedo>(1));
+        dedos.push_back(static_cast<comum::md::CDedo::TipoDedo>(6));
+        dedos.push_back(static_cast<comum::md::CDedo::TipoDedo>(2));
+        dedos.push_back(static_cast<comum::md::CDedo::TipoDedo>(7));
+    } else if (comparecimento->GetDedoHabilitacao() == 0) {
+        return false;
+    } else {
+        dedos.push_back(comparecimento->GetDedoHabilitacao());
+    }
+    const std::map<comum::md::CEleitorIdentidade, comum::CEleitorDetalhe> eleitores =
+        comum::CEleitores::GetInst().GetRegistros();
+    const auto eleitor = eleitores.find(mesario);
+    if (eleitor == eleitores.end()) {
+        return false;
+    }
+    for (const comum::md::CDedo::TipoDedo& dedo : dedos) {
+        if (eleitor->second.GetBiometria().TemDedo(dedo)) {
+            const std::vector<api::SXYT> minucias = eleitor->second.GetBiometria().GetDedo(dedo).GetMinucias();
+            const int limiar = comum::CControladorReconhecimentoMesario::GetInst().GetLimiar();
+
+            // (original lines 357-370: content not recovered)
+#line 371
+            auto& matcher = api::CPolySingleton<api::IFingerMatcher>::instance();
+            if (matcher.Slot2(modelo, minucias, limiar)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+} // namespace vota

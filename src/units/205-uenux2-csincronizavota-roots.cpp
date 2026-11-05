@@ -10,8 +10,8 @@
 // - SincronizaAssinaturaVota (fn 4687) and GravaBancoDadosMI (fn 4657) need no stand-in: their target callers, 491 and
 //   10590, and 4662 and 10590, are in the link;
 // - GravaBancoDadosMV (fn 4682): callers 4657 (written) and 7174;
-// - SincronizaBancoDados (fn 4662): callers 7787 and 10786 (unit 119's trap for CControladorRegistraMesariosVota's slot
-//   16);
+// - SincronizaBancoDados (fn 4662): callers 7787 and 10786 (CControladorRegistraMesariosVota's slot 16, unit 119's, in
+//   the link);
 // - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
 // - SincronizaRelatorios (fn 1836): callers 11943, 11946, 12105 (three times) and 12110, the slot 2 of four vota states.
 // - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 23 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
@@ -33,14 +33,11 @@ __attribute__((noinline)) int w205_banco(int passo)
     return passo + 3;
 }
 
-// stands for fns 7787 and 10786
+// stands for fn 7787 (10786 is in the link)
 __attribute__((noinline)) int w205_sincroniza(int vezes)
 {
     vota::CSincronizaVota::SincronizaBancoDados();
-    if (vezes > 1) {
-        vota::CSincronizaVota::SincronizaBancoDados();
-    }
-    return vezes - 1;
+    return vezes * 2;
 }
 
 // stands for fn 6737

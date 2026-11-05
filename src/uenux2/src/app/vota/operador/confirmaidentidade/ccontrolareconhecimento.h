@@ -111,6 +111,16 @@ public:
     static std::vector<api::SXYT> GetMinuciasDedoCorrente();
     static bool DigitalReconhecidaTreinamento();
     static void RegistraDigitalCapturada(const std::vector<uebyte>& digital);
+    // The accesses vota::CRegistraDigitalOperador's ProcessTick (fn 10451) and BiometriaMesarioPresente (fn 3614) hold
+    // inlined: 10451 assigns the WSQ copy of the mesario's digital to s_digitalRegistrada (the vector's operator=,
+    // its self-assignment test against @1908684 and fn 1681), and both copy it into new vectors by value; 3614 assigns
+    // s_dedoRegistrado twice, from a temporary empty string and from the mesario's identifier (std::string's copy
+    // assignment, inlined). That s_dedoRegistrado holds the identifier of the mesario whose biometry
+    // matched is a reading of 3614; the static's name stays the one the class gave it. The accessors' names, their
+    // being inline static members and the by-value result are chosen.
+    static void RegistraDigitalMesario(const std::vector<uebyte>& digital) { s_digitalRegistrada = digital; }
+    static std::vector<uebyte> GetDigitalRegistrada() { return s_digitalRegistrada; }
+    static void SetMesarioRegistrado(const std::string& identificador) { s_dedoRegistrado = identificador; }
     static void SetQualidadeCapturada(ueword qualidade) { s_qualidadeCapturada = qualidade; }
 
 private:

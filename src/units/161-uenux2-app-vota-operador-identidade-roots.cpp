@@ -1,5 +1,5 @@
-// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the second call sites of the static members and
-// CLogVota members whose target callers are not reconstructed yet.
+// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the second call sites of the static members whose
+// target callers are not reconstructed yet.
 //
 // - The vtables: vota::CDadoEleitorNaoConfere's and vota::CInformaAnoNascimentoErrado's constructors are in the link,
 //   inlined with their GetInst into fn 10443 (vota::CVerificaDadoEleitor::ProcessInput, this unit's) and fn 10489
@@ -15,7 +15,7 @@
 //   GetInst, which vota::CValidaIdentidade::StartState (10627, unit 278's) holds.
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
-//   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
+//   CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
 //   10430, and the ones the stand-in's comment names are in the link). A stand-in goes when the target callers it names
 //   are in splat/matched.txt or written in the link.
 // - vota::CControlaReconhecimento::GetInst (fn 1256): its target callers are 10425, 10474, 10486 and 10500; 10474 and
@@ -25,6 +25,8 @@
 //   steps 6 to 10: every match row stays, 1256's among them.
 // The call of CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097) went: its target callers 10500, 10443, 10447,
 // 10489 and 10626 are in the link.
+// The call of CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522) went: its target callers 10451 (unit
+// 221's) and 10452 are in the link.
 // The stand-in for vota::MontaTelaEleitorPodeVotar (5410) went: its callers 1256 (this unit's) and 5399 (unit 282's) are
 // in the link.
 // The stand-ins for AtingiuLimiteVerificacoes (5404), AtingiuLimiteTentativas and AvancaTentativa (5405, 5406) went:
@@ -32,7 +34,6 @@
 // The stand-in for CControlaReconhecimento::PrimeiraTentativa (5403) went: its one target caller, 10465 (unit 282's),
 // which calls it twice, is in the link.
 // The stand-ins differ in their bytes, from each other and from every target function. Compiled with APP_CXXFLAGS.
-#include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
 
 extern "C" {
@@ -42,15 +43,6 @@ int w161_pede_identidade() __asm__("_ZN4vota15CPedeIdentidade7GetInstEv");
 namespace {
 
 using vota::CControlaReconhecimento;
-using vota::CLogVota;
-
-// Stands for 10451.
-__attribute__((noinline)) int CancelaUm()
-{
-    CLogVota& log = CLogVota::GetInst();
-    log.LogaHabilitacaoCanceladaCapturaDigitalMesario();
-    return 71;
-}
 
 // Stands for CPedeIdentidade::GetInst's (fn 652) other target caller, 10209 (in the link: 10590, unit 283's; 10443,
 // unit 161's; 10689, unit 277's list's CEscolheOpcao::ProcessInput; 10447, unit 161's; 2295, the body binaryen merges from the five
@@ -74,7 +66,6 @@ const void* volatile w161_sink;
 struct SW161Roots {
     SW161Roots()
     {
-        w161_sink = reinterpret_cast<const void*>(&CancelaUm);
         w161_sink = reinterpret_cast<const void*>(&PedeIdentidade);
         w161_sink = reinterpret_cast<const void*>(&ControlaReconhecimento);
     }

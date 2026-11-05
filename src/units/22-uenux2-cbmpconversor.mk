@@ -33,8 +33,5 @@
 # fragment). Names chosen: the structs, their fields, the parameters and locals.
 CBMPCONVERSOR_SRCS := src/api/gui/cbmpconversor.cpp
 UENUX2_SRCS += $(CBMPCONVERSOR_SRCS)
-# the three functions that call both are not reconstructed yet: 22-uenux2-cbmpconversor-roots.cpp gives each two call
-# sites
-$(ROOT)/$(APP)/22-uenux2-cbmpconversor-roots.o: $(ROOT)/src/units/22-uenux2-cbmpconversor-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/22-uenux2-cbmpconversor-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/22-uenux2-cbmpconversor-roots.o
+# no roots: the three target functions that call both, 10316, 10451 and 10465 (units 135, 221 and 282), are in the link,
+# so the roots file that gave each two call sites went

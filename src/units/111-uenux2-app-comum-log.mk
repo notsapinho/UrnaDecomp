@@ -14,7 +14,9 @@
 #   alimentação não implementado" otherwise (EUE_COMUM_LOG_8850, a name that says its value). Their records fix their
 #   lines; column 19 of line 158 puts the throw at twelve spaces, which the case labels indented under the switch give,
 #   a reading; `fonte` and the layout of lines 146 to 157 are chosen. The two declarations took three blank lines above
-#   line 74 for the header's three lines, so no record moved.
+#   line 74 for the header's three lines, so no record moved. LogaScoreReconhecimentoMesario (record 214:18), added
+#   since, has no target index either: binaryen inlined it into its one caller, fn 5372
+#   (comum::CControladorReconhecimentoMesario::ComparaDigitais, unit 214's file); clogcomum.h says what it rests on.
 # - comum::CArquivosResultado::GetInst (348, in unit 95's files) and 2900, binaryen's body of the two GetInst, with the
 #   mutex destructors 11659 and 11639 and the pointers' 11660 and 11640, thunks of 349, which the content pass pairs once
 #   the statics have names;
@@ -62,9 +64,8 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - not reconstructed: 5372 (2224 matches since unit 282's 10465, 816 and 1686 since unit 135's IFingerMatcher
-#   stand-in, 1903 since unit 307),
-#   12098 and the other CLogComum members. The other thunks of 2900 are written elsewhere: 2742 is unit 307's
+# - not reconstructed: 12098 and the other CLogComum members (5372, which waited for 2224, 816, 1686 and 1903,
+#   matches now: unit 214's file). The other thunks of 2900 are written elsewhere: 2742 is unit 307's
 #   vota::CConversorWsq::GetInst, and 3603 is comum::asn::CAssinaVotavelBu::GetInst, fragment 321's, in
 #   gravadores/asn/cassinavotavelbu.cpp.
 #

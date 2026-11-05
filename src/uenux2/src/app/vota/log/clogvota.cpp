@@ -436,6 +436,11 @@ void CLogVota::LogaSolicitaDigitalMesario()
     loga("Solicita digital do mesário");
 }
 
+void CLogVota::LogaCapturadaDigitalMesario()
+{
+    loga("Capturada a digital do mesário");
+}
+
 void CLogVota::LogaIdentificadorDigitadoMesario()
 {
     const std::string mensagem = "Identificador do eleitor digitado pelo mesário";

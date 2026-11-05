@@ -367,8 +367,9 @@
 # CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735; CEleitorJaVotou's went:
 # its constructor is in the link, inlined into its GetInst, which 10635 holds; CIdentidadeInvalida's went: its
 # constructor is in the link, inlined into its GetInst, which unit 278's 10627 holds), and stand-ins for the target
-# callers of 5403, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link); those of 5404 to
-# 5406 went, their callers 10447, 10448, 10473 and 10485 being in the link. ccontrolareconhecimento.cpp reaches Boost
+# callers of 5403, 2097, 4661 and 652 (the roots file names them, and the callers in the link); those of 5404 to
+# 5406 went, their callers 10447, 10448, 10473 and 10485 being in the link, and so did that of 4522, its callers 10451
+# (unit 221's) and 10452 being in the link. ccontrolareconhecimento.cpp reaches Boost
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #

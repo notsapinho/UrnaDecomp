@@ -55,6 +55,9 @@
 #     moves for that. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
 #     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
 #     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
+#     cregistradormesario.cpp is compiled by unit 221's list now, after cregistradigitaloperador.cpp, where the target's
+#     data put its records (unit 221's fragment has the measurement, on fns 10451 and 3614); the servico's object still
+#     links ahead of it, and 815 is 55 over 519 rows so, as with the servico right before it (both measured).
 #   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377
 #     downwards, so the destructor is defined (or first mentioned) above AtualizaMesarioSecao, which first mentions 5379
 #     (how-to step 3, "The order of two members"). Defined below Registra, the bodies were the same (5380 `4 over 29
@@ -174,7 +177,8 @@
 # and 11616 read it too (each unlocks it through fn 150 after reading the pointer), not written. The pointer's name is
 # `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throws' (55, 83 and 104).
-CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
+# cregistradormesario.cpp is this unit's and in unit 221's list (above)
+CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 
 $(ROOT)/$(APP)/113-uenux2-cdatamap-roots.o: $(ROOT)/src/units/113-uenux2-cdatamap-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/113-uenux2-cdatamap.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
