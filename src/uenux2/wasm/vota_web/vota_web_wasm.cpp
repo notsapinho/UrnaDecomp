@@ -2,10 +2,17 @@
 // 515 and 592; every other line is a choice, and src/units/170-uenux2-wasm-vota-web.mk says what is recovered, what is
 // chosen and what waits.
 #include <cstddef>
+#include <cstdlib>
+#include <cxxabi.h>
+#include <emscripten/emscripten.h>
+#include <exception>
 #include <functional>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
+#include <typeinfo>
 #include <vector>
 
 #include "api/audio/isound.h"
@@ -18,13 +25,22 @@
 #include "api/pattern/cpolysingleton.h"
 #include "api/pattern/igenericfactory.h"
 #include "api/util/cajustedatahora.h"
+#include "app/comum/dados/ccandidaturas.h"
+#include "app/comum/dados/ccargos.h"
+#include "app/comum/dados/crespostas.h"
 #include "app/comum/iinterfacesavd.h"
 #include "app/vota/cexecucaovotacooperativa.h"
 #include "app/vota/eleitor/caguardamensagem.h"
+#include "app/vota/eleitor/celeitorvotando.h"
+#include "app/vota/eleitor/comum/cinformacaoeleitor.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/isincronismovotoeleitor.h"
+#include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
+#include "app/vota/iexecucaovota.h"
 #include "ecourna/api/security/cprng.hpp"
 #include "ecourna/api/security/csymmetriccipherfactory.hpp"
+#include "ecourna/api/util/cstringutils.hpp"
 #include "uenux2/mock/app/simulador/wasm/cfingerpreparesimulador.h"
 #include "uenux2/mock/app/simulador/wasm/cwasmthread.h"
 #include "uenux2/mock/app/simulador/wasm/cwasmwebsound.h"
@@ -52,8 +68,82 @@ TPolySingletonsInfo& (*g_polySingletonsInfo)() = polySingletonsInfoPadrao;
 
 namespace {
 
-// (original lines 55-357: content not recovered)
-#line 358
+// (original lines 71-279: content not recovered)
+#line 280
+std::string Desmangle(const char* nome)
+{
+    int status = 0;
+    char* legivel = abi::__cxa_demangle(nome, nullptr, nullptr, &status);
+    std::string resultado = (status == 0 && legivel != nullptr) ? legivel : (nome != nullptr ? nome : "");
+    std::free(legivel);
+    return resultado;
+}
+
+std::string NomeEstadoEleitor()
+{
+    comum::CAppState* estado = vota::IExecucaoVota::GetInst().GetEstadoEleitor();
+    if (estado != nullptr) {
+        return Desmangle(typeid(*estado).name());
+    }
+    return "";
+}
+
+std::string NomeSubestadoEleitor()
+{
+    const auto* votando = dynamic_cast<vota::CEleitorVotando*>(vota::IExecucaoVota::GetInst().GetEstadoEleitor());
+    if (votando == nullptr || votando->GetEstadoCargo() == nullptr) {
+        return "";
+    }
+    return Desmangle(typeid(*votando->GetEstadoCargo()).name());
+}
+
+std::string ListaCandidatos()
+{
+    std::ostringstream lista;
+    lista << '[';
+    try {
+        if (comum::CCargos::GetInst().IsFim()) {
+            lista << ']';
+            return lista.str();
+        }
+        const comum::TCargoID cargo = comum::CCargos::GetInst().GetCurrentCargoID();
+        const comum::CCandidaturas& candidaturas = comum::CCandidaturas::GetInst();
+        bool primeiro = true;
+        for (const comum::TCandidatoID numero : comum::CCandidaturas::GetInst().GetCandidatos(cargo)) {
+            const auto candidatura = candidaturas.GetRegistros().find(comum::ChaveResposta(cargo, numero));
+            if (candidatura == candidaturas.GetRegistros().end()) {
+                continue;
+            }
+            if (!primeiro) {
+                lista << ',';
+            }
+            lista << "{\"number\":" << candidatura->second.GetCandidatoID() << ","
+                  << "\"name\":\"" << simulador::EscapaJson(candidatura->second.GetTitular().GetNomeUrna()) << "\","
+                  << "\"party\":" << candidatura->second.GetPartidoID() << ","
+                  << "\"apt\":" << (candidatura->second.GetTitular().GetSituacao() == 0 ? "true" : "false") << '}';
+            primeiro = false;
+        }
+    } catch (...) {
+    }
+    lista << ']';
+    return lista.str();
+}
+
+void ReportaErro(const std::string& mensagem)
+{
+    const std::string evento = std::string("{\"message\":\"") + simulador::EscapaJson(mensagem) + "\"}";
+    simulador::ConsoleError(mensagem);
+    simulador::EmitEvent("vota:error", evento);
+}
+
+} // namespace
+
+void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila);
+
+// (original lines 350-355: content not recovered)
+#line 356
+namespace {
+
 class CPoliticaExecucaoEleitorWeb : public vota::impl::IPoliticaExecucaoEleitor {
 public:
 
@@ -64,7 +154,67 @@ public:
 class CVotaWebEngine {
 public:
 
-    // (original lines 368-588: content not recovered)
+    // (original lines 368-516: content not recovered)
+#line 517
+    int Tick()
+    {
+        if (!m_inicializado || m_encerrado) {
+            return 0;
+        }
+        try {
+            const std::string antes = NomeEstadoEleitor();
+            vota::IExecucaoVota::GetInst().ProcessaEntradaEleitor();
+            const std::string depois = NomeEstadoEleitor();
+            if (depois.find("CSincronismoEleitor") != std::string::npos) {
+                const double agora = emscripten_get_now();
+                if (!m_aguardando) {
+                    m_aguardando = true;
+                    m_avisado = false;
+                    m_avisos = 0;
+                    m_proximoAviso = agora + 120;
+                } else if (!m_avisado && !(agora < m_proximoAviso)) {
+                    if (m_avisos < 4) {
+                        vota::CTelasVota::GetInst().IncrementaBarraSincronismo();
+                        m_proximoAviso = agora + 160;
+                        ++m_avisos;
+                    } else {
+                        SinalizaSincronismo(vota::IExecucaoVota::GetInst().GetFilaEleitor());
+                        m_avisado = true;
+                    }
+                }
+            } else {
+                m_aguardando = false;
+                m_avisado = false;
+                m_avisos = 0;
+                m_proximoAviso = 0;
+            }
+            if (depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
+                m_encerrado = true;
+            }
+            const std::string estado = EstadoJson();
+            if (depois != antes || estado != m_estado) {
+                m_estado = estado;
+                simulador::EmitEvent("vota:state", m_estado);
+            }
+            if (m_encerrado && depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
+                simulador::EmitEvent("vota:done", EstadoJson());
+            }
+            return 1;
+        } catch (const std::exception& erro) {
+            ReportaErro(erro.what());
+        } catch (...) {
+            ReportaErro("erro desconhecido em votaTick");
+        }
+        return 0;
+    }
+
+    const char* GetStateJson()
+    {
+        m_estado = EstadoJson();
+        return m_estado.c_str();
+    }
+
+    // (original lines 575-588: content not recovered)
 #line 589
     void SetAudioEnabled(bool habilitado)
     {
@@ -77,6 +227,95 @@ public:
         if (tecla) {
             simulador::PushKey(tecla);
         }
+    }
+
+    std::string EstadoJson() const
+    {
+        const std::string estado = NomeEstadoEleitor();
+        const std::string subestado = NomeSubestadoEleitor();
+        const std::string tela = subestado.find("CInstrucaoVotacaoAcessibilidade") != std::string::npos ? "accessibility" : "";
+
+        bool proporcional = false;
+        try {
+            const comum::CCargos& cargos = comum::CCargos::GetInst();
+            if (!cargos.IsFim()) {
+                proporcional = cargos.GetCurrent().IsProporcional();
+            }
+        } catch (...) {
+        }
+
+        bool legendaValida = false;
+        try {
+            const comum::CCargos& cargos = comum::CCargos::GetInst();
+            if (proporcional && !cargos.IsFim() && vota::g_numeroDigitado.size() >= 2) {
+                const ueword partido = ecourna::api::util::CStringUtils::ToWord(vota::g_numeroDigitado.substr(0, 2));
+                legendaValida = vota::LegendaValida(cargos.GetCurrentCargoID(), partido);
+            }
+        } catch (...) {
+            legendaValida = false;
+        }
+
+        std::string_view modo;
+        if (!m_inicializado) {
+            modo = "inicio";
+        } else if (m_encerrado) {
+            modo = "fim";
+        } else if (m_aguardando || estado.find("CSincronismo") != std::string::npos) {
+            modo = "gravando";
+        } else if (tela == "accessibility") {
+            modo = "accessibility";
+        } else if (subestado.find("Branco") != std::string::npos) {
+            modo = "branco";
+        } else if (subestado.find("CPedeNominal") != std::string::npos) {
+            modo = legendaValida && proporcional ? "legendaOuNominal" : "nulo";
+        } else if (subestado.find("VotoLegenda") != std::string::npos ||
+                   subestado.find("CandidatoInexistente") != std::string::npos) {
+            modo = legendaValida && proporcional ? "legenda" : "nulo";
+        } else if (subestado.find("Nulo") != std::string::npos || subestado.find("Inexistente") != std::string::npos ||
+                   subestado.find("Inapto") != std::string::npos || subestado.find("Repetido") != std::string::npos) {
+            modo = "nulo";
+        } else {
+            modo = "nominal";
+        }
+        const bool confirmacao = subestado.find("VotoNominal") != std::string::npos ||
+                                 subestado.find("MajoritarioValido") != std::string::npos;
+
+        std::ostringstream json;
+        json << "{\"initialized\":" << (m_inicializado ? "true" : "false") << ','
+             << "\"done\":" << (m_encerrado ? "true" : "false") << ','
+             << "\"audioEnabled\":" << (m_audioHabilitado ? "true" : "false") << ','
+             << "\"audioEleitorHabilitado\":" << (m_audioEleitorHabilitado ? "true" : "false") << ','
+             << "\"state\":\"" << simulador::EscapaJson(estado) << "\""
+             << ",\"guide\":{\"voteMode\":\"" << simulador::EscapaJson(std::string(modo)) << "\""
+             << ",\"legendaValida\":" << (legendaValida ? "true" : "false")
+             << ",\"confirmacao\":" << (confirmacao ? "true" : "false") << '}';
+        if (!subestado.empty()) {
+            json << ",\"substate\":\"" << simulador::EscapaJson(subestado) << "\"";
+        }
+        if (!tela.empty()) {
+            json << ",\"screen\":\"" << simulador::EscapaJson(tela) << "\"";
+        }
+        try {
+            if (!tela.empty()) {
+                json << ",\"candidates\":[]";
+            } else if (!comum::CCargos::GetInst().IsFim()) {
+                const comum::md::CCargo& cargo = comum::CCargos::GetInst().GetCurrent();
+                const char* tipo = cargo.IsProporcional() ? "proporcional" : "majoritario";
+                json << ",\"cargo\":{\"id\":" << static_cast<unsigned>(cargo.GetID()) << ","
+                     << "\"name\":\"" << simulador::EscapaJson(cargo.GetNomeNeutro()) << "\","
+                     << "\"digits\":" << static_cast<unsigned>(cargo.GetNumeroDigitos()) << ","
+                     << "\"tipo\":\"" << tipo << "\"";
+                if (cargo.IsProporcional()) {
+                    json << ",\"legendaDigits\":2";
+                }
+                json << '}';
+                json << ",\"candidates\":" << ListaCandidatos();
+            }
+        } catch (...) {
+            json << ",\"candidates\":[]";
+        }
+        json << '}';
+        return json.str();
     }
 
 private:
@@ -136,9 +375,19 @@ extern "C" void votaPressKey(const char* tecla)
     Engine().PressKey(tecla);
 }
 
+extern "C" int votaTick(void)
+{
+    return Engine().Tick();
+}
+
 extern "C" void votaSetAudioEnabled(int habilitado)
 {
     Engine().SetAudioEnabled(habilitado);
+}
+
+extern "C" const char* votaGetStateJson(void)
+{
+    return Engine().GetStateJson();
 }
 
 
@@ -169,4 +418,28 @@ int main()
         simulador::EmitEvent("vota:ready", "{}");
     });
     return 0;
+}
+
+void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+{
+    api::SMessage mensagem;
+    mensagem.m_tipo = 9;
+    mensagem.m_fila = &fila;
+    fila.Insert(mensagem);
+}
+
+void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+{
+    api::SMessage mensagem;
+    mensagem.m_tipo = 1;
+    mensagem.m_fila = &fila;
+    fila.Insert(mensagem);
+}
+
+void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila)
+{
+    api::SMessage mensagem;
+    mensagem.m_tipo = 5;
+    mensagem.m_fila = &fila;
+    fila.Insert(mensagem);
 }

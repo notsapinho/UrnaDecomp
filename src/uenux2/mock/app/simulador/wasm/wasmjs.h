@@ -9,5 +9,6 @@ namespace simulador {
 void EmitEvent(const char* nome, const std::string& detalhe);
 void PushKey(const std::string& tecla);
 void ConsoleError(const std::string& mensagem);
+std::string EscapaJson(const std::string& texto);
 
 } // namespace simulador

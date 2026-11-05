@@ -508,7 +508,9 @@ What the build lists after the meter is for the reviewer:
   ours), `target-object` (the address of a target object the symbol file names, from 64 KiB, or the low word of a
   packed string view) and `past-table` (a value in the target's table, past the end of ours). Thousands of
   legitimate integers fall inside our own data range (OpenSSL's error codes such as 786688), so that range is not
-  listed. The warnings are all in upstream library functions built from their own sources.
+  listed. The warnings are in upstream library functions built from their own sources, and in two TSE functions whose
+  number no TSE source writes: 11172's 1341440, the bit mask clang builds for a switch over enumerators (unit 179), and
+  9543's 65836, which comes with the minizip code inlined into it (`zipOpen64`, unit 06).
 
 What no check here rejects, so a reviewer of a TSE function reads it in the source:
 

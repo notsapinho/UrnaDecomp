@@ -3,10 +3,10 @@
 // that the class links. Its body is NOT the target's. What it waits for:
 // - vota::impl::CSincronismoVotoEleitor::Sincroniza 7174 (slot 2), 3288 B: it holds the records of
 //   csincronizavota.cpp's vota::(anonymous namespace)::SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (lines
-//   290 and 303), so it calls into that file, and of the 48 functions it calls (imports aside) fns 1551, 1692, 1701,
-//   2369 and 2826 have no name and no match (3789 and 3790 match now: unit 109; 2543 is written, unit 98, with neither
-//   yet). Its stub, which sat at csincronizavota.cpp:287, goes
-//   with this trap.
+//   290 and 303), so it calls into that file, and of the 48 functions it calls (imports aside) fns 1551, 1692, 1701 and
+//   2826 have no name and no match (3789 and 3790 match now: unit 109; 2369 too: unit 170's
+//   vota::CTelasVota::IncrementaBarraSincronismo; 2543 is written, unit 98, with neither yet). Its stub, which sat at
+//   csincronizavota.cpp:287, goes with this trap.
 #include "app/vota/eleitor/csincronismovotoeleitor.h"
 
 namespace vota {

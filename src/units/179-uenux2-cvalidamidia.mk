@@ -91,18 +91,39 @@
 #   target's br_table, '#', '?', '@' 13 over 54 rows (6 inserted, 6 deleted) in the whole link. ConteudoIncializacao's
 #   test through a switch in a helper (IndependeDoTurno) compiles to the target's
 #   bit mask 1341440.
-# - 11172: written with the turn tested first, `turno != TURNO_1 && turno != TURNO_2 && (aplicativo == eAplicativo07
-#   || ... || aplicativo == eAplicativo15)`, clang's code (the object, wasm-objdump -d, before binaryen) tests 16 and
-#   17, then 7 to 10, then 15 apart, the target's three tests; with the applications first (this fragment's earlier
-#   form) it folds 15 in with the others, and a switch over the seven cases gives a bit mask (231296). In
+# - 11172: the applications tested in an outer if, `aplicativo == eAplicativo07 || ... || aplicativo == eAplicativo15`
+#   (07 to 10, 16, 17, 15), and the turn in an inner one, `turno != TURNO_1 && turno != TURNO_2`: clang's code (the
+#   object, wasm-objdump -d, before binaryen) tests 16 and 17, then 7 to 10, then 15 apart, the target's three tests,
+#   then the turn. The turn and the applications in one condition, the turn first (this fragment's earlier form),
+#   give the turn's test, then the same three, and the same opcodes after binaryen (0 rows inserted or deleted), but
+#   the debug loop and the list's destruction take the locals of two parameters the other way round: the loop's
+#   iterator is local 0 and its end local 2 in that object, where the target's final code has the iterator in local 2
+#   and the end in 0, and the whole link read 116 over 1019 rows, 19 of them local numbers. With the outer if the
+#   object has them in 2 and 0, and the whole link gives 97 over 1019 rows (97 operand-only, 0 inserted, 0 deleted;
+#   pnpm wasm score after make -C src link-map), every row a call, a data address, the format string's packed i64 or
+#   a table slot; splat-remap --no-kinds prints IDENTICAL. Why, a reading: those locals are the result pointer's (0)
+#   and the application's (2), both dead by then, and clang's register coloring gives the loop variables the one it
+#   ranks first by its uses weighted by block frequency (-mllvm -print-before=wasm-reg-coloring prints the uses and
+#   the branch probabilities), which the application's tests ahead of the turn's raise. In scratch variants of the
+#   earlier form, `DepuraInfo("ap %d %d", aplicativo, aplicativo + 1)` ahead of the list (two more uses of the
+#   application alone) swaps the two locals the same way, and `DepuraInfo("%d", aplicativo)` (one) does not.
+#   Valida's code in the object is the same with the list in the order 16, 17, 07 to 10, 15, and with the list in
+#   three parenthesized groups (07 to 10, 16 and 17, 15). Other forms give other tests in the object: the applications
+#   and the turn in one condition, the applications first, an or of the three tests in one block
+#   (`(a & 30) == 16 | a == 15 | a - 7 < 4`, after the turn's), and with 15 next to 16 and 17 in the list two range
+#   tests (15 to 17, 7 to 10); 15 next to 16 and 17 in the outer if or after the turn, or a switch over the seven
+#   cases, a bit mask (231296); `!(turno == TURNO_1 || turno == TURNO_2)` the turn as `turno - 49 < 2`. In
 #   ConteudoIncializacao, an early return of the empty list, then the list and the switch, gives the target's blocks
 #   (the empty list's stores first, where the if-block around the switch put them last), and the cases in the order
 #   16, 17, 15 give the target's br_table [6 6 6 6 0 0 0 0 3 1 2 0 5 4]: in the order 15, 16, 17 clang lays the blocks
 #   out in that order ([... 1 2 3 ...]). Measured in the whole link (pnpm wasm score after tools/round/link-map.sh):
 #   146 over 1040 rows (21 inserted, 21 deleted) before, 106 over 1023 (4 inserted and 4 deleted, all in Valida's own
-#   test) with the early return, 116 over 1019 (0 inserted, 0 deleted) with the turn test and the case order as well.
+#   test) with the early return, 116 over 1019 (0 inserted, 0 deleted) with the turn test and the case order as well,
+#   97 over 1019 with the outer if (above).
 #
-# Matched: GetInst (5575), now that slot 5's std::format is defined above it (the variant measurement this fragment
+# Matched: Valida (11172), with the outer if above, named by srcloc-anchor (the record of the ConteudoIncializacao it
+# holds inlined), its calls of 5574 named by a hand line (below); GetInst (5575), now that slot 5's std::format is
+# defined above it (the variant measurement this fragment
 # held: a TU emits the format code first) and it matches by its record (srcloc-anchor); its mutex's exit destructor
 # (11165), matched by the scan's content pass, its operand the mutex GetInst's match names; slots 4, 5, 6, 7 and 9
 # (11171, 11170, 11169, 11168, 11166, named by vtable, 11171 by pair-addr); ConteudoValido (2784) and ValidaConteudo
@@ -128,16 +149,6 @@
 # function-local static as month_map is (a reading).
 # docs/reference/facts/libraries.md B7's 1.89.0 column reads the same with either probe.
 # Not matched, written, and what each waits for (pnpm wasm score after link-map):
-# - Valida (11172), differs, `116 over 1019 rows (116 operand-only, 0 inserted, 0 deleted)`: the forms above; its
-#   rows that are no call or data address are the std::format string's packed address (an i64, twice), two small
-#   constants read as table slots (__cxa_throw's destructor and a function pointer the format code stores: a reading),
-#   and 19 local numbers after ConteudoIncializacao's code (in the debug loop the target keeps the iterator in local 2
-#   and the end in local 0, ours in 0 and 1; in the list's destruction locals 0 and 2 swap): not explained. Tried with
-#   no change of score: the
-#   result and the list not const, the reason copied to a local, `if (resultado.m_motivo < 4) return resultado;` first,
-#   ConteudoIncializacao's condition written out without IndependeDoTurno, and this unit's two objects in the other
-#   order (docs/reference/facts/codegen.md C4); worse, a const_iterator loop (117 over 1020) and an index loop (151 over
-#   1044). Step 8 names it by srcloc-anchor now, and its call names 5574 (below).
 # - RemoveArquivosDeSistema (5571) matches, with this file built with strict aliasing (src/Makefile's UENUX2_TBAA_DIRS
 #   lists it; docs/reference/facts/app-flags.md F6). Without it, `394 over 992 rows (311 operand-only, 42 inserted, 39
 #   deleted)`: the frame, the names' order and the order their buffers are freed are the target's (allocation 13 down
@@ -152,8 +163,17 @@
 #   sha256), then in place on the whole tree with the file in the list: 5571 matches, no other row moves, none is
 #   lost (12251 to 12252). Its callers match all the same, as its name comes from their calls (5572 and slot 9, both
 #   matched).
-# - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h): named now by
-#   Valida's call vote (`call by:11172`), and the word (.data, -1) still has no target name.
+# - the priority-6 debug wrapper of this file (5574), unresolved on its word (api/util/uedebug.h). Valida is its one
+#   target caller (twice, ledger/callgraph.tsv), so its generated name, `call by:11172`, is self-voted, and Valida read
+#   `unresolved self-voted` on it. A callers+content hand line of splat/symbol_addrs.txt names it from its own body,
+#   f2921(p0, p1, 6, 1577092): priority 6, and a word that no other target function loads, in this object's data
+#   between IValidaMidia's typeinfo and GetInst's push record, at the distances our link gives them. Removed alone, with
+#   Valida's match line out of the copy, two scans leave Valida `unresolved self-voted` and splat-build gives the
+#   target's sha256 with 12579 matches: Valida rests on it. The word (.data, -1) has no target name: 5574 alone loads
+#   it, so no vote names it, its four bytes occur 65+ times (the scan's detail), and no hand line may, since its one
+#   use would be the match the line enables (docs/reference/splat.md section 3, "No circular evidence": its sentence
+#   names a .bss object no target function but the match reads; this word is .data, and the reasoning is the same),
+#   and 5574 stays unresolved.
 #
 # Chosen: every name but the records' (ConteudoIncializacao, CFabricaConteudoMidiaStart, GetInst, the classes RTTI
 # names): the slots' (EhValida, Valida, ContemApenasArquivosPermitidos, ContemResultado, ContemArquivosResultado,
@@ -161,7 +181,8 @@
 # ConteudoValido, RemoveArquivosDeSistema, ArquivosPermitidos, ArquivosDeSistema, IndependeDoTurno, CasamTodos,
 # CasaPadrao, CCasaNome, DiretorioContemApenas, CasaRegex, CasaCaractere, FindRegexPosition), SResultadoValidacao and
 # its members, EAplicativosDeUrna's enumerators,
-# EUeComumValidaMidiaError's enumerator; the slots' types beyond their wasm widths (bool for the words slots 4 to 8
+# EUeComumValidaMidiaError's enumerator; the order and grouping of Valida's application list (the forms above that
+# give its object); the slots' types beyond their wasm widths (bool for the words slots 4 to 8
 # return, unsigned and char for slot 5's, read from its format's argument types); that the slots are pure in
 # IValidaMidia (src/units/README.md "Pending members") and non-const; the paths of cvalidamidia.h,
 # cfabricaconteudomidiastart.h, euecomumvalidamidiaerror.h and eaplicativosdeurna.h and EAplicativosDeUrna's scope;

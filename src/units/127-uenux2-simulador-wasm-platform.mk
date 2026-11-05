@@ -83,7 +83,12 @@
 #   -mllvm -memdep-block-number-limit= 2, 5, 20, 50 or 100, with -memdep-block-scan-limit=5, with GVN off
 #   (-opt-disable=gvn) or with its load PRE off (-enable-load-pre=false), and 1 at -Os; 3 with the substr as
 #   std::string(caminho, 17), the prefixes as std::string_view, the test as a lambda, or a non-const path given to
-#   push_back, and 4 with the images' substr written twice. What keeps the target from reusing the values is not found.
+#   push_back, and 4 with the images' substr written twice. Counted in the object as well, the rest of the file as
+#   landed (size, flag signed and unsigned, data; the form written 5, 4 and 2, 7 there, the target's 2626 5, 5 and 1,
+#   6): the prefix passed as a const char* and built into a std::string inside ComecaCom, 3, 3 and 1, 5; both prefixes
+#   named const std::strings at Candidatos' top, 3, 5 and 0, 7; ComecaCom over two std::string_views, 3, 2 and 2, 5;
+#   each test held in a named const bool gives the function written. What keeps the target from reusing the values is
+#   not found.
 #
 # EnviarMensagem: the cases and the answers are the target's (its br_table on the message less 6, and each block's
 #   constants). The order of the case bodies is measured: in value order the blocks come out in another order (108 over

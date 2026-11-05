@@ -1638,8 +1638,8 @@ before the commit, with:
   `names.tsv`'s object column names one per new match line, but a binaryen merge's (`<binaryen>`), whose records are in
   the objects it merges, and a file no unit compiles has no object (a missing one stops the tool): leave both out. It
   must report 0 records that are not the target's
-  (`build/out/app/uenux2/src/api/util/cgenerictags.cpp.o build/out/app/33-uenux2-cgenerictags-roots.o` for unit 33: `1
-  source_location records in 2 objects (1 files): 1 are records of the target; …`). A landed unit's other objects can
+  (`build/out/app/uenux2/src/api/util/cgenerictags.cpp.o` for unit 33, whose source unit 95's list compiles: `9
+  source_location records in 1 objects (1 files): 9 are records of the target; …`). A landed unit's other objects can
   hold records of unmatched functions that were already off, so `--strict` over a whole landed unit may never pass;
   show those objects unchanged instead (the object comparison of [agents.md](agents.md) "Shared build outputs"). An
   object of a landed unit that yours extends passes when `--strict` lists the same off records on it as on the base's

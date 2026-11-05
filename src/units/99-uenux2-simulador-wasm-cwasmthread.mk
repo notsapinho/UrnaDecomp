@@ -1,7 +1,7 @@
 # uenux2 simulador::CWasmThread, the wasm build's api::IThreadImpl, in
-# src/uenux2/mock/app/simulador/wasm/cwasmthread.cpp (+ cwasmthread.h), with the three wrappers of EM_JS functions in
-# wasmjs.cpp (+ wasmjs.h). Paths relative to src/uenux2; the generic uenux2 rule compiles mock/ too and depends on the
-# source and every uenux2 header.
+# src/uenux2/mock/app/simulador/wasm/cwasmthread.cpp (+ cwasmthread.h), with the three wrappers of EM_JS functions and
+# simulador::EscapaJson in wasmjs.cpp (+ wasmjs.h). Paths relative to src/uenux2; the generic uenux2 rule compiles mock/
+# too and depends on the source and every uenux2 header.
 #
 # CWasmThread:
 # - Wait (target fn 9652, slot 3) and Yield (fn 9651, slot 5) match, with the global destructor of s_contextos (fn 9662,
@@ -45,12 +45,23 @@
 # since Create's record at line 31 leaves cwasmthread.cpp little room above it; our link's order of the objects is not
 # the target's. Chosen too: every name, wasmjs.* as the path, namespace simulador, and that the wrappers take const
 # char* for the event's name (a literal in both callers). `.data()` for `.c_str()` gives the same three functions.
-# EmitEvent has one caller in our link (9018 is a trap), and the roots' address keeps it out of line: binaryen inlines a
-# function for having one call only when the table does not hold it (the target's table does, slot 59).
+# EmitEvent's direct caller in our link is a trap (9018); unit 170's 10619, 10857 and 10384 reach it by table slot, and
+# the roots take its address for 7840 (votaInit), not written. binaryen inlines a function for having one call only when
+# the table does not hold it (the target's table does, slot 59). EscapaJson (target fn 9640, 1083 B, matched): the JSON
+# escape of a std::string through a std::ostringstream: a backslash before `\` and `"`, the letter escapes of \b, \f,
+# \n, \r and \t, `\u` and four hex digits for the other control bytes, `\u00` (literal 357653) and two hex digits for
+# the bytes from 0x80. Its two target callers, the executable TU's 5500 and 10857, invoke it through table slot 94 (unit
+# 170 writes both). No record names its file. Its body has no landing pad, where the executable TU's -fexceptions code
+# invokes the stream's members (unit 170's EstadoJson, 5500, does), so it is the code of a TU built without -fexceptions
+# (a reading); that it is wasmjs.cpp's is a reading of use band 1: 9640 sits below ConsoleError (9646) and PushKey
+# (9649), wasmjs.cpp.o's, with RHVoice objects' rows between, the band's index running in reverse link order, so it is
+# defined after them, last in the file (our ld_index: PushKey 8105, ConsoleError 8106, EscapaJson 8107). Chosen: the
+# name, the namespace, the parameter and result types, the switch and the order of its cases, and the names of the
+# locals. It matches at this directory's flags (strict aliasing).
 CWASMTHREAD_SRCS := mock/app/simulador/wasm/cwasmthread.cpp mock/app/simulador/wasm/wasmjs.cpp
 UENUX2_SRCS += $(CWASMTHREAD_SRCS)
-# nothing reconstructed builds a thread, and of the wrappers the executable TU calls only PushKey yet (unit 170):
-# 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps them (see the file header)
+# nothing reconstructed builds a thread, and votaInit (7840), which reaches EmitEvent by table slot too, is not written:
+# 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps the vtable and EmitEvent's address (see the file header)
 $(ROOT)/$(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o: $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o

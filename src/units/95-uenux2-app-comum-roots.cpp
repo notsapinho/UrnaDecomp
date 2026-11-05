@@ -2,7 +2,8 @@
 // from several functions (ledger/callgraph.tsv: 275 from 1501 1836 3333 4682 4687 6737 7174 12098, 680 from 1836 4657
 // 7174, 347 from 1164 3798 5876 6045, 5900 from 4625 5901, 3830 from 4625 5890 5892), none of them reconstructed yet but
 // 5901 (CPacoteArquivos::TrataErroPacote, written in cpacotearquivos.cpp: the stand-ins for 5900 stay for 4625), 5890
-// (comum::ValidarUE, written in iinterfacesavd.cpp: the stand-ins for 3830 stay for 4625 and 5892), 1164
+// and 5892 (comum::ValidarUE and IInterfaceSavd::VerificarArquivo, written in iinterfacesavd.cpp: the stand-ins for
+// 3830 stay for 4625), 1164
 // (CArquivosSavd::GetInst: the stand-ins for 347 stay for 3798, 5876 and 6045) and 1501, 1836, 4657, 4682 and 4687
 // (units 165 and 205, and 205's 3333: the stand-ins for 275 and 680 stay for 6737, 7174 and 12098), and none through the table. TrataErroPacote (fn 5901) itself has one caller in the target, 4625, which calls it twice.
 // Two noinline callers with different bodies give each two call sites, so binaryen keeps its body out of line, and they
@@ -21,6 +22,7 @@ void w3831_root_0(int, int, int) __asm__("_ZN5comum18MontaRequisicaoTLVERKNSt3__
 int w5891_root_0(int, int, int, int, int) __asm__("_ZN5comum14IInterfaceSavd14AssinarArquivoENS_10ESavdAplicEihi");
 void w5889_root_0(int, int, int) __asm__("_ZN5comum13EnviarAcaoHSMERNS_14IInterfaceSavdENS_10ESavdAplicENS_11ESavdCmdHSME");
 void w5905_root_0(int, int) __asm__("_ZN5comum16DescricaoArquivoENS_14ESavdArquivoUEE");
+int w5892_root_0(int, int, int, int, int) __asm__("_ZN5comum14IInterfaceSavd16VerificarArquivoENS_10ESavdAplicEjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_");
 }
 
 namespace {
@@ -78,7 +80,7 @@ __attribute__((noinline)) int EnviaDuas(int savd, int codigo, int requisicao, in
     return w3830_root_0(savd, codigo, requisicao, dados) + w3830_root_0(savd, codigo + 8, requisicao + 8, dados + 12);
 }
 
-// stands for fns 4625 and 5892, which pass MontaRequisicaoTLV a key of their own
+// stands for fn 4625, which passes MontaRequisicaoTLV a key of its own (5892, which passes its parameter, is in the link)
 __attribute__((noinline)) void MontaRequisicoes(int saida, int pacote, int chave)
 {
     w3831_root_0(saida, pacote, chave);
@@ -119,6 +121,13 @@ __attribute__((noinline)) void DescreveDoisArquivos(int descricao, int arquivo, 
     w5905_root_0(descricao + 12, outro);
 }
 
+// stands for fn 4625, the other target caller of VerificarArquivo (5892) besides 11179's inlined ValidarUE: it
+// passes the ESavdAplic and the key it reads from its object (+32 and +24), so every argument is passed through
+__attribute__((noinline)) int VerificaArquivo(int savd, int aplic, int chave, int pacote, int arquivo)
+{
+    return w5892_root_0(savd, aplic, chave, pacote, arquivo);
+}
+
 void* volatile w95_sink;
 
 struct SW95Roots {
@@ -139,6 +148,7 @@ struct SW95Roots {
         w95_sink = reinterpret_cast<void*>(&EnviaAcoesHSM);
         w95_sink = reinterpret_cast<void*>(&DescreveArquivo);
         w95_sink = reinterpret_cast<void*>(&DescreveDoisArquivos);
+        w95_sink = reinterpret_cast<void*>(&VerificaArquivo);
     }
 } w95_roots;
 

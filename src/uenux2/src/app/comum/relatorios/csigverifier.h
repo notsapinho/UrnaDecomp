@@ -11,7 +11,7 @@ namespace comum {
 /**
  * Valida no SAVD a assinatura do arquivo de um relatório antes que ele seja impresso.
  */
-// Recovered: the constructor, the members it sets and Verify's signature (record csigverifier.cpp:32). The destructor
+// Recovered: the constructor, the members it sets and Verify (record csigverifier.cpp:32, fn 11179). The destructor
 // is implicit: the target's callers inline it, and its vtable slots (fns 11178, 11176) hold the compiler's bodies.
 // Those store no vptr, which clang leaves out of a destructor that destroys members only when the class is final. The
 // member and parameter names are not in the target. Verify passes m_aplic to comum::ValidarUE, with m_diretorio joined
