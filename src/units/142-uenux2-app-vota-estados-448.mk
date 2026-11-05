@@ -77,10 +77,12 @@
 #   rows not operands read as following from the builder's construction, which the target clears in place (12 bytes at +104 of the frame) where
 #   ours calls api::CMTFormBuilder's constructor (fn 203's body) and keeps its result in a local, as unit 104's 10214
 #   does: of the seven target callers of GetForm (1694; `grep -rlE 'call 1694( |$)' build/out/splat/pieces/asm`), only
-#   10204 calls fn 203; 1150 clears the builder in place, as unit 104's fragment reads 10214, 4633 and 5341 doing and
-#   unit 165's reads 5343 doing (and unit 161's 10676, written, does), where 88 other target functions call 203. That remainder is not explained. No vote names 1150 (its callers are vtable slots or not written,
-#   and its body anchors nothing), so a hand line names it by `rtti-vptr`: it alone holds the class's address point
-#   1593008. 5394, 10407 and 10523 (unit 152's) match through it.
+#   10204 calls fn 203; 1150 clears the builder in place, as 10214, 4633, 5341, 5343 and 10676 do, where 88 other target
+#   functions call 203. Those callers' builder is api::CMTFormBuilderBase, whose constructor is inline
+#   (api/gui/cmtformbuilder.h), over which 10214, 5341, 5343 and 10676 match; 1150's source still builds an
+#   api::CMTFormBuilder, and 1150 is not measured over the base. No vote names 1150 (its callers are vtable slots or not
+#   written, and its body anchors nothing), so a hand line names it by `rtti-vptr`: it alone holds the class's address
+#   point 1593008. 5394, 10407 and 10523 (unit 152's) match through it.
 # - Its statics' exit destructors, 10429 (the std::unique_ptr at 1909316) and 10428 (the std::mutex at 1909292), match:
 #   their .bss names come from two `callers+content` hand lines, each resting on 1150's use of the address. The statics
 #   are defined after GetInst, s_inst first: 10429 lies above 10428 in their use band, so it links first.

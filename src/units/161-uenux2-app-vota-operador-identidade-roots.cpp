@@ -15,9 +15,9 @@
 //   GetInst, which vota::CValidaIdentidade::StartState (10627, unit 278's) holds.
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
-//   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
-//   10430, and the ones the stand-in's comment names are in the link). A stand-in goes when the target callers it names
-//   are in splat/matched.txt or written in the link.
+//   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451; 10452 is in the link). A stand-in goes when
+//   the target callers it names are in splat/matched.txt or written in the link. CPedeIdentidade::GetInst (652) needs
+//   none: its last target caller that was not in the link, 10209 (CSincronismoOperador::ProcessKey, unit 104), is.
 // - vota::CControlaReconhecimento::GetInst (fn 1256): its target callers are 10425, 10474, 10486 and 10500; 10474 and
 //   10486 (unit 282's) are in the link and drop the result, as 10425 does, while 10500 (unit 239's, in the link) stores
 //   it as its next state. The stand-in stands for 10425 and drops the result, as 10425 does: its read of the result
@@ -35,10 +35,6 @@
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/confirmaidentidade/ccontrolareconhecimento.h"
 
-extern "C" {
-int w161_pede_identidade() __asm__("_ZN4vota15CPedeIdentidade7GetInstEv");
-}
-
 namespace {
 
 using vota::CControlaReconhecimento;
@@ -50,16 +46,6 @@ __attribute__((noinline)) int CancelaUm()
     CLogVota& log = CLogVota::GetInst();
     log.LogaHabilitacaoCanceladaCapturaDigitalMesario();
     return 71;
-}
-
-// Stands for CPedeIdentidade::GetInst's (fn 652) other target caller, 10209 (in the link: 10590, unit 283's; 10443,
-// unit 161's; 10689, unit 277's list's CEscolheOpcao::ProcessInput; 10447, unit 161's; 2295, the body binaryen merges from the five
-// states' slot 7, 10452 and 10626, units 161, 221, 278, 283 and 277; 10217, 10404, 10435, 10527, 10646 and 10762, units
-// 165, 152, 152, 281, 104 and 119; 10588 and 10624, units 174's and 161's; and 10718, 10721, 10731, 10734 and 10751,
-// unit 277's).
-__attribute__((noinline)) int PedeIdentidade()
-{
-    return w161_pede_identidade() + 89;
 }
 
 // Stands for 10425, which drops the result.
@@ -75,7 +61,6 @@ struct SW161Roots {
     SW161Roots()
     {
         w161_sink = reinterpret_cast<const void*>(&CancelaUm);
-        w161_sink = reinterpret_cast<const void*>(&PedeIdentidade);
         w161_sink = reinterpret_cast<const void*>(&ControlaReconhecimento);
     }
 } w161_roots;

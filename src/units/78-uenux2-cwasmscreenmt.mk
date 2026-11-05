@@ -67,7 +67,7 @@
 CWASMSCREENMT_SRCS := mock/app/simulador/wasm/cwasmscreenmt.cpp src/api/gui/cbeepfieldmt.cpp src/api/gui/cbuzzfieldmt.cpp \
     src/api/gui/cclockfieldmt.cpp src/api/gui/cpreshowclearmt.cpp
 UENUX2_SRCS += $(CWASMSCREENMT_SRCS)
-# nothing reconstructed creates the screen yet (unit 31's CMTFormBuilder creates CPreShowClearMT, fns 1694 and 301):
+# nothing reconstructed creates the screen yet (unit 31's MT builders create CPreShowClearMT, fns 1694 and 301):
 # 78-uenux2-cwasmscreenmt-roots.cpp keeps the vtables, std::string::assign and the control blocks the way the target
 # reaches them; it reads the classes' headers
 $(ROOT)/$(APP)/78-uenux2-cwasmscreenmt-roots.o: $(ROOT)/src/units/78-uenux2-cwasmscreenmt-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/78-uenux2-cwasmscreenmt.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.h

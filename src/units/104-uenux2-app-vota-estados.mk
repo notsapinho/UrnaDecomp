@@ -114,15 +114,38 @@
 #   out_of_range call is the one Read()'s bounds check throws through, as the target's block shows, where a test of
 #   size() and front() leaves an if (52 over 299); with all three, 48 over 299, all operand-only. Same object function
 #   (wasm-objdump of a --symbols try, masked): std::any_of with an int lambda `c < '0' || c > '9'`.
-# - vota::CFinalizaOperador::StartState (fn 10214) is written and differs: 128 over 307 rows (97 operand-only, 8
-#   inserted, 17 deleted), the rows not operands read as following from the builder's construction. Ours calls
-#   api::CMTFormBuilder's constructor (out of line in api/gui/cmtformbuilder.cpp, unit 31, one body with fn 203) and
-#   keeps the object's address in a local; the target clears the 12 bytes in place, as fns 5341 and 4633 do, while 88
-#   other target functions call fn 203 (ledger/callgraph.tsv). That remainder is not explained. The form is built in a
+# - vota::CFinalizaOperador::StartState (fn 10214), a match. Its builder is an api::CMTFormBuilderBase, the class whose
+#   constructor is inline (api/gui/cmtformbuilder.h has the evidence: six of GetForm's seven target callers clear the
+#   builder's 12 bytes in their frame and call no constructor). Measured with pnpm wasm score in the whole link: over
+#   api::CMTFormBuilder, whose constructor is out of line (one body with fn 203), 128 over 307 rows (97 operand-only, 8
+#   inserted, 17 deleted); over the base, 21 over 299, every row a call or a data address. The form is built in a
 #   file-static helper and its slot 2 called on the returned temporary, so the builder is destroyed before the form is
 #   shown and the form released before m_pNextState is stored, the target's order; a named local of the form gave 136
-#   over 310 rows (11 inserted, 20 deleted). The helper's name and its linkage are chosen; the points SPoint{20, 1}
-#   and {20, 3} are the two words the target stores (65556, 196628). Unit 142's 1150 clears its builder in place too.
+#   over 310 rows (11 inserted, 20 deleted), measured over api::CMTFormBuilder. The helper's name and its linkage are
+#   chosen; the points SPoint{20, 1} and {20, 3} are the two words the target stores (65556, 196628).
+# - vota::CSincronismoOperador::ProcessKey (fn 10209, slot 6, in csincronismooperador.cpp after StartState: 10210 lies
+#   above 10209 in use band 1), a match, with fn 5341, the screen it shows on keys 14 and 15. The target's br_table on
+#   the key less 1: on 1, when the +11 byte is 1, vota::CEleitorVotouNaoVotou's state (fn 1901, called twice: its +11
+#   set to 1, then the state) unless comum::CAppInfo::EhTreinamentoEleitor (fn 697) holds, else CPedeIdentidade's (fn
+#   652); when the byte is not 1, CDesabilitaAudioEleitor's (fn 5393) if CEstadoAudio::GetInst()'s +4 (fn 509) is not 2
+#   (CEstadoAudio::Ativo), else CPedeIdentidade's; on 14 and 15, fn 5341 with 2 and 1, and this state. m_pNextState is
+#   stored once, after a block whose result each of those paths gives, and not at all for the other keys. Measured with
+#   pnpm wasm score in the whole link: the next state in a local stored after the switch, whose default returns, 9 over
+#   53 rows, every row a call; an assignment in each branch with a default that breaks, 25 over 61 rows (15 replaced, 6
+#   operand-only, 8 inserted, 2 deleted). The bool member gives the target's compare with 1. Fn 5341 builds an
+#   api::CMTFormBuilderBase in its frame (cmtformbuilder.h): AddLed(2), then "FALHA NA ME: SUBSTITUA A ME" and "ÚLTIMO
+#   VOTO FOI COMPUTADO" for 1, else "FALHA NA MI: SUBSTITUA A URNA" and "ELEITOR DEVE VOTAR NOVAMENTE", at {20, 1} and
+#   {20, 3}, centred, and shows the form of GetForm("") through its slot 2, held in a named local: the "" temporary is
+#   destroyed before the slot's call, the form before the builder. 36 over 450 rows, every row a call or a data address;
+#   over api::CMTFormBuilder, whose constructor is out of line, 86 over 458 (57 replaced, 55 operand-only, 8 inserted,
+#   21 deleted). It reads no state of the class, so it is a free function; its name, its int parameter and its being in
+#   the file's anonymous namespace (ours keeps it out of line, as the target does: two calls) are chosen, and so are the
+#   local's spelling, the cases' `break` and `return`, and EhTreinamentoEleitor for the training test. Its file is its
+#   one caller's, a choice the band does not contradict (docs/how-to-decompile.md step 3, rule 5): in use band 2 it lies
+#   below CFinalizaOperador::GetInst (5342, cfinalizaoperador.cpp's) and above RHVoice's bodies, so its object links
+#   after cfinalizaoperador.cpp's, as csincronismooperador.cpp's does in ours; its stub in src/uenux2/unplaced.cpp went.
+#   10209's trap left 104-uenux2-app-vota-estados-pending.cpp, and with it the stand-ins of units 152's and 161's roots
+#   that stood for its calls of 5393 and 652 (units 71's and 109's stay for their other callers).
 # - vota::CSincronismoOperador::StartState (fn 10210, in csincronismooperador.cpp, after the statics, a chosen line) is
 #   written and differs, in local numbers only. It holds comum::CEleitores::MarcaVotou (records celeitores.cpp:456 and
 #   460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp's) inlined

@@ -1,6 +1,6 @@
 // api::CPaperFormBuilder; the file is chosen, see cpaperformbuilder.h. Target functions of this file:
 //   193, 604  AddTextField   over a CFixedText, over a CDataText of a function
-//   198       AddNewLine     thunk into 3890, binaryen's one body for this and CMTFormBuilder's AddLed and AddBeep
+//   198       AddNewLine     thunk into 3890, binaryen's one body for this and CMTFormBuilderBase's AddLed and AddBeep
 //   1264      AddCut
 //   2775      AddQRCode      with CQRCodeImageFieldPaper's constructor inlined by binaryen; the name is chosen
 //   357       Build          GetForm's form, after which the builder's vector is emptied: the target calls GetForm (fn

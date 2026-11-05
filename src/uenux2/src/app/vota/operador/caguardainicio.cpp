@@ -21,7 +21,7 @@ namespace {
 
 std::shared_ptr<api::IForm<api::IScreenMT>> MontaTelaAguardaInicio()
 {
-    api::CMTFormBuilder builder;
+    api::CMTFormBuilderBase builder;
     const std::string aplicacao = std::format("{}: {}", api::CApplication::s_aplicacao, api::CApplication::s_versao);
     const size_t traco = aplicacao.find('-');
     if (traco != std::string::npos) {

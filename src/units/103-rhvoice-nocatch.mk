@@ -42,7 +42,7 @@
 # - 3473 (decodeCommon) waits no more: it matches since unit 89's ccandidaturas.cpp.o defines
 #   vector<unsigned>::push_back(&&) ahead of asn1.o (unit 89's fragment). document.cpp.o, which defines it too, put
 #   ahead of the runtime, had moved the row to `call 938` and matched nothing.
-# - 3674 waits no more: it matches since unit 31 wrote it (api::CMTFormBuilder::AddField) with its caller 395. With
+# - 3674 waits no more: it matches since unit 31 wrote it (api::CMTFormBuilderBase::AddField) with its caller 395. With
 #   its callers unwritten, it had matched by content only with RHVoice at -fignore-exceptions, where a twin's body is
 #   the target's; userdict.cpp.o alone at -fignore-exceptions does not give it.
 # - 8811: differs past the first local. Not read further. (2706, listed here before, matches from unit 229's root; 194,

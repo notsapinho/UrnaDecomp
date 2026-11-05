@@ -74,7 +74,7 @@
 #   temporary shared (299 over 1687): a by-value class argument's temporary takes a new slot at each call, as
 #   docs/reference/facts/codegen.md C10 measures.
 # - The form: AddClock({33, 1}), "Selecione a opção: " at {1, 1}, one text per option through
-#   api::CMTFormBuilder::AddTextField<COpcaoDS> (cmtformbuilder.h; binaryen holds it inlined behind a 48-byte frame)
+#   api::CMTFormBuilderBase::AddTextField<COpcaoDS> (cmtformbuilder.h; binaryen holds it inlined behind a 48-byte frame)
 #   at the column and line the loop keeps as two ints (1, 2; 1, 3; then 20, 2 and 20, 3), "CORRIGE: retornar" at {1, 4},
 #   "CONFIRMA: prosseguir" at {40, 4} on the right, AdicionaCampoNumerico(builder, 1, true, {20, 1}) and
 #   GetInteractiveForm("", true). The loop's coordinates as an api::SPoint kept in place gave 299 rows; as TPosition

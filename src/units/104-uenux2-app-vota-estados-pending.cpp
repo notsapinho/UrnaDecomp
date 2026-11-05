@@ -15,7 +15,6 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
-#include "app/vota/operador/csincronismooperador.h"
 
 namespace vota {
 
@@ -71,19 +70,6 @@ void CMenuFiltrarCandidatosPorCargo::StartState()
 // api::CInputMenuField::SetFormatString inlined (records cinputmenufield.cpp:156 and 468), which are not written, and
 // it calls fn 5953, which has no body here.
 void CMenuFiltrarCandidatosPorPartido::StartState()
-{
-    __builtin_trap();
-}
-
-} // namespace vota
-
-namespace vota {
-
-// CSincronismoOperador::ProcessKey: fn 10209 (120 B), callee with no body: 5341 (a screen it shows with key 14 or 15,
-// which builds its api::CMTFormBuilder in place, its 12 bytes zeroed with no call of fn 203: the remainder this unit's
-// fragment records for 10214, not explained). 509, 697, 1901 (unit 71's) and 5393 (unit 152's) match; 652
-// (vota::CPedeIdentidade::GetInst, unit 161) matches now.
-void CSincronismoOperador::ProcessKey(uebyte)
 {
     __builtin_trap();
 }

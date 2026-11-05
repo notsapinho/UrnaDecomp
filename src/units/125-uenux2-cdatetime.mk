@@ -19,10 +19,10 @@
 #              469, 328 over 698 and 938 over 1355. 3649 is named by the call votes of 2765 and 5475.
 #              5472 FormatCurrentDate and 5473 FormatCurrentTime, the callbacks cdatetime.h describes, match at the
 #              tree's -O3 with 706 and 779, which they call; at -O2 they were operand-only (3 over 32 and 3 over 30 rows,
-#              the callee rows) and `unresolved`, named by pair-depth0 hand lines. No vote reaches them (their one
-#              direct caller, 11216, has its name by vtable evidence; 5343 is written but does not match, 7787 is
-#              not written): the scan's
-#              content pass finds each, and 11216 matches over them. They sit in band 2 of
+#              the callee rows) and `unresolved`, named by pair-depth0 hand lines. Until 5343 (unit 165's) matched
+#              no vote reached them (their one direct caller, 11216, has its name by vtable evidence; 7787 is not
+#              written): the scan's content pass found each, and 11216 matches over them. 5343, which passes their
+#              slots, names them now (`evidence:table by:5343`). They sit in band 2 of
 #              ledger/ordinals.tsv between 5475 and 5471 (cluster 765, labelled cdatetime.cpp), and are defined after
 #              ConvertFromLocalTime, 5473 first (names.tsv's ld_index); their lines are chosen. The forms, each object
 #              against the target's frame offsets: a named CDateTime and a copy of its date
