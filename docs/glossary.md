@@ -205,13 +205,13 @@ when its sources are under `src/` and a fragment `src/units/<name>.mk` adds them
 `src/Makefile` (the comment above `SKIP_UNITS`).
 
 **placeholder, pending TU** — a landed TU that holds definitions belonging elsewhere.
-`src/units/40-uenux2-cprogressbar-pending.cpp` defines the `CProgressBar` members not reconstructed yet with
-`__builtin_trap()` bodies, because the class's vtable needs them defined; each moves into the real source when
-reconstructed. Such a member has no stub, so its pending file's header is the note that it is left to do. When the
-pending member is the class's key function, the vtable and the implicit members it names are emitted in the pending
-object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds three reconstructed
+`src/units/69-uenux2-cwasmimagesurfaceops-pending.cpp` defines the `simulador::CWasmScreen` member not reconstructed
+yet with a `__builtin_trap()` body, because the class's vtable needs it defined; a pending member moves into the real
+source when reconstructed. Such a member has no stub, so its pending file's header is the note that it is left to do.
+When the pending member is the class's key function, the vtable and the implicit members it names are emitted in the
+pending object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds three reconstructed
 `CStringUtils` functions of `api/util/cstringutils.cpp` (its header says which). *Where:* those files' headers,
-`src/units/40-uenux2-cprogressbar.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
+`src/units/69-uenux2-cwasmimagesurfaceops.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
 
 **stand-in** — two uses. In the benchmark, a hand-written root or stub object (`src/app/*`,
 `src/units/*-roots.cpp`) that also defines a name, which disqualifies that name from deciding a row's setup
@@ -420,12 +420,12 @@ function may still be written and compiled, dropped by the link or inlined into 
 is the `no-candidate` verdict. *Where:* `docs/status.md` "What is left", `docs/reference/splat.md` "Matching a
 function".
 
-**self-voted** — a name whose only vote came from the function being matched, so it proves nothing about that match:
-a data name, or a function's `call` or `table` name whose `by:` list holds that function alone (a name with no `by:`
-list is never read so). A data name holds only if our object's bytes agree with the target's at that address, or
-another holding match uses the name; a function's, only if another holding match calls it or holds a constant the target
-reads as its slot. Otherwise the scan reports `unresolved (self-voted)` and the build `UNCONFIRMED`. *Where:*
-`docs/reference/splat.md` §3.
+**self-voted** — a name whose only vote came from the function being matched, so it proves nothing about that match: a
+data name, or a function's `call` or `table` name whose `by:` list holds that function alone (a name with no `by:` list
+is never read so). A data name holds only if our object's bytes agree with the target's at that address, or another
+holding match uses the name; a function's, only if another holding match calls it or holds a constant the target reads
+as its slot, or the function is a match itself, whose own body confirms the name. Otherwise the scan reports `unresolved
+(self-voted)` and the build `UNCONFIRMED`. *Where:* `docs/reference/splat.md` §3.
 
 **drift** — a match that stops verifying because a source, flag, link-order or toolchain change altered our body. The
 build exits 1 and names each failing match; the fix is the source, or deleting the match line with a reason in the

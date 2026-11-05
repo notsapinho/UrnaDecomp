@@ -142,7 +142,11 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 
 - **What lanes share goes through the board.** A branch is on its own machine until the coordinator fetches it, so
   `git show <branch>:<path>` fails on the other. A header a lane publishes for others goes into the board's `shared/`,
-  and a lane that needs one from the other machine takes it from there.
+  and a lane that needs one from the other machine takes it from there. A verifier whose brief names a lane on the other
+  machine reads that lane's files read-only from its worktree there (`ssh <host> "git -C <worktree> diff <base> HEAD --
+  <paths>"`, into its own scratch) or asks the coordinator to copy them into `shared/`, and never fetches the branch. A
+  lane's result names the files and line ranges it changed outside its unit, which how-to step 10's rule on unlanded
+  branches reads where the branch is not.
 - **Lanes never push.** A lane commits on its branch in its own machine's checkout, and its VERIFY runs on that machine,
   on the lane's worktree.
 - **One machine lands.** The coordinator fetches the other machine's branches over ssh, then merges each confirmed
@@ -189,50 +193,54 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds the objects whose rules name it: `roots_asn1.o` always, the fragment's companions when their rules
-  list it (135 companion rules do, 34 do not), and objects the fragment builds outside `build/out/app/` (fragment 06's
+  list it (not every companion rule does), and objects the fragment builds outside `build/out/app/` (fragment 06's
   13 zlib objects under `build/out/zlib/`). `make -n -C src link -W $PWD/<fragment>` lists them.
 - `-j` goes on the object list only, never on `link` or `splat` ([facts/workflow.md](reference/facts/workflow.md) §W21).
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
-- An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not
-  (the generic rules depend on every header there), the tree's roots object, and the companions whose rules name it:
-  164 compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at 0b5f410
-  ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
-  until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
-  matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a
-  parallel lane builds on), list the objects the edit will rebuild (`make -n -C src link -W $PWD/<file>` for each file
-  added or changed, fragments too), keep a copy of them before the first link or try, and compare each after relinking
+- An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not (the
+  generic rules depend on every header there), the tree's roots object, and the companions whose rules name it: 164
+  compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at 0b5f410
+  ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link until it
+  is fixed. Keep shared headers compiling at every commit. The splat build checks only the matched functions of those
+  units; to show that a restructure left them as they were (a vtable, an inline member a parallel lane builds on), list
+  the objects the edit will rebuild (`make -n -C src link -W $PWD/<file>` for each file added or changed, fragments
+  too), keep a copy of them before the first link or try, and compare each after relinking
   ([facts/workflow.md](reference/facts/workflow.md) §W13 has the commands). An object not in the list compares equal
-  with itself and proves nothing, and the list can miss one: a companion that holds a header its rule omits, and an
-  edit of an `src/asn1` module header (§W15 has the check). A uenux2 header's list is the whole tree: only the objects
-  whose sources include it, directly or through another header, can change, so a reviewer with no copy from before the
-  edit compiles those from `git archive <commit> src` in scratch (§W13 lists them). An object of another unit that the
-  edit changes is named in the commit message, and what that unit's fragment states about it (a score, a form, a type's
-  shape) is measured again and rewritten (5113's score in unit 69, after `SPathCommand` gained constructors): a fresh
-  rebuild against the lane's own objects cannot see it, only the base compile can.
+  with itself and proves nothing, and the list can miss one: a companion that holds a header its rule omits, and an edit
+  of an `src/asn1` module header (§W15 has the check). A uenux2 header's list is the whole tree: only the objects whose
+  sources include it, directly or through another header, can change, so a reviewer with no copy from before the edit
+  compiles those from `git archive <commit> src` in scratch (§W13 lists them). An object of another unit that the edit
+  changes is named in the commit message (one that differs only in the names of a renamed type's instances as a
+  name-only change: §W13, "Reading a `DIFFER`"), and what that unit's fragment states about it (a score, a form, a
+  type's shape) is measured again and rewritten (5113's score in unit 69, after `SPathCommand` gained constructors): a
+  fresh rebuild against the lane's own objects cannot see it, only the base compile can.
 - An include added to a header reaches every TU that includes it, and a header that brings guarded template or inline
   statics adds their initializers to each (`votadefs.h` including `cpaperformbuilder.h` gave every includer
   `api::CFormStack<api::IScreen>`'s `s_forms` and `s_mutex`). Declare what the header's own declarations need (a
   forward declaration for a reference), include the full header in the `.cpp` that uses it, and count the includers'
   `wasm-objdump -x <object> | /usr/bin/grep -c -E '__cxx_global_var_init|_ZGV'` before and after.
-- To check a unit's objects fresh afterwards, move aside every object its worktree built, compile them with the object
-  list, `TMPDIR=/tmp make -C src -j<n> $(make -s -C src print-LINK_OBJS)` (`docs/how-to-decompile.md` step 6 item 4),
-  then run `TMPDIR=/tmp make -C src splat`, which links serially: left to `splat`, they compile one at a time, about
-  eight a minute on the mini (818 after a header edit). `find build/out/app -name '*.o' -newer .git`, run in the
-  worktree, lists them, since the worktree's `.git` file dates from its creation and a cloned `build/out/` keeps older
-  mtimes (§W15); an object listed that does not come back is one no rule of the link makes, a deleted file's or a
-  probe's compiled by hand, and `make -s -C src print-LINK_OBJS` does not name it. Three kinds the list misses, so move
-  them aside by name too: what the `-W` list of an edited fragment names outside `build/out/app/` (fragment 06's zlib
-  objects), a library variant directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in
-  `src/Makefile`), which `TMPDIR=/tmp make -C src libs` rebuilds before the splat build, since the link takes those
-  objects on trust, and, when the range edits `asn1.h` or a `src/asn1/modules/*.h` header, the link objects that hold
-  its mangled names, which make does not rebuild (§W15 has the search). When the range edits `src/Makefile` or a
-  fragment's flags, the list shows what the lane rebuilt, not what the edit changed, and a lane may have set
-  `src/Makefile`'s mtime back: compare the compile lines `make -n -C src link APP=<a new directory>` prints with the
-  base's Makefile (`git show <base>:src/Makefile > <copy>`, then `-f <copy> ROOT=$PWD`) and with the branch's, and move
-  aside every object whose line differs. A lane that keeps `src/Makefile`'s old mtime says so in its result, with that
-  comparison.
+- To check a unit's objects fresh afterwards, move aside every object its worktree built, into a folder of your own that
+  you checked is empty (a `build/out/` cloned from another worktree holds that one's `build/out/verify/`, old objects
+  included), compile them with the object list, `TMPDIR=/tmp make -C src -j<n> $(make -s -C src print-LINK_OBJS)`
+  (`docs/how-to-decompile.md` step 6 item 4), then run `TMPDIR=/tmp make -C src splat`, which links serially: left to
+  `splat`, they compile one at a time, about eight a minute on the mini (818 after a header edit). `find build/out/app
+  -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file dates from its creation
+  and a cloned `build/out/` keeps older mtimes (§W15); an object listed that does not come back is one no rule of the
+  link makes, a deleted file's or a probe's compiled by hand, and `make -s -C src print-LINK_OBJS` does not name it.
+  Three kinds the list misses, so move them aside by name too: what the `-W` list of an edited fragment names outside
+  `build/out/app/` (fragment 06's zlib objects), a library variant directory a change of its build makes (a
+  `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which `TMPDIR=/tmp make -C src libs` rebuilds before the splat
+  build, since the link takes those objects on trust, and, when the range edits `asn1.h` or a `src/asn1/modules/*.h`
+  header, the link objects that hold its mangled names, which make does not rebuild (§W15 has the search). When the
+  range edits `src/Makefile` or a fragment's flags, the list shows what the lane rebuilt, not what the edit changed, and
+  a lane may have set `src/Makefile`'s mtime back: compare the compile lines `make -n -B -C src link APP=<a new
+  directory>` prints with the base's, and move aside every object whose line differs. `ROOT` names the fragments
+  `src/Makefile` includes, so the base's Makefile run with `ROOT=$PWD` reads the branch's fragments and shows no
+  fragment's change: take the base's lines from an archive of the base, `make -n -B -C <dir>/src link APP=<a new
+  directory>` with no `ROOT` ([facts/workflow.md](reference/facts/workflow.md) §W13, item 3 of the batch). A lane that
+  keeps `src/Makefile`'s old mtime says so in its result, with that comparison.
 - A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
   moved main", says what to copy, what to add and where.
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
@@ -269,14 +277,16 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - Never byte-compare an `--emit-symbol-map` build with the target: the map changes the function order of an -Oz
   link ([facts/link-order.md §L1](reference/facts/link-order.md)).
 - Run the Python tools with `python3 -I -B`: `-B` keeps `__pycache__` out of the tree.
-- In zsh, pass flag lists as arrays ([facts/tool-traps.md §X3](reference/facts/tool-traps.md)). zsh does not split an
-  unquoted `$list` into words, and it expands an unquoted glob in an argument (`--include=*.hpp` fails with "no
-  matches found"): quote it. It also reads `:` after a bare parameter as a modifier, so `git show $rev:path` fails
-  with `bad substitution`: write `"${rev}:path"`; in an unquoted heredoc the same stops after the file was truncated. A
-  word that starts with `=` is a command's path: `echo ======` fails with `===== not found`. `for i in $L` runs once,
-  over the whole list, and `em++ $F` passes the flags as one argument: write `${=L}` and `${=F}`. Each of these ends
-  with no output that reads like a result, so check that a file was written before you count it
-  ([facts/workflow.md](reference/facts/workflow.md) §W10).
+- Comment lines in sources, headers, fragments and companions are at most 120 columns. A rename that pushes one past
+  rewraps its paragraph, keeping the paragraph's line count in a compiled file with records below it (or shortening a
+  phrase when the count would grow); a line already past it is rewrapped by whoever edits its paragraph. `git diff -U0
+  <base> -- src | /usr/bin/grep -E '^\+[^+]' | LC_ALL=C awk '{ l = length($0) - 1; if (l > 120) print l }'` lists the
+  added lines past it.
+- In zsh, pass flag lists as arrays ([facts/tool-traps.md §X3](reference/facts/tool-traps.md)): an unquoted `$list` is
+  one word (write `${=list}`), an unquoted glob in an argument is expanded (quote it), `$rev:path` is a modifier (write
+  `"${rev}:path"`), and a word that starts with `=` is a command's path. Each ends with no output that reads like a
+  result, so check that a file was written before you count it ([facts/workflow.md](reference/facts/workflow.md) §W10
+  has each).
 - In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources, with
   `LC_ALL=C` in front too, and exits as if nothing matched, so a negative from it is no evidence.
   Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line

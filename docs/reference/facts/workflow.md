@@ -358,6 +358,18 @@ and an untracked partial copy beside it, `.!<pid>!<file>`, which `git status --s
 valid UTF-8"). Edit a Latin-1 source with a script that reads and writes `latin-1`, check that `file <path>` still says
 ISO-8859 or ASCII, and look for `.!` files in `git status --short` before `git add`; remove one by its full name.
 
+Two more give a plausible wrong count with no error. BSD `sed -E` has no `\b`, so a mask written with it replaces
+nothing, and a masked diff counts every callee and local number: use `[[:<:]]` and `[[:>:]]`, or Python's `re`, and
+check that a masked call reads `f(`:
+
+    echo 'x = f136(l3, p0);' | sed -E -e 's/\bf[0-9]+\(/f(/g' -e 's/\b[lp][0-9]+\b/L/g'
+      x = f136(l3, p0);
+    echo 'x = f136(l3, p0);' | sed -E -e 's/[[:<:]]f[0-9]+\(/f(/g' -e 's/[[:<:]][lp][0-9]+[[:>:]]/L/g'
+      x = f(L, L);
+
+And a column cut (`cut -c1-230`) of `git diff splat/symbol_addrs.txt` can end inside a `by:` list, so `by:11584` reads
+`by:1158`, another function: print the evidence field whole (`/usr/bin/grep -oE 'evidence:.*$'`).
+
 ## W10. zsh: `$var:` is a modifier, and a word that starts with `=` is a command path
 
     zsh -c 'b=main; git show $b:splat/matched.txt | head -1'
@@ -383,7 +395,8 @@ variable needs braces. `=word` expands to the path of the command `word`; quote 
 The first inside an unquoted heredoc stops after `cat > <file>` has truncated the file, and a `printf … >> INDEX.md`
 later on the line still runs: quote the heredoc (`<<'EOF'`) or write `${S}:path`. A `grep` whose file argument is an
 empty variable reads stdin and waits until the tool's timeout: pass `</dev/null`. Test that a file was written before
-you read a count from it: an empty `join` or a `wc -l` of 0 says nothing until then.
+you read a count from it: an empty `join` or a `wc -l` of 0 says nothing until then. A loop that passes a command line
+in a variable to `build/docker-build.sh` belongs in a bash script file run with `bash <file>`.
 
 ## W11. A match line whose symbol our link lacks stops `make -C src splat-match` before the stubs
 
@@ -604,8 +617,10 @@ A uenux2 header's `-W` list is the whole tree (the generic rule depends on every
 source does not reach the header through its includes compiles from the same text, so compile only the includers.
 This lists the link objects whose sources reach the given headers through `#include "…"` lines, transitively, over
 the tracked tree (a basename shared by two sources lists both, which costs a compile, not a miss); at 182dc6c1 it
-prints 32 for `cconfiguracaoeleicao.h` and 232 for `cdatetime.h`, in under a second. Add §W15's byte search for an
-`src/asn1` module header, whose users reach it through ecourna's include paths too:
+prints 32 for `cconfiguracaoeleicao.h` and 232 for `cdatetime.h`, in under a second. It reads the tree it runs in, so
+take the union with the same search over the base's tree: a range that removes an `#include` (a trap's `-pending.cpp`
+that goes with its last member) takes an object out of the head's list though the edit changed it. Add §W15's byte
+search for an `src/asn1` module header, whose users reach it through ecourna's include paths too:
 
     make -s -C src print-LINK_OBJS | tr ' ' '\n' > build/out/workflow-facts/link-objs.txt
     python3 -I -c "import os,re,subprocess,sys; fs=[f for f in subprocess.run(['git','ls-files','src'],capture_output=True,text=True).stdout.split() if f.endswith(('.h','.hpp','.cpp','.c'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(f,'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[2:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c'))}; print('\n'.join(sorted(o.replace(os.getcwd()+'/','') for o in open(sys.argv[1]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
@@ -653,7 +668,10 @@ linkonce copy of it differ with no code changed: such an object imports the symb
 (116 of 130 `DIFFER`s when `CAppState::ProcessKey` went out of line). Compare those per function: each function's
 `wasm-objdump -d` text with every `<index> <name>` operand reduced to the name and the step 3 masks of
 [how-to](../../how-to-decompile.md) ("To measure the same bytes"); the object's only change is then the copy's
-absence. An object of another unit that differs for real is named in the commit and re-measured
+absence. A type renamed or moved to another scope does the same to every includer that emits a template instance over
+it: the object differs in those symbols' names only, its masked disassembly the same (295 includers of `cfotos.h`
+compiled, one so when `CFotos::SFotoIndexada` became `SIndiceFoto`); name such objects in the commit message as
+name-only changes. An object of another unit that differs for real is named in the commit and re-measured
 ([agents.md](../../agents.md) "Shared build outputs").
 
 When the range also edits a source that includes the header, the base object differs by that edit, and the question
@@ -712,19 +730,23 @@ plain link's indices, so a symbol file regenerated from a variant names the wron
       5443	match	unresolved
       5444	match	unresolved
 
-The same scan with `--symbols` on a file `splat-symbols -o` wrote from the variant takes 230 rows out of `match`, none
-of them a real loss. Read only the rows that enter or leave `match`: unmatched rows trade `unresolved` and `differs`
-between the two links for the same reason. A symbol file of the variant's own needs a census of the variant first.
+A symbol file `splat-symbols -o` writes from the variant into a new file keeps no hand edit (`… 0 hand edits kept`), and
+a scan with `--symbols` on it takes a few hundred rows out of `match` for that alone (230 in one run, about 180 in
+another), none of them a real loss; `-o` keeps the hand edits of the file it overwrites, so copy the committed file
+there first (`cp splat/symbol_addrs.txt <scratch>`), and the same scan then moves the variant's rows only (12065's
+variant: 3 rows, all into `match`). Read only the rows that enter or leave `match`: unmatched rows trade `unresolved`
+and `differs` between the two links for the same reason. A symbol file of the variant's own needs a census of the
+variant first.
 
-That scan keeps every name of the committed file, so it cannot show a name the variant no longer earns. When the
-variant removes or changes a body that is an anchor or a voter (`by:` lists it), regenerate the symbol file from the
-variant into scratch (`pnpm wasm splat-symbols <target> <variant wasm> --kinds … --map-dir <V>/wasm-map/<n> -o
-<scratch>`) and read the lines of the indices it named or voted for: anchor names (`srcloc-`, `vptr-`,
-`content-anchor`) and the `call` votes their pairs cast read no census pair and hold there, while a census pair's vote
-in a band the variant reorders does not. Without `CSystem::ReplaceDir`, 5455 scores `717 over 1984`, anchors nothing,
-and 3645 and 5458, `call by:5455`, lose their names, though the committed-symbols scan moved no row. The row set a
-fragment quotes for a variant comes from steps 7 to 9 run on the variant link with private paths
-([app-flags.md](app-flags.md) §F9 item 6 gives the options).
+That scan keeps every name of the committed file, so it cannot show a name the variant no longer earns. When the variant
+removes or changes a body that is an anchor or a voter (`by:` lists it), regenerate the symbol file from the variant
+into a copy of the committed file (`cp splat/symbol_addrs.txt <scratch>`, then `pnpm wasm splat-symbols <target>
+<variant wasm> --kinds … --map-dir <V>/wasm-map/<n> -o <scratch>`) and read the lines of the indices it named or voted
+for: anchor names (`srcloc-`, `vptr-`, `content-anchor`) and the `call` votes their pairs cast read no census pair and
+hold there, while a census pair's vote in a band the variant reorders does not. Without `CSystem::ReplaceDir`, 5455
+scores `717 over 1984`, anchors nothing, and 3645 and 5458, `call by:5455`, lose their names, though the
+committed-symbols scan moved no row. The row set a fragment quotes for a variant comes from steps 7 to 9 run on the
+variant link with private paths ([app-flags.md](app-flags.md) §F9 item 6 gives the options).
 
 **A header for the whole link.** `UENUX2_EXTRA="-iquote <overlay>"` reaches the tree's objects and not the roots:
 `src/Makefile` sets `APP_CXXFLAGS` from `UENUX2_CXXFLAGS` with `:=` (line 90) before it adds `UENUX2_EXTRA` (line 97).
@@ -971,31 +993,59 @@ This also drops every untracked file it staged, so save what you want first. The
 
 ## W23. The notes a merge makes stale
 
-A landing's new matches make other units' notes false: a pending header's list of callees "with no name", a fragment's
-"waits for fn N", a roots comment that names a stand-in's callers. And a stand-in can stand for references that are no
-call, such as unit 35's address of `IInterfaceInit`'s destructor for the slot 0 of two vtables, which a search of the
-link for calls does not find. The merge's new indices against the comments find both, with `main` (or the merge's
-first parent) as the base. Add to the list, by hand, the functions the merge writes that do not match (each lane's
-result names them): a written caller ends a stand-in as a match does, and one with no name reads `no-candidate` with no
-object in the scan, so look it up by name in `build/out/wasm-map/vota_web/names.tsv`. The search needs no link, so it
-can run from the lanes' lists before steps 6 to 10:
+A merge's new matches, and the functions it writes that do not match, make other notes false: a pending header's
+callees "with no name", a fragment's "waits for fn N", a roots comment's callers, a README row, a doc's example. Seven
+kinds go stale, and a search by the new indices finds only the first, so run each:
 
-    comm -13 <(git show main:splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
+1. **A note that names a new index.** The indices are the new match lines, the indices whose match line or object the
+   merge moved (step 9's renames, a linkonce copy that now comes from another object: "matches from X.cpp.o now"), and,
+   by hand, the functions the merge writes that do not match (each lane's result names them; one with no name reads
+   `no-candidate` with no object, so look it up in `build/out/wasm-map/vota_web/names.tsv`).
+2. **A note that names a caller's callee.** A comment that lists or counts a function's callers ("22 are in the
+   link") goes stale when a new caller lands, though it never named that caller; a hand line whose function a new match
+   calls is the landing's to weigh (how-to step 9).
+3. **A note that names what the merge removed**, a stand-in, sink, roots file or pending file, by its name: a removal
+   adds no index. Search each deleted file's name and each removed identifier.
+4. **A sink whose storers are in the link.** A vtable sink's comment need not name the functions that store its vptr:
+   for the vtable it names, `/usr/bin/grep -rlE 'i32\.const <vptr>($|[^0-9])' build/out/splat/pieces/asm` lists them,
+   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing.
+5. **A stand-in that takes an address,** `&name` of an `__asm__`-labelled function in a static constructor: no `call`
+   shows it, so read its callee's callers from the scan, not from the comment, which can be stale either way (callers
+   it calls missing that are in the link).
+6. **A doc example named by function or score**, not index ("`comum::md::CPleito`'s constructor at `103 over 438`"):
+   search the docs for each new match's class and member (demangled from `splat/matched.txt`).
+7. **A doc example that prints our link's numbers** (a slot, an offset, an `ours` index, a count): a change of the
+   link line or of a library's flags moves them with no new match. Re-run the examples that print the moved code's
+   numbers, or date each with the commit it was taken at.
+
+The base is the side whose comments have not been searched against the other's matches: for a lane merged onto
+`main`, `main` (or the merge's first parent); when `main` merges `origin/main`, the first parent already holds every
+match, so take the other parent, and each side's new indices against the other's text. The searches need no link, so
+they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W10):
+
+    B=main
+    comm -13 <(git show "${B}:splat/matched.txt" | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
+    join -t "$(printf '\t')" <(git show "${B}:splat/scan.tsv" | awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' | sort) <(awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' splat/scan.tsv | sort) | awk -F'\t' '$2!=$4 || $3!=$5 {print $1}' >> build/out/<handle>/new.idx
     LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp $(git ls-files docs | /usr/bin/grep -v -E '^docs/(img/|status\.md$)')
     awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/new.idx
     LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
+    awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' build/out/<handle>/new.idx ledger/callgraph.tsv | sort -u > build/out/<handle>/callee.idx
+    awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' build/out/<handle>/callee.idx));"
+    LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/callee.idx src/units/*-roots.cpp src/app/roots_*.cpp
+    for f in $(git diff --name-only --diff-filter=D $B HEAD -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
+    git diff $B HEAD -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
 
-The tree roots in `src/app/` hold stand-ins too (`roots_ecourna.cpp`'s for unit 00), and the units README's rows and
-the docs' examples name indices; `docs/img/` and `docs/status.md` are generated and hold coordinates and counts, no
-notes (84 of 100 docs lines at one merge). With 9202406 as the base, bbf27ac1's 82 new indices give 228 lines in
-`src/units/`'s companions and fragments and 277 with the rest, each to read: an index also matches a line number or a
-size. The second search reads the hand lines' comments, whose "our body differs" a new match makes false (the lane whose
-match names the function weighs the line, how-to step 10). The third reads the trees' comments, where a header of any
-class can list a new match among callees "with no name"; a fix keeps the paragraph's line count, so no `#line` moves.
-At 182dc6c1 against 65b4d0e3 (six new indices) they print 39, 0 and 0 lines. A stand-in whose callers are now all in
-the link goes in the merge; one found otherwise goes when a link without it moves no row (W13, "One variant object in
-the whole link"). A lane runs the same search on its own new indices before it commits, and fixes what it finds,
-comment lines only, in files it claims (how-to step 10).
+The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
+from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
+search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing) and the
+companions' lines that name a callee, among them every caller list; the last two list the deleted files' names (at
+3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to search
+with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold coordinates
+and counts, no notes. Each hit is to read: an index also matches a line number or a size. The third index search reads
+the trees' comments, where a header of any class can list a new match among callees "with no name"; a fix keeps the
+paragraph's line count, so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says
+("When it goes", "Going earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it
+commits, and fixes what it finds, comment lines only, in files it claims (how-to step 10).
 
 A note's count of a function's callees "with no name" counts against both name files, imports aside (callees below
 136), and says so beside the count: a match line can be a function's only name (2745). For 10425 at 182dc6c1, 5 of 45:
@@ -1010,8 +1060,11 @@ Four ways, each met at a landing (the commits are the merged branch and the `mai
   line: `cestadogeralvota.h:171:10: error: class member cannot be redeclared` (`SetEstadoVota`, fb87775d's inline form
   against `main`'s out-of-line one, onto 96a1fbc5). Keep the form a match rests on (12077 was measured on the
   out-of-line one), drop the other, and score the dropped side's users on the merged link (10734: `49 over 273` with the
-  out-of-line form; the inline form was measured on its own branch only). When both forms carry matches, stop and
-  report.
+  out-of-line form; the inline form was measured on its own branch only). Two inline definitions that differ in their
+  return type stop on another error, `functions that differ only in their return type cannot be overloaded`
+  (`ccontrolareconhecimento.h`'s `GetDigitalRegistrada`, by value for 3614 and by `const&` for 10425, merging c7d005ce
+  onto 7e8fae06): the same rule kept the by-value one, which 3614's copy rests on, and 10425 scored `222 over 2205`
+  against `224 over 2205` before. When both forms carry matches, stop and report.
 
 - **A header one side made real reaches a library path the other side's objects lack** (`… file not found`). The fix is
   the fragment's include path, not the header (`src/units/README.md` "What a fragment holds").
@@ -1089,6 +1142,22 @@ compile line in the make's output: `/usr/bin/grep -c -- '-c .*<file>.cpp' <log>`
 remove the object again (or `touch -t` it older than the source), rebuild, and `cmp` it with one built from the restored
 text.
 
+`-o <file>` (`--old-file`) makes make treat one prerequisite as old, so nothing is rebuilt on its account:
+
+    mkdir -p build/out/workflow-facts/oldfile && cd build/out/workflow-facts/oldfile
+    printf 'out: in hdr\n\tcat in hdr > out\n' > Makefile; echo a > in; echo h > hdr; /usr/bin/make -s
+    touch -t 203001010000 hdr; /usr/bin/make -n -o hdr; /usr/bin/make -n
+      make: `out' is up to date.
+      cat in hdr > out
+
+Two uses. To count what an edit of a header compiles while the object is stale for another reason (its own source
+edited), hold that source old: `make -n -C src link -o $PWD/<source> -W $PWD/<header>` then counts 1 for a header the
+rule lists and 0 for one it does not (check with one it is known to list). And to iterate on a variant of a header in
+the plain link without rebuilding its whole tree (every uenux2 object depends on every uenux2 header, W15), remove the
+includers' objects by name (W13's includer search) and run `make -C src link -o $PWD/<header>`: 5 to 7 compiles and a
+link per variant, against 605 for a header of `app/comum/gravadores/md/`. Before step 7, rebuild without `-o` and check
+that the objects outside the includers came out the same.
+
 ## W27. What a merge joins with no conflict, and what it drops
 
 How-to step 10 ("Landing onto a moved main") resolves the conflicts. These pass every conflict check:
@@ -1153,6 +1222,10 @@ the data: 10313 passes three data sources to `AddTextField` by slot, and the sco
 data:ba4744780c86a45e+3314 ~ …`, while slot 148, below 1024, prints as a number. A wrong function pointer passes the
 filter so; read every function-pointer argument against `wasm-objdump -x -j Elem` of both modules, or the scan's `table
 slot` reading after step 9.
+
+**What `score` reads.** The two modules and the glue beside each (`x.wasm` → `x.js`, for the imports' names), nothing
+of `splat/`: steps 7 to 9 do not change a score taken on the same link, and a note need not say a score came before
+them. The link's map gives `ours`, so take it after `link-map` has mapped that link.
 
 **What `splat-remap` does not apply.** It reads the committed symbol file and none of the matches, so a callee that only
 `splat/matched.txt` names reads `UNRESOLVED` there (scan the variant with the match list instead, W13, "Scan a

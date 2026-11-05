@@ -6,7 +6,8 @@ whether its class is `final`, whether a class is abstract or has a key function,
 binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
 `bool`'s reads and a byte's sign, an `invoke` around a callee that cannot throw, several table slots of one function, a
 local static's guard, one row more than the target at a call, where a record's line and column fall when no `throw`
-makes it, a slot's vtable read from the data, and a reload that says a TU had no strict aliasing.
+makes it, a slot's vtable read from the data, a reload that says a TU had no strict aliasing, and static-initializer
+code that names no object.
 `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
 source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
 `inline` one) is in [codegen.md](codegen.md).
@@ -68,6 +69,13 @@ sites; with 3678 written to pass that address in place, our link folded the para
 rectangle read through an accessor out of line that only 3678 calls, it kept it. Measure the callee's wasm type in the
 link before choosing the caller's form. §R18 has a parameter the target keeps with no caller to explain it.
 
+A folded constant can leave a compare clang gives only for a parameter. clang folds `!(x >= c)` into `x < c`
+(`f64.lt`) when it proves neither operand NaN, as for a product of two converted unsigned integers against a constant
+in the body, and keeps `f64.ge` then `i32.eqz` when one is a parameter. So a target body with `f64.ge; i32.eqz` over a
+constant that every in-body form folds had the constant as a parameter all callers passed: 5371
+(`CControladorReconhecimentoMesario::GravaWsq`) takes the minimum free space as its last parameter, both callers pass
+5 MiB, and it matches (unit 214's fragment has the seven in-body forms, each `f64.lt`).
+
 ## R2. A constructor returns `this` in the object; the target's `void` is a result no caller used
 
 In the WebAssembly C++ ABI a constructor and a non-deleting destructor return `this`. The target's `()` result is
@@ -82,6 +90,10 @@ dead-argument elimination dropping a return value no caller read. `api::CMovie`'
 
 A stub's `void` (`src/README.md` "Stubs") is the target's type, so it says nothing here, and a roots file that
 declares such a constructor must give it the object's `int` result (`src/units/README.md` "Companion files").
+
+A caller shows where the constructor is defined: one that uses the returned `this` called a C1 defined in another TU,
+and one that drops it the C1 alias of a C2 its own TU defines, which stays so after binaryen inlines either
+([codegen.md](codegen.md) §C6 has the probe, and 2733, 2738 and 5702, each out of line in another TU for it).
 
 ## R3. A trivially copyable class of one scalar is returned as that scalar
 
@@ -346,6 +358,9 @@ visibility). `wasm-objdump -d -r` names such a call D2 whichever alias it holds;
 A class with no D0 (no vtable, or no destructor slot in it) shows the form in a caller instead: at `-fPIC` a caller in
 the destructor's own TU keeps a call of an out-of-line D1 (C6), where an implicit or in-class destructor of a small
 body is inlined. `comum::CCargos`'s exit destructor calls `~CCargos` (5805) so, which `ccargos.cpp` defines `= default`.
+So does a caller in another TU that keeps the D2 call where `-Rpass=inline` shows the in-class definition inlined at
+that site. In ecourna's code such a caller decides even for a class with a D0, which can take either shape there
+(`~CZip`, 2690, called twice by 5821).
 
 What separates the first two rows is the inline hint. Only an implicit destructor and one declared `inline` carry it
 before optimization:
@@ -837,7 +852,11 @@ Three limits to this reading:
   implicit, or the file's last function: the DAOs' slot 2 comes after their other members and before the base's
   template defaults (`awk -F'\t' 'NR>1 && $1>=11467 && $1<=11473 {printf "%s(%s) ", $1, $2} END {print ""}'
   ledger/ordinals.tsv` prints `11467(1) … 11473(1)`, read downwards: slots 3, 5, 6, 7, 8, then 2, then the default 4),
-  and its merge-thunk body cannot tell which.
+  and its merge-thunk body cannot tell which. A member that follows, in its band, a deferred function the file emits (a
+  linkonce vtable's slot, a template instance the file first uses) is neither: clang creates deferred functions after
+  every external one, whatever the definition order, so the member is another object's, or deferred itself. 3872 and
+  3873 follow 3874, a slot of the `api::CSubReport` vtable `crelvotautil.cpp` emits, and are
+  `cgeradorresumozeresima.cpp`'s (unit 325).
 - **A deferred function sits after its first caller in the object, not at its end.** clang creates a function in the
   module where it is first referenced, and emits the body (and its records, R8) at the end of the TU; the object's
   function order is the module's. Probe `deferorder.cpp` (bb6f018):
@@ -861,7 +880,12 @@ Three limits to this reading:
 - **A shared body has no band place.** A member whose target body binaryen keeps once for several classes counts
   every class's table slots in its `uses`, so it sits in another band than its class's other members: `awk -F'\t'
   '$1==2241 || $1==5527 {print $1, $2}' ledger/ordinals.tsv` prints `2241 5` and `5527 2` for the `Move` that five
-  and two field classes share, while each class's other members are in band 1. Its line in its file is a choice.
+  and two field classes share, while each class's other members are in band 1. Its line in its file is a choice. Its
+  index is the place of the copy binaryen kept, the first in link order, which can be another class's file: before
+  such a body places a neighbour, list its vtables (`pnpm wasm fn`'s `;; vtable` lines) and say which copy the link
+  order keeps. 3874 is a slot of `CSha512`'s, `CSha`'s, `api::CSubReport`'s and `__func<api::QRCodeSRC, …>`'s
+  vtables, and `crelvotautil.cpp`'s copy is the first, since the uenux2 app links ahead of ecourna's security objects
+  ([link-order.md](link-order.md) §L3).
 - **The first mention is in clang's code after its inlining.** A linkonce function takes its place where the code
   clang emits first calls it, so a callee whose caller clang inlined into an earlier function sits after that earlier
   function, ahead of its own caller (bbf27ac1):
@@ -1029,6 +1053,15 @@ three and `unresolved` for 5181, which waits for a name:
   inlines, stores at frame offsets 4 and 12 (a scratch object at the tree's flags), and the helper with external
   linkage, kept out of line by clang and inlined by binaryen, gives `106 over 924` rows, all operand-only. This sign
   holds for a frameless callee too.
+- **A member's address added once to `this` after the prologue,** the loads at small offsets from that local, where
+  clang folds the constant into each load's `offset=`: an accessor that returned the member's reference, out of line in
+  another TU, inlined by binaryen after the backend folded addresses. 5665 adds 68 to `p0` and loads at 0, 4 and 11;
+  reading the member in place gives `offset=68`, `72`, `79` (`10 over 77`), and `CEleitor::GetDataNascimento()` out of
+  line in `celeitor.cpp` matches it (unit 91's fragment).
+- **A zero set ahead of a callee's second prologue** is binaryen's: its inliner zeroes the callee's locals at the
+  inline site and keeps the set where a path of the callee reads one before writing it. 10425 opens its key-6 path with
+  `p1 = 0;` before `SalvaHabilitacaoEleitor`'s 144-byte prologue, which no line of `ProcessKey` gives; our object's own
+  zero-set patched to nops gave the target's rows, so the callee's object had none on that path (unit 142's fragment).
 - **None, for a frameless callee our link calls once,** unless the sign above. A function without a frame leaves no
   prologue, so a body of ours that holds inline what the target calls can be binaryen's work as well as clang's. Count
   the target's callers against ours (`awk -F'\t' '$2==365 {print $1}' ledger/callgraph.tsv | sort -u | wc -l` prints 17
@@ -1036,11 +1069,24 @@ three and `unresolved` for 5181, which waits for a name:
   look for the function in the caller's object before binaryen (`wasm-objdump -x -j linking <object>` lists an
   out-of-line copy). When the object keeps it out of line and our link calls it once, binaryen inlined it: a source
   change clang alone sees links to the same wasm, and a roots stand-in caller that gives it the target's call sites is
-  the fix.
+  the fix. Two exceptions to the one-call-site count ([tool-traps.md](tool-traps.md) §X1): a body of a few instructions
+  (an empty function, a one-store setter) is inlined into every direct caller whatever its count, and stays a function
+  only for a table slot or an export (`comum::CAppState::SetNextState`, called from nine sites, is in none of its
+  callers' code: at 3c1ef19d `pnpm --silent wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm 11442 | /usr/bin/grep
+  -E '^;; (table|callers)'` prints `;; table slots 3884` and no callers); and two bodies identical in the objects count
+  as one only when their callees are one too: RHVoice's `vector<shared_ptr<correction>>::__insert_with_size` (2875) and
+  11943's `IReportPart` instance differ in calling each instance's own `__throw_length_error`, and binaryen inlined the
+  second into its one caller until a stand-in gave it two (unit 325).
+- **A library inline member's body called out of line from several TUs** is a function of the project's that holds it:
+  clang inlines the library member at each such call site (`-Rpass=inline` prints its cost under the threshold), so the
+  target's out-of-line body is another TU's function. 1922, `std::function<SQtdeAptos()>`'s copy called from six TUs,
+  is `comum::CEleitoresAptos`'s constructor (unit 317). Measure the inline cost before writing a caller with the library
+  call.
 - **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
-  [codegen.md](codegen.md) §C4's order. A leaf that differs so can return a result the source has: binaryen's
+  [codegen.md](codegen.md) §C4's order, the object's own locals and whether an inlined member is static (§C4 has
+  11172's and 12040's). A leaf that differs so can return a result the source has: binaryen's
   dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
@@ -1060,6 +1106,12 @@ bonus. Probe `onecall.cpp` (182dc6c1), an anonymous-namespace `Big` of three str
     TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -Rpass=inline -c /work/build/out/reading-probe/onecall.cpp -o /work/build/out/reading-probe/onecall.o
       remark: '_ZN12_GLOBAL__N_13BigEi' inlined into '_Z6Calleri' with (cost=-14060, threshold=250)
 
+An external function under clang's threshold is inlined as well, so one shared frame does not say internal linkage,
+and the two linkages can still give the caller other code: `comum::md::CPleito`'s constructor (5652) loads its
+elections' bounds before the ids set's stores, as the target does, only with the helper internal (`static`, the
+anonymous namespace and a lambda alike), and after them with it external or a member (unit 88's fragment). Compile
+both before choosing, and write external only when they give one object.
+
 So such a function's code behind a frame of its own means either an external function around it, which binaryen
 inlined (1937's 576-byte frame holds `"LeBiometriaEleitor(" + identifier + ")"`'s temporaries around
 `legravaentidade.h`'s anonymous-namespace `LeEntidadeBiometria`: written as `comum::CLeitorASN::LeBiometriaEleitor` in a
@@ -1073,21 +1125,26 @@ place in the data says; where in that TU, the object's data order, which is a re
 ([placing.md](placing.md) §P4, "What each order shows"; [../link-order.md](../link-order.md) §2).
 
 Whether such a function is a member is how-to step 3's member rule ("Names no evidence gives"); these are its cases. One
-that reads its class's state is a member in the class's `.cpp`. One that reads none (8533's tone sequences) is a free
-function in the namespace of its caller's class, in a `.cpp` you choose and name as chosen, not the caller's TU when
-clang would inline it there (any small function, and any internal one with one call). A helper the caller's object
-keeps out of line (`wasm-objdump -x -j Function <object>` lists it, and the caller calls it) may stay beside its
-caller, and the fragment says it was measured (`vota::ExisteArquivoImprimindo` in `votadefs.cpp`, held behind a second
-prologue in 1487). A helper of a singleton class may be a static member of it either way, as TSE's 22 records of a
-`static … ::GetInst()` show (`awk -F'\t' '$5 ~ /^static .*::GetInst\(\)$/' ledger/source-locations.tsv | wc -l`); mark
-the form chosen. The tree is evidence too: a helper whose rows match only at another tree's flags goes in that tree and
-its namespace. `ecourna::api::util::Repete` (unit 182), inlined into uenux2's 5467 (`api::CGenericTags::EncodeTLV`),
-matches only with ecourna's `-fno-delete-null-pointer-checks`, which no uenux2 directory has
-([app-flags.md](app-flags.md) §F3). Inside one tree a directory's flags are no placing evidence: when a record-less
-object's rows match only at flags its band's directory lacks, keep the band's directory, leave those rows written and
-`differs`, and put the measurement in the fragment, for a per-file flag decision, which is the user's (2882's lambda
-`__clone`s, 12006 and 12007, matched once `crelvotautil.cpp` was carved out of strict aliasing:
-[app-flags.md](app-flags.md) §F6).
+that reads or writes its class's state is a member, in the class's `.cpp` unless clang would inline it there where the
+target keeps a call: then in a `.cpp` of its own, its file chosen (5400, `CNomeEleitor::HabilitaEleitor`, inlined into
+both callers in `cnomeeleitor.cpp` at cost 185 under 250, is in `cnomeeleitorauxiliares.cpp`, unit 239). One that reads
+none (8533's tone sequences) is a free function in the namespace of its caller's class, in a `.cpp` you choose and name
+as chosen, not the caller's TU when clang would inline it there (any small function, and any internal one with one
+call). A helper the caller's object keeps out of line (`wasm-objdump -x -j Function <object>` lists it, and the caller
+calls it) may stay beside its caller, and the fragment says it was measured (`vota::ExisteArquivoImprimindo` in
+`votadefs.cpp`, held behind a second prologue in 1487). A helper of a singleton class may be a static member of it
+either way, as TSE's 22 records of a `static … ::GetInst()` show (`awk -F'\t' '$5 ~ /^static .*::GetInst\(\)$/'
+ledger/source-locations.tsv | wc -l`); mark the form chosen. So may a helper of a class whose records name non-static
+members of the same kind that read no state (`comum::IEventosLog`'s `Converte*`: `awk -F'\t' '$5 ~
+/IEventosLog::Converte/' ledger/source-locations.tsv`): keep that form, marked chosen with the records as the reason,
+and list the free function with the measurement that it gives the same link (1047's `ConverteInicioTermino`, unit 325).
+The tree is evidence too: a helper whose rows match only at another tree's flags goes in that tree and its namespace.
+`ecourna::api::util::Repete` (unit 182), inlined into uenux2's 5467 (`api::CGenericTags::EncodeTLV`), matches only with
+ecourna's `-fno-delete-null-pointer-checks`, which no uenux2 directory has ([app-flags.md](app-flags.md) §F3). Inside
+one tree a directory's flags are no placing evidence: when a record-less object's rows match only at flags its band's
+directory lacks, keep the band's directory, leave those rows written and `differs`, and put the measurement in the
+fragment, for a per-file flag decision, which is the user's (2882's lambda `__clone`s, 12006 and 12007, matched once
+`crelvotautil.cpp` was carved out of strict aliasing: [app-flags.md](app-flags.md) §F6).
 
 ## R11. A record fixes the function's qualified name and its types' spelling, not the scope of a type it prints unqualified
 
@@ -1373,6 +1430,12 @@ member, in any of four spellings, the byte is tested bare, as the target does, a
 has the forms). In a probe whose two members are one struct's, both forms give the `& 1`, so the accessors' own shape
 counts too: try the accessors before the member's type.
 
+A loop's `br_if` on a flag says which block it leaves: one that leaves a block enclosing the code after the loop is a
+`return`, not a `break`. 12065 tests `CSincronizaVota::s_urnaDesligando` once per turn and leaves the block that holds
+the next state's store (`if (s_urnaDesligando) return;`); written with `break`, clang tests the flag on the loop's guard
+and back edge as well, which reads like a load moved out of the loop (`107 over 788`), and the flag's type changes
+nothing (unit 205's fragment).
+
 ## R15. An `invoke` around a callee that cannot throw: the callee had a call that might, which a later pass removed
 
 emscripten turns a call inside a `try` (or a cleanup scope) into an `invoke_*` when the callee may throw at the time
@@ -1393,7 +1456,7 @@ constructor's body calls only `sqlite3_bind_parameter_count` (6536):
         i32.store[p0+16] = f6536(i32.load[p0+8]);
         push p0;
 
-A `std::mutex::lock()` in the constructor gives both: `pthread_mutex_lock` may throw through `std::system_error` when
+A mutex's `lock()` in the constructor gives both: `pthread_mutex_lock` may throw through `std::system_error` when
 the invoke is made, and in this single-threaded build it is a stub that returns 0, so the throw path and the call
 vanish. `src/ecourna/api/sql/sqlite/csqlstatement.cpp` (unit 12) locks a file-level mutex there, and 9430 and 9460
 match (`awk '$1==9430 || $1==9460' splat/matched.txt`). The reverse case, a direct call inside a cleanup scope, is
@@ -1434,6 +1497,14 @@ that does not. So a function with no record shows its linkage here. Probe `guard
 `.cpp`, though the pointer to it reads from a header (unit 170, `src/uenux2/wasm/vota_web/vota_web_wasm.cpp`, whose
 engine pointer, which fn 2094 reads, is the next word, 1832600).
 
+A guarded namespace-scope object (an inline variable, a template's static data member) is emitted by every TU that sees
+its definition when it needs dynamic initialization or destruction, each copy's initialization guarded in its COMDAT,
+and the link keeps the first object's. So the code level and the place of that initialization in `__wasm_call_ctors`
+and of the object in `.bss` name the object that emitted it, not the TU of its users: 14478 initializes 1832432 with
+"Digite a sua opção:" (444366) through an out-of-line call, the executable TU's `-Oz` shape, first after libc's
+`environ` (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 14478 | sed -n '/folded readout/,$p' | /usr/bin/grep -B2
+'1832432'`; [levels.md](levels.md) §V1).
+
 ## R18. One row more than the target at a call is the callee's signature, not the caller
 
 Dead-argument elimination (R1, R2) leaves alone a function the table holds. So a body whose only structural row is a
@@ -1470,6 +1541,12 @@ sites, and one of them reads the result:
 
 12979 is a 9-byte forwarder whose only reference is table slot 168 (`pnpm wasm fn`'s `;; table slots 168`). Taking its
 address in a roots file (unit 103) gives ours the result.
+
+The reader can also be code inlined into a function both links hold, a static initializer in `__wasm_call_ctors`
+above all. 10254 (`CPosixMutex`'s constructor) drops `pthread_mutexattr_init`'s (3977) result, which 14478 reads in
+libc++'s `recursive_mutex` constructor (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 14478 | sed -n '/folded
+readout/,$p' | /usr/bin/grep -A1 'f3977'` prints `l0 = f3977(l2);` and `if (l0) br 0;`). No roots address fixes that:
+the static's own type does, and §R22 says how to find which static it is.
 
 Or no target caller reads it and the target's table holds the callee itself, as an `invoke_*` slot of callers not in
 our link. libc++'s `path::operator/=(const path&)` (183) is `(i32 i32)->(i32)` in the target and lost its result in our
@@ -1606,3 +1683,16 @@ can (5782 loads a global string's words before such stores, and passing the stri
 order, `135 over 1108` to `70 over 1098`). Before reading a reload as strict aliasing, look for a callee binaryen may
 have inlined between the two loads (a frameless one leaves no prologue, R10) and for a value the source may have
 passed as an argument.
+
+## R22. Code `__wasm_call_ctors` runs for an object it does not address
+
+14478, `__wasm_call_ctors`, holds every static initializer in link order. Code there that stores no address of its
+object (a libc++ constructor whose pthread calls are stubs that return 0) belongs to a TU whose objects lie between
+those whose initializers run before and after it. List every `.bss` object between those two neighbours' addresses (the
+symbol file's names, and unnamed bytes read through their exit destructors' `i32.const`), drop the function-local
+statics (guarded, built lazily), and weigh what is left with other evidence: a library string the code's callees
+reference that the target keeps (wasm-ld keeps a library's `.L.str` pieces one by one), and lock and unlock traces (a
+call of the lock with the object's address). The `recursive_mutex` that reads 3977's result (§R18) runs where two
+24-byte statics are candidates; `ecourna::api::sql::sqlite`'s `s_mutex` (1911796) is the one 9429 locks and unlocks
+(`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9429 | /usr/bin/grep -c 'f150(1911796)'` prints 2), and the target
+keeps "recursive_mutex lock failed". Mark such an attribution a reading, and name the candidates it rules out and why.

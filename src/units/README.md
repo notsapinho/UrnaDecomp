@@ -20,7 +20,9 @@ UENUX2_SRCS += src/api/util/cwait.cpp
 item 3 as well:
 
 1. A header comment naming the classes and the target functions the unit reconstructs. A score it quotes is `pnpm
-   wasm score <target> <index> <link> <ours>` at the default depth; one taken with `--depth 0` says so.
+   wasm score <target> <index> <link> <ours>` at the default depth; one taken with `--depth 0` says so. Any other
+   figure it quotes (a hunk count, an instruction count) names the command, or the script under `tools/`, that gives
+   it, or is left out: a figure no command gives again cannot be measured again when the body changes.
 2. The sources: `DADOS_SRCS := app/dados/tiposbasicos.cpp …` then `ECOURNA_SRCS += $(DADOS_SRCS)`. A variable of its
    own lets the next parts, and the `*_TRY` switches below, name the unit's files.
 
@@ -130,30 +132,34 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
 `NN-<component>-<what>.mk`:
 
 - `NN`, two digits and from 100 on three, is the order `src/Makefile` reads the fragments in, and so the order their
-  objects take in `ECOURNA_SRCS`, `UENUX2_SRCS` and `EXTRA_OBJS`, and their flags in `ECOURNA_CXXFLAGS`. It is the names'
-  text order, so `100-…` sorts between `10-…` and `11-…`, not last, and a filter over the companion objects spells the
-  number `[0-9]+`. That order reaches the link:
-  wasm-ld numbers functions in input order, and binaryen's inlining can depend on it. The order of the sources inside
-  one fragment can decide a body's locals, and so can the order of definitions inside one `.cpp` where the records' lines
-  leave room (`docs/reference/facts/codegen.md` §C4). A body that differs only in its locals is worth one link with a
-  fragment's sources swapped before a source form is hunted. A new fragment takes the next free number; renumbering a
-  landed one changes the link. A new file whose order against a landed unit's file decides a body goes into that unit's
-  list, on the side it measures right, not into a fragment whose number sorts on the other side: unit 49 lists
-  `cwasmtimerscheduler.cpp` after `cwasmtimer.cpp`, and its fragment gives the two scores. A function whose file a
-  landed unit already compiles takes no number: it extends that unit ("Landing a unit"). When several people or agents
-  land units at the same time, each takes its number before it starts: in a run of several agents the coordinator hands
-  them out (`docs/agents.md`), and otherwise the number is said in the pull request or issue that announces the work.
-  The same holds for a landed file a new function needs on the other side of another landed unit's file: move it into
-  that unit's list, on the side it measures right (the second fragment no longer lists it, "Landing a unit" item 2),
-  and say so in both fragments (`docs/reference/facts/codegen.md` §C4 measures both moves). The move can rename a
-  twin's match line, which step 9 does. A file in another unit's list stays its own unit's: its fragment keeps the
-  header comment, the companions and the row, with no source list when every source moved, and says which list
-  compiles its files; that list's fragment says why, with the measurement (unit 188's `simulador.cpp` sits in unit
-  101's list for 4879, unit 245's three files in unit 96's). A new file whose functions only another unit's matches
-  carry (a constructor twin, a callee binaryen inlines), and whose order was measured to decide nothing, goes in that
-  unit's list beside its caller, and the fragment names the variant link that showed it (unit 197's `ccedula.cpp`).
-  Whoever lands second has a link the first never measured: it runs link, census, symbols, match and the splat build
-  again on top of the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
+  objects take in `ECOURNA_SRCS`, `UENUX2_SRCS` and `EXTRA_OBJS`, and their flags in `ECOURNA_CXXFLAGS`. It is the
+  names' text order, so `100-…` sorts between `10-…` and `11-…`, not last, and a filter over the companion objects
+  spells the number `[0-9]+`. That order reaches the link: wasm-ld numbers functions in input order, and binaryen's
+  inlining can depend on it. The order of the sources inside one fragment can decide a body's locals, and so can the
+  order of definitions inside one `.cpp` where the records' lines leave room (`docs/reference/facts/codegen.md` §C4). A
+  body that differs only in its locals is worth one link with a fragment's sources swapped before a source form is
+  hunted. A new fragment takes the next free number; renumbering a landed one changes the link. A new file whose order
+  against a landed unit's file decides a body goes into that unit's list, on the side it measures right, not into a
+  fragment whose number sorts on the other side: unit 49 lists `cwasmtimerscheduler.cpp` after `cwasmtimer.cpp`, and its
+  fragment gives the two scores. A function whose file a landed unit already compiles takes no number: it extends that
+  unit ("Landing a unit"). When several people or agents land units at the same time, each takes its number before it
+  starts: in a run of several agents the coordinator hands them out (`docs/agents.md`), and otherwise the number is said
+  in the pull request or issue that announces the work. The same holds for a landed file a new function needs on the
+  other side of another landed unit's file: move it into that unit's list, on the side it measures right (the second
+  fragment no longer lists it, "Landing a unit" item 2), and say so in both fragments (`docs/reference/facts/codegen.md`
+  §C4 measures both moves). A move lands only when a measured form needs it: a body that matches, or a row that holds,
+  only at the new place. One that gains nothing stays out, however the data's order reads. The fragment names the pairs
+  of objects the move inverts in the target's data order (§C4 counts them), and the places weighed are the ones this
+  rule gives, inside a landed unit's list: a place outside every list that inverts fewer pairs is not taken, and the
+  fragment gives its count. The move can rename a twin's match line, which step 9 does. A file in another unit's list
+  stays its own unit's: its fragment keeps the header comment, the companions and the row, with no source list when
+  every source moved, and says which list compiles its files; that list's fragment says why, with the measurement (unit
+  188's `simulador.cpp` sits in unit 101's list for 4879, unit 245's three files in unit 96's). A new file whose
+  functions only another unit's matches carry (a constructor twin, a callee binaryen inlines), and whose order was
+  measured to decide nothing, goes in that unit's list beside its caller, and the fragment names the variant link that
+  showed it (unit 197's `ccedula.cpp`). Whoever lands second has a link the first never measured: it runs link, census,
+  symbols, match and the splat build again on top of the first (`docs/how-to-decompile.md` step 10, "Landing onto a
+  moved main").
 - `<component>` is the `src/` tree the sources live in: `ecourna`, `uenux2` or `asn1`, or the library's name for a unit
   that holds no tree's source (`103-rhvoice-nocatch`: a flag, a roots file and names, all RHVoice's).
 - `<what>` is the source directory the unit's files share, with `/` as `-` (`api-security`, `app-dados-midias`), or
@@ -419,55 +425,85 @@ way the target does, because binaryen's inlining and dead-argument removal depen
 - a function the target reaches through the table has its address taken. For one the target reaches only through a
   vtable, take the vtable's address: `extern const char x_vt[] __asm__("_ZTV…")`, stored into a `volatile` sink from a
   static constructor (units 15, 16, 17, 20 and 36). That is the reference the target has, the vptr store of a
-  constructor not written yet, and it keeps every slot. Once that constructor is in the link (written and reached, if
-  only inlined into another unit's function through a `GetInst`), the sink stands for nothing and goes, with its
-  `extern` and its words in the roots comment, as a caller stand-in goes. A function reached through another kind of
-  slot (an
+  constructor not written yet, and it keeps every slot. Once one of the target functions that store the vptr is in
+  the link (written and reached, if only inlined into another unit's function through a `GetInst`), the sink stands
+  for nothing and goes, with its `extern` and its words in the roots comment, as a caller stand-in goes. A function
+  reached through another kind of slot (an
   `invoke_*` thunk, a callback passed by its slot) has its own address taken, and so can a vtable member that also has
   direct callers, which keeps the vtable its vptr store names. `ledger/callgraph.tsv` holds
   direct calls only, so such a function can look like one with a single caller; `docs/reference/facts/units.md` §U11
   lists who passes its slot to an `invoke_*`;
 - a function with direct calls in the target gets at least two call sites in our link, because binaryen inlines a
   function called once: two callers, or one caller that calls it twice (the target's 2761 calls 5457 twice, and unit
-  32's stand-in did the same until 2761 landed). The reconstructed callers count: the roots TU adds `noinline` ones for the rest.
-  Each stand-in's comment names the target callers it stands for. A stand-in beside a real caller compiles, links and
-  passes every check, so a search of those indices is what says it can go, at a merge too: in `splat/matched.txt`, and in
-  the scan for a caller written but not matched, since a caller in the link ends a stand-in whether or not its row
-  matches (unit 08's `UsaFaseDeconverte` stood for 9052 and went while 9052 was written and `differs`). A written caller
-  with no symbol line reads `no-candidate` with no object in the scan, as if not written (4349 did): look its symbol up
-  in `build/out/wasm-map/vota_web/names.tsv`, and its call in our link (how-to step 10's `wasm-objdump` awk). A library
-  caller can be in our link with the callee inlined into it, its row `no-candidate` all the same (SQLite's `unixSleep`,
-  12902, holds `nanosleep`, 6265): look a library caller's name up in `build/out/wasm-map/vota_web/names.tsv` before
-  writing a stand-in for it. A stand-in that reads the callee's result stands for a reader too, and goes only when a
-  real reader is in the link, or binaryen drops the result and the callers that drop it lose a row: unit 123's
-  `w123_copia` reads 1249's returned `this`, as the target's 11395 does, where 5856 and 11197 drop it. A stand-in goes
-  when every caller it stands for is in the link, not when the link first holds two real call sites: one whose callers
-  landed in part stays, and its comment says which still wait. A caller counts when our link holds its call: one in the
-  link that inlines the callee where the target calls it ends nothing, and the comment says so (unit 190's two
-  `GetPathLog` calls stay for 8302, whose copy inlines it). A stand-in may go earlier only with a link without it that
-  moves no row (`docs/reference/facts/workflow.md` §W13, "One variant object in the whole link"), measured and said in
-  the fragment. Scanned with the committed symbol file, such a link counts the rows under the names they have now; for
-  the set a fragment quotes, run steps 7 to 9 on the variant link with private paths
-  (`docs/reference/facts/app-flags.md` §F9 item 6 gives the options). A stand-in that only keeps a library callee of the
-  unit out of line, as the target does, stays only when a row moves with it (unit 214's for 3373 and 3372 moved none).
-  The rule goes call by call: in a stand-in that calls several callees, a call whose callee's every target caller is in
-  the link goes, measured with steps 6 to 10, and the stand-in stays for its other calls (unit 31's `TelaMTA` and
-  `TelaMTB` called ten adders; their calls of 728, 941, 5409 and 5419, whose callers are all in the link, went). A
-  stand-in for one target caller, whatever units its callees are in, goes whole when that caller lands; each callee's
-  fragment says where its call site is. One in a file another active stage claims is left to the landing, with a link
-  without it measured and its lines named in the result (how-to step 10). 5629 has two direct callers in the target
-  (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and 11387); unit 20 reconstructs 11387, so `20-…-roots.cpp`
-  adds one caller standing in for 5324. binaryen inlines a function for having one call only when no table entry or
-  export refers to it (`docs/reference/facts/tool-traps.md` §X1), so a function the table also holds keeps its body with
-  a single caller. A function with one direct caller in the target that keeps its body all the same (11514, 6868 bytes,
-  under 2543: `awk -F'\t' '$2==11514' ledger/callgraph.tsv`) had a second call the target's later merges took away (X1:
-  a function can end with one caller and keep its body). Its caller inlines it in our link once written, so a stand-in
-  gives the second call site; its comment names the one caller, says the merged-away call is a reading (X1), and says
-  what would identify that caller (a twin of the caller, a merge's other members). It goes once that caller is
-  identified and in the link. A destructor whose other target caller is `__shared_ptr_emplace<T>::__on_zero_shared` gets
-  that caller only from a live `std::make_shared<T>` call, which needs T's constructor: while the constructor is not
-  written, the vtable's address is enough, and the control block's members come from a builder the link drops ("A
-  control block") or wait for the unit that writes it;
+  32's stand-in did the same until 2761 landed). The reconstructed callers count: the roots TU adds `noinline` ones for
+  the rest. 5629 has two direct callers in the target (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and
+  11387); unit 20 reconstructs 11387, so `20-…-roots.cpp` adds one caller standing in for 5324. binaryen inlines a
+  function for having one call only when no table entry or export refers to it (`docs/reference/facts/tool-traps.md`
+  §X1), so a function the table also holds keeps its body with a single caller. A destructor whose other target caller
+  is `__shared_ptr_emplace<T>::__on_zero_shared` gets that caller only from a live `std::make_shared<T>` call, which
+  needs T's constructor: while the constructor is not written, the vtable's address is enough, and the control block's
+  members come from a builder the link drops ("A control block") or wait for the unit that writes it.
+  - **Its comment.** Each stand-in's comment names, by index, the target callers each of its calls stands for, and a
+    taken address the callers that pass the slot (unit 103's roots: `elem[465]: 5360, 9963`), or says `none found`
+    with the search it ran. A stand-in calls a callee as often as the callers it stands for do, one call per caller
+    (`155-uenux2-cgeradorbuqrcode-roots.cpp`'s `w155_pkcs11` calls 3704 once, for 5635). A library caller can be in
+    our link with the callee inlined into it, its row `no-candidate` all the same (SQLite's `unixSleep`, 12902, holds
+    `nanosleep`, 6265): look a library caller's name up in `build/out/wasm-map/vota_web/names.tsv` before writing a
+    stand-in for it. A function with one direct caller in the target that keeps its body all the same (11514, 6868
+    bytes, under 2543: `awk -F'\t' '$2==11514' ledger/callgraph.tsv`) had a second call the target's later merges took
+    away (X1: a function can end with one caller and keep its body). Its caller inlines it in our link once written, so
+    a stand-in gives the second call site; its comment names the one caller, says the merged-away call is a reading
+    (X1), and says what would identify that caller (a twin of the caller, a merge's other members). It goes once that
+    caller is identified and in the link.
+  - **When it goes.** A stand-in beside a real caller compiles, links and passes every check, so only a search of the
+    callers it names says it can go (below). A caller counts when our link holds its call, whether or not its row
+    matches (unit 08's `UsaFaseDeconverte` stood for 9052 and went while 9052 was written and `differs`); one in the
+    link that inlines the callee where the target calls it ends nothing, and the comment says so (unit 190's two
+    `GetPathLog` calls stay for 8302, whose copy inlines it). The rule goes call by call: a call goes when every target
+    caller it stands for is in the link, measured with steps 6 to 10, and the stand-in stays for its other calls, its
+    comment saying which callers still wait (unit 31's `TelaMTA` and `TelaMTB` called ten adders; their calls of 728,
+    941, 5409 and 5419, whose callers are all in the link, went). So when one of several callers a callee's calls stand
+    for lands, its call goes and one call stays per caller still waiting. A stand-in for one target caller, whatever
+    units its callees are in, goes whole when that caller lands; each callee's fragment says where its call site is. A
+    stand-in that reads the callee's result stands for a reader too (unit 123's `w123_copia` reads 1249's returned
+    `this`, as the target's 11395 does, where 5856 and 11197 drop it). The target can keep a result every caller drops,
+    so such a stand-in goes when the callers it stands for are in the link and a link without it keeps the callee's
+    result: unit 307's read 1903's until its five callers were in, and the link without it keeps `()->(i32)` (fragment
+    307). A stand-in that only keeps a library callee of the unit out of line, as the target does, stays only when a row
+    moves with it (unit 214's for 3373 and 3372 moved none). A sink goes once one of the vptr's storers is in the link
+    (the bullet above).
+  - **Going earlier.** A stand-in may go before its callers are in the link only with a link without it that moves no
+    row (`docs/reference/facts/workflow.md` §W13, "One variant object in the whole link"), measured and said in the
+    fragment: no row enters or leaves `match`. A stand-in that is a function shifts our later indices, so unmatched
+    rows trade `differs` and `unresolved` between the two links (§W13), and `pnpm wasm fingerprint` of both links,
+    compared on its `addr` column, shows that no body but the stand-in and `__wasm_call_ctors` changed. Scanned with
+    the committed symbol file, such a link counts the rows under the names they have now; for the set a fragment
+    quotes, run steps 7 to 9 on the variant link with private paths (`docs/reference/facts/app-flags.md` §F9 item 6
+    gives the options). Removals that go for one reason (their callers all in the link) may share one variant link
+    that moves no row; one that goes early takes a link of its own, so its fragment quotes its own measurement, and a
+    variant that moves a row is split call by call until the row has its call.
+  - **The roots file goes with its last stand-in**, with its rule and its `EXTRA_OBJS` entry, as a `-pending.cpp`
+    goes with its last member: a file left with an empty static constructor stands for nothing. What its header said
+    that still holds moves into the fragment's `No roots:` sentence (units 137 and 174).
+  - **Finding the idle ones.** A merge's search by its new indices (`docs/reference/facts/workflow.md` §W23) finds a
+    comment that names one of them; it does not find a call it made idle among a comment's other callers, a count of
+    callers that leaves one out, or a note that names a removed stand-in or a moved object by its name. Read each call
+    by its callee: the callee's target callers, each with its `ours` column (`-` when not in our link) and verdict,
+
+    ```sh
+    c=3704; for i in $(awk -F'\t' -v c=$c '$2==c {print $1}' ledger/callgraph.tsv | sort -un); do awk -F'\t' -v i=$i '$1==i {print $1, $3, $5}' splat/scan.tsv; done
+    ```
+
+    prints `5604 - no-candidate`, `5635 - no-candidate` and `10273 11623 match` (at 3c1ef19d; `ours` moves with the
+    link). A written caller with no symbol line reads `-` too (5604, unit 155's `Gera`): look its symbol up in
+    `build/out/wasm-map/vota_web/names.tsv`, and its call in our link (how-to step 10's `wasm-objdump` awk). A sink's
+    storers are the functions that load its vptr (the address-point grep below). A note that names a removed stand-in is
+    found by that name (`LC_ALL=C git grep -n -w <stand-in> -- src docs`). A stand-in whose last caller a lane brings
+    into the link goes in the lane's commit, code and comment (how-to step 10). One a lane finds idle since before its
+    base goes there too when the lane claims its file, with a link that puts it back and moves no row, named in the
+    commit and the result; otherwise the lane names it and the landing removes it. One in a file another active stage
+    claims is left to the landing, with a link without it measured and its lines named in the result; when only its
+    note is in a file an unlanded branch changed, the code goes and the note is left to the landing;
 - a function the target inlines into its only caller is left unrooted, so it is inlined here too. It can be a
   function the source defined out of line that binaryen inlined, which `docs/how-to-decompile.md` step 3 tells from
   the caller's body: write it out of line, in the file that step says, and leave it unrooted. When such a function
@@ -484,7 +520,11 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   `bloco + 12`). Before step 8, read the census's `moved:` list (`build/out/census/progress.md`) for a target
   function paired with a `-roots.cpp` symbol. A stand-in's own use of a library template instantiates it in the roots
   object, where the census can pair it too (a string `==` there paired with 1148): use what instantiates nothing
-  (`size()`). A stand-in that calls a function with a defaulted `std::source_location`
+  (`size()`). A local of a template type instantiates its destructor too, a copy that can take another root's match
+  (a `std::vector<std::string>` local took 2255 from `roots_vector.o`): build the object in place, `::new (destino)
+  T(…)`, which emits no destructor (`roots_coderenv.cpp`'s `urna_vector_string`), and read the object column of step
+  9's `join` for a range that adds a stand-in ([../../docs/reference/splat.md](../../docs/reference/splat.md)
+  "Reviewing a match"). A stand-in that calls a function with a defaulted `std::source_location`
   passes an empty one by name (unit 100's `w100_usa`): the default makes a record on the stand-in's own line, which
   `check_srcloc.py --strict` prints as `MOVED`. When every caller of the function in the link is a stand-in, an empty
   location is one constant at every call, and dead-argument elimination folds it into the callee: the stand-in then
@@ -574,7 +614,11 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     copies to the head of the link too, and that object can be another tree's than the template's:
     `roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS` right after `roots_uenux2.o`, for an ecourna template whose target
     copies are uenux2's (unit 112), its rule depending on the ecourna headers, and `roots_iconversorasn.cpp` after it
-    for `IConversorASN`'s members (unit 166), its rule on the ASN.1 module headers too. The other way round, uenux2's
+    for `IConversorASN`'s members (unit 166), its rule on both trees' headers and the ASN.1 module headers. A root's
+    rule names the headers of every tree the root includes (`$(UENUX2_HDRS)`, which holds `$(ECOURNA_HDRS)`, once it
+    includes a uenux2 header), or an edit of one leaves the root stale: `make -n -C src link -W
+    $PWD/src/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.h | /usr/bin/grep -c -E -- '-c
+    src/app/roots_iconversorasn.cpp'` prints 1. The other way round, uenux2's
     objects link ahead of ecourna's, so a uenux2 TU that is a library template's first user takes the copies
     ecourna's objects gave the link: one that uses `std::regex` takes the regex internals, of which the target holds
     two sets: the `const char*` parser's, the token iterator's and `std::regex_replace`'s are uenux2's code without
@@ -621,8 +665,9 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     (`/usr/bin/grep -c urna_insere_doubles build/out/wasm-map/vota_web/names.tsv` prints 0; it keeps `vector<double>`'s
     range insert, 2662, with TBAA for RHVoice). An implicit or inline member of a plain class takes this kind, since
     no explicit instantiation names it: `::new (d) T(c);` keeps an implicit copy constructor out of line with no
-    attribute (`roots_iconversorasn.cpp`'s `urna_copia_dados_comparecimento`, 5846). An explicit instantiation leaves
-    none, and its instance stays in the link only while something calls it: one whose target callers are not written
+    attribute. An explicit instantiation leaves no function either. Neither kind gives call sites, and an instance
+    stays a function of its own only while two call sites reach it (the roots bullets above): one whose target callers
+    are not written
     needs a caller stand-in in the same root, which `urna_roots` in `src/app/roots.cpp` calls (`urna_roots_vector`,
     `urna_roots_iconversorasn`), or which its address in a sink keeps, as fragment roots keep theirs; a single call
     from `urna_roots` lets binaryen inline it there. Once some of those callers are written, a stand-in for the rest
@@ -750,7 +795,10 @@ tree root `roots_cbasetype.cpp`); then no match can rest on a flag its tree lack
 (`$(call uenux2_cxxflags,<path>)` gives a directory's or a file's own). A companion at
 `$(UENUX2_CXXFLAGS)` that emits code of such a directory compares its object compiled both ways, and says so, when it
 lands and at every change of the split (units 97, 113 and 154's roots; `docs/reference/facts/levels.md` §V5 has the
-measurement). Taking an instance out is a withdrawal, so measure the fragment's
+measurement). So does one at a directory's own flags (`$(call uenux2_cxxflags,…)`) that emits a copy the target keeps
+from an object of the other set (a record in that object's run, or its use band): one roots object can emit copies
+for objects of both sets, so each such match is compared both ways, and the fragment says per match which set it
+needs. Taking an instance out is a withdrawal, so measure the fragment's
 "differs" forms for that object
 again (`docs/how-to-decompile.md` step 10, "Withdrawing a match"). A body a companion object supplies can match only
 when it is code a landed header defines: an implicit or inline member, or a template instance such as
@@ -770,11 +818,16 @@ fragment states with both measurements.
 
 **Pending members** (`-pending.cpp`). A class's vtable is emitted in the TU that defines its first non-inline
 virtual member, and it needs every virtual member defined, including the ones not reconstructed yet.
-`40-uenux2-cprogressbar-pending.cpp` defines those with a body of `__builtin_trap()`: the class links and
-the reconstructed constructor can be measured, and a trapping body (one `unreachable`) cannot pass for the target's
-code, so no match can land on it. It compiles with the unit's own flags, as the real members will, through a
-rule of its own in the fragment (it is not in `ECOURNA_SRCS`) that is added to `EXTRA_OBJS`. Each member
-moves into the class's real source when it is reconstructed, and the file and its rule go with the last one.
+`69-uenux2-cwasmimagesurfaceops-pending.cpp` defines those with a body of `__builtin_trap()`: the class links and
+its reconstructed members can be measured, and a trapping body (one `unreachable`) cannot pass for the target's
+code, so no match can land on it. It compiles through a rule of its own in the fragment (it is not in
+`ECOURNA_SRCS` or `UENUX2_SRCS`), added to `EXTRA_OBJS`, at its source's flags, as the real members will:
+`$(call uenux2_cxxflags,<the source's path>)` in uenux2 (fragment 220's rule). A rule on `$(UENUX2_CXXFLAGS)` keeps
+`-fno-strict-aliasing` where `UENUX2_TBAA_DIRS` drops it, so the vtable and the implicit members the pending object
+emits compile otherwise than the source's would: 16 of the 17 rules `/usr/bin/grep -n 'pending.cpp -o'
+src/units/*.mk` lists are so, 69's for `mock/app/simulador/wasm/cwasmscreen.cpp` among them, written before the
+split. Each member moves into the class's real source when it is reconstructed, and the file and its rule go with
+the last one.
 
 A trap is for a member that cannot be written yet (a callee or a type the tree lacks, or no form measured comes
 close, the `-pending.cpp` header giving the forms and their rows: unit 69's 9018; a slot member one remainder off
@@ -952,8 +1005,10 @@ compiles: it extends that unit.
    paragraph (2803's are in unit 178's roots), and a landing may move them into the unit's roots. Each keeps to its
    own hunks: a stage that extends a unit another stage also extends or claims writes its source, its paragraph and
    the row of the fragment that holds its stand-ins, and says so in its claim; the extended unit's row changes at the
-   landing, which folds the members in. A stage with no source of its own may hold such stand-ins in a fragment that
-   builds only a roots file, whose header lists each member, its unit and the paragraph with its evidence (unit 212).
+   landing, which folds the members in. A stage with no source of its own, or whose sources are all landed units'
+   files, may hold such stand-ins in a fragment that builds only a roots file, whose header lists each member, its
+   unit and the paragraph with its evidence (units 212 and 309), rather than in roots files another stage may be
+   editing.
    In a TSE header two stages extend, each appends its note to the header comment as a paragraph of its own
    ([../README.md](../README.md) "Gaps"). The rule is the source file's: a
    root that keeps a header template's instance goes with the unit that keeps that template's instances, and the

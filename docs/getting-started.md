@@ -250,3 +250,4 @@ function.
 | a flag change in `src/units/*.mk` does not change the link | make does not rebuild objects when only a fragment's flags change; touch the sources (each object depends on its own source and every header of its tree, so an edit of either rebuilds it) |
 | the bootstrap refuses a `third_party/` checkout | that directory is at another commit; it is never reset for you, so move it aside and run the bootstrap again |
 | a step takes many times longer than the table says | the host is loaded; every compile is a docker run |
+| every compile fails within a second or two with make's `Error 1` lines | docker is not running (Colima stopped): `/usr/bin/grep -m1 ERROR <log>` prints `failed to connect to the docker API`, `colima status` says it is not running, and no object was written; `colima start`, then run the step again |

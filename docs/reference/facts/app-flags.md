@@ -14,8 +14,9 @@ rows"; **operand-only** is `score`'s flag for a replaced row whose opcode is the
 table slot or the `__THREW__` address, which a separate link can never share, but it is any immediate: an alignment
 hint, a memarg `offset=` (a field, a frame slot, a vtable slot), an `i32.const` added to the frame pointer, or a
 count. So an all-operand-only score is a lead, not a structurally identical body: read the scan's first difference or
-`splat-remap` before calling it one (8605 differed at -O3 only in `i32.store align=1` against `align=2`, and 10895's
-`call_indirect` loaded `IScreen`'s slot 6, `i32.load offset=24`, where the target's loads slot 5, `offset=20`). Prefer
+`splat-remap` before calling it one (8605 differed at -O3 only in `i32.store align=1` against `align=2`, and a
+`call_indirect` that loads a vtable's slot 6, `i32.load offset=24`, where the target's loads slot 5, `offset=20`, is
+another member: 10895's did through a header's slot order). Prefer
 a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes inlining (see F9).
 
 | component | flags |
@@ -418,8 +419,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `dados/md/`'s) with its callee 2872, which the symbol file names by 11453's call. The split is a reading of the original
   build's settings, made from the rows: TSE's build gave `src/api/`, comum's data classes, the voting application and the
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
-  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for four files whose
-  own rows say the other way (below); `dados/md/` and the files
+  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for the five files
+  `UENUX2_NOTBAA_FILES` lists, whose own rows say the other way (below); `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
   directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, matched), which holds
   `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
@@ -472,7 +473,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `ctelasvota.cpp:1301`; binaryen inlines it into 11805, 6579's one caller in `ledger/callgraph.tsv`), reloads the
   tree's begin after a new node's stores ([reading.md](reading.md) §R21's sign): 74 over 308 rows with strict aliasing,
   2 over 292, operand-only, without it. In `eleitor/iniciovotacao/crelvotautil.cpp`, the `__clone` of `CortaPapel`'s
-  lambda (12006, 12007; `$_0` in the closure's RTTI name is clang's name for a type with internal linkage) stores the
+  lambda (12006, 12007; `$_0` in the closure's RTTI name is clang's name for a type with internal linkage,
+  numbered as said below) stores the
   vptr before it copies the capture: 6 over 12 rows with strict aliasing, 1 over 9, operand-only, without it. In
   `eleitor/cvotacaostateaudio.cpp`, the two `__clone` slots of `IniciarEsperaFimAudio`'s second lambda (`$_1`; 13732,
   13740) store the vptr first too: 13732 scores 6 over 12 rows with strict aliasing and 1 over 9, operand-only, without
@@ -490,8 +492,17 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
   of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
   neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
-  object's is a reading: the file was listed last, on the user's decision (below). At b7c2e8a5 (11619 matches) each file
-  of the table was built in place,
+  object's is a reading: the file was listed last, on the user's decision (below).
+
+  A lambda's N is its rank in the order clang mangles the enclosing function's lambdas, not their source order: one
+  passed to a template instantiated where it is written (`std::bind`), or a generic lambda at its first call, is
+  mangled there, the others when their call operators are emitted (a reading of one function's forms). The target's
+  N is in the closure's typeinfo string: `CTelasVota::CriaTelaVisualizacaoCandidato`'s photo reader, fourth in the
+  source, is `$_0` and its `std::function` lambda `$_2` (`/usr/bin/grep -a CriaTelaVisualizacaoCandidato
+  ledger/strings.tsv`, 478246 and 481428). Ours is in the object's symbols (`llvm-nm`), and a form that changes the
+  mangling order changes the names of every match over the closure.
+
+  At b7c2e8a5 (11619 matches) each file of the table was built in place,
   its object compiled with `make -C src <object> UENUX2_TBAA_DIRS=` (the compile line gains `-fno-strict-aliasing` and
   nothing else), then how-to steps 7 to 9 and `make -C src splat`, the rows against b7c2e8a5's `splat/scan.tsv`; between
   two variants the tracked files went back to b7c2e8a5's and the objects were compiled again, and the link came back

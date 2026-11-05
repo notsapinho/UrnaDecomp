@@ -111,7 +111,11 @@ vtable by its typeinfo and reads its words). Three shapes, and a call that place
 - **A class with its key function in another class's file.** `comum::CRdvPosicionadorVota`'s vtable and typeinfos lie
   inside `crdvvota.cpp`'s run of the data, and a copy kept from a user would come after `comum::CRdvVota`'s own typeinfo
   and its members after the file's external functions; here they come before. A small class one file constructs can be
-  defined there: its member goes into that file, and the landed unit that compiles it grows (unit 13).
+  defined there: its member goes into that file, and the landed unit that compiles it grows (unit 13). Not when a
+  caller keeps the constructor's returned `this` (a `local.tee` or `local.set` of the call's result): clang drops it at
+  a call in the defining TU, so that caller and the constructor are in two TUs ([codegen.md](codegen.md) §C6). 3614
+  keeps 2738's (`CComparecimentoMesarioPK`), and with the constructor in its caller's recorded file scores `346 over
+  2200` against `132 over 2174`, operand-only, in a file of its own.
 - **A class out of its upstream file.** The reverse: a fork can move a class out of the file upstream keeps it in, and
   the data show it. `ASN1::DataLengthCounter` is in upstream's `BEREncoder.cxx`, and `PEREncoder`'s vtable (1151416)
   lies between `PrimitiveChecker`'s (1151276) and `DataLengthCounter`'s (1151548) in `ledger/vtables.json`'s address
@@ -119,7 +123,8 @@ vtable by its typeinfo and reads its words). Three shapes, and a call that place
   `PEREncoder.cxx`'s end gives the same module, so its file name is chosen. The sign that sent the search there: a call
   the target keeps and clang inlines at a low cost, with no flag to explain it, means the callee is in another TU. An
   out-of-line constructor or destructor is the exception: at `-fPIC` its call stays beside the definition, with no
-  remark ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags. A second sign needs no inlining: with the
+  remark ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags; what the caller does with the returned
+  `this` is. A second sign needs no inlining: with the
   callee's body in its TU, clang can drop work the caller does after the call on what it passed. 3745 and 5727
   (`NomeArquivoEleitores` and `…TTE`) test the long bit of both their temporary strings before freeing them; written in
   `cnomearquivo.cpp` beside 3772, the callee they keep a call to, ours tested one (`17 over 80 rows`, 12 deleted), and
@@ -127,11 +132,12 @@ vtable by its typeinfo and reads its words). Three shapes, and a call that place
   TU than its callee.
 - **A call of another file's internal function.** With no LTO, only that file's TU can call a function of internal
   linkage (a `(anonymous namespace)::` or `static` name in a record), so a direct call of one puts the call site in that
-  TU: the caller is defined there, or binaryen inlined into it a function defined there. 5971, `vota::(anonymous
-  namespace)::CriaTituloExtratoRDV()` (`iniciovotacao/cgeradorresumozeresima.cpp:43`), is called by 11943 and 11946
-  alone (`awk -F'\t' '$2==5971 {print $1}' ledger/callgraph.tsv | sort -u`), the `StartState`s of two zeresima bases.
-  Read the caller's size and look for a one-caller function of that file to tell the two apart, and say which in the
-  fragment.
+  TU: the caller is defined there, or binaryen inlined into it a function defined there. The records of an internal
+  function inside a body do the same: 5971 holds `vota::(anonymous namespace)::CriaTituloExtratoRDV()`
+  (`iniciovotacao/cgeradorresumozeresima.cpp:43`) inlined by clang, so 5971 is that file's
+  (`vota::CriaPartesExtratoRDV`, external, unit 325), and its callers 11943 and 11946, which call it directly, are
+  placed by other evidence. Read the caller's size and look for a one-caller function of that file to tell the two
+  apart, and say which in the fragment.
 
 ## P3. What a stretch's label says
 
@@ -201,22 +207,31 @@ a choice the fragment names with both neighbours. `comum::asn::CConversorCodigoC
 **What each order shows.** Three orders place code, and a comment says which one it rests on and what is a reading
 ([../link-order.md](../link-order.md) §2 has the rule; these are the measurements behind it):
 
-- *Between objects*, the data: each object's vtables, typeinfos and records lie in link-line order (L7 item 15). That
-  is evidence of the objects' order.
+- *Between objects*, the data: each object's vtables, typeinfos and records lie in link-line order (L7 item 15). That is
+  evidence of the objects' order. So is the function table: wasm-ld numbers its slots in link-line order, object by
+  object, so a slot run lies among its object's neighbours. `CControladorReconhecimentoMesario`'s statics' exit
+  destructors (10306, 10305) hold slots 4405 and 4406, before the gravadores converters' vtables (4428 on), as its
+  records come before theirs (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E
+  'elem\[(4405|4406|4428)\] '`), and `CAssinaVotavelBu`'s (10281, 10280) at 4466 and 4467 lie two objects past
+  `gravadores/asn/util.cpp`'s, where `cassinavotavelbu.cpp`'s record is (unit 321). In our link the order is each
+  object's first mention of a function address (table relocations and `GOT.func` alike), so an edit of an early object
+  can move every later slot.
 - *Inside one object*, the code: the use band's reverse index order against `names.tsv`'s `ld_index` (how-to step 3,
   "The order of two members") is evidence of the order clang emitted the functions, which follows the definitions only
   as [reading.md](reading.md) §R8 and §R9 say.
 - *Inside one object*, the data: clang creates each object's data when its code first needs it, and the link keeps that
   order. A record comes with its function's body (§R8); a vtable with the first constructor or destructor that stores
-  it; a typeinfo with its first `typeid` or vtable; an internal constant where the first function that reads it is
-  emitted, and a global or a static data member at its first mention, not at its definition (`ctelasvota.cpp` defines
-  `FONTE_TITULO`, `FONTE_INSTRUCAO_TESTE_TECLADO` and `FONTE_AGUARDE` on lines 176 to 178, and its object holds them as
-  segments 3, 30 and 5, the second after `TelaTesteTeclado`'s data, its only reader, and `CTelasVota::s_mutex` before
-  `s_instancia`, in `GetInst`'s order: `wasm-objdump -x -j Data
-  build/out/app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o | /usr/bin/grep 'segment\['`). So constants the
-  key function's code reads come before the vtable, typeinfo and typeinfo name of its class, and constants only a
-  deferred (internal) function reads come after them. Two probes at the uenux2 flags, `ext.cpp` (`K::f` reads two
-  `SFont` constants) and `int.cpp` (an anonymous-namespace `g`, kept by a pointer, reads them and `K::f` calls it):
+  it; a typeinfo with its first `typeid` or vtable; an internal constant where the first body that reads it is compiled,
+  in the definitions' order, which can differ from that function's place in the code (a function an earlier caller
+  mentions first takes its code place there and still creates its constants at its definition, so the code's order and
+  the data's are two choices); and a global or a static data member at its first mention, not at its definition
+  (`ctelasvota.cpp` defines `FONTE_TITULO`, `FONTE_INSTRUCAO_TESTE_TECLADO` and `FONTE_AGUARDE` on lines 176 to 178, and
+  its object holds them as segments 3, 30 and 5, the second after `TelaTesteTeclado`'s data, its only reader, and
+  `CTelasVota::s_mutex` before `s_instancia`, in `GetInst`'s order: `wasm-objdump -x -j Data
+  build/out/app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o | /usr/bin/grep 'segment\['`). So constants the key
+  function's code reads come before the vtable, typeinfo and typeinfo name of its class, and constants only a deferred
+  (internal) function reads come after them. Two probes at the uenux2 flags, `ext.cpp` (`K::f` reads two `SFont`
+  constants) and `int.cpp` (an anonymous-namespace `g`, kept by a pointer, reads them and `K::f` calls it):
 
       // ext.cpp                                         // int.cpp: the same head, then
       struct SFont { int a, b; };                        namespace { const SFont F1{20, 0}; const SFont F2{30, 0};
@@ -339,8 +354,8 @@ On `main` the file is stub-only, and each of its three recorded functions (6718,
 function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/dados/cfotos.cpp` is 32 lines, its records of 3755 are lines 39 and 51, and f3755's stub is
-line 30 (`LC_ALL=C /usr/bin/grep -n '^// f3755 ' <file>`; bbf27ac1); `stubs.py --check` passes. A function in a slot of
+`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` is 90 lines, its record of 3744 is line 208, and f3744's stub is
+line 88 (`LC_ALL=C /usr/bin/grep -n '^// f3744 ' <file>`; 3c1ef19d); `stubs.py --check` passes. A function in a slot of
 a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
 vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
@@ -348,8 +363,8 @@ though a record names the function: `stubs.py` takes only blank lines outside ev
 (`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).
 `src/uenux2/src/api/gui/cstepsprogressbar.cpp` (unit 41) has one record, line
 428, of the constructor that 13550 inlines; its gap ends at `#line 425`, f13550's stub takes lines 425 to 428, and the
-unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps lines 4 to 77 blank around its
-constructor's records at 52, 58 and 67, with its destructor at 78, and that run stays blank:
+unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps the lines between its namespace's
+opening and its destructor at 78 blank around its constructor's records at 52, 58 and 67, and that run stays blank:
 
 ```sh
 awk 'NR==52||NR==58||NR==67||NR==78 {print NR": ["$0"]"}' src/uenux2/src/api/gui/cprogressbar.cpp
@@ -386,7 +401,9 @@ alone does not settle:
   break another: 3272 and 3279), and name the pairs that stay inverted in the fragment, or fix the old pairs in the same
   commit with the splat build. Unit 197's `CLogVota` members 4546, 4542, 4541 and 4537 sit right after 4551, which
   keeps the band's order with 4556, 4551 and 4511 and leaves 12 pairs against 4535, 4529 and 4522, which unit 156 had
-  already put out of order.
+  already put out of order. Count over the whole band, not a window of indices around the member, which can flip which
+  place is fewest; when two places tie, take the one between the member's data neighbours ([codegen.md](codegen.md)
+  §C4 has the objects' side of the same count).
 - **A run across two objects of files you chose.** A run of consecutive indices in one band orders the objects as well:
   arrange the definitions so the run reads in link order across them where a form with the same code exists, and say
   in the fragment which part of the order the run fixes. The uses-2 run 5558 down to 5552 spans

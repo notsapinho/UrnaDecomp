@@ -7,7 +7,8 @@ traps stay with their topic: [toolchain.md §T7](toolchain.md) (comparing bodies
 ## X1. binaryen never inlines an exported function, so exporting library code to keep it alive changes its bodies
 
 binaryen's Inlining pass inlines a function of **any** size when it has exactly one call site and is not used
-globally (exported, or in the table). With `-sEXPORTED_FUNCTIONS` covering a library's symbols that rule never
+globally (exported, or in the table), and a body of a few instructions into every direct caller whatever their count
+([reading.md](reading.md) §R10, 11442). With `-sEXPORTED_FUNCTIONS` covering a library's symbols that rule never
 fires. Measured: target func 444 (`BN_div`) is 866 rows = `BN_div` with its only callee `bn_div_fixed_top` inlined;
 in a probe that exports `bn_div_fixed_top`, `BN_div` stays 65 rows at every -O level (817/866 rows differ). Target
 981 is `BN_mod_exp` with `BN_mod_exp_mont_word` and `BN_mod_exp_recp` inlined (their ERR strings share the
@@ -98,6 +99,15 @@ When neither the twin nor the merge's other members are identified, a roots stan
 7. `LC_ALL=C grep …` can print nothing where `/usr/bin/grep …` prints matches. A bare `grep`'s silence is no evidence.
 8. Each of these fails quietly when a chain goes on: an empty `join`, a `wc -l` of 0 or a `grep -c` of 0 proves
    nothing until the file it reads is known to be written, and `grep` on an empty variable waits on stdin.
+9. macOS's `sed -E` has no `\b`: `s/\bf[0-9]+\(/f(/g` replaces nothing and exits 0, so a masked diff written with it
+   masks nothing (322 lines against Python's `re`, 54). Use `[[:<:]]` and `[[:>:]]`, or Python, and check that one
+   masked line reads as masked before trusting a count.
+10. A column cut (`cut -c1-230`) of a symbol-file line can keep a prefix of a `by:` voter's index: 3797's
+   `evidence:call by:11584` printed as `by:1158`. Print the evidence whole (`/usr/bin/grep -F '= func:3797;'
+   splat/symbol_addrs.txt | /usr/bin/grep -oE 'evidence:.*$'`).
+11. A make error a second after the start is the environment's before the code's: a stopped Colima VM fails each
+   compile with make's `Error 1` lines, and the log's first `ERROR` says `failed to connect to the docker API`
+   (`/usr/bin/grep -m1 ERROR <log>`; `colima status`, then `colima start`).
 
 ## X4. Fetching from the TSE site
 
@@ -314,11 +324,15 @@ Symbol 22 is D1, so the object calls D1. The link map lists both names on the on
 ## X12. Comparing two objects function by function
 
 A comparison of two relocatable objects by `wasm-objdump -d` text (to show that an `extern template` line or a probe
-edit left the rest of an object alone) reads three things that change with no code change:
+edit left the rest of an object alone) reads five things that change with no code change:
 
 - `call_indirect 0 <env.__indirect_function_table> (type N)`: N indexes the object's own type section, which
   renumbers when the object gains or loses a signature (five of 261 common functions of `cmtformbuilder.cpp.o` differed
   in `(type 11)` against `(type 12)` alone after the object gained members);
+- `global.get N <GOT.func.…>`, `<GOT.mem.…>` or `<__memory_base>`: N indexes the object's globals, which renumber when
+  it gains an import (four libc++ helpers of `csincronismooperador.cpp.o` read `global.get 9` against `global.get 17`
+  and nothing else);
+- the `i32.const` an object adds to `__memory_base`: a data offset, which moves when the object's data grow;
 - a callee that became undefined prints `call <env._ZN…>` where it printed `call <_ZN…>` while the object defined it;
 - `wasm-objdump -d` names a constructor's or destructor's one body by its C1 or D1 symbol, so a cut by the C2 or D2
   name gets nothing from both objects and a `diff` prints 0 lines: count the lines cut before reading a 0, and treat 0
@@ -330,9 +344,28 @@ wasm-objdump -d build/out/app/uenux2/src/api/gui/capplicationcontextstack.cpp.o 
 # func[30] <_ZN3api24CApplicationContextGuardD1Ev>
 ```
 
-With offsets, call indices, ` (type N)` and `env.` stripped and call targets compared by name, `roots_boost.o` before
-and after two `extern template` lines and one probe call taken out (b020932b) gave `same 764, differ 1`: the probe
-function changed on purpose.
+With offsets, call indices, ` (type N)`, `global.get`/`global.set` indices and `env.` stripped, call targets compared
+by name and a `__memory_base` offset read by hand, `roots_boost.o` before and after two `extern template` lines and
+one probe call taken out (b020932b) gave `same 764, differ 1`: the probe function changed on purpose.
+
+A variant compiled from another path than the object it is compared with differs in the `i32.const` addends into its
+read-only data, which are relocated addends, not `__memory_base` sums: the `std::source_location` records' file names
+lie in that data, and `-ffile-prefix-map` rewrites only the trees' `/work/src/…` spellings, so a scratch path keeps
+its length. An unchanged copy of `cconversoreleicoesvota.cpp` compiled from `build/out/` differed from the landed
+object in 22 lines of 2115, every one such an addend (`i32.const 600` against `564`). Compile the control beside the
+variants, under a name of the same length, and compare each variant with it (the control against itself: 0).
+
+## X14. Reading the scan and the pieces
+
+1. In a `differs` row's detail, `ours +0x49 call 2269` names the **target** index our callee re-points to, not our
+   function 2269: 12936's `+0x4a target +0x49 call 3977 | ours +0x49 call 2269` re-points into
+   `_ZN5comum7CCargos5ResetEv = func:2269;`, while our 2269 in `names.tsv` is a binaryen merge. Read the number in
+   `splat/symbol_addrs.txt` (`/usr/bin/grep -F '= func:2269;'`), and ours from the row's `ours` column. In an
+   `unresolved` row's `call N: <symbol> has no target function`, N is ours.
+2. Each piece is two files with one leading index, `<group>/<index>[-<name>].wat` and `.bin`
+   (`find build/out/splat/pieces/asm -type f -name '10214*'` prints both). A script that keys the folder by index
+   keeps whichever it meets last and reads no `call N` in a `.bin`: take `.wat` files only, or `grep -r`, which finds
+   nothing in the `.bin`.
 
 ## X13. `sed -i` on a Latin-1 source
 
