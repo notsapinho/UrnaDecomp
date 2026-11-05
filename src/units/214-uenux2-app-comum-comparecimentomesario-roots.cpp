@@ -1,44 +1,19 @@
-// Roots: reach unit 214's functions the way the target's callers do, until they land. Each has direct callers in the
-// target that are not all written, so each gets the call sites it lacks here, two in all, and stays out of line; each
-// stand-in has a body no target function has (the calls, then a constant, the results' last bytes or a word read from
-// the result), and none is called:
-// - comum::ListaArquivosNaoRegistrados (fn 5374): fns 1149 and 10451, one call each; 1149 is in the link (it holds the
-//   constructor that calls it), so one call here stands for 10451;
-// - comum::CControladorReconhecimentoMesario::GetInst (fn 1149): fns 3614, 5382, 10316, 10337 and 10451; 10337, 5382
-//   and 10316 are in the link (unit 135's), so one call here stands for 3614 and 10451;
-// - comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385): fn 12105, which calls it twice;
-// - comum::CControladorReconhecimentoMesario::GravaWsq (fn 5371): fns 5382 and 10451; 5382 is in the link (unit 135),
-//   so one call here stands for 10451 (a member, called through an asm label as its object's symbol). It passes the
-//   5 MiB that 5382's inlined SalvarBiometriaMesarioRegistrado passes: dead-argument elimination puts the constant in
-//   GravaWsq's body, where the target has it, only when every caller passes it, so 10451 does too (a reading).
-// The first and the third return a class by value through a hidden result pointer, so they are declared through asm
-// labels with that pointer first and called into buffers the stand-ins never destroy: nothing of libc++ is
-// instantiated here. GetNomeMesario's `this` is a parameter of ours that its body never reads, as the target's wasm
-// type has none. GetInst returns a reference, the object's address.
+// Roots: reach unit 214's functions the way the target's callers do, until they land.
+// comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385) has one direct caller in the target, fn 12105,
+// which calls it twice and is not written, so the stand-in gives it those two call sites and it stays out of line; the
+// stand-in's body (the calls, then the results' last bytes) is no target function's, and nothing calls it.
+// The stand-ins for comum::ListaArquivosNaoRegistrados (fn 5374), CControladorReconhecimentoMesario::GetInst (fn 1149)
+// and GravaWsq (fn 5371) went: their target callers (1149 and 10451; 3614, 5382, 10316, 10337 and 10451; 5382 and
+// 10451) are in the link.
+// GetNomeMesario returns a class by value through a hidden result pointer, so it is declared through an asm label with
+// that pointer first and called into buffers the stand-in never destroys: nothing of libc++ is instantiated here. Its
+// `this` is a parameter of ours that its body never reads, as the target's wasm type has none.
 extern "C" {
-void w214_lista(void* resultado) __asm__("_ZN5comum27ListaArquivosNaoRegistradosEv");
-const void* w214_controlador() __asm__("_ZN5comum33CControladorReconhecimentoMesario7GetInstEv");
 void w214_nome(void* resultado, void* objeto, const void* titulo) __asm__(
     "_ZN5comum35CImprimirIdentificacaoMesariosFinal14GetNomeMesarioERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w214_grava(void* objeto, const void* wsq, const void* diretorio, const void* externo, const void* geraId,
-    double espacoMinimo) __asm__(
-    "_ZN5comum33CControladorReconhecimentoMesario8GravaWsqERKNSt3__26vectorIhNS1_9allocatorIhEEEERKNS1_10filesystem4pathESB_RKNS1_8functionIFjvEEEd");
 }
 
 namespace {
-
-// stands for fn 10451
-__attribute__((noinline)) int w214_arquivos(void* resultado)
-{
-    w214_lista(resultado);
-    return 23;
-}
-
-// stands for fns 3614 and 10451
-__attribute__((noinline)) int w214_controlador_limiar()
-{
-    return static_cast<const int*>(w214_controlador())[1] + 31;
-}
 
 // stands for fn 12105
 __attribute__((noinline)) int w214_nomes(void* objeto, const void* primeiro, const void* segundo)
@@ -50,26 +25,12 @@ __attribute__((noinline)) int w214_nomes(void* objeto, const void* primeiro, con
     return a[11] + b[11];
 }
 
-// stands for fn 10451
-__attribute__((noinline)) int w214_gravacao(void* objeto, const void* wsq, const void* diretorio, const void* externo,
-    const void* geraId)
-{
-    w214_grava(objeto, wsq, diretorio, externo, geraId, 5 * 1024 * 1024);
-    return 37;
-}
-
-int (*volatile w214_sink_arquivos)(void*);
-int (*volatile w214_sink_controlador)();
 int (*volatile w214_sink_nomes)(void*, const void*, const void*);
-int (*volatile w214_sink_gravacao)(void*, const void*, const void*, const void*, const void*);
 
 struct SW214Roots {
     SW214Roots()
     {
-        w214_sink_arquivos = w214_arquivos;
-        w214_sink_controlador = w214_controlador_limiar;
         w214_sink_nomes = w214_nomes;
-        w214_sink_gravacao = w214_gravacao;
     }
 } w214_roots;
 

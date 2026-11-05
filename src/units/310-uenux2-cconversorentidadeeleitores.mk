@@ -120,8 +120,8 @@
 # its .cpp; md/cdataje.h in md/ as its record's .cpp is).
 #
 # Roots (310-uenux2-cconversorentidadeeleitores-roots.cpp): w310_visitantes stands for 5704's target caller 7787 (the
-# photos' reader, not written) and w310_busca for 2805's target callers 3614, 5376 and 10451 (not written; they call the
-# other maps' instances that the target's 2805 merges); each goes when its callers are in the link.
+# photos' reader, not written) and goes when 7787 is in the link; w310_busca, which stood for 2805's target callers
+# 3614, 5376 and 10451 (they call the other maps' instances that the target's 2805 merges), went with them (unit 221's).
 W310_SRCS := src/app/comum/dados/asn/eleitor/cconversorentidadeeleitores.cpp src/app/comum/dados/md/cdataje.cpp \
   src/app/comum/dados/md/eleitor/centidadeeleitores.cpp src/app/comum/dados/md/eleitor/ctransferenciatemporaria.cpp
 UENUX2_SRCS += $(W310_SRCS)

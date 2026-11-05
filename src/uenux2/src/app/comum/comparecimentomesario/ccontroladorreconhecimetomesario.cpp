@@ -1,12 +1,6 @@
-// comum (/home/rubio/tse/uenux2/src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp): the list of
-// the files of the WSQ directory "nao-registrado/" in reverse name order, target fn 5374, and with it the libc++ code
-// of its std::sort the target keeps: __introsort (fn 5373), __insertion_sort_incomplete (fn 5370), __sort4 (fn 2726)
-// and the comparator (fn 310). No record names fn 5374: its name, its being a free function and its line are chosen,
-// and its file is its band's. comum::CControladorReconhecimentoMesario's constructor, GetInst (fn 1149) and its
-// statics follow, their lines a choice; the statics below GetInst give the target's .bss order. The records of
-// CControladorReconhecimentoMesario::ComparaDigitais (fn 5372, lines 65 and 76) are not written. After them, their
-// lines a choice: PREFIXO_MESARIO and ArmazenaImagemMesario, SalvarBiometriaMesarioRegistrado (all three held by fn
-// 5382) and GravaWsq (fn 5371). src/units/214-uenux2-app-comum-comparecimentomesario.mk says what each part rests on.
+// comum (/home/rubio/tse/uenux2/src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp). The
+// reconstruction's notes, not TSE's text, are in src/units/214-uenux2-app-comum-comparecimentomesario.mk: the records
+// fix ComparaDigitais's lines (65 and 76); every other line is a choice.
 #include "app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.h"
 
 #include <algorithm>
@@ -18,10 +12,15 @@
 
 #include <sys/statfs.h>
 
+#include "api/hwil/ifingermatcher.h"
+#include "api/hwil/ifingerscanner.h"
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 #include "app/comum/cpath.h"
+#include "app/comum/log/clogcomum.h"
 #include "app/comum/gravadores/pathwsq.h"
 #include "app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.h"
+#include "app/vota/operador/confirmaidentidade/cparametrosimagemdigital.h"
 #include "api/io/cfile.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
@@ -60,22 +59,26 @@ CControladorReconhecimentoMesario& CControladorReconhecimentoMesario::GetInst()
     return *s_inst;
 }
 
+bool CControladorReconhecimentoMesario::ComparaDigitais(const std::vector<uebyte>& digital,
+                                                        const std::vector<uebyte>& outraDigital)
+{
+    auto& digitais = api::CPolySingleton<api::IFingerScanner>::instance();
+    std::vector<uebyte> modelo;
+    std::vector<api::SXYT> minucias;
+    vota::CParametrosImagemDigital::GetInst().ExtraiTemplate(digital, digitais.Slot2(), digitais.Slot1(), modelo);
+    vota::CParametrosImagemDigital::GetInst().ExtraiMinucias(outraDigital, digitais.Slot2(), digitais.Slot1(),
+                                                             minucias);
+
+    // (original lines 72-75: content not recovered)
+#line 76
+    auto& checador = api::CPolySingleton<api::IFingerMatcher>::instance();
+    const bool batem = checador.Slot2(modelo, minucias, m_limiar);
+    CLogComum::GetInst().LogaScoreReconhecimentoMesario(checador.Slot4());
+    return batem;
+}
+
 std::unique_ptr<CControladorReconhecimentoMesario> CControladorReconhecimentoMesario::s_inst;
 std::mutex CControladorReconhecimentoMesario::s_mutex;
-
-// <stubs>
-// f5372 · 720 B · unmatched · name unknown
-// ? f5372(i32) { ... }
-// </stubs>
-
-
-
-
-
-
-
-
-
 
 const std::string PREFIXO_MESARIO = "me";
 
@@ -123,6 +126,47 @@ void CControladorReconhecimentoMesario::GravaWsq(const std::vector<uebyte>& wsq,
     arquivo.Write(wsq);
     arquivo.Close();
     api::CSystem::CopyFile(caminho, caminhoExterno, false, true);
+}
+
+bool CControladorReconhecimentoMesario::BiometriaPresenteNoArquivo(const std::vector<uebyte>& digital,
+    const std::filesystem::path& diretorio, int idArquivo)
+{
+    const std::string nome = std::format("me{:06}.wsq", idArquivo);
+    const std::filesystem::path caminho = diretorio / nome;
+    if (std::filesystem::exists(caminho)) {
+        if (ComparaDigitais(digital, ecourna::api::io::CFile::ReadFileBinary(caminho))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CControladorReconhecimentoMesario::BiometriaPresenteNosRegistrados(const std::vector<uebyte>& digital,
+                                                                        int idArquivo)
+{
+    return BiometriaPresenteNoArquivo(digital, GetPathWsqRegistrado(), idArquivo);
+}
+
+bool CControladorReconhecimentoMesario::BiometriaPresenteNosNaoRegistrados(const std::vector<uebyte>& digital)
+{
+    const std::vector<std::filesystem::path> arquivos = ListaArquivosNaoRegistrados();
+    const std::vector<std::filesystem::path> recentes(
+        arquivos.begin(), arquivos.begin() + std::min<std::size_t>(arquivos.size(), 6));
+    for (const std::filesystem::path& arquivo : recentes) {
+        const std::filesystem::path caminho = GetPathWsqNaoRegistrado() / arquivo;
+        if (std::filesystem::exists(caminho)) {
+            if (ComparaDigitais(digital, ecourna::api::io::CFile::ReadFileBinary(caminho))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void CControladorReconhecimentoMesario::SalvarBiometriaMesarioNaoRegistrado(const std::vector<uebyte>& wsq)
+{
+    const std::function<uint32_t()> geraId = [this]() { return ++m_quantidadeNaoRegistrados; };
+    GravaWsq(wsq, GetPathWsqNaoRegistrado(), GetPathWsqNaoRegistradoExterno(), geraId, 5 * 1024 * 1024);
 }
 
 } // namespace comum

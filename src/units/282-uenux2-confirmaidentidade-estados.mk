@@ -258,8 +258,5 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalreconheci
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # Every slot of these classes is written: the -pending.cpp that trapped CDigitalReconhecida::ProcessInput and
-# CPedeDigital::ProcessTick went with them. One callee has a caller not reconstructed (5399's 10451; 6269's 10316 is in
-# the link, unit 135's): 282-uenux2-confirmaidentidade-estados-roots.cpp stands in for it; it keeps no vtable.
-$(ROOT)/$(APP)/282-uenux2-confirmaidentidade-estados-roots.o: $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/282-uenux2-confirmaidentidade-estados.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/282-uenux2-confirmaidentidade-estados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/282-uenux2-confirmaidentidade-estados-roots.o
+# CPedeDigital::ProcessTick went with them. No roots: the last stand-in, for 5399's caller 10451, went once 10451 was in
+# the link (unit 221's).

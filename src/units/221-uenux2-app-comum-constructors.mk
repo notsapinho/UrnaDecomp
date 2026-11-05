@@ -1,9 +1,9 @@
 # uenux2 comum constructors that no record names, each defined out of line: comum::md::CComparecimentoMesario's two
 # (target fns 2731 without an id_arquivo and 2730 with one, defined in that order) in
 # app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp, and comum::md::CComparecimentoMesarioPK's (2738) in
-# app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp, vota::CRegistraDigitalOperador's file (its records'
-# path), which no unit compiled before (the class's members came later: below). All three match. The fourth
-# constructor of the kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's
+# app/vota/operador/confirmaidentidade/ccomparecimentomesariopk.cpp, a file of its own beside
+# vota::CRegistraDigitalOperador's (below says why; that class's members extend this unit: below). All three match. The
+# fourth constructor of the kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's
 # aguardaeleitor/celeitordadoshabilitacao.cpp, a TU of its own, and unit 142's fragment has its evidence.
 #
 # Evidence, read in the target:
@@ -33,12 +33,14 @@
 #   (CRegistraDigitalOperador's vtable @1592424, records @1592468 to @1592596) and CDadoEleitorNaoConfere's vtable: the
 #   one recorded file between is confirmaidentidade's, and so is the upper end's (cpededigital.cpp); the lower end's
 #   file, cverificadadoeleitor.cpp, is unit 161's choice in that directory. So the directory is
-#   app/vota/operador/confirmaidentidade/, against the class's namespace (rule 2 wins over it). The file is a choice
-#   among those objects: cregistradigitaloperador.cpp, the recorded one, holds 3614, one of 2738's callers (records :328
-#   and :371), and a small class one file constructs can be defined there (docs/reference/facts/placing.md P2). A file
-#   named after the class there (rule 4) is the other reading; no data place it. The constructor's lines, after the
-#   records of the class's own members (95 to 371; StartState's are written now: below), are chosen (src/README.md
-#   "Gaps").
+#   app/vota/operador/confirmaidentidade/, against the class's namespace (rule 2 wins over it). The file is not the
+#   recorded cregistradigitaloperador.cpp, though 3614, one of 2738's callers, is there: the target's 3614 uses the
+#   constructor's returned `this` as the map key it builds (`call 2738; local.tee`), as 2730, 2731 and 10313 do, and
+#   with the constructor defined in cregistradigitaloperador.cpp the object drops that result at 3614's call, where with
+#   the constructor only declared there it keeps it (llvm-objdump -d of the object compiled each way; in the whole link,
+#   3614 is 346 over 2200 rows so, against 132 over 2174 with the file of its own).
+#   So the file is the other reading, one named after the class there (rule 4), which no data contradict; its name,
+#   its lines and its place in this unit's list are chosen.
 # - 2731 and 2730 link after aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 and before
 #   comparecimentomesario/estados/cpedetitulomesario.cpp's 2729 (stretch 1080, labelled
 #   csuspensaoautomaticaeleitor.cpp). In the data CSuspensaoAutomaticaEleitor's vtable (@1593264) and record are
@@ -49,12 +51,12 @@
 #   4). 2731 is defined first, as it links first (docs/how-to-decompile.md step 3, "The order of two members").
 # Chosen too: the header's path, unit 91's (rule 1: such a path names nothing; 2730, 2731 and the DAO include it, and it
 # stays); the parameters' names; the date taken by reference (the callers pass an address, which a by-value class
-# parameter gets too); the member-initializer lists. cregistradigitaloperador.cpp builds with strict aliasing
-# (UENUX2_TBAA_DIRS) where md/ does not: compiled with -fno-strict-aliasing too, its object is byte-identical. No roots
-# file: the DAO's RecuperarID and RecuperarTodos (unit 91) call the three, as the target's 10402 and 10401 do.
+# parameter gets too); the member-initializer lists. ccomparecimentomesariopk.cpp builds with strict aliasing
+# (UENUX2_TBAA_DIRS) where md/ does not: compiled with -fno-strict-aliasing too, its object is byte-identical (cmp). No
+# roots file: the DAO's RecuperarID and RecuperarTodos (unit 91) call the three, as the target's 10402 and 10401 do.
 #
-# vota::CRegistraDigitalOperador's members, written in cregistradigitaloperador.cpp before 2738's constructor, extend
-# this unit (src/units/README.md "Landing a unit" item 2). Target fns matched: GetInst 5396, with the constructor and
+# vota::CRegistraDigitalOperador's members, written in cregistradigitaloperador.cpp, extend this unit
+# (src/units/README.md "Landing a unit" item 2). Target fns matched: GetInst 5396, with the constructor and
 # its two form builders inlined; StartState 10454; ProcessInput 10452; the statics' exit destructors 10457 and 10456;
 # and 3886, the body binaryen forms from three statics' exit destructors, with 10321 (unit 135's) and 10682 (unit
 # 161's), which match through it. Evidence (cregistradigitaloperador.h has the class's RTTI, vtable and layout):
@@ -104,17 +106,84 @@
 # FinishState (10453) is written at its records' lines (104 and 105, column 5: instance<api::IFingerScanner>() with slot 7
 # given 0, then slot 6); with comum::CPedeDigitalMesario::FinishState (10315, unit 135) it forms binaryen's 6012, as in
 # the target, and the three match.
-# Pending (221-uenux2-app-comum-constructors-pending.cpp says what it waits for): ProcessTick (10451);
-# BiometriaMesarioPresenteNosEleitores (3614) is declared and not written. GetInst (5396) needs no stand-in: its two
-# target callers, 10458 (unit 278) and 10443 (unit 161), are in the link. The vtable sinks of the two states 10451 holds
-# inlined are in unit 278's roots, beside those states' classes.
+# GetInst (5396) needs no stand-in: its two target callers, 10458 (unit 278) and 10443 (unit 161), are in the link.
+#
+# ProcessTick (10451, slot 8, 6996 B, records :143 to :145) is written and its row is `unresolved` (below); its callee
+# BiometriaMesarioPresente (3614, 4765 B) matches, named by the srcloc-anchor of the records it holds, with
+# comum::CControladorReconhecimentoMesario::ComparaDigitais (5372, unit 214's file), the hinted emplace of
+# std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> (5376, from cregistradormesario.cpp's object) and the
+# five __func members of SalvarBiometriaMesarioNaoRegistrado's lambda (10294 to 10298). What the target holds, read
+# with pnpm wasm fn and lift (the headers name each piece):
+# - On the capture tick (+11): both ticks stopped, +32 decremented; at 0 it is set back to 3, the next state is
+#   vota::CTentativaCapturaDigitalEsgotada and LogaHabilitacaoCanceladaCapturaDigitalMesario (fn 4522) logs it,
+#   otherwise the next state is vota::CDigitalNaoCapturada; each GetInst and constructor inlined (their headers).
+# - On the wait tick (+12): the detection, scanner and urna singletons (records :143 to :145; fns 3615, 816, 923); up
+#   to three captures (slot 4), each checked against slot 0's size, its entropy computed (a std::map<uebyte, int> of
+#   its bytes in ProcessTick's own frame, then the sum of p * log2(p) in doubles: fn 2972, musl's log2, and the
+#   `f64.lt` against -4.0) before the urna's model is tested (2009, 2010, 2020 and 2022 keep the capture at once), the
+#   one of highest entropy above 4 kept; then, when the detection's slot 2 accepts it: the second form, the scanner's
+#   slot 7 with 1, InvertColors up to model 2019 and VerticalFlip, CConversorWsq's WSQ and its std::make_shared copy,
+#   assigned to CControlaReconhecimento's s_digitalRegistrada (@1908684); IdentificaMesario's frame; the two ticks
+#   stopped; vota::impl::IInformacaoThreadOperador::GetInst()'s slot 12 (SetBiometriaOperador) and
+#   CInformaEleitorPodeVotar::GetInst() as the next state.
+# - IdentificaMesario: the three searches, each over a map comum::CRegistradorMesario builds (its three Get* members),
+#   calling 3614 for each node with the comparecimento's id_arquivo or 999999 and logging LogaMesarioHabilitouEleitor
+#   (fn 3258) for the one found; when none is, the digital is compared (5372) with the first six files of
+#   comum::ListaArquivosNaoRegistrados (fn 5374), and either a match is logged, or LogaCapturadaDigitalMesario and the
+#   message that none matched are, and SalvarBiometriaMesarioNaoRegistrado stores it through GravaWsq (fn 5371).
+# - 3614: BiometriaMesarioPresenteNosEleitores inlined first (the registered digital's template; the mesario's
+#   comparecimento of period 1 through CRegistradorMesario's Find and CComparecimentoMesarioPK, fn 2738; the fingers to
+#   try, its dedo_habilitacao, or 1, 6, 2 and 7 when it has none, false at once for a finger 0; a copy of
+#   comum::CEleitores's records, the mesario found in it, and for each finger it has its minutiae against the template,
+#   IFingerMatcher's slot 2 with the controller's limit, record :371); then CControlaReconhecimento's s_dedoRegistrado
+#   emptied and, when the mesario is found, set to the identifier, the logs of the outcome, and the registered file
+#   "me{:06}.wsq" of the id_arquivo compared (5372) when the voters' biometry did not match.
+# The forms the bytes asked for, each measured on the whole link (pnpm wasm score at the default depth, the variant's
+# object or link line swapped into a copy of link.cmd: docs/reference/facts/workflow.md W13):
+# - the order of the objects (docs/reference/facts/codegen.md C4): unit 214's ccontroladorreconhecimetomesario.cpp is
+#   compiled from this list right after this file, where the target holds its records
+#   (`LC_ALL=C awk -F'\t' '$2 ~ /cregistrad|ccontroladorrec/ {print $1, $2}' ledger/source-locations.tsv`). Of the 13
+#   object pairs that move reorders on the merged link, 12 come into the target's data order and 1 has no named data;
+#   it inverts none (each object's named data and records against the target's addresses). 10451 is then 773 over 3291
+#   rows and 3614 132 over 2174, operand rows only (the statics' and table slots' addresses). Unit 278's two state files
+#   and unit 113's cregistradormesario.cpp stay in their units' lists, which is measured too: the target holds the
+#   states' vtables ahead of this class's and cregistradormesario.cpp's records after its, but compiled from this list
+#   around this file they invert 82 object pairs against the target's data on the merged link (34 for each state file,
+#   which would link ahead of cvalidaidentidade.cpp, ctime.cpp, the outrasopcoes/ states and others whose data the
+#   target holds before theirs; 14 for cregistradormesario.cpp), and no match needs them: in that order 10451 scored 290
+#   over 3269 before the merge, 674 over 3281 with the states left in unit 278's list, and with the two comum files
+#   ahead of the states, as their own units placed them, 546 over 3294 (3614 445 over 2208);
+# - 2738 in a file of its own (above);
+# - the fingers built by reserve(2) and four push_back, where a vector of {1, 6} move-assigned lets clang fold away the
+#   8-byte buffer the target keeps (3614 is 144 over 2174 so, 11 rows deleted), and `dedos = {1, 6}` calls
+#   __assign_with_size out of line and keeps the vector in the frame (112 bytes against the target's 96: the object);
+# - the loop over the fingers by reference, each finger loaded at each use as in the target;
+# - the searches as a loop that keeps the identity found and logs after it: with the log inside the loop 10451 is 329
+#   over 3290, with std::ranges::find_if 371 over 3292;
+# - the file checks as nested ifs that return true from inside, the target's `block (result i32)`;
+# - the entropy's begin and end read before the map is built: the target loads them ahead of the map's construction
+#   and keeps its root as 0 on the first pass; a range-for over *imagem gives 310 over 3275.
+# What is left is not explained, in two places of 10451 (`pnpm wasm fn` of both sides, locals renamed by first use: no
+# other instruction differs): the map's construction stores its begin node first and its root and size after, the
+# target the other way round, in every form of the loop tried, the helper inlined or not, a span, a reference, the
+# iterators in either order (each object compiled alone); and the copy of the first six files, which the target sizes
+# by `count >= 6 ? 72 : bytes` and tests for zero only in the second arm, where std::min (or views::take, or a count
+# named first: the same object) tests the bytes first and multiplies a select, and an iterator chosen by the same test
+# keeps it a pointer (327 against 290 over 3269). The local numbers that differ besides follow from those two. 10451's
+# four statics of the two states (@1909068, @1909092, @1909096, @1909120) are read by it and by their exit destructors
+# (10459, 10460, 10462, 10463) alone, so they take a name only from 10451's own vote, which comes with its bytes: its
+# row reads `unresolved` on CTentativaCapturaDigitalEsgotada::s_inst, and the destructors' `differs`, on census pairs
+# with other objects' destructors of the same shape.
+# Four rows match besides, from objects this unit does not compile: 10516, the exit destructor of
+# CControlaReconhecimento::s_dedoRegistrado (unit 161's ccontrolareconhecimento.cpp), named by 3614's vote now that
+# 3614 assigns that static; 2972 (musl's log2) and 12450 (SQLite's logFunc, log2's one other caller in this link),
+# `no-candidate` at the base with no log2 in its names, and matches here, where 10451 calls log2 too; and 4689
+# (libc++'s ~__split_buffer of locale.o), `differs` on its locals at the base (splat/scan.tsv) and a match here, a
+# whole-link match no source of ours holds (docs/reference/facts/splat.md §S10 item 27).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_CONSTRUCTORS_SRCS := src/app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp \
-    src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp
+    src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp \
+    src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp \
+    src/app/vota/operador/confirmaidentidade/ccomparecimentomesariopk.cpp
 UENUX2_SRCS += $(APP_COMUM_CONSTRUCTORS_SRCS)
-# vota::CRegistraDigitalOperador's members not reconstructed: 221-uenux2-app-comum-constructors-pending.cpp gives its
-# vtable trapping bodies, compiled with UENUX2_CXXFLAGS, as unit 161's pending file is
-$(ROOT)/$(APP)/221-uenux2-app-comum-constructors-pending.o: $(ROOT)/src/units/221-uenux2-app-comum-constructors-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/221-uenux2-app-comum-constructors.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/221-uenux2-app-comum-constructors-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/221-uenux2-app-comum-constructors-pending.o

@@ -23,10 +23,10 @@ namespace vota {
 // overrides StartState (slot 2, fn 10454, records cregistradigitaloperador.cpp:95 and :98), FinishState (slot 5, fn
 // 10453, records :104 and :105, a thunk into binaryen's fn 6012, the body it shares with
 // comum::CPedeDigitalMesario::FinishState), ProcessInput (slot 7, fn 10452), which cancels the habilitation on CORRIGE
-// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145). ProcessTick is
-// pending (src/units/221-uenux2-app-comum-constructors-pending.cpp says what it waits for). The
-// destructor is out of line, the body comum::CPedeDigitalMesario and vota::CPedeIdentidade share (fns 1537 and 3629),
-// which releases the std::shared_ptr at +24 and then the one at +16.
+// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145), written and not
+// matched (src/units/221-uenux2-app-comum-constructors.mk has its measured remainder). The destructor is out of line,
+// the body comum::CPedeDigitalMesario and vota::CPedeIdentidade share (fns 1537 and 3629), which releases the
+// std::shared_ptr at +24 and then the one at +16.
 //
 // The layout is what the constructor stores, which GetInst (fn 5396) holds inlined by binaryen: CAppState's with
 // EVENTO_ENTRADA | EVENTO_TICK (6); +11 and +12 the bytes vota::CThreadOperador's AddStoppedTick (fn 807) returns for
@@ -54,8 +54,23 @@ public:
 private:
     CRegistraDigitalOperador();
 
-    // Fn 3614 (records cregistradigitaloperador.cpp:328 and :371), not written: its one caller, ProcessTick (fn 10451,
-    // three call sites), is not either. The parameter's name is chosen.
+    // What ProcessTick (fn 10451) holds behind frames of their own once it has stored the captured digital, functions
+    // clang kept out of line and binaryen inlined (docs/reference/facts/reading.md R10): IdentificaMesario's 16-byte
+    // frame holds the three searches, each behind a 16-byte frame of its own over one of comum::CRegistradorMesario's
+    // maps of mesarios, and the search of the digital among the files of the non-registered ones. Their names, their
+    // being members (dead-argument elimination dropped the `this` none of them reads) and the split into three
+    // searches of one shape are chosen; that each is a function of its own is what the frames show.
+    void IdentificaMesario();
+    bool BuscaMesarioSecaoComBiometria();
+    bool BuscaMesarioSecaoSemBiometria();
+    bool BuscaMesarioForaSecao();
+    // Fn 3614, with no record of its own: its body opens with BiometriaMesarioPresenteNosEleitores's code (records
+    // cregistradigitaloperador.cpp:328 and :371) behind a 96-byte frame inside its own 416-byte one, binaryen's
+    // inlining, and then looks for the mesario's registered digital file. Its wasm type is `(i32 i32)->(i32)`, and the
+    // three searches pass it the map node's identity and the comparecimento's id_arquivo, or 999999 when it has none (a
+    // `select`): those are its parameters. Its name and its being a member of this class, like the member it calls, are
+    // chosen.
+    bool BiometriaMesarioPresente(const comum::md::CEleitorIdentidade& mesario, int idArquivo);
     bool BiometriaMesarioPresenteNosEleitores(const comum::md::CEleitorIdentidade& mesario);
 
     static std::unique_ptr<CRegistraDigitalOperador> s_inst;

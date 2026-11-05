@@ -27,11 +27,12 @@
 //   call site.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade,
-//   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, 3728, fragment 225, and 2805,
-//   fragment 310), and binaryen merges the copies.
+//   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, 3614, unit 221, 3728, fragment
+//   225, and 2805, fragment 310), and binaryen merges the copies.
 // - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
 //   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
-// - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387 and 10368 are in the link), its counts
+// - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387, 10368, 3614 and 10451 are in the
+//   link), its counts
 //   3606 and 2727 (called by 10795 and by 5387 and 10368, the data sources' slot 2, in the link with unit 104's 10388,
 //   and both by 12105), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls HasInst once, for 12105 (11616,
 //   unit 122's, is in the link and calls it three times).
@@ -84,7 +85,7 @@ __attribute__((noinline)) int CarregaUm(api::CDataMap<comum::md::CComparecimento
     return 13;
 }
 
-// Stands for 3614 and 10842 (2225 and 2264 are in the link), which search and insert in other trees of this key.
+// Stands for 10842 (2225, 2264 and 3614 are in the link), which searches and inserts in another tree of this key.
 __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa,
                                            const comum::md::CEleitorIdentidade& eleitor)
 {

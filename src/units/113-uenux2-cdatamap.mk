@@ -56,6 +56,9 @@
 #     moves for that. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
 #     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
 #     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
+#     cregistradormesario.cpp stays in this list: compiled from unit 221's list after cregistradigitaloperador.cpp,
+#     where the target holds its records, it would invert 14 object pairs against the target's data on the merged
+#     link, and no match needs it (unit 221's fragment has the measurement, on fns 10451 and 3614).
 #   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377
 #     downwards, so the destructor is defined (or first mentioned) above AtualizaMesarioSecao, which first mentions 5379
 #     (how-to step 3, "The order of two members"). Defined below Registra, the bodies were the same (5380 `4 over 29
