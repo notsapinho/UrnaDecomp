@@ -80,8 +80,8 @@
 # Draw scores 31 over 917 rows against the plain link (`pnpm wasm score ../target/vota_web_wasm.wasm 10977
 # ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>`), every one an operand: calls, data, and the table slot 148
 # against ours 91, both __allocating_buffer<char>::__prepare_write (fn 7324); it matches. The scores above are the same
-# command's on a link of each variant, unless they say alone. Draw is reached only through the vtable, which
-# 40-uenux2-cprogressbar-roots.cpp keeps.
+# command's on a link of each variant, unless they say alone. Draw is reached only through the vtable, which 5545's
+# vptr store keeps (below).
 CPROGRESSBAR_SRCS := src/api/gui/cprogressbar.cpp
 UENUX2_SRCS += $(CPROGRESSBAR_SRCS)
 # No roots: api::CFormBuilder::AddProgressBar (fn 5545, unit 31), which holds the constructor inlined, stores the

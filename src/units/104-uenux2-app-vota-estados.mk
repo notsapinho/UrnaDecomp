@@ -577,7 +577,8 @@
 # GetPartidos, 106 over 1644 (6 inserted, 4 deleted), the rest as landed. The parties' items take the text ""
 # (std::string from an empty C string: two byte stores, the target's; std::string() and {} zero all twelve bytes in an
 # 8-byte and a 4-byte store, compared by function in the object). The screen's place in ctelasvota.cpp, after
-# TelaMenuVisualizacaoCandidatos, puts 12888 after 12894 (11881's handler) in band 1, the target's order: there 12888
+# TelaMenuVisualizacaoCandidatos (a choice: the file's end gives the same), puts 12888 after 12894 (11881's handler)
+# in band 1, the target's order for that pair: there 12888
 # inverts two pairs of the object's band-1 members, against 12875 and 12882 (CTelasVota's statics' exit destructors, as
 # 12893 does), and after TelaFiltragemCandidatosPorCargo three (12894 too); 11884 scores 95 over 1638 at both places.
 # Chosen: the structured binding's names, the case spelling, GetPartidos and SetPartido (names, membership, SetPartido

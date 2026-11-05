@@ -30,14 +30,17 @@
 #   So the four are one form, and the two of each flash are the ones binaryen can merge. Same object: the implicit
 #   conversion (`return CPath::GetPathTrab(o) / "x";`). Different: a named `const` path then `.string()` (it destroys
 #   the temporaries before the copy).
-# - Their files, by their bands (docs/how-to-decompile.md step 3, rule 5). 5762 lies in celeitores.cpp's band-2 run
+# - Their files, a reading of their bands (docs/how-to-decompile.md step 3, rule 5), which allow other files too. 5762
+#   lies in celeitores.cpp's band-2 run
 #   (5765 and 5764 link before it, 5761, DynamicCreate, after it), and 2826 heads its band-4 run (2825 to 2821 after it;
 #   cnomearquivo.cpp's 2827 and 2828 before it); CEleitores::CompleteLoad (fn 6734, celeitores.cpp:205) calls 2826.
 #   1551 lies right before crdvvota.cpp's 1550 in band 8, 1701 right after clocal.cpp's 1702 in band 7, and 5737 and
 #   5736 between clocal.cpp's 5738 and crdvvota.cpp's 5734 in band 2: where the target's data hold crdv.cpp's records
 #   (@1559956 to @1560024, CRdv's constructor and GetCifradorCryptoTable, inlined into fn 7787), after clocal.cpp's
-#   (@1559876) and before crdvvota.cpp's (@1560132). That they are free functions (they read no class state), their
-#   names and their declarations' headers are chosen.
+#   (@1559876) and before crdvvota.cpp's (@1560132). 2826's file is its pair with 5762 and CompleteLoad's call (the data
+#   put celeitordetalhe.cpp and celeitordinamicodao.cpp between cnomearquivo.cpp and celeitores.cpp), and crdv.cpp over
+#   clocal.cpp's tail for 1551 and 1701 is 5737's and 5736's, CRdv's. That they are free functions (they read no class
+#   state), their names and their declarations' headers are chosen.
 # - 5737 and 5736: on GetArquivoRdvInterno's or GetArquivoRdvExterno's string, a CEncryptedFile built over this+8 (the
 #   cipher, CRdv::m_cifrador), the bytes of slot 11 (CRdv::Converte) called through the vtable, Write (2766), Save
 #   (2767), then the bytes, the file and the string destroyed. The call through the vtable on `this`, whose class is

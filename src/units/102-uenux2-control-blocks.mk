@@ -19,7 +19,8 @@
 # it shares with std::string's block, match) and api::CTextFieldBlinking's (1265,
 # CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and
 # api::CProgressBar's (5545, CFormBuilder::AddProgressBar, the same object, from which 11111 and 11110 match; the roots'
-# builder and sink went) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
+# builder and sink went) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's
+# cpowerinformation.cpp, from
 # which 8585 and 8578 match) and the pointer blocks of comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose
 # builders are unit 113's comum::CJustificador constructor (3742) and comum::CRegistradorMesario::GetInst (815): each
 # holds its servico's constructor inlined, whose object instantiates Entregar and with it the block (11463 matches from

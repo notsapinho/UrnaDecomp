@@ -413,7 +413,7 @@
 # their members (12287, 12290, 12291, the block's 12294 and 12292, and 12316, 12314 of api::CTextFieldUpdate's block)
 # link from this object now,
 # ahead of the objects that gave them before (79's roots and unit 31's cformbuilder.cpp), with the same bytes.
-# 3054's other target callers are in the link: 11805 is written (unit 217, below), 11804 and 11809 match, and unit
+# 3054's other target callers are in the link and match: 11804, 11805 and 11809 (unit 217, below), and unit
 # 220's stand-in for them went.
 # The three include lines this needs (<functional>, api/gui/cformbuilder.h, app/vota/comum/cpreshowformvota.h) took
 # blank lines above line 291. cformbuilder.h brings iform.h, so the TU now also initializes api::CFormStack<IScreen>'s
@@ -458,14 +458,14 @@
 #
 # ctelasvota.cpp also holds unit 217's part of the keyboard test, written with vota::testeteclado::CTesteTeclado's
 # StartState (fn 11805), which holds it behind second stack-pointer prologues: the anonymous namespace's
-# GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado and vota::SorteiaTeclasTesteTeclado
-# (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font
-# FONTE_INSTRUCAO_TESTE_TECLADO. With them this object brings the destroy of
+# GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado (declared in ctelasvota.h, as is
+# vota::SorteiaTeclasTesteTeclado, which ctesteteclado.cpp defines), the key names vota::TECLAS_TESTE_TECLADO
+# (extern there), and the {20, 0} font FONTE_INSTRUCAO_TESTE_TECLADO. With them this object brings the destroy of
 # GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, matched since this file builds
 # without strict aliasing, src/Makefile's UENUX2_NOTBAA_FILES: unit 217's fragment has its rows, and on the whole link
 # no other row moves, docs/reference/facts/app-flags.md F6) and the destroy of CTesteTeclado's map (2023, matched, now
-# linked from here). The key names come after CTelasVota's statics (line 3439), TelaTesteTeclado and
-# SorteiaTeclasTesteTeclado before CriaTelaVisualizacaoCandidato (3266 to 3286), CTelasVota's destructor after both
+# linked from here). The key names come after CTelasVota's statics (line 3439), TelaTesteTeclado before
+# CriaTelaVisualizacaoCandidato (3266 to 3281; 3283 to 3287 are a gap), CTelasVota's destructor after both
 # (3478): src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 #
 # ctelasvota.cpp also holds the QR-code BU's screen, vota::CTelasVota::CriaTelaQRCodeBU, after GetTelaCargo, with the
@@ -486,8 +486,8 @@
 #   {20, 0} at 3072, beside {35, 0}, with AdicionaTelaQRCode: below); FONTE_TITULO and FONTE_VERSAO take lines 3002 and
 #   3003 (every one of these lines chosen). Use band 2 is the evidence for above: 6587 (TelaPorFavorAguarde), 6583,
 #   6581, 6580 and 6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix
-#   (names.tsv's ld_index 2805, 2808, 2814, 2817 and 2820, then 6569's 2826, 6561's 2828, 6557's 2833 and the
-#   destructor's 2834).
+#   (names.tsv's ld_index at 894335de 2689, 2692, 2698, 2701 and 2704, then 6569's 2709, 6561's 2711, 6557's 2716 and
+#   the destructor's 2717).
 # - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
 #   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, FONTE_TECLA and FONTE_SUPLENTE
 #   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4), the target as {30, 0} @474888,
@@ -569,8 +569,9 @@
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
 # - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
 #   operand rows only in the whole link (9 over 65, pnpm wasm score), named by its callers' calls (7481 and 11797) and
-#   matched. Use band 2 bounds its place (above): defined after SorteiaTeclasTesteTeclado, its ld_index 2833 between
-#   6579's 2820 and the destructor's 2834 (2806 and 2807 when it landed); the five lines it adds take five of the blank
+#   matched. Use band 2 bounds its place (above): defined after TelaTesteTeclado, its ld_index 2716 between 6579's
+#   2704 and the destructor's 2717 at 894335de (2806 and 2807 when it landed); the five lines it adds take five of
+#   the blank
 #   lines above record 3530.
 # - GetTelaInspecionaUrna, GetTelaInspecaoTerminada, TelaTeclaErradaTesteTeclado (with the lambda 12903, matched by
 #   its table slot from 11804's anchor: 13 over 250 rows, operand-only, before step 8), TelaEnviarManutencaoTesteTeclado
@@ -775,6 +776,9 @@
 #   of the 14 instances against the object's later band-1 rows it held before (the CDataImage block 12520 to 12530,
 #   3059's blocks 12535 to 12560, 12628, 12631, 12639, 12640) and 35 two of them; 2 in band 3, 4021 against 4022 and
 #   4118; and 3 of 12893 against 12875 and 12882 (CTelasVota's statics' exit destructors) and 12894 (11881's handler).
+#   std::any's handler for unsigned short (12888, the party screen's) adds 2 more since, against 12875 and 12882 (571
+#   at 894335de; ctelasvota.cpp.o's function list changed by that handler and the screen alone, and by
+#   SorteiaTeclasTesteTeclado's move to ctesteteclado.cpp, which has no index).
 #
 # cmenufiltrarcandidatosporcargo.cpp (unit 104's: vota::CMenuFiltrarCandidatosPorCargo::StartState, 11888) follows
 # cmenufiltrarcandidatospornumero.cpp in this list: 11888 holds ctelasvota.cpp's TelaFiltragemCandidatosPorCargo inlined
@@ -801,7 +805,7 @@
 # @1545520, after PorCargo's (@1545448) and before CMenuVisualizarCandidatos' (@1545592). Every place after
 # ctelasvota.cpp.o measured gives 95 over 1638 rows, every row an operand (measured with the screen after
 # TelaFiltragemCandidatosPorCargo; after TelaMenuVisualizacaoCandidatos, its place now, this one gives the same);
-# docs/reference/facts/codegen.md C4's count of objects out of the data's order against it, on this branch's link: 116
+# docs/reference/facts/codegen.md C4's count of objects out of the data's order against it, on the merged link: 116
 # right after ctelasvota.cpp, 115 after cmenumaisinformacoesvota.cpp, 114 after cmenufiltrarcandidatospornumero.cpp, 113
 # here, 114 after cmenuvisualizarcandidatos.cpp, 94 at its place in unit 104's list. Against that old place it puts 6
 # pairs in order (cmunicipio.cpp, ctelasvota.cpp, cmenumaisinformacoesvota.cpp, celeitoroptouporvotaremtransito.cpp and

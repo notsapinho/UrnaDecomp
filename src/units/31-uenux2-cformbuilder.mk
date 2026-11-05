@@ -151,7 +151,9 @@
 # ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm sym:<AddProgressBar> --against 5545
 # --symbols <the copy>` prints
 # IDENTICAL. So it waits for that object's name, which a match of 7787 (vota::CTelasVota's constructor, whose file's
-# data hold the object) can give once it is written and passes its own constant; no hand line names it meanwhile, as
+# data hold the object; 12098, cgravaresultado.cpp's CGravaResultado::StartState, passes the same address, so it is no
+# constant internal to ctelasvota.cpp) can give once it is written and passes its own constant; no hand line names it
+# meanwhile, as
 # the stand-in's object is no target object. What the bytes fixed, measured: the size is read before the allocation,
 # after the rectangle, so the rectangle and the size are named locals in that order. `fonte.size` given to make_shared
 # is read in the constructor, after the allocation (3 rows inserted and 3 deleted in the link), and a size local

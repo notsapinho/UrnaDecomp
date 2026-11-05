@@ -350,8 +350,9 @@ awk -F'\t' -v f="${f#src/uenux2/}" 'index($2, f) {print $3, $6}' ledger/source-l
 LC_ALL=C /usr/bin/grep -n '^// f' $f
 ```
 
-On `main` the file is stub-only, and each of its three recorded functions (6718, 2386, 4135) has its stub. A recorded
-function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
+When the file was stub-only, before unit 150 wrote its three recorded functions (6718, 2386, 4135), each had its
+stub. A recorded function that is neither written in the file nor stubbed there is such a case, or a match or a
+pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
 `src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` is 90 lines, its record of 3744 is line 208, and f3744's stub is

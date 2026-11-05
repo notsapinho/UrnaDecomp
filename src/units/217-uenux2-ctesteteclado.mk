@@ -132,7 +132,8 @@
 # held in a local first, both, neither) all scored 310 over 4520, 4 and 4; SorteiaTeclasTesteTeclado's function moved
 # after StartState's (right after it, or after GetInst) scored 300 over 4516, none inserted or deleted; GetInst moved
 # above StartState, 359 over 4521 (5 inserted, 5 deleted). ctelasvota.cpp.o links far ahead of this object, so the
-# function is defined here, below StartState, which mentions it first: the object holds it right after StartState and
+# function is defined in a TU that links after StartState's: here, below StartState (the choice, below), which mentions
+# it first: the object holds it right after StartState and
 # GetInst (clang keeps it out of line; binaryen inlines it into its one caller). Measured on a scratch copy of it
 # under another name that StartState called (ctelasvota.cpp's then dropped by wasm-ld): defined above StartState, on
 # the blank line 13, it came first in the object and StartState scored 310 over 4520 in the whole link, 4 and 4;
@@ -200,13 +201,13 @@
 # the band order above. The lines SorteiaTeclasTesteTeclado held there (3283 to 3286) are blank, a gap, the line count
 # kept: record 1538492 (6561's, adicionaFotoEmoldurada's instance) names the lambda of CriaTelaVisualizacaoCandidato
 # it is instantiated over by its line and column (ctelasvota.cpp:3323:29), and with the definition's lines deleted 6561
-# read unresolved, its record not the target's (a scratch link). TECLAS_TESTE_TECLADO follows CTelasVota's statics (line 3439): in
-# band 1 the index runs 12882, 12875, 12862, the statics' exit destructors before the vector's, so its definition
-# follows theirs, and ctelasvota.h declares it extern for line 1303. The data agree: the target holds
+# read unresolved, its record not the target's (a scratch link). TECLAS_TESTE_TECLADO follows CTelasVota's statics
+# (line 3439): in band 1 the index runs 12882, 12875, 12862, the statics' exit destructors before the vector's, so its
+# definition follows theirs, and ctelasvota.h declares it extern for line 1303. The data agree: the target holds
 # TECLAS_TESTE_TECLADO (0x1bf990) before CTelasVota::s_mutex (0x1bf99c) and s_instancia (0x1bf9b4), and since
-# TelaTesteTeclado, which reads the vector, moved above GetInst's line 3434, our link does too (0x1babfc, 0x1bac08,
-# 0x1bac20 in build/out/wasm-map/vota_web/vota_web_wasm.map when SorteiaTeclasTesteTeclado moved to ctesteteclado.cpp;
-# it held them after the statics before), which fits the reading that clang lays a file's globals out by first use.
+# TelaTesteTeclado, which reads the vector, moved above GetInst's line 3434, our link does too (0x1bb688, 0x1bb694,
+# 0x1bb6ac in build/out/wasm-map/vota_web/vota_web_wasm.map at 894335de; it held them after the statics before
+# TelaTesteTeclado moved), which fits the reading that clang lays a file's globals out by first use.
 # In ctesteteclado.cpp, GetInst, the statics and the D0 above StartState (record :38), the constructor (no index)
 # below ProcessInput's blank record lines 50, 60 and 81, GeraSequencia above the macro (its static std::mt19937,
 # @1835152, lies below the macro's mutex in .bss), SorteiaTeclasTesteTeclado and AdicionaCaixaTecla last (the two in

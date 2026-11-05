@@ -186,8 +186,8 @@
 # update on one line, so that SetFormatString's record lands on its body's fourth line: the layout is a choice, and the
 # object's functions other than the two new ones compile as before (compared by function, relocated operands masked; the
 # static initializers' local numbers moved, which renamed 7753's match line to its libc++ locale.o qualifier at step 9).
-# Chosen: the parameters' names and the two members' lines around their records (152 to 160 and 464 to 471, in the blank
-# runs there).
+# Chosen: the parameters' names and the two members' lines around their records (152 to 160, the first three of them
+# SetSearchText's tail's before its re-lay and the rest a blank run, and 464 to 471, in a blank run).
 #
 # No roots: the file that stood for 11884's calls of 3655, 3675 and 3861 went with 11884 in the link.
 #

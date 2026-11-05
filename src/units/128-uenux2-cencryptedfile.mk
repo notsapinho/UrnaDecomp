@@ -43,7 +43,7 @@
 # above its record line, and Write's and Read's lines between Save and MemWrite. Save comes before Write in the object and
 # Load before Read: in their use bands (4 and 3) the higher target index links first.
 #
-# Written and not matched (unit 381's lane, for comum::CRdv::SalvaInterno and SalvaExterno, which construct one):
+# Written and not matched (for unit 381's comum::CRdv::SalvaInterno and SalvaExterno, which construct one):
 # - The constructor (fn 1692), which copies the cipher's shared_ptr into +0 and +4 and zeroes +8 to +20, in the
 #   plainest form (`: m_cifrador(cifrador), m_posicao(0) {}`), above the destructor (a chosen line; band 7 puts 1692
 #   before 1691). In the target +16 (i32), +8 (i64) and +20 (i32) are three stores in that order; every spelling

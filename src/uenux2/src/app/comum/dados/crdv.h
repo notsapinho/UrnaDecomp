@@ -64,9 +64,9 @@ private:
 
 // The path of "rdv.dat" in the work directory of the internal flash (target fn 1551) and of the external one (fn
 // 1701), as a string: CPath::GetPathTrab of that flash with the name appended. No record, slot or RTTI names them;
-// their names and their being free functions (they read no class state) are chosen. Their bands put them in crdv.cpp.
-// In the target each is a thunk of a body binaryen merged with celeitores.h's function of the same flash: 1551 and
-// 2826 call fn 6036, 1701 and 5762 fn 6035 (src/units/381-uenux2-crdv.mk).
+// their names and their being free functions (they read no class state) are chosen, and crdv.cpp is a reading: their
+// bands allow clocal.cpp's tail too, and CRdv's 5736 and 5737 beside them give this file. Each is a thunk of a body
+// binaryen merged with celeitores.h's function of the same flash: 1551 and 2826 call 6036, 1701 and 5762 6035.
 std::string GetArquivoRdvInterno();
 std::string GetArquivoRdvExterno();
 
