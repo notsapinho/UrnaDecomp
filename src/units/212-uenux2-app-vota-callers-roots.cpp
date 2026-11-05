@@ -6,12 +6,12 @@
 //
 // comum::md::CCargo::TemFoto (fn 1546) has six direct callers in the target, fns 1192, 4185, 6569, 6660, 6671 and
 // 6678, and CCargo::QtdSuplentes (fn 1157) seven, fns 1588, 6569, 6660, 6671, 6678, 7787 and 12272, none written but
-// 6569, 1588 and 12272 (unit 110's; those with records are app/vota/eleitor/comum/ctelasvota.cpp's). DetalheCargo
+// 1192, 6569, 1588 and 12272 (unit 110's; those with records are app/vota/eleitor/comum/ctelasvota.cpp's). DetalheCargo
 // stands for the others with two calls of each.
 //
 // vota::MensagemErroCargo (fn 690) has thirteen direct callers in the target, all of ctelasvota.cpp: fns 3064, 6602,
-// 6603, 6605, 6608, 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787, none written. MensagensCargo stands for them
-// with two calls.
+// 6603, 6605, 6608, 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787, of which 3064, 6608, 6624 and 6646 are written
+// and in the link (src/units/378-uenux2-ctelasvota-criatela.mk). MensagensCargo stands for the others with two calls.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 // The results returned through a pointer are left as they are, as nothing calls these.
@@ -26,14 +26,15 @@ namespace {
 
 const void* volatile app_vota_callers_sink;
 
-// stands for fns 1192, 4185, 6660, 6671, 6678 (TemFoto) and 6660, 6671, 6678, 7787 (QtdSuplentes); 6569, 1588 and
+// stands for fns 4185, 6660, 6671, 6678 (TemFoto) and 6660, 6671, 6678, 7787 (QtdSuplentes); 1192, 6569, 1588 and
 // 12272 are in the link
 __attribute__((noinline)) int DetalheCargo(const void* cargo, const void* outro)
 {
     return w212_tem_foto(cargo) * 7 + w212_tem_foto(outro) + w212_suplentes(cargo) - w212_suplentes(outro) * 3;
 }
 
-// stands for fns 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787
+// stands for fns 6602, 6603, 6605, 6641, 6652, 6660, 6671, 6678 and 7787 (3064, 6608, 6624 and 6646 are in the
+// link)
 __attribute__((noinline)) int MensagensCargo(const void* tela, const void* cargo, const void* erro)
 {
     char mensagem[12];

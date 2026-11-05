@@ -2,18 +2,19 @@
 // the other stand-ins; it instantiates none of the unit's templates (the extern template below keeps CFormStack's copy
 // out), so every body it reaches comes from the unit's objects.
 //
-//   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (1591, 1767,
-//                     3063, 3064, 3067, 6616, 6626, 6639, 6681, 7787; 576 is linked): two call sites, or binaryen
-//                     would inline it, with the name and the bool varied as theirs are
+//   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (6639, 6681,
+//                     7787; 576 and unit 110's 1591, 1767, 3063, 3064, 3067, 6616 and 6626 are linked): two call
+//                     sites, or binaryen would inline it, with the name and the bool varied as theirs are
 //   CampoA, CampoB    the callers of the control fields' adders, none reconstructed but 2376 (ctelasvota.cpp),
 //                     11804 and 11809 (unit 217's, with ctelasvota.cpp's screens they hold) and 12055 (unit 37's,
-//                     written): of 901, AddInputControl() (1591, 2376, 3063, 3064, 6626, 6639, 7787, 11804, 11809)
+//                     written), and 1591, 3063, 3064 and 6626 (unit 110's): of 901, AddInputControl() (1591, 2376,
+//                     3063, 3064, 6626, 6639, 7787, 11804, 11809)
 //                     and of 5530, AddInputControl(int) (7787 and 12055, which pass the keys 6 and 5). Each adder
 //                     gets two call sites
 //   RotulosA, RotulosB  the callers of 653, AddLabeledInputControl, none reconstructed but 2376 (ctelasvota.cpp), 2291
 //                     (CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo),
 //                     11804 and 11809 (unit 217's), 11881, 11888 and 11892 (unit 104's), 6599 (unit 110's, not
-//                     matched), 6569 and 6595 (unit 110's): 6592, 7787, 11884 and 12040, which pass the same two
+//                     matched), 6569, 6592 and 6595 (unit 110's): 7787, 11884 and 12040, which pass the same two
 //                     constants as 2376 does: they stay while
 //                     those callers wait. The target's 653 has neither of its last two parameters, folded by binaryen:
 //                     it loads the area's corners from api::CApplication::s_areaTela (.data 1577200) and adds the keys'

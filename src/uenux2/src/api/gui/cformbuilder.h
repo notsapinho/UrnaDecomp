@@ -104,6 +104,12 @@ public:
 
     SharedField AddImage(SharedIImage imagem, const SPoint& posicao);
 
+    // a CMovieField of movie at posicao, anchored by its bottom right corner (the constant 7): target fn 5543, which
+    // holds the field's constructor inlined (cmoviefield.cpp); its callers are the gif screens of
+    // app/vota/eleitor/comum/ctelasvota.cpp (fns 1593 and 3076). The name, the anchor's being a constant of the body
+    // and the parameters' order beyond the wasm's are chosen
+    SharedField AddMovie(const SPoint& posicao, const std::shared_ptr<CMovie>& movie);
+
     SharedField AddLine(const SPoint& inicio, const SPoint& fim, TColor cor);
 
     SharedField AddFill(const SPoint& canto, const SPoint& oposto, TColor cor);

@@ -338,6 +338,8 @@
 # stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 4184, 6660, 6671, 6678 and the
 # rest of its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn
 # 7787, which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written.
+# Not so 6624 (adicionaBaseTelaVotoNuloConsulta), of that namespace too: its target callers are 6626 and 6616,
+# CTelasVota statics, and it is written with them (src/units/378-uenux2-ctelasvota-criatela.mk).
 #
 # CValidadorIdentidade's members in cvalidadoridentidade.cpp beside GetInst and the destructor, for unit 178's
 # md::CEleitorIdentidade constructor (target fn 566), the one caller of Valida:
@@ -374,13 +376,13 @@
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
 # code 9347 with it over "não é de proporcional"). Its 22 call sites are this file's (fns 3064, 6602, 6603, 6605, 6608,
-# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), none written. No record gives its name or its linkage. The file's
-# recorded helpers (DS_CandidatoNaoConcorre, adicionaFotoEmoldurada, the adicionaBaseTela* builders, GetKeyboardLayout)
-# are in an anonymous namespace, where clang emits no function nothing in the TU calls (a reading), so in that form it
-# would leave the link until a caller here is written; it is written as a function of vota, its callers' namespace
-# (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that lets
-# src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names, its
-# namespace and linkage, and its lines (801 to 804, above line 822, the first record of a caller). Those lines lie
+# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), 3064 and 6624 written (unit 378). No record gives its name or its
+# linkage. The file's recorded helpers (DS_CandidatoNaoConcorre, adicionaFotoEmoldurada, the adicionaBaseTela* builders,
+# GetKeyboardLayout) are in an anonymous namespace, where clang emits no function nothing in the TU calls (a reading),
+# so in that form it would leave the link until a caller here is written; it is written as a function of vota, its
+# callers' namespace (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that
+# lets src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names,
+# its namespace and linkage, and its lines (801 to 804, above line 822, the first record of a caller). Those lines lie
 # inside the file's run of internal records (lines 294 to 1301, all vota::(anonymous namespace)::), between :487 and
 # :822: written external there, the original would close and reopen the anonymous namespace around it, so the place goes
 # with the linkage chosen. Its include line (<string>, which <format>, already included, brings: a choice) took one of
@@ -557,13 +559,15 @@
 #     changed). With the body above
 #     AdicionaTelaAguarde and a {15, 0} constant of its own, that constant came first (segment 9, then 12, 13, 38):
 #     three pairs against the target's. FONTE_AGUARDE ahead of FONTE_INSTRUCAO_TESTE_TECLADO is the pair the file had
-#     before, which 3064 (record 1585, not written), a reader of @474896, can explain. The fonts after @475008, {35, 0}
+#     before, which 3064 (record 1585), a reader of @474896, can explain (it is written now, unit 378, and with its
+#     helpers it moved the fonts again: unit 378's fragment has the object's order). The fonts after @475008, {35, 0}
 #     @475016 and {20, 1} @475032, followed it as the target holds them while their first readers' bodies were
 #     TelaTextoConfirmaCorrige's and CriaTelaQRCodeBU's, after AdicionaLocal's; AdicionaTelaQRCode (3059) reads {35, 0}
 #     first now (the order is in CriaTelaVisualizacaoCandidato's paragraph above).
 # - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
-#   are 2380, 6601 and 7787, and unit 309's roots stand in for the last two, not written; 2380's are 6557, 6587, 7787 and
+#   are 2380, 6601 and 7787, and unit 309's roots stand in for 7787, not written (6601 is in the link: unit 378's
+#   fragment); 2380's are 6557, 6587, 7787 and
 #   11797, and they stand in for 7787 (6557 and 11797 are in the link now).
 # ctelasvota.cpp also holds the screens of vota::CMostraTelaContinuaVotacao, CInspecionaUrna and CUrnaInspecionada
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
@@ -621,15 +625,18 @@
 #   one, where the target
 #   holds them after the menu's vtable and the first block (@1539884, @1539904), inside the constructor's run; and
 #   FONTE_VERSAO's two pairs (below).
-# - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), are defined right above it, their old
-#   lines left blank. 6599 reads FONTE_VERSAO before AdicionaTelaQRCode (3059, below) reads
-#   FONTE_INSTRUCAO_TESTE_TECLADO and FONTE_TEXTO_CONFIRMA_CORRIGE and AdicionaTelaAguarde FONTE_AGUARDE, so the object
-#   holds FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE,
-#   FONTE_TECLA and FONTE_SUPLENTE in that order (wasm-objdump -x: segments 4, 9, 21, 22, 26, 46 and 317), FONTE_VERSAO's
-#   two pairs and FONTE_TEXTO_CONFIRMA_CORRIGE's one against the target's order. The target's readers of @474896 (6660,
-#   6671, records 850 and 887, and 3064, record 1585) and of @474992 (6608, 6605, 6603, records 1049 to 1101) are defined
-#   above 6599's lines and not written: they can give the target's order (`/usr/bin/grep -rlE 'i32\.const
-#   474992($|[^0-9])' build/out/splat/pieces/asm` lists the readers).
+# - The fonts: FONTE_TITULO and FONTE_VERSAO, which 6599 reads (@474888, @475008), were defined right above it, their
+#   old lines left blank; FONTE_VERSAO still is, and unit 378 moved FONTE_TITULO to the top of the file. 6599 reads
+#   FONTE_VERSAO before AdicionaTelaQRCode (3059, below) reads FONTE_INSTRUCAO_TESTE_TECLADO and
+#   FONTE_TEXTO_CONFIRMA_CORRIGE and AdicionaTelaAguarde FONTE_AGUARDE, so the object holds FONTE_TITULO, FONTE_VERSAO,
+#   FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, FONTE_TECLA and FONTE_SUPLENTE in that
+#   order (wasm-objdump -x: segments 4, 9, 21, 22, 26, 46 and 317), FONTE_VERSAO's two pairs and
+#   FONTE_TEXTO_CONFIRMA_CORRIGE's one against the target's order. The target's readers of @474896 (6660, 6671, records
+#   850 and 887, and 3064, record 1585) and of @474992 (6608, 6605, 6603, records 1049 to 1101) are defined above 6599's
+#   lines; 3064 is written now (unit 378, which defines FONTE_TITULO, FONTE_INSTRUCAO_TESTE_TECLADO and
+#   FONTE_TEXTO_CONFIRMA_CORRIGE at the top of the file for its helpers, and whose fragment has the order they give),
+#   the others not: they can give the target's order (`/usr/bin/grep -rlE 'i32\.const 474992($|[^0-9])'
+#   build/out/splat/pieces/asm` lists the readers).
 # - 6599 differs: 306 over 2151 rows (278 operand-only replaced, 14 inserted, 14 deleted), every row a local's number, a
 #   call, a data address or the format buffer's table slot (148 against 43). In the fourth item the target keeps the
 #   comum constructor's 16-byte frame pointer in the local that held the vota state, ours the count GetNumViasPU
@@ -691,9 +698,9 @@
 #   link and this object gives now, being ahead of it in the link: a row far from its run, read as another TU's copy
 #   (how-to step 3).
 # - Stand-ins: 110-uenux2-singletons-roots.cpp's TelasConstrutor stands for 7787 (6595, 3059, 4160) and
-#   TelaConfirmaZeresima for 6592 (3059, with the origin 2 6592 passes; 6595 passes 0). The stand-ins of other units
-#   that only these functions' calls ended went (units 43, 79, 102, 111, 215, 280, 296 and src/app/roots_ecourna.cpp
-#   say which).
+#   TelaConfirmaZeresima stood for 6592 (3059, with the origin 2), and went when 6592 was written (unit 378). The
+#   stand-ins of other units that only these functions' calls ended went (units 43, 79, 102, 111, 215, 280, 296 and
+#   src/app/roots_ecourna.cpp say which).
 #
 # cmenuvisualizarcandidatos.cpp (unit 104's: vota::CMenuVisualizarCandidatos::StartState, 11881) is compiled from this
 # list, after ctelasvota.cpp and cmenumaisinformacoesvota.cpp: 11881 holds ctelasvota.cpp's

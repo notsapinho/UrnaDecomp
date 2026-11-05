@@ -14,6 +14,7 @@
 //   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
 //   -     AddKeyLabel              2243's code, which only 653 calls and holds inlined (cformbuilder.h says why)
 //   2782  AddTextFieldMultiLine    over a CFixedText. The three come after GetLabeledKeyPos (the fragment says why)
+//   5543  AddMovie                 over a CMovieField, last: band 2 puts it after GetLabeledKeyPos (5544)
 // FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 and 3678 each pass twice, and no other target function
 // reads; its name and its being a constant of this file are chosen. GeraNome has no target function: binaryen inlined it
 // into 426, which shows its second prologue. The order of the definitions above line 290 is read from band 1
@@ -30,6 +31,7 @@
 #include "api/gui/cfillfield.h"
 #include "api/gui/cfixedtext.h"
 #include "api/gui/cimagefield.h"
+#include "api/gui/cmoviefield.h"
 #include "api/gui/cdsimagefield.h"
 #include "api/gui/clinefield.h"
 #include "api/gui/crectfield.h"
@@ -179,7 +181,7 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
     return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
 }
 
-// (original lines 182-289: content not recovered)
+// (original lines 184-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {
@@ -271,6 +273,13 @@ CFormBuilder::SharedField CFormBuilder::AddTextFieldMultiLine(const std::string&
 {
     const auto text = std::make_shared<CFixedText>(texto, alinhamento);
     SharedField campo = std::make_shared<CTextFieldMultiLine>(rect, text, fonte, static_cast<TColor>(2), static_cast<TColor>(1));
+    AddField(campo);
+    return campo;
+}
+
+CFormBuilder::SharedField CFormBuilder::AddMovie(const SPoint& posicao, const std::shared_ptr<CMovie>& movie)
+{
+    SharedField campo = std::make_shared<CMovieField>(posicao, movie, ANCHOR_BOTTOM_RIGHT);
     AddField(campo);
     return campo;
 }

@@ -1,6 +1,6 @@
 // api::CMovie (/home/rubio/tse/uenux2/src/api/gui/cmovie.cpp): the constructor's throw is a record of the target, so
 // its position in this file is fixed:
-//   5526  CMovie(std::vector<CMovieFrame>, const SPoint&)   record at line 29, column 15
+//   5526  CMovie(std::vector<CMovieFrame>, const SPoint&)   record at line 29, column 15; 5525 ProximoFrame(), last
 
 #include "api/gui/cmovie.h"
 
@@ -30,6 +30,12 @@ CMovie::CMovie(std::vector<CMovieFrame> frames, const SPoint& tamanho)
 
 CMovieFrame::CMovieFrame(std::vector<uebyte> imagem, uint64_t duracao) : imagem(std::move(imagem)), duracao(duracao)
 {
+}
+
+void CMovie::ProximoFrame()
+{
+    const size_t proximo = m_frameAtual + 1;
+    m_frameAtual = proximo == m_frames.size() ? 0 : proximo;
 }
 
 } // namespace api

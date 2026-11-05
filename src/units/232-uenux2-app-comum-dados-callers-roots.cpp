@@ -16,12 +16,12 @@ namespace {
 
 const void* volatile w232_sink;
 
-// Stands for the callers of md::CCargo::GetDetalheConsulta (fn 1923): 3074 and 7787 (the others, 6999, 5604, unit
-// 155's, 3819, unit 200's, and 11253, unit 139's, are in the link and call it once each). ccargo.cpp's own calls are
-// inlined by clang, so without these the link drops 1923's body.
+// Stands for 7787, a caller of md::CCargo::GetDetalheConsulta (fn 1923) (the others, 3074, unit 110's, 6999, 5604,
+// unit 155's, 3819, unit 200's, and 11253, unit 139's, are in the link and call it once each). ccargo.cpp's own calls
+// are inlined by clang, so without these the link drops 1923's body.
 __attribute__((noinline)) int DetalhesConsulta(int cargos)
 {
-    return w232_1923(cargos) + 3 * w232_1923(cargos + 140);
+    return 3 * w232_1923(cargos + 140);
 }
 
 // Stands for fns 5735 and 7787, which call CConfiguracaoEleicao::GetCargos (fn 3775) on GetInst()'s result (fn 187)

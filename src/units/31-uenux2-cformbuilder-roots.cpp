@@ -22,7 +22,8 @@
 //                     (AddClock) went: every target caller of the four is in the link (5409's 1150 and 2734, 5419's
 //                     1905, 941's 13 and 728's 16), and the link without those calls moved no row (steps 6 to 10)
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
-//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
+//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265 (3064,
+//                     1190, 6608, 6624 and 6646, unit 378's, are in the link, and 3064 for the adders above); 1255,
 //                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040, 12055, 12065 and
 //                     12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and 6599, unit 110's,
 //                     11812, unit 217's, and 11881, 11888 and 11892, unit 104's, are in the link); TelaB for 7787, the
@@ -34,8 +35,9 @@
 //   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
 //                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
 //                     their defaults
-//   TextoMultiLinha   3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit
-//                     110's, is): it calls it twice, with another rectangle and alignment the second time
+//   TextoMultiLinha   7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit 110's,
+//                     and 3074, unit 378's, are): it calls it twice, with another rectangle and alignment the second
+//                     time
 //   RelatorioA        the caller of 193, 604, 198 and 1264 not in the link, 12110, one call of each, and 12110 for
 //                     2775, two (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, 2248, unit 220's, and 12105,
 //                     fragment 372's, which call them too, are in the link: the calls that stood for 12105 went). Its

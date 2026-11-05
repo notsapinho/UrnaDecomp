@@ -7,8 +7,9 @@
 #   ctelasvota.cpp for 11892;
 # - unit 104, app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp:
 #   vota::CMenuFiltrarCandidatosPorNumero::StartState (11892).
-# Both match. 2383's target callers are 1591, 2384, 7787 (twice) and 11892; only 11892's screen is in the link, so the
-# roots give it the other four call sites, one per target call, with the flags each passes. The roots compile at
+# Both match. 2383's target callers are 1591, 2384, 7787 (twice) and 11892; 11892's screen and 1591 (unit 378's
+# CriaTelaVotoNuloCandidato, whose call went) are in the link, so the roots give it the other three call sites, one per
+# target call, with the flags each passes. The roots compile at
 # APP_CXXFLAGS and declare what they call through an asm label: they emit no TSE code, so no match rests on their flags.
 # The census pairs no target function with the stand-in (how-to step 7's command). The stand-in's comment names the
 # target callers each call stands for; a call goes when its caller is in the link. The stand-in is here and not in unit

@@ -6,8 +6,8 @@
 // IFormFieldBase's.
 //
 // The layout: the mask at +24 (fns 6504 and 6505 add 24; fn 4185 builds it at +36 of a control block that holds the
-// object at +12) and a std::shared_ptr at +52/+56, which fn 4185 fills with a shared_ptr it moves in and Draw calls
-// slot 2 of, IText's GetText. Its type is chosen: only that slot is evidence. The members' names are chosen too.
+// object at +12) and a std::shared_ptr at +52/+56, which the builders fill with the text and Draw calls slot 2 of,
+// IText's GetText. Its type is chosen: only that slot is evidence. The members' names are chosen too.
 //
 // The destructor is implicit: the D0s (thunks of binaryen's fn 6062) hold the D2's body, then free `this`
 // (docs/reference/facts/reading.md §R5). Draw, GetTypeName, Rect and Move are written; GetTypeName, Rect and Move are
@@ -16,8 +16,11 @@
 // trap, binaryen inlined it and the body collapsed to one `unreachable`.
 //
 // The constructor's shape is chosen: fns 4185 and 2384 build the mask from different arguments, and each instantiation
-// needs its own, so a forwarding template stands for them. No function of this tree's link holds it (the masks'
-// constructors need api::CPolySingleton), and nothing has compared it with the target.
+// needs its own, so a forwarding template stands for them. It copies the text into its member: fns 6624 (inlined from
+// vota::AdicionaCampoNumero, ctelasvota.cpp) and 4185 increment the text's count for the parameter and then reload it
+// and compare it with -1 with no store, which the copy's increment and the parameter's release fold into, and a move
+// (`m_texto(std::move(texto))`) does not give (6624 scored 69 over 322 rows with the move against 56 with the copy,
+// both in the whole link: src/units/378-uenux2-ctelasvota-criatela.mk).
 
 #include <string>
 #include <utility>
@@ -36,7 +39,7 @@ class CMaskedTextField : public IFormField<IScreen> {
 public:
     template <typename... TArgs>
     explicit CMaskedTextField(SharedIText texto, TArgs&&... args)
-        : m_mask(std::forward<TArgs>(args)...), m_texto(std::move(texto))
+        : m_mask(std::forward<TArgs>(args)...), m_texto(texto)
     {
     }
 

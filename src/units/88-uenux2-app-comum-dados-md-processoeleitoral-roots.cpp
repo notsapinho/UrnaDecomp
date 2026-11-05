@@ -10,12 +10,12 @@
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787, and 5747, written (3715 holds it inlined), 12272 (unit
 //         110's) and 11888 (unit 104's), in the link
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
-//   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
+//   1547  GetNomeNeutro               13550, and 2796, 2302, 4464, 6999 and 12587, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
 //   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
-//   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
+//   2258  GetOrdinalEscolha           12811 13550, and 4464 and 12587, which are written
 //   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
 //   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
 //   5655  CCargo::operator<=>: no stand-in, its caller 11888 (unit 104's, two call sites) is in the link
@@ -90,8 +90,7 @@ __attribute__((noinline)) int DistanciaSuplentes(int detalhe, int a, int b)
 
 __attribute__((noinline)) void NomesNeutros(int saida, int a, int b)
 {
-    w1547(saida, a);
-    w1547(saida + 12, b);
+    w1547(saida + 12, b + a);
 }
 
 __attribute__((noinline)) int XorCargos(int a, int b)
