@@ -3472,7 +3472,7 @@ byn$mgfn-shared$_ZN5comum23CServicoEstadoGeralVotaC2ENS_12EFlashOrigemENS_10EUrn
 byn$mgfn-shared$_ZN5comum27GetPathWsqHabilitadoExternoEv = func:3898; // size:0xb6 evidence:call by:3794
 byn$mgfn-shared$_ZNK5boost10wrapexceptISt16invalid_argumentE7rethrowEv = func:3899; // size:0x81 evidence:pair-addr
 byn$mgfn-shared$_ZN5boost15throw_exceptionISt16invalid_argumentEEvRKT_ = func:3901; // size:0x52 evidence:pair-addr
-byn$mgfn-shared$_ZN5comum11IEventosLog25LogaMidiaResultadoAusenteEv = func:3902; // size:0x91 evidence:call
+byn$mgfn-shared$_ZN5comum11IEventosLog25LogaMidiaResultadoAusenteEv = func:3902; // size:0x91 evidence:call by:5881
 byn$mgfn-shared$_Z19SinalizaSincronismoRN3api21CPriorityMessageQueueINS_8SMessageEEE = func:3903; // size:0x2c evidence:call
 byn$mgfn-shared$_ZN3api10CSubReportD2Ev = func:3904; // size:0x71 evidence:pair-addr
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle24ForwardTemplateReference19hasRHSComponentSlowERNS0_12OutputBufferE = func:3905; // size:0x5f evidence:pair-addr
@@ -5065,7 +5065,6 @@ _ZN5comum9CLogComum21LogaGerandoResultadosENS_25EExtensaoArquivoResultadoENS_24E
 _ZNSt3__211__formatter34__format_buffer_general_lower_caseB8ne210108IffEENS0_14__float_resultERNS0_14__float_bufferIT_EET0_iPc = func:5877; // size:0xa1 evidence:pair-addr
 _ZN5comum9CLogComum24LogaCopiandoArqResParaFIENS_25EExtensaoArquivoResultadoE = func:5878; // size:0x14 evidence:srcloc-anchor
 _ZN5comum11IEventosLog21ConverteERelatoriosUEENS_13ERelatoriosUEE = func:5879; // size:0x375 evidence:srcloc-anchor
-_ZN5comum11IEventosLog33LogaImprimindoRelatorioEstadoUrnaEv = func:5880; // size:0x1d evidence:pair-addr
 _ZN5comum11IEventosLog24LogaErroEstadoAplicativoEv = func:5881; // size:0x1d evidence:call by:5945,11914
 _ZN5comum11IEventosLog35LogaMesarioIndagadoImprimirZeresimaEv = func:5882; // size:0xa7 evidence:call by:11849
 _ZNSt3__211__formatter14__float_bufferIfED2B8ne210108Ev = func:5884; // size:0x16 evidence:pair-addr
@@ -9615,7 +9614,6 @@ _ZNKSt3__220__shared_ptr_pointerIPN3api18CControlValidationENS_10shared_ptrINS1_
 _ZNK3api18CInputFieldControlINS_7IScreenEE4RectEv = func:11153; // size:0x9 evidence:pair-fingerprint
 _ZNK3api18CInputFieldControlINS_7IScreenEE11GetTypeNameEv = func:11155; // size:0x15 evidence:vtable
 _ZZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativosENK23commaAsDecimalSeparator16do_decimal_pointEv = func:11156; // size:0x4 evidence:vtable
-_ZN3api14CPolySingletonINS_12CEscritorLogEE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE = func:11157; // size:0x736 evidence:call
 _ZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativos = func:11159; // size:0x600 evidence:vptr-anchor
 __cxx_global_array_dtor.6@app/uenux2/src/api/gui/capplication.cpp.o = func:11160; // size:0x59 evidence:pair-addr
 _ZNKSt3__220__shared_ptr_pointerIPN5comum4impl12IValidaMidiaENS_14default_deleteIS3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info = func:11164; // size:0x11 evidence:content-anchor
@@ -32565,7 +32563,7 @@ _ZTSSt9type_info = 0x174a08; // type:data size:0xd evidence:rtti
 str.9a9d585e5137 = 0x174a08; // type:data size:0xd evidence:string "St9type_info"
 _ZTISt8bad_cast = 0x174a18; // type:data size:0xc evidence:vote:1+rtti by:272
 _ZTSSt8bad_cast = 0x174a24; // type:data size:0xc evidence:rtti
-_ZN3api20g_polySingletonsInfoE = 0x174a30; // type:data size:0x4 evidence:vote:3 by:316,433
+_ZN3api20g_polySingletonsInfoE = 0x174a30; // type:data size:0x4 evidence:vote:2 by:316
 srcloc.e89a7703d112 = 0x174a34; // type:data size:0x10 evidence:srcloc vota_web_wasm.cpp:515:13
 _ZTIN3api13ITextToSpeechE = 0x174a44; // type:data size:0x8 evidence:rtti
 srcloc.385b4574e27d = 0x174a4c; // type:data size:0x10 evidence:srcloc cpolysingletonlist.h:129:19

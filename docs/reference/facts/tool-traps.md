@@ -63,7 +63,12 @@ awk -F'\t' '$1==3939 {print substr($2, 1, 16)}' ../splat/scan.tsv               
 So read a one-caller row's caller in `splat/scan.tsv` before taking its body out of line as a puzzle of the source.
 When neither the twin nor the merge's other members are identified, no stand-in gives the call the merge took away: a
 stand-in stands only for a caller the target shows, so the caller stays unmatched with the function inlined into it
-(`src/units/README.md` "Companion files", 11514 under 2543).
+(`src/units/README.md` "Companion files", 11514 under 2543). That holds even when removing a stand-in's calls costs
+matches, the user's decision: 11157, `CPolySingleton<api::CEscritorLog>::instance` (1846 bytes), has one direct
+target caller, 433 (`api::CLoga::loga`), and no table slot or export; unit 100's roots called it twice, standing for
+no caller the target shows, and the two matched with those calls. They went, and a link without them reads `433
+differs` (11157 inlined into it, 1904 bytes against 68) and `11157 no-candidate`, no other row moving (unit 100's
+fragment).
 
 ## X2. Probe links
 

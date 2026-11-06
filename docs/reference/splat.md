@@ -231,8 +231,9 @@ matches out until the line follows ([facts/splat.md](facts/splat.md) §S10).
 A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE` (`callers+content`: the static
 constructors build it from a literal only it has, and five functions read it), and `_ZN3api20g_polySingletonsInfoE`
 had one (`content`: the word holds the one slot of 11265, paired on its own) until step 8 named it by the votes of 316
-and 433 and the line went, idle. A `_ZGV` guard that one body reads has such
-evidence in its object: the target keeps our link's distance between the two ([facts/splat.md](facts/splat.md) §S13),
+and 433 and the line went, idle (316's alone since 433 left `match`: unit 100's fragment). A `_ZGV` guard that one body
+reads has such evidence in its object: the target keeps our link's distance between the two
+([facts/splat.md](facts/splat.md) §S13),
 so the object's address, held by another match, places the guard. §3's self-vote rule reads that itself, so such a
 guard takes no hand line (5158's, in §3), when step 8 wrote a line for it: a seed or anchor pair of its reader votes
 for it. A `shape` pair casts no vote until a caller's anchor names the reader (whose `call` vote then makes it vote in

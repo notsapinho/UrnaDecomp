@@ -1,12 +1,14 @@
 # uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 18 of its 32 plain instantiations,
 # set, its wrapper of push, with api::CPolySingletonList's has<T>, instance<T>, push<T> and remove (cpolysingletonlist.h),
 # their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. The roots
-# object instantiates 15 of the 18 and stands in for the real callers, and the link keeps the first copy, so a copy moves
-# to a real object as its users land (the object column of splat/scan.tsv):
+# object instantiated 15 of the 18 and stood in for the real callers (8 now, the roots file's comment says which), and
+# the link keeps the first copy, so a copy moves to a real object as its users land (the object column of
+# splat/scan.tsv):
 #   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 905 IPaperRelatorios, 3204 IAjusteDataHora,
 #   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 3164 IGenericFactory<ISyncCtl>,
 #   1282 comum::CCalculaCV, 837 comum::IEventosLog, 611 comum::IInterfaceInit, 1822 comum::IInterfaceSavd.
-# All 15 come from real objects now. The other three come from real objects alone: 5443 ITimerScheduler from
+# All 15 come from real objects now, and 14 match: 11157 is inlined into its one caller, 433, since the roots' calls of
+# it went (below, "What waits"). The other three come from real objects alone: 5443 ITimerScheduler from
 # itimerscheduler.cpp.o, and 383 IInputMT and 356 comum::IControladorRegistraMesarios, whose calls in the roots went once
 # every target caller of each was in the link (10590 was 383's last; 5382, 6008 and 10316 were 356's): a link without
 # the two calls moves no row in or out of match, the symbol file and the match list the same (measured).
@@ -125,6 +127,20 @@
 # - 11265 and 10620 match now, from unit 170's object, the executable TU, which holds them and api::g_polySingletonsInfo
 #   (unit 170's fragment). 11265 had read `unresolved`, self-voted: the two .bss names only its own vote gave; and 10620,
 #   which holds the object's address and not the guard's, was not reached.
+# - 11157, instance<api::CEscritorLog> (1846 B), and 433, api::CLoga::loga (unit 111's), are written and unmatched. The
+#   target keeps 11157 out of line under one direct call, 433's, with no table slot and no export (`awk -F'\t'
+#   '$2==11157' ledger/callgraph.tsv` prints `433 11157` alone; `wasm-objdump -x -j Elem` and `-j Export` of the target
+#   name no func[11157]): a second call a later merge took away (docs/reference/facts/tool-traps.md X1). The roots
+#   called 11157 twice (w100_usa<api::CEscritorLog>), standing for no caller the target shows, and with those calls 433
+#   and 11157 matched. The calls went by the user's decision: a stand-in reaches its function only the way the target
+#   does, even when its removal costs matches (src/units/README.md "Companion files", beside 11514 under 2543). The
+#   has<T> call (3391, for 14478) stays. Measured: the plain link without them (sha256 50e78afc...) moves 433 from
+#   `match` to `differs` (`+0x0 target the locals | ours the locals`: binaryen inlines 11157 into it, our 433 is 1904 B
+#   against the target's 68) and 11157 to `no-candidate`, and no other row; the census moved nine tiers and no verdict,
+#   eight of them 433's callers or theirs, whose fingerprints read its body (233, 1398, 2282; 5880, 5881, 5885 over
+#   3902; 10775, 10784 over 6017), and 7080 as at other relinks; 5880's pair-addr line went with its pair, and 5880
+#   stays matched. The two wait for a caller of 11157 the target shows; while 433 is its only one, nothing our link
+#   can give brings them back.
 #
 # set in two layers, and the locks (added with the executable TU's main and fn 8302, units 170 and 188):
 # - CPolySingletonList::set<T>(std::unique_ptr<T>&&, info), a has<T> test, then remove<T> (the name's remove, now with no
@@ -159,7 +175,9 @@
 # their evidence there: each has<T> whose call has one voter, from T's type name; 1654 and 2160 have two voters and need
 # no such line, and none reads a match. _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
 # (slot 284, 11265's only one; a slot below 1024 counts two telling bytes, and placing by content takes four), until
-# step 8 named it by the votes of 316 and 433, and it went (a scan and a build without it kept every row).
+# step 8 named it by the votes of 316 and 433, and it went (a scan and a build without it kept every row). Since 433
+# left `match` (above) 316's votes alone name it (`vote:2 by:316`), and the splat build verifies every match that
+# reads it.
 #
 # Inlining. binaryen inlined CPolySingletonList::instance<T> into CPolySingleton<T>::instance: each target body has a
 # second stack prologue (i32.sub(g0, 576)), our object has two functions, and the link has one caller of the second, so

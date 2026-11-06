@@ -17,7 +17,12 @@
 // every target caller of the four is in the link. Where only one half still waits, it makes that half's calls alone:
 // instance's (w100_instancia) for api::IScreen, api::IUrna, api::IResource and comum::IInterfaceSavd, whose has<T>
 // (3387, 4871, 4872, 5434) have their target callers in the link; has<T>'s (w100_tem) for comum::CCalculaCV,
-// api::IAjusteDataHora and the two IGenericFactory, whose instance (1282, 3204, 4356, 3164) have theirs. It calls
+// api::IAjusteDataHora and the two IGenericFactory, whose instance (1282, 3204, 4356, 3164) have theirs, and for
+// api::CEscritorLog, whose has<T> (3391) stands for 14478 (__wasm_call_ctors, the static initializer of a TU not
+// written; its other callers, 8302 and 11157, are in the link). Its instance (11157) has no call here: its one
+// target caller, 433 (api::CLoga::loga), is in the link and calls it once, and no table slot or export holds it, so a
+// call here would stand for no caller the target shows. Our link inlines 11157 into 433 where the target keeps it out
+// of line, and both stay unmatched until a caller of 11157 the target shows is found (the fragment). It calls
 // api::IPaperRelatorios's instance (905) once (w100_usa_uma), for its one target caller not in the link, 12110 (2890,
 // 3654, 11006, 11852, 11855, 11991, 12068, 12071, 12074 and 12105 are); its has<T> (4853) has its callers, 905 and
 // 8302, in the link.
@@ -101,7 +106,7 @@ __attribute__((noinline)) int w100_todos()
 {
     return w100_instancia<api::IScreen>() + w100_usa<api::IBeep>() + w100_instancia<api::IUrna>() +
         w100_instancia<api::IResource>() + w100_tem<comum::CCalculaCV>() + w100_usa_uma<api::IPaperRelatorios>() +
-        w100_usa<comum::IEventosLog>() + w100_tem<api::IAjusteDataHora>() + w100_usa<api::CEscritorLog>() +
+        w100_usa<comum::IEventosLog>() + w100_tem<api::IAjusteDataHora>() + w100_tem<api::CEscritorLog>() +
         w100_usa<comum::IInterfaceInit>() + w100_tem<api::IGenericFactory<api::ISemaphore>>() +
         w100_tem<api::IGenericFactory<api::ISyncCtl>>() + w100_instancia<comum::IInterfaceSavd>();
 }
