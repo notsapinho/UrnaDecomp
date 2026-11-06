@@ -1,5 +1,5 @@
-// The reconstruction's note, not TSE's text: the two constructors (fns 5664 and 5663) and GetTituloMesarioHabilitacao
-// (fn 1548, record at line 93). The constructors' lines are chosen: no record gives them one.
+// The reconstruction's note, not TSE's text: the constructors (5664, 5663, 2800), operator== (inlined into 5761) and
+// GetTituloMesarioHabilitacao (fn 1548, record at line 93). The other lines are chosen: no record gives them one.
 #include "app/comum/dados/md/eleitor/celeitordinamico.h"
 
 #include "app/comum/dados/euecomumdadoserror.h"
@@ -31,7 +31,48 @@ CEleitorDinamico::CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEle
 {
 }
 
-// (original lines 34-86: content not recovered)
+CEleitorDinamico::CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEleitorIdentidade& identidadeHabilitacao,
+                                   int estadoComparecimento)
+    : m_eleitor(eleitor), m_identidadeHabilitacao(identidadeHabilitacao), m_estadoComparecimento(estadoComparecimento),
+      m_tipoHabilitacao(0), m_dedoHabilitacao(), m_scoreHabilitacao(0), m_numeroTentativa(0), m_tipoAtivacaoAudio(2),
+      m_erroDecifrarBiometria(0),
+      m_apresentacaoFoto(ecourna::app::dados::CApresentacaoFotoEleitor::EleitorSemFoto,
+                         ecourna::app::dados::CApresentacaoFotoEleitor::SemErro)
+{
+}
+
+bool CEleitorDinamico::operator==(const CEleitorDinamico& outro) const
+{
+    if (m_eleitor != outro.m_eleitor || m_identidadeHabilitacao != outro.m_identidadeHabilitacao ||
+        m_tipoAtivacaoAudio != outro.m_tipoAtivacaoAudio) {
+        return false;
+    }
+    if (Votou() != outro.Votou() || NaoVotou() != outro.NaoVotou() ||
+        SemCargoParaVotar() != outro.SemCargoParaVotar() || Faltou() != outro.Faltou()) {
+        return false;
+    }
+    if (m_tipoHabilitacao != outro.m_tipoHabilitacao) {
+        return false;
+    }
+    if (HabilitadoPorBiometria() && outro.HabilitadoPorBiometria()) {
+        if (m_dedoHabilitacao != outro.m_dedoHabilitacao || m_scoreHabilitacao != outro.m_scoreHabilitacao ||
+            m_numeroTentativa != outro.m_numeroTentativa) {
+            return false;
+        }
+    }
+    if (m_erroDecifrarBiometria != outro.m_erroDecifrarBiometria) {
+        return false;
+    }
+    if (TemTituloMesarioHabilitacao() != outro.TemTituloMesarioHabilitacao()) {
+        return false;
+    }
+    if (TemTituloMesarioHabilitacao() && GetTituloMesarioHabilitacao() != outro.GetTituloMesarioHabilitacao()) {
+        return false;
+    }
+    return m_apresentacaoFoto == outro.m_apresentacaoFoto;
+}
+
+// (original lines 75-86: content not recovered)
 #line 87
 const CEleitorIdentidade& CEleitorDinamico::GetTituloMesarioHabilitacao() const
 {

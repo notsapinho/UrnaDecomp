@@ -24,6 +24,10 @@
 #   IInputField<IScreen>'s constructor, whose copy there stores the __func vtable; and 11019 and 11020 to 11023 from
 #   api/gui/cmtformbuilder.cpp's, whose AddInputControl (fn 395) builds that block and whose copy of
 #   IInputField<IScreenMT>'s constructor (fn 3673) stores the __func vtable (src/units/31-uenux2-cformbuilder.mk).
+#   The two CMaskedTextField blocks' members (12618, 12613, 12735, 12727) and CMaskedTextField's D2s, D0s, Draws,
+#   GetTypeName, Rect and Move (12604, 12719, 12595, 12713, 12593, 12708, 6507, 6505, 6504) come from ctelasvota.cpp's
+#   object now, whose vota::AdicionaCampoNumero<MASK> (fns 6624's inlined copy and 3060, unit 378) builds both blocks;
+#   step 9 renamed the twins' lines to the <CGrayedFramedText> members, the first copies in link order.
 #   The roots' builders and sinks that stood for 395 and 3673 went when those two landed, though 5410 stores
 #   CInputFieldControl<IScreenMT>'s vptr too: the scan with them and the scan without them each move the same three
 #   rows, 395, 3673 and 3674, from the commit before (docs/how-to-decompile.md step 9's join), so no row rests on them.
@@ -63,11 +67,13 @@
 #   That test mentions FillCell before DrawChar, and the target's uses-2 band has 5537 before 5536 (a higher index, a
 #   lower ld_index), so DrawChar is defined above MaskText and FillCell after it: their lines, and the padding with
 #   append rather than resize (not measured), are choices.
-# Not written: CGrayedFramedText's constructor (5535). It passes CFramedText's constructor the address of a constant
-#   SFont {40, 0} at 474880, which lies in the data of an app/vota object (after its typeinfo name
-#   N4vota19CPreShowProgressBarE, with {30, 0} and {20, 0} beside it), not in cgrayedframedtext.cpp's (its typeinfo name is
-#   at 523132): an object no source of ours defines. Measured: `SFont{40, 0}` written in the call compiles to a stack
-#   temporary, and a namespace-scope or function-local constant of this file lands in its own data.
+# CGrayedFramedText's constructor (5535) is written (unit 173's file, src/units/378-uenux2-ctelasvota-criatela.mk): the
+#   SFont {40, 0} at 474880 it passes CFramedText's constructor lies in the data of an app/vota object (after its
+#   typeinfo name N4vota19CPreShowProgressBarE, with {30, 0} and {20, 0} beside it), not in cgrayedframedtext.cpp's (its
+#   typeinfo name is at 523132), so it is a parameter its callers in ctelasvota.cpp pass, folded by binaryen. Measured
+#   before that: `SFont{40, 0}` written in the call compiles to a stack temporary, and a namespace-scope or
+#   function-local constant of this file lands in its own data. The roots' CMaskedTextField<CGrayedFramedText> block
+#   builder, destructor emitter and sinks went: 3060 builds the block and stores both vtables.
 #   the constructors of the other classes, in the headers: only dropped functions or stand-ins reach them, so nothing has
 #   measured them. IInputField<IScreen>'s (2024) matches from unit 110's ctelasvota.cpp object, the first to emit it
 #   (its fn 2383 calls it), and CInputFieldControlBase<IScreen>'s (5565) from unit 120's, whose AddInputControl (901,

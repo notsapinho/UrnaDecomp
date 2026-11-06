@@ -38,6 +38,10 @@ public:
     // that a member of CMovie does it: the store is all the target shows
     void Rewind() { m_frameAtual = 0; }
 
+    // on to the next frame, back to the first after the last: target fn 5525, called twice by the timer's lambda of
+    // CMovieField's constructor (fn 11056) and kept out of line there, so defined in cmovie.cpp. The name is chosen
+    void ProximoFrame();
+
     // the frame on show and the size: simulador::CWasmScreen's slot 26 (fn 9038) reads them, the frame through at() (its
     // `call 234`, the vector's out_of_range). The names are chosen
     const CMovieFrame& FrameAtual() const { return m_frames.at(m_frameAtual); }

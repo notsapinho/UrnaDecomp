@@ -13,6 +13,9 @@
 # All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.
+# dados/dao/celeitordinamicodao.cpp is compiled from unit 110's list, right before celeitores.cpp, where
+# CEleitores::DynamicCreate (5761) needs it; CEleitorDinamico's third constructor (2800) and operator==, and the DAO's
+# InserirTodos, are that function's (src/units/383-uenux2-celeitores-dinamicos.mk).
 #
 # - CBiometriaEleitor::TemDedo (3719, no record): whether the map is there and holds the finger, `m_dedos.has_value() &&
 #   m_dedos->contains(tipo)`. Its body reads the flag at +32 (compared with 1) and then searches the map at +20 for the
@@ -74,10 +77,10 @@
 #   (5760 is the copy), where a temporary would be moved.
 # - std::vector<CEleitorDinamico>'s instances that RecuperarTodos brings match: the push_back slow path (5759), and
 #   construct_at, __uninitialized_allocator_relocate and __split_buffer's destructor (5760, 3759, 3758), which the slow
-#   path calls out of line. The target gives each of those three a second caller (3614 for 5760, in the link, 5761 for
-#   3759 and 3758, for which the roots stand): with only the slow path calling them binaryen inlined all three into it
-#   (410 over 507 rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), has no instance of ours:
-#   its callers 5761 (CEleitores::DynamicCreate) and 6734 are not written.
+#   path calls out of line. The target gives each of those three a second caller (3614 for 5760, 5761 for 3759 and
+#   3758, both in the link): with only the slow path calling them binaryen inlined all three into it (410 over 507
+#   rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), matches from celeitores.cpp.o, whose
+#   CEleitores::DynamicCreate (5761) calls it twice.
 #
 # CComparecimentoMesarioDAO's slots 7 and 8, RecuperarID (10402) and RecuperarTodos (10401), names chosen as
 # CEleitorDinamicoDAO's are, are written in ccomparecimentomesariodao.cpp between Inserir and Clone, the band's order
@@ -118,11 +121,12 @@
 #
 # md::CEleitorDecorator::GetAbrangencia (fn 3721, celeitordecorator.cpp, after GetIdentidadePorTipo): the voter's reach
 # for the urn's state and municipality, 0 with no temporary transfer or one to that municipality, 1 to that state, 2
-# otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; unit 197's roots stand in
-# for its caller 5761 (2824, unit 110's, is in the link). The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial and
-# m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of names only.
-# The decorator now derives from md::CEleitor (celeitordecorator.h, unit 110's fragment), and GetAbrangencia reads the
-# transfer through CTransferenciaTemporaria's accessors: celeitordecorator.cpp.o is cmp-identical to the one before.
+# otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; its callers 5761 (unit 383's
+# notes) and 2824 (unit 110's) are in the link. The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial
+# and m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of
+# names only. The decorator now derives from md::CEleitor (celeitordecorator.h, unit 110's fragment), and GetAbrangencia
+# reads the transfer through CTransferenciaTemporaria's accessors: celeitordecorator.cpp.o is cmp-identical to the one
+# before.
 #
 # Two members of the decorator that comum::CEleitores::GetEleitoresEstaticos (fn 5772, unit 110) needs, in
 # celeitordecorator.cpp (celeitordecorator.h says what shows each): its constructor from a CEleitor and the voter's type,
@@ -150,8 +154,9 @@
 # CriaComum pair went: 11422, its one target caller, is in the link.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
+# dados/dao/celeitordinamicodao.cpp left this list for unit 110's, and fragment 383 gives it its Boost path.
 COMUM_ELEITOR_MD_SRCS := src/app/comum/dados/md/eleitor/celeitordinamico.cpp src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp src/app/comum/dados/md/eleitor/celeitordecorator.cpp
-COMUM_ELEITOR_DAO_SRCS := src/app/comum/dados/dao/celeitordinamicodao.cpp src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp
+COMUM_ELEITOR_DAO_SRCS := src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp
 UENUX2_SRCS += $(COMUM_ELEITOR_MD_SRCS) $(COMUM_ELEITOR_DAO_SRCS)
 # src/ecourna/api/sql/isqlstatement.hpp and isqlresultset.hpp include Boost, and UENUX2_CXXFLAGS has no Boost path. An
 # include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").

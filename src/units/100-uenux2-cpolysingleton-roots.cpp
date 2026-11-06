@@ -38,7 +38,6 @@
 #include "api/uelog/cescritorlog.h"
 #include "api/util/cajustedatahora.h"
 #include "api/util/iajustedatahora.h"
-#include "api/util/itimerscheduler.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/log/ieventoslog.h"
@@ -88,14 +87,6 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for the callers of the GetInst that have not landed: 5543 for fn 1259, whose 502, 652, 1265, 2024, 3658,
-// 3673, 5904, 8302 and 3059 (unit 110's, CImageFieldUpdate's constructor inlined) are in the link. Fn 1155's last one,
-// 11862 (unit 138), is in the link, and its calls went.
-__attribute__((noinline)) int w100_getinst()
-{
-    return *reinterpret_cast<const unsigned char*>(&api::ITimerScheduler::GetInst()) + 2;
-}
-
 // The control block of each singleton: __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>. The target's builder is
 // push<T>, or the shared_ptr constructor its thunks hold (10335, 10547, ...: a merged 1010 with that vptr), and each stores
 // that vtable. w100_bloco is never called, uses no constructor of T, and is no target function: it reads the count back.
@@ -141,7 +132,6 @@ __attribute__((optnone, noinline)) void w100_destroi_b(std::unique_lock<std::mut
 
 int (*volatile w100_sink)();
 void* volatile w100_sink_bloco;
-int (*volatile w100_sink_getinst)();
 int (*volatile w100_sink_qrcode)();
 void (*volatile w100_sink_falha)(const char*);
 
@@ -155,7 +145,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
-        w100_sink_getinst = w100_getinst;
         w100_sink_qrcode = w100_tem_qrcode;
         w100_sink_falha = w100_falha;
     }

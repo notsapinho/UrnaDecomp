@@ -618,7 +618,7 @@ the landing re-reads it. An item's command quotes an output that moves at every 
 at.
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689 183 3679 5549 4789 6233 7884 3984 11180", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689 183 3679 5549 4789 6233 7884 3984 11180 6071 12862", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -952,6 +952,21 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
 
     The `ours` numbers were read at cf3b755a. What holds the eight is binaryen's choice over the whole module: a landing
     that takes 5360's library code out of the link takes them out.
+
+30. **6071 and 12862, by `api/io/cinistrings.cpp`'s static `ESCAPES`.** 12862 is the exit destructor of
+    `vota::TECLAS_TESTE_TECLADO` (`ctelasvota.cpp.o`'s, unit 110's), a `std::vector<std::string>` (12-byte elements);
+    10879 is the exit destructor of `ESCAPES`, the `std::vector<std::pair<std::string, char>>` (16-byte elements, the
+    string at +0) that unit 379's `TrataEscapes` (3651) reads. In the target both are thunks into one body, 6071, each
+    passing its vector's three words, its element size and two more constants: from `asmlift-wasm/`, `pnpm --silent
+    wasm fn ../target/vota_web_wasm.wasm 12862` disassembles `f6071(p0, 1833368, 1833364, 1833360, 4, 1, 12)` and
+    `... 10879` `f6071(p0, 1839296, 1839292, 1839288, 8, 5, 16)`. Binaryen merges ours the same way:
+    `awk -F'\t' '$1==6071 || $1==12862 || $1==10879 {print $1, $2}' splat/scan.tsv` prints the merge body
+    `byn$mgfn-shared$__cxx_global_array_dtor.120` for 6071 and the two destructors' own symbols (at 7149483a; the
+    suffix follows `ctelasvota.cpp`'s statics, how-to step 10's local symbols). Without `ESCAPES` our link holds no
+    merged body and 12862's destructor whole: a scratch link with a variant `cinistrings.cpp.o` whose `ESCAPES` is a
+    `const std::pair<const char*, char>[]` (workflow.md W13, "One variant object in the whole link") has no line for
+    6071's symbol in its `names.tsv`, where the plain link has one. A landing that takes `ESCAPES` or its destructor out
+    takes the two out. 10879 itself matches by `ESCAPES.2`'s hand line (unit 379's fragment).
 
 ## S11. A match among bodies of the same content can take the other one's name
 

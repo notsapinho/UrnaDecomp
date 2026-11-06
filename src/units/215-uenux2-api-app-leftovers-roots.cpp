@@ -6,18 +6,7 @@
 // fns 7160, 7306 and 10710, all in our link (units 329, 104 and 277): its stand-ins went.
 
 // api::TerminaComBarraInvertida (target fn 5484) has one direct caller in the target, fn 5480, which calls it twice
-// and is not in our link. This stand-in calls it twice too.
-extern "C" int w5484_termina(const void*) __asm__(
-    "_ZN3api24TerminaComBarraInvertidaERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
-
-namespace {
-
-__attribute__((noinline)) int LinhasContinuam(const char* linha, const char* proxima)
-{
-    return w5484_termina(linha) * 2 + w5484_termina(proxima + 12);
-}
-
-} // namespace
+// and is in our link (fragment 379): its stand-in went.
 
 // comum::md::estadoaplicacao::CEstadoGeral's constructor from its eight parts (target fn 5637) has one direct caller in
 // the target, fn 11398 (unit 124, in our link), and a table slot, 427, which fn 10205 (not written) alone passes to
@@ -35,7 +24,6 @@ const void* volatile leftovers_sink;
 struct SLeftoversRoots {
     SLeftoversRoots()
     {
-        leftovers_sink = reinterpret_cast<const void*>(&LinhasContinuam);
         leftovers_sink = reinterpret_cast<const void*>(&w5637_geral);
     }
 } leftovers_roots;

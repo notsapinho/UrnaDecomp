@@ -59,11 +59,13 @@
 #   functions (the two paths, Salva, SalvaInterno, SalvaExterno) follow them, from line 96, a choice.
 # - Lines in celeitores.cpp, chosen: GetArquivoBancoDadosInterno at 278, between CompleteLoad's last record (238) and
 #   DynamicCreate's first (301); GetArquivoBancoDadosExterno at 744, after ValidaIdentidadesEleitor, where it adds no
-#   inverted pair to band 2 (docs/reference/facts/placing.md P9; names.tsv's ld_index: 5765 2692, 5764 2690, 5762 2694,
-#   5757 2700; 5765/5764 inverted already). The band suggests the two were defined together after CompleteLoad, whose
-#   calls would put 5765 and 5764 first (a reading): there 5762 would sit before 5765 and 5764 in our object while
-#   CompleteLoad is not written. Once DynamicCreate (5761) is written at its records' lines, 5762's line, below it,
-#   inverts one pair (5762 links before 5761 in the target).
+#   inverted pair to band 2 (docs/reference/facts/placing.md P9; names.tsv's ld_index before unit 383 landed: 5765 2692,
+#   5764 2690, 5762 2694, 5757 2700; 5765/5764 inverted already). The band suggests the two were defined together after
+#   CompleteLoad, whose calls would put 5765 and 5764 first (a reading): there 5762 would sit before 5765 and 5764 in
+#   our object while CompleteLoad is not written. With DynamicCreate (5761) written at its records' lines (unit 383),
+#   5762's line, below it, inverts that pair: 5762 links before 5761 in the target (ledger/ordinals.tsv's ordinals 4434
+#   and 4435), after it in ours (ld_index 2605 against 2586 at 7149483a; 5765 2603, 5764 2601, 5757 2611, so 5761 also
+#   links before 5765 and 5764, the pairs unit 383's fragment names).
 #
 # Names. The census pairs 1551, 1701, 2826, 5762, 6035 and 6036 at the shape tier only (moved: none -> shape), so step 8
 # names none of them, and step 9's scan matches all six from those pairs (source `ledger`). 5737 and 5736 have no

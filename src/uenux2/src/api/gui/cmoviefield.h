@@ -52,6 +52,11 @@ public:
     std::string GetTypeName() const override;
 
 private:
+    // the timer's callback: on to the next frame, a redraw, and the time the frame has left as the next interval
+    // (fn 11056, the lambda's __func slot, holds it behind binaryen's inlining block: a function of its own that clang
+    // kept out of line). Its name, and its being a member the lambda calls, are chosen
+    void AvancaFrame();
+
     std::shared_ptr<CMovie> m_movie;
     SPoint m_posicao;
     EAnchorPoint m_ancora;

@@ -4,7 +4,7 @@
 //   Cargas         comum::CLocal::Carrega (fn 5740, unit 89's clocal.cpp): fn 7787 (4161 is in the link)
 //   TodasSecoes    comum::CLocal::GetTodasSecoes (fn 5741, unit 89's clocal.cpp): fn 7787 (12105, fragment 372's, is
 //                  in the link: the call that stood for it went)
-//   Locais         vota::AdicionaLocal (fn 4161, unit 110's ctelasvota.cpp): fns 6601 and 7787 (2380 is in the link)
+//   Locais         vota::AdicionaLocal (fn 4161, unit 110's ctelasvota.cpp): fn 7787 (2380 and 6601 are in the link)
 //   TelasNeutras   vota::TelaNeutra (fn 2380, unit 110's ctelasvota.cpp): fn 7787 (6557, 6587 and 11797 are in the
 //                  link); the target's wasm type keeps the font size and the location flag, so the stand-ins pass
 //                  values that vary, and dead-argument elimination folds neither
@@ -32,10 +32,10 @@ __attribute__((noinline)) int TodasSecoes(int resultado, int local)
     return 17;
 }
 
-__attribute__((noinline)) void Locais(int builder, int outro)
+__attribute__((noinline)) int Locais(const char* builder)
 {
-    w4161(builder + 12);
-    w4161(outro);
+    w4161(reinterpret_cast<int>(builder + 12));
+    return builder[5] * 7;
 }
 
 __attribute__((noinline)) void TelasNeutras(int resultado, int mensagem, int tamanho, int local)

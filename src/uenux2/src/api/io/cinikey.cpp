@@ -1,5 +1,7 @@
 #include "api/io/cinikey.h"
 
+#include <utility>
+
 #include "api/io/eueioerror.h"
 
 namespace api {
@@ -19,14 +21,18 @@ CIniKey& CIniKey::operator=(const CIniKey& chave)
         //
         //
         //
-        //
-        //
         throw CUeIoError(EUE_IO_NOME_CHAVE_MODIFICADO, "O nome de uma chave não pode ser modificado.");
     }
 
     m_valor = chave.m_valor;
 
     return *this;
+}
+
+CIniKey::CIniKey(std::string nome, std::string valor)
+    : m_nome(std::move(nome))
+    , m_valor(std::move(valor))
+{
 }
 
 } // namespace api

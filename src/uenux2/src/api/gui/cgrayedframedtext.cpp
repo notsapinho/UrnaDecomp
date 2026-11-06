@@ -1,6 +1,6 @@
 // Reconstruction's note, not TSE's text. The file's one record is api::CGrayedFramedText::MaskText's throw, line 29
-// (fn 5534); its other lines are chosen. The constructor (fn 5535) is not written: it passes CFramedText's constructor
-// the address of a constant SFont no object of ours defines (src/units/173-uenux2-cgrayedframedtext.mk).
+// (fn 5534); its other lines are chosen. The constructor (fn 5535) passes CFramedText's constructor the font and the
+// alignment its callers give, both folded in the target (src/units/378-uenux2-ctelasvota-criatela.mk).
 #include "api/gui/cgrayedframedtext.h"
 
 #include <string>
@@ -10,13 +10,14 @@
 
 namespace api {
 
-// <stubs>
-// f5535 · 25 B · unmatched · placement: link order · name unknown
-// void f5535(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 13-19: content not recovered)
+#line 20
+CGrayedFramedText::CGrayedFramedText(size_t length, const SPoint& position, const SFont& font, ETextAlignment alignment)
+    : CFramedText(length, position, font, alignment)
+{
+}
 
-// (original lines 18-25: content not recovered)
-#line 26
+
 void CGrayedFramedText::MaskText(IScreen& screen, const std::string& text) const
 {
     if (text.size() > m_length) {
@@ -35,3 +36,8 @@ void CGrayedFramedText::MaskText(IScreen& screen, const std::string& text) const
 }
 
 } // namespace api
+
+// <stubs>
+// f5535 · 25 B · unmatched · placement: link order · name unknown
+// void f5535(i32, i32, i32) { ... }
+// </stubs>

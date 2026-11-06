@@ -1,5 +1,4 @@
 #include "app/comum/dados/celeitores.h"
-
 #include <algorithm>
 #include <format>
 #include <functional>
@@ -11,6 +10,7 @@
 #include "app/comum/dados/asn/eleitor/cconversorimpedido.h"
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
+#include "app/comum/dados/dao/celeitordinamicodao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 #include "app/comum/dados/md/eleitor/cimpedido.h"
 #include "app/comum/relatorios/cgeradorbuqrcode.h"
@@ -116,12 +116,63 @@ std::string GetArquivoBancoDadosInterno()
 
 // (original lines 283-297: content not recovered)
 #line 298
-// <stubs>
-// f5761 · 3007 B · unmatched · name unknown
-// void f5761(i32, i32) { ... }
-// </stubs>
+void CEleitores::DynamicCreate(const std::string& banco) const
+{
+    if (m_registros.empty()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7837, "Não há informações carregadas");
+    }
 
-// (original lines 303-430: content not recovered)
+    if (m_registros.begin()->second.TemDadosDinamicos()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7838, "Informações dinâmicas já carregadas");
+    }
+
+    const bool temMunicipal = std::find(m_tipos.begin(), m_tipos.end(), md::ABRANGENCIA_MUNICIPAL) != m_tipos.end();
+    const bool temEstadual = std::find(m_tipos.begin(), m_tipos.end(), md::ABRANGENCIA_ESTADUAL) != m_tipos.end();
+    const bool temFederal = std::find(m_tipos.begin(), m_tipos.end(), md::ABRANGENCIA_FEDERAL) != m_tipos.end();
+
+    std::vector<md::CEleitorDinamico> dinamicos;
+    for (const Container::value_type& registro : m_registros) {
+        const md::CEleitorDecorator& eleitor = registro.second.GetEleitor();
+        const md::CEleitorIdentidade identidade = eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador());
+        bool vota = false;
+        switch (eleitor.GetAbrangencia(m_uf, m_municipio)) {
+        case md::ABRANGENCIA_MUNICIPAL:
+            vota = temMunicipal;
+            [[fallthrough]];
+        case md::ABRANGENCIA_ESTADUAL:
+            vota = vota || temEstadual;
+            [[fallthrough]];
+        case md::ABRANGENCIA_FEDERAL:
+            vota = vota || temFederal;
+            break;
+        }
+        if (vota) {
+            dinamicos.emplace_back(identidade, identidade);
+        } else {
+            dinamicos.emplace_back(identidade, identidade, ecourna::app::dados::CEstadoComparecimento::SemCargoParaVotar);
+        }
+    }
+
+    const dao::CEleitorDinamicoDAO dinamicoDAO(banco);
+    std::vector<md::CEleitorDinamico> gravados = dinamicoDAO.RecuperarTodos();
+    if (gravados.empty()) {
+        dinamicoDAO.InserirTodos(dinamicos);
+    } else {
+        const auto porEleitor = [](const md::CEleitorDinamico& esquerdo, const md::CEleitorDinamico& direito) {
+            return esquerdo.GetEleitor() < direito.GetEleitor();
+        };
+        std::sort(gravados.begin(), gravados.end(), porEleitor);
+        std::sort(dinamicos.begin(), dinamicos.end(), porEleitor);
+        if (gravados != dinamicos) {
+
+            // (original lines 347-357: content not recovered)
+#line 358
+            throw CUeComumDadosError(EUE_COMUM_DADOS_7839, std::format("Já existem informações dinâmicas no banco {}", banco));
+        }
+    }
+}
+
+// (original lines 363-430: content not recovered)
 #line 431
 void CEleitores::MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados)
 {

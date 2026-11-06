@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 36 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 31 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 33 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 34 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 10683 matches, and 12463 did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was
@@ -66,14 +66,17 @@
 #     11537. ecourna CIdentificacaoJustificativa 11470: 11465 with slot 2, 11466. comum::md::CComparecimentoMesario
 #     10402: 10395, and std::string 10740: 10749, with their one slot 2, 5429
 # Emplace blocks (slots 0 and 1, D2 and D0; slot 2 too where it is listed):
-#   CMovie 1593, 3076: 12835, 12830, 12823. FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
-#   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
+#   CMovie 1593, 3076: 12835, 12830, 12823, from unit 110's ctelasvota.cpp.o since both builders are written (unit 378;
+#   this unit's builder and sink went). FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
+#   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103, from unit
+#   31's cformbuilder.cpp.o since 5543 is written (unit 378; the builder and sink went). CTextFieldBlinking
 #   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059 (unit 110's
 #   ctelasvota.cpp, from whose object both match since; the roots' builder went): 12541, 12535. CWavFile
 #   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
 #   GetImage (8633) builds the block, as unit 164's CriaIcones (1263) does. CPreShowProgressBar (ten builders, 1591
 #   first): 12813,
-#   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. api::Logger
+#   12812, from unit 110's ctelasvota.cpp.o since its CriaTela* screens are written (unit 378; this unit's builder and
+#   sink went). CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
 #   <CCargoDSNomeSexoCandidato> 6528: 12637, 12636. <CRespostasDSNumero> 6652: 12625, 12622.
@@ -131,7 +134,8 @@
 #   record 1581300 gives (api/gui/cpaperformbuilder.h, CLASS); the class's lines span that record's line 51.
 # Flags: the roots object compiles with APP_CXXFLAGS. Against the same file compiled with UENUX2_CXXFLAGS and the rule's
 # include paths, by function with call and global indices and relocated constants masked, 343 of the 346 functions
-# both define compare equal, counted while the roots still built CSha512's block (354 of 357 at bbf27ac1's, the same
+# both define compare equal, counted while the roots still built CSha512's and CMovie's blocks (354 of 357 at
+# bbf27ac1's, the same
 # three differing): std::shared_ptr<IGravador>'s
 # constructor over a comum::CGravadorWSQ*, that block's __on_zero_shared, and make_shared<CMovie>. The link keeps one of
 # them from this object, the block's __on_zero_shared, matched as 12092, which calls default_delete's operator() at
@@ -145,8 +149,9 @@
 # Pending, each with what it waits for:
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
-#   another TU's anonymous namespace, so they come with fns 6627 and 10388. 10388 is written (unit 104) and its three
-#   blocks are in the link; their __get_deleter rows still differ (unit 97's fragment).
+#   another TU's anonymous namespace, so they come with fns 6627 and 10388. Both are written (6627 with unit 110's
+#   ctelasvota.cpp, unit 378, and 12592 and 12591 match; 10388 with unit 104) and their blocks are in the link; the
+#   three __get_deleter rows still differ (unit 97's fragment).
 # 12530 and 12529, the block of CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>, which waited here for
 # fn 6561 (a lambda is spelled only in its function), match from ctelasvota.cpp.o with it (unit 150's fragment).
 # 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name

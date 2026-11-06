@@ -426,7 +426,7 @@
 #   `221 over 1681 rows (same 1460, replaced 221 [221
 #   operand-only], inserted 0, deleted 0)` (pnpm wasm score on whole links, the rest of the tree as committed). In use
 #   band 1 the target links them so too: 10662 to 10638 above 10635, in reverse link order.
-# - The set's range insert (fn 6733, libc++'s std::set<ecourna::app::dados::ETipoIdentificadorEleitor>::insert over two
+# - The set's range insert (fn 6733, libc++'s std::set<comum::md::ETipoAbrangencia>::insert over two
 #   const_iterator) has a second target caller, 7787 (not written), for which unit 283's roots stand in: while 10635 was
 #   its one caller, binaryen inlined it there. Our copy is this object's, built without strict aliasing
 #   (docs/reference/facts/app-flags.md F6): with strict aliasing 6733 read `differs`, in its locals (7 against 6); with

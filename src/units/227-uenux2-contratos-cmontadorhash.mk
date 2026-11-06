@@ -1,14 +1,14 @@
-# uenux2 comum::md::CVersoesContratos and CDependenciasContratos (app/comum/gravadores/md/, the files the records
-# name, each class header beside its file): GetValor, target fns 3825 and 3826, and their merged body, fn 6044; and
+# uenux2 comum::md::CVersoesContratos and CDependenciasContratos (app/comum/gravadores/md/, the files the records name,
+# each class header beside its file): GetValor, target fns 3825 and 3826, and their merged body, fn 6044; and
 # api::hash's CMontadorHash::CriaHashesDiretorio (fn 5360), ListaHashesDiretorio (fn 5359) and ListaHashesArquivos (fn
 # 5358), written, not matched, in api/hash/cmontadorhash.cpp, the records' file, with the header cmontadorhash.h beside
-# it. Paths relative to src/uenux2. Members of the same work that live
-# in other units' files: IGravador's Slot4 and Slot5 (unit 122, iresultado.cpp), api::CIniStrings::FindKey and EndKey
-# (unit 215, cinistrings.cpp) and ecourna::api::io::CFile::Write (fn 5180, ecourna's api/io/cfile.cpp, unit 03's
-# source), whose callers' stand-ins are this fragment's roots.
+# it. Paths relative to src/uenux2. Members of the same work that live in other units' files: IGravador's Slot4 and
+# Slot5 (unit 122, iresultado.cpp), api::CIniFile::FindKey and EndKey (fragment 379's cinifile.cpp; unit 215 wrote them
+# in cinistrings.cpp) and ecourna::api::io::CFile::Write (fn 5180, ecourna's api/io/cfile.cpp, unit 03's source), whose
+# callers' stand-ins are this fragment's roots.
 #
 # GetValor (records cversoescontratos.cpp:42 and cdependenciascontratos.cpp:59, `const std::string ...::GetValor(const
-# std::string &)`): the INI object's key map's find (fn 10877, CIniStrings::FindKey) and end (fn 5481), and when the key
+# std::string &)`): the INI object's key map's find (fn 10877, CIniFile::FindKey) and end (fn 5481), and when the key
 # is not there CUeComumGravadoresError 8697 (8663) "Propriedade inexistente: {}" with the key; else a copy of the
 # CIniKey's value. The two bodies differ only in their record and code, so binaryen merged them into fn 6044, which
 # takes the two as parameters, and keeps each GetValor as a thunk (3825, 3826) that passes its own. Our link forms the

@@ -37,9 +37,10 @@
 #
 # api::TerminaComBarraInvertida (target fn 5484, 131 B), matched, in src/uenux2/src/api/io/cinistrings.cpp, a new file,
 # declared in a new api/io/cinistrings.h: whether a line ends in a run of backslashes of odd length. Evidence: its one
-# target caller, fn 5480 (8780 B, not written), calls it twice and holds the records of
-# api::CIniStrings::ParseKeyLine (cinistrings.cpp lines 183 and 187, which stay blank); in use band 2 (ledger/ordinals.tsv)
-# it and 5485, another helper only 5480 calls, link right before cinikey.cpp's CIniKey::operator= (5483), and in the data
+# target caller, fn 5480 (8780 B, written in fragment 379, not matched), calls it twice and holds the records of
+# api::CIniStrings::ParseKeyLine (cinistrings.cpp lines 183 and 187, written in fragment 379); in use band 2
+# (ledger/ordinals.tsv) it and 5485, another helper only 5480 calls, link right before cinikey.cpp's CIniKey::operator=
+# (5483), and in the data
 # cinistrings.cpp's record (1584092) lies right before cinikey.cpp's (1584124). Chosen: the name, the file, the line,
 # its being a free function of api with external linkage (it reads no class state: docs/how-to-decompile.md step 3,
 # "Names no evidence gives"; a static member of api::CIniStrings, whose only records name the static ParseKeyLine,
@@ -48,16 +49,14 @@
 # empty string and the last character tested before a counting loop, `25 over 79`; the form written, those two tests
 # before a loop that flips a bool, `score 0 over 71 rows ... BYTE-EXACT`, and the same in the whole link.
 #
-# api::CIniStrings::FindKey (target fn 10877, 12 B, matched) and EndKey (the end fn 6044 calls, fn 5481, a body the
-# target keeps once for boost's sp_counted_impl_pd::get_untyped_deleter too), in cinistrings.cpp after
-# TerminaComBarraInvertida, declared with the class's head in cinistrings.h: the find and the end of the std::map at +12
-# of the INI object fn 5480 loads, which comum::md::CVersoesContratos::GetValor and CDependenciasContratos::GetValor
-# (fragment 227) call out of line. Evidence: their merged body, fn 6044, calls both with its own `this`, and 10877 is
-# `f163(p0 + 12, p1)`, the map's find; in the uses-1 band 10877 lies between api/hwil's rows (10880, 10881) and
-# api/util/cajustedatahora.cpp's (10874 to 10876), where api/io's objects fit. Chosen: the class (CIniStrings, whose
-# static ParseKeyLine fn 5480 holds: a reading, cinistrings.h says it), the names, the iterator type, that they are not
-# const, the file and the lines. Whole link, before step 8: 10877 `score 0 over 7 rows`; step 8 names it by
-# pair-fingerprint. Their callers are fragment 227's sources, so the roots below need no stand-in for them.
+# api::CIniFile::FindKey (target fn 10877, 12 B, matched) and EndKey (the end fn 6044 calls, fn 5481, a body the target
+# keeps once for boost's sp_counted_impl_pd::get_untyped_deleter too): the find and the end of the std::map at +12 of
+# the INI object fn 5480 loads, which comum::md::CVersoesContratos::GetValor and CDependenciasContratos::GetValor
+# (fragment 227) call out of line. This unit wrote them in cinistrings.cpp as members of CIniStrings; fragment 379 moved
+# them, bodies unchanged, into cinifile.cpp under the class it names CIniFile (step 9 renamed 10877's match line), since
+# the band puts them in the loader's object after cinisection.cpp's and ParseKeyLine's records in cinistrings.cpp's
+# before cinikey.cpp's (fragment 379 has the evidence). Their callers are fragment 227's sources, so they need no
+# stand-in.
 #
 # comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (target fn 3703, 1126 B), added for unit 287's
 # ImprimeVersoesPacotes (11222), in cestadogeral.cpp after SetAjusteDataHora, written, and matched since ecourna's
@@ -102,8 +101,9 @@
 # names, its lines, and copying the load and the adjustment: std::move on m_dadoCarga's and m_ajusteDataHora's
 # arguments gives the same object (cmp).
 #
-# 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 5480 (twice) for 5484 and 10205 for 5637 (its
-# address); 3705's stand-in went, its callers 7160, 7306 and 10710 (units 329, 104, 277) in the link, and so did
+# 215-uenux2-api-app-leftovers-roots.cpp stands for 10205's reference to 5637 (its address); 5484's stand-in went, its
+# caller 5480 in the link (fragment 379); 3705's stand-in went, its callers 7160, 7306 and 10710 (units 329, 104, 277)
+# in the link, and so did
 # 5636's, which stood for 3059: 5636's callers 11200 (unit 123's) and 3059 (unit 110's) are in the link.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp

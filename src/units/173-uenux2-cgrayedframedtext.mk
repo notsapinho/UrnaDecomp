@@ -5,13 +5,14 @@
 # starts from the text's size, read again after the first loop, with an index of its own; one index shared by both loops
 # gave 75 over 157 rows (the throw after the loops, a second epilogue), the two loops 10 over 131, all operand rows until
 # DrawChar had its name (`pnpm wasm score` in the plain link).
-# Not written: the constructor (fn 5535). It passes CFramedText's constructor the address of a constant SFont {40, 0} at
-#   474880, in the data of an app/vota object (unit 92's fragment has the measurement), so it waits for that object.
+# The constructor (fn 5535) is written, at lines 20 to 23 (a choice): CFramedText's constructor over the font and the
+#   alignment its two target callers, 3060 and 4185, pass alike, folded by binaryen (the SFont {40, 0} at 474880, among
+#   ctelasvota.cpp's constants, FONTE_NUMERO there, and the alignment 0), so cgrayedframedtext.h declares them as
+#   parameters. Of its callers only 3060 (vota::AdicionaCampoNumero<api::CGrayedFramedText>, written with
+#   ctelasvota.cpp's screens: src/units/378-uenux2-ctelasvota-criatela.mk) is in the link, which holds it inlined, so
+#   5535 has no index of ours and reads no-candidate. The target's 3060 calls it out of line (its other caller there is
+#   4185), ours inlines it: unit 378's fragment. The constructor's vptr store is in the link inside 3060, so the roots
+#   file that took the vtable's address went.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 API_GUI173_SRCS := src/api/gui/cgrayedframedtext.cpp
 UENUX2_SRCS += $(API_GUI173_SRCS)
-# the constructor that stores CGrayedFramedText's vtable is not written: 173-uenux2-cgrayedframedtext-roots.cpp takes the
-# vtable's address; it includes no header
-$(ROOT)/$(APP)/173-uenux2-cgrayedframedtext-roots.o: $(ROOT)/src/units/173-uenux2-cgrayedframedtext-roots.cpp $(ROOT)/src/units/173-uenux2-cgrayedframedtext.mk $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/173-uenux2-cgrayedframedtext-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/173-uenux2-cgrayedframedtext-roots.o

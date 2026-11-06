@@ -169,8 +169,10 @@
 #   their std::mt19937 and std::random_device, statics no other target function reads (docs/reference/splat.md section
 #   3, "No circular evidence"); with this file without TBAA alone, still 255 (the long instance has the two callers).
 #   The body stays as written.
-# - 12862, the key vector's exit destructor, reads no-candidate: it is `f6071(p0, 1833368, 1833364, 1833360, 4, 1,
-#   12)`, a thunk into the body binaryen merged from it and fn 10879 (not written); ours is a whole body.
+# - 12862, the key vector's exit destructor, is `f6071(p0, 1833368, 1833364, 1833360, 4, 1, 12)`, a thunk into the
+#   body binaryen merged from it and fn 10879, the exit destructor of cinistrings.cpp's ESCAPES (unit 379's): ours
+#   forms the same merge since unit 379 wrote ESCAPES, and 12862, 10879 and the body, 6071, match
+#   (docs/reference/facts/splat.md S10 item 30).
 #
 # Chosen, no evidence names them: every name the records do not give (LogaInicioTesteTeclado, TelaTesteTeclado,
 # SorteiaTeclasTesteTeclado, AdicionaCaixaTecla, TTeclasTesteTeclado, TECLAS_TESTE_TECLADO, SLayoutTecla and its

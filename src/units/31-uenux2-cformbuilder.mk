@@ -283,6 +283,15 @@
 # 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the screens'
 # builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 #
+# api::CFormBuilder::AddMovie (target fn 5543), written with unit 378 and matched
+# (src/units/378-uenux2-ctelasvota-criatela.mk): a CMovieField of the movie at the point, anchored by its bottom right
+# corner (the constant 7), made with std::make_shared and added with AddField. It holds the field's constructor inlined
+# (unit 52's cmoviefield.cpp), and its block's vtable (@1578652) lies among this object's adders' blocks, so it is this
+# file's. Band 2 puts it after GetLabeledKeyPos (5544, record :372), so it is defined last, a choice within that bound.
+# Its target callers, the gif screens 1593 and 3076 of ctelasvota.cpp, are in the link. The name, the anchor's being a
+# constant of the body and the parameters' order beyond the wasm's are chosen. Its include and its line in the header
+# comment took two blank lines of the run above line 290, so the records 292, 305 and 372 keep their lines.
+#
 # CPaperFormBuilder::Show (target fn 3671, cpaperformbuilder.cpp), written with unit 246: its name and parameters are
 # its lambda's RTTI, api::CPaperFormBuilder::Show(const std::string &, const std::string &, bool)::$_0 (vtable @1581356,
 # right after cpaperformbuilder.h's record 1581300, so this file's object). It prints through api::CLp::GetInst() (fn
