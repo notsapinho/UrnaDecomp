@@ -679,25 +679,27 @@ for w in glob.glob('build/out/splat/pieces/asm/*/*.wat'):
     for c in re.findall(r'i32\.const (\d+)\b', open(w, errors='replace').read()):
         if int(c) in want: st[int(c)].add(int(re.match(r'\d+', os.path.basename(w)).group()))
 for vp, (p, lab) in sorted(want.items(), key=lambda kv: kv[1]):
-    live = sorted(i for i in st[vp] if i in held and i not in vt[vp]['functions'])
+    live = sorted(i for i in st[vp] if i in held and i not in vt[vp]['functions'] and not obj.get(held[i], '').endswith('-pending.o'))
     if live: print('sink', p, lab, 'storers in our link:', *live[:6])
 PY
 ```
 
-At e7d03612 (plain link sha256 `f70571e5…`) it prints 20 `function` lines, 12 `calls` lines and 49 `sink` lines in
-about 5 s, among them:
+At c3a97777 (plain link sha256 `b3149a07…`) it prints five `calls` lines and no other, in about 5 s (20 `function`,
+12 `calls` and 49 `sink` lines at e7d03612):
 
 ```
-function 89-uenux2-clocal-roots.o func[10104] 3710x2
-calls 110-uenux2-singletons-roots.o func[10414] 1073x2 1926x2 2817x2
-calls 116-uenux2-cthreads-roots.o func[10390] 270x1
-calls roots_ecourna.o func[3634] 1838x2 5106x1 (second site) 5107x1 (second site)
-sink 102-uenux2-control-blocks-roots.cpp _ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperE… storers in our link: 1264
+calls 03-ecourna-api-io-util-roots.o func[10498] 3564x1
+calls 116-uenux2-cthreads-roots.o func[10407] 270x1
+calls 123-uenux2-crelatoriotesteimpressora-roots.o func[10386] 1637x1
+calls 14-uenux2-ctextfieldmultiline-roots.o func[10365] 1637x1
+calls roots_ecourna.o func[3650] 1838x1 5106x1 (second site) 5107x1 (second site)
 ```
 
-Each line is a lead, read before anything goes. A call to build the stand-in's own body is listed too (270, a `GetInst`
-that reaches a member); a `(second site)` call keeps its callee out of line and is no idle call, unless it stands for
-no caller the target shows (unit 100's calls of 11157 went so, the user's decision); a stand-in that reads
+A storer whose scan row comes from a `-pending.o` is that member's trap, which stores nothing, and the script skips it
+(10841, `CWavFile`'s, keeps units 38's and 102's sinks). Each line is a lead, read before anything goes. A call to
+build the stand-in's own body is listed too (270, a `GetInst` that reaches a member); a `(second site)` call keeps its
+callee out of line and is no idle call, unless it stands for no caller the target shows (unit 100's calls of 11157
+went so, the user's decision); a stand-in that reads
 its callee's result goes only with a link without it that keeps the result ("When it goes"). A written caller with no
 symbol line reads `-` in the scan, so its callee's calls count as waiting here and are left out: the per-callee command
 of "Finding the idle ones" settles them. Tree roots other than `roots_ecourna.o` hold instances, which "Whose copy"

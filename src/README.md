@@ -69,7 +69,8 @@ copyable and holds one scalar, which comes back as that scalar (3641, `CTime CTi
 i32)->(i32)`); and a constructor or a non-deleting destructor returns `this` until binaryen drops a result no caller
 uses (5526, the `api::CMovie` constructor, is `(i32 i32 i32)->()`). A parameter every caller passed as one constant is
 folded into the body, so the wasm type can have fewer parameters than the C++ function (`docs/how-to-decompile.md`
-step 2). The file comes from the function's records, else from its class's vtable or vptr (`ledger/vtables.json`,
+step 2). The file comes from the function's records, else from its class's vtable or vptr, which can be a temporary's
+(`docs/reference/facts/placing.md` §P1; `ledger/vtables.json`,
 `ledger/func-attribution.tsv`): its records' file when a record names the class, else the one file that defines the
 class's members, else `<class>.cpp` in lower case once such a file exists. So a unit that creates `cwasmscreen.cpp`
 takes `CWasmScreen`'s stubs out of `unplaced.cpp` at step 9, whatever the file holds. A function with neither is in
@@ -148,8 +149,8 @@ moves no byte, which `cmp` of the object shows. Such a run gets no gap when
 no record line lies below it: until unit 40 wrote the constructor that 5545 inlines, lines 11-77 of
 `uenux2/src/api/gui/cprogressbar.cpp`, which hold its records 52, 58 and 67, stayed blank (f9af1d5d). When the
 records' function has a stub, step 9 writes the stub over its record's line:
-`uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for lines 18-424, then f13550's stub on lines 425-428 (its
-record is 428:15), then the unit's members. A comment there
+`uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp` holds a gap for lines 1337-1388, then f7787's stub on lines
+1389-1392 (its record there is 1392:15), then the next gap. A comment there
 reads as TSE's, and no evidence gives it.
 What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
 are chosen) goes in the file's header comment; in a file two stages extend at once, each appends its note there as a

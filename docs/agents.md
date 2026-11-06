@@ -258,7 +258,10 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   [facts/workflow.md](reference/facts/workflow.md) §W12). `<dir>` is a new directory outside the checkout, a sibling of
   the worktree (`../<worktree>-base`): the script clones the checkout's whole `build/out/` into it, so a `<dir>` under
   `build/out/` would hold a copy of itself ([facts/workflow.md](reference/facts/workflow.md) §W5). A `cmp` against the
-  base's objects means something only for the objects the base's build rebuilt; every other one is a clone of yours. A
+  base's objects means something only for the objects the base's build rebuilt; every other one is a clone of yours.
+  Among those rebuilt, a companion the range deleted can still have its object in your `build/out/app/` (make never
+  removes an object whose rule went), which compares equal and proves nothing: compare only the objects your
+  `make -s -C src print-LINK_OBJS` names, and name the base's others apart. A
   bare `git worktree add` or `git archive` of the commit cannot build: it lacks every ignored input (`third_party/*`,
   `target/fs/`, `asmlift-wasm/node_modules/`, the library outputs under `build/out/`; without node_modules the split
   fails right after `splat-split` with no message), and every file gets a time newer than any object, so the first link
