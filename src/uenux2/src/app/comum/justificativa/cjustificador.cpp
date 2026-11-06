@@ -89,4 +89,14 @@ std::string CJustificadorDadoQuantidade::Text(const std::string& formato)
     return std::vformat(texto, std::make_format_args(quantidade));
 }
 
+void CJustificador::Carrega()
+{
+    m_registros.clear();
+    m_corrente = m_registros.end();
+    for (const ecourna::app::dados::CIdentificacaoJustificativa justificativa : m_servico.RecuperarTodos()) {
+        Add(ecourna::app::dados::CNumeroInscricaoEleitoral(justificativa.GetIdentificacaoEleitor().GetIdentificadorHabilitacao()->GetNumero()),
+            CJustificadorDetalhe(justificativa.GetAnoNascimentoEleitor()));
+    }
+}
+
 } // namespace comum

@@ -30,14 +30,11 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
     w2263_root(segundo + 16);
 }
 
-// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos) 6734 and 12098, not in the link; the third,
-// 7174, which calls it twice, is (unit 241).
-__attribute__((noinline)) void VerificaDuasVezes(int vezes)
+// Stands for fn 2543's target caller (comum::VerificaIntegridadeVotos) 12098, not in the link; the others, 7174,
+// which calls it twice (unit 241), and 6734 (fragment 386), are, and the call for 6734 went.
+__attribute__((noinline)) void VerificaUmaVez()
 {
     w2543_root();
-    if (vezes > 1) {
-        w2543_root();
-    }
 }
 
 // Stands for fn 2834's target caller 7787, not in the link (2543 and 12244, unit 102's, and 5953, unit 150's, are)
@@ -56,7 +53,7 @@ struct SComumDadosRoots {
     SComumDadosRoots()
     {
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
-        comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
+        comum_dados_sink = reinterpret_cast<const void*>(&VerificaUmaVez);
         comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);
     }
 } comum_dados_roots;

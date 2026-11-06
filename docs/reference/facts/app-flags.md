@@ -492,8 +492,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   operand-only, without it, and 10635, every row an operand, reads `unresolved self-voted` on 6733's name until 6733
   matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
   of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
-  neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
-  object's is a reading: the file was listed fifth, on the user's decision (below). In `eleitor/comum/ctelascargo.cpp`
+  neighbour 6734 (`vota::CEstadoAudio::CarregaEleitores`, which holds `CEleitores::CompleteLoad`'s records) does not
+  call it. So that the target's copy is this file's object's is a reading: the file was listed fifth, on the user's
+  decision (below). In `eleitor/comum/ctelascargo.cpp`
   (unit 150), `vota::CTelasCargo`'s constructor (2386) holds inlined the copy of
   `std::map<ETelaVotacao, CFormInterativoTelaVota>`'s range insert (`insert(first, last)`, a second prologue around the
   loop), and the target reads `*__child` again after libc++'s `__insert_node_at` stores the begin node, which only code

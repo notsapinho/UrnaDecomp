@@ -2,10 +2,9 @@
 // - comum::dao::CComparecimentoMesarioDAO's vtable (@1593352): nothing calls its slots directly, and the constructor
 //   that stores its vptr is held by fn 7787. The address keeps the vtable, its slots' bodies and the destructors, as
 //   unit 66's roots do. CEleitorDinamicoDAO's vtable needs no root: its constructor stores the vptr.
-// - The CEleitorDinamicoDAO constructor (fn 3768): three direct callers in the target (5761, 6734, 7174), which use the
-//   returned `this`, so the stand-in uses it too. AbreDinamico's call stands for 6734; 5761 (CEleitores::DynamicCreate,
-//   unit 383's notes) and 7174 (unit 241, through CEleitores::GravaEleitorCorrenteMI) are in the link, and the calls
-//   that stood for them went.
+// - The CEleitorDinamicoDAO constructor (fn 3768): three direct callers in the target, all in the link: 5761
+//   (CEleitores::DynamicCreate, unit 383's notes), 6734 (fragment 386) and 7174 (unit 241, through
+//   CEleitores::GravaEleitorCorrenteMI). AbreDinamico, which stood for them, went with the last two.
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers): one stand-in with two call sites keeps it out of
 //   line, and no argument is the same constant at both, so dead-argument elimination folds nothing in. CriaComum's (fn
 //   2799) went: its one target caller, 11422 (fragment 335's), is in the link with its four call sites.
@@ -22,16 +21,10 @@
 // header and instantiates nothing.
 extern "C" {
 extern const char comparecimentomesariodao_vt[] __asm__("_ZTVN5comum3dao25CComparecimentoMesarioDAOE");
-int r91_dinamicodao_ctor(int, int) __asm__("_ZN5comum3dao19CEleitorDinamicoDAOC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void r91_identidade_por_tipo(int, int, int) __asm__("_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 }
 
 namespace {
-
-__attribute__((noinline)) int AbreDinamico(int dao, int caminho)
-{
-    return r91_dinamicodao_ctor(dao + 12, caminho);
-}
 
 __attribute__((noinline)) void DuasIdentidades(int resultado, int eleitor, int tipo)
 {
@@ -45,7 +38,6 @@ struct SRoots91 {
     SRoots91()
     {
         r91_sink = comparecimentomesariodao_vt;
-        r91_sink = reinterpret_cast<const void*>(&AbreDinamico);
         r91_sink = reinterpret_cast<const void*>(&DuasIdentidades);
     }
 } roots91;

@@ -30,6 +30,10 @@ public:
 
     void Salva(const ecourna::app::dados::CIdentificacaoJustificativa& justificativa) const;
     bool Existe(const std::string& titulo) const;
+    // RecuperarTodos: the DAO's (slot 8) result handed back. Out of line in cjustificadorservico.cpp: one body with
+    // CComparecimentoMesarioServico's, target fn 5723, which both loads fn 6734 holds call
+    // (src/units/386-uenux2-carregaeleitores.mk). The name, after the DAO's slot, and the const are chosen.
+    std::vector<ecourna::app::dados::CIdentificacaoJustificativa> RecuperarTodos() const;
 
 private:
     std::shared_ptr<dao::IJustificadorDAO> m_dao;

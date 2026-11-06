@@ -34,7 +34,8 @@
 # - Their files, a reading of their bands (docs/how-to-decompile.md step 3, rule 5), which allow other files too. 5762
 #   lies in celeitores.cpp's band-2 run
 #   (5765 and 5764 link before it, 5761, DynamicCreate, after it), and 2826 heads its band-4 run (2825 to 2821 after it;
-#   cnomearquivo.cpp's 2827 and 2828 before it); CEleitores::CompleteLoad (fn 6734, celeitores.cpp:205) calls 2826.
+#   cnomearquivo.cpp's 2827 and 2828 before it); CEleitores::CompleteLoad()'s 48 bytes, which fn 6734 holds
+#   (fragment 386), call 2826.
 #   1551 lies right before crdvvota.cpp's 1550 in band 8, 1701 right after clocal.cpp's 1702 in band 7, and 5737 and
 #   5736 between clocal.cpp's 5738 and crdvvota.cpp's 5734 in band 2: where the target's data hold crdv.cpp's records
 #   (@1559956 to @1560024, CRdv's constructor and GetCifradorCryptoTable, inlined into fn 7787), after clocal.cpp's
@@ -66,18 +67,22 @@
 #   our object while CompleteLoad is not written. With DynamicCreate (5761) written at its records' lines (unit 383),
 #   5762's line, below it, inverts that pair: 5762 links before 5761 in the target (ledger/ordinals.tsv's ordinals 4434
 #   and 4435), after it in ours (ld_index 2605 against 2586 at 7149483a; 5765 2603, 5764 2601, 5757 2611, so 5761 also
-#   links before 5765 and 5764, the pairs unit 383's fragment names).
+#   links before 5765 and 5764, the pairs unit 383's fragment names). Since fragment 386 wrote CompleteLoad, 5765 and
+#   5764 link before 5761 (ld_index 2603, 2604 and 2613) and 5762 after it (2627): that one pair stays inverted.
 #
 # Names. The census pairs 1551, 1701, 2826, 5762, 6035 and 6036 at the shape tier only (moved: none -> shape), so step 8
-# names none of them, and step 9's scan matches all six from those pairs (source `ledger`). 5737 and 5736 have no
-# census pair (their call of the constructor differs) and match by the content pass once 1692 has a name. No generated
-# route names 1692: a callers+content hand line in splat/symbol_addrs.txt does, from its own rows (the only target
-# function with its depth-0 fingerprint, addr and shape hashes, a shared_ptr copied to +0 and +4, +8 to +24 zeroed,
-# `this` returned) and from what every target caller does with the object (CEncryptedFile's matched Write and Save, or
-# Load and Read, then ~CEncryptedFile, fn 1691). Weighed by removal (docs/reference/splat.md "Reviewing a match"): a
-# scan, run twice, on copies without the line and without the match lines of 5736 and 5737 leaves 12798 match rows
-# (5736 and 5737 no-candidate, 1692 no-candidate) where the control on the same match copy with every name leaves 12800
-# (1692 differs), and splat-build on either copy gives the target's sha256: the line carries 5736 and 5737 alone.
+# names none of them, and step 9's scan matches all six from those pairs (source `ledger`). 5737 and 5736 have no census
+# pair (their call of the constructor differs) and match by the content pass once 1692 has a name. No generated route
+# names 1692: a callers+content hand line in splat/symbol_addrs.txt does, from its own rows (the only target function
+# with its depth-0 fingerprint, addr and shape hashes, a shared_ptr copied to +0 and +4, +8 to +24 zeroed, `this`
+# returned) and from what every target caller does with the object (CEncryptedFile's matched Write and Save, or Load and
+# Read, then ~CEncryptedFile, fn 1691). Weighed by removal (docs/reference/splat.md "Reviewing a match"): a scan, run
+# twice, on copies without the line and without the match lines of 5736 and 5737 leaves 12798 match rows (5736 and 5737
+# no-candidate, 1692 no-candidate) where the control on the same match copy with every name leaves 12800 (1692 differs),
+# and splat-build on either copy gives the target's sha256: the line carried 5736 and 5737 alone. Since fragment 386,
+# 6734's call names 1692 too (`call by:6734`), and the line carries nothing (removed, alone or with 5769's, every row
+# stays and splat-build gives the target's sha256); it goes in a commit of its own with docs/reference/splat.md section
+# 2, which cites it.
 #
 # Written since, for fn 7174 (vota::impl::CSincronismoVotoEleitor::Sincroniza, unit 241's fragment), with no target
 # index of their own: CRdv::SalvaTemporarioInterno and SalvaTemporarioExterno (Salva of the ".tmp" path),
@@ -85,15 +90,15 @@
 # slot 13, through ConfereArquivo), and the free comum::SubstituiRdvInterno and SubstituiRdvExterno
 # (api::CSystem::ReplaceFile, 5455, of the ".tmp" path over the RDV's, with an empty backup), which binaryen inlines
 # into 7174 behind 48-byte frames, one each; GetArquivoRdvTemporarioInterno and Externo (the path with ".tmp" appended,
-# the literal at 121448), Le and ConfereArquivo, which clang inlines into them. Unit 241's fragment has the frames
-# measured and the forms that give them. Their names, the CRdv members' const and the free functions' being free (they
-# read no class state) are chosen; their lines are chosen, after GetArquivoRdvExterno, and the include of
-# api/util/csystem.h took a blank line above line 60.
+# the literal at 121448), Le and ConfereArquivo, which clang inlines into them; Le is CRdv::Carrega's reader too
+# (fragment 386). Unit 241's fragment has the frames measured and the forms that give them. Their names, the CRdv
+# members' const and the free functions' being free (they read no class state) are chosen; their lines are chosen,
+# after GetArquivoRdvExterno, and the include of api/util/csystem.h took a blank line above line 60.
 #
 # Roots (381-uenux2-crdv-roots.cpp): a stand-in for 7787, the target caller not written that gives each function its
-# second call site; 6734 needs none, and the stand-in for 6737 went with it (unit 116). Unit 128's stand-ins for
-# 5736's and 5737's calls of Write and Save went (their callers are in the link). It compiles at the tree's flags, as
-# the functions' directory does.
+# second call site; 6734 (in the link since fragment 386) and 7174 need none, and the stand-in for 6737 went with it
+# (unit 116). Unit 128's stand-ins for 5736's and 5737's calls of Write and Save went (their callers are in the link).
+# It compiles at the tree's flags, as the functions' directory does.
 CRDV_SRCS := src/app/comum/dados/crdv.cpp
 UENUX2_SRCS += $(CRDV_SRCS)
 $(ROOT)/$(APP)/381-uenux2-crdv-roots.o: $(ROOT)/src/units/381-uenux2-crdv-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/381-uenux2-crdv.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

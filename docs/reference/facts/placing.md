@@ -426,9 +426,9 @@ alone does not settle:
 - **An order an unwritten caller's mentions give.** A band whose order reads as the first mentions of a function not
   written yet (one defined earlier in the file that calls the members) can disagree with every place free now. The place
   that adds no inverted pair now is still the rule, and the fragment names the place the reading gives, so the caller's
-  lane can move the member there when it lands: celeitores.cpp's 2826 and 5762 are one pair in two places while
-  CompleteLoad (6734) is unwritten (fragment 381). Count an in-flight lane's member of the same file as landed once its
-  records fix its lines.
+  lane can move the member there when it lands: celeitores.cpp's 2826 and 5762 were one pair in two places while
+  CompleteLoad (held by 6734) was unwritten (fragment 381). Count an in-flight lane's member of the same file as landed
+  once its records fix its lines.
 - **A run across two objects of files you chose.** A run of consecutive indices in one band orders the objects as well:
   arrange the definitions so the run reads in link order across them where a form with the same code exists, and say
   in the fragment which part of the order the run fixes. The uses-2 run 5558 down to 5552 spans

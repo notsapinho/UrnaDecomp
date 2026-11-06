@@ -281,7 +281,7 @@
 #   for this one. Measured, `pnpm wasm score` of 2543 against the plain link: with a noinline stand-in in the roots that
 #   calls 11514 once more, 11514 stays out of line and 2543 scores 10 over 49 rows, all operand-only, and matches in the
 #   splat build (with 11514's name, next bullet); without it, as now, our link inlines 11514 into 2543 (VerificaVotos is
-#   not in names.tsv) and 2543 scores 3051 over 3085 rows, its scan row `no-candidate` (no record or pair names it). 2834,
+#   not in names.tsv) and 2543 scores 3051 over 3085 rows, its scan row `differs` (named by its callers' calls). 2834,
 #   1939 and 1835 match either way.
 # - 11514's name: it has no record, slot or census pair, and its ten literals hold it alone: 67258 ("o cargo ({}) no RDV
 #   não foi encontrado na lista de cargos") and the nine "um voto do cargo ({}) no RDV está com voto ..." messages at
@@ -290,12 +290,13 @@
 #   ten. A `callers+content` hand line in splat/symbol_addrs.txt naming it by them is the route to its name once 2543
 #   can land: with the stand-in it carried 2543 alone (weighed by removal: only 2543's and 11514's rows moved). While
 #   our link inlines 11514, it has no body of its own to name, so neither the line nor the stand-in is in the tree.
-# - 2543's name: its third target caller, 7174 (unit 241), is in the link and matches through a `callers+content` hand
-#   line in splat/symbol_addrs.txt that names 2543 from its own rows (alone on the depth-0 hashes); 2543 itself stays
-#   written and unmatched, for the reason above.
-# - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: two calls of 2543 for its callers 6734 and 12098 (7174, which
-#   calls it twice, is in the link), and one of 2834 for 7787 (12244, unit 102's, and 5953, unit 150's, are in the
-#   link; the call for 5953 went with it).
+# - 2543's name: two of its target callers, 7174 (unit 241) and 6734 (fragment 386), are in the link and match, and
+#   step 8 names 2543 by their calls, each the other's holding match. The `callers+content` hand line that named it
+#   from its own rows while 7174 was its one caller in the link went once 6734 was in (removed on copies: no row moves;
+#   with the name out on both sides 6734 and 7174 fall). 2543 itself stays written and unmatched, for the reason above.
+# - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: one call of 2543 for its caller 12098 (7174, which calls it
+#   twice, and 6734, fragment 386, are in the link: the call for 6734 went), and one of 2834 for 7787 (12244, unit
+#   102's, and 5953, unit 150's, are in the link; the call for 5953 went with it).
 # Chosen: the names (VerificaVotosCargo, ChaveCandidatura, ChaveResposta, Procura, GetMapaCargos included), the free
 # functions' linkage and files, GetMapaCargos' being a member (m_todos's access is our header's), the parameters'
 # names, and the lines.

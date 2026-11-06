@@ -100,14 +100,79 @@ std::vector<md::CImpedido> CEleitores::GetEleitoresImpedidos(const std::vector<s
     return LeArquivos(arquivos, leitor);
 }
 
-// (original lines 121-201: content not recovered)
-#line 202
-// <stubs>
-// f6734 · 6461 B · unmatched · name unknown
-// void f6734(i32) { ... }
-// </stubs>
+// (original lines 121-182: content not recovered)
+#line 183
+bool ComparaImpedidos(const md::CImpedido& esquerdo, const md::CImpedido& direito)
+{
+    return esquerdo.GetEleitor() < direito.GetEleitor();
+}
 
-// (original lines 207-277: content not recovered)
+bool ComparaDinamicos(const md::CEleitorDinamico& esquerdo, const md::CEleitorDinamico& direito)
+{
+    return esquerdo.GetEleitor() < direito.GetEleitor();
+}
+
+// (original lines 193-201: content not recovered)
+#line 202
+void CEleitores::CompleteLoad(const std::string& diretorio, const std::string& banco)
+{
+    if (!api::CSystem::ExistFile(banco)) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7834, std::format("Não existe o arquivo {}", banco));
+    }
+
+    const std::vector<std::string> caminhos = MontaCaminhos(diretorio, m_lista3);
+    std::vector<md::CImpedido> impedidos = GetEleitoresImpedidos(caminhos);
+    const std::vector<md::CEleitorDecorator> eleitores = GetEleitoresEstaticos(diretorio);
+    std::vector<md::CEleitorDinamico> dinamicos = dao::CEleitorDinamicoDAO(banco).RecuperarTodos();
+
+    std::ranges::sort(impedidos, ComparaImpedidos);
+    std::ranges::sort(dinamicos, ComparaDinamicos);
+    const auto mesmoEleitor = [](const md::CEleitorDecorator& eleitor, const md::CEleitorDinamico& dinamico) {
+        return eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador()) == dinamico.GetEleitor();
+    };
+    if (!std::equal(eleitores.begin(), eleitores.end(), dinamicos.begin(), dinamicos.end(), mesmoEleitor)) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7835, "Havia divergência entre os títulos dinâmicos e os estáticos");
+    }
+
+    Container registros;
+    std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> identidades;
+    size_t indice = 0;
+    unsigned int votaram = 0;
+
+    for (size_t i = 0; i < eleitores.size(); ++i) {
+        const md::CEleitorDecorator& eleitor = eleitores[i];
+        ValidaIdentidadesEleitor(eleitor);
+
+        const md::CEleitorIdentidade identidade = eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador());
+        const std::vector<md::CEleitorIdentidade> identidadesEleitor = eleitor.GetIdentidades();
+
+        const CEleitorDetalhe detalhe = LoadEleitorDetalhe(eleitor, impedidos, indice, &dinamicos[i]);
+
+
+        if (!registros.insert(Container::value_type(identidade, detalhe)).second) {
+            throw CUeComumDadosError(EUE_COMUM_DADOS_7836, std::format("Identificador principal {} duplicado", identidade.GetIdentificador()));
+        }
+        const bool votou = dinamicos.at(i).Votou();
+        std::ranges::for_each(identidadesEleitor, [&identidades, &identidade](const md::CEleitorIdentidade& outra) {
+            identidades.insert({outra, identidade});
+        });
+        if (votou) {
+            ++votaram;
+        }
+    }
+
+    SetRegistros(std::move(registros));
+    m_qtdVotaram = votaram;
+    m_identidades.swap(identidades);
+    m_completo = true;
+}
+
+void CEleitores::CompleteLoad()
+{
+    CompleteLoad(CPath::GetPathEstatico(FLASH_INTERNA).string(), GetArquivoBancoDadosInterno());
+}
+
+// (original lines 260-277: content not recovered)
 #line 278
 std::string GetArquivoBancoDadosInterno()
 {

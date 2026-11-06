@@ -299,7 +299,11 @@
 #   of the two's order).
 # - Roots: 116-uenux2-cthreads-roots.cpp takes its address, for votaInit's slot 41. Its one direct caller, 11865, is not
 #   written, and the table entry keeps the body out of line without a call (docs/reference/facts/tool-traps.md X1).
-CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+#
+# cestadoaudio.cpp stays this unit's file, compiled in unit 110's list, at its head: fragment 386's
+# CEstadoAudio::CarregaEleitores (6734), written there, matches only with that object ahead of celeitores.cpp.o and
+# cjustificador.cpp.o (src/units/386-uenux2-carregaeleitores.mk has the measurement and the count of the move).
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

@@ -35,11 +35,11 @@
 #   dao::CEleitorDinamicoDAO (as a named local after a named path, the path's and the DAO's offsets swapped). pnpm
 #   wasm score on the link: 258 over 1491 rows (4 inserted) before those three, 181 over 1487 after, all operand-only
 #   (calls, the flag's address and the throw's destructor slot).
-# - Names: 2543 (comum::VerificaIntegridadeVotos, unit 98's, written and no match: the user's rule) has a
-#   `callers+content` hand line in splat/symbol_addrs.txt; step 8's own line for it is `call by:7174`, which the
-#   build's fixed point refuses as self-voted: weighed by removal (a scan on copies, run twice beside a control, and
-#   splat-build), without the hand line 7174 reads unresolved and the build stops on UNCONFIRMED. With it, 7174 is
-#   `srcloc-anchor` (its records 290 and 303) and matches.
+# - Names: 2543 (comum::VerificaIntegridadeVotos, unit 98's, written and no match: the user's rule) is named by step
+#   8's `call` line from its two callers in the link, 7174 and fragment 386's 6734, each the other's holding match.
+#   With 7174 alone that line was 7174's own vote, which the build's fixed point refuses as self-voted, and a
+#   `callers+content` hand line named 2543 from its own rows; it went once 6734 was in (removed on copies: no row moves;
+#   with the name out on both sides 6734 and 7174 fall). 7174 is `srcloc-anchor` (its records 290 and 303) and matches.
 # - Chosen: the names of the steps and of the halves, their files where no record names one, and the lines.
 #
 # Written since: CFimVotoEleitor::StartState (7198, slot 2, record cfimvotoeleitor.cpp:42), the class's key function,

@@ -3,9 +3,12 @@
 #include "api/util/csynchronizer.h"
 #include "api/util/csystem.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/cintegridadereferencial.h"
 #include "app/comum/dados/crdv.h"
 #include "app/comum/dados/crdvvota.h"
+#include "app/comum/justificativa/cjustificador.h"
 #include "app/vota/comum/csincronizavota.h"
 
 namespace vota {
@@ -89,6 +92,20 @@ void CEstadoAudio::SetTeclasTesteTeclado(char esperada, char pressionada)
 std::pair<char, char> CEstadoAudio::GetTeclasTesteTeclado() const
 {
     return {m_teclaEsperada, m_teclaPressionada};
+}
+
+void CEstadoAudio::CarregaEleitores()
+{
+    if (!m_eleitoresCarregados) {
+        comum::CRdvVota::GetInst().CarregaInterno();
+        if (!comum::CAppInfo::GetInst().GetVota().GetTreinamentoEleitor()) {
+            comum::CEleitores::GetInst().CompleteLoad();
+        }
+        comum::CJustificador::GetInst().Carrega();
+        comum::CRegistradorMesario::GetInst().Carrega();
+        comum::VerificaIntegridadeVotos();
+        m_eleitoresCarregados = true;
+    }
 }
 
 } // namespace vota

@@ -5,9 +5,9 @@
 // - fn 7787 (vota::CTelasVota's constructor) calls 1551, 1701, 2826 and 5762 once each.
 // fn 6737 (vota::CEstadoAudio::GeraDadosDinamicos, unit 116), which calls GetArquivoRdvInterno (fn 1551),
 // GetArquivoRdvExterno (1701), GetArquivoBancoDadosInterno (2826) and GetArquivoBancoDadosExterno (5762) once each and
-// CRdv::SalvaInterno (5737) and SalvaExterno (5736) twice each, and fn 7174 (vota::impl::CSincronismoVotoEleitor::
-// Sincroniza, unit 241: 1551 and 1701 four times, 2826 once) are in the link, and the stand-in for 6737 went; fn 6734
-// (1551 and 2826) is not written, and needs none, since each function has two call sites without it.
+// CRdv::SalvaInterno (5737) and SalvaExterno (5736) twice each, fn 7174 (vota::impl::CSincronismoVotoEleitor::
+// Sincroniza, unit 241: 1551 and 1701 four times, 2826 once) and fn 6734 (vota::CEstadoAudio::CarregaEleitores,
+// fragment 386: 1551 and 2826) are in the link, and the stand-in for 6737 went.
 #include <string>
 
 #include "app/comum/dados/celeitores.h"

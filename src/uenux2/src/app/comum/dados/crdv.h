@@ -57,6 +57,10 @@ public:
     // names them; the names and const are chosen. crdv.cpp defines them (src/units/381-uenux2-crdv.mk).
     void SalvaInterno() const;
     void SalvaExterno() const;
+    // CarregaInterno: the RDV read back from the internal flash's "rdv.dat" and handed to Desconverte (slot 12, through
+    // the vtable): fn 6734 holds it behind a 48-byte prologue, on CRdvVota::GetInst()'s result
+    // (src/units/386-uenux2-carregaeleitores.mk). No record names it: the name, after SalvaInterno, is chosen.
+    void CarregaInterno();
 
 protected:
     md::RdvPosicionadorPtr m_posicionador;
@@ -66,7 +70,8 @@ protected:
 private:
     // The file's bytes read through an api::CEncryptedFile over m_cifrador, and those bytes passed to Confere. No
     // target function is their own: the two ConfereTemporario members hold them as clang inlines them, their file and
-    // bytes above the caller's path (src/units/241-uenux2-app-vota-eleitor.mk has the frame). Names and const chosen.
+    // bytes above the caller's path (src/units/241-uenux2-app-vota-eleitor.mk has the frame), and Carrega holds Le the
+    // same way for fn 6734 (src/units/386-uenux2-carregaeleitores.mk). Names and const chosen.
     std::vector<uebyte> Le(const std::string& arquivo) const;
     bool ConfereArquivo(const std::string& arquivo) const;
 
@@ -75,6 +80,9 @@ private:
     // it (src/units/381-uenux2-crdv.mk). It reads m_cifrador and calls Converte through the vtable (slot 11), on a
     // class that is not final, so it is CRdv's member; its name, const and being private are chosen.
     void Salva(const std::string& arquivo) const;
+    // Carrega: CarregaInterno's body, which clang inlines (one frame): Salva's other direction, Le's bytes handed to
+    // Desconverte, its existence, name and being private chosen.
+    void Carrega(const std::string& arquivo);
 };
 
 // The path of "rdv.dat" in the work directory of the internal flash (target fn 1551) and of the external one (fn
