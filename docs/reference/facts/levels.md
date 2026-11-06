@@ -365,7 +365,7 @@ link's and link the same wasm. The census moves 18 rows up (8799 `none → addr`
 
 The data name is a second kind of evidence for C++23. libc++ defines the table only from C++23, for `std::format`'s
 escaped output, which every formatter of a string or a character argument then emits, and the target holds its 2940
-bytes and reads them in fn 11769 (640 B, `no-candidate`):
+bytes and reads them in fn 11769 (640 B, a match since):
 
     TMPDIR=/tmp build/docker-build.sh grep -n '_LIBCPP_STD_VER\|__entries\[' /emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__format/escaped_output_table.h
       75:#if _LIBCPP_STD_VER >= 23
@@ -443,7 +443,7 @@ after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Co
 
 uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile` but
 the files `UENUX2_NOTBAA_FILES` lists, and without it elsewhere: `make -s -C src print-UENUX2_TBAA_DIRS
-print-UENUX2_NOTBAA_FILES` prints both lists (eight entries and five at 3c1ef19d). [app-flags.md](app-flags.md) §F6 has
+print-UENUX2_NOTBAA_FILES` prints both lists (eight entries and six at e7d03612). [app-flags.md](app-flags.md) §F6 has
 the evidence and the measurement of each entry, with the commit it was measured at, and [reading.md](reading.md) §R21
 reads the setting from a body.
 

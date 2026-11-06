@@ -3,7 +3,8 @@
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them, and
 what it says of the class that holds a member), what an object's disassembly does not settle and how to compare two
 forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what the
-source's named values, a TU's first emissions and an inlined callee do to a frame, a C1 or D1 call `-fPIC` keeps,
+source's named values, a TU's first emissions and an inlined callee do to a frame and which temporaries share a slot, a
+C1 or D1 call `-fPIC` keeps,
 `-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, what a caller's temporaries say of
 a parameter's form, a throw path's blocks and where its pad lies, a loop clang turns twice, a store in each arm of a
 branch, a condition's test order, what orders a function's blocks, and the loads a declaration decides.
@@ -226,6 +227,19 @@ constants alone keep no source order either: 10405 (`CSuspensaoAutomaticaEleitor
 other way round matched (`7 over 78`, operand rows only; unit 152's fragment). Only a whole-link score decides such a
 pair's source order.
 
+A zeroing the size of a `memset` (a `std::string`'s or a `std::vector`'s 12 bytes, an `i64` and an `i32` store) keeps
+no source order either: it follows the constants the function used before it, since the backend reuses a constant
+register for the store of 0. 6035 and 6036 (the external and internal flash's `uenux.db` paths) come from one form,
+`(CPath::GetPathTrab(o) / "uenux.db").string()`, and differ only in `o`, 1 against 0 (e7d03612, from `asmlift-wasm/`):
+
+```sh
+for i in 6035 6036; do printf '%s: ' $i; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $i 2>/dev/null | /usr/bin/grep -E '^[0-9a-f]+ +i(32|64)\.(store|const)' | awk '{print $2, ($3 ~ /align/ ? $4 : $3)}' | sed -n 3,7p | tr '\n' ';'; echo; done
+# 6035: i32.const 1;i64.const 0;i64.store offset=8;i32.const 0;i32.store offset=16;
+# 6036: i32.const 0;i32.const 0;i32.store offset=16;i64.const 0;i64.store offset=8;
+```
+
+Compare such an order only between bodies that pass the same constants before it (unit 381's fragment).
+
 **A store's `align=` hint.** Two 16-bit values read before two adjacent 16-bit stores are joined by the backend into one
 32-bit load and store at the first store's alignment; each stored right after its own load stays two `i32.store16`.
 Probe `align.cpp` (182dc6c1): an `SPoint` of two `short`s at +52 of `M`, from `Src`'s +6 and +8, copied through a
@@ -260,7 +274,11 @@ to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fra
   ```
 
   Without the flag the same `cmp` differs. Compile every variant of a comparison from one directory, with one name
-  length, when you do not map them.
+  length, when you do not map them: a record holds the path, so a longer name can cross an alignment step and move every
+  later data address by 16, and the variant then differs in `i32.const` lines alone (a case-order variant of
+  `ajustaAbrangenciaUFMunicipio` in `cnomearquivo.cpp`, 18 characters against the control's 11, differed in 6 such lines
+  and in none under a name of the same length). Before calling a form evidence, count the lines of the diff that are not
+  `i32.const` (`diff a b | /usr/bin/grep '^[<>]' | /usr/bin/grep -vc 'i32.const'`).
 - **A copy's base name names its dynamic initializer.** A TU with one (a static whose constructor runs at start-up,
   such as a singleton's `s_instance`) names it `_GLOBAL__sub_I_<base name>`, which no prefix map rewrites, so a copy
   under another name differs in that symbol and every offset after it. Keep the base name, in a directory of its own:
@@ -467,41 +485,82 @@ objects swapped, [workflow.md](workflow.md) §W13 "One variant object"); 12055 g
 2364` the same way. That dead-argument elimination drops the unused `this` before the inlining is a reading.
 
 A function with no record has a free line to do this with, and a function with records may move while each throw stays
-on its record's line. Say in the fragment that the order is measured. The same body can show a source form only here:
-`std::map<char, T>::find` in 5658 scores `25 over 92`, two locals swapped, with `label.at(0)` as the argument or bound
-to a `const char&`, and `12 over 91` with `const char token`.
+on its record's line. Say in the fragment that the order is measured. A function binaryen inlined into every caller has
+no target index, so no band or ordinal places it, and when no record or data of its own names its file, the file is
+free too: a measured order of it against its caller, in a whole link or a replay of the link's `wasm-opt` (below), is
+the evidence for a TU linked before or after the caller's, and the fragment says the file is a choice and what was
+measured (`vota::SorteiaTeclasTesteTeclado` in `ctesteteclado.cpp` after 11805's StartState, unit 217's fragment). The
+same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals swapped,
+with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
 
 **Which place a moved object takes.** The target's data give the objects' order ([placing.md](placing.md) §P4). When a
 move lands and which places count is `src/units/README.md` "Names"' rule; among those places that give the bytes, take
-the one with the fewest objects out of the data's order against the moved one. Measure each place in a scratch link of
-the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). Count over every
-object with target data, not a window, which can flip the answer: run this on the link of each place, `x` the moved
-object's path (at 3c1ef19d):
+the one with the fewest objects out of the data's order against the moved one. Count over every object with target
+data, not a window, which can flip the answer, and with the objects that have records and no vtable: ranked by their
+vtables alone, the wrong place can win (a new report file's two places counted 202 and 205 by vtables, 268 and 241 with
+records, fragment 372). This ranks each object of the plain link line by the lowest target address the symbol file
+gives its vtables and typeinfos (`.data.rel.ro._ZT[VI]` in our map) or, with none, by its source's lowest `.cpp` record,
+and counts at each place given, the object `x` moved before or after another (e7d03612):
 
 ```sh
-awk -v x=/citensmenuvota.cpp.o 'NR==FNR { if ($2 == "=") { a = $3; sub(/;$/, "", a); t[$1] = a }; next }
-  /:\(\.data\.rel\.ro\._ZT[VI]/ { o = s = $NF; sub(/:\(.*/, "", o); sub(/.*:\(\.data\.rel\.ro\./, "", s); sub(/\)$/, "", s)
-    if (!(s in t)) next; if (!(o in p)) p[o] = ++n; if (!(o in m) || t[s] < m[o]) m[o] = t[s] }
-  END { for (o in p) if (substr(o, length(o) - length(x) + 1) == x) X = o
-    for (o in p) if (o != X && ((p[o] < p[X]) != (m[o] < m[X]))) { c++; print p[o], m[o], o }
-    print c + 0, "objects out of the data order against", X, "at", p[X], m[X] }' splat/symbol_addrs.txt build/out/wasm-map/vota_web/vota_web_wasm.map | tail -1
-# 58 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 14 0x177e34
+python3 -I - /citensmenuvota.cpp.o here after:/ctelasvota.cpp.o <<'END'
+import re, sys
+# usage: python3 -I - <X suffix> <place>... [names]   place: here | before:<suffix> | after:<suffix>
+xs, places = sys.argv[1], [a for a in sys.argv[2:] if a != 'names']
+order = list(dict.fromkeys(w for w in open('build/out/wasm/vota_web/link.cmd').read().split() if w.endswith('.o')))
+t = {p[0]: int(p[2].rstrip(';'), 0) for p in (l.split() for l in open('splat/symbol_addrs.txt', encoding='latin-1'))
+     if len(p) >= 3 and p[1] == '=' and re.fullmatch(r'0x[0-9a-f]+;', p[2])}
+vt, rec = {}, {}
+for l in open('build/out/wasm-map/vota_web/vota_web_wasm.map', encoding='latin-1'):
+    m = re.search(r'(\S+?):\(\.data\.rel\.ro\.(_ZT[VI][^)]*)\)$', l)
+    if m and m.group(2) in t: vt[m.group(1)] = min(vt.get(m.group(1), 1 << 40), t[m.group(2)])
+for l in open('ledger/source-locations.tsv', encoding='latin-1'):
+    p = l.split('\t'); f = p[1] if len(p) > 1 else ''
+    if not p[0].isdigit() or not f.endswith('.cpp'): continue
+    if f.startswith('/home/rubio/tse/uenux2/'): o = 'app/uenux2/' + f[23:] + '.o'
+    elif '/src/ecourna/' in f: o = 'app/ecourna/' + f.split('/src/ecourna/', 1)[1].replace('/', '_') + '.o'
+    else: continue
+    rec[o] = min(rec.get(o, 1 << 40), int(p[0]))
+both = {**rec, **vt}
+X = [o for o in order if o.endswith(xs)]; assert len(X) == 1, X; X = X[0]
+for spec in places:
+    seq = order if spec == 'here' else [o for o in order if o != X]
+    if spec != 'here':
+        how, ys = spec.split(':', 1); Y = [o for o in seq if o.endswith(ys)]; assert len(Y) == 1, Y
+        seq.insert(seq.index(Y[0]) + (how == 'after'), X)
+    pos = {o: i for i, o in enumerate(seq)}
+    for name, r in (('vtables-only', vt), ('record-aware', both)):
+        out = sorted((pos[o], o) for o in seq if o != X and o in r and (pos[o] < pos[X]) != (r[o] < r[X]))
+        print(spec, name, len(out), 'objects out of the data order against', X, 'at', pos[X], hex(r[X]))
+        if 'names' in sys.argv and name == 'record-aware': print('\n'.join(f'  {p} {hex(both[o])} {o}' for p, o in out))
+END
+# here vtables-only 57 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
+# here record-aware 121 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
+# after:/ctelasvota.cpp.o vtables-only 82 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
+# after:/ctelasvota.cpp.o record-aware 157 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
 ```
 
-It ranks each object by its first vtable or typeinfo in our map (`.data.rel.ro`, link-line order) against the lowest
-target address the symbol file gives them, and the lines above the count (`sort -n` them) name the objects; those
-printed at one place and not at the other are the pairs the move inverts or restores. The target's `.rodata` (`_ZTS`
-names, strings) orders apart, so never mix the two segments, and an object with records and no vtable is read from
-`ledger/source-locations.tsv` by its file ([link-order.md](link-order.md) §L7 item 15 reads one object's run). A
-destination neighbour that is itself out of the data's order with the objects crossed makes every crossed pair an
-inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour, crossed 56 objects and inverted 34
-with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function moved between two files that stay
-in place reorders no object: its code and the linkonce data it emits change object, so read the target's neighbours of
-that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count over our order. 3675
-(`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316)
-follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
-`cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's order in our link goes
-between them where they are adjacent, and names the pairs it leaves.
+Take the record-aware count. With `names` added, it lists the record-aware objects of each place with their positions
+and target addresses: those listed at one place and not at the other are the pairs the move inverts or restores, and
+for a file at two places they are the objects linked between them. An object with no named data and no record has no
+rank, and the script stops on it. Count on the plain `build/out/wasm/vota_web/link.cmd` of the committed state: a
+home-made count over a link line that holds a variant object under another path drops that object's pairs with no
+message (unit 278's move counted 478 and 31 so, against 515 and 33 over the plain line). The count reads which objects'
+data the symbol file names, so it moves as later landings name data, with no object moving (unit 278's move: 515 agree
+and 33 inverted at b3b6d4bb, 537 and 39 on the merged link at fac8e5ce): give a count with the commit it was taken at,
+and a landing that merges a fragment that states one counts it again on the merged link. Confirm the chosen place with a
+scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). The
+target's `.rodata` (`_ZTS` names, strings) orders apart, so never mix the two segments ([link-order.md](link-order.md)
+§L7 item 15 reads one object's run). A destination neighbour that is itself out of the data's order with the objects
+crossed makes every crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour,
+inverted more than it restored, with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function
+moved between two files that stay in place reorders no object: its code and the linkonce data it emits change object, so
+read the target's neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count
+over our order. 3675 (`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block,
+whose vtable (1579316) follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between
+`cframedtext.cpp`'s 3676 and `cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's
+order in our link goes between them where they are adjacent; `src/units/README.md` "Names" says which places a new file
+weighs and what its fragment names.
 
 **Trying orders on binaryen alone.** A relink costs about 40 s an order, and a chain of several inlined functions has
 many. The link's own `wasm-opt -Oz` step can run alone instead: `link-map` writes it as line 3 of
@@ -517,13 +576,14 @@ cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
 # same
 ```
 
-`r05.wasm` is the link's byte for byte, before metadce and the last `wasm-opt`, which change throw sites, so score
-`r13.wasm`: it gives the link's own scores, and keeps the imports' names, which the minify step left to the glue (`pnpm
-wasm score` reads a minified name from a `.js` beside the module, and a module with none reads every throw's import call
-as a differing row). Find the function through the symbol map, whose lines are `<index>:<input index>`: the left counts
-the imports, as `pnpm wasm` does, and the right is the input's defined-function index, `names.tsv`'s `ld_index` (its
-`post_oz_index` counts no imports). From `asmlift-wasm/`, 10689 against our `CEscolheOpcao::ProcessInput` (`ld_index`
-5765):
+`r05.wasm` is the link's byte for byte, before metadce and the last `wasm-opt`, which change throw sites and locals
+(1150 scored `67 over 779` on `r05.wasm`, a copy of `new`'s result kept in a local, against the link's `65 over 777`),
+so score `r13.wasm`: it gives the link's own scores, and keeps the imports' names, which the minify step left to the
+glue (`pnpm wasm score` reads a minified name from a `.js` beside the module, and a module with none reads every throw's
+import call as a differing row). Find the function through the symbol map, whose lines are `<index>:<input index>`: the
+left counts the imports, as `pnpm wasm` does, and the right is the input's defined-function index, `names.tsv`'s
+`ld_index` (its `post_oz_index` counts no imports). From `asmlift-wasm/`, 10689 against our
+`CEscolheOpcao::ProcessInput` (`ld_index` 5765):
 
 ```sh
 pnpm --silent wasm score ../target/vota_web_wasm.wasm 10689 ../build/out/codegen-facts/replay/r13.wasm $(awk -F: '$2==5765 {print $1}' ../build/out/codegen-facts/replay/r05.symbols) | /usr/bin/grep '^score'
@@ -599,7 +659,35 @@ wasm-objdump -d $P/inlframe.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func
 
 11394 (`comum::asn::CConversorEstadoGeralGap::DoConverte`) keeps its loop's 52-byte temporary at +28, above the
 converter at +24 and the list at +4 that it creates before the loop: the second shape, a callee clang inlined (an
-algorithm, a lambda or a helper), not a declaration order.
+algorithm, a lambda or a helper), not a declaration order. Such a helper is a reading of the target's frame, not
+scaffolding: write it with its name and linkage marked chosen, citing this section (2383's file-static helper in
+`ctelasvota.cpp`, unit 110's fragment, the only form measured with the target's allocation order).
+
+**Which temporaries share a slot.** Stack colouring merges only slots that carry lifetime markers. A call's result the
+source drops, written as a statement of the function, gets an alloca with none, so it keeps a slot of its own for the
+whole function; the same calls in a callee clang inlines get markers, and their slots merge (e7d03612):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct SF { void* p; void* c; ~SF(); };' 'struct B { SF Add(int); };' 'static inline void Rect(B& b, int i) { b.Add(i); }' 'void Stmt(B& b) { b.Add(1); b.Add(2); b.Add(3); }' 'void Named(B& b) { SF a = b.Add(1); SF c = b.Add(2); }' 'void Helper(B& b) { Rect(b, 1); Rect(b, 2); Rect(b, 3); }' > $P/dropped.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/$P/dropped.cpp -o /work/$P/dropped.ll && awk '/^define/ {f=$0; sub(/.*@/, "", f); sub(/\(.*/, "", f)} /alloca/ {a[f]++} /llvm.lifetime.start/ {l[f]++} END {for (f in a) print f, "allocas", a[f], "lifetime starts", l[f]+0}' $P/dropped.ll | sort
+# _Z4StmtR1B allocas 3 lifetime starts 0
+# _Z5NamedR1B allocas 2 lifetime starts 3
+# _Z6HelperR1B allocas 3 lifetime starts 3
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/dropped.cpp -o /work/$P/dropped.o && wasm-objdump -d $P/dropped.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {printf "%s%s", (n++ ? "\n" : ""), $3} /global.get 0/ {g=1} g && /^i32.const/ {printf " frame %s", $2; g=0} END {print ""}'
+# <_Z4StmtR1B>: frame 32
+# <_Z5NamedR1B>: frame 16
+# <_Z6HelperR1B>: frame 16
+```
+
+So a frame larger than the target's, with every dropped result in a slot of its own, points at calls the target made
+inside a helper clang inlined: 3064 (`CTelasVota::CriaTelaVotoCargoSemCandidato`) and the footers 1102 and 1190 took the
+target's offsets only with their adders in internal helpers, a `void` one for 1102's rectangle (unit 378's fragment).
+Which of the marked slots merge follows the
+colouring's own order, which no probe here has measured: 11891's message function gave other pairs in a slot than the
+target's in eight forms (a result dropped, named, in a block, in an `if`'s init-statement, in a helper) and stays a trap
+(unit 104's `-pending.cpp`). Read which temporaries carry markers in the TU's IR (`-S -emit-llvm`, as above) before
+trying forms for such a remainder.
 
 What a TU emitted first decides an inlined template's stack slots too. `CPolySingleton<T>::set` (4879 for
 `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`, whose parts are `always_inline`, and

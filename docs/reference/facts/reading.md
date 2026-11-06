@@ -6,8 +6,8 @@ whether its class is `final`, whether a class is abstract or has a key function,
 binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
 `bool`'s reads and a byte's sign, an `invoke` around a callee that cannot throw, several table slots of one function, a
 local static's guard, one row more than the target at a call, where a record's line and column fall when no `throw`
-makes it, a slot's vtable read from the data, a reload that says a TU had no strict aliasing, and static-initializer
-code that names no object.
+makes it, a slot's vtable read from the data, a reload that says a TU had no strict aliasing, static-initializer
+code that names no object, and a constant in the data range that is an integer or a slot.
 `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
 source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
 `inline` one) is in [codegen.md](codegen.md).
@@ -18,7 +18,7 @@ The probes are short TUs compiled by the pinned em++ with uenux2's flags of the 
 R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts marked bb6f018 (R14 and R15
 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and R16–R18 were measured, and the
 parts marked 4487d6b and R19 at 4487d6b; the `-O3` probes and R20 at c1b2630; the parts marked bbf27ac1 and R21 at
-bbf27ac1, and the parts marked 182dc6c1 at 182dc6c1. Readouts are
+bbf27ac1, the parts marked 182dc6c1 at 182dc6c1, and R23 and the parts marked e7d03612 at e7d03612. Readouts are
 `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
 `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
@@ -75,6 +75,24 @@ in the body, and keeps `f64.ge` then `i32.eqz` when one is a parameter. So a tar
 constant that every in-body form folds had the constant as a parameter all callers passed: 5371
 (`CControladorReconhecimentoMesario::GravaWsq`) takes the minimum free space as its last parameter, both callers pass
 5 MiB, and it matches (unit 214's fragment has the seven in-body forms, each `f64.lt`).
+
+A folded constant shows in clang's inlining too. A callee the target keeps as a call, passed a constant that picks one
+of its branches, is inlined by clang when the caller writes that constant, since the inline cost drops the other
+branch; so the caller had a parameter there, which binaryen folded once every caller passed the same value. 921
+(`api::ITextToSpeech::Cache`) calls Store (5750) with `i32.const 1` last: with `Store(key, wav, eCacheKept)` written in
+Cache, `-Rpass=inline` reports Store inlined at cost 210 against the threshold 250 and 921 scores `136 over 358` (87
+rows inserted); with `void Cache(const std::string&, ECache cache = eCacheKept)` Store costs 280, stays a call, and 921
+matches (unit 237's fragment). Compile both forms with the remarks ([levels.md](levels.md) §V2) when a target call
+passes a constant.
+
+A parameterized body can also merge before the fold. binaryen's first duplicate-function elimination runs before its
+dead-argument elimination, so a function whose body with the parameter equals another function's is joined with that
+one first, and the constant never reaches it. `CGeradorRelEleitoresHabBiograf(EGeradorRelatorio tipo) : m_tipo(tipo)`,
+called once with 0, merged with `comum::CInformacaoEleicao`'s constructor (603, `store p1 at +0; return this`), so our
+StartState called 603 twice; the target calls 603 once and 2262, a body with the 0 in place that it shares with
+`comum::CLocal::CLocal()`. Written as a default constructor that stores the enumerator, it calls 2262 (fragment 372). A
+target body with the constant in place, whose parameterized form equals another body the link holds, says the source
+had the constant.
 
 ## R2. A constructor returns `this` in the object; the target's `void` is a result no caller used
 
@@ -631,6 +649,12 @@ A base destructor in the class without `inline` is inlined only under the plain 
 one call, of a weak copy, and `inline` gives 85 lines. So "defined in the class" does not always show as the base's
 body.
 
+An inline base shows in a derived class's D2 as its vptr store and member frees only when the base destructor's body
+makes a call; without the store, the base's destructor may still be empty, `= default`, or do anything that calls
+nothing. A destructor with the inline hint whose body needs a type whose header includes this one is declared `inline`
+in the class and defined after that type, in that header (`api::IScreen`'s, at the end of `api/gui/iform.h`); a TU that
+only deletes through the vtable then warns `-Wundefined-inline`, which is harmless.
+
 ## R6. A class whose only virtual members are inline has no key function: only a TU that uses its vtable emits it
 
 With no non-inline virtual member, the vtable, D2 and D0 are linkonce_odr, emitted only by a TU that references the
@@ -900,6 +924,18 @@ Three limits to this reading:
 
   `push_back` sits after `Guard`'s constructor, which inlines `Push`, and ahead of `Push`. When a definition's place
   is in question, read the object's function list for each order you try.
+- **A function first mentioned above its definition does not carry its callees.** It sits at the mention, and the
+  functions its own body mentions first sit where that body is compiled, at its definition: `top` calls `a`, defined
+  below `mid`, and `a`'s callee `b` follows `mid` and `mid`'s callee `lo` (e7d03612):
+
+      P=build/out/reading-probe; mkdir -p $P
+      printf '%s\n' '#include <string>' '#include <vector>' 'void use(const std::string&);' 'void a(const std::string& s);' 'void lo(int);' 'void top() { a("x"); }' 'void mid(const std::string& m) { use(m); lo(1); }' 'void b(int);' 'void a(const std::string& s) { std::vector<std::string> v{s, s}; use(v[1]); b(2); }' 'void b(int n) { use(std::to_string(n)); }' 'void lo(int n) { use(std::to_string(n + 1)); }' > $P/mention3.cpp
+      TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/mention3.cpp -o /work/$P/mention3.o
+      wasm-objdump -d $P/mention3.o | /usr/bin/grep -oE ' func\[[0-9]+\] <[^>]+>' | sed 's/.*<//; s/>$//; s/RKNSt3__2[A-Za-z0-9_]*//' | tr '\n' ' '
+        _Z3topv _Z1a _Z3mid _Z2loi _Z1bi
+
+  An object whose callee of a callee sits higher than this reading gives has an earlier mention of it, or a deferred
+  function between: read its list, not the reading.
 
 ## R10. Code binaryen inlined from an out-of-line function of the source
 
@@ -1091,6 +1127,16 @@ three and `unresolved` for 5181, which waits for a name:
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
   whose result every caller drops (unit 00's fragment).
+
+  Two locals-only remainders no lever above moves. A parameter copied into a local before a loop (`local.get 1;
+  local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
+  binaryen's inliner copies each parameter of a body it inlines, so the target may hold the body as a one-caller
+  function its caller forwards to: 2811 written as such a forwarder took the target's frame and head and kept a copy, of
+  another parameter (`95 over 349` against `138 over 354`, unit 388's fragment). Which parameter's copy survives is not
+  known. And 5480 (`api::CIniFile::Carrega`) differs from the target in which locals binaryen packs alone (`1173 over
+  4214`, every replaced row an operand): ours zeroes a section iterator's local the target leaves, in four source forms
+  that give one object (unit 379's fragment). Record what was tried in the fragment and leave such a body written or
+  unwritten as how-to step 5 says.
 
 **Whose frame a prologue is.** The second prologue is the frame of the function around the code that follows it, which
 need not be the function whose records that code holds. A temporary built for a call's argument sits in the caller's
@@ -1696,3 +1742,43 @@ call of the lock with the object's address). The `recursive_mutex` that reads 39
 24-byte statics are candidates; `ecourna::api::sql::sqlite`'s `s_mutex` (1911796) is the one 9429 locks and unlocks
 (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9429 | /usr/bin/grep -c 'f150(1911796)'` prints 2), and the target
 keeps "recursive_mutex lock failed". Mark such an attribution a reading, and name the candidates it rules out and why.
+
+## R23. A constant in the data range: a literal, an integer or a table slot
+
+`pnpm wasm fn`'s "strings referenced" reads every `i32.const` in the data range as a pointer, and the table's 12854
+slots (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -c ref.func`) overlap the low data
+addresses, so one value can be a literal's tail, an integer and a slot at once. Read its use, not the list (e7d03612):
+
+- **A size.** A constant right before `call 137` (`operator new`) is the allocation's size: 7787's `i32.const 236` is
+  no reference to slot 236's function (5538).
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 7787 | /usr/bin/grep -m1 -A1 -E '^[0-9a-f]+ +i32\.const 236 '
+        01522e  i32.const 236                                    | i32.const 236
+        015231  call 137                                         | call fn:8ffcb2c593628e87
+
+- **A multiple of an element's size.** A library template over a struct compares byte lengths, so its thresholds read
+  as addresses: 3762 (`__introsort` over an 84-byte element) holds `i32.const 2015` and `10753`, sort.h's `__limit`
+  (24) and `__ninther_threshold` (128) times 84, minus and plus one, and loads no string. Divide by the element's size
+  before reading such a constant as a pointer; a vector's `max_size` bound is one too (`(2^32 - 1) / 84 + 1`, 51130564,
+  in 5761's slow paths).
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3762 | /usr/bin/grep -oE 'i32\.const (2015|10753)' | sort | uniq -c
+         1 i32.const 10753
+         1 i32.const 2015
+
+- **A slot inside a literal.** The words 1086 to 1100 lie both in the table and inside `"{:05}{:04}{:04}{}{}{}{}"`
+  (23 bytes at 1071), and `fn` lists 2384's `1087` as `(+16 into 1071)`. 2384 passes it as the first argument of
+  `api::CFormBuilder::AddTextField(std::string (*)(), …)` (1191), a function-pointer parameter, so it is slot 1087,
+  13424; 6689 stores 1086 into a `CDataImage<std::vector<uebyte> (*)()>`, slot 1086, 13441; and 2725 stores 1090 and
+  1094 side by side, whose difference is the length of the tail `{}{}`: a `std::string_view` of the literal.
+
+      wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[(1086|1087|1090|1094)\] '
+        - elem[1086] = ref.func:13441
+        - elem[1087] = ref.func:13424
+        - elem[1090] = ref.func:6669
+        - elem[1094] = ref.func:13298
+
+So a constant is a slot when the parameter that takes it or the member that stores it is a function pointer, and the
+function the slot names fits the caller's class (a comparator, a callback of its data); a pair of words whose difference
+is a tail's length is a literal's begin and end; a size before `call 137` and a multiple of an element's size are
+integers. Count a slot among a function's callees only on that reading.

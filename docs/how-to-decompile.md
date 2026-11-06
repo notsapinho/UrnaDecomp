@@ -215,8 +215,8 @@ A TSE function not decompiled yet usually has a *stub* in that tree, a generated
 function sat ([src/README.md](../src/README.md) "Stubs"). Find it by its index:
 
 ```sh
-LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 src/ecourna src/asn1 | iconv -f latin1 -t utf-8     # the files are Latin-1
-# src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 · 496 B · unmatched · name unknown
+LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 src/ecourna src/asn1 | iconv -f latin1 -t utf-8     # the files are Latin-1
+# src/uenux2/src/app/comum/dados/celeitores.cpp:106:// f6734 · 6461 B · unmatched · name unknown      (at e7d03612)
 ```
 
 (Use `/usr/bin/grep`: in an agent's shell `grep` can be a shell function that prints nothing and exits as if nothing
@@ -225,17 +225,17 @@ matched, with `LC_ALL=C` or without, so a negative from it is no evidence.)
 The line under it is the stub's signature. It names the function only when `splat/symbol_addrs.txt` does; today no stub
 does, so each reads `f<index>(<wasm types>)`. Get the name from the records (the `awk` above), from the vtable slot the
 `fn` readout gives (step 2), or from `ledger/vtables.json`. A record names the function that holds the throw, and that
-can be an inlined callee: f1455 has records for both `CVotacaoStateAudio::PlayFile` and `CVotacaoStateAudio::PlayKey`,
-so one of the two is inlined into it. The function is the one whose code holds no second prologue (step 3, "Code
-binaryen inlined from another function"): 2767's records name `CFile::Flush` (`cfile.cpp:145`) and
-`CEncryptedFile::Save` (`cencryptedfile.cpp:88`), Flush's code sits behind a second prologue, and 2767 is Save. When
-every record lies behind a second prologue, none is the row's: it has no record of its own, its stub's file is a
-callee's, and it takes a name as "Names no evidence gives" says (step 3) and a place from what only its code creates
-(rule 5): 4625's four records are `cpacotearquivos.cpp`'s, each behind a prologue, and the one store of
-`comum::CInterfaceMensagemVazia`'s vptr (1532504) puts it before `votadefs.cpp`'s first record, where that class's
-vtable copy lies (`/usr/bin/grep -rlE 'i32\.const 1532504($|[^0-9])' build/out/splat/pieces/asm` prints only its piece).
-A slot that a base class fills with a default of its own has no record, but its overriders in the same slot of the
-derived classes' vtables may have one, and that names the slot. For a base and a slot number, the records of every
+can be an inlined callee: f1455's stub had records for both `CVotacaoStateAudio::PlayFile` and
+`CVotacaoStateAudio::PlayKey`, so one of the two is inlined into it, and 1455 matched as PlayKey. The function is the
+one whose code holds no second prologue (step 3, "Code binaryen inlined from another function"): 2767's records name
+`CFile::Flush` (`cfile.cpp:145`) and `CEncryptedFile::Save` (`cencryptedfile.cpp:88`), Flush's code sits behind a second
+prologue, and 2767 is Save. When every record lies behind a second prologue, none is the row's: it has no record of its
+own, its stub's file is a callee's, and it takes a name as "Names no evidence gives" says (step 3) and a place from what
+only its code creates (rule 5): 4625's four records are `cpacotearquivos.cpp`'s, each behind a prologue, and the one
+store of `comum::CInterfaceMensagemVazia`'s vptr (1532504) puts it before `votadefs.cpp`'s first record, where that
+class's vtable copy lies (`/usr/bin/grep -rlE 'i32\.const 1532504($|[^0-9])' build/out/splat/pieces/asm` prints only its
+piece). A slot that a base class fills with a default of its own has no record, but its overriders in the same slot of
+the derived classes' vtables may have one, and that names the slot. For a base and a slot number, the records of every
 derived class's function there:
 
 ```sh
@@ -290,7 +290,9 @@ pnpm wasm fn ../target/vota_web_wasm.wasm 1931
 `fn` prints the disassembly, a *folded readout* (the stack replayed into expressions), the strings it loads, its callers
 and callees with their components and best pairs, and the vtable class and slot it fills ([the
 toolkit](glossary.md#the-toolkit)). The "strings referenced" list reads every `i32.const` in the data range as a
-pointer, so an error code can show up as a string (1931's `4725` is an error code, not "Tipo de identificador…"). The
+pointer, so an error code can show up as a string (1931's `4725` is an error code, not "Tipo de identificador…"), and
+so can an allocation's size, a multiple of an element's size or a table slot that falls inside a literal
+([facts/reading.md](reference/facts/reading.md) §R23 reads each by its use). The
 readout is approximate in order too: it hoists a `local.tee` and a call out of a nested expression, so a value a later
 `tee` overwrites reads as the new one (8827 passes the old `p1` as its fourth argument, and the readout prints the new),
 and a call printed as a statement can come after writes the disassembly has first (995). The compiler also reuses a
@@ -320,7 +322,7 @@ wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527
 
 One function can fill several slots, each a symbol of its own, so look up every slot of a merge thunk's family
 ([facts/reading.md](reference/facts/reading.md) §R16). A constant equal to a slot number can be an integer: read it in
-the shifted link, not the plain one (§R18).
+the shifted link, not the plain one (§R18), and by the parameter or member that takes it (§R23).
 
 `ledger/callgraph.tsv` holds direct calls only, so it misses such a callee too. `pnpm wasm bundle`
 writes the same readout for a list of functions into `ledger/bundles/<name>.md`, which is how to read a whole
@@ -370,10 +372,14 @@ class temporary keeps a frame slot of its own ([facts/codegen.md](reference/fact
 
 - its dead-argument elimination removes a parameter every caller passes as the same constant and puts the constant
   in the body: 5890's record has three parameters and its wasm type two. So a constant the body stores, or passes to a
-  call, can be an argument of the source; write the parameter, and give the roots callers that constant (step 6). A
-  record no function loads (step 1) can be the throw of a test of that argument: write the test at the record's line
-  (§R1). The pass runs before binaryen's inlining, so a constant that inlined code produced stays a parameter: measure
-  the callee's wasm type in the link before choosing the caller's form (§R1, §R18).
+  call, can be an argument of the source; write the parameter, marked as a reading unless a record shows it, and give
+  the roots callers that constant (step 6). A record no function loads (step 1) can be the throw of a test of that
+  argument: write the test at the record's line (§R1). The pass runs before binaryen's inlining, so a constant that
+  inlined code produced stays a parameter: measure the callee's wasm type in the link before choosing the caller's form
+  (§R1, §R18). Two more signs of a folded parameter (§R1): a callee the target keeps as a call that clang inlines when
+  the caller writes the constant (921 over Store, `-Rpass=inline`), and a parameterized body equal to another body of
+  the link, which binaryen merges before the fold, so the target's body with the constant in place says the source had
+  the constant (2262, fragment 372).
 - a constructor and a non-deleting destructor return `this` in the object, and the same pass drops a result no caller
   read. A stub's `void` is the target's type, so it says nothing of the source's result; a roots file declares such a
   function with the object's `int` result (`src/units/README.md` "Companion files").
@@ -387,7 +393,10 @@ too. An override spelled as the record does not override a header that differs, 
 the record contradicts. Fix the header when no other active stage claims it,
 even one every unit of a tree compiles: claim it, keep the objects the edit rebuilds and compare them afterwards
 ([agents.md](agents.md) "Shared build outputs"), and check that its matched users still verify (step 10). When another
-stage holds it, keep the member pending (step 5) and report the difference.
+stage holds it, keep the member pending (step 5) and report the difference. One exception: a declaration change of a
+non-virtual inline member there (a setter that returns the item for a chained call) that leaves every other object
+`cmp`-equal to the base's goes in your commit as a hunk apart from that stage's, named in your result with the matches
+that rest on it (11888's `CMenuItem& SetDado` in `cinputmenufield.h`, unit 104); anything more waits for that stage.
 
 For the ASN.1 converters there are two bases, and the namespace of the base's RTTI name in `ledger/classes.json`
 says which: ecourna's
@@ -421,29 +430,33 @@ what such a fragment holds.
 
 **A form chosen for the code it gives.** The lift keeps the target's order of loads and stores, and the source has to
 give it back. That order is evidence of the source's form ([facts/codegen.md](reference/facts/codegen.md) §C1): stores
-whose values were all read first come out in the reverse of the source's order. A lift whose stores run backwards over a
-struct (+6, +4, +2, +0 in 11067, `api::CLineField::Rect`) comes from values read into locals before the aggregate is
-built; a constructor that moves every argument out before its first store into the object and stores the vptr last
-(3660, `api::CSubReport`'s) delegates to a constructor that takes them by value again, unless that callee stays a call
-with no `this` result: then it is a function that returns the object its complete constructor builds (3682 and 5558 over
-5557, §C6). A call through `vtable[N + 4*x]` after an unsigned range check of `x` is a `switch` whose cases call
-consecutive virtual slots, its `default` the code under the check (§C2, 11050); write the switch, not a table of member
-pointers. Such a form is source when it is ordinary C++ in the project's types: a local that holds a value the function
-reads, an order of evaluation, a temporary, a delegating constructor. A construct whose only purpose is to steer the
-compiler is scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. An
-ordinary type the function uses only for the code it gives is source only where the target shows the object it stands
-for: 1695's always-engaged `std::optional<CApplicationContext>` is the 56-byte object its frame holds (§C5), a type TSE
-uses elsewhere, marked chosen among the forms that give the same object (unit 171). When a form stands in for a header
-that is not the original's (an aggregate where the target has a constructor), say so in the fragment's header comment. A
+whose values were all read first come out in the reverse of the source's order (a zeroing the size of a `memset`
+excepted: its order follows the constants used before it, §C1). A lift whose stores run backwards over a struct (+6, +4,
++2, +0 in 11067, `api::CLineField::Rect`) comes from values read into locals before the aggregate is built; a
+constructor that moves every argument out before its first store into the object and stores the vptr last (3660,
+`api::CSubReport`'s) delegates to a constructor that takes them by value again, unless that callee stays a call with no
+`this` result: then it is a function that returns the object its complete constructor builds (3682 and 5558 over 5557,
+§C6). A call through `vtable[N + 4*x]` after an unsigned range check of `x` is a `switch` whose cases call consecutive
+virtual slots, its `default` the code under the check (§C2, 11050); write the switch, not a table of member pointers.
+Such a form is source when it is ordinary C++ in the project's types: a local that holds a value the function reads, an
+order of evaluation, a temporary, a delegating constructor. A construct whose only purpose is to steer the compiler is
+scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. An ordinary type
+the function uses only for the code it gives is source only where the target shows the object it stands for: 1695's
+always-engaged `std::optional<CApplicationContext>` is the 56-byte object its frame holds (§C5), a type TSE uses
+elsewhere, marked chosen among the forms that give the same object (unit 171). When a form stands in for a header that
+is not the original's (an aggregate where the target has a constructor), say so in the fragment's header comment. A
 function the target holds inlined at every use is a form too when only a call there gives the measured code (a predicate
 or a setter over a member): write it as a member of the class it reads, its name and membership chosen, and give the
-in-place forms' scores; a lambda or a helper written only for that call is scaffolding
-(`CEstadoGeralVota::IsFimAquisicaoMarcado` for 10734, unit 93; `CAppState::SetNextState`, unit 61). A value the target
-computes ahead of code of an earlier statement (before a copy's branches or a release) was a local declared above it
-(12055's layout values, unit 37). And a form that is ill-formed with no diagnostic required but compiles to the same
-code in every TU may land when it is the only one measured to give the bytes, its comment naming the rule it breaks and
-the forms measured that keep it: an internal-linkage helper a header template calls (`ReadWholeFile` in
-`src/ecourna/api/io/asn/serialization.hpp`, for 2280 and 11419).
+in-place forms' scores; a lambda or a helper written only to steer a choice the target's bytes do not show is
+scaffolding (`CEstadoGeralVota::IsFimAquisicaoMarcado` for 10734, unit 93; `CAppState::SetNextState`, unit 61). A
+helper whose existence the frame shows (its locals above the caller's, or dropped results sharing slots,
+[facts/codegen.md](reference/facts/codegen.md) §C5) is a reading of the target: write it with its name and linkage
+marked chosen (2383's file-static helper, unit 110). A value the target computes ahead of code of an earlier statement
+(before a copy's branches or a release) was a local declared above it (12055's layout values, unit 37). And a form that
+is ill-formed with no diagnostic required but compiles to the same code in every TU may land when it is the only one
+measured to give the bytes, its comment naming the rule it breaks and the forms measured that keep it: an
+internal-linkage helper a header template calls (`ReadWholeFile` in `src/ecourna/api/io/asn/serialization.hpp`, for 2280
+and 11419).
 
 An order is evidence only where the forms you compare give different orders in the target function's own shape:
 compile both there. The vptr store before a member's says the base's constructor sets the member, the other way the
@@ -455,17 +468,22 @@ unit 78's fragment). An inlined library algorithm leaves no name: its body is ev
 direction, a halving), not of the call, so write `std::upper_bound` when it is the plain way to say it and list the
 hand-written loop that gives the same bytes beside it (unit 13's fragment does). When only the loop gives the target's
 bytes (clang keeps the library body out of line where the target has it inlined), the loop is scaffolding: write the
-call, leave the row `differs`, and put both measurements in the fragment (unit 137's `CPrng::GetInt`, 9500).
+call, leave the row `differs`, and put both measurements in the fragment (unit 137's `CPrng::GetInt`, 9500). That
+case is a body that copies a library function's own code. An ordinary expression that computes the same value is a
+source form like any other, written when only it gives the bytes and listed with the call's score: 10451's
+`arquivos.size() >= 6 ? 6 : arquivos.size()` gives the target's branch where `std::min` gives `llvm.umin` and `284 over
+3266` (unit 221).
 
 To measure "the same bytes" for one function of a TU, compare that function's disassembly between the two objects with
 the object-local numbers masked, against a control compiled beside the variants under a name of the same length, not the
 landed object, and count the lines each cut takes before reading a 0
-([facts/tool-traps.md](reference/facts/tool-traps.md) §X12 has the masks and the control). Mask with Python, or
-`[[:<:]]` in `sed`: macOS `sed` has no `\b` ([facts/workflow.md](reference/facts/workflow.md) §W9). `cmp` of two objects
-compares the whole TU, and a variant of one member then fails it. Change one occurrence per variant: a text substitution
-that matches twice rewrites another member too. [facts/codegen.md](reference/facts/codegen.md) §C1 lists the other ways
-such a comparison lies (a copy's path moves every offset, the edit can sit in a callee, a compare's operand order is the
-link's).
+([facts/tool-traps.md](reference/facts/tool-traps.md) §X12 has the masks and the control). A variant that differs in
+`i32.const` data addresses alone was compiled under a longer name: its records moved the data (§C1). Mask with Python,
+or `[[:<:]]` in `sed`: macOS `sed` has no `\b` ([facts/workflow.md](reference/facts/workflow.md) §W9). `cmp` of two
+objects compares the whole TU, and a variant of one member then fails it. Change one occurrence per variant: a text
+substitution that matches twice rewrites another member too. [facts/codegen.md](reference/facts/codegen.md) §C1 lists
+the other ways such a comparison lies (a copy's path moves every offset, the edit can sit in a callee, a compare's
+operand order is the link's).
 
 The lifter names a callee from the ledger's pairs, not from the symbol file, so a callee can be `extern "C" …
 f219(…)` although `splat/symbol_addrs.txt` names it (`_ZN4ASN18SEQUENCEC2EPKv = func:219;`, the
@@ -527,21 +545,29 @@ inline a function the target calls from several places, and the caller's object 
 it into the one caller our link gives it: a roots stand-in that gives it the target's call sites is the fix, not a
 question for clang. A body that differs in local numbers alone can be such a callee (try it out of line before a source
 form), a leaf whose result binaryen dropped after the locals were laid out (§R10 has 728, 3890 and 3510), the caller's
-and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three). Write such a
-function out of line and leave it unrooted, so that it has one caller in our link too, and in another TU than its caller
-when clang would inline it or read its attributes there (8533's tone sequences); "Names no evidence gives" below says
-which class and namespace it takes, §R10's last paragraph which tree. Linkage decides clang's inlining in the same TU:
-an internal function with one call there is always inlined, so code behind a frame of its own is an external function's,
-another TU's, or an internal one's with a second caller the link dropped (§R10 has unit 135's builders, 5455's
-`ReplaceDir` and unit 71's `MontaTela`). One shared frame is what both linkages give under clang's threshold, and the
-linkage can still change the caller's code: compile both (5652's ids helper, §R10). A target function whose body is a
-library inline member's, called out of line from several TUs, is a function of the project's that holds it (1922, §R10),
-and a member that writes its class's state where clang would inline it in the class's `.cpp` goes in a `.cpp` of its own
-(5400, §R10's last paragraph). A callee's records lie in the data of the object that defined it, which names its file
+and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three); §R10 has two
+remainders none of these moves (a parameter copied before a loop, binaryen's packing of locals). Write such a function
+out of line and leave it unrooted, so that it has one caller in our link too, and in another TU than its caller when
+clang would inline it or read its attributes there (8533's tone sequences); "Names no evidence gives" below says which
+class and namespace it takes, §R10's last paragraph which tree, and §C4 how a measured order picks its file when no
+record or data names one. Linkage decides clang's inlining in the same TU: an internal function with one call there is
+always inlined, so code behind a frame of its own is an external function's, another TU's, or an internal one's with a
+second caller the link dropped (§R10 has unit 135's builders, 5455's `ReplaceDir` and unit 71's `MontaTela`). A template
+instance takes internal linkage from an argument that has it (a lambda of a function that is not inline, a type in an
+anonymous namespace), so the rule reaches its one-call helpers: a `std::sort` whose helpers the target holds in one
+frame, four parameters, sorted with a lambda; one whose helpers keep frames of their own, five parameters, with
+`std::less<>`, an `operator<` or a function pointer (3762 against 5769, unit 383's fragment has the remarks). One shared
+frame is what both linkages give under clang's threshold, and the linkage can still change the caller's code: compile
+both (5652's ids helper, §R10). A target function whose body is a library inline member's, called out of line from
+several TUs, is a function of the project's that holds it (1922, §R10), and a member that writes its class's state where
+clang would inline it in the class's `.cpp` goes in a `.cpp` of its own (5400, §R10's last paragraph). A callee's
+records lie in the data of the object that defined it, which names its file
 ([facts/placing.md](reference/facts/placing.md) §P4).
 
-The order of a caller and its callee can decide what binaryen makes of them. When two bodies differ in locals, or a
-pointer stays in a local where the target folds it, try the other order of the caller and its callee before hunting a
+The order of a caller and its callee can decide what binaryen makes of them. When two bodies differ in locals, a
+pointer stays in a local where the target folds it, or a value the caller passes to an inlined callee is computed inside
+the callee's code where the target computes it at the inline site, before the callee's prologue (11888's screen's
+`bool`, unit 104's fragment), try the other order of the caller and its callee, the data's first, before hunting a
 source form: in the link for two objects, and in the `.cpp` for one, where a function with no record has a free line and
 records leave room. Either order can be the target's, and the target's data give the objects' order (§P4): when both
 orders give the bytes, keep the data's, and a body that holds a chain inlined from several objects can need the order of
@@ -640,7 +666,12 @@ then delete or add moves every record below it until you put the count back, and
 back (two statics moved below a `GetInst` by deleting their lines took the constructor's `instance()` record three
 lines up). Write the function where the stub or the gap was, delete the blank lines it replaces, add some where a throw
 would land too early, delete one blank line of the run below for each line you add above it (an `#include` above all),
-and compare every record's line with the stripped file before the link. A `throw` is not
+and compare every record's line with the stripped file before the link. Before writing a member, check in the stripped
+file that the lines its record needs above it are blank: a landed function's tail can hold them. The lines of a landed
+function after its last record are a layout of ours, and may be re-laid out to make room for a later record when that
+function's code is shown unchanged (its disassembly compared by function, object-local numbers masked, against the
+base's object), and the fragment says so (3655's tail in `cinputmenufield.cpp` made room for `SetFormatString`'s record
+156, unit 84's fragment). A `throw` is not
 the only maker: a default argument's records (`CPolySingleton<T>::instance()`'s `std::source_location`) sit on lines
 `/throw/` does not find, so list each record's line, column and functions (`f=<file>; awk -F'\t' -v f="${f#src/uenux2/}"
 'index($2, f) {print $3, $4, $6}' ledger/source-locations.tsv | sort -n`) and read each line (`awk 'NR==<line>' $f`).
@@ -711,13 +742,16 @@ the statics' target addresses too before moving a definition (`CInfoMTLCD`'s `s_
 
 Run the check over every matched member of the object in the band, not only yours;
 [facts/placing.md](reference/facts/placing.md) §P9 says where a new member goes when the landed ones are already
-inverted, what a run across two objects of files you chose orders, and how a recorded function bounds the order.
+inverted, how to tell the pairs a range added from the base's, how to count in a file that emits many instances, what to
+do when the band reads as an unwritten caller's mentions, what a run across two objects of files you chose orders, and
+how a recorded function bounds the order.
 
 An inverted pair is two definitions swapped only when no earlier function of the TU can mention either: a function takes
 its place at its first mention, not at its definition (a callee sits between its two constructors in three objects of
 unit 89, and 5693 and 5694 read inverted because `DoDesconverte` mentions 5694 first), in the code clang emits after its
 own inlining ([facts/reading.md](reference/facts/reading.md) §R9 has the case and the object's function list to read
-for each order you try). Such a swap gives the
+for each order you try); a function first mentioned above its definition does not carry its own callees there, which
+take their places at its definition (§R9). Such a swap gives the
 same bytes, so it is a question of source order, not of a match. A linkonce instance (a control block's member, a
 template's member) counts the same way: it takes its place at its first mention, so a run of consecutive target indices
 in one band gives the order of the definitions that mention them, and a row far from the run may be another TU's copy,
@@ -1063,7 +1097,9 @@ unchanged header through the same `-iquote` must give an object `cmp`-equal to t
 file: a callee not written, a flag its tree does not have, a data object or a literal it waits for. Its row stays
 `differs` or `unresolved`, or `no-candidate` when nothing names it, which is an ordinary state of a TSE object. Show the
 cause with a link or a compile that holds what the body waits for, and say what it waits for, with that measurement, in
-the fragment's header and its README row: for a `no-candidate` row the fragment is the only note. A body whose only
+the fragment's header and its README row: for a `no-candidate` row the fragment is the only note. A form measured on the
+body in another unit's fragment is cited in the body's own fragment too, so a pick reads one note (the setter measured
+on 10380 in unit 61's fragment, cited in unit 135's). A body whose only
 remainder is a flag its tree lacks lands so too, a new unit when its file is new (5482, unit 175), so that the flag's
 landing matches it (`api::ITextToSpeech::SetVoice`, 11518, unit 82, gives the target's rows at the executable TU's
 flags: [facts/levels.md](reference/facts/levels.md) §V1). When the flag alone is not enough (the body also needs an
@@ -1118,57 +1154,50 @@ it stays unwritten and its callers pending (5568, `CApplication::ShowExceptionMs
 
 **The destructors say how the class is declared.** Read the D2 and D0 in the vtable's slots 0 and 1 before you write
 the class head. The D2's bytes are the same in every form of the destructor, so a D2 that matches settles nothing; the
-D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7):
+D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7 have each case with its measurement):
 
-- **A D0 that holds the D2's body and then frees `this`** (11176, 12049) belongs to a destructor with the inline hint:
-  implicit, or declared `inline`, in the class (`inline virtual ~X() = default;`) or after it in the header, which give
-  the same object. Leave it implicit when the class has a base; declare it `inline` when it must be declared, as in a
-  class with no base, whose destructor is virtual only when declared so. When its body needs a type whose header
-  includes this one, declare it `inline` in the class and define it after that type, in that header (`api::IScreen`'s,
-  at the end of `api/gui/iform.h`); a TU that only deletes through the vtable then warns `-Wundefined-inline`, which is
-  harmless. An in-class destructor without `inline` gives this shape only for a cheap D2 (12049 holds the 116-B D2 of
-  `vota::IQRCodeBUDS`).
-- **A D0 that frees what the D2 returns,** `f136(f5531(p0))` (10 B, 11086), belongs to a destructor that is not out of
-  line and whose D2 was too costly to inline: defined in the class without `inline`, or, above the hinted cost as well,
+- **A D0 that holds the D2's body and then frees `this`** (11176) belongs to a destructor with the inline hint:
+  implicit, or declared `inline` in the class or after it in the header, which give the same object. Leave it implicit
+  when the class has a base; declare it `inline` when it must be declared, as in a class with no base, whose destructor
+  is virtual only when declared so, and after the type its body needs when that type's header includes this one (§R5).
+  An in-class destructor without `inline` gives this shape only for a cheap D2 (12049).
+- **A D0 that frees what the D2 returns,** `f136(f5531(p0))` (11086), belongs to a destructor that is not out of line
+  and whose D2 was too costly to inline: defined in the class without `inline`, or, above the hinted cost as well,
   implicit or `inline` (5590). Only a smaller D2 tells those forms apart: compare them in the class's own shape, and list
   the ones that give the same object. Around a base's D2 (9388 calls 5898) it belongs to a class with no member whose
-  destruction emits code, whose slot 0 holds that out-of-line base D2: its destructor is implicit or defined in the
-  class (`= default` and `{}` give the same object, §R4). Such a class can still hold scalars: read its size from the
-  allocation (`vota::CThreadMonitor`, §R5).
-- **A D0 that calls the D2 and then frees `this`,** `f5709(p0); f136(p0);` with a `drop` between them (13 B, 11443),
+  destruction emits code, its destructor implicit or defined in the class, which can still hold scalars: read its size
+  from the allocation (§R4, §R5).
+- **A D0 that calls the D2 and then frees `this`,** `f5709(p0); f136(p0);` with a `drop` between them (11443),
   belongs to a destructor defined out of line: define it in the `.cpp`, where it is the key function unless another
   virtual member is out of line before it, and declare it first among those (step 3, "What a body does not decide").
-  With no member whose destruction emits code, the class can show the base's D2 in slot 0 under this D0 (3609 over
-  1378: an inline base, merged by binaryen, or an out-of-line base in the same TU, which only the classes' files tell
-  apart), or a D2 of one call of the base's (884 over 1035: a base in another object; §R5).
+  With no member whose destruction emits code, slot 0 can hold the base's D2 under it (3609 over 1378) or a D2 of one
+  call of the base's (884 over 1035, §R5).
 - **These shapes are uenux2's, at `-fPIC`**, where a call of the D1 alias stays a call in its own TU (§C6). In
   ecourna's code an out-of-line destructor over an out-of-line base can take the in-class row's shape (3491), and
-  there, as for a class with no D0, a caller that keeps the call decides (§R5: `~CCargos`, `~CZip`).
+  there, as for a class with no D0, a caller that keeps the call decides (§R5).
 - **The shapes are those of the destructor's own TU.** A `delete` elsewhere (a control block's `__on_zero_shared`)
   frees the D2's result where its TU only declares the destructor and `this` where it defines it, so a target body of
   the second kind was compiled in the destructor's TU, which a roots file cannot give (11263 over 5614, unit 121). An
   explicit instantiation of a class template gives the out-of-line shape whatever the form (§R5).
-- **A derived class's D2** inlines its base's destructor unless that is out of line, or above the threshold for its form,
-  when it calls it (a weak copy in the second case). An inline base shows as its vptr store and member frees after the
-  derived class's own. That store is there only when the base destructor's body makes a call; without it, the base's
-  destructor may still be empty, `= default`, or do anything that calls nothing (§R4).
+- **A derived class's D2** inlines its base's destructor unless that is out of line, or above the threshold for its
+  form, when it calls it (a weak copy in the second case). An inline base shows as its vptr store and member frees
+  after the derived class's own, the store only when the base destructor's body makes a call (§R4).
 - **A D2 that destroys members and does not begin with its class's own vptr store** (11178) belongs to a `final` class:
-  write `final`. A vptr stored further on is a base's, and `final` leaves that store in place. A class whose destructor
-  destroys nothing has one of binaryen's shared bodies there; when the target builds it with `std::make_shared`, an empty
-  `__on_zero_shared` (slot 2 of `__shared_ptr_emplace<T>` is the shared 218) says `T` or its destructor is `final` (§R4).
+  write `final`; a vptr stored further on is a base's. A class whose destructor destroys nothing has one of binaryen's
+  shared bodies there, and an empty `__on_zero_shared` of its `std::make_shared` block (the shared 218 in slot 2) says
+  `T` or its destructor is `final` (§R4).
 - **A class whose virtual members are all inline** has no key function: only a TU that uses its vtable emits the vtable,
   D2 and D0, one that defines a constructor or emits a derived class's destructor that inlines this one. When neither
   is written, write a constructor at its record's line (the target may have inlined it everywhere), or let the roots
   file emit them from an `optnone` function (§R6 has the mechanism, `src/units/README.md` "A class with no key
   function" the shape, [facts/units.md](reference/facts/units.md) §U13 what such a root emits).
 - **When the destructors are shared bodies,** or the class has no vtable in the target, they say nothing of a key
-  function, and a missing vtable does not either: wasm-ld drops one nothing references. Read where the typeinfo lies: a
-  copy in a user's object, inside a TU that only uses the class or no later than its earliest derived class's typeinfo,
-  means no key function, and one well after it, among other objects' records, means one member is out of line. Which
-  member is a choice (§R6).
+  function, and a missing vtable does not either: read where the typeinfo lies. A copy in a user's object, inside a TU
+  that only uses the class or no later than its earliest derived class's typeinfo, means no key function, and one well
+  after it, among other objects' records, means one member is out of line; which member is a choice (§R6).
 - **A slot that holds `__cxa_pure_virtual`** (12143) is a pure member: declare it `= 0` at its slot even when no evidence
-  names it, so the class stays abstract. An abstract class's D0 is a trap (its slot 1 holds 325, `unreachable`); without
-  the pure members the vtable is shorter and the D0 a real body the target does not have (§R7).
+  names it, so the class stays abstract; its D0 is then a trap (slot 1 holds 325, `unreachable`), where without the pure
+  members the vtable is shorter and the D0 a real body the target does not have (§R7).
 
 What a `new T()` clears before the base constructor runs says how the constructors are declared too: the whole
 object with no user-provided constructor, the base's data for `D() : B() {}`, nothing for `D() {}`
@@ -1410,12 +1439,14 @@ a stronger pair demotes an anchor's name, so a data name becomes `self-voted` an
 181 took 8979, 9074, 9083, 9108 and 9111 out so: [facts/splat.md](reference/facts/splat.md) §S8, the seventh kind), and
 a new anchor whose small constants differ from the target's votes them as table slots, the rows that leave all naming
 one slot in their detail (§S8 item 1). `git diff splat/symbol_addrs.txt` shows each evidence change. Fix it with the
-name's own evidence, not by withdrawing a line. A row can also leave because
-an instance of yours took the symbol (step 3), a stronger name moved (below), a line you added above a record of a
-matched function moved the record (step 3; [src/README.md](../src/README.md) "Gaps" has the sign, and `TMPDIR=/tmp
-make -C src check-srcloc` lists it), or an edit of a header or a signature changed what another unit's object
-instantiates, so a linkonce copy the link took from it now comes from another object or none (unit 253's `-Oz`
-copies of 857, 1249, 2240, 9872 and 10145 after `IServicoEstado::Salva` took `const ESTADO&`): read `names.tsv`'s
+name's own evidence, not by withdrawing a line. A change that costs a match does not land, a brief that asks for its
+state recorded included: commit the last state that keeps every row, and post the costly change beside it (a patch or
+a `wip/<lane>` branch, which never lands) with the `join`'s rows and its link's sha256, for the coordinator to weigh. A
+row can also leave because an instance of yours took the symbol (step 3), a stronger name moved (below), a line you
+added above a record of a matched function moved the record (step 3; [src/README.md](../src/README.md) "Gaps" has the
+sign, and `TMPDIR=/tmp make -C src check-srcloc` lists it), or an edit of a header or a signature changed what another
+unit's object instantiates, so a linkonce copy the link took from it now comes from another object or none (unit 253's
+`-Oz` copies of 857, 1249, 2240, 9872 and 10145 after `IServicoEstado::Salva` took `const ESTADO&`): read `names.tsv`'s
 object column for the lost rows' symbols against the base's link, and that object's function list before and after.
 A displaced copy takes along the callees only it reached: when your object's instance of a library template links
 ahead of another object's, the other copy's out-of-line callees can lose their last caller, and their matches go
@@ -1442,7 +1473,7 @@ And with no source at fault, for one link's data layout, in four cases:
 - **A table slot below 1024 that another object's edit moves.** Our slots follow the objects' first mentions of
   function addresses ([facts/placing.md](reference/facts/placing.md) §P4), and the census's `addr` tier compares a
   constant below 1024 as a literal, so a seed pair that passed it falls to `shape` and its votes go: an edit of the
-  executable TU moved an invoke's slot from 3 to 4, and 988 (`locale::classic`) and ten rows that rested on it left
+  executable TU moved an invoke's slot from 3 to 4, and the ten rows that rest on 988's pair (`locale::classic`) left
   `match`. Compare `wasm-objdump -x -j Elem` slots 1 to 5 with the base's link's, and keep the object's first function
   references in their order ([facts/splat.md](reference/facts/splat.md) §S10 item 28 has the check).
 
@@ -1504,9 +1535,10 @@ rescan of the committed state differs from the committed `scan.tsv` in one such 
 way (its `detail` can shorten too: [reference/splat.md](reference/splat.md) "Reviewing a match"), and a renamed twin's
 row can go from `ledger` to `symbol` the same way. Commit the rescan's file ([reference/splat.md](reference/splat.md)
 "Reviewing a match"): a reviewer's rescan of the committed state then changes nothing, and the check that survives is a
-new match whose index has no line in the symbol file: for each index `i` that `comm -13 <(cut -d' ' -f1 <old
+new match the scan found by its body or by the census's pair: for each index `i` that `comm -13 <(cut -d' ' -f1 <old
 matched.txt> | sort) <(cut -d' ' -f1 splat/matched.txt | sort)` prints, `/usr/bin/grep -c -E "= func:$i;"
-splat/symbol_addrs.txt` prints 0. Search by index, not by symbol: a thunk's symbol also ends the name of the merge
+splat/symbol_addrs.txt` prints 0 for such a match and 1 or more for one step 8 named (below), whose row reads `symbol`
+from the first scan. Search by index, not by symbol: a thunk's symbol also ends the name of the merge
 body binaryen named after it (`byn$mgfn-shared$<the thunk's name> = func:3884;` for 2744). A new match that step 8 had
 already named (`evidence:srcloc-anchor`, `pair-*`, `call`, …) has `symbol` from the start, and then a rescan changes
 nothing: on an unchanged tree `TMPDIR=/tmp make -C src splat-match` ends with `0 files written` and `git status` shows
@@ -1542,25 +1574,30 @@ has the two removals (the hand line alone out decides), the scan run twice besid
 lines and keeps every name, `splat-build` on the copies after it, since the scan can add back a match the build's fixed
 point refuses, and what removing one line at a time cannot show. Run the same on a hand line before you add it. A line
 no removal shows carrying anything goes: a line a generated one has caught up with (the `awk` there), and a `func:` line
-for a body the content pass finds alone. Then weigh the lines you keep again on the file you commit. After a landing,
+for a body the content pass finds alone. The `awk` is no removal: a hand line whose generated twin's only voter is the
+row the hand line carries stays (6627's line under a generated `call by:1192`: without it 1192 is `unresolved
+self-voted`). Then weigh the lines you keep again on the file you commit. After a landing,
 weigh every hand line whose function or matched callers your new matches touch, with a generated twin or not: the `awk`
 lists only the caught-up ones, and 3764's `callers+content` line carried nothing once the executable TU's copy
 re-pointed. A line names a new match's index, or the function a new match calls: the searches by the new indices and by
 their callees ([facts/workflow.md](reference/facts/workflow.md) §W23) list both. A line found idle for a cause your
 landing did not bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
 `vector<ASN1::AbstractData*>::push_back`) goes in a commit of its own with the docs that cite it, after a `queue/` post;
-your commit keeps it. A merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an internal one), is
-one our link derives: it is no evidence of the target, it moves with link order, and step 9 renames a match line to the
-new one. It earns a hand line only when the removal shows rows that fall without it, and a landing that moves the first
-member rewrites that line's name from `names.tsv`'s `<binaryen>` row (2924's held its three thunks until 2924 matched:
-[facts/splat.md](reference/facts/splat.md) §S10 item 2).
+your commit keeps it. A line a generated twin caught up with is not such a case: a range whose match touches it removes
+it whenever it went idle ([reference/splat.md](reference/splat.md) "Reviewing a match"), with the doc that cites it as
+an example changed in the same commit. A merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an
+internal one), is one our link derives: it is no evidence of the target, it moves with link order, and step 9 renames a
+match line to the new one. It earns a hand line only when the removal shows rows that fall without it, and a landing
+that moves the first member rewrites that line's name from `names.tsv`'s `<binaryen>` row (2924's held its three thunks
+until 2924 matched: [facts/splat.md](reference/facts/splat.md) §S10 item 2).
 
 A data name is the same question: a generated `vote:1 by:<index>` line is a name whose only evidence is the one body that
-voted, and the build's check is that body's bytes and the object's (one byte for `api::CSystem::s_dorme`, which 8461
-alone votes for). Say in the fragment what else ties the operand to the object (the other readers of the address, its
-static destructor first), so a reviewer can weigh it. When that one voter is a written body that is no match, the
-build checks neither its bytes nor its votes: `splat-remap` on it must print `IDENTICAL`, and the fragment names the
-matches that rest on its votes ([reference/splat.md](reference/splat.md) "Reviewing a match").
+voted, and the build's check is that body's bytes and the object's (four bytes for
+`vota::CControlaReconhecimento::s_tentativa`, which the matched 5403 alone votes for: `/usr/bin/grep -F
+'s_tentativaE =' splat/symbol_addrs.txt`). Say in the fragment what else ties the operand to the object (the other
+readers of the address, its static destructor first), so a reviewer can weigh it. When that one voter is a written body
+that is no match, the build checks neither its bytes nor its votes: `splat-remap` on it must print `IDENTICAL`, and the
+fragment names the matches that rest on its votes ([reference/splat.md](reference/splat.md) "Reviewing a match").
 
 ## 10. Build and commit
 
@@ -1639,8 +1676,15 @@ in the link. Step 9 renames only the lines whose old name left, and reports the 
 evidence says another function` although the listed body is another one; one symbol then sits on two lines (`uniq -d`
 above). The report can be missing too, and the first sign the build's `no longer verify` on those indices (or
 `UNCONFIRMED` on a reader of the static): after adding a static with an exit destructor to a file whose statics'
-destructors are matched, run the `uniq -d` above before `make -C src splat`. Edit each such line to step 8's name, and
-run that check and the build before trusting `splat-match`'s summary.
+destructors are matched, run the `uniq -d` above before `make -C src splat`. clang's one counter numbers every internal
+symbol of the TU (`.L.str.N`, a `std::source_location` default argument's `.L.constant.N`), so a new function above the
+statics' initializers renumbers them too (`cinputmenufield.cpp.o`'s `.34` to `.40` became `.45` to `.48` for two new
+setters), and a header edit renumbers the statics of objects whose files you did not touch (an inline variable, a
+template's statics it instantiates: 66 objects changed so for one header move). So run the check after any edit of a
+file or header whose objects hold matched static destructors. A new number can also equal a name another object's
+match line holds unqualified, and step 9 then renames that line to `<name>@<object>` (`2 matches added, 1 renamed` for
+`locale.o`'s 7753): the rename is right. Edit each line `uniq -d` lists to step 8's name, and run that check and the
+build before trusting `splat-match`'s summary.
 
 A merge can also unmake a twin. A matched body whose second and third call sites were a twin's loses them when the
 other side drops that twin (a library rebuilt without landing pads), binaryen inlines it into its last caller, and that
@@ -1682,7 +1726,7 @@ tree, and move a form that now gives the same bytes to that list, naming the fun
 Your new matches, and the functions your unit writes that do not match, can make other units' notes false: a callee
 "with no name", a member that "waits for" one, a stand-in whose callers are now all in the link, a hand line's "our body
 differs", a doc's example. Search for them as a landing does ([facts/workflow.md](reference/facts/workflow.md) §W23 has
-the seven kinds and a search for each) and fix them in your commit, comment lines only, after a claim of those files,
+the eight kinds and a search for each) and fix them in your commit, comment lines only, after a claim of those files,
 with two exceptions. A stand-in or sink your unit makes idle goes in your commit, code and comment, call by call; one
 idle since an earlier landing, or in a file another stage holds, goes as `src/units/README.md` "Finding the idle ones"
 says. And a hand line whose function your match now names by a generated line is yours to weigh (the caught-up `awk` of
@@ -1839,22 +1883,25 @@ Some matches rest on the whole link and not on a source, so a merge that touches
 9 run the check of [facts/splat.md](reference/facts/splat.md) §S10, which lists them, and stop if one left `match`. A
 row lost to one link's data layout, with the cause shown (step 9's four cases), is the one loss a batch may wait out:
 land the next lane first, which moves the data, and retry the merge; stop if the row is still out. Read each roots
-file's reasons again too, since a stand-in beside its real caller passes every check: a stand-in, or a call of one,
+file's reasons again too, since a stand-in beside its real caller can pass every check (one that calls what the target
+inlines into that caller unmatches it instead: `src/units/README.md` "Companion files"): a stand-in, or a call of one,
 whose every target caller is now in the link goes in this merge, before these steps, and one whose callers landed in
 part stays (`src/units/README.md` "Companion files" has the rule, its cases and the per-callee search, "Finding the idle
-ones"). A caller's call in our link is found by the callee's `ours` index (for 5103, ours 5303 at bbf27ac1,
-`wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5303 '/ func\[/ {f=$2} $0 ~ " call " c "( |$)"
-{print f}' | sort -u` prints `func[10515]:`, 9052's, and `func[10667]:`). A stand-in can also stand for references that
-are no call (an address taken in a static constructor, or for a vtable slot), and other units' notes can name a function
-the merge matched as one that waits: run the searches of [facts/workflow.md](reference/facts/workflow.md) §W23, whose
-kinds a search by the new indices misses (an address root, a sink, a caller list, a removed stand-in's name), and fix
-what is stale in the merge or a comments-only commit after it. A stale note in a hunk that a branch of a later batch
-changes, or on a line next to one it changes, is left to that branch's landing and named in the result: git joins
-adjacent lines into one hunk. Commit it all as the merge commit. A merge commit takes no pathspec (`fatal: cannot do a
-partial commit during a merge`): stage everything, read `git status --short`, and commit with a bare `git commit -F -`,
-owning the checkout while you do, since nothing else may be staged ([facts/workflow.md](reference/facts/workflow.md)
-§W18). To leave a merge after step 9, `git merge --abort` needs everything staged first (§W22). Two branches that each
-took "the next free NN" collide too; `src/units/README.md` "Names" says how to avoid that.
+ones"). One the merge made idle that is found after its commit goes in a code commit of its own, before the
+comments-only one, and the result says so. A caller's call in our link is found by the callee's `ours` index (for 5103,
+ours 5303 at bbf27ac1, `wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5303 '/ func\[/ {f=$2} $0
+~ " call " c "( |$)" {print f}' | sort -u` prints `func[10515]:`, 9052's, and `func[10667]:`). A stand-in can also stand
+for references that are no call (an address taken in a static constructor, or for a vtable slot), and other units' notes
+can name a function the merge matched as one that waits: run the searches of
+[facts/workflow.md](reference/facts/workflow.md) §W23, whose kinds a search by the new indices misses (an address root,
+a sink, a caller list, a removed stand-in's name), and fix what is stale in the merge or a comments-only commit after
+it. A stale note in a hunk that a branch of a later batch changes, or on a line next to one it changes, is left to that
+branch's landing and named in the result: git joins adjacent lines into one hunk. Commit it all as the merge commit. A
+merge commit takes no pathspec (`fatal: cannot do a partial commit during a merge`): stage everything, read `git status
+--short`, and commit with a bare `git commit -F -`, owning the checkout while you do, since nothing else may be staged
+([facts/workflow.md](reference/facts/workflow.md) §W18). To leave a merge after step 9, `git merge --abort` needs
+everything staged first (§W22). Two branches that each took "the next free NN" collide too; `src/units/README.md`
+"Names" says how to avoid that.
 
 ## Library functions
 

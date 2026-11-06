@@ -160,7 +160,7 @@ byte-identical, and names every final function (`build/out/wasm-map/vota_web/nam
 `src/mk/splat-map.mk`, `docs/reference/splat.md` §2.
 
 **stub** — two meanings. (1) A generated comment for a TSE function not decompiled yet, where the evidence says it
-sat in TSE's file: `// f1455 · 496 B · unmatched · name unknown` over its signature, between `// <stubs>` and
+sat in TSE's file: `// f6734 · 6461 B · unmatched · name unknown` over its signature, between `// <stubs>` and
 `// </stubs>` markers. `tools/round/stubs.py` writes them (`make -C src stubs`, run by `splat-match`, so a matched
 function's stub goes) and CI checks them (`stubs.py --check`); a function no evidence places is in its tree's
 `unplaced.cpp`. A function the generator finds code of ours for has none, and a pending member counts as code of
