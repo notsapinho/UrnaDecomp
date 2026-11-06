@@ -2,10 +2,10 @@
 // second call site the target gives them, so binaryen keeps each out of line as the target does (it inlines a function
 // with one call site). Each stand-in calls its function once, beside fn 11373's call, and drops the result as the
 // target's callers do.
-// - comum::md::CDetalheCandidato's copy constructor (target fn 365, implicit): stands for 3 of its 16 other target
-//   callers, 1192, 3744 and 6627 (11888 and 11892, unit 104's, 2289 and 3775, unit 88's, 2834, GetMapaCargos (unit 98's
-//   row), 3818, unit 200's FiltraCargos, and 1386, 3687, 5577, 5578, 5582, 5594 and 5595, unit 123's crelutil.cpp.o,
-//   are in the link).
+// - comum::md::CDetalheCandidato's copy constructor (target fn 365, implicit): stands for 2 of its 16 other target
+//   callers, 1192 and 6627 (3744, fragment 388's, 11888 and 11892, unit 104's, 2289 and 3775, unit 88's, 2834,
+//   GetMapaCargos (unit 98's row), 3818, unit 200's FiltraCargos, and 1386, 3687, 5577, 5578, 5582, 5594 and 5595, unit
+//   123's crelutil.cpp.o, are in the link).
 // - std::construct_at<comum::md::CSuplencia> (fn 2341) needs none now: its callers 11375 (fragment 299) and 5594 (unit
 //   123's crelutil.cpp.o) are in the link.
 // - std::vector<comum::md::CRespostaConsulta>::__init_with_size (fn 3018, the vector copy inside

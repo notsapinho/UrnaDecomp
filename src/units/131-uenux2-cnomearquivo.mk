@@ -6,9 +6,13 @@
 # - The anonymous-namespace helpers, at their records' lines: FormataFase (target fn 2828, record :38), FormataNumero
 #   (fn 1161, record :48, matched since fn 11973's literal is in the link: below) and FormataUF (fn 3773, record :73).
 # - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), matched at the tree's -O3
-#   (below). They are the helpers' callers in the object: FormataFase and FormataUF have two call sites there and
-#   FormataNumero five, and all three are functions of their own in the link (build/out/wasm-map/vota_web/names.tsv), as
-#   in the target, where 2828 has 4 callers, 1161 5 and 3773 3 (ledger/callgraph.tsv).
+#   (below). The builders are the helpers' callers in the object: FormataFase has four call sites there, FormataNumero
+#   eleven and FormataUF three (`wasm-objdump -d` of cnomearquivo.cpp.o), and all three are functions of their own in
+#   the link (build/out/wasm-map/vota_web/names.tsv), as in the target, where 2828 has 4 callers, 1161 5 and 3773 3
+#   (ledger/callgraph.tsv).
+# - ajustaAbrangenciaUFMunicipio (record :208, clang inlines it) and CNomeArquivo::NomeArquivoAbrangencia (no index:
+#   binaryen inlines it into fn 3744, comum::NomesArquivosEleicao in unit 279's cnomearquivoeleitores.cpp), after the
+#   other builders: fragment 388 (src/units/388-uenux2-nomesarquivos.mk) has their evidence and forms.
 #
 # Evidence: the records give the helpers' names, file, lines, columns and signatures; the typeinfo of CBaseError<...>
 # gives the enum's name, namespace and limits, and the codes are the ones the four throwers pass to fn 2827. 1705 and
@@ -47,12 +51,6 @@
 #   and the objects call __grow_by_and_replace instead: in the -O2 link they scored 551 over 805 rows and 877 over 1285,
 #   and with cnomearquivo.cpp.o compiled at -O3 in a copy of the link command (docs/reference/facts/workflow.md W13)
 #   14 over 370 and 23 over 566, all operand-only, splat-remap printing IDENTICAL for both.
-# - Not written: fn 3744, which holds the record at :208 (ajustaAbrangenciaUFMunicipio, code 8953) and the helpers'
-#   calls inside a second stack frame, under code that copies what comum::md::CPleito::GetEleicao (fn 5651) returns and
-#   inserts what reads as the name into a std::map keyed by a word (32-byte nodes, rebalanced by fn 152); it calls
-#   append (fn 160) six times, comum::md::CEleicaoPE::PossuiCargoCandidato (fn 5653, unit 88), and fns 365 and 374
-#   (374, std::construct_at of a comum::md::CDetalheConsulta copy, matches since unit 88's GetCargos; 365,
-#   comum::md::CDetalheCandidato's copy constructor, since fragment 191).
 NOMEARQUIVO_SRCS := src/app/comum/nomearquivo/cnomearquivo.cpp
 UENUX2_SRCS += $(NOMEARQUIVO_SRCS)
 # 131-uenux2-cnomearquivo-roots.cpp stands in for fn 7787's calls of NomeArquivoSecao, two call sites (its other

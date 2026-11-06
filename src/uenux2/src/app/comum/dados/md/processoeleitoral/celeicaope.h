@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <set>
 #include <string>
 #include <vector>
@@ -40,6 +41,15 @@ public:
     // to find its voters (map::at over the recorder's map, keyed by md::ETipoAbrangencia); no record names it, so its
     // name and its being inline in the class are chosen.
     ETipoAbrangencia GetAbrangencia() const { return m_abrangencia; }
+    // Whether the municipalities at +40 hold the municipality or 0. CPleito's fns 5649 and 3713 hold the test inlined,
+    // a std::find over the words (wmemchr) and a second loop that compares each with 0, which reads as clang's inlining
+    // in that TU. No record names it: its name, its being a member inline in the class and its parameter's type are
+    // chosen.
+    bool PossuiMunicipio(uedword municipio) const
+    {
+        return std::find(m_municipios.begin(), m_municipios.end(), municipio) != m_municipios.end() ||
+               std::find(m_municipios.begin(), m_municipios.end(), 0) != m_municipios.end();
+    }
 
 private:
     void ValidaNome() const;

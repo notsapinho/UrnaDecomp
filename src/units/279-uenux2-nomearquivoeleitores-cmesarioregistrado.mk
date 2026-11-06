@@ -18,10 +18,12 @@
 #   file, before steps 7 to 9 (pnpm wasm score at the default depth): 3745 `6 over 80 rows (same 74, replaced 6 [6
 #   operand-only], inserted 0, deleted 0)`, 5727 `7 over 85 rows (same 78, replaced 7 [7 operand-only], inserted 0,
 #   deleted 0)`, calls and data addresses only; step 9 matched both (scan source `ledger`, the census's pairs).
-# - Their band neighbours with records do not place the file: 3744 (cnomearquivo.cpp:208) and 3747
-#   (dados/md/rdv/cvotoseleicoesvota.cpp:184) for 3745 in band 3, 5725 (api/io/cdatamap.h:143, a header) and 5732
-#   (cvotoseleicoesvota.cpp:172) for 5727 in band 2. The file's name and its directory, beside the header that declares
-#   them, are chosen.
+# - Their band neighbours with records do not place the file: 3744 for 3745 in band 3, whose record
+#   (cnomearquivo.cpp:208) is a builder's binaryen inlined into it, and 3747 (dados/md/rdv/cvotoseleicoesvota.cpp:184),
+#   5725 (api/io/cdatamap.h:143, a header) and 5732 (cvotoseleicoesvota.cpp:172) for 5727 in band 2. The file's name and
+#   its directory, beside the header that declares them, are chosen.
+# - comum::NomesArquivosEleicao (fn 3744) follows them in this file, its object's by band 3 and the table's slots
+#   (fragment 388, src/units/388-uenux2-nomesarquivos.mk, has its evidence, forms and stand-ins).
 # - comum::CMesarioRegistrado (cmesarioregistrado.h has the class's evidence): vtable @1594872, [448, 765, 10339, 7480,
 #   1661, 218, 425, 10338, 425], and the record cmesarioregistrado.cpp:72, GetControlador's return, which 10339 and 6011
 #   (through 10338) load. ProcessInput (10338) is the thunk `f6011(p0, 1594916, 1594944)` of unit 247's paragraph.
