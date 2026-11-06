@@ -32,8 +32,3 @@ CFixedImage::CFixedImage(const std::string& arquivo)
 }
 
 } // namespace api
-
-// <stubs>
-// f13441 · 386 B · unmatched · placement: link order · name unknown
-// void f13441(i32) { ... }
-// </stubs>

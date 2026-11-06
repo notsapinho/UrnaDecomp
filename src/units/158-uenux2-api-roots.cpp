@@ -21,13 +21,9 @@ extern const char w158_vt_rhvoice[] __asm__("_ZTVN3api20CRHVoiceTextToSpeechE");
 
 namespace {
 
-// fn 2246, CFixedImage's string constructor, has four direct callers in the target (fns 1263, 3616, 3617 and 13441),
-// of which 1263 (unit 164's CriaIcones), 3616 and 3617 (unit 319's) are in the link. This one stands for 13441, which
-// waits, with a body no target function has; the other, for 3616 and 3617, went.
-__attribute__((noinline)) void ImagemFixaEm(void* destino, const std::string& arquivo)
-{
-    new (destino) api::CFixedImage(arquivo);
-}
+// fn 2246, CFixedImage's string constructor, needs no stand-in: its four direct target callers (fns 1263, 3616, 3617
+// and 13441) are in the link, 1263 unit 164's CriaIcones, 3616 and 3617 unit 319's, 13441 unit 387's
+// vota::ImagemAudioHabilitado (ctelasvota.cpp); the stand-ins for them went.
 
 const void* volatile w158_sink;
 
@@ -36,7 +32,6 @@ struct SW158Roots {
     {
         w158_sink = w158_vt_logger;
         w158_sink = w158_vt_rhvoice;
-        w158_sink = reinterpret_cast<const void*>(&ImagemFixaEm);
     }
 } w158_roots;
 

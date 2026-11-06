@@ -1,10 +1,10 @@
 // Roots: the CImageField ctor has five direct callers in the target (fns 502, 4129, 5547, 6561 and 6689). Four build
 // the field with std::make_shared<CImageField> (the __shared_ptr_emplace<api::CImageField> vptr 1537564, then the ctor
 // at +12), 502 is the CDSImageField ctor inlined into its caller; they pass the anchors 0 and 1 and keep the ctor's
-// result (a ctor returns this in the wasm ABI). 5547 and 502 are written (unit 31), and 6561 (unit 110), and the others are not, so these two stand-ins build it the same way,
-// with different bodies (wasm-opt would merge identical ones and inline the ctor into the survivor) and different
-// anchors (so binaryen's dead-argument elimination folds no parameter), and are address-taken from a static
-// constructor. As unit 14's roots do, this TU includes the class header for make_shared: the control block it
+// result (a ctor returns this in the wasm ABI). 5547 and 502 are written (unit 31), 6561 (unit 110) and 6689 (unit
+// 387, anchor 0), and 4129 is not, so this stand-in builds it the way 4129 does, with anchor 1 (4129 passes 1: pnpm
+// wasm fn ../target/vota_web_wasm.wasm 4129), and is address-taken from a static constructor; the one for 6689
+// (anchor 0) went. As unit 14's roots do, this TU includes the class header for make_shared: the control block it
 // instantiates, __shared_ptr_emplace<api::CImageField> (D0 12639 and D2 12640 in the target), comes from ctelasvota.cpp.o
 // now, the first object on the link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too).
 // The ctor's
@@ -15,12 +15,6 @@
 #include "api/gui/cimagefield.h"
 
 namespace {
-
-__attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoImagemA(const api::SPoint& posicao,
-                                                                                       const api::SharedIImage& imagem)
-{
-    return std::make_shared<api::CImageField>(posicao, imagem, api::ANCHOR_TOP_LEFT);
-}
 
 __attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoImagemB(api::TPosition x, api::TPosition y,
                                                                                        const api::SharedIImage& imagem)
@@ -34,7 +28,6 @@ void* volatile w2242_sink;
 struct SW2242Roots {
     SW2242Roots()
     {
-        w2242_sink = reinterpret_cast<void*>(&CampoImagemA);
         w2242_sink = reinterpret_cast<void*>(&CampoImagemB);
     }
 } w2242_roots;

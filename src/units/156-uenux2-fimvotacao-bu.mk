@@ -3,7 +3,8 @@
 #   shared fns 244, 387), and GetInst (inlined into fn 12023, unit 185's), the constructor and the statics (exit-time
 #   destructors fns 12028, 12029);
 # - vota::CMostraQRCodeCertificado: ProcessInput (fn 12038), the destructor (fns 785, 1560), GetInst (inlined into fn
-#   12051, unit 37's), the constructor and the statics (exit-time destructors fns 12041, 12042);
+#   12051, unit 37's), the constructor and the statics (exit-time destructors fns 12041, 12042); StartState (fn 12040)
+#   and its callback (fn 12039) are written in its file since, by unit 387, whose fragment has them;
 # - vota::CQuerImprimirBU: StartState (fn 12035), the destructor (fns 244, 387), and GetInst (inlined into fn 12062,
 #   unit 104's), the constructor and the statics (exit-time destructors fns 12036, 12037), written since (below);
 # - vota::CRetirarMR: ProcessInput (fn 12030), the destructor (fns 1284, 2884), and GetInst (fn 2291), the constructor
@@ -28,8 +29,8 @@
 #   and calls IEventosLog::loga (fn 233). 4563 is called by vota::CEmitirMaisBU::StartState (fn 12082, unit 104's)
 #   and ProcessInput (fn 12081, unit 104's, written since), 4557 twice by 12081; the roots' stand-in for 12081 went
 #   with it. Scored on the whole link before steps 7 to 9: 10 over 67 and 9 over 63 rows, operand-only.
-# 156-uenux2-fimvotacao-bu-pending.cpp names the slots left as traps and what each waits for; the class heads say what
-# each layout rests on. The destructors are bodies other states share, so the match lines of 785 and 1560, and of 1284
+# No pending file: its last trap, CMostraQRCodeCertificado::StartState (12040), went when unit 387 wrote it. The class
+# heads say what each layout rests on. The destructors are bodies other states share, so the match lines of 785 and 1560, and of 1284
 # and 2884, name this unit's symbols, the first in link order (docs/reference/facts/splat.md S6).
 #  Evidence: the records name the .cpp files (climitecopiasbuatingido.cpp:37, cmostraqrcodecertificado.cpp:39,
 # cquerimprimirbu.cpp:40 and 41, cretirarmr.cpp:54 to 96, cimprimindobu.cpp:70 to 114). The vtables' slots, the D0
@@ -205,10 +206,6 @@ UENUX2_SRCS += $(FIMVOTACAO_BU_SRCS)
 # citemmenu.cpp reaches CConfiguracaoEleicao's CParametrosUrna, whose CHorariosUrna includes Boost (unit 88 gives
 # cconfiguracaoeleicao.cpp the same path)
 $(ROOT)/$(APP)/uenux2/src/app/comum/informacao/citemmenu.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 156-uenux2-fimvotacao-bu-pending.cpp gives the vtables trapping bodies, compiled with
-# the unit's flags
-$(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
 # No roots file. Its last stand-ins, the vtable sinks of comum's four menu items (@1550780 to @1550888), went once
 # their constructors were written and reached (citemmenu.cpp, through vota::CMenuMaisInformacoesVota's constructor,
 # which fn 6599, unit 110's, holds): those constructors store the vptrs, and a link without the sinks moves no row in
@@ -220,4 +217,3 @@ $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-
 # app/vota/log/clogvota.cpp) have their two or more direct call sites in the link from their written callers: 4551,
 # 4556, 4563 and 4557 from 12077, 12078, 12081, 12027 and 12082, 2495 from 10466, 10473, 10477 and 10485 (unit 282), and
 # 1127 from the printing states 11852, 11855, 11991, 12065, 12068, 12071, 12074, 12077, 12078 and 12081.
-override EXTRA_OBJS += $(APP)/156-uenux2-fimvotacao-bu-pending.o

@@ -19,7 +19,10 @@
 # - api::CFixedImage (api/gui/cfixedimage.h): its vector member, GetData (4975, already matched as an RHVoice twin; its
 #   line is renamed to this class's) and the implicit destructors, which binaryen merges into the shared bodies the
 #   target has: 8563 and 8554, the D2 and D0, are thunks of 3937 and 3936, whose two match lines are renamed to this
-#   class's too. The vector constructor GetImage inlines has no target function: it is compared with nothing.
+#   class's too. The vector constructor GetImage inlines has no target function: it is compared with nothing. GetData
+#   and the destructors link from ctelasvota.cpp.o since vota::ImagemAudioHabilitado (13441, unit 387) destroys a
+#   CFixedImage there, an object our link puts ahead of this one (the target's data put the class's vtable beside
+#   CWasmResource's, the copy of an object it links first), the same bytes (they still match).
 # - api::CMovieFrame's constructor (api/gui/cmovie.cpp, unit 23's file), which GetMovie calls.
 #
 # Where the code is. No record names a file of either class. That each has an object of its own is the data's:

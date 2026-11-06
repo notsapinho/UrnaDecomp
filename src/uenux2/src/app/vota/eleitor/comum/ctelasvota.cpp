@@ -14,6 +14,8 @@
 #include "api/gui/capplication.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
+#include "api/gui/cfixedimage.h"
+#include "api/gui/cfixedtext.h"
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cframedtext.h"
 #include "api/gui/cgrayedframedtext.h"
@@ -56,8 +58,26 @@
 
 namespace vota {
 
-// (original lines 59-265: content not recovered)
-#line 266
+// (original lines 61-247: content not recovered)
+#line 248
+std::vector<uebyte> ImagemAudioHabilitado()
+{
+    if (CEstadoAudio::GetInst().Ativo()) {
+        return api::CFixedImage(":/resource/images/audioHabilitado.jpg").GetData();
+    }
+    return ecourna::api::util::CStringUtils::HexStringToBytes(
+        "424d42000000000000003e000000280000000100000001000000010001000000000004000000000000000000000000000000"
+        "0000000000000000ffffff0080000000");
+}
+
+std::string TextoAudioAtivado()
+{
+    if (CEstadoAudio::GetInst().Ativo()) {
+        return "Áudio ativado";
+    }
+    return "";
+}
+
 void AdicionaGifCargo(const comum::md::CCargo& cargo, api::CFormBuilder& builder)
 {
     static const std::map<comum::TCargoID, std::string> gifs = {
@@ -282,8 +302,32 @@ api::SRect adicionaFotoEmoldurada(api::CFormBuilder& builder, const api::TPositi
 
 } // namespace
 
-// (original lines 494-776: content not recovered)
-#line 777
+// (original lines 494-752: content not recovered)
+#line 753
+api::CFormBuilder::SharedField AdicionaImagemAudioHabilitado(api::CFormBuilder& builder, const api::SPoint& posicao)
+{
+    const auto imagem = std::make_shared<api::CDataImage<std::vector<uebyte> (*)()>>(&ImagemAudioHabilitado);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CImageField>(posicao, imagem, api::ANCHOR_TOP_LEFT);
+    builder.AddField(campo);
+    return campo;
+}
+
+std::shared_ptr<api::IInputField<api::IScreen>> AdicionaCampoNumerico(api::CFormBuilder& builder, const size_t tamanho,
+    const bool confirmaAoCompletar, const bool corrigeLimpa, const bool aceitaConfirma, const bool aceitaBranco,
+    const bool corrigeSai, const api::SPoint& posicao, const api::SFont& fonte, const api::ETextAlignment alinhamento);
+
+void AdicionaCamposInputVazio(api::CFormBuilder& builder, const api::TPosition x, const api::TPosition y,
+                              const size_t digitos, const size_t digitosRestantes)
+{
+    AdicionaImagemAudioHabilitado(builder, api::SPoint(176, 445));
+    builder.AddTextField(TextoAudioAtivado, api::SPoint(10, 445), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA);
+    const std::shared_ptr<api::IInputField<api::IScreen>> campo = AdicionaCampoNumerico(
+        builder, digitos, false, true, false, true, false, api::SPoint(x, y), FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+    if (digitosRestantes != 0) {
+        builder.AddMaskedTextField("", digitosRestantes, api::SPoint(campo->Rect().right + 5, y), FONTE_NUMERO);
+    }
+}
+
 namespace {
 
 std::shared_ptr<api::IInputField<api::IScreen>> AdicionaCampo(api::CFormBuilder& builder,
@@ -1104,30 +1148,30 @@ CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeBU(std::function<std::string()
     return GetFormularioInterativo(builder, "telaQRCodeBU");
 }
 
+namespace {
 
+const char TEXTO_CERTIFICADO_DIGITAL[] = "Certificado digital";
 
+} // namespace
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeCertificado(std::function<std::string()> qrcode)
+{
+    api::CInteractiveFormBuilder builder;
+    const api::SRect area = AreaTela();
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    const api::TPosition linhaVersao = area.bottom - 80;
+    const auto imagem = std::make_shared<api::CQRCodeImage>(380, qrcode);
+    const api::CFormBuilder::SharedField campoImagem = builder.AddImage(imagem, api::SPoint(630, 35));
+    builder.AddTextField("Versão: " + api::CApplication::s_versao, api::SPoint(10, linhaVersao), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(TEXTO_CERTIFICADO_DIGITAL, api::SPoint(10, 45), FONTE_TITULO, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextFieldMultiLine("O QR code ao lado contém o certificado desta urna.",
+                                  api::SRect(10, 95, campoImagem->Rect().left - 30, area.bottom - 130),
+                                  FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA);
+    builder.AddLabeledInputControl({{'D', "Retornar"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaQRCodeCertificado");
+}
 
 
 

@@ -139,7 +139,7 @@
 # Not written, with what each waits for (the pick's list for this class):
 # - 6639, 6681 need 6678, which calls 4184, 4185 and 2028 (4184 calls 4129 and 6528; 11501, reached through its table
 #   slot 1089 only, has no direct caller in ledger/callgraph.tsv), 7787's builders' callees.
-# - 2384, 6689, 13441: after 7787 (2384's one caller).
+# - 2384, 6689 and 13441 are unit 387's since (its fragment).
 # Roots: 378-uenux2-ctelasvota-criatela-roots.cpp stands for 7787, and for 6602, 6603 and 6605 (3060's other callers).
 # Stand-ins this unit made idle went, call by call: units 28 (1192's CTextFieldDoubleLine), 191 (6627's vector copy),
 # 232 (3074's GetDetalheConsulta), 309 (6601's AdicionaLocal), 88 (12587's GetNomeNeutro), 110 (6592's

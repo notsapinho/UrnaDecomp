@@ -762,7 +762,8 @@
 #   constructor takes them), 2383's being a free function of vota and its external linkage (its other callers read as
 #   this file's: 7787 as CTelasVota's constructor, 1591 and 2384 by the font @474880 of this file's run of constants;
 #   11892's screen calls it, and the roots give it its other call sites; a file-static function with one call is
-#   inlined), its declaration in this file only, and the lines. Unit 373's roots stand in for 1591, 2384 and 7787.
+#   inlined), its declaration in this file only, and the lines. Unit 373's roots stand in for 7787 (1591 and 2384,
+#   units 378's and 387's, are in the link).
 # - cmenufiltrarcandidatospornumero.cpp follows cmenumaisinformacoesvota.cpp in this list, as
 #   cmenuvisualizarcandidatos.cpp does: with it in unit 104's list, 11892 scored 86 over 752 rows (6 inserted, 7
 #   deleted: ours computes the address of StartState's result at its one use, where the target keeps it on the stack
