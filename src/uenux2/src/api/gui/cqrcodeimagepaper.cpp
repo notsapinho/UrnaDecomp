@@ -1,6 +1,6 @@
 // api::CQRCodeImagePaper (a note of the reconstruction, not TSE's text). MontaImagem's throws are the records at
 // lines 35, 38 and 49, column 15; every other line is a choice. The constructor (target fn 2772) holds MontaImagem,
-// and through it api::CStringUtils::SetBit, as binaryen inlined them; cqrcodeimagepaper.h has the evidence.
+// and through it CStringUtils::SetBit, inlined by binaryen; cqrcodeimagepaper.h has the evidence, unit 296 the order.
 #include "api/gui/cqrcodeimagepaper.h"
 
 #include <algorithm>
@@ -12,17 +12,7 @@
 
 namespace api {
 
-// (original lines 15-21: content not recovered)
-#line 22
-CQRCodeImagePaper::CQRCodeImagePaper(const std::string& texto)
-{
-    const QrcodeData dados = MontaImagem(400, texto);
-    m_dados.imagem = dados.imagem;
-    m_dados.tamanho = dados.tamanho;
-    m_dados.escala = dados.escala;
-}
-
-// (original lines 30-31: content not recovered)
+// (original lines 15-31: content not recovered)
 #line 32
 CQRCodeImagePaper::QrcodeData CQRCodeImagePaper::MontaImagem(size_t tamanho, const std::string& texto)
 {
@@ -57,6 +47,14 @@ CQRCodeImagePaper::QrcodeData CQRCodeImagePaper::MontaImagem(size_t tamanho, con
         }
     }
     return {imagem, larguraComMargem, escala};
+}
+
+CQRCodeImagePaper::CQRCodeImagePaper(const std::string& texto)
+{
+    const QrcodeData dados = MontaImagem(400, texto);
+    m_dados.imagem = dados.imagem;
+    m_dados.tamanho = dados.tamanho;
+    m_dados.escala = dados.escala;
 }
 
 } // namespace api

@@ -25,12 +25,19 @@
 # Not explained: the target stores the file header's type (+0) and size (+2) right after the vector is built, ahead of
 # the rest; every form measured stores them last, after the info header, from +46 down (the order of the stores in the
 # object, each compiled with this tree's flags): the two structs copied with std::memcpy, std::copy or a struct
-# assignment, the fields written through pointers into the vector, aggregate initialization, the info header copied
-# first, the file header written byte by byte, through 32-bit casts or with std::memcpy per field, header.resize after a
-# default vector, and either parameter order. The test written between the first two fields and the rest stores those two
-# first, but leaves the vector's zero fill at 1072 bytes, where the target's is 1024 from +54 (a reading: a fill trimmed
-# so needs all 54 header bytes written on every path after it). So GetData differs by those 8 rows (unit 79's
-# fragment). Names chosen: the structs, their fields, the parameters and locals.
+# assignment, one packed struct of both copied once, the fields written through pointers into the vector, aggregate
+# initialization, the info header copied first, the file header written byte by byte, through 32-bit casts or with
+# std::memcpy per field, the type and size copied after the rest, header.resize after a default vector, and either
+# parameter order; the form here gives that order at -O1, -O2, -Os, and with -fno-strict-aliasing or -fexceptions added
+# too. In one block the object's order does not follow the source's: the IR's stores (em++ -S -emit-llvm) run in the
+# source's order, +6 to +50 then +0 and +2 for the type and size copied last, and the object's still run from +46 down
+# to +0. The test written between the first two fields and the rest stores those two first, but leaves the vector's zero
+# fill at 1072 bytes, where the target's is 1024 from +54, and std::abort() in the throw's place gives the same;
+# __builtin_trap() there (a probe, not a TSE form) gives the target's stores and its 1024-byte fill. The reading from
+# these: the target's object has a block boundary between those two fields and the rest on whose other path nothing
+# reads memory, and its final code keeps no branch there (one on the fourth argument would fold with it); no such form
+# of TSE's code is found. So GetData differs by those 8 rows (unit 79's fragment). Names chosen: the structs, their
+# fields, the parameters and locals.
 CBMPCONVERSOR_SRCS := src/api/gui/cbmpconversor.cpp
 UENUX2_SRCS += $(CBMPCONVERSOR_SRCS)
 # no roots: the three target functions that call both, 10316, 10451 and 10465 (units 135, 221 and 282), are in the link,
