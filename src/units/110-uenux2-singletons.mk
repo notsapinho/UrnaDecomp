@@ -232,10 +232,11 @@
 #   decorator for std::transform into a back_inserter, 166; emplace_back, 413. The written form's frame is the target's:
 #   the decorator temporary and the sort's comparator at +132, above every local of 5772's own (a callee clang inlined,
 #   docs/how-to-decompile.md step 3). Before step 8, 5772 scored 26 over 989 rows, all operand-only (calls and data). A
-#   pair-depth0 hand line in splat/symbol_addrs.txt named 5769 (recursive) while no caller of 5772 was written; since
-#   6734 (fragment 386) names 5772 by `call`, a generated line names 5769 from 5772's call, and the hand line carries
-#   nothing (removed, alone or with 1692's, every row stays and splat-build gives the target's sha256): it goes in a
-#   commit of its own with docs/reference/splat.md section 2, which cites it. Chosen: the locals' names, std::transform
+#   pair-depth0 hand line named 5769 (recursive) while no caller of 5772 was written; since 6734 (fragment 386) names
+#   5772 by `call`, step 8 names 5769 from 5772's call (`call by:5772`), and the hand line went: at b1593f92 a scan run
+#   twice on copies without it and without the match lines of 5769 and 5772 moved no row against a control on the same
+#   match copy, alone or with 1692's, and splat-build gave the target's sha256 on both; with the name out on both sides
+#   of the hand-edit marker 5769, 5772 and 6734 read unresolved. Chosen: the locals' names, std::transform
 #   with a lambda over the other forms measured, its being private (celeitores.h) and its lines, after MontaCaminhos and
 #   before GetEleitoresImpedidos, as band 2's order (5773, 5772, 5771, 5770, 5767 in link order) allows. The roots'
 #   LeEstaticos stands for its caller 7787 (6734 is in the link: fragment 386).
