@@ -11,8 +11,9 @@
 #
 # Target functions matched:
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
-#   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673, from cjustificativaefetuada.cpp.o
-#                                                                     (ahead of 1150's std::make_shared on the link line)
+#   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673, from
+#                                                                     cjustificativaefetuada.cpp.o (ahead of 1150's
+#                                                                     std::make_shared on the link line)
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069, from cinteractiveformbuilder.cpp.o,
 #                                                                     where its builder, fn 3675 (unit 120), matches
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o

@@ -1102,8 +1102,8 @@ flags: [facts/levels.md](reference/facts/levels.md) §V1). When the flag alone i
 unwritten caller of an instance the flag shapes), the body stays unwritten when nothing needs it, with both measurements
 in the fragment (5869 waited so in unit 227's, until unit 268 wrote it with the flag and a stand-in for its callee's
 other caller: that fragment's "The flag"). A callee that is written but has no name yet, or that only an unlanded
-branch names,
-is something outside the body too: a body measured right lands written, not as a trap (11861 over 3648, unit 138).
+branch names, is something outside the body too: a body measured right lands written, not as a trap (11861 over 3648,
+unit 138).
 `ModeloAbreviado` (8168, unit 75) was `differs` until the literal it shares a tail with was in the link (it matched when
 unit 142 wrote 10425, which holds it), and with that literal in a scratch link `splat-remap` printed `IDENTICAL`, once
 code the link keeps references the literal and its

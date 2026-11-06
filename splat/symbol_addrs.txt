@@ -38695,7 +38695,8 @@ _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_1
 # (pnpm wasm fingerprint ../target/vota_web_wasm.wasm --depth 0). Each of its target callers, 5736, 5737, 6734 and 7174
 # (6734 and 7174 placed by srcloc-anchor lines on the records celeitores.cpp:205 and csincronizavota.cpp 290 and 303,
 # their names chosen), passes the object it returns to api::CEncryptedFile's matched members and destroys it with
-# ~CEncryptedFile (1691): Write (2766) and Save (2767), or Load (3653) and Read (3652). That is the constructor over the layout those members read (api/io/cencryptedfile.h).
+# ~CEncryptedFile (1691): Write (2766) and Save (2767), or Load (3653) and Read (3652). That is the constructor over
+# the layout those members read (api/io/cencryptedfile.h).
 # Our body is written and differs at every flag measured: 5 over 30 rows at the tree's flags (pnpm wasm score; 2
 # replaced, 3 deleted), where every spelling measured stores +16 and +20 as one i64; the remainder is not explained
 # (src/units/381-uenux2-crdv.mk, src/units/128-uenux2-cencryptedfile.mk). Since 7174 and 6734 are in the link (unit

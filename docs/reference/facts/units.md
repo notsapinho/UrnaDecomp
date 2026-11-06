@@ -696,8 +696,8 @@ sink 102-uenux2-control-blocks-roots.cpp _ZTVNSt3__220__shared_ptr_pointerIPN3ap
 ```
 
 Each line is a lead, read before anything goes. A call to build the stand-in's own body is listed too (270, a `GetInst`
-that reaches a member); a `(second site)` call keeps its callee out of line and is no idle call, unless it stands for no caller the target
-shows (unit 100's calls of 11157 went so, the user's decision); a stand-in that reads
+that reaches a member); a `(second site)` call keeps its callee out of line and is no idle call, unless it stands for
+no caller the target shows (unit 100's calls of 11157 went so, the user's decision); a stand-in that reads
 its callee's result goes only with a link without it that keeps the result ("When it goes"). A written caller with no
 symbol line reads `-` in the scan, so its callee's calls count as waiting here and are left out: the per-callee command
 of "Finding the idle ones" settles them. Tree roots other than `roots_ecourna.o` hold instances, which "Whose copy"

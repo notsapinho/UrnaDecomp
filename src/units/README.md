@@ -533,15 +533,14 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     stand-in makes only to build its own body stands for no caller (a `GetInst` to reach a member, an `operator+` to
     vary a thrower's message, `free`), and one that is its callee's second call site in our link (a link without it
     inlines the callee) is not idle, unless it stands for no caller the target shows: then it goes whatever it costs
-    (unit 100's calls of 11157, the user's decision; "Companion files"). A merge's search by its new indices (`docs/reference/facts/workflow.md` §W23)
-    finds a
-    comment that names one of them; it does not find a call it made idle among a comment's other callers, a count of
-    callers that leaves one out, or a note that names a removed stand-in or a moved object by its name. The sweep of a
-    whole tip, with what it printed at e7d03612, is
-    [../../docs/reference/facts/units.md](../../docs/reference/facts/units.md) §U16. Read each call it lists
-    by its callee: the callee's target callers, each with its `ours` column (`-` when not in our link) and verdict, for
-    one callee or a list in one pass over both files (W23's callee list holds libc and libc++ hubs with hundreds of
-    callers, which a reader skips when no stand-in calls them),
+    (unit 100's calls of 11157, the user's decision; "Companion files"). A merge's search by its new indices
+    (`docs/reference/facts/workflow.md` §W23) finds a comment that names one of them; it does not find a call it made
+    idle among a comment's other callers, a count of callers that leaves one out, or a note that names a removed
+    stand-in or a moved object by its name. The sweep of a whole tip, with what it printed at e7d03612, is
+    [../../docs/reference/facts/units.md](../../docs/reference/facts/units.md) §U16. Read each call it lists by its
+    callee: the callee's target callers, each with its `ours` column (`-` when not in our link) and verdict, for one
+    callee or a list in one pass over both files (W23's callee list holds libc and libc++ hubs with hundreds of callers,
+    which a reader skips when no stand-in calls them),
 
     ```sh
     awk -F'\t' -v list="3704" 'BEGIN {n = split(list, a, " "); for (i = 1; i <= n; i++) want[a[i]] = 1} NR==FNR {s[$1] = $3 " " $5; next} FNR==1 {next} ($2 in want) && !(($1, $2) in seen) {seen[$1, $2]; print $2 ": " $1, s[$1]}' splat/scan.tsv ledger/callgraph.tsv
