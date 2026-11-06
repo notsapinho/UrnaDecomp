@@ -76,6 +76,9 @@
 // "Eleitor impedido - {}" of a text and logs it through loga (fn 233), for IMPEDIMENTO_INVALIDO it throws, and for a
 // value past it it logs the empty text (the target's branch table). The euevotaerror.h include is in this header for
 // the same reason as iinterfaceinit.h's; the parameter's name, the local's and the switch's spelling are chosen.
+// LogaVotoComputado is the shape of the members held inlined above: vota::impl::CSincronismoVotoEleitor::Sincroniza
+// (fn 7174) calls GetInst before the member's 16-byte frame opens and calls fn 233 with "O voto do eleitor foi
+// computado"; its name is chosen from its message, and its place at the end of clogvota.cpp is chosen.
 
 #include <cstdint>
 #include <string>
@@ -385,6 +388,7 @@ public:
     void LogaAnoNascimentoInvalido();
     void LogaEleitorSemIdadeMinima();
     void LogaMesarioCancelouEntradaDados();
+    void LogaVotoComputado();
 };
 
 } // namespace vota

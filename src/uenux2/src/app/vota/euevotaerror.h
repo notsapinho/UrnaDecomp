@@ -9,6 +9,12 @@
 namespace vota {
 
 enum EUeVotaError {
+    // the values are the codes the anonymous-namespace SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro of
+    // csincronizavota.cpp throw (records csincronizavota.cpp:290 and :303, inlined into target fn 7174) when
+    // comum::CRdv::Confere refuses the RDV read back from the flash's ".tmp" file; the names are chosen from their
+    // messages, "Falha na gravação do RDV na MI" and "... na MV": no evidence names them
+    EUE_VOTA_FALHA_GRAVACAO_RDV_MI = 9300,
+    EUE_VOTA_FALHA_GRAVACAO_RDV_MV = 9301,
     // the value is the code vota::CSincronizaVota::SincronizaRelatorios (target fn 1836, record csincronizavota.cpp:392)
     // throws; the name is chosen from its message, "O arquivo{} não é um relatório válido para sincronização": no
     // evidence names it

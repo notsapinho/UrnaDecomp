@@ -44,6 +44,15 @@ public:
     virtual void Desconverte(const std::vector<uebyte>& dados) = 0;
     virtual bool Confere(const std::vector<uebyte>& dados) const = 0;
 
+    // No target index: steps of fn 7174 (vota::impl::CSincronismoVotoEleitor::Sincroniza), their one caller, which
+    // holds each behind a 48-byte frame of its own, as binaryen inlined them: Converte's bytes saved to the RDV's
+    // ".tmp" path, and that file read back and passed to Confere. They read m_cifrador and call slots, so they are
+    // CRdv's members; their names and const are chosen (src/units/381-uenux2-crdv.mk).
+    void SalvaTemporarioInterno() const;
+    bool ConfereTemporarioInterno() const;
+    void SalvaTemporarioExterno() const;
+    bool ConfereTemporarioExterno() const;
+
     // Target fns 5737 and 5736: Salva of GetArquivoRdvInterno's or GetArquivoRdvExterno's path. No record, slot or RTTI
     // names them; the names and const are chosen. crdv.cpp defines them (src/units/381-uenux2-crdv.mk).
     void SalvaInterno() const;
@@ -55,6 +64,12 @@ protected:
     uebyte m_digitosPartido;
 
 private:
+    // The file's bytes read through an api::CEncryptedFile over m_cifrador, and those bytes passed to Confere. No
+    // target function is their own: the two ConfereTemporario members hold them as clang inlines them, their file and
+    // bytes above the caller's path (src/units/241-uenux2-app-vota-eleitor.mk has the frame). Names and const chosen.
+    std::vector<uebyte> Le(const std::string& arquivo) const;
+    bool ConfereArquivo(const std::string& arquivo) const;
+
     // Converte's bytes written through an api::CEncryptedFile over m_cifrador and saved to the path given. No target
     // function is its own: SalvaInterno and SalvaExterno hold its code, its locals above their string, as clang inlines
     // it (src/units/381-uenux2-crdv.mk). It reads m_cifrador and calls Converte through the vtable (slot 11), on a
@@ -69,5 +84,13 @@ private:
 // binaryen merged with celeitores.h's function of the same flash: 1551 and 2826 call 6036, 1701 and 5762 6035.
 std::string GetArquivoRdvInterno();
 std::string GetArquivoRdvExterno();
+
+// The ".tmp" companions of those paths, which clang inlines into their users in crdv.cpp, and the ".tmp" file moved
+// over the RDV's through api::CSystem::ReplaceFile with an empty backup name, which binaryen inlines into fn 7174, its
+// one caller, behind a 48-byte frame. No target index; their names and their being free functions are chosen.
+std::string GetArquivoRdvTemporarioInterno();
+std::string GetArquivoRdvTemporarioExterno();
+void SubstituiRdvInterno();
+void SubstituiRdvExterno();
 
 } // namespace comum

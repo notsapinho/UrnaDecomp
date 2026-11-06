@@ -1,7 +1,7 @@
 // vota::CSincronizaVota (/home/rubio/tse/uenux2/src/app/vota/comum/csincronizavota.cpp). The reconstruction's own
-// note: the records of VerificaUrnaDesligando's and SincronizaRelatorios's throws fix lines 47 and 392; those of
-// SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (fn 7174 holds both), lines 290 and 303, are of functions
-// not written: 290 holds 7174's stub, 303 a gap. Every other line is chosen (src/units/205-uenux2-csincronizavota.mk).
+// note: the records of VerificaUrnaDesligando's and SincronizaRelatorios's throws fix lines 47 and 392, and those of
+// the anonymous SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (fn 7174 holds both) lines 290 and 303.
+// Every other line is chosen (src/units/205-uenux2-csincronizavota.mk).
 
 #include "app/vota/comum/csincronizavota.h"
 
@@ -18,7 +18,12 @@
 #include "app/comum/carquivossavd.h"
 #include "app/comum/justificativa/cjustificador.h"
 #include "app/comum/cpath.h"
+#include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/cintegridadereferencial.h"
+#include "app/comum/dados/crdv.h"
+#include "app/comum/dados/crdvvota.h"
 #include "app/vota/comum/cassinadorvota.h"
+#include "app/vota/comum/votadefs.h"
 #include "app/vota/euevotaerror.h"
 
 namespace vota {
@@ -30,7 +35,7 @@ void CSincronizaVota::MarcaUrnaDesligando()
     s_urnaDesligando = true;
 }
 
-// (original lines 33-43: content not recovered)
+// (original lines 38-43: content not recovered)
 #line 44
 void CSincronizaVota::VerificaUrnaDesligando()
 {
@@ -180,7 +185,128 @@ void CSincronizaVota::SincronizaJustificativa()
     }
 }
 
-// (original lines 192-369: content not recovered)
+
+void CSincronizaVota::CriaBancoDadosMI(const comum::CEleitores& eleitores)
+{
+    eleitores.DynamicCreate(comum::GetArquivoBancoDadosInterno());
+}
+
+void CSincronizaVota::CriaBancoDadosMV(const comum::CEleitores& eleitores)
+{
+    eleitores.DynamicCreate(comum::GetArquivoBancoDadosExterno());
+}
+
+void CSincronizaVota::SincronizaAssinaturaDadosDinamicos()
+{
+    const comum::CArquivosSavd& arquivos = comum::CArquivosSavd::GetInst();
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    if (appInfo.GetGeral().GetDadoCarga().GetTurno() == comum::TURNO_1) {
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(122)], arquivos[comum::ESavdPacote(124)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(199)], arquivos[comum::ESavdPacote(201)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(134)], arquivos[comum::ESavdPacote(136)], false, true);
+    } else {
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(123)], arquivos[comum::ESavdPacote(125)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(200)], arquivos[comum::ESavdPacote(202)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(135)], arquivos[comum::ESavdPacote(137)], false, true);
+    }
+}
+
+// (original lines 218-229: content not recovered)
+#line 230
+void CSincronizaVota::CopiaBancoDadosMV()
+{
+    const comum::CArquivosSavd& arquivos = comum::CArquivosSavd::GetInst();
+    const std::filesystem::path origem = comum::CPath::GetPathTrab(comum::FLASH_INTERNA) / arquivos[comum::ESavdArquivoUE(110)];
+    const std::filesystem::path destino = comum::CPath::GetPathTrab(comum::FLASH_EXTERNA) / arquivos[comum::ESavdArquivoUE(111)];
+    api::CSystem::CopyFile(origem.string(), destino.string(), false, true);
+    GravaBancoDadosMV();
+}
+
+void CSincronizaVota::SincronizaAssinaturaRDV()
+{
+    const comum::CArquivosSavd& arquivos = comum::CArquivosSavd::GetInst();
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    if (appInfo.GetGeral().GetDadoCarga().GetTurno() == comum::TURNO_1) {
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(122)], arquivos[comum::ESavdPacote(124)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(134)], arquivos[comum::ESavdPacote(136)], false, true);
+    } else {
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(123)], arquivos[comum::ESavdPacote(125)], false, true);
+        api::CSystem::CopyFile(arquivos[comum::ESavdPacote(135)], arquivos[comum::ESavdPacote(137)], false, true);
+    }
+}
+
+// (original lines 252-282: content not recovered)
+#line 283
+namespace {
+
+void SincronizaRDVInternoSeguro()
+{
+    const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+    rdv.SalvaTemporarioInterno();
+    if (!rdv.ConfereTemporarioInterno()) {
+        throw CUeVotaError(EUE_VOTA_FALHA_GRAVACAO_RDV_MI, "Falha na gravação do RDV na MI");
+    }
+    comum::VerificaIntegridadeVotos();
+    comum::SubstituiRdvInterno();
+}
+
+// (original lines 296-297: content not recovered)
+#line 298
+void SincronizaRDVExternoSeguro()
+{
+    const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+    rdv.SalvaTemporarioExterno();
+    if (!rdv.ConfereTemporarioExterno()) {
+        throw CUeVotaError(EUE_VOTA_FALHA_GRAVACAO_RDV_MV, "Falha na gravação do RDV na MV");
+    }
+    comum::VerificaIntegridadeVotos();
+    comum::SubstituiRdvExterno();
+}
+
+} // namespace
+
+void CSincronizaVota::SincronizaVotoMI()
+{
+    VerificaUrnaDesligando();
+    SincronizaRDVInternoSeguro();
+    comum::CAppInfo::GetInst().SalvaVotaInterno();
+    if (!comum::CAppInfo::EhTreinamentoEleitor()) {
+        comum::CEleitores::GetInst().GravaEleitorCorrenteMI();
+        api::CSynchronizer::GetInst().Sync();
+        AssinaESincroniza(comum::ESavdArquivoUE(110));
+    }
+    {
+        const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+        const CAssinadorVota assinador(appInfo.GetGeral().GetDadoCarga().GetTurno() == comum::TURNO_1 ? comum::ESavdPacote(122) : comum::ESavdPacote(123));
+        assinador.Assina(comum::ESavdArquivoUE(83));
+        assinador.Assina(comum::ESavdArquivoUE(31));
+    }
+    api::CSynchronizer::GetInst().Sync();
+    VerificaAssinaturaMI("vota.vsu");
+    VerificaAssinaturaMI("rdv.vsu");
+    if (!comum::CAppInfo::EhTreinamentoEleitor()) {
+        VerificaAssinaturaMI("uenux.vsu");
+    }
+}
+
+void CSincronizaVota::SincronizaVotoMV()
+{
+    VerificaUrnaDesligando();
+    SincronizaRDVExternoSeguro();
+    comum::CAppInfo::GetInst().SalvaVotaExterno();
+    if (!comum::CAppInfo::EhTreinamentoEleitor()) {
+        CopiaBancoDadosMV();
+    }
+    SincronizaAssinaturaRDV();
+    api::CSynchronizer::GetInst().Sync();
+    VerificaAssinaturaMV("vota.vsu");
+    VerificaAssinaturaMV("rdv.vsu");
+    if (!comum::CAppInfo::EhTreinamentoEleitor()) {
+        VerificaAssinaturaMV("uenux.vsu");
+    }
+}
+
+// (original lines 352-369: content not recovered)
 #line 370
 void CSincronizaVota::SincronizaRelatorios(const std::string& arquivo)
 {

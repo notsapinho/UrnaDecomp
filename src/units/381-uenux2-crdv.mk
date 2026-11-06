@@ -21,7 +21,8 @@
 # - The four path functions: 6036 calls CPath::GetPathTrab(EFlashOrigem) (fn 436) with 0, 6035 with 1, builds a path
 #   from the name (string::append, fn 178), copies GetPathTrab's path (fn 138 when it is long) and appends the name
 #   (path::operator/=, fn 183), copies the result's string into the result (a std::string: fn 6737 passes the results
-#   to CSystem::RemoveFile, fn 2760, and CEleitores::DynamicCreate, fn 5761, and 5736 and 5737 to CEncryptedFile::Save,
+#   to CSystem::RemoveFile, fn 2760, and CEleitores::DynamicCreate, fn 5761 (unit 116's paragraph has 6737), and 5736
+#   and 5737 to CEncryptedFile::Save,
 #   each `const std::string&`), and destroys the three temporaries in reverse. The two bodies differ in one place
 #   only, the order of the two stores that zero the name's path (6036: i32 +16, i64 +8; 6035 the other way), and one
 #   form gives both, by GetPathTrab's constant alone: `(CPath::GetPathTrab(o) / "x").string()` compiled at
@@ -78,9 +79,21 @@
 # (5736 and 5737 no-candidate, 1692 no-candidate) where the control on the same match copy with every name leaves 12800
 # (1692 differs), and splat-build on either copy gives the target's sha256: the line carries 5736 and 5737 alone.
 #
-# Roots (381-uenux2-crdv-roots.cpp): stand-ins for 6737 and 7787, the target callers not written that give each
-# function its second call site; 6734 and 7174 need none. Unit 128's stand-ins for 5736's and 5737's calls of Write and
-# Save went (their callers are in the link). It compiles at the tree's flags, as the functions' directory does.
+# Written since, for fn 7174 (vota::impl::CSincronismoVotoEleitor::Sincroniza, unit 241's fragment), with no target
+# index of their own: CRdv::SalvaTemporarioInterno and SalvaTemporarioExterno (Salva of the ".tmp" path),
+# ConfereTemporarioInterno and ConfereTemporarioExterno (the ".tmp" file read back through Le and passed to Confere,
+# slot 13, through ConfereArquivo), and the free comum::SubstituiRdvInterno and SubstituiRdvExterno
+# (api::CSystem::ReplaceFile, 5455, of the ".tmp" path over the RDV's, with an empty backup), which binaryen inlines
+# into 7174 behind 48-byte frames, one each; GetArquivoRdvTemporarioInterno and Externo (the path with ".tmp" appended,
+# the literal at 121448), Le and ConfereArquivo, which clang inlines into them. Unit 241's fragment has the frames
+# measured and the forms that give them. Their names, the CRdv members' const and the free functions' being free (they
+# read no class state) are chosen; their lines are chosen, after GetArquivoRdvExterno, and the include of
+# api/util/csystem.h took a blank line above line 60.
+#
+# Roots (381-uenux2-crdv-roots.cpp): a stand-in for 7787, the target caller not written that gives each function its
+# second call site; 6734 needs none, and the stand-in for 6737 went with it (unit 116). Unit 128's stand-ins for
+# 5736's and 5737's calls of Write and Save went (their callers are in the link). It compiles at the tree's flags, as
+# the functions' directory does.
 CRDV_SRCS := src/app/comum/dados/crdv.cpp
 UENUX2_SRCS += $(CRDV_SRCS)
 $(ROOT)/$(APP)/381-uenux2-crdv-roots.o: $(ROOT)/src/units/381-uenux2-crdv-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/381-uenux2-crdv.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

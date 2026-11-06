@@ -18,6 +18,7 @@
 #include "app/vota/operador/cthreadoperador.h"
 
 extern "C" void w4771_root_0(void* estado) __asm__("_ZNSt3__217__assoc_sub_state9set_valueEv");
+extern "C" void w6737(void* estado) __asm__("_ZN4vota12CEstadoAudio18GeraDadosDinamicosEv");
 
 namespace {
 
@@ -46,6 +47,7 @@ struct SW116Roots {
         w116_sink = reinterpret_cast<const void*>(&ParaOperadorEMonitor);
         w116_sink = reinterpret_cast<const void*>(&ValorDoAudio);
         w116_sink = reinterpret_cast<const void*>(&ConcluiEstado);
+        w116_sink = reinterpret_cast<const void*>(&w6737);
     }
 } w116_roots;
 

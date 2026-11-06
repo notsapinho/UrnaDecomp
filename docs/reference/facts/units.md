@@ -49,10 +49,12 @@ the constructor's C2 and both stand-ins); the try link kept one stand-in and no 
 
 **A stand-in that only forwards is a target function.** `int B(int p) { return D2(p); }` compiles to
 `local.get 0; call D2; end`, the D2 of a derived class that adds no member: vota::CAssinadorVota's 7766 (7 B, a call of
-1007) is exactly that. Unit 34's second stand-in destroys two objects instead. Written as a forwarder:
+1007) is exactly that. Unit 34's second stand-in destroyed two objects instead, until 7174, one of the two callers
+its stand-ins stood for, was written (the file at 8f35addb). Written as a forwarder:
 
 ```sh
-python3 -I -B -c "import sys; s=open(sys.argv[1]).read(); s=s.replace('void DestroiAssinadoresB(int primeiro, int segundo)\n{\n    w1007_root_0(primeiro);\n    w1007_root_0(segundo);\n}', 'int DestroiAssinadorB(int assinador)\n{\n    return w1007_root_0(assinador);\n}').replace('&DestroiAssinadoresB', '&DestroiAssinadorB'); open(sys.argv[2], 'w').write(s)" src/units/34-uenux2-cassinador-roots.cpp build/out/units-facts/return-roots.cpp
+git show 8f35addb:src/units/34-uenux2-cassinador-roots.cpp > build/out/units-facts/34-roots.cpp
+python3 -I -B -c "import sys; s=open(sys.argv[1]).read(); s=s.replace('void DestroiAssinadoresB(int primeiro, int segundo)\n{\n    w1007_root_0(primeiro);\n    w1007_root_0(segundo);\n}', 'int DestroiAssinadorB(int assinador)\n{\n    return w1007_root_0(assinador);\n}').replace('&DestroiAssinadoresB', '&DestroiAssinadorB'); open(sys.argv[2], 'w').write(s)" build/out/units-facts/34-roots.cpp build/out/units-facts/return-roots.cpp
 printf '7766\n1007\n4694\n' > build/out/units-facts/t7766.txt
 TMPDIR=/tmp tools/round/try-tu.sh --name units-return-roots src/uenux2/src/app/comum/gravadores/cassinador.cpp \
   --roots build/out/units-facts/return-roots.cpp --targets build/out/units-facts/t7766.txt --skip-units 34-uenux2-cassinador.mk

@@ -10,10 +10,10 @@
 #include <vector>
 
 #include "api/io/cencryptedfile.h"
+#include "api/util/csystem.h"
 #include "app/comum/cpath.h"
 
 namespace comum {
-
 
 
 
@@ -101,6 +101,60 @@ std::string GetArquivoRdvInterno()
 std::string GetArquivoRdvExterno()
 {
     return (CPath::GetPathTrab(FLASH_EXTERNA) / "rdv.dat").string();
+}
+
+std::string GetArquivoRdvTemporarioInterno()
+{
+    return GetArquivoRdvInterno() + ".tmp";
+}
+
+std::string GetArquivoRdvTemporarioExterno()
+{
+    return GetArquivoRdvExterno() + ".tmp";
+}
+
+std::vector<uebyte> CRdv::Le(const std::string& arquivo) const
+{
+    api::CEncryptedFile cifrado(m_cifrador);
+    cifrado.Load(arquivo);
+    std::vector<uebyte> dados;
+    cifrado.Read(dados);
+    return dados;
+}
+
+bool CRdv::ConfereArquivo(const std::string& arquivo) const
+{
+    return Confere(Le(arquivo));
+}
+
+void CRdv::SalvaTemporarioInterno() const
+{
+    Salva(GetArquivoRdvTemporarioInterno());
+}
+
+bool CRdv::ConfereTemporarioInterno() const
+{
+    return ConfereArquivo(GetArquivoRdvTemporarioInterno());
+}
+
+void SubstituiRdvInterno()
+{
+    api::CSystem::ReplaceFile(GetArquivoRdvTemporarioInterno(), GetArquivoRdvInterno(), "");
+}
+
+void CRdv::SalvaTemporarioExterno() const
+{
+    Salva(GetArquivoRdvTemporarioExterno());
+}
+
+bool CRdv::ConfereTemporarioExterno() const
+{
+    return ConfereArquivo(GetArquivoRdvTemporarioExterno());
+}
+
+void SubstituiRdvExterno()
+{
+    api::CSystem::ReplaceFile(GetArquivoRdvTemporarioExterno(), GetArquivoRdvExterno(), "");
 }
 
 void CRdv::Salva(const std::string& arquivo) const

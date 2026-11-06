@@ -4,9 +4,9 @@
 // destructor's vptr store names, vota::CAssinadorVota's destructor (7766, fragment 165) and vota::CSincronizaVota's
 // SincronizaRelatorios, GravaBancoDadosMI, AssinaRDVEBancoDados, SincronizaEstadoGeralVota and SincronizaEstadoGeral
 // (1836, 4657, 4668, 491, 3333, fragment 205) are reconstructed, and so is 10590 (unit 283), which holds
-// SincronizaJustificativa's signing inlined. These two noinline callers stand in for the two others (7174 12098), with
-// different bodies so that
-// binaryen does not merge them into one; they are address-taken from a static constructor.
+// SincronizaJustificativa's signing inlined, and 7174 (unit 241), which holds two calls through the
+// vota::CSincronizaVota members binaryen inlines into it. The noinline caller below stands in for the last, 12098; it is
+// address-taken from a static constructor.
 // Declared through an asm label with the wasm-level signature (a non-deleting destructor returns `this`); compiled
 // with APP_CXXFLAGS.
 extern "C" {
@@ -20,14 +20,8 @@ __attribute__((noinline)) void DestroiAssinadorA(int assinador)
     w1007_root_0(assinador);
 }
 
-// destroys two objects, so that its body differs from DestroiAssinadorA's and from every target function: a stand-in
-// that only returns the destructor's result is vota::CAssinadorVota's destructor (fn 7766, a thunk into 1007) byte
-// for byte, and the census and the splat scan pair it with that function
-__attribute__((noinline)) void DestroiAssinadoresB(int primeiro, int segundo)
-{
-    w1007_root_0(primeiro);
-    w1007_root_0(segundo);
-}
+// It drops the destructor's result: a stand-in that only returns it is vota::CAssinadorVota's destructor (fn 7766, a
+// thunk into 1007) byte for byte, and the census and the splat scan pair it with that function.
 
 void* volatile w1007_sink;
 
@@ -35,7 +29,6 @@ struct SW1007Roots {
     SW1007Roots()
     {
         w1007_sink = reinterpret_cast<void*>(&DestroiAssinadorA);
-        w1007_sink = reinterpret_cast<void*>(&DestroiAssinadoresB);
     }
 } w1007_roots;
 

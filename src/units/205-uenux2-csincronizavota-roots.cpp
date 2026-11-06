@@ -2,17 +2,18 @@
 // the link holds are counted (SincronizaBancoDados calls VerificaUrnaDesligando, inlined, and GravaBancoDadosMI, which
 // calls GravaBancoDadosMV), and these stand-ins, each with a body of its own (no two of one shape, so that binaryen
 // merges none), stand for the rest, none of which is written:
-// - fn 1685 (api::CUeDesligandoError's constructor) is called by the throw of VerificaUrnaDesligando, which clang inlines
-//   into each of its seven target callers (491, 1836, 3333, 4662, 6737, 7174, 10590); 4662 is SincronizaBancoDados,
-//   1836 SincronizaRelatorios, 491 SincronizaEstadoGeralVota, 3333 SincronizaEstadoGeral and 10590
-//   vota::CPedeAnoNascimento::ProcessInput (unit 283, through SincronizaJustificativa), in the link, so every call
+// - fn 1685 (api::CUeDesligandoError's constructor) is called by the throw of VerificaUrnaDesligando, which the target
+//   holds inlined in each of its seven target callers (491, 1836, 3333, 4662, 6737, 7174, 10590), all in the link: 4662
+//   is SincronizaBancoDados, 1836 SincronizaRelatorios, 491 SincronizaEstadoGeralVota, 3333 SincronizaEstadoGeral,
+//   10590 vota::CPedeAnoNascimento::ProcessInput (unit 283, through SincronizaJustificativa), 7174
+//   vota::impl::CSincronismoVotoEleitor::Sincroniza (unit 241, through SincronizaVotoMI and SincronizaVotoMV) and 6737
+//   vota::CEstadoAudio::GeraDadosDinamicos (unit 116, its one out-of-line call, which binaryen inlines), so every call
 //   passes the location of csincronizavota.cpp 47:15 and dead-argument elimination folds it as in the target;
 // - SincronizaAssinaturaVota (fn 4687) and GravaBancoDadosMI (fn 4657) need no stand-in: their target callers, 491 and
-//   10590, and 4662 and 10590, are in the link;
-// - GravaBancoDadosMV (fn 4682): callers 4657 (written) and 7174;
+//   10590, and 4662 and 10590, are in the link; nor do GravaBancoDadosMV (fn 4682: callers 4657 and 7174) and
+//   AssinaRDVEBancoDados (fn 4668: caller 6737, twice), whose callers are in the link too;
 // - SincronizaBancoDados (fn 4662): callers 7787 and 10786 (CControladorRegistraMesariosVota's slot 16, unit 119's, in
 //   the link);
-// - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
 // - SincronizaRelatorios (fn 1836): callers 11943 and 11946 (in the link: fragment 325's notes), 12105 (three times,
 //   in the link: fragment 372's) and 12110, the slot 2 of four vota states.
 // - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 23 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
@@ -26,27 +27,11 @@
 
 namespace {
 
-// stands for fn 7174, GravaBancoDadosMV's other target caller (4657 is in the link); its calls of
-// SincronizaAssinaturaVota and GravaBancoDadosMI went with 10590 in the link
-__attribute__((noinline)) int w205_banco(int passo)
-{
-    vota::CSincronizaVota::GravaBancoDadosMV();
-    return passo + 3;
-}
-
 // stands for fn 7787 (10786 is in the link)
 __attribute__((noinline)) int w205_sincroniza(int vezes)
 {
     vota::CSincronizaVota::SincronizaBancoDados();
     return vezes * 2;
-}
-
-// stands for fn 6737
-__attribute__((noinline)) int w205_assina(int base)
-{
-    vota::CSincronizaVota::AssinaRDVEBancoDados();
-    vota::CSincronizaVota::AssinaRDVEBancoDados();
-    return base * 3;
 }
 
 // stands for fn 12110, which passes the report it wrote (11943, 11946 and 12105 are in the link: the call that stood
@@ -79,9 +64,7 @@ const void* volatile w205_sink;
 struct SW205Roots {
     SW205Roots()
     {
-        w205_sink = reinterpret_cast<const void*>(&w205_banco);
         w205_sink = reinterpret_cast<const void*>(&w205_sincroniza);
-        w205_sink = reinterpret_cast<const void*>(&w205_assina);
         w205_sink = reinterpret_cast<const void*>(&w205_relatorios);
         w205_sink = reinterpret_cast<const void*>(&w205_desligando);
         w205_sink = reinterpret_cast<const void*>(&w205_estado);

@@ -1,7 +1,9 @@
 // Roots: keep the singletons' GetInst, the destructors of their classes and the members written with them in the skeleton
 // link the way the target reaches them. Each has direct callers and needs two call sites in the link, the reconstructed
 // callers counted, and this file adds what the link lacks. Stand-ins and the target callers they stand for:
-//   TodasAsInstancias   GetInst: fns 187, 273, 326, 407, 555, 1073, 1926, 2812, 2817 have 4 to 105 direct callers each
+//   TodasAsInstancias   GetInst: fns 187, 273, 326 and 555, for their direct callers not in the link (its calls of 407,
+//                       1073, 1926, 2812 and 2817 went: every target caller of each is in the link with the call, and
+//                       the link without those calls moved no row)
 //   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 7787 for 5671, 5730, 5734,
 //                       5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
 //                       ~CProcessoEleitoral 2830: 7787 (2787 and 5598 are in the link);
@@ -12,12 +14,11 @@
 //   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
 //                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
 //                       stand-in reads it (R18)
-//   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, CHV::GetHorarioVerao 5745, and GetCargo 861 once, for
-//                       13550 (its 11 other callers are in the link)
+//   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, and GetCargo 861 once, for 13550 (its 11 other
+//                       callers are in the link); its calls of CHV::GetHorarioVerao 5745 went: its target callers, 11198
+//                       and 11199, are in the link with the call, and the link without them moved no row
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
-//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
-//                       in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
@@ -41,10 +42,6 @@ int w273(void) __asm__("_ZN5comum7CCargos7GetInstEv");
 int w326(void) __asm__("_ZN5comum10CEleitores7GetInstEv");
 int w407(void) __asm__("_ZN4vota10CTelasVota7GetInstEv");
 int w555(void) __asm__("_ZN5comum8CRdvVota7GetInstEv");
-int w1073(void) __asm__("_ZN5comum3CPE7GetInstEv");
-int w1926(void) __asm__("_ZN5comum2md20CValidadorIdentidade7GetInstEv");
-int w2812(void) __asm__("_ZN5comum10CRespostas7GetInstEv");
-int w2817(void) __asm__("_ZN5comum3CHV7GetInstEv");
 
 int d267(int) __asm__("_ZN5comum2md16CDetalheConsultaD2Ev");
 int d242(int) __asm__("_ZN5comum2md17CDetalheCandidatoD2Ev");
@@ -55,7 +52,6 @@ void w2269(int) __asm__("_ZN5comum7CCargos5ResetEv");
 int w332(int) __asm__("_ZNK5comum7CCargos10GetCurrentEv");
 int w2836(int) __asm__("_ZNK5comum7CCargos17GetCurrentEleicaoEv");
 int w861(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao8GetCargoEh");
-int w5745(int) __asm__("_ZNK5comum3CHV15GetHorarioVeraoEv");
 int d2830(int) __asm__("_ZN5comum2md18CProcessoEleitoralD2Ev");
 int d5671(int) __asm__("_ZN5comum2md20CValidadorIdentidadeD1Ev");
 int d5730(int) __asm__("_ZN5comum10CRespostasD1Ev");
@@ -67,7 +63,6 @@ int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
 
 void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
 void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
-int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
@@ -80,9 +75,7 @@ namespace {
 
 __attribute__((noinline)) int TodasAsInstancias()
 {
-    return (w187() ^ w187()) + (w273() ^ w273() * 3) + (w326() ^ w326() * 5) + (w407() ^ w407() * 7) +
-           (w555() ^ w555() * 9) + (w1073() ^ w1073() * 11) + (w1926() ^ w1926() * 13) + (w2812() ^ w2812() * 15) +
-           (w2817() ^ w2817() * 17);
+    return (w187() ^ w187()) + (w273() ^ w273() * 3) + (w326() ^ w326() * 5) + (w555() ^ w555() * 9);
 }
 
 __attribute__((noinline)) void DestroiTodos(int p)
@@ -101,10 +94,9 @@ __attribute__((noinline)) void DestroiTodos(int p)
     d5805(p + 48);
 }
 
-__attribute__((noinline)) int ConsultaTodos(int cargos, int configuracao, int hv)
+__attribute__((noinline)) int ConsultaTodos(int cargos, int configuracao)
 {
-    return (w332(cargos) ^ w332(cargos + 28) * 3) + (w2836(cargos) ^ w2836(cargos + 28) * 5) +
-           w861(configuracao, 1) * 7 + (w5745(hv) ^ w5745(hv + 28) * 9);
+    return (w332(cargos) ^ w332(cargos + 28) * 3) + (w2836(cargos) ^ w2836(cargos + 28) * 5) + w861(configuracao, 1) * 7;
 }
 
 __attribute__((noinline)) int DestroiDecoradores(int p)
@@ -126,11 +118,6 @@ __attribute__((noinline)) int QuantidadesAptos(int eleitores)
     int quantidade[2];
     w2823(reinterpret_cast<int>(&quantidade[0]), eleitores);
     return (quantidade[0] & 0xffff) + (quantidade[1] >> 16);
-}
-
-__attribute__((noinline)) int ConsultaDinamicos(int detalhe)
-{
-    return w1271(detalhe + 204) * 3;
 }
 
 __attribute__((noinline)) void LeImpedidos(int resultado, int arquivos)
@@ -171,7 +158,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w407);
         singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
-        singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);

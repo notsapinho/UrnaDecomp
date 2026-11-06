@@ -8,6 +8,10 @@
 // and the members no record names join it: that they are members, their names and this header's path are chosen.
 // Only what a written function needs is declared.
 
+namespace comum {
+class CEleitores;
+} // namespace comum
+
 namespace vota {
 
 class CSincronizaVota {
@@ -45,6 +49,21 @@ public:
     // No target index: binaryen inlined it into SincronizaRelatorios (fn 1836), its one caller, behind a stack frame of
     // its own. Name chosen from what it does.
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);
+    // No target index: steps of vota::CEstadoAudio::GeraDadosDinamicos (fn 6737, cestadoaudio.cpp), their one caller,
+    // which holds each behind a frame of its own, as binaryen inlined them (src/units/205-uenux2-csincronizavota.mk).
+    // Names chosen from what they do; their being members here is chosen.
+    static void CriaBancoDadosMI(const comum::CEleitores& eleitores);
+    static void CriaBancoDadosMV(const comum::CEleitores& eleitores);
+    static void SincronizaAssinaturaDadosDinamicos();
+    // No target index: steps of SincronizaVotoMV that clang leaves out of line and binaryen inlines into fn 7174 behind
+    // frames of their own. Names chosen.
+    static void CopiaBancoDadosMV();
+    static void SincronizaAssinaturaRDV();
+    // No target index: the internal and external flash's halves of vota::impl::CSincronismoVotoEleitor::Sincroniza (fn
+    // 7174, csincronismovotoeleitor.cpp), their one caller, which binaryen inlined there; each holds this file's
+    // anonymous SincronizaRDVInternoSeguro or SincronizaRDVExternoSeguro (records 290 and 303). Names chosen.
+    static void SincronizaVotoMI();
+    static void SincronizaVotoMV();
 
     // The byte at 1832936 that VerificaUrnaDesligando tests: 14 target functions read it (`== 1`, `& 1` or a bare test)
     // and fn 3336, its one store, sets it to 1. That it is a bool is a choice that fits every read. One reader tests it

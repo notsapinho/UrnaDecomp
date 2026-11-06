@@ -8,8 +8,8 @@
 // CEleitorDetalhe::MarcaHabilitado inlined) and 10210 (which holds CEleitorDetalhe::MarcaVotou inlined, unit 104's
 // csincronismooperador.cpp) are all in the link: it has no stand-in. CConversorTipoIdentificadorEleitor's vtable
 // (@1570668) is what the target keeps that converter by (slots 2 and 3, table slots 2773 and 2774, no direct caller);
-// the one target function that stores its vptr, 11363 (CConversorProcessoEleitoral::DoDesconverte, unit 140), is in
-// the link too, and the sink stays until a link without it is measured (src/units/README.md "Companion files").
+// it has no sink: the one target function that stores its vptr, 11363 (CConversorProcessoEleitoral::DoDesconverte,
+// unit 140), is in the link, and the link without the sink moved no row.
 // CConversorImpedido's vtable (@1567096) has no sink: its slots 2 and 3 (table slots 2633 and 2634, fns 11409 and
 // 11410) have no direct caller either, and the one target function that stores its vptr, 11517 (the std::function
 // body of CEleitores::GetEleitoresImpedidos's lambda, unit 110's celeitores.cpp), is in the link.
@@ -17,7 +17,6 @@
 // link (cconversorimpedido.cpp). Declared through asm labels with the object's signatures, so this TU needs no uenux2
 // or ASN.1 header and instantiates nothing.
 extern "C" {
-extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 void w2543_root() __asm__("_ZN5comum24VerificaIntegridadeVotosEv");
 void w2834_root(void*, int) __asm__("_ZNK5comum7CCargos13GetMapaCargosEv");
@@ -31,8 +30,8 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
     w2263_root(segundo + 16);
 }
 
-// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos): 6734, 7174 (twice) and 12098, none in the
-// link.
+// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos) 6734 and 12098, not in the link; the third,
+// 7174, which calls it twice, is (unit 241).
 __attribute__((noinline)) void VerificaDuasVezes(int vezes)
 {
     w2543_root();
@@ -56,7 +55,6 @@ const void* volatile comum_dados_sink;
 struct SComumDadosRoots {
     SComumDadosRoots()
     {
-        comum_dados_sink = tipoidentificador_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
         comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);
