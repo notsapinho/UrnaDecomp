@@ -8,9 +8,9 @@
 //   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442), which makes RegistraVoto's calls;
 //   FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn 7352) and suspenderEleitor. All are in the link: no
 //   stand-in.
-// - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: fn 5761, not
-//   written, and fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor inlined, and CEleitores' slot 0 (fn
-//   2824, unit 110's), both in the link. Abrange stands for fn 5761.
+// - comum::md::CEleitorDecorator::GetAbrangencia (fn 3721) has three direct callers in the target: fn 5761
+//   (CEleitores::DynamicCreate, unit 383's), fn 7377 (StartState), which holds GetCurrentAbrangenciaEleitor inlined,
+//   and CEleitores' slot 0 (fn 2824, unit 110's), all in the link: Abrange, which stood for 5761, went.
 // - comum::CCargos::OrdenaPorImpressao (fn 3782) has three direct callers in the target, fns 5604, 12098 and 12110;
 //   5604 (unit 155's) is in the link: Imprime stands for the other two, two call sites.
 // - The std::map<SCargoInfo, CVotos> copy of comum::md::CVotosCargos::InsereCedula (held by fn 4454) calls
@@ -21,20 +21,12 @@
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-int w197_abrangencia(const void* eleitor, const void* uf, unsigned int municipio) __asm__(
-    "_ZNK5comum2md17CEleitorDecorator14GetAbrangenciaERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEj");
 void w197_ordena_impressao(void* cargos) __asm__("_ZN5comum7CCargos18OrdenaPorImpressaoEv");
 }
 
 namespace {
 
 const void* volatile celeitorvotando_sink;
-
-// stands for fn 5761
-__attribute__((noinline)) int Abrange(const char* registro, const char* eleitores)
-{
-    return w197_abrangencia(registro + 32, eleitores + 32, eleitores[44] + 197u);
-}
 
 // stands for fns 12098 and 12110 (5604, unit 155's, is in the link)
 __attribute__((noinline)) void Imprime(char* cargos, int vezes)
@@ -48,7 +40,6 @@ __attribute__((noinline)) void Imprime(char* cargos, int vezes)
 struct SCEleitorVotandoRoots {
     SCEleitorVotandoRoots()
     {
-        celeitorvotando_sink = reinterpret_cast<const void*>(&Abrange);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Imprime);
     }
 } celeitorvotando_roots;

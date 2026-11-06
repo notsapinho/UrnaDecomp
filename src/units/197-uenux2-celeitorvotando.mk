@@ -207,12 +207,12 @@
 # whose slots are all written: the pending file went with ProcessKey.
 # 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem, which stood for GetInst's fn 7481,
 # went when unit 104 wrote 7481 (7428 and 11754 were in the link; Registra, which stood for 11754's RegistraVoto calls,
-# went before), Abrange for GetAbrangencia's (fn 5761; 2824 is in the link), Imprime for OrdenaPorImpressao's (fns 12098
-# and 12110; 5604 is in the link). Procura, which stood for 3251's caller 2386, went when unit 150 wrote 2386. Precisa
-# and Inicia, which stood for 7352 and 7377, went with them, Suspende, which stood for suspenderEleitor's (fn 4442)
-# calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442, and Converte, which stood for 5681's caller
-# 11349, with 11349 (unit 140's). GetInst's constructor stores the vptr, the target's one reference to the vtable, so no
-# root takes it.
+# went before), Imprime for OrdenaPorImpressao's (fns 12098 and 12110; 5604 is in the link). Abrange, which stood for
+# GetAbrangencia's caller 5761, went when unit 383 wrote 5761. Procura, which stood for 3251's caller 2386, went when
+# unit 150 wrote 2386. Precisa and Inicia, which stood for 7352 and 7377, went with them, Suspende, which stood for
+# suspenderEleitor's (fn 4442) calls of AdicionaVoto, the five loggers and FinalizaEleitor, with 4442, and Converte,
+# which stood for 5681's caller 11349, with 11349 (unit 140's). GetInst's constructor stores the vptr, the target's one
+# reference to the vtable, so no root takes it.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
 # g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's members' names, SVotoCargo and its members' names,

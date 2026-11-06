@@ -6,6 +6,7 @@
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "ecourna/api/uetypes.hpp"
 #include "ecourna/app/dados/resultadournacadastro/capresentacaofotoeleitor.hpp"
+#include "ecourna/app/dados/resultadournacadastro/cestadocomparecimento.hpp"
 
 namespace comum::md {
 
@@ -22,7 +23,7 @@ namespace comum::md {
 // Constructors: fns 5664 and 5663, the second with the optional, whose one difference is that argument. The parameters'
 // order is the wasm's and their types what the bodies do; their callers (3766, 11542, CEleitorDinamicoDAO's SELECTs) pass
 // the columns in that order. The photo's reference could be a by-value parameter, since the caller passes an address
-// either way.
+// either way. The third constructor, fn 2800, is below.
 class CEleitorDinamico {
 public:
     CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEleitorIdentidade& identidadeHabilitacao,
@@ -34,6 +35,20 @@ public:
                      ueword scoreHabilitacao, uebyte numeroTentativa, int tipoAtivacaoAudio, int erroDecifrarBiometria,
                      const CEleitorIdentidade& tituloMesarioHabilitacao,
                      const ecourna::app::dados::CApresentacaoFotoEleitor& apresentacaoFoto);
+    // Fn 2800: the two identities and the state, every other member at a constant (tipoHabilitacao, dedo, score and
+    // numeroTentativa 0, tipoAtivacaoAudio 2, erroDecifrarBiometria 0, no title, the photo's constructor, fn 1081, over
+    // 0 and 0). CEleitores::DynamicCreate (fn 5761) calls it in two std::vector::emplace_back slow paths binaryen
+    // inlined there: one passes the constant 0 itself and the other loads the state from the caller's frame, which an
+    // emplace_back with two arguments and one with three give (the third bound to the slow path's reference); hence the
+    // default. The parameters' names, the default's spelling and the line in celeitordinamico.cpp are chosen.
+    CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEleitorIdentidade& identidadeHabilitacao,
+                     int estadoComparecimento = ecourna::app::dados::CEstadoComparecimento::Faltou);
+
+    // DynamicCreate compares the records it builds with the table's (src/units/383-uenux2-celeitores-dinamicos.mk lists
+    // the tests in their order). Out of line in celeitordinamico.cpp: 5761 holds it behind a result kept in a local and
+    // tested again, binaryen's inlining of its one call (docs/reference/facts/reading.md R10); its being a member and
+    // its file are chosen.
+    bool operator==(const CEleitorDinamico& outro) const;
 
     const CEleitorIdentidade& GetEleitor() const { return m_eleitor; }
     const CEleitorIdentidade& GetIdentidadeHabilitacao() const { return m_identidadeHabilitacao; }
@@ -47,6 +62,20 @@ public:
     bool TemTituloMesarioHabilitacao() const { return m_tituloMesarioHabilitacao.has_value(); }
     const CEleitorIdentidade& GetTituloMesarioHabilitacao() const;
     const ecourna::app::dados::CApresentacaoFotoEleitor& GetApresentacaoFoto() const { return m_apresentacaoFoto; }
+
+    // The state's values are ecourna's CEstadoComparecimento::ESituacaoComparecimento's (its converter's table, fn
+    // 9080): DynamicCreate stores 0 or 1 by whether the voter has an election to vote in, MarcaHabilitado 2 and
+    // MarcaVotou 3, a reading. The equality tests each value on both sides, the target's four `xor`s of `== 3`, `== 2`,
+    // `== 1` and `== 0`, and the biometric fields only when both voters are enabled by biometrics (state 2 or 3, kind
+    // 1). The predicates, their names and their being members are chosen.
+    bool Faltou() const { return m_estadoComparecimento == ecourna::app::dados::CEstadoComparecimento::Faltou; }
+    bool SemCargoParaVotar() const
+    {
+        return m_estadoComparecimento == ecourna::app::dados::CEstadoComparecimento::SemCargoParaVotar;
+    }
+    bool NaoVotou() const { return m_estadoComparecimento == ecourna::app::dados::CEstadoComparecimento::NaoVotou; }
+    bool Votou() const { return m_estadoComparecimento == ecourna::app::dados::CEstadoComparecimento::Votou; }
+    bool HabilitadoPorBiometria() const { return (NaoVotou() || Votou()) && m_tipoHabilitacao == 1; }
 
     // How CEleitorDetalhe::MarcaHabilitado (inlined into target fn 2825) changes a voter who showed up. Each kind of
     // enabling stores the state 2, its kind and its own set of the members after them, in reverse member order, from

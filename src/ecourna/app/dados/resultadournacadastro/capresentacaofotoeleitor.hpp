@@ -31,6 +31,11 @@ public:
     EEstado GetEstado() const { return m_estado; }
     EResultado GetResultado() const { return m_resultado; }
 
+    // comum::md::CEleitorDinamico's equality (inlined into target fn 5761) compares the two words with no branch
+    // between them, as an inline function of their own gives; the GetEstado and GetResultado tests written in place
+    // keep a branch (src/units/383-uenux2-celeitores-dinamicos.mk). Defaulted is chosen.
+    bool operator==(const CApresentacaoFotoEleitor&) const = default;
+
 private:
     EEstado m_estado;
     EResultado m_resultado;
