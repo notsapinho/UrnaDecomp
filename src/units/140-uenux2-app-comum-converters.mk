@@ -119,8 +119,9 @@
 # testeteclado/cbase.cpp @1545768, iniciovotacao/creiniciovotacao.cpp @1546628, testeteclado/cretomada.cpp @1546700
 # and testeteclado/cesperaretestar.cpp @1546772). cconversorvotoscargo.cpp (vtable
 # @1570996) stays after it, inverted as before. Steps 7 to 9 on the moved link added 11349, 5681 and 4454 and moved one
-# other row, 11445 (unit 159's trap of CConversorCandidaturas::DoDesconverte), from no-candidate to differs: with this
-# unit's trap gone, our link no longer holds the two traps as one body under this unit's name (names.tsv at the base
+# other row, 11445 (then unit 159's trap of CConversorCandidaturas::DoDesconverte, written since), from no-candidate
+# to differs: with this unit's trap gone, our link no longer holds the two traps as one body under this unit's name
+# (names.tsv at the base
 # names 5369 from 140-uenux2-app-comum-converters-pending.o and nothing from 159's), so the vtable slot names 159's.
 # Matched: 11482, CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoDesconverte, the class template's member in
 # rdv/cconversorregistrodigitalvoto.h, which unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte

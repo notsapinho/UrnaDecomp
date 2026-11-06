@@ -78,11 +78,12 @@
 # - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
 #   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what its match took.
 # Not written:
-# - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
+# - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.
 # Written elsewhere: 5680, which holds Desconverte<EntidadeRegistroDigitalVoto, ...> so after its call of fn 5825, as
 # comum::asn::Decodifica (a chosen name), and 11488 (comum::CRdvVota::Converte), which holds that entity's Converte so:
-# unit 13's fragment.
+# unit 13's fragment. 5710, which holds Desconverte<ModuloCandidatos::Candidatura, ...> so, as
+# comum::asn::DesconverteCandidaturas (a chosen name): unit 159's fragment.
 # CConversorHorarioVerao (11385, 11384), whose two slots were this unit's -pending.cpp, and CConversorCabecalhoEntidade
 # (11589, 11588) and CConversorDadoCorrespondencia (11399, 11400) are fragment 172's, matched; the -pending.cpp went.
 #
@@ -101,8 +102,9 @@ ICONVERSOR_SRCS := src/app/comum/dados/md/municipiozona/cmunicipio.cpp \
 UENUX2_SRCS += $(ICONVERSOR_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ICONVERSOR_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# the callers of Converte and Desconverte are not reconstructed yet: 107-uenux2-iconversorasn-roots.cpp reaches them the
-# way the target does; the object's prerequisites are every header it reads
-$(ROOT)/$(APP)/107-uenux2-iconversorasn-roots.o: $(ROOT)/src/units/107-uenux2-iconversorasn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/107-uenux2-iconversorasn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+# every caller of Converte and Desconverte is written now (the last two instances' stand-in went once unit 159 wrote
+# 11445 and 11448): 107-uenux2-iconversorasn-roots.cpp keeps only CDadoLocal's constructor's table slot (5632), through
+# an asm label, so the object reads no header
+$(ROOT)/$(APP)/107-uenux2-iconversorasn-roots.o: $(ROOT)/src/units/107-uenux2-iconversorasn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/107-uenux2-iconversorasn.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/107-uenux2-iconversorasn-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/107-uenux2-iconversorasn-roots.o

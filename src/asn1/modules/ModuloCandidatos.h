@@ -21,6 +21,21 @@ class DadosCandidato : public ModuloTiposResultadosEcoUrna::DadosCandidato
 {
 };
 
+//
+// ModuloCandidatos::Candidatura
+//
+// No theInfo of the target names it and no object of it is built, so the schema has no entry: the name is the typeid
+// text "N16ModuloCandidatos11CandidaturaE" (@504613) that comum::asn::IConversorASN<ModuloCandidatos::Candidatura,
+// ...>'s default DoConverte (fn 11446) and its Desconverte (inlined in fn 5710) pass. A class and not a typedef, as
+// DadosCandidato above. The base's layout is what comum::asn::CConversorCandidatura::DoDesconverte (fn 11448) reads:
+// fields 0, 1 and 3 (numero, titular, suplentesVices) and optional field 0 (suplentesVices); its callers pass the
+// elements of ModuloTiposResultadosEcoUrna::CandidatoPorPartido's candidatosAptos and candidatosInaptos. The base's name
+// is chosen.
+
+class Candidatura : public ModuloTiposResultadosEcoUrna::Candidatura
+{
+};
+
 } // namespace ModuloCandidatos
 
 namespace ModuloTiposEleitorais {

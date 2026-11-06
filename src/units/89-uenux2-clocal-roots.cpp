@@ -3,11 +3,11 @@
 // taken. Every other function below has direct callers in the target and no table slot (ledger/callgraph.tsv), so each
 // noinline stand-in gives it two call sites and binaryen keeps its body out of line. The stand-ins differ in their operators, so binaryen merges none of them, and they take their
 // arguments as parameters, so dead-argument elimination folds none in. A constructor's result is kept where the target's
-// wasm type keeps it (fns 5677, 5679) and dropped where it does not (5660). Declared through asm labels with the
-// object's signatures; address-taken from a static constructor. md::CLocal's destructor (5744), CLocal::ValidaCriacao
-// (5673) and VerificaEhSecao (5742), CIndiceFoto's constructor (5659), and CInfoMunicipio's (5674, 5676) and
-// CComplementoMunicipio's (3710, 3711) constructors need none: their target callers (2261 and 5740; 11452, twice; 1933
-// and 11188; 11441 and 11442; 11423 and 11452; 11382, 11424 and 11451) are in the link.
+// wasm type keeps it (fns 5677, 5679). Declared through asm labels with the object's signatures; address-taken from a
+// static constructor. md::CLocal's destructor (5744), CLocal::ValidaCriacao (5673) and VerificaEhSecao (5742),
+// CIndiceFoto's constructor (5659), and CInfoMunicipio's (5674, 5676), CComplementoMunicipio's (3710, 3711) and
+// md::CCandidatura's (5660) constructors need none: their target callers (2261 and 5740; 11452, twice; 1933 and 11188;
+// 11441 and 11442; 11423 and 11452; 11382, 11424 and 11451; 11448, twice) are in the link.
 extern "C" {
 int w401() __asm__("_ZN5comum6CLocal7GetInstEv");
 int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
@@ -27,7 +27,6 @@ int w3725(int) __asm__("_ZNK5comum2md14CInfoMunicipio15GetHorarioVeraoEv");
 int w5679(int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1Ej");
 int w5677(int, int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1EjRKNS0_13CHorarioVeraoE");
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
-int w5660(int, int, int, int, int, int) __asm__("_ZN5comum2md12CCandidaturaC1EhtjRKNS0_15CDadosCandidatoERKNSt3__26vectorIS2_NS5_9allocatorIS2_EEEE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
@@ -49,7 +48,7 @@ __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
-__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 7787, 11448 (2871, 5950 linked)
+__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 7787 (1709, 2871, 5950, and unit 159's 5710 and 11448, linked)
 // CLocal's constructor (fn 2262) and destructor (fn 2261) need none: their target callers, 401, 1543, 4160, 5738 and
 // 12105 (fragment 372's), and 401, 1543, 4160, 5738 and 11508, are in the link; Construtores went with 12105.
 __attribute__((noinline)) int Zonas(int a, int b) { return w1003(a) + w1003(b); }
@@ -75,11 +74,6 @@ __attribute__((noinline)) int VeroesHorario(int a, int b, int c, int d)
     return w5677(a, c, d) >> (w5677(b, c + 2, d + 20) & 3);
 }
 __attribute__((noinline)) int HorariosComplemento(int a, int b) { return w2795(a) > w2795(b); }
-__attribute__((noinline)) void Candidaturas(int a, int b, int c, int d, int e, int f, int g)
-{
-    w5660(a, c, d, e, f, g);
-    w5660(b, c + 1, d, e + 1, f, g);
-}
 __attribute__((noinline)) int Suplentes(int a, int b) { return w1389(a, b) >= w1389(a, b + 1); }
 __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 {
@@ -123,7 +117,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Veroes);
         clocal_sink = reinterpret_cast<const void*>(&VeroesHorario);
         clocal_sink = reinterpret_cast<const void*>(&HorariosComplemento);
-        clocal_sink = reinterpret_cast<const void*>(&Candidaturas);
         clocal_sink = reinterpret_cast<const void*>(&Suplentes);
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
         clocal_sink = reinterpret_cast<const void*>(&Consultas);

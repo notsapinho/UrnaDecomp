@@ -1,13 +1,10 @@
 // Roots: reach comum::asn::IConversorASN<ENTIDADE, DADO>'s Desconverte (app/comum/asn/iconversorasn.h) the way the
-// target's callers do, until they land. Each instance here has direct callers only, at least two call sites in the
-// target (ledger/callgraph.tsv), and binaryen keeps it out of line for that, and merges those of one shape into fns
-// 1563 and 1008, with the record and the entity's typeid text as parameters. w107_desconverte calls an instance twice,
-// so each has two call sites, and the stand-in w107_todos, which holds them all, has a body no target function has.
-// The last Converte instance went: 2275's callers are all written.
-//
-// The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
-// a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
-// The callers each instance stands for:
+// target's callers do, until they land. Each instance has direct callers only, at least two call sites in the target
+// (ledger/callgraph.tsv), and binaryen keeps it out of line for that, and merges those of one shape into fns 1563 and
+// 1008, with the record and the entity's typeid text as parameters. No instance needs a stand-in now: w107_todos, which
+// called the last two twice each (through w107_desconverte), went with them. The last Converte instance went: 2275's
+// callers are all written.
+// The callers each instance stood for:
 //   3730, 3726, 3727 and 3736 need none: their callers 11411 and 10270, 11390 and 11394, 11391 and 11395, and 11424 and
 //   11451, are written.
 //   3737 and 3738 need none: their callers 11381, 11423 and 11452, and 11411, 10270 and 11457, are written. 3799 needs
@@ -15,9 +12,10 @@
 //   2275 and 5688 need none: their callers 10266, 10271, 10273, 11458 and 11587, and 11359 and 11375, are written.
 //   5692, 5691, 5696 and 5697 need none: their callers 11395 and 11398, 11394 and 11397, 11399 and 11403, and 11400 and
 //   11404, are written.
-//   5711: 11448. 5705, 5713 and 5714 need none: their callers 5706 and 11423, and 11424 and 11451, are written.
+//   5711 needs none: its caller 11448 (unit 159's, two calls) is written. 5705, 5713 and 5714 need none: their callers
+//   5706 and 11423, and 11424 and 11451, are written.
 //   5715 and 5716 need none: their callers 11423 and 11452 are written.
-//   5828: 11445 (11373 is written).
+//   5828 needs none: its callers 11373 and 11445 (unit 159's) are written.
 // 3823 needs none: its callers 2725 (unit 293's), 11412 and 11629 (unit 200's) are in the link, and w107_dados, which
 // stood for 11629, went. 5672's call went: its callers 5741 and 11455 are written. 3712 needs none:
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
@@ -29,59 +27,18 @@
 // CConversorMunicipio's: 11423, 11424, 11451 and 11452. CConversorIdentificacaoAgregada's: 11453 and 11454.
 // CConversorComplementoMunicipio's: 11381, 11423, 11424, 11451 and 11452. CConversorAbrangencia's: 11441, 11457 and
 // 11458.
-#include <new>
-
-#include "app/comum/asn/iconversorasn.h"
-#include "app/comum/dados/md/candidatura/cdadoscandidato.h"
-#include "app/comum/dados/md/csecaoeleitoral.h"
-#include "app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.h"
-#include "app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.h"
-#include "app/comum/dados/md/municipiozona/ccomplementomunicipio.h"
-#include "app/comum/dados/md/municipiozona/cmunicipio.h"
-#include "app/comum/md/ccabecalhopacote.h"
-#include "app/comum/md/cseguranca.h"
-#include "asn1/modules/ModuloCandidatos.h"
-#include "asn1/modules/ModuloComplementosMunicipios.h"
-#include "asn1/modules/ModuloEleicao.h"
-#include "asn1/modules/ModuloEstadoGeralDefs.h"
-#include "asn1/modules/ModuloLocal.h"
-#include "asn1/modules/ModuloProcessoEleitoral.h"
-#include "asn1/modules/ModuloTiposCadastro.h"
-#include "asn1/modules/ModuloTiposEleitorais.h"
-#include "asn1/modules/ModuloTiposResultadosEcoUrna.h"
-
+// Declared through an asm label, so this TU needs no uenux2 or ASN.1 header and instantiates nothing.
 extern "C" {
 int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE");
 }
 
 namespace {
 
-template <typename ENTIDADE, typename DADO>
-inline char* w107_desconverte(char* destino, const char* entrada)
-{
-    const auto& conversor = *reinterpret_cast<const comum::asn::IConversorASN<ENTIDADE, DADO>*>(entrada);
-    const auto& entidade = *reinterpret_cast<const ENTIDADE*>(entrada + 8);
-    ::new (destino) DADO(conversor.Desconverte(entidade));
-    ::new (destino + 256) DADO(conversor.Desconverte(entidade));
-    return destino + 512;
-}
-
-__attribute__((noinline)) char* w107_todos(char* d, const char* e)
-{
-    using namespace comum::md;
-    using namespace comum::md::estadoaplicacao;
-    d = w107_desconverte<ModuloCandidatos::DadosCandidato, CDadosCandidato>(d, e);
-    d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
-    return d;
-}
-
-char* (*volatile w107_sink)(char*, const char*);
 const void* volatile w107_sink_vt;
 
 struct SIConversorRoots {
     SIConversorRoots()
     {
-        w107_sink = &w107_todos;
         w107_sink_vt = reinterpret_cast<const void*>(&w5632);
     }
 } w107_roots;

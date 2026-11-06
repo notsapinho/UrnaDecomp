@@ -37,8 +37,8 @@
 // without CandidaturasCarregadas, which stood for 11884, moved no row).
 //
 // std::__uninitialized_allocator_relocate over comum::md::CCandidatura (fn 5950, the copy 5953's push_back makes
-// cvisualizarcandidatos.cpp.o emit first) has two direct callers in the target, fns 5953 (in the link) and 5710 (not
-// written): CandidaturasRelocadas stands for 5710 with one call.
+// cvisualizarcandidatos.cpp.o emit first) has two direct callers in the target, fns 5953 and 5710, both in the link
+// (5710 is unit 159's comum::asn::DesconverteCandidaturas): CandidaturasRelocadas, which stood for 5710, went.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -50,8 +50,6 @@ int w150_telas_cargo(void* telas, int id, const void* mapa) __asm__(
 extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
 int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
 int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
-void w150_reloca(void* alocador, void* inicio, void* fim, void* destino) __asm__(
-    "_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md12CCandidaturaEEEPS4_EEvRT_T0_S9_S9_");
 }
 
 namespace {
@@ -90,14 +88,6 @@ __attribute__((noinline)) int CargoVisualizado(const void* estado, const void* o
     return w150_cargo(estado) - static_cast<const char*>(outro)[3];
 }
 
-// stands for fn 5710 (5953 is in the link)
-__attribute__((noinline)) int CandidaturasRelocadas(char* inicio, char* fim)
-{
-    char alocador;
-    w150_reloca(&alocador, inicio, fim, fim + 72);
-    return 23;
-}
-
 struct SEleitorEstadosRoots {
     SEleitorEstadosRoots()
     {
@@ -106,7 +96,6 @@ struct SEleitorEstadosRoots {
         eleitor_estados_sink = reinterpret_cast<const void*>(&TelasCargo);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
         eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&CandidaturasRelocadas);
     }
 } eleitor_estados_roots;
 
