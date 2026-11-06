@@ -79,15 +79,15 @@
 #   vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491); CVerificaHorarioZeresima::GetInst() (fn 5947) stored
 #   at +4, m_pNextState. The text names the local vota. CAppInfo::GetInst is called before 6737 and 6734 and GetVota
 #   after them, so its result is a local declared above the two calls (a reading of the calls' order). The record's
-#   column is the ASSERT invocation's closing parenthesis on a line of its own (api/util/eueasserterror.h says what
-#   that gives the enumerator's name). 14 over 49 rows, all operand-only (pnpm wasm score on the plain link before
-#   steps 7 to 9: the calls, the data addresses and the throw's destructor slot, the target's 69 against our 43); step
-#   8 names it by srcloc-anchor. StartState is the class's key function, so cgeradadosdinamicos.cpp.o emits the
-#   vtable and typeinfo now, which the -pending.o did; the target's vtable (@1545964, 44 bytes) ends where the record
-#   of :47 (@1546008) begins. In band 1 (ledger/ordinals.tsv) 11867, 11866 and 11865 run in that order of ld_index
-#   (names.tsv): the statics stay defined above StartState. It made two stand-ins idle, and both went (steps 6 to 9
-#   run again without them moved no row): unit 386's GeraDadosDinamicos (11865's call of 6734) and unit 138's
-#   ChamaVerificaHorarioZeresima (its call of 5947), that roots file's last.
+#   column is the ASSERT invocation's closing parenthesis on a later line, the code alone there (a chosen layout:
+#   api/util/eueasserterror.h says what that gives the enumerator's name). 14 over 49 rows, all operand-only (pnpm wasm
+#   score on the plain link before steps 7 to 9: the calls, the data addresses and the throw's destructor slot, the
+#   target's 69 against our 43); step 8 names it by srcloc-anchor. StartState is the class's key function, so
+#   cgeradadosdinamicos.cpp.o emits the vtable and typeinfo now, which the -pending.o did; the target's vtable
+#   (@1545964, 44 bytes) ends where the record of :47 (@1546008) begins. In band 1 (ledger/ordinals.tsv) 11867, 11866
+#   and 11865 run in that order of ld_index (names.tsv): the statics stay defined above StartState. It made two
+#   stand-ins idle, and both went (steps 6 to 9 run again without them moved no row): unit 386's GeraDadosDinamicos
+#   (11865's call of 6734) and unit 138's ChamaVerificaHorarioZeresima (its call of 5947), that roots file's last.
 #
 # Chosen, no evidence names them: the paths, by how-to step 3's rule 4 (the class name in lower case) where no record
 # names the file (cdefinerotaprevotacao.cpp, ciniciovotacao.cpp), each header beside its .cpp, and the directory:

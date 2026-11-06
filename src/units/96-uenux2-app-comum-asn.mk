@@ -145,6 +145,7 @@ UENUX2_SRCS += $(COMUM_ASN_SRCS)
 # No roots: the members' callers are all in the link, and so is CConversorDadosCandidato's vtable's one storer, 11448
 # (unit 159's CConversorCandidatura::DoDesconverte): the roots file, whose sink kept that vtable, went with it.
 # cconversordadoscandidato.cpp also holds CConversorDadosCandidato's constructor, out of line for 11448, which holds it
-# inlined by binaryen (cconversordadoscandidato.h and fragment 159 say what shows it); it has no target index of its own.
+# inlined by binaryen (a reading: cconversordadoscandidato.h and fragment 159 say what shows it); it has no target
+# index of its own.
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))

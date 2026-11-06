@@ -38,18 +38,23 @@
 # - slots 22 and 24, DrawImage (9079, 9058), DrawMovie's shape over ImageSize. Same functions: the data held by `const
 #   std::vector<uint8_t>&` or `const auto`, `!largura || !altura` for the two tests. Not free: 9058 scales the natural
 #   width before the height; the other order differs.
-# - slots 17 and 18, FillPath and DrawPath (9146, 9125), match, and so does the scaling they share, a private member
-#   EscalaCaminho (fn 5113, whose name is chosen; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670,
-#   which matches). The tree's -O3 inlines `tipos.push_back` as the target does (at cost 225,
-#   docs/reference/facts/levels.md V2). At -O2 their two push_backs stayed calls of one vector<int> body, a twin of
-#   vector<long>'s in roots_boost.o, which equals target fn 543 by bytes; at -O3 543 still matched, from roots_boost.o,
-#   and since the Boost tree root's do_assign line it matches from crespostas.cpp.o's vector<unsigned>::push_back(&&)
-#   (src/units/89-uenux2-clocal.mk).
-#   5113 matches with each command's products written in its braces, which call SPathCommand's 7-argument constructor
-#   (cstepsprogressbar.h: unit 41's choice, which stands in for a header whose constructors, if any, are not known):
+# - slots 17 and 18, FillPath and DrawPath (9146, 9125), match, and so does the scaling they share, a private const
+#   member EscalaCaminho (fn 5113; its name, its being a member, private and const are chosen: no record, slot or RTTI
+#   shows them, how-to step 3; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670, which matches).
+#   The tree's -O3 inlines `tipos.push_back` as the target does (at cost 225, docs/reference/facts/levels.md V2). At -O2
+#   their two push_backs stayed calls of one vector<int> body, a twin of vector<long>'s in roots_boost.o, which equals
+#   target fn 543 by bytes; at -O3 543 still matched, from roots_boost.o, and since the Boost tree root's do_assign line
+#   it matches from crespostas.cpp.o's vector<unsigned>::push_back(&&) (src/units/89-uenux2-clocal.mk). 5113 matches
+#   with each command's products written in its braces, which call SPathCommand's 7-argument constructor
+#   (cstepsprogressbar.h, unit 41's: its parameters and defaults are chosen; that a constructor exists is a reading of
+#   5113's bytes, built as a constructor call builds them, where the form without constructors scored 70 over 264):
 #   for MOVE_TO, LINE_TO and ARC the target reads every value of the command before its first store and stores the type
-#   (and an arc's two angles) before the scaled coordinates, and so does that form. `push_back(api::SPathCommand(...))`
-#   gives the same object. With the products held in locals first, the form before, the whole link scored 38 over 256
+#   (and an arc's two angles) before the scaled coordinates, and so does that form. Measured to give the same bytes,
+#   the braces chosen among them: `push_back(api::SPathCommand(...))`, `push_back(api::SPathCommand{...})` and a named
+#   local moved in (`api::SPathCommand novo(...); escalado.push_back(std::move(novo));`, the CLOSE case's shape) give
+#   the same object; a `const` local passed to `push_back(const&)` gives an object that calls that overload, whose body
+#   binaryen folds with `push_back(&&)`'s, so the link's bytes are the same and step 9 would rename 2670's match line to
+#   `push_back(const&)`. With the products held in locals first, the form before, the whole link scored 38 over 256
 #   rows; on the object, the products written the other way round (`comando.x * m_escalaX`) give other code, and so
 #   does `emplace_back`, whose three cases grow the vector in place (calls of operator new and delete) where the target
 #   calls push_back (2670) in all four. The CLOSE case is unchanged: a value-initialized
@@ -57,7 +62,7 @@
 #   target has). 9146 and 9125 are named by vtable alone and cast no call votes; the `callers+content` hand line that
 #   named 5113 for them went with this match: on copies of the symbol file without it and the match list without 5113,
 #   9146 and 9125, two scans beside a control bring all three back (5113 by its content) and both copies build to the
-#   target's sha256 with 12916 matches.
+#   target's sha256 with 12916 matches (at 71f3cd69).
 # - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): the member tests for no data and calls TamanhoImagem, a
 #   file-static helper clang inlines, with the GIF, PNG and JPEG reading. Written in the member itself, every form tried
 #   left one thing (11 over 256 rows, 5 of them operand-only): the target tests the size against 12, the guard of the

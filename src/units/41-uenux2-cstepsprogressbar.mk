@@ -27,8 +27,10 @@
 # are in cstepsprogressbar.cpp before line 428, in an anonymous namespace (Tenta, CabeEmUmaLinha, CabeProporcional,
 # Divide, and Escolhe, CriaContorno and Fecha, which have no target function: Draw inlines them), with the private
 # Recalcula, which Draw calls and inlines. Chosen, and measured against no matching Draw: every name, the structs
-# SDisposicao and SSegmento's names, the lines, and the header's additions for them (SPathCommand's two constructors,
-# which take unit 69's 5113, EscalaCaminho, from 70 over 264 rows to 38 over 256; Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
+# SDisposicao and SSegmento's names, the lines, and the header's additions for them (SPathCommand's two constructors:
+# with them unit 69's 5113, EscalaCaminho, went from 70 over 264 rows to 38 over 256 with its products in locals, and
+# it matches with each command built in the 7-argument constructor's braces, so a change of the constructors is
+# measured on 5113; Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
 # - 5507 (Tenta) and 5505 (std::vector<SSegmento>::__swap_out_circular_buffer, which Recalcula's reserve and push_back
 #   bring) differ in call and data operands only, and match.
 # - Divide (5506) matches, through three forms, each measured on the function's disassembly in compiles with the

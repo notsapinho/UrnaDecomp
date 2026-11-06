@@ -146,8 +146,8 @@
 # and our link gives 5953, 5952, GetCargo and 5950 rising ld_index (names.tsv), so CarregaCandidaturas is defined above
 # GetCargo and its first mention of construct_at puts 5952 between them; GetCargos after LimpaFiltros is a choice. The
 # roots stood for 5950's other target caller, 5710, with one call (CandidaturasRelocadas), which went once unit 159
-# wrote 5710; 5953's, 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through cconfiguracaoeleicao.h now
-# (the include path below).
+# wrote 5710; 5953's, 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through
+# cconfiguracaoeleicao.h now (the include path below).
 #
 # cvisualizarcandidatos.cpp also holds CVisualizarCandidatos::GetPartidos, defined after GetCargos (a choice), and the
 # header SetPartido, both for unit 104's 11884, which holds them inlined and matches: GetPartidos is out of line here

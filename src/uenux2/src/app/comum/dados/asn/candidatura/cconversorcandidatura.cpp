@@ -1,7 +1,7 @@
 // Reconstruction: comum::asn::CConversorCandidatura's constructor (target fn 5712) and DoDesconverte (fn 11448). No
-// record names this file or a line of it: the order of the two definitions and every line are a choice. The static_casts
-// to ModuloCandidatos::DadosCandidato are forced by that class's chosen base (ModuloCandidatos.h): they generate no code.
-// 159-uenux2-iconversorasn-defaults.mk has the rest.
+// record names this file or a line of it: the order of the two definitions and every line are a choice. The
+// static_casts to ModuloCandidatos::DadosCandidato are forced by that class's chosen base (ModuloCandidatos.h): they
+// generate no code. 159-uenux2-iconversorasn-defaults.mk has the rest.
 #include "app/comum/dados/asn/candidatura/cconversorcandidatura.h"
 
 #include "app/comum/dados/asn/candidatura/cconversordadoscandidato.h"

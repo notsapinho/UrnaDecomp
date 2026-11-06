@@ -12,14 +12,15 @@
 #   cconversorimpedido.cpp.o;
 # - slot 2 of this fragment's CConversorEleicaoPE 11370, CConversorCargo 11372, CConversorDetalheCandidato 11374,
 #   CConversorDetalheConsulta 11376, CConversorDedo 11415, CConversorBiometriaEleitor 11421, CConversorFotoCandidato
-#   11439, CConversorCandidaturas 11444 and CConversorCandidatura 11446, and slot 3, DoDesconverte, of CConversorHistoricoVotoImpresso 10275 and of
-#   CConversorEntidadeHashes 10265 (its head is gravadores/asn/cconversorentidadehashes.h, over unit 136's
-#   md::CEntidadeHashes; RTTI names the class and its base, fn 5367 stores its vptr, and the header's path is chosen,
-#   the directory its data class's and its link neighbours' records', docs/reference/facts/placing.md P3) and of
-#   CConversorEntidadeBU 10272 (its head is gravadores/asn/cconversorentidadebu.h, beside the .cpp its records name,
-#   over md::CEntidadeBU, gravadores/md/centidadebu.h, with which the default returns the TDado in memory, the target's
-#   (i32 i32 i32)->(); RTTI names the class and its base, and fn 11629, unit 200's, is the one target function that
-#   stores its vptr, which matches: the roots' sink went with it);
+#   11439, CConversorCandidaturas 11444 and CConversorCandidatura 11446, and slot 3, DoDesconverte, of
+#   CConversorHistoricoVotoImpresso 10275 and of CConversorEntidadeHashes 10265 (its head is
+#   gravadores/asn/cconversorentidadehashes.h, over unit 136's md::CEntidadeHashes; RTTI names the class and its base,
+#   fn 5367 stores its vptr, and the header's path is chosen, the directory its data class's and its link neighbours'
+#   records', docs/reference/facts/placing.md P3) and of CConversorEntidadeBU 10272 (its head is
+#   gravadores/asn/cconversorentidadebu.h, beside the .cpp its records name, over md::CEntidadeBU,
+#   gravadores/md/centidadebu.h, with which the default returns the TDado in memory, the target's (i32 i32 i32)->();
+#   RTTI names the class and its base, and fn 11629, unit 200's, is the one target function that stores its vptr, which
+#   matches: the roots' sink went with it);
 # and 11418, IConversorBiometriaASN's default DoConverte, slot 2 of CConversorBiometriaEleitorCifrada. All of them come
 # from the headers' code, emitted with each class's vtable by the object that writes the class's own slot (the pending
 # object, which emitted them while it trapped those slots, went with its last member, 11445):
@@ -96,13 +97,13 @@
 # IConversorASN<ModuloCandidatos::Candidatura, md::CCandidatura>::Desconverte's record (iconversorasn.h:71, @1562404)
 # behind a second stack prologue inside its loop, an instance binaryen inlined there, then the push_back; its
 # parameters are the result's vector, the converter and the list, in that order.
-# The data: the target's run CConversorDadosCandidato's vtable (@1562224, unit 96's object), then CConversorCandidatura's
-# vtable and typeinfos with the records of Desconverte<ModuloCandidatos::DadosCandidato, ...> (5711's, @1562328) and of
-# the default DoConverte (11446's, @1562344), then CConversorCandidaturas's vtable and typeinfos with the records of
-# 5710's inlined Desconverte (@1562404) and of the default DoConverte (11444's, @1562420): so the two converters are
-# two objects, each holding what it instantiates first, and 5710 is cconversorcandidaturas.cpp's. Each of our two
-# objects holds that run (the link map's .data.rel.ro entries, decoded) at the place below.
-# Measured (pnpm wasm score on the whole link, before step 8):
+# The data: the target's run CConversorDadosCandidato's vtable (@1562224, unit 96's object), then
+# CConversorCandidatura's vtable and typeinfos with the records of Desconverte<ModuloCandidatos::DadosCandidato, ...>
+# (5711's, @1562328) and of the default DoConverte (11446's, @1562344), then CConversorCandidaturas's vtable and
+# typeinfos with the records of 5710's inlined Desconverte (@1562404) and of the default DoConverte (11444's, @1562420):
+# so the two converters are two objects, each holding what it instantiates first, and 5710 is
+# cconversorcandidaturas.cpp's. Each of our two objects holds that run (the link map's .data.rel.ro entries, decoded) at
+# the place below. Measured (pnpm wasm score on the whole link, before step 8):
 # - 11448 holds CConversorDadosCandidato's constructor inlined by binaryen: the object's address in a local and its
 #   byte stored before the vptr, the order the out-of-line 5712 gives. With the constructor inline in the class (that
 #   header's form before) 11448 scored 121 over 758 rows (15 inserted, 14 deleted), out of line in
@@ -117,19 +118,19 @@
 #   locals instead of temporaries. Forms that give 11445's and 5710's code with only the object's data offsets moved:
 #   5710 static, or in an anonymous namespace (clang keeps it out of line with two call sites either way), and 5710
 #   defined after 11445.
-# - The place: docs/reference/facts/codegen.md C4's record-aware count, per file, on this tree's plain link (base
-#   76661cb7): 276 objects out of the data's order in unit 225's list before cvisitanteeleitor.cpp, 279 in unit 124's
-#   before cindexadorfotos.cpp, 284 in unit 172's before cconversorfotocandidato.cpp, 285 in unit 157's after
-#   cconversorlocal.cpp, 287 in this fragment's own list, 332 in unit 36's before cvisitantefoto.cpp (the data
-#   successor), 333 as a fragment of its own (394) and 372 in unit 96's after cconversordadoscandidato.cpp (the data
-#   predecessor). Unit 225's place also links them after cconversorcargo.cpp.o, which then keeps
-#   Desconverte<CodigoCargoConsulta>'s copy (5828) as at the base: in this fragment's own list cconversorcandidaturas.cpp
-#   linked first and held that copy's record in its run, which the target's run of that object does not hold (its copy's
-#   record is @1556684). Left inverted among the data neighbours: cconversordadoscandidato.cpp (unit 96's list links
-#   after), cindexadorfotos.cpp and cconversorfotocandidato.cpp (units 124's and 172's link before). Against unit 124's
-#   place, 93 objects are inverted here and in order there (49 of app/comum, 24 of app/vota/operador, 19 of api, one of
-#   app/vota) and 96 the other way (53 of app/vota/eleitor, 33 of app/comum, 4 of app/vota/comum, 3 of the simulator's
-#   mock, 2 of api, one of app/vota).
+# - The place: docs/reference/facts/codegen.md C4's record-aware count, per file, on the plain link of the commit that
+#   added these files (525b5b8a, over 76661cb7): 276 objects out of the data's order in unit 225's list before
+#   cvisitanteeleitor.cpp, 279 in unit 124's before cindexadorfotos.cpp, 284 in unit 172's before
+#   cconversorfotocandidato.cpp, 285 in unit 157's after cconversorlocal.cpp, 287 in this fragment's own list, 332 in
+#   unit 36's before cvisitantefoto.cpp (the data successor), 333 as a fragment of its own (394) and 372 in unit 96's
+#   after cconversordadoscandidato.cpp (the data predecessor). Unit 225's place also links them after
+#   cconversorcargo.cpp.o, which then keeps Desconverte<CodigoCargoConsulta>'s copy (5828) as at the base: in this
+#   fragment's own list cconversorcandidaturas.cpp linked first and held that copy's record in its run, which the
+#   target's run of that object does not hold (its copy's record is @1556684). Left inverted among the data neighbours:
+#   cconversordadoscandidato.cpp (unit 96's list links after), cindexadorfotos.cpp and cconversorfotocandidato.cpp
+#   (units 124's and 172's link before). Against unit 124's place, 93 objects are inverted here and in order there (49
+#   of app/comum, 24 of app/vota/operador, 19 of api, one of app/vota) and 96 the other way (53 of app/vota/eleitor, 33
+#   of app/comum, 4 of app/vota/comum, 3 of the simulator's mock, 2 of api, one of app/vota).
 # Chosen, no evidence names them: the members' and parameters' names, the flag's type (bool: a byte stored and passed),
 # m_cargo's and m_partido's types (md::TCargoID and TPartidoID, the record's types of the md::CCandidatura constructor
 # parameters they are passed to; their widths are evidence); DesconverteCandidaturas's name, its being a free function

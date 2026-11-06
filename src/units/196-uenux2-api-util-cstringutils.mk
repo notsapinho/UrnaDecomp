@@ -39,14 +39,18 @@
 # src/units/README.md "Names" gives, by docs/reference/facts/codegen.md C4's record-aware count on 76661cb7's link line:
 # cqrcodeimagepaper.cpp here leaves 332 objects out of the data's order against it, 341 at its place in unit 296's list;
 # this file after it in unit 296's list would leave 340 against cstringutils.cpp.o, 341 where it is (after
-# cqrcodeimage.cpp in unit 79's list, which the rule does not give for this pair, 286). The move restores 53 pairs:
-# cstringutils.cpp.o, 7 other api/ objects (api/gui/ctextfield and ctextfielddoubleline, api/hash/, api/io/cinistrings,
-# api/util/cdirreader and ctime), 8 of app/comum/ (comparecimentomesario/ and two more) and 37 of app/vota/operador/
-# (confirmaidentidade/, justificativa/, outrasopcoes/ and two more); it inverts 44: api/gui/cbmpconversor, cimagefield,
-# cmovie and cqrcodeguard, api/hwil/euedesligandoerror, mock/app/simulador/wasm/cwasmclp, 19 of app/comum/
-# (appinfo/servicos/, dados/, gravadores/, md/, relatorios/) and 19 of app/vota/ (comum/csincronizavota, 17 of eleitor/,
-# mostly fimvotacao/ and iniciovotacao/, and operador/outrasopcoes/cescolheopcao). The file stays unit 296's, which
-# keeps its notes and its include path's rule.
+# cqrcodeimage.cpp in unit 79's list, 286, a list neither file's unit holds: "Names" says nothing of which landed file
+# of a pair moves or whether a third list counts, and this reading weighs only the two units' lists). The move restores
+# 53 pairs: cstringutils.cpp.o, 7 other api/ objects (api/gui/ctextfield and ctextfielddoubleline, api/hash/,
+# api/io/cinistrings, api/util/cdirreader and ctime), 8 of app/comum/ (comparecimentomesario/ and two more) and 37 of
+# app/vota/operador/ (confirmaidentidade/, justificativa/, outrasopcoes/ and two more); it inverts 44:
+# api/gui/cbmpconversor, cimagefield, cmovie and cqrcodeguard, api/hwil/euedesligandoerror,
+# mock/app/simulador/wasm/cwasmclp, 19 of app/comum/ (appinfo/servicos/, dados/, gravadores/, md/, relatorios/) and 19
+# of app/vota/ (comum/csincronizavota, 17 of eleitor/, mostly fimvotacao/ and iniciovotacao/, and
+# operador/outrasopcoes/cescolheopcao). Counted again on the plain link.cmd at b5d3f599: 332 here against 339 at its
+# place in unit 296's list, the move restoring the same 53 and inverting 46, the two more of app/comum/dados/ being unit
+# 225's cconversorcandidatura.cpp.o and cconversorcandidaturas.cpp.o. The file stays unit 296's, which keeps its notes
+# and its include path's rule.
 CSTRINGUTILS_UENUX2_SRCS := src/api/gui/cqrcodeimagepaper.cpp src/api/util/cstringutils.cpp
 UENUX2_SRCS += $(CSTRINGUTILS_UENUX2_SRCS)
 # nothing in the skeleton calls GetVersionNumber: 196-uenux2-api-util-cstringutils-roots.cpp stands for its callers,
