@@ -39,8 +39,8 @@ public:
     // numeroTentativa 0, tipoAtivacaoAudio 2, erroDecifrarBiometria 0, no title, the photo's constructor, fn 1081, over
     // 0 and 0). CEleitores::DynamicCreate (fn 5761) calls it in two std::vector::emplace_back slow paths binaryen
     // inlined there: one passes the constant 0 itself and the other loads the state from the caller's frame, which an
-    // emplace_back with two arguments and one with three give (the third bound to the slow path's reference); hence the
-    // default. The parameters' names, the default's spelling and the line in celeitordinamico.cpp are chosen.
+    // emplace_back with two arguments and one with three give (the third bound to the slow path's reference) through a
+    // default argument, a choice (two constructors of one body give the same); its spelling, names and line are chosen.
     CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEleitorIdentidade& identidadeHabilitacao,
                      int estadoComparecimento = ecourna::app::dados::CEstadoComparecimento::Faltou);
 

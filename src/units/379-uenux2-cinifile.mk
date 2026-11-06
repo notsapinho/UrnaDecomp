@@ -65,7 +65,8 @@
 #   cinikey.cpp and cinisection.cpp: the target keeps the destroy tests of the strings they moved from, which clang
 #   drops when it inlines them (1332 -> 1230). CIniSection declares its copy and move constructors `= default`, as
 #   CIniKey does, since its operator= is user-declared: without the move, the new section's node copied its map and name
-#   (1792 -> 1436). The by-value parameters and `= default` are chosen.
+#   (1792 -> 1436). The by-value parameters and `= default` are chosen (an rvalue-reference pair would leave the same
+#   moved-from copies; not measured).
 # - The INI object's SetKey copies the key's name into a local before the find (the target's 64-byte frame holds that
 #   copy; CIniSection::SetKey, 5482, passes the name as is).
 # - ecourna's ReadLine (unit 03's cfile.cpp, never in our link before: nothing called it) declares its result string
@@ -111,10 +112,14 @@
 # third word, 1839296, is read by 10879 and written by 14478 (__wasm_call_ctors) only (/usr/bin/grep -rlE
 # 'i32\.const 1839296($|[^0-9])' build/out/splat/pieces/asm), the static constructors' stores of 0 and of the block's
 # end of capacity: a .bss object led by a target function other than the match (how-to step 9, "Hand edits"). Without
-# the line 10879 reads `unresolved self-voted` on that name. 10879 is a thunk into the body binaryen keeps for it and
-# for vota::TECLAS_TESTE_TECLADO's exit destructor (12862, ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862
-# are: 6071 and 12862 match, and a link with a cinistrings.cpp.o without ESCAPES holds no merged body and 12862's
-# destructor whole (docs/reference/facts/splat.md S10 item 30).
+# the line 10879 reads `unresolved self-voted` on that name. 3651 rests on 10879 in turn: ESCAPES.0's and .1's names
+# have one voter besides 3651, 10879's census pair (`vote:2 by:3651,10879`); scanned twice over copies without 3651's
+# and 10879's match lines, with .0 and .1 at `vote:1 by:3651` and without ESCAPES.2's line, 3651 reads `unresolved
+# self-voted` on ESCAPES.0 (12902 rows), and with either 10879's votes or its match it holds (12903, 12904). 10879 is a
+# thunk into the body binaryen keeps for it and for vota::TECLAS_TESTE_TECLADO's exit destructor (12862,
+# ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862 are: 6071 and 12862 match, and a link with a
+# cinistrings.cpp.o without ESCAPES holds no merged body and 12862's destructor whole (docs/reference/facts/splat.md S10
+# item 30).
 #
 # Choices besides those above: the helpers' names, their being free functions of api with external linkage (they read
 # no class state; the loader is another TU's, so they cannot be internal) and cinistrings.cpp's lines but 183 and 187;

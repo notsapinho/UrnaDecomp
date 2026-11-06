@@ -710,8 +710,8 @@
 # in unit 104's list it keeps the result's address in one more local (measured: unit 104's fragment). The move is
 # needed for 11881, not the data's order. The target holds this class's data at @1545592 to @1545652, after
 # ctelasvota.cpp's and cmenumaisinformacoesvota.cpp's (the two pairs the move puts in order) and before the data of the
-# 36 objects below, which it now links after, each a pair the move inverts (the target addresses of each object's named
-# .data.rel.ro symbols and records, on the merged link; of the 43 objects it crosses, cmunicipio.cpp.o's data span this
+# 37 objects below, which it now links after, each a pair the move inverts (the target addresses of each object's named
+# .data.rel.ro symbols and records, on the merged link; of the 44 objects it crosses, cmunicipio.cpp.o's data span this
 # class's and 4 have none):
 # - unit 104's cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
 #   cquerreimprimirzeresima.cpp (@1546124 to @1546400);
@@ -726,7 +726,8 @@
 #   cconversorseguranca.cpp, md/cabrangencia.cpp, cconversorabrangencia.cpp, cconversordadolocal.cpp,
 #   appinfo/cappinfo.cpp and dados/cfotos.cpp;
 # - api/gui/primitives.cpp (@1583624);
-# - this list's six files ahead of ctelasvota.cpp (@1558832 to @1576260).
+# - this list's seven files ahead of ctelasvota.cpp (@1558832 to @1576260), dao/celeitordinamicodao.cpp (below)
+#   among them.
 #
 # ctelasvota.cpp also holds vota::AdicionaCampoNumerico (target fn 2383, no record) and the screen of
 # vota::CMenuFiltrarCandidatosPorNumero::StartState (fn 11892), TelaFiltragemCandidatosPorNumero (ctelasvota.h has its
@@ -768,14 +769,14 @@
 #   from the start, and the builder's vector takes other local numbers); with its object after ctelasvota.cpp.o, 53 over
 #   746, every row a call or a data address (the order of a caller and its callee, docs/reference/facts/codegen.md C4).
 #   The target holds the class's vtable (@1545376) after ctelasvota.cpp's and cmenumaisinformacoesvota.cpp's data, two
-#   of the three pairs the move puts in order (cmunicipio.cpp is the third). Of the 44 objects the move crosses, 25 hold
+#   of the three pairs the move puts in order (cmunicipio.cpp is the third). Of the 45 objects the move crosses, 26 hold
 #   their named .data.rel.ro symbols after @1545376 in the target, each a pair the move inverts (unit 104's
 #   cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
 #   cquerreimprimirzeresima.cpp; eleven vota operador states; the two comparecimentomesario states; cconversormunicipio,
 #   cconversoridentificacaoagregada, cconversorcomplementomunicipio, cconversorseguranca, cconversorabrangencia and
-#   cconversordadolocal; cappinfo.cpp and celeitores.cpp), celeitoroptouporvotaremtransito.cpp's span it and 15 have
-#   none there (the target addresses of the map's data symbols of each object, by name in splat/symbol_addrs.txt). The
-#   move is needed for 11892, not for the data's order.
+#   cconversordadolocal; cappinfo.cpp, dao/celeitordinamicodao.cpp and celeitores.cpp),
+#   celeitoroptouporvotaremtransito.cpp's span it and 15 have none there (the target addresses of the map's data symbols
+#   of each object, by name in splat/symbol_addrs.txt). The move is needed for 11892, not for the data's order.
 # - The instances 2383's code and the two filter screens bring link from this object first now, each at its first user's
 #   place (how-to step 3): IInputField<IScreen>'s, CInputField<CFramedText>'s and CNumberValidation's members and blocks
 #   (band 1's 12350 to 12502 and 12658, band 3's 4021, 4022 and 4118) and std::any's handler for unsigned char (12893,
@@ -795,11 +796,12 @@
 # move is needed for 11888, not the data's order. The target holds the class's vtable at @1545448, after PorNumero's
 # (@1545376) and before PorPartido's (@1545520) and CMenuVisualizarCandidatos' (@1545592). Of the places after
 # ctelasvota.cpp.o this one has the fewest objects out of the data's order against it (docs/reference/facts/codegen.md
-# C4's count on the merged link: 113 here, at least 114 at the others; 93 at its old place in unit 104's list). Against
-# that old place it puts 5 pairs in order (cmunicipio.cpp, ctelasvota.cpp, celeitoroptouporvotaremtransito.cpp,
-# cmenumaisinformacoesvota.cpp and cmenufiltrarcandidatospornumero.cpp) and inverts 25, objects whose target data lie
-# after @1545448: unit 104's cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
-# cquerreimprimirzeresima.cpp; comum's cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp,
+# C4's count at e7d03612: 113 here, at least 114 at the others; 93 at its old place in unit 104's list; 115 here now,
+# below). Against that old place it puts 5 pairs in order (cmunicipio.cpp, ctelasvota.cpp,
+# celeitoroptouporvotaremtransito.cpp, cmenumaisinformacoesvota.cpp and cmenufiltrarcandidatospornumero.cpp) and inverts
+# 26, objects whose target data lie after @1545448: unit 104's cdefinerotaposreinicio.cpp,
+# creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and cquerreimprimirzeresima.cpp; comum's
+# cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp, dao/celeitordinamicodao.cpp,
 # celeitores.cpp, cconversorabrangencia.cpp, cconversorseguranca.cpp, cconversormunicipio.cpp and
 # cconversorcomplementomunicipio.cpp; eleven vota operador states (cfimaquisicaovotos.cpp, eight leidentidade/ ones,
 # cfinalizaoperador.cpp and csincronismooperador.cpp); and comparecimentomesario's cpedetitulomesario.cpp and
@@ -813,15 +815,16 @@
 # @1545520, after PorCargo's (@1545448) and before CMenuVisualizarCandidatos' (@1545592). Every place after
 # ctelasvota.cpp.o measured gives 95 over 1638 rows, every row an operand (measured with the screen after
 # TelaFiltragemCandidatosPorCargo; after TelaMenuVisualizacaoCandidatos, its place now, this one gives the same);
-# docs/reference/facts/codegen.md C4's count of objects out of the data's order against it, on the merged link: 116
-# right after ctelasvota.cpp, 115 after cmenumaisinformacoesvota.cpp, 114 after cmenufiltrarcandidatospornumero.cpp, 113
-# here, 114 after cmenuvisualizarcandidatos.cpp, 94 at its place in unit 104's list. Against that old place it puts 6
-# pairs in order (cmunicipio.cpp, ctelasvota.cpp, cmenumaisinformacoesvota.cpp, celeitoroptouporvotaremtransito.cpp and
-# the PorNumero and PorCargo files) and inverts 25: unit 104's cdefinerotaposreinicio.cpp,
-# creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and cquerreimprimirzeresima.cpp; comum's
-# cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp, celeitores.cpp, cconversorabrangencia.cpp,
-# cconversorseguranca.cpp, cconversormunicipio.cpp and cconversorcomplementomunicipio.cpp; eleven vota operador states
-# (cfimaquisicaovotos.cpp, leidentidade/'s ccancelahabilitacaoeleitor, celeitorencontrado, celeitorimpedidojustificar,
+# docs/reference/facts/codegen.md C4's count of objects out of the data's order against it, at e7d03612 (115 here now,
+# below): 116 right after ctelasvota.cpp, 115 after cmenumaisinformacoesvota.cpp, 114 after
+# cmenufiltrarcandidatospornumero.cpp, 113 here, 114 after cmenuvisualizarcandidatos.cpp, 94 at its place in unit 104's
+# list. Against that old place it puts 6 pairs in order (cmunicipio.cpp, ctelasvota.cpp, cmenumaisinformacoesvota.cpp,
+# celeitoroptouporvotaremtransito.cpp and the PorNumero and PorCargo files) and inverts 26: unit 104's
+# cdefinerotaposreinicio.cpp, creimprimindoresumozeresima.cpp, creimprimindozeresima.cpp and
+# cquerreimprimirzeresima.cpp; comum's cconversordadolocal.cpp, cconversoridentificacaoagregada.cpp, cappinfo.cpp,
+# dao/celeitordinamicodao.cpp, celeitores.cpp, cconversorabrangencia.cpp, cconversorseguranca.cpp,
+# cconversormunicipio.cpp and cconversorcomplementomunicipio.cpp; eleven vota operador states (cfimaquisicaovotos.cpp,
+# leidentidade/'s ccancelahabilitacaoeleitor, celeitorencontrado, celeitorimpedidojustificar,
 # celeitorimpedidojustificarvototransito, celeitorjavotou, celeitornaopossuicargosparavotar, celeitornaotemidademinima
 # and cprocuraeleitor, cfinalizaoperador.cpp and csincronismooperador.cpp); and comparecimentomesario's
 # cpedetitulomesario.cpp and cgestordadomesario.cpp.
@@ -830,7 +833,11 @@
 # celeitordetalhe.cpp and celeitores.cpp, the target's data order (records @1558832, @1558940, @1559096): DynamicCreate
 # (5761) holds its InserirTodos inlined by binaryen and matches with that object linked right before celeitores.cpp.o;
 # after it, as unit 91's list put it, 5761 differs in local numbers only (src/units/383-uenux2-celeitores-dinamicos.mk
-# has the measurement and codegen.md C4's count of objects out of the data order at both places).
+# has the measurement and codegen.md C4's count of objects out of the data order at both places). Linked here, it
+# lies between unit 104's list and ctelasvota.cpp.o, so each move above from unit 104's list crosses it and inverts
+# one pair more (its vtable is at @1551044 in the target), and codegen.md C4's count against each of the four
+# filter-screen files after ctelasvota.cpp.o is 115 (113 at e7d03612 for PorCargo and PorPartido): the two more are
+# this object and unit 378's pending object, which lie on one side of every place after ctelasvota.cpp.o.
 SINGLETONS_SRCS := src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/dao/celeitordinamicodao.cpp \
   src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \

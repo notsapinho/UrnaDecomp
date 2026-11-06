@@ -27,11 +27,11 @@ void urna_insere_conjunto(std::set<std::string>& conjunto, const std::string& va
 // const pair&> (target fn 3266), which map's initializer-list constructor calls once per pair: its target callers are
 // vota::CDigitalReconhecida::ProcessInput (10481, the map of vota::CLogVota::LogaTipoHabilitacaoEleitor inlined there)
 // and 3076 (vota::AdicionaGifCargo, the cargos' map of images, :/resource/gifs/, written with unit 378, differs). The
-// target's copy loads a
-// pointer again after a store, as this instance at UENUX2_CXXFLAGS does (2 over 101 rows, the calls), where
-// app/vota/log/clogvota.cpp's, with strict aliasing, does not (15 over 101, 5 rows deleted). Which uenux2 object gives
-// it is not identified (3076's, a reading: ctelasvota.cpp's object, which holds 3076 now, was not measured without this
-// instance); the instance goes once that object is. It brings
+// target's copy loads a pointer again after a store, as this instance at UENUX2_CXXFLAGS does (2 over 101 rows, the
+// calls), where app/vota/log/clogvota.cpp's, with strict aliasing, does not (15 over 101, 5 rows deleted). Which
+// uenux2 object gives it is not identified. ctelasvota.cpp's object, which holds 3076, emits the instance too, but it
+// links after clogvota.cpp.o: a link with this object compiled without the instance keeps clogvota.cpp.o's copy, and
+// 3266 reads no-candidate and 10481 unresolved there, so the instance stays. It brings
 // __tree::__find_equal<unsigned char> (3251), whose match line step 9 renamed to this instance, a twin of
 // md::CVotosCargos' map's, which links later. urna_insere_mapa_texto only instantiates: nothing calls it, and it leaves
 // the link.

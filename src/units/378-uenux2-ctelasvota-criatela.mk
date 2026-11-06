@@ -82,8 +82,8 @@
 #   is a CDataText over NumeroDigitado, and cmaskedtextfield.h's constructor copies it (that header has the
 #   measurement).
 # - 13176 NumeroDigitado returns vota::g_numeroDigitado (table slot 1098, which 6624's helper and 3060 store: one
-#   function, so a named one); defined near the top, after AdicionaGifCargo (3076), a choice the use band bounds (it
-#   was the highest index among the object's band-1 functions in our link when the band was read).
+#   function, so a named one); defined near the top, after AdicionaGifCargo (3076), a choice the use band does not
+#   bound: 13527 (the gif map's exit destructor), a higher band-1 index, links after it in our object (below).
 # - CPreShowProgressBar: its declared constructor is gone (implicit), and its key function PreShow (13550) is the
 #   trap in 378-uenux2-ctelasvota-criatela-pending.cpp, whose header says what it waits for.
 # The gif screens and the VotoBranco/VotoNulo pairs:
@@ -116,7 +116,7 @@
 #   whose timer lambda calls the callback AvancaFrame (11056's body).
 # Error codes (app/vota/euevotaerror.h): 9354, 9341 and 9344, names chosen from the screens.
 # Chosen: every name above but the statics' (whose names the records and strings give), the free functions' being free
-# and external (no record gives their linkage, as for unit 110's 690; NumeroDigitado's place is the band's) and the
+# and external (no record gives their linkage, as for unit 110's 690; NumeroDigitado's place is chosen, above) and the
 # internal helpers' being helpers, the parameters' names and the lines (no record but 964, 1014, 1049 and 1585):
 # AdicionaGifCargo at 266, the top of the file's anonymous-namespace run for the shared helpers (lines 300 to 422,
 # closing and reopening the namespace around the external ones), the gif map and AdicionaGif after them (428 to 460),
@@ -124,14 +124,21 @@
 # use bands were not read for; AdicionaNomeCargo and AdicionaRodapeConfira after MensagemErroCargo (806 to 820), 6624 at
 # its record, 6626 and 6616 after 3064 (1603 to 1619), 6601 at 2950 and 6592 after AdicionaTelaQRCode (3121), which the
 # use bands bound: in bands 2, 4, 11 and 12 the new members' ld_index runs as the target's indices do (6627, 6626, 6624,
-# 6616, 6601 before 6595, 6594, 6592, 6587; 3074, 3064 before 3054; 1192 before 1190). The object's fonts now hold
+# 6616, 6601 before 6595, 6594, 6592, 6587; 3074, 3064 before 3054; 1192 before 1190), but for 6643 before 6646 in band
+# 2 (the gif map's tree member, which AdicionaGif at 428 mentions first, against 6646's record :964). Inverted pairs of
+# ctelasvota.cpp.o's matched members (how-to step 3, "The order of two members"; ledger/ordinals.tsv's bands, the
+# object's own function order): 571 at 778b28ff, 998 at c97e48e1; 487 new and 60 gone (CTextField's block members 12628
+# and 12631 link earlier now). Three of the new are between two of this file's own functions: 13176 (NumeroDigitado) and
+# 13137 (AdicionaInstrucaoTeclas's lambda) before 13527 in band 1, and 6643 before 6646 in band 2; every other has a
+# template instance, a control block, a lambda's invoke or an exit destructor on a side. The object's fonts now hold
 # FONTE_INSTRUCAO_TESTE_TECLADO, the {35, 0}, the {30, 1}, FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_TECLA, the
 # arrays, FONTE_NUMERO, TEXTO_CONFIRMAR_VOTO and FONTE_SUPLENTE in that order (wasm-objdump -x, segments 1 to 420),
 # against the target's {40, 0}, {30, 0}, {20, 0}, "CONFIRMAR este voto", ...: their first readers in the target are
 # 7787's and the unwritten builders'.
 #
 # Not written, with what each waits for (the pick's list for this class):
-# - 6639, 6681 need 6678, which calls 4184, 4185 and 2028 (with 11501, 4129, 6528), 7787's builders' callees.
+# - 6639, 6681 need 6678, which calls 4184, 4185 and 2028 (4184 calls 4129 and 6528; 11501, reached through its table
+#   slot 1089 only, has no direct caller in ledger/callgraph.tsv), 7787's builders' callees.
 # - 2384, 6689, 13441: after 7787 (2384's one caller).
 # Roots: 378-uenux2-ctelasvota-criatela-roots.cpp stands for 7787, and for 6602, 6603 and 6605 (3060's other callers).
 # Stand-ins this unit made idle went, call by call: units 28 (1192's CTextFieldDoubleLine), 191 (6627's vector copy),

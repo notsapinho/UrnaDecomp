@@ -105,9 +105,9 @@
 #
 # Roots (283-uenux2-app-vota-operador-justificativa-roots.cpp): a stand-in for fn 7787 (not written), the second target
 # caller of std::set<comum::md::ETipoAbrangencia>'s range insert (6733; the element type is a reading, fragment 383's),
-# which 10635 calls: with 10635 as its one caller, binaryen inlined it there and 10635 differed by that body. Unit 104's fragment has the rest
-# of 6733, which matches from celeitorencontrado.cpp.o, built without strict aliasing (src/Makefile's
-# UENUX2_NOTBAA_FILES).
+# which 10635 calls: with 10635 as its one caller, binaryen inlined it there and 10635 differed by that body. Unit 104's
+# fragment has the rest of 6733, which matches from celeitorencontrado.cpp.o, built without strict aliasing
+# (src/Makefile's UENUX2_NOTBAA_FILES).
 APP_VOTA_OPERADOR_JUSTIFICATIVA_SRCS := src/app/vota/operador/justificativa/canoinformadoinvalido.cpp \
     src/app/vota/operador/justificativa/cconfirmajustificativatemporario.cpp \
     src/app/vota/operador/justificativa/cconfirmajustificativatransito.cpp \

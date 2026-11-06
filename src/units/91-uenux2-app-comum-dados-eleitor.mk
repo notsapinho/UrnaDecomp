@@ -121,11 +121,12 @@
 #
 # md::CEleitorDecorator::GetAbrangencia (fn 3721, celeitordecorator.cpp, after GetIdentidadePorTipo): the voter's reach
 # for the urn's state and municipality, 0 with no temporary transfer or one to that municipality, 1 to that state, 2
-# otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; its callers 5761 (unit
-# 383's notes) and 2824 (unit 110's) are in the link. The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial and
-# m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of names only.
-# The decorator now derives from md::CEleitor (celeitordecorator.h, unit 110's fragment), and GetAbrangencia reads the
-# transfer through CTransferenciaTemporaria's accessors: celeitordecorator.cpp.o is cmp-identical to the one before.
+# otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; its callers 5761 (unit 383's
+# notes) and 2824 (unit 110's) are in the link. The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial
+# and m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of
+# names only. The decorator now derives from md::CEleitor (celeitordecorator.h, unit 110's fragment), and GetAbrangencia
+# reads the transfer through CTransferenciaTemporaria's accessors: celeitordecorator.cpp.o is cmp-identical to the one
+# before.
 #
 # Two members of the decorator that comum::CEleitores::GetEleitoresEstaticos (fn 5772, unit 110) needs, in
 # celeitordecorator.cpp (celeitordecorator.h says what shows each): its constructor from a CEleitor and the voter's type,

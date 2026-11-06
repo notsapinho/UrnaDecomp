@@ -78,7 +78,9 @@
 # all three. A reading, until 6734 is written.
 #
 # Chosen: every local's name (temMunicipal, temEstadual, temFederal, vota, dinamicos, gravados, dinamicoDAO, porEleitor)
-# and the lambda's parameters; std::find for the three searches; the vector's `!=` for the size test and element loop
+# and the lambda's parameters; the comparator's being a lambda (a function object in an anonymous namespace or a local
+# class has the same internal linkage, so by the same argument the same bytes; not measured); std::find for the three
+# searches; the vector's `!=` for the size test and element loop
 # (std::equal not measured); DynamicCreate's lines but the records' (a blank run before the 358 throw) and the DAO
 # header's include, which takes the blank line after the file's own header's include (no blank run is left above the
 # file's first record outside the namespace); InserirTodos (its name, membership, const, line) and the by-value
