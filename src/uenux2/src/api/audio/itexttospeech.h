@@ -66,11 +66,21 @@ class CWavFile;
 //   3732); when the index holds `capacity` keys, a copy of the last entry, its key erased (slot 212, fn 11353) and the
 //   entry popped (slot 213, fn 11346); then emplace_front of the key and the file (the pair's constructor is slot 218, fn
 //   11342) and the index set to the new first entry.
-// Not written: fn 921, a member with no landing pads (a uenux2 TU's copy) that only fn 7787 calls, 14 times: the same
-// options, key and Lookup; when the file is found it sets the kept map's entry to it, else it calls slot 11 and Store
-// with 1. Its copy is the TU of 7787, not written.
-// Chosen as well: the names GetOptions, MakeKey, Lookup, Store, ECache and its enumerators, Get and Put; ECache an enum
-// (an int compared with 1 gives the same rows); MakeKey a member (how-to step 3: its callers pass an object it never
+// Cache (fn 921), in no slot, a uenux2 TU's copy (no landing pads; src/units/237-uenux2-itexttospeech-roots.cpp gives
+// it at that TU's flags):
+// - the same options, key and Lookup, called directly (fns 5758 and 5754); a file found becomes the kept map's entry
+//   (operator[] and the copy assignment inlined, a direct call of fn 5685), else slot 11 synthesizes it and Store (fn
+//   5750) keeps it, called with 1 (eCacheKept), a constant of the target's body. Written in Cache, eCacheKept lets
+//   clang inline Store (cost 210, threshold 250), where the target calls it; as Cache's parameter, Store costs 280 and
+//   stays a call. So the kind is read as a parameter that every caller passes as 1 and binaryen's dead-argument
+//   elimination folded into the body (how-to step 2).
+// - Its one target caller is fn 7787, 14 times, all inside a frame of their own there that loads the records of
+//   vota::CInstrucaoVotacaoAcessibilidade::CacheInstructionAudio (cinstrucaovotacaoacessibilidade.cpp:157 and :161),
+//   read as that member, which binaryen inlined into 7787 (how-to step 3's signs): so 921 is read as that file's TU's
+//   copy.
+// Chosen as well: the names GetOptions, MakeKey, Lookup, Store, Cache, ECache and its enumerators, Get and Put; ECache
+// an enum (an int compared with 1 gives the same rows), and public, declared ahead of Cache, whose parameter names it;
+// Cache's default argument for the kind; MakeKey a member (how-to step 3: its callers pass an object it never
 // reads; a free function that takes the object first gives the same rows); the cast that makes the tag a prvalue (a
 // C-style cast gives the same rows), which converts nothing on the chosen long long and may stand for a conversion from
 // the original member's type. src/units/237-uenux2-itexttospeech.mk lists the other forms measured.
@@ -83,6 +93,7 @@ public:
         unsigned volume;
         long long tag;
     };
+    enum ECache { eCacheRecent, eCacheKept };
 
     virtual std::shared_ptr<CWavFile> Synthesize(const std::string& text)
     {
@@ -93,6 +104,17 @@ public:
         std::shared_ptr<CWavFile> wav = DoSynthesize(text, options);
         Store(key, wav, eCacheRecent);
         return wav;
+    }
+    void Cache(const std::string& text, ECache cache = eCacheKept)
+    {
+        SOptions options = GetOptions();
+        std::string key = MakeKey(text, options);
+        if (std::shared_ptr<CWavFile> wav = Lookup(key)) {
+            m_kept[key] = wav;
+            return;
+        }
+        std::shared_ptr<CWavFile> wav = DoSynthesize(text, options);
+        Store(key, wav, cache);
     }
     virtual void SetVoice(const std::string& voice) { m_voice = voice; }
     virtual void SetPitch(unsigned pitch) { m_pitch = pitch; }
@@ -118,8 +140,6 @@ public:
     virtual std::shared_ptr<CWavFile> DoSynthesize(const std::string& text, const SOptions& options) = 0;
 
 private:
-    enum ECache { eCacheRecent, eCacheKept };
-
     struct SRecentCache {
         using TEntry = std::pair<std::string, std::shared_ptr<CWavFile>>;
 
