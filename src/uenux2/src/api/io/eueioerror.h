@@ -52,6 +52,11 @@ enum EUeIoError {
     EUE_IO_MEMREAD_BUFFER_INVALIDO = 5999,
     EUE_IO_MEMREAD_NADA_PARA_LER = 6000,
     EUE_IO_NOME_CHAVE_MODIFICADO = 6005,
+    // the codes of api::CIniSection::operator= (record cinisection.cpp 36) and api::CIniStrings::ParseKeyLine (records
+    // cinistrings.cpp 183 and 187), all held by target fn 5480; chosen from the messages
+    EUE_IO_NOME_SECAO_MODIFICADO = 6007,
+    EUE_IO_LINHA_INVALIDA = 6009,
+    EUE_IO_NOME_CHAVE_INVALIDO = 6010,
 };
 
 using CUeIoError = ecourna::api::exception::CBaseError<EUeIoError, ecourna::api::exception::SErrorLimits{5950, 6150}>;

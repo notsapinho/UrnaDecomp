@@ -58,12 +58,18 @@
 # Choices. The class's members, their names and access, ObtemDependencias's name and its parameters' names are chosen;
 # its being a member is a reading (it reads the object's +0, and 12098 passes it the singleton). Its line, after
 # GetInst's record line, is a choice. The value is a named const local and the second insert repeats `insert`; one form
-# of each was measured. GetInst and the constructor are not written: they wait for 12098 and the INI loader (fn 5480).
-# Nor is the destructor (fn 5866, a function of its own in the target, called by 12098 and fn 11636): its band place
-# follows md/cversoesarquivos.cpp's rows, not this file's. The stand-in for 1163's callers (two calls through its
-# label), roots_set.cpp's body (an uncalled insert at the end hint) and its name are choices; one form of each was
-# measured. The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152 differs and 447 reads
-# unresolved (above), so it links after it; that it is last, after roots_boost.o too, is the choice.
+# of each was measured. GetInst and the constructor are not written: they wait for 12098 (the INI loader, fn 5480, is
+# written in fragment 379, not matched). Nor is the destructor (fn 5866, a function of its own in the target, called by
+# 12098 and fn 11636): its band place follows md/cversoesarquivos.cpp's rows, not this file's. A
+# std::shared_ptr<CGeracaoVersoesContratos> built from a std::unique_ptr, the target's block
+# (__shared_ptr_pointer<CGeracaoVersoesContratos*, default_delete<...>, ...>, vtable @1553544, whose vptr fn 12098 alone
+# stores, its __on_zero_shared fn 11636), compiled at uenux2's -O3, with strict aliasing or without, inlines the
+# implicit destructor into __on_zero_shared (four tree destroys and the delete), where the target's 11636 calls 5866:
+# the block's TU did not see the destructor's body, or was built at another level (a reading). The stand-in for 1163's
+# callers (two calls through its label), roots_set.cpp's body (an uncalled insert at the end hint) and its name are
+# choices; one form of each was measured. The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152
+# differs and 447 reads unresolved (above), so it links after it; that it is last, after roots_boost.o too, is the
+# choice.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 W268_SRCS := src/app/comum/gravadores/cgeracaoversoescontratos.cpp
