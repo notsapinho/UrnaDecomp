@@ -235,12 +235,16 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   build, since the link takes those objects on trust, and, when the range edits `asn1.h` or a `src/asn1/modules/*.h`
   header, the link objects that hold its mangled names, which make does not rebuild (§W15 has the search). When the
   range edits `src/Makefile` or a fragment's flags, the list shows what the lane rebuilt, not what the edit changed, and
-  a lane may have set `src/Makefile`'s mtime back: compare the compile lines `make -n -B -C src link APP=<a new
-  directory>` prints with the base's, and move aside every object whose line differs. `ROOT` names the fragments
-  `src/Makefile` includes, so the base's Makefile run with `ROOT=$PWD` reads the branch's fragments and shows no
-  fragment's change: take the base's lines from an archive of the base, `make -n -B -C <dir>/src link APP=<a new
-  directory>` with no `ROOT` ([facts/workflow.md](reference/facts/workflow.md) §W13, item 3 of the batch). A lane that
-  keeps `src/Makefile`'s old mtime says so in its result, with that comparison.
+  a lane may have set `src/Makefile`'s mtime back: compare the compile lines `make -n -B -C src link
+  APP=build/out/<handle>/appx OUT=build/out/<handle>/outx OUT_NAMED=build/out/<handle>/outnx` prints with the base's,
+  and move aside every object whose line differs. Give `APP` relative to the checkout: the companions' rules are
+  `$(ROOT)/$(APP)/<n>-…-roots.o`, so an absolute `APP` stops at the first one (`No rule to make target`), and with `-k`
+  it prints every other line and none of the `-c src/units/…` ones (733 lines and 0 such, against 933 and 135 with a
+  relative `APP`, at e7d03612), which compares equal and checks no companion. `ROOT` names the fragments `src/Makefile`
+  includes, so the base's Makefile run with `ROOT=$PWD` reads the branch's fragments and shows no fragment's change:
+  take the base's lines from an archive of the base, `make -n -B -C <dir>/src link` with a relative `APP` under it and
+  no `ROOT` ([facts/workflow.md](reference/facts/workflow.md) §W13, item 3 of the batch). A lane that keeps
+  `src/Makefile`'s old mtime says so in its result, with that comparison.
 - A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
   moved main", says what to copy, what to add and where.
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
@@ -291,8 +295,8 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   `LC_ALL=C` in front too, and exits as if nothing matched, so a negative from it is no evidence.
   Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line
   under `LC_ALL=C` (`/usr/bin/grep` itself, `sed`, `cut`, `tr`, `awk` with a regex, `git grep`), or convert with `iconv
-  -f latin1 -t utf-8` first: in a UTF-8 locale `/usr/bin/grep -c '// f1455 '
-  src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp` counts 0 with no error where `LC_ALL=C` counts 1, macOS `sed`
+  -f latin1 -t utf-8` first: in a UTF-8 locale `/usr/bin/grep -c '// f6734 '
+  src/uenux2/src/app/comum/dados/celeitores.cpp` counts 0 with no error where `LC_ALL=C` counts 1, macOS `sed`
   and `cut` stop with `illegal byte sequence` at a stub's middle dot, and `git grep` prints nothing
   ([facts/workflow.md](reference/facts/workflow.md) §W9). A `sed -i ''` that stops so leaves its temporary copy,
   `.!<pid>!<name>`, beside the file: edit with `LC_ALL=C sed -i ''`, and remove such a copy by its name.

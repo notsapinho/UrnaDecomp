@@ -138,6 +138,29 @@ Measured twice:
 So in the target, votaInit's TU is the first object on the link line, exports `votaInit` first and makes an indirect
 call. It exports more than `votaInit`: [../toolchain.md](../toolchain.md) "Export order" gives the records that say so.
 
+Inside one object the exports keep the object's symbol order, and the table's import symbol sits where the object first
+refers to the table: a `call_indirect`, whose `R_WASM_TABLE_NUMBER_LEB` relocation names it, and not an `invoke_*` call
+through a `GOT.func` slot. At e7d03612 our executable TU lists `votaPressKey` (symbol 12), `votaTick` (27),
+`env.__indirect_function_table` (51), `votaSetAudioEnabled` (58), `votaGetStateJson` (62) and `main` (1115), and its
+first table relocation is in `votaTick`; the link's exports follow that order, the table after `votaTick`:
+
+```sh
+o=build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
+wasm-objdump -x -j Linking $o | LC_ALL=C /usr/bin/grep -E '<(votaPressKey|votaTick|votaSetAudioEnabled|votaGetStateJson|main)>|__indirect_function_table'
+wasm-objdump -d -r $o | awk '/ func\[/ {f=$0} /R_WASM_TABLE_NUMBER_LEB/ {print f; exit}'
+# 006371 func[147] <votaTick>:
+```
+
+`src/app/vota_init.cpp`'s `votaInit` is the one reference to `urna_roots` (`int (*volatile urna_roots_ptr)(int) =
+urna_roots;`, called from `votaInit`), and through it to every tree root `roots.h` declares. A variant that takes
+`votaInit` from another object (the stand-in made weak beside a strong one, or its object left out) links without a word
+and drops all of that: wasm-ld keeps the strong definition, and `urna_roots_ptr` and what only `urna_roots` reaches go
+with the weak one. On 7011d5a0's tree such a link's census log read `functions 13540` against the plain link's 15310
+(`/usr/bin/grep '^functions' <census log>`), its first export letter moved, and step 9's `join` against afc03869 printed
+1118 rows, almost all `match` to `no-candidate`. Rename the stand-in's function instead (`extern "C" int
+w170_votaInitRoots(int arg) { return urna_roots_ptr(arg); }`) and call it from the variant's `votaInit`: that link holds
+15310 functions, as the plain one does.
+
 Two more facts from the same links:
 
 - Minified export names continue the import alphabet: 136 imports → exports start at `Cb`. A link with 135

@@ -355,9 +355,11 @@ stub. A recorded function that is neither written in the file nor stubbed there 
 pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` was 90 lines at 3c1ef19d, its record of 3744 line 208, and
+`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` was 90 lines at 3c1ef19d, the record 3744 loads line 208, and
 f3744's stub line 88 (`git show 3c1ef19d:<file> | LC_ALL=C /usr/bin/grep -n '^// f3744 '`); `stubs.py --check` passed.
-Its writer laid out the lines up to 208 (fragment 388). A function in a slot of
+That record is the throw of `ajustaAbrangenciaUFMunicipio`, which 3744 holds inlined behind a second prologue, while
+band 3 and table slots 2463 and 2464 put 3744 itself beside 3745, in another file; the record's writer laid out the
+lines up to 208 (fragment 388). A function in a slot of
 a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
 vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
@@ -394,7 +396,7 @@ name.
 
 ## P9. A band's order against landed members, two objects and a record
 
-How-to step 3 ("The order of two members") holds a reviewer to the band's order inside one object. Three cases the rule
+How-to step 3 ("The order of two members") holds a reviewer to the band's order inside one object. Six cases the rule
 alone does not settle:
 
 - **Landed members already out of order.** Run the check over every matched member of the object in the band. A new
@@ -406,6 +408,27 @@ alone does not settle:
   already put out of order. Count over the whole band, not a window of indices around the member, which can flip which
   place is fewest; when two places tie, take the one between the member's data neighbours ([codegen.md](codegen.md)
   §C4 has the objects' side of the same count).
+- **Which pairs a range added.** `names.tsv` holds the link at hand only, so compile the base's object from `git archive
+  <base> src` ([workflow.md](workflow.md) §W13) and compare the two objects' function order (`wasm-objdump -d <object> |
+  /usr/bin/grep -oE ' func\[[0-9]+\] <[^>]+>'`) over each side's match list, a function's place being its rank in that
+  list. Match a local static's `__cxx_global_array_dtor.N` by its position among the object's static-init functions, not
+  by name: an added include renumbers them (12875's was `.29` at the base and `.41` after, and `.29` names `locale.o`'s
+  in the new link, so a filter by name dropped it and counted two old pairs as new; 101 of unit 110's pairs predated the
+  range).
+- **A file that emits many instances.** Its linkonce and local template instances (control blocks' and `__func` members,
+  `CDataImage` instances) come after its own functions in clang's deferred order, and each new first mention reorders
+  them: `ctelasvota.cpp.o`'s 109 matched members held 569 inverted pairs before a range, 565 with an instance on one
+  side, and 159 members 991 after it, 482 of them new. Count the pairs among the functions the file defines (external
+  and internal functions and its statics' destructors, whose places its lines fix) apart from those with an instance; a
+  new member is placed by the first count, and the fragment gives the second as a number at the base and the branch,
+  with the command (three of the range's new pairs were between definitions: 13176 and 13137 before 13527, 6643 before
+  6646).
+- **An order an unwritten caller's mentions give.** A band whose order reads as the first mentions of a function not
+  written yet (one defined earlier in the file that calls the members) can disagree with every place free now. The place
+  that adds no inverted pair now is still the rule, and the fragment names the place the reading gives, so the caller's
+  lane can move the member there when it lands: celeitores.cpp's 2826 and 5762 are one pair in two places while
+  CompleteLoad (6734) is unwritten (fragment 381). Count an in-flight lane's member of the same file as landed once its
+  records fix its lines.
 - **A run across two objects of files you chose.** A run of consecutive indices in one band orders the objects as well:
   arrange the definitions so the run reads in link order across them where a form with the same code exists, and say
   in the fragment which part of the order the run fixes. The uses-2 run 5558 down to 5552 spans
