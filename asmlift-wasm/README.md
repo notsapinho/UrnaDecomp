@@ -717,6 +717,14 @@ OBJECT_IDENTIFIER's") and `test/splat-symbols.test.ts` (`OID_VTABLE`) read `ASN1
 vtable, which unit 115's ASN.1 roots keep and the target holds nowhere. A row that needs them out (binaryen merges
 them with `api::AudioCollector`'s once that class is written) waits for those cases to read a saved pair of bodies
 instead; no lane edits them to land a match.
+`test/splat-symbols.test.ts`'s `resolveRepointed > offers every place of read-only content it finds more than once, for
+the body to pick` reads `boost::gregorian::bad_weekday`'s typeinfo, which the target lacks too (`/usr/bin/grep -c
+bad_weekday ../splat/symbol_addrs.txt` prints 0) and the Boost probe's `probe_weekday` keeps
+(`tools/libs/boost/probe.cpp`). Such an object is kept by the narrowest code that emits it, a `typeid` for a typeinfo,
+never by code whose functions have twins in the link: a call of `greg_weekday`'s range check emitted `bad_weekday`'s
+members, `bad_year`'s twins, and binaryen's fold then kept the probe's copy and name for 2846 (`bad_year`'s D0) in place
+of `cgravadorrcsecao.cpp.o`'s, and `bad_weekday` names for eight more rows. So a probe edit runs these cases (`pnpm
+test`) before steps 7 to 9, and step 9's `join` shows that it moved no match row's symbol or object.
 
 Every test runs on the real target, `target/vota_web_wasm.wasm` of the urna checkout around this directory:
 section counts and offsets equal `wasm-objdump -h`; every function decodes and its `end` lands on

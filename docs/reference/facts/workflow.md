@@ -337,20 +337,20 @@ UTF-8. At 182dc6c1 twelve tracked files there besides the externs file are not U
 
 ## W9. A Latin-1 line breaks macOS `sed`, `cut` and `tr` in a UTF-8 locale, not only `grep`
 
-Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"`:
+Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"` (e7d03612):
 
-    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | sed -E 's/·/x/'
+    LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 | sed -E 's/·/x/'
       sed: RE error: illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | cut -d' ' -f1-3
+    LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 | cut -d' ' -f1-3
       cut: stdin: Illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | LC_ALL=C cut -d' ' -f1-3
-      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 <0xB7>
-    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | tr -d '\n'
+    LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 | LC_ALL=C cut -d' ' -f1-3
+      src/uenux2/src/app/comum/dados/celeitores.cpp:106:// f6734 <0xB7>
+    LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 | tr -d '\n'
       tr: Illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | iconv -f latin1 -t utf-8
-      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 · 496 B · unmatched · name unknown
-    git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l              # 0
-    LC_ALL=C git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l     # 1
+    LC_ALL=C /usr/bin/grep -rn '^// f6734 ' src/uenux2 | iconv -f latin1 -t utf-8
+      src/uenux2/src/app/comum/dados/celeitores.cpp:106:// f6734 · 6461 B · unmatched · name unknown
+    git grep -h -E '^// f6734 ' HEAD -- src/uenux2 | wc -l              # 0
+    LC_ALL=C git grep -h -E '^// f6734 ' HEAD -- src/uenux2 | wc -l     # 1
 
 `sed -i ''` on a Latin-1 source stops the same way, `sed: RE error: illegal byte sequence`, leaves the source unchanged
 and an untracked partial copy beside it, `.!<pid>!<file>`, which `git status --short` lists as `??` and
@@ -480,6 +480,7 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-kinds.test.ts`, "offers an operand only the readings of its kind" | `NextEntry`'s `i32.const 7010` without the kind table: the function in our table slot 7010, and the string our data holds at address 7010 | an address-taken function ahead of it in our table; a string a landing puts at 7010, which adds an address reading. The case now takes the function from the link and reads only the slot readings |
 | `splat-sub.test.ts`, the `selfVoted` and `buildSplat` self-vote cases | `__cxa_new_handler`'s voters (`by:137`) | a match of another reader of the name adds a voter (2549): `newHandlerVotedBy137Alone` now sets the premise on a copy of the maps |
 | `splat-review.test.ts`, "confirms a self-voted name through the matches that may use it" | 1877's `call by:9218` line | a table holder of 1877 that matches names it by `table`: `desconverteVotedBy9218Alone` now sets the premise |
+| `splat-symbols.test.ts`, "resolveRepointed > offers every place of read-only content it finds more than once" | `boost::gregorian::bad_weekday`'s typeinfo in our link, which the target lacks (`TypeError: Cannot read properties of undefined (reading 'section')` without it) | an edit of the Boost probe that drops the object: `probe_weekday` keeps it (`tools/libs/boost/probe.cpp`) |
 
 Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
 case takes the number from the link ([splat.md](splat.md) §S5 item 3). A case that restates the slot rule reads the
@@ -498,7 +499,8 @@ makes the tree, from a checkout whose build is current (W5):
 
 Its `splat` must print the target's sha256 with the base's count first: a stale link fails as the branch does. Do not
 change a test to suit one link. A landing changes the case that fails on its merge, to read the rule and not the number,
-in the merge commit.
+in the merge commit. An object a case reads that the target lacks stays in our link for the test alone, and
+`asmlift-wasm/README.md` "Tests" says what may keep it and what a probe edit runs before steps 7 to 9.
 
 One more way a run alone can mislead (bb6f018):
 
@@ -616,14 +618,20 @@ relative to the source that no `-I` names (bbf27ac1):
 A uenux2 header's `-W` list is the whole tree (the generic rule depends on every header, W15), and an object whose
 source does not reach the header through its includes compiles from the same text, so compile only the includers.
 This lists the link objects whose sources reach the given headers through `#include "…"` lines, transitively, over
-the tracked tree (a basename shared by two sources lists both, which costs a compile, not a miss); at 182dc6c1 it
-prints 32 for `cconfiguracaoeleicao.h` and 232 for `cdatetime.h`, in under a second. It reads the tree it runs in, so
-take the union with the same search over the base's tree: a range that removes an `#include` (a trap's `-pending.cpp`
-that goes with its last member) takes an object out of the head's list though the edit changed it. Add §W15's byte
-search for an `src/asn1` module header, whose users reach it through ecourna's include paths too:
+the files under `<tree>/src` (a basename shared by two sources lists both, which costs a compile, not a miss). It reads
+the tree it is given, so run it over the head and over the base's archive (`git archive <base> src tools | tar -x -C
+<dir>`), each with its own object list (`make -s -C <dir>/src print-LINK_OBJS`, no `ROOT`), and take the union: a range
+that removes an `#include` (a trap's `-pending.cpp` that goes with its last member) takes an object out of the head's
+list though the edit changed it. It walks the directory rather than `git ls-files`, which lists nothing in an archive,
+with no error. At e7d03612 it prints 65 for `cconfiguracaoeleicao.h` over the checkout and over an archive of the same
+commit, in under a second. Add §W15's byte search for an `src/asn1` module header, whose users reach it through
+ecourna's include paths too:
 
     make -s -C src print-LINK_OBJS | tr ' ' '\n' > build/out/workflow-facts/link-objs.txt
-    python3 -I -c "import os,re,subprocess,sys; fs=[f for f in subprocess.run(['git','ls-files','src'],capture_output=True,text=True).stdout.split() if f.endswith(('.h','.hpp','.cpp','.c'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(f,'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[2:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c'))}; print('\n'.join(sorted(o.replace(os.getcwd()+'/','') for o in open(sys.argv[1]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
+    python3 -I -c "import os,re,sys; r=sys.argv[1]; fs=[os.path.relpath(os.path.join(d,n),r) for d,_,ns in os.walk(os.path.join(r,'src')) for n in ns if n.endswith(('.h','.hpp','.cpp','.c'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(os.path.join(r,f),'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[3:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c'))}; print('\n'.join(sorted(o.replace(os.path.abspath(r)+'/','').replace(os.getcwd()+'/','') for o in open(sys.argv[2]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" . build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
+
+Over an archive, pass its directory for `.` and its own object list; the objects come out as `build/out/…` paths of
+that tree.
 
 For a range that rebuilds many objects, `make -n -B` over the list prints every one's compile line at once, and the
 lines of their prerequisites (the `build/out/app/asn1/` objects) beside them; keep those whose `-o` is listed. With
@@ -646,9 +654,10 @@ Run as a batch, those lines mislead five ways:
 3. **The branch's flags.** The checkout's line has the branch's fragment flags: when the range edits a fragment that
    names the object, take the base's lines from the archive's own Makefile, `make -n -B -C <dir>/src
    <dir>/<object>…`, run with no `ROOT` (a `ROOT` names the fragments `src/Makefile` includes, so `ROOT=$PWD` gives the
-   branch's). Its `awk: can't open file …/tools/libs/7zip/sources.txt` comes from a rule the archive cannot read and
-   changes no TSE object's line.
-4. **An object no rule makes stops make** at `No rule to make target`, and only the lines before it print: leave out of
+   branch's). An `APP=` on either side is relative to the tree (`APP=build/out/<handle>/appx`): an absolute one drops
+   every companion's line ([agents.md](../../agents.md) "Shared build outputs" has the counts). Its `awk: can't open
+   file …/tools/libs/7zip/sources.txt` comes from a rule the archive cannot read and changes no TSE object's line. 4.
+   **An object no rule makes stops make** at `No rule to make target`, and only the lines before it print: leave out of
    the list the objects `print-LINK_OBJS` does not name (a deleted source's, a probe's), or pass `-k`, and count the
    lines against the list. With stderr dropped nothing says so.
 5. **A prerequisite outside `src/`** (`third_party/libqrencode/qrencode.h` in fragment 204's rule,
@@ -671,8 +680,11 @@ linkonce copy of it differ with no code changed: such an object imports the symb
 absence. A type renamed or moved to another scope does the same to every includer that emits a template instance over
 it: the object differs in those symbols' names only, its masked disassembly the same (295 includers of `cfotos.h`
 compiled, one so when `CFotos::SFotoIndexada` became `SIndiceFoto`); name such objects in the commit message as
-name-only changes. An object of another unit that differs for real is named in the commit and re-measured
-([agents.md](../../agents.md) "Shared build outputs").
+name-only changes. An include that brings a header's guarded template or inline statics adds their initializers to
+every includer, which then differs though the link drops the repeats: `cparterdv.cpp.o` went from 0 to 48
+`__cxx_global_var_init`/`_ZGV` symbols with an `iform.h` include, and the plain link with the base's object gave the
+same sha256; settle such an object with that one-variant link (below) before calling it harmless. An object of another
+unit that differs for real is named in the commit and re-measured ([agents.md](../../agents.md) "Shared build outputs").
 
 When the range also edits a source that includes the header, the base object differs by that edit, and the question
 is today's source with the base's header. Compile today's sources with the base header put first, `-iquote <dir>` with
@@ -994,7 +1006,7 @@ This also drops every untracked file it staged, so save what you want first. The
 ## W23. The notes a merge makes stale
 
 A merge's new matches, and the functions it writes that do not match, make other notes false: a pending header's
-callees "with no name", a fragment's "waits for fn N", a roots comment's callers, a README row, a doc's example. Seven
+callees "with no name", a fragment's "waits for fn N", a roots comment's callers, a README row, a doc's example. Eight
 kinds go stale, and a search by the new indices finds only the first, so run each:
 
 1. **A note that names a new index.** The indices are the new match lines, the indices whose match line or object the
@@ -1008,15 +1020,25 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    adds no index. Search each deleted file's name and each removed identifier.
 4. **A sink whose storers are in the link.** A vtable sink's comment need not name the functions that store its vptr:
    for the vtable it names, `/usr/bin/grep -rlE 'i32\.const <vptr>($|[^0-9])' build/out/splat/pieces/asm` lists them,
-   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing.
+   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing (a storer as
+   `src/units/README.md` "Companion files" counts it; [units.md](units.md) §U16 lists a tip's idle stand-ins and sinks).
 5. **A stand-in that takes an address,** `&name` of an `__asm__`-labelled function in a static constructor: no `call`
    shows it, so read its callee's callers from the scan, not from the comment, which can be stale either way (callers
    it calls missing that are in the link).
 6. **A doc example named by function or score**, not index ("`comum::md::CPleito`'s constructor at `103 over 438`"):
    search the docs for each new match's class and member (demangled from `splat/matched.txt`).
-7. **A doc example that prints our link's numbers** (a slot, an offset, an `ours` index, a count): a change of the
-   link line or of a library's flags moves them with no new match. Re-run the examples that print the moved code's
+7. **A note or a doc example that quotes our link's numbers** (an `ld_index`, a map address, an object's data segment
+   numbers, a slot, an offset, an `ours` index, a count): a change of that object, of one before it on the link line or
+   of a library's flags moves them with no new match, and no index names them. Search the fragments and companions of
+   the objects the merge recompiled (`LC_ALL=C /usr/bin/grep -n -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' <those
+   files>`; 126 lines in 64 fragments at e7d03612) and re-measure, re-run the examples that print the moved code's
    numbers, or date each with the commit it was taken at.
+8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
+   the line, and so does one that takes an anchor kind from its pair ([splat.md](splat.md) §S8, the ninth kind); no
+   index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
+   it; this lists every quote the symbol file no longer holds (9 at e7d03612):
+
+       LC_ALL=C /usr/bin/grep -n -o -E 'vote:[0-9]+ by:[0-9]+(,[0-9]+)*' src/units/*.mk src/units/*.cpp | while IFS=: read f n q; do /usr/bin/grep -q -F "evidence:$q" splat/symbol_addrs.txt || echo "$f:$n: $q"; done
 
 The base is the side whose comments have not been searched against the other's matches: for a lane merged onto
 `main`, `main` (or the merge's first parent); when `main` merges `origin/main`, the first parent already holds every
@@ -1032,8 +1054,8 @@ they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W
     awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' build/out/<handle>/new.idx ledger/callgraph.tsv | sort -u > build/out/<handle>/callee.idx
     awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' build/out/<handle>/callee.idx));"
     LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/callee.idx src/units/*-roots.cpp src/app/roots_*.cpp
-    for f in $(git diff --name-only --diff-filter=D $B HEAD -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
-    git diff $B HEAD -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
+    for f in $(git diff --name-only --diff-filter=D $B -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
+    git diff $B -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
 
 The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
 from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
@@ -1041,7 +1063,9 @@ search reads the hand lines of the new matches' callees (the second-to-last kind
 companions' lines that name a callee, among them every caller list; the last two list the deleted files' names (at
 3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to search
 with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold coordinates
-and counts, no notes. Each hit is to read: an index also matches a line number or a size. The third index search reads
+and counts, no notes. The last two compare the base with the working tree, so they read a lane's uncommitted range, a
+merge's staged result and a commit alike (against `HEAD` they print nothing before the commit). Each hit is to read: an
+index also matches a line number or a size. The third index search reads
 the trees' comments, where a header of any class can list a new match among callees "with no name"; a fix keeps the
 paragraph's line count, so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says
 ("When it goes", "Going earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it
@@ -1155,8 +1179,14 @@ edited), hold that source old: `make -n -C src link -o $PWD/<source> -W $PWD/<he
 rule lists and 0 for one it does not (check with one it is known to list). And to iterate on a variant of a header in
 the plain link without rebuilding its whole tree (every uenux2 object depends on every uenux2 header, W15), remove the
 includers' objects by name (W13's includer search) and run `make -C src link -o $PWD/<header>`: 5 to 7 compiles and a
-link per variant, against 605 for a header of `app/comum/gravadores/md/`. Before step 7, rebuild without `-o` and check
-that the objects outside the includers came out the same.
+link per variant, against 605 for a header of `app/comum/gravadores/md/`. Pass the same `-o $PWD/<header>` to every
+make target run on that link (`link-map`, `link-kinds`, `census`, the `splat-*` targets): each depends on the link, so
+without it make compiles the tree first, as `link` does (e7d03612):
+
+    make -n -C src link-map -W $PWD/src/uenux2/src/app/comum/gravadores/cgravadorwsq.h | /usr/bin/grep -c 'em++.* -c '
+      612
+
+Before step 7, rebuild without `-o` and check that the objects outside the includers came out the same.
 
 ## W27. What a merge joins with no conflict, and what it drops
 
@@ -1178,11 +1208,13 @@ How-to step 10 ("Landing onto a moved main") resolves the conflicts. These pass 
   both sides changed, write the three blobs to files and intersect the lines each side adds (`comm -12` of the sorted
   `>` lines of `diff <base> <ours>` and `diff <base> <theirs>`), then recount every number their comments give.
 - **Each side removed a different member, sink or stand-in of one companion.** Keep both removals and do what the last
-  one does: a `-pending.cpp` goes with its last member, with its rule and its `EXTRA_OBJS` entry, though neither side
-  removed them.
+  one does (when one side removed the last and deleted the file, git reports a modify/delete conflict: `git rm` it): a
+  `-pending.cpp` goes with its last member, with its rule and its `EXTRA_OBJS` entry, though neither side removed them.
 - **A gap line** (`// (original lines N-M: …)` over a `#line`) that both sides renumbered conflicts: take the side whose
   code the merge keeps around it. Step 9 writes the numbers again (`N files written`), and the object is the same either
-  way, since the `#line` sets the lines.
+  way, since the `#line` sets the lines, except where a record names a lambda by its place (`(lambda at
+  <file>:<line>:<col>)`): keep every line of that lambda's function where it was
+  ([src/README.md](../../../src/README.md) "Gaps" has the fact and the `awk` that lists them).
 - **A hand line carried into a side taken whole.** A second `git checkout HEAD -- splat/symbol_addrs.txt` after the
   carry drops it with no message: take a side of a generated file once, before carrying, and check with read-only
   commands after. After step 8, `N hand edits kept` (entries, not the section's comment lines) is the parent's count

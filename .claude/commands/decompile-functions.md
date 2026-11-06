@@ -230,7 +230,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   (a `std::function` built from a function pointer holds the slot beside its `__func` vptr: 12040 stores 1529, which
   is 12039): `fn` lists its slot among the strings referenced, and the element section names it
   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
-  `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). Count it as a callee, and put it
+  `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). A slot can also lie inside a
+  literal, which `fn` lists as a tail, `(+N into M)`, and an integer can equal a slot: read each word by its use
+  (`docs/reference/facts/reading.md` §R23). Count a slot as a callee, and put it
   in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
   named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A callee the lane writes, which the link
   keeps, resolves only when its own callees do: wasm-ld stops on an undefined symbol that live code calls. So follow
@@ -287,19 +289,23 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
     which an anchor or a `vtable` pair casts only when the two bodies are the same opcodes (`docs/reference/splat.md`
     §2): the row, the object and the destructor land together, and a row written one remainder off stays `unresolved` on
     it (7160). The row's unit's pending notes are the other place to read first;
-  - its literals' tails. Most `(+N into M)` lines `pnpm wasm fn` lists are integers in the data range or a tail's
-    start, which re-points by content. A loaded end pointer (`M + len` among its operands, `len` from
+  - its literals' tails. Most `(+N into M)` lines `pnpm wasm fn` lists are integers in the data range (a size, a
+    multiple of an element's size: §R23) or a tail's start, which re-points by content. A loaded end
+    pointer (`M + len` among its operands, `len` from
     `ledger/strings.tsv`) waits for the host's writer when no code of our link holds the host and its text is not in
     our plain wasm (11253, 11254 and 8168 waited so for 10425's `"-{:02}-{:02}"`, 8963). One whose host our link holds
     can still read `string tail occurs N times` (2725), which only the written row's scan shows: list it as a risk.
 - **And every row has a keeper.** A row lands only if our link keeps it: a caller, a store of its vtable's vptr, or
   a function that passes its table slot, each matched, written, in the lane, or a roots stand-in (an external
-  function; a vtable through a sink). A template copy or an internal helper whose callers are all unwritten waits for
+  function; a vtable through a sink). A template copy, or a helper with internal linkage (its record names `(anonymous
+  namespace)::`, which no roots TU can name), whose callers are all unwritten waits for
   them, under their lane. A function passed by its slot is kept by the passer: the slot's `i32.const` in the passer's
   piece (`/usr/bin/grep -rlE 'i32\.const <slot>($|[^0-9])' build/out/splat/pieces/asm`), checked in the element
   section and used as a slot (an `invoke_*` first argument, a `call_indirect` operand, a stored function pointer the
   code calls), since an integer can equal a slot: 11852 stores `2594` beside `2582` as a value and keeps no 11423, whose
-  keeper is its class's vptr store (`docs/reference/facts/reading.md` §R20). A static's exit destructor (10 to 14 B,
+  keeper is its class's vptr store (`docs/reference/facts/reading.md` §R20), and a size before `call 137` or a stored
+  word whose slot's function does not fit the class is no slot either (§R23). A
+  static's exit destructor (10 to 14 B,
   its only reference its table slot, which `__cxa_atexit` gets at run time) has no keeper a search sees:
   `wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'ref\.func:10682$'` prints `elem[3848]`, and
   no piece holds `i32.const 3848`. It lands with the lane whose match reads the static, and counts there.
@@ -319,7 +325,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   members and its statics' destructors. Different classes and different files, so no two lanes edit one file or emit
   one vtable. A member that loads another file's constant (a font, a table) holds that file's code, inlined: list the
   readers of each candidate's data operands (the grep above) and put the members that read one file's constants in
-  the lane that owns that file (eleven state classes read `ctelasvota.cpp`'s fonts). A header
+  the lane that owns that file (eleven state classes read `ctelasvota.cpp`'s fonts). When a member's two ties name two
+  lanes (it holds one lane's file's code inlined and calls a callee another lane writes), it goes to the lane of the
+  callee, as a member that waits for the file owner's landing, and the pick says so (11884 holds `cinputmenufield.cpp`'s
+  two `SetFormatString` and calls 5953). A header
   several lanes need (a shared enum, a type a record names) is listed in the pick post, with one copy on the board's
   `shared/` that every lane takes byte for byte.
 
@@ -344,7 +353,8 @@ It returns, and posts as a `rounds/` result: the verdict (matched, or not matcha
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
-without a match.
+without a match, nor from one whose change costs a row its base matches: it posts the loss as a `facts/` post, and
+how-to step 9 says what that post holds and on which branch alone the change may be committed.
 
 Count the matches by target index, not by line. `git diff main -- splat/matched.txt` shows the added lines, but a
 line removed there is not always a lost match: a twin whose surviving name moved is removed under its old symbol and
@@ -470,10 +480,12 @@ lands ("Pausing and resuming" below).
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
    stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
    name, and which side of a twin's line to keep, with the check after step 9. A stand-in, or a call of one, whose
-   every target caller is now in the link goes in the merge, and a roots file with its last stand-in; one whose callers
+   every target caller is now in the link goes in the merge, or in a code commit of its own right after the batch's
+   merges that names each removal and its link, and a roots file with its last stand-in; one whose callers
    landed in part keeps one call per caller still waiting, its comment saying which, unless a link without it moves
-   no row. Removals that go for one reason share one variant link (`src/units/README.md` "Companion files", which
-   says how to find them call by call).
+   no row. Removals that go for one reason share one variant link (`src/units/README.md` "Companion files", "Finding the
+   idle ones", which says how to find them call by call and over the whole tip). One idle since before the batch is
+   named in the result and goes in a commit of its own.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
@@ -512,7 +524,8 @@ relative links of every edited doc resolve and that `status.py --check`, `stubs.
 and for each friction post the doc change that answers it, or why none does.
 
 With many posts, split the docs in two parts by file, one agent each in its own worktree from the same commit, and
-give each post to the part whose file it names first. A third agent then merges the two branches, gives each fact one
+give each post to the part whose file it names first, and each part a block of the follow-up numbers, so their two lists
+do not collide. A third agent then merges the two branches, gives each fact one
 home, and re-runs what the two halves disagree on. Its branch is what the coordinator opens a pull request for, and
 the DOCS worktrees are removed as Stage 4 step 4 removes a lane's, the branches kept.
 

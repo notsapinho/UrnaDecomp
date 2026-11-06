@@ -516,6 +516,14 @@ anchor nothing, [../splat.md](../splat.md) §2), so the first holder's anchor li
 build/out/splat/pieces/asm`); when a unit made our 886 the target's thunk, 576's `vptr-anchor` line left. 576 stayed
 `match`, since the scan applies the match list, and its fragment says why the line went.
 
+A ninth moves a count and no name: **a `vote:N` that halves.** An anchor pair votes once for each anchor kind that lists
+it (`srcloc-anchor`, `vptr-anchor`, `content-anchor`: the `anchorKinds` loop of `splat-symbols.ts`), so a range that
+gives a second holder to an object one pair held alone takes that pair's `content-anchor` away, and its votes count
+once. `git diff afc03869 d481b81c -- splat/symbol_addrs.txt | /usr/bin/grep -E '^[-+]_ZN4vota15CPedeIdentidade'` prints
+652's two statics going from `vote:2` and `vote:8` to `vote:1` and `vote:4`, names and addresses unchanged, when 1150
+came to load `TITULO_TREINAMENTO`, which 652 alone had held (a reading of that loop). A note that quotes a count goes
+stale so; read the name and the address.
+
 Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses). These are
 7-Zip's allocators, two function pointers each: the content step places them where the target holds the same two
@@ -760,10 +768,11 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     twice, since binaryen inlines a function called once ([tool-traps.md](tool-traps.md) §X1). The rows that call 306
     (5161, 9052, 9504 and the others that stopped at `call 306 | call 2671`) leave `match` with it. 2671's line names
     `vector<int>`'s guard, the first of that body's twins in link order, since the root's guard is another body.
-    The link's copies of the three are unit 253's `mock/app/comum/cappinfobuilder.cpp.o`'s now, the same code at the
-    executable TU's rule, linked ahead of this root and of `src/app/roots_coderenv.cpp` (unit 229, whose `vector<char>`
-    twins of 520 and 4967 named their match lines before), so the lines carry `vector<unsigned char>`'s names
-    (`awk -F'\t' '$1==306 || $1==520 || $1==4967 {print $1, $11}' splat/scan.tsv`; the root's head comment).
+    The link's copies come from objects ahead of this root now, at the executable TU's rule: 306's from unit 253's
+    `mock/app/comum/cappinfobuilder.cpp.o`, 520's and 4967's from the executable TU's own `vota_web_wasm.cpp.o` (at
+    e7d03612: `awk -F'\t' '$1==306 || $1==520 || $1==4967 {print $1, $11}' splat/scan.tsv`), so the lines carry
+    `vector<unsigned char>`'s names, where `src/app/roots_coderenv.cpp`'s `vector<char>` twins (unit 229) named them
+    before. Whether the three still need the root is not measured.
 17. **5294, 1698, 5532 and 9873, by `src/app/roots_vector.cpp`, and 3792, 6043, 11585, 11621 and 11622, by two of
     them.** The first four are the executable TU's copies of
     `vector<comum::md::estadoaplicacao::CDadoCorrespondencia>`'s guard destructor, `~vector`,
@@ -891,7 +900,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
 28. **1227, 1524, 3363, 4760, 5152, 7833, 7850, 8046, 8327 and 9405, by 988's `addr` pair at our table's slot 3.**
     988 (`std::locale::classic`, `unresolved`) pairs at `addr` only while our slot 3 holds std::string's `const char*`
     constructor, as the target's slot 3 (148) does: the census reads a slot below 1024 as a literal, so the slot's
-    number must agree, not the table's order (our slots 1 and 2 hold other functions than the target's). The pair's
+    number must agree, not the table's order (at e7d03612 our slot 1 holds 10620, the target's slot 2, and our slot 2
+    9649, where the target's holds 11662: `wasm-objdump -x -j Elem` of both wasm, each slot's function looked up in the
+    scan's `ours` column). The pair's
     votes name `locale::__imp::install`'s callees and the facets' vtables (`vote:N+rtti by:988,…`), and through them
     the ten rows hold. The executable TU's first references give our first slots, and a form of it that moved the
     constructor to slot 4 put 988 at `shape` and took the ten out (unit 170's fragment). Both checks, as a bash script:
@@ -989,7 +1000,10 @@ is checked against its neighbours and the data it uses before it is listed, at a
 one content the scan pairs turns on where our data lies, so a unit that adds data can move a pick no source touched.
 At a boundary between two files' runs the neighbours do not decide. For an OpenSSL provider function the
 `OSSL_DISPATCH` tables do: each is `{id, slot}` pairs from id 1, the family's `new`, so the table that holds the
-function's slot names its family. This prints each one, with its first three entries named by `splat/matched.txt`:
+function's slot names its family, and the id beside the slot names the member
+(`third_party/openssl/include/openssl/core_dispatch.h` defines each `OSSL_FUNC_<OPERATION>_<MEMBER>`). A family's getter
+and setter can return lists of the same bytes, and then the id alone tells them apart. This prints each table that holds
+the function's slot, with the slot's id and the table's first three entries named by `splat/matched.txt`:
 
 ```sh
 python3 -I -c "
@@ -1001,10 +1015,15 @@ for s in [k for k, v in el.items() if v == int(sys.argv[1])]:
     for o in [o for o in range(4, len(img) - 3, 4) if w(o) == s and 0 < w(o - 4) < 64]:
         t = o - 4
         while 0 < w(t - 8) < 64: t -= 8
-        if w(t) == 1: print(base + t, [(w(t + k), names.get(str(el.get(w(t + k + 4))), el.get(w(t + k + 4)))) for k in range(0, 8 * 3, 8)])
+        if w(t) == 1: print(base + t, 'id', w(o - 4), [(w(t + k), names.get(str(el.get(w(t + k + 4))), el.get(w(t + k + 4)))) for k in range(0, 8 * 3, 8)])
 " 13334
-# 1784000 [(1, 'hmac_new'), (2, 'hmac_dup'), (3, 'hmac_free')]
+# 1784000 id 11 [(1, 'hmac_new'), (2, 'hmac_dup'), (3, 'hmac_free')]
 ```
+
+With 13412 in place of 13334 it prints `1780192 id 14 [(1, 'mac_new'), …]` and `1780336 id 14 [(1, 'mac_new_cmac'),
+…]`: id 14 is `OSSL_FUNC_KEYMGMT_SETTABLE_PARAMS` (`/usr/bin/grep -n -E 'OSSL_FUNC_KEYMGMT_(GET|SET)TABLE_PARAMS '
+third_party/openssl/include/openssl/core_dispatch.h` prints 12 and 14), so 13412 is `mac_settable_params`, though
+`mac_gettable_params` returns a list of the same bytes and its neighbours are `mac_*` either way.
 
 12991 was written `kdf_tls1_prf_gettable_ctx_params`, and its one slot, 11864, is in pbkdf1's table (1795712, which
 holds the slots of 12996 to 12992; id 7, `OSSL_FUNC_KDF_GETTABLE_CTX_PARAMS`). 13334 was written
