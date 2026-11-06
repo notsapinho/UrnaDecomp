@@ -985,9 +985,14 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     `unresolved self-voted` (`awk -F'\t' '$1==3138 {print $5, $6}' splat/scan.tsv`): how-to step 9's data-layout case,
     and its match line was withdrawn, no later merge of that batch moving the data back. Found by its content (its 48
     `OSSL_DISPATCH` ids at 8-byte strides) in each plain link, `core_dispatch_` sat at 0x199140 on c3a97777, moved
-    +0xd0 with 11865's object, +0xe0 with cgeracaoversoescontratos.cpp.o and +0x2a0 with the converters. A landing
-    whose data puts the two objects back at the target's addresses brings 3138 back by content (how-to step 9, "A row
-    of another unit can turn `match`"), and adds it to the list again.
+    +0xd0 with 11865's object, +0xe0 with cgeracaoversoescontratos.cpp.o and +0x2a0 with the converters. What refuses
+    3138 is `core_dispatch_`'s line alone: on the merged link a copy of the symbol file without it
+    (`provider_store_method`'s `vote:13` line kept) gives 3138 `match` and the splat build the target's sha256, and the
+    committed file `UNCONFIRMED: self-voted`. A landing whose data puts `core_dispatch_` back at 0x199290 brings 3138
+    back by content (how-to step 9, "A row of another unit can turn `match`"), and so does a match of `core_get_params`
+    (6996, `no-candidate`, ours 24 over 96 rows), the one function among its 48 entries our link does not name: our
+    object's bytes then agree with the target's, and the name holds wherever the data falls
+    ([glossary](../../glossary.md) "self-voted"). Either adds it to the list again.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
