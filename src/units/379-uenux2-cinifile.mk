@@ -108,15 +108,18 @@
 # step 3, unit 230: the overload set forces it).
 # 3651's static (ESCAPES, @1839288, the ten escapes the target's static initializer 14478 stores) is in an anonymous
 # namespace, a choice; our link holds it as three words, the symbol file's ESCAPES.0 to .2. Its exit destructor 10879
-# matches by ESCAPES.2's callers+content hand line (splat/symbol_addrs.txt): 3651's match votes for .0 and .1, and the
-# third word, 1839296, is read by 10879 and written by 14478 (__wasm_call_ctors) only (/usr/bin/grep -rlE
-# 'i32\.const 1839296($|[^0-9])' build/out/splat/pieces/asm), the static constructors' stores of 0 and of the block's
-# end of capacity: a .bss object led by a target function other than the match (how-to step 9, "Hand edits"). Without
-# the line 10879 reads `unresolved self-voted` on that name. 3651 rests on 10879 in turn: ESCAPES.0's and .1's names
-# have one voter besides 3651, 10879's census pair (`vote:2 by:3651,10879`); scanned twice over copies without 3651's
-# and 10879's match lines, with .0 and .1 at `vote:1 by:3651` and without ESCAPES.2's line, 3651 reads `unresolved
-# self-voted` on ESCAPES.0 (12902 rows), and with either 10879's votes or its match it holds (12903, 12904). 10879 is a
-# thunk into the body binaryen keeps for it and for vota::TECLAS_TESTE_TECLADO's exit destructor (12862,
+# matches by ESCAPES.2's generated name: 3651's match votes for .0 and .1, and the third word, 1839296, is read by 10879
+# and written by 14478 (__wasm_call_ctors) only (/usr/bin/grep -rlE 'i32\.const 1839296($|[^0-9])'
+# build/out/splat/pieces/asm), the static constructors' stores of 0 and of the block's end of capacity. Step 8 names
+# the word by the votes of 10879 and 14478, so 10879 rests on 14478's: our static constructors, written and no match
+# (splat-remap of __wasm_call_ctors against 14478 reads UNRESOLVED on 1740 operands, the word's store not among them).
+# The callers+content hand line that named the word while 10879 was its one voter went once 14478 voted for it too
+# (removed on copies: no row moves and both splat-builds pass; with the name out on both sides 10879 reads
+# `unresolved`). 3651 rests on 10879 in turn: ESCAPES.0's and .1's names have one voter besides 3651, 10879's census
+# pair (`vote:2 by:3651,10879`); scanned twice over copies without 3651's and 10879's match lines, with .0 and .1 at
+# `vote:1 by:3651` and without ESCAPES.2's hand line (measured before it went), 3651 reads `unresolved self-voted` on
+# ESCAPES.0 (12902 rows), and with either 10879's votes or its match it holds (12903, 12904). 10879 is a thunk into
+# the body binaryen keeps for it and for vota::TECLAS_TESTE_TECLADO's exit destructor (12862,
 # ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862 are: 6071 and 12862 match, and a link with a
 # cinistrings.cpp.o without ESCAPES holds no merged body and 12862's destructor whole (docs/reference/facts/splat.md S10
 # item 30).

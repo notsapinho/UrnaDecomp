@@ -967,7 +967,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     merged body and 12862's destructor whole: a scratch link with a variant `cinistrings.cpp.o` whose `ESCAPES` is a
     `const std::pair<const char*, char>[]` (workflow.md W13, "One variant object in the whole link") has no line for
     6071's symbol in its `names.tsv`, where the plain link has one. A landing that takes `ESCAPES` or its destructor out
-    takes the two out. 10879 itself matches by `ESCAPES.2`'s hand line (unit 379's fragment).
+    takes the two out. 10879 itself matches by `ESCAPES.2`'s generated name, which 10879 and 14478 (the static
+    constructors, written and no match) vote for; unit 379's fragment has the weighing of the hand line it replaced.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
