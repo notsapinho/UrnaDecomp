@@ -189,8 +189,8 @@ uedword CFile::ReadLine(std::string& linha) const
         throw CIoError(EIO_LEITURA_LINHA_NAO_ABERTO, EFileOperation::None, "arquivo nao estava aberto");
     }
     char buffer[TAMANHO_BUFFER_LINHA];
-    std::string resultado;
     buffer[0] = buffer[TAMANHO_BUFFER_LINHA - 2] = '\0';
+    std::string resultado;
     while (fgets(buffer, TAMANHO_BUFFER_LINHA, m_file) != nullptr) {
         if (buffer[TAMANHO_BUFFER_LINHA - 2] == '\0' || buffer[TAMANHO_BUFFER_LINHA - 2] == '\n') break;
         resultado += buffer;

@@ -1,4 +1,6 @@
-# uenux2 api::CIniSection (api/io/cinisection.cpp, the file the record of its operator= names): SetKey, target fn 5482.
+# uenux2 api::CIniSection (api/io/cinisection.cpp, the file the record of its operator= names): SetKey, target fn 5482;
+# operator= (its record, line 36) and the constructor from a name, which target fn 5480 holds inlined, are written for
+# fragment 379, which has their evidence and measurements.
 #
 # Evidence: 5482 looks a CIniKey's name up in a std::map<std::string, CIniKey> at +12 of its object; when the name is
 # there it assigns the key through CIniKey::operator= (5483, unit 01), otherwise it builds a pair of the name and a copy
@@ -25,22 +27,18 @@
 # - The hint is end(), which the target passes from the compare's own end(): the find's result as the hint (it equals
 #   end() there) scores 21 over 242, the extra row the hint argument.
 #
-# Chosen: the name SetKey and the class head in api/io/cinisection.h (the 12 bytes before the map as the section's
-# name, the member names, the header's path); the constructors' `= default`; SetKey's line (40), below operator='s
-# record line 36, which stays blank. std::make_pair, a pair of the map's value_type and emplace_hint(end(), name, key)
-# give the same object (wasm-objdump -d of the object, local and relocation numbers masked). cinikey.cpp's object
-# defines the same functions with the same code before and after the constructors (the same comparison).
+# Chosen: the name SetKey and the class head in api/io/cinisection.h (the 12 bytes before the map as the section's name,
+# the member names, the header's path); the constructors' `= default`; SetKey's lines, after operator= (whose throw is
+# on its record's line 36) and the constructor. std::make_pair, a pair of the map's value_type and emplace_hint(end(),
+# name, key) give the same object (wasm-objdump -d of the object, local and relocation numbers masked). cinikey.cpp's
+# object defines the same functions with the same code before and after the constructors (the same comparison).
 #
 # SetKey's calls of the map's find and hinted __find_equal score as the target's 163 and 1346, the bodies matched as
 # twins (they compare only the key): std::map<std::string, std::string>'s find (roots_boost.o) and, since the Boost
 # probe's std::map<std::string, unsigned short> copy left the link, std::set<std::string>'s hinted __find_equal
 # (roots_set.o). Step 9 renamed no match line when this unit landed.
 #
-# Roots: 175-uenux2-cinisection-roots.cpp stands in for 5480, which is not written.
+# No roots: the stand-in for SetKey's two target call sites in 5480 (two calls of SetKey) went when 5480, the INI
+# loader, came into the link (fragment 379, api::CIniFile::Carrega, which holds both calls).
 CINISECTION_SRCS := src/api/io/cinisection.cpp
 UENUX2_SRCS += $(CINISECTION_SRCS)
-
-$(ROOT)/$(APP)/175-uenux2-cinisection-roots.o: $(ROOT)/src/units/175-uenux2-cinisection-roots.cpp $(ROOT)/src/Makefile \
-    $(ROOT)/src/units/175-uenux2-cinisection.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/175-uenux2-cinisection-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/175-uenux2-cinisection-roots.o

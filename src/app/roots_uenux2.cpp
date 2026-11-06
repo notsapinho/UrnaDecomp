@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "api/io/cinikey.h"
 #include "api/io/eueioerror.h"
 #include "api/ipc/eueipcerror.h"
 #include "api/ipc/isemaphore.h"
@@ -28,22 +27,6 @@ __attribute__((noinline)) int EsperaB(size_t ms)
 {
     api::CWait espera(ms + 1);
     return static_cast<int>(sizeof(espera)) + 1;
-}
-
-__attribute__((noinline)) std::string ChaveA(const std::string& nome, const std::string& valor)
-{
-    api::CIniKey a(nome, valor);
-    api::CIniKey b(nome, valor + "b");
-    a = b;
-    return a.GetValor();
-}
-
-__attribute__((noinline)) std::string ChaveB(const std::string& nome, const std::string& valor)
-{
-    api::CIniKey a(nome + "x", valor);
-    const api::CIniKey b(nome, valor);
-    a = b;
-    return a.GetNome();
 }
 
 __attribute__((noinline)) std::shared_ptr<api::ISyncCtl> MutexA() { return std::shared_ptr<api::ISyncCtl>(new api::CPosixMutex()); }
@@ -90,7 +73,6 @@ int urna_roots_uenux2(int a)
 {
     std::string s(static_cast<size_t>(a), 'k');
     int r = EsperaA(static_cast<size_t>(a)) + EsperaB(static_cast<size_t>(a));
-    r += static_cast<int>(ChaveA(s, s).size() + ChaveB(s, s).size());
     r += UsaSincronizacao(a);
     switch (a) {
     case 1: LancaUtil1(a, s); break;
