@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 
+#include "api/gui/primitives.h"
 #include "app/comum/dados/cqrcodeds.h"
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
@@ -218,6 +219,41 @@ public:
     // the vector's words were reloaded after the calls and the first emplace_back kept its fast path). Its other target
     // caller is 7787. The name, from the screen's, its place in ctelasvota.cpp and the bool's name are chosen.
     static CFormInterativoTelaVota CriaTelaAntesHorarioZeresima();
+    // The vote screens CTelasVota's constructor (fn 7787, not written) builds per post, each a CInteractiveFormBuilder
+    // over vota::CPreShowProgressBar (std::make_shared, the block's vptr @1536976 that every one stores). Evidence for
+    // the names: the record ctelasvota.cpp:1585 (fn 3064, its signature and its throw) and, for the others, the name
+    // each passes as the screen's to vota::MensagemErroCargo's builders ("CriaTelaVotoNuloConsulta", ...) and the
+    // form's name ("telaVotoNuloConsulta", ...); that they are static members of CTelasVota is a reading, as for the
+    // recorded CriaTela* statics (records :1392 to :2382). CriaTelaConfirmaImpressaoZeresima (fn 6592) and CriaTelaFim
+    // (fn 6601) are named after their forms ("telaConfirmaImpressaoZeresima", "telaFim"), a choice. Parameters: 3064's
+    // are the record's (its api::TPosition unused, the target's wasm type drops it); the others' are their wasm types'
+    // (7787 passes a std::string to 6616, 6626, 6592 and 6601), and 6601's two font sizes are parameters 7787 passes as
+    // constants, which the target's code shows folded. So are 1591's and 1767's three positions, which they pass on to
+    // adicionaBaseTelaVotoNuloCandidato (fn 6608): its two points are stored as separate 16-bit halves, which values
+    // that were no constants when clang compiled it give, and 7787 passes 10, 115 and 190 at every call; which values
+    // are parameters, and how many, is chosen (6608's own three are its record's, ctelasvota.cpp:1049). The
+    // parameters' names are chosen. Written and matched: 1767, 3063, 3064, 3067, 6592, 6601, 6616 and 6626; written
+    // and differing: 1591 (frame offsets). CriaTelaCompletaCandidatoCom0 (fn 6639) and
+    // CriaTelaConferenciaCandidatoCom0 (fn 6681) are declared only: their adicionaBaseTelaCompletaCandidatoCom0 (6678)
+    // and its callees are not written.
+    static CFormInterativoTelaVota CriaTelaVotoCargoSemCandidato(const comum::md::CCargo& cargo, api::TPosition largura);
+    static CFormInterativoTelaVota CriaTelaVotoBrancoCandidato(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaVotoBrancoCandidato(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaVotoNuloConsulta(const comum::md::CCargo& cargo, const std::string& mensagem);
+    static CFormInterativoTelaVota CriaTelaConferenciaVotoNuloConsulta(const comum::md::CCargo& cargo,
+                                                                       const std::string& mensagem);
+    static CFormInterativoTelaVota CriaTelaVotoNuloCandidato(const comum::md::CCargo& cargo, const std::string& confirma,
+                                                             const std::string& mensagem, uebyte digitos,
+                                                             api::TPosition x, api::TPosition yCampo,
+                                                             api::TPosition yTexto);
+    static CFormInterativoTelaVota CriaTelaConferenciaVotoNuloCandidato(const comum::md::CCargo& cargo,
+                                                                        const std::string& mensagem, api::TPosition x,
+                                                                        api::TPosition yCampo, api::TPosition yTexto);
+    static CFormInterativoTelaVota CriaTelaCompletaCandidatoCom0(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaCandidatoCom0(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConfirmaImpressaoZeresima(const std::string& texto);
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaFim(const std::string& texto, api::TFontSize tamanhoFim,
+                                                                 api::TFontSize tamanhoTexto);
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

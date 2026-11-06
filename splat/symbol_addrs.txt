@@ -669,6 +669,7 @@ out2PrereleaseWithClear = func:686; // size:0x1a evidence:pair-addr
 strAccumFinishRealloc = func:687; // size:0xb9 evidence:pair-addr
 sqlite3Realloc = func:688; // size:0x23e evidence:pair-addr
 deleteTable = func:689; // size:0x943 evidence:pair-addr
+_ZN4vota17MensagemErroCargoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKN5comum2md6CCargoES8_ = func:690; // size:0x2df evidence:call by:3064,6646
 ossl_prov_import_key = func:691; // size:0xbe evidence:pair-fingerprint
 WPACKET_get_total_written = func:692; // size:0x17 evidence:pair-fingerprint
 ossl_namemap_stored = func:693; // size:0x19c evidence:call
@@ -859,7 +860,7 @@ _ZN12CFilterCoder14QueryInterfaceERK4GUIDPPv = func:895; // size:0x631 evidence:
 _ZN7RHVoice8languageD2Ev = func:896; // size:0x5f4 evidence:pair-addr
 _ZN7RHVoice17file_format_errorC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:898; // size:0x15 evidence:vptr-anchor
 _ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEbEENS_19__map_value_compareIS7_NS_4pairIKS7_bEEN7RHVoice3str4lessELb1EEENS5_ISC_EEE7destroyEPNS_11__tree_nodeIS8_PvEE = func:900; // size:0x39 evidence:call
-_ZN3api23CInteractiveFormBuilder15AddInputControlEv = func:901; // size:0x117 evidence:call by:2376,11804,11809
+_ZN3api23CInteractiveFormBuilder15AddInputControlEv = func:901; // size:0x117 evidence:call by:2376,3064,11804,11809
 _ZNK5comum21CImprimirExtratoCarga28GetConteudosQRCodeAdicionaisEv = func:902; // size:0x10 evidence:pair-fingerprint
 _ZNK5comum8CAppInfo7GetVotaENS_10EUrnaTurnoE = func:903; // size:0x261 evidence:srcloc-anchor
 _ZNSt3__24findB8ne210108IPccEET_S2_S2_RKT0_ = func:904; // size:0x2a evidence:pair-fingerprint
@@ -1121,6 +1122,7 @@ sqlite3BitvecDestroy = func:1187; // size:0xc8 evidence:pair-addr
 sqlite3_errmsg = func:1188; // size:0x1ab evidence:pair-addr
 sqlite3_exec = func:1189; // size:0x8c9 evidence:pair-addr
 _ZN3api12CFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentE = func:1191; // size:0x124 evidence:call by:11804,12065
+_ZN4vota17AdicionaNomeCargoERKN5comum2md6CCargoERN3api12CFormBuilderEss = func:1192; // size:0x403 evidence:call by:3064,6646
 ossl_DER_w_precompiled = func:1193; // size:0x94 evidence:pair-addr
 ossl_prov_free_key = func:1194; // size:0x3b evidence:pair-fingerprint
 type_specific_keypair_der2rsa_does_selection = func:1195; // size:0xe evidence:pair-fingerprint
@@ -2792,6 +2794,7 @@ sqlite3_config = func:3056; // size:0x543 evidence:pair-addr
 ossl_cipher_var_keylen_set_ctx_params = func:3057; // size:0x95 evidence:pair-addr
 rsa_signverify_init = func:3061; // size:0x245 evidence:pair-addr
 mac_newctx = func:3062; // size:0xbd evidence:pair-addr
+_ZN4vota10CTelasVota29CriaTelaVotoCargoSemCandidatoERKN5comum2md6CCargoEs = func:3064; // size:0x51b evidence:srcloc-anchor
 hash_df = func:3065; // size:0x323 evidence:pair-addr
 ctr_BCC_update = func:3066; // size:0x2be evidence:pair-addr
 mac_gen_set_params = func:3069; // size:0xa7 evidence:pair-addr
@@ -3276,6 +3279,7 @@ _ZN3api11CFramedText4MoveERKNS_6SPointE = func:3676; // size:0xc evidence:pair-f
 _ZNK3api11CFramedText4RectEv = func:3677; // size:0x85 evidence:pair-fingerprint
 _ZN3api12CFormBuilder13AddLabeledKeyERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_NS_14ETextAlignmentENS_6TColorESB_ = func:3678; // size:0x234 evidence:call by:653,2243
 _ZNKSt3__210filesystem4path12has_filenameB8ne210108Ev = func:3679; // size:0x26 evidence:pair-addr
+_ZN3api12CFormBuilder7AddRectERKNS_6SPointES3_ = func:3680; // size:0xc8 evidence:call by:3064
 _ZN3api10CLineFieldD0Ev = func:3681; // size:0xc evidence:vtable
 _ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_ = func:3682; // size:0x14d evidence:call by:676,2740,3229
 _ZN3api12CApplication11PushContextENS_19CApplicationContextE = func:3684; // size:0x274 evidence:call by:7377,10468,11159
@@ -3306,7 +3310,7 @@ _ZN5comum2md21CComplementoMunicipioC2Ejs = func:3711; // size:0x25 evidence:call
 _ZN5comum2md10CMunicipioC2EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEb = func:3712; // size:0x6b evidence:srcloc-anchor
 _ZNK5comum2md10CEleicaoPE11ValidaOrdemERNSt3__23setIhNS2_4lessIhEENS2_9allocatorIhEEEEhRKNS2_12basic_stringIcNS2_11char_traitsIcEENS6_IcEEEE = func:3714; // size:0x2a8 evidence:srcloc-anchor
 _ZNK5comum2md6CCargo15GetNomeSuplenteEmNS0_5CSexo5ESexoE = func:3715; // size:0x23e evidence:call by:5803,12272
-_ZNK5comum2md6CCargo16GetNomeMasculinoEv = func:3716; // size:0xb8 evidence:call by:2258,2796
+_ZNK5comum2md6CCargo16GetNomeMasculinoEv = func:3716; // size:0xb8 evidence:call by:690,2258,2796
 _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendB8ne210108ERKS5_ = func:3717; // size:0x27 evidence:pair-fingerprint
 _ZN5comum2md34CEleitorDadosHabilitacaoBiometricaC2ENS0_5CDedo8TipoDedoEthi = func:3718; // size:0x2c evidence:pair-fingerprint
 _ZNK5comum2md17CBiometriaEleitor7TemDedoENS0_5CDedo8TipoDedoE = func:3719; // size:0x65 evidence:pair-fingerprint
@@ -3741,6 +3745,7 @@ CMAC_Init = func:4183; // size:0x2ce evidence:pair-addr
 ec_gen_set_params = func:4186; // size:0x394 evidence:pair-addr
 dsa_precheck_params = func:4187; // size:0x81 evidence:pair-addr
 dh_load = func:4188; // size:0x1c evidence:pair-fingerprint
+_ZNSt3__26__treeINS_12__value_typeINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEbEENS_10shared_ptrIN3api6CMovieEEEEENS_19__map_value_compareIS9_NS2_IKS9_SD_EENS_4lessIS9_EELb1EEENS6_ISH_EEE7destroyEPNS_11__tree_nodeISE_PvEE = func:4189; // size:0x6d evidence:call
 tls1_prf_P_hash = func:4190; // size:0x1e5 evidence:pair-addr
 sskdf_set_ctx_params = func:4191; // size:0x1ba evidence:pair-addr
 _ZN4vota12AdicionaVotoEhRKN5comum2md5CVotoE = func:4192; // size:0x2c0 evidence:call by:4442,4471
@@ -4803,6 +4808,7 @@ _ZN12_GLOBAL__N_19DesmangleEPKc = func:5521; // size:0x48 evidence:pair-addr
 _ZN3api5IFormINS_9IScreenMTEEC2ERKNSt3__26vectorINS3_10shared_ptrINS_10IFormFieldIS1_EEEENS3_9allocatorIS8_EEEERKNS5_INS_8IPreShowIS1_EEEE = func:5522; // size:0x10 evidence:call by:301,1694
 _ZNSt3__214__split_bufferIN3api21CPriorityMessageQueueINS1_8SMessageEE5SItemERNS_9allocatorIS5_EEED2Ev = func:5523; // size:0x9 evidence:pair-addr
 _ZN3api11CMovieFieldD2Ev = func:5524; // size:0xb0 evidence:pair-addr
+_ZN3api6CMovie12ProximoFrameEv = func:5525; // size:0x27 evidence:pair-fingerprint
 _ZN3api6CMovieC2ENSt3__26vectorINS_11CMovieFrameENS1_9allocatorIS3_EEEERKNS_6SPointE = func:5526; // size:0x94 evidence:srcloc-anchor
 _ZN3api20CTextFieldDoubleLine4MoveERKNS_6SPointE = func:5527; // size:0x87 evidence:pair-addr
 _ZN3api13CSyncCtlGuardD2Ev = func:5528; // size:0x40 evidence:pair-addr
@@ -5202,8 +5208,8 @@ byn$mgfn-shared$_ZN3api18CPolySingletonList3hasIN5comum10CCalculaCVEEEbRKNS_19TP
 byn$mgfn-shared$_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED0Ev = func:6059; // size:0x3f evidence:pair-addr
 byn$mgfn-shared$_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED2Ev = func:6060; // size:0x3c evidence:pair-fingerprint
 byn$mgfn-shared$_ZN3api11IInputFieldINS_7IScreenEED2Ev = func:6061; // size:0xd1 evidence:pair-addr
-byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_11CFramedTextEED0Ev = func:6062; // size:0x65 evidence:pair-addr
-byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_11CFramedTextEED2Ev = func:6063; // size:0x62 evidence:pair-addr
+byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_17CGrayedFramedTextEED0Ev = func:6062; // size:0x65 evidence:pair-addr
+byn$mgfn-shared$_ZN3api16CMaskedTextFieldINS_17CGrayedFramedTextEED2Ev = func:6063; // size:0x62 evidence:pair-addr
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle9DotSuffix9printLeftERNS0_12OutputBufferE = func:6064; // size:0x7b evidence:pair-fingerprint
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13QualifiedName9printLeftERNS0_12OutputBufferE = func:6065; // size:0x49 evidence:pair-fingerprint
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle15TypeRequirement9printLeftERNS0_12OutputBufferE = func:6066; // size:0x47 evidence:pair-fingerprint
@@ -5211,7 +5217,7 @@ byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle21TemplateParamPackDecl9prin
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13StringLiteral9printLeftERNS0_12OutputBufferE = func:6068; // size:0x62 evidence:pair-fingerprint
 byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle14PODSmallVectorIPNS1_IPNS0_4NodeELm8EEELm4EEaSEOS6_ = func:6069; // size:0x120 evidence:pair-addr
 byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E4makeINS0_8NameTypeEJRNSt3__217basic_string_viewIcNS8_11char_traitsIcEEEEEEEPNS0_4NodeEDpOT0_ = func:6070; // size:0x42 evidence:pair-addr
-byn$mgfn-shared$__cxx_global_array_dtor.80 = func:6071; // size:0x68 evidence:pair-addr
+byn$mgfn-shared$__cxx_global_array_dtor.120 = func:6071; // size:0x68 evidence:pair-addr
 byn$mgfn-shared$_ZNSt3__244__extended_grapheme_custer_property_boundary14__get_propertyB8ne210108EDi = func:6072; // size:0x8a evidence:pair-addr
 byn$mgfn-shared$nth_valueFinalizeFunc = func:6073; // size:0x76 evidence:pair-addr
 byn$mgfn-shared$countFinalize = func:6074; // size:0x5d evidence:pair-addr
@@ -5629,10 +5635,10 @@ walTryBeginRead = func:6500; // size:0x8db evidence:pair-addr
 pagerUnlockDb = func:6501; // size:0x47 evidence:pair-fingerprint
 releasePageOne = func:6502; // size:0x22 evidence:pair-addr
 sqlite3PagerSharedLock = func:6503; // size:0x89c evidence:pair-addr
-_ZN3api16CMaskedTextFieldINS_11CFramedTextEE4MoveERKNS_6SPointE = func:6504; // size:0x46 evidence:pair-addr
-_ZNK3api16CMaskedTextFieldINS_11CFramedTextEE4RectEv = func:6505; // size:0xc evidence:pair-fingerprint
+_ZN3api16CMaskedTextFieldINS_17CGrayedFramedTextEE4MoveERKNS_6SPointE = func:6504; // size:0x46 evidence:pair-addr
+_ZNK3api16CMaskedTextFieldINS_17CGrayedFramedTextEE4RectEv = func:6505; // size:0xc evidence:pair-fingerprint
 unixShmPurge = func:6506; // size:0x31d evidence:pair-addr
-_ZNK3api16CMaskedTextFieldINS_11CFramedTextEE11GetTypeNameEv = func:6507; // size:0x3d evidence:vtable
+_ZNK3api16CMaskedTextFieldINS_17CGrayedFramedTextEE11GetTypeNameEv = func:6507; // size:0x3d evidence:vtable
 unixLockSharedMemory = func:6508; // size:0x187 evidence:pair-addr
 unixLogErrorAtLine = func:6509; // size:0x6f evidence:pair-addr
 closePendingFds = func:6510; // size:0x147 evidence:pair-addr
@@ -5737,6 +5743,7 @@ clean_tbuf = func:6621; // size:0x1c evidence:pair-addr
 setup_tbuf = func:6622; // size:0x55 evidence:pair-addr
 rsa_sign = func:6623; // size:0x3dd evidence:pair-addr
 ossl_digest_rsa_sign_get_md_nid = func:6625; // size:0x50 evidence:pair-addr
+_ZNSt3__211make_sharedB8ne210108IN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEEJRS5_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS9_EEDpOT0_ = func:6627; // size:0x2b7 evidence:call by:1192
 ecdsa_setup_md = func:6628; // size:0x2a9 evidence:pair-addr
 ecdsa_set_ctx_params = func:6629; // size:0x130 evidence:pair-addr
 ecdsa_digest_signverify_init = func:6630; // size:0x7c evidence:pair-addr
@@ -5750,8 +5757,10 @@ dsa_digest_signverify_init = func:6637; // size:0x7c evidence:pair-addr
 ossl_pool_acquire_entropy = func:6638; // size:0x2d4 evidence:pair-addr
 test_rng_set_ctx_params = func:6640; // size:0x113 evidence:pair-addr
 seed_src_generate = func:6642; // size:0x9d evidence:pair-addr
+_ZNSt3__26__treeINS_12__value_typeINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEbEENS_10shared_ptrIN3api6CMovieEEEEENS_19__map_value_compareIS9_NS2_IKS9_SD_EENS_4lessIS9_EELb1EEENS6_ISH_EEE12__find_equalIS9_EERPNS_16__tree_node_baseIPvEERPNS_15__tree_end_nodeISR_EERKT_ = func:6643; // size:0x11d evidence:pair-addr
 drbg_hmac_set_ctx_params = func:6644; // size:0xc8 evidence:pair-addr
 drbg_hmac_uninstantiate = func:6645; // size:0x26 evidence:pair-addr
+_ZN4vota12_GLOBAL__N_135adicionaBaseTelaVotoBrancoCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoEs = func:6646; // size:0x108 evidence:srcloc-anchor
 add_hash_to_v = func:6647; // size:0x18a evidence:pair-addr
 drbg_hash_set_ctx_params = func:6648; // size:0xa8 evidence:pair-addr
 drbg_hash_uninstantiate = func:6649; // size:0x32 evidence:pair-addr
@@ -9514,6 +9523,11 @@ _ZNK3api11CLedFieldMT4DrawERNS_9IScreenMTE = func:11050; // size:0x1f1 evidence:
 _ZNK3api10IFormFieldINS_9IScreenMTEE11GetTypeNameEv = func:11051; // size:0x49 evidence:vtable
 _ZN3api14IFormFieldBaseINS_9IScreenMTEED2Ev = func:11052; // size:0xc evidence:vtable
 _ZNK3api12CBeepFieldMT4DrawERNS_9IScreenMTE = func:11053; // size:0x14 evidence:pair-fingerprint
+_ZNKSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEE11target_typeEv = func:11054; // size:0x7 evidence:vtable
+_ZNKSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEE6targetERKSt9type_info = func:11055; // size:0x14 evidence:content-anchor
+_ZNSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEclEv = func:11056; // size:0xed evidence:vtable
+_ZNKSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEE7__cloneEPNS0_6__baseISE_EE = func:11057; // size:0x16 evidence:vtable
+_ZNKSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEE7__cloneEv = func:11058; // size:0xc evidence:vtable
 _ZNK3api11CMovieField11GetTypeNameEv = func:11059; // size:0x11 evidence:vtable
 _ZN3api11CMovieField4HideEv = func:11060; // size:0x1d evidence:pair-fingerprint
 _ZN3api11CMovieField4ShowEv = func:11061; // size:0x4d evidence:pair-addr
@@ -10758,7 +10772,12 @@ fixSelectCb = func:12583; // size:0x394 evidence:pair-addr
 renameUnmapExprCb = func:12584; // size:0x70 evidence:pair-fingerprint
 renameUnmapSelectCb = func:12585; // size:0x22e evidence:pair-addr
 _ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISD_EEED2Ev = func:12586; // size:0xe evidence:vtable
+_ZNK3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEE7GetTextEv = func:12587; // size:0x1d3 evidence:vtable
+_ZN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEED0Ev = func:12588; // size:0x39 evidence:pair-addr
+_ZN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEED2Ev = func:12589; // size:0x36 evidence:pair-addr
 sqlite3SelectWalkFail = func:12590; // size:0xb evidence:pair-fingerprint
+_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEED0Ev = func:12591; // size:0x11 evidence:vtable
+_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEED2Ev = func:12592; // size:0xe evidence:vtable
 _ZNK3api16CMaskedTextFieldINS_11CFramedTextEE4DrawERNS_7IScreenE = func:12593; // size:0x52 evidence:vtable
 pragmaVtabRowid = func:12594; // size:0xe evidence:pair-fingerprint
 _ZN3api16CMaskedTextFieldINS_11CFramedTextEED0Ev = func:12595; // size:0xc evidence:vtable
@@ -11009,7 +11028,7 @@ sqlite3_result_text16be = func:12858; // size:0x12 evidence:pair-addr
 sqlite3RCStrUnref = func:12859; // size:0xb5 evidence:pair-addr
 sqlite3_result_text = func:12860; // size:0xf evidence:pair-addr
 sqlite3_result_subtype = func:12861; // size:0x1c evidence:pair-addr
-__cxx_global_array_dtor.80 = func:12862; // size:0x1c evidence:pair-addr
+__cxx_global_array_dtor.120@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o = func:12862; // size:0x1c evidence:pair-addr
 sqlite3_result_pointer = func:12863; // size:0x63 evidence:pair-addr
 sqlite3_result_null = func:12864; // size:0x20 evidence:pair-addr
 sqlite3_result_int64 = func:12865; // size:0x29 evidence:pair-addr
@@ -11027,7 +11046,7 @@ sqlite3_value_int = func:12878; // size:0x70 evidence:pair-addr
 sqlite3_value_double = func:12879; // size:0x3e evidence:pair-addr
 sqlite3_value_bytes16 = func:12880; // size:0x5a evidence:pair-addr
 sqlite3_value_bytes = func:12881; // size:0x5a evidence:pair-addr
-__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o = func:12882; // size:0x25 evidence:pair-addr
+__cxx_global_array_dtor.105 = func:12882; // size:0x25 evidence:pair-addr
 sqlite3_clear_bindings = func:12883; // size:0xb1 evidence:pair-addr
 sqlite3_expired = func:12884; // size:0x17 evidence:pair-fingerprint
 getPageNormal = func:12885; // size:0x3b6 evidence:pair-addr
@@ -11544,6 +11563,7 @@ x942kdf_get_ctx_params = func:13521; // size:0x58 evidence:pair-addr
 x942kdf_derive = func:13524; // size:0x4a6 evidence:pair-addr
 x942kdf_free = func:13525; // size:0x18 evidence:pair-addr
 x942kdf_new = func:13526; // size:0x48 evidence:pair-addr
+__cxx_global_array_dtor.14@app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o = func:13527; // size:0x12 evidence:pair-addr
 kdf_tls1_prf_derive = func:13530; // size:0x251 evidence:pair-addr
 kdf_tls1_prf_reset = func:13531; // size:0x51 evidence:pair-addr
 kdf_tls1_prf_free = func:13532; // size:0x62 evidence:pair-addr
@@ -25427,8 +25447,9 @@ _ZTSN4vota4impl24IPoliticaExecucaoEleitorE = 0x73e95; // type:data size:0x27 evi
 str.4bad50a125b0 = 0x73e95; // type:data size:0x27 evidence:string "N4vota4impl24IPoliticaExecucaoEleitorE"
 _ZTSN4vota4impl24CPoliticaExecucaoEleitorE = 0x73ebc; // type:data size:0x27 evidence:rtti
 str.e32659e595ed = 0x73ebc; // type:data size:0x27 evidence:string "N4vota4impl24CPoliticaExecucaoEleitorE"
-_ZTSN4vota19CPreShowProgressBarE = 0x73ee3; // type:data evidence:rtti
+_ZTSN4vota19CPreShowProgressBarE = 0x73ee3; // type:data size:0x1d evidence:rtti
 str.42246ddfce5c = 0x73ee3; // type:data size:0x1d evidence:string "N4vota19CPreShowProgressBarE"
+_ZN4vota12_GLOBAL__N_120TEXTO_CONFIRMAR_VOTOE = 0x73f20; // type:data size:0x14 evidence:content
 str.fb9aa18a7a57 = 0x73f60; // type:data size:0x10 evidence:string "NÚMERO REPETIDO"
 _ZN4vota12_GLOBAL__N_124TEXTO_ERRO_TESTE_TECLADOE = 0x73fc0; // type:data size:0x19 evidence:content
 str.490760b97e4b = 0x73fc0; // type:data size:0x19 evidence:string "Erro no teste do teclado"
@@ -25482,9 +25503,9 @@ _ZTSNSt3__220__shared_ptr_emplaceIN3api16CMaskedTextFieldINS1_11CFramedTextEEENS
 str.de7460e0998b = 0x74651; // type:data size:0x60 evidence:string "NSt3__220__shared_ptr_emplaceIN3api16CMa"…
 _ZTSN3api16CMaskedTextFieldINS_11CFramedTextEEE = 0x746b1; // type:data size:0x2c evidence:rtti
 str.084bfcb6ac83 = 0x746b1; // type:data size:0x2c evidence:string "N3api16CMaskedTextFieldINS_11CFramedText"…
-_ZTSNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x746dd; // type:data evidence:rtti
+_ZTSNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x746dd; // type:data size:0x79 evidence:rtti
 str.8e246feef882 = 0x746dd; // type:data size:0x79 evidence:string "NSt3__220__shared_ptr_emplaceIN3api9CDat"…
-_ZTSN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x74756; // type:data evidence:rtti
+_ZTSN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x74756; // type:data size:0x46 evidence:rtti
 str.44973363edea = 0x74756; // type:data size:0x46 evidence:string "N3api9CDataTextIN4vota12_GLOBAL__N_128DS"…
 _ZTSNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISD_EEEE = 0x7479c; // type:data size:0x7d evidence:rtti
 str.3ece68d2989c = 0x7479c; // type:data size:0x7d evidence:string "NSt3__220__shared_ptr_emplaceIN3api9CDat"…
@@ -26854,9 +26875,9 @@ _ZTSN3api10CLineFieldE = 0x7ff24; // type:data size:0x13 evidence:rtti
 str.90a79ddce5e5 = 0x7ff24; // type:data size:0x13 evidence:string "N3api10CLineFieldE"
 _ZTSN3api11CMovieFieldE = 0x7ff37; // type:data size:0x14 evidence:rtti
 str.4e4a5188a963 = 0x7ff37; // type:data size:0x14 evidence:string "N3api11CMovieFieldE"
-_ZTSNSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x7ff4b; // type:data evidence:rtti
+_ZTSNSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x7ff4b; // type:data size:0x7e evidence:rtti
 str.8ebc923ba9e3 = 0x7ff4b; // type:data size:0x7e evidence:string "NSt3__210__function6__funcIZN3api11CMovi"…
-_ZTSZN3api11CMovieFieldC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6CMovieEEENS_12EAnchorPointEE3$_0 = 0x7ffc9; // type:data evidence:rtti
+_ZTSZN3api11CMovieFieldC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6CMovieEEENS_12EAnchorPointEE3$_0 = 0x7ffc9; // type:data size:0x5e evidence:rtti
 str.8ca9d3801de7 = 0x7ffc9; // type:data size:0x5e evidence:string "ZN3api11CMovieFieldC1ERKNS_6SPointERKNSt"…
 _ZTSN3api12CBeepFieldMTE = 0x80027; // type:data size:0x15 evidence:rtti
 str.e771b1670f7c = 0x80027; // type:data size:0x15 evidence:string "N3api12CBeepFieldMTE"
@@ -29572,7 +29593,6 @@ srcloc.146d70edbdbf = 0x113534; // type:data size:0x10 evidence:srcloc cconverso
 srcloc.325d2c23389f = 0x113544; // type:data size:0x10 evidence:srcloc cconversorlabelparametrizado.cpp:71:19
 srcloc.ac750f80ca5c = 0x113554; // type:data size:0x10 evidence:srcloc cconversorlabelparametrizado.cpp:75:11
 _ZTVN7ecourna3app5dados3asn28CConversorLabelParametrizadoE = 0x113564; // type:data size:0x18 evidence:rtti
-g_Alloc = 0x113570; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn28CConversorLabelParametrizadoE = 0x11357c; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn28CConversorLabelParametrizadoE = 0x113588; // type:data size:0x37 evidence:rtti
 str.4d6ce6dc6706 = 0x113588; // type:data size:0x37 evidence:string "N7ecourna3app5dados3asn28CConversorLabel"…
@@ -29591,6 +29611,7 @@ srcloc.0f8398f1bdff = 0x113728; // type:data size:0x10 evidence:srcloc cconverso
 srcloc.98e6f6008b63 = 0x113738; // type:data size:0x10 evidence:srcloc cconversorparametrosurna.cpp:199:19
 srcloc.e56305556403 = 0x113748; // type:data size:0x10 evidence:srcloc cconversorparametrosurna.cpp:203:11
 _ZN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS_15EmptyConstraintEE7theInfoE = 0x113758; // type:data size:0x20 evidence:vote:1 by:9161
+g_Alloc = 0x113784; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn24CConversorParametrosUrnaE = 0x113790; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn24CConversorParametrosUrnaE = 0x11379c; // type:data size:0x33 evidence:rtti
 str.202feab67338 = 0x11379c; // type:data size:0x33 evidence:string "N7ecourna3app5dados3asn24CConversorParam"…
@@ -33050,8 +33071,8 @@ srcloc.fbbc72a824c8 = 0x1771e0; // type:data size:0x10 evidence:srcloc cpolysing
 srcloc.e88dea5a482f = 0x1771f0; // type:data size:0x10 evidence:srcloc cpolysingleton.h:78:19
 srcloc.28df01c1ed86 = 0x177200; // type:data size:0x10 evidence:srcloc cpolysingletonlist.h:99:19
 srcloc.4e037098ac46 = 0x177210; // type:data size:0x10 evidence:srcloc cpolysingletonlist.h:105:19
-_ZTVN4vota19CPreShowProgressBarE = 0x177220; // type:data evidence:rtti
-_ZTIN4vota19CPreShowProgressBarE = 0x177234; // type:data evidence:rtti
+_ZTVN4vota19CPreShowProgressBarE = 0x177220; // type:data size:0x14 evidence:rtti
+_ZTIN4vota19CPreShowProgressBarE = 0x177234; // type:data size:0xc evidence:rtti
 srcloc.f52948d6238a = 0x177240; // type:data size:0x10 evidence:srcloc ctelascargo.cpp:60:11
 srcloc.fad6c7ef8850 = 0x177250; // type:data size:0x10 evidence:srcloc ctelascargo.cpp:67:15
 srcloc.dc49960df6d7 = 0x177260; // type:data size:0x10 evidence:srcloc ctelascargo.cpp:72:15
@@ -33129,10 +33150,10 @@ _ZTVN3api16CMaskedTextFieldINS_11CFramedTextEEE = 0x177774; // type:data size:0x
 _ZTIN3api16CMaskedTextFieldINS_11CFramedTextEEE = 0x1777a4; // type:data size:0xc evidence:rtti
 srcloc.8076b69022fe = 0x1777b0; // type:data size:0x10 evidence:srcloc ctelasvota.cpp:964:15
 srcloc.11bb406a1cb5 = 0x1777c0; // type:data size:0x10 evidence:srcloc ctelasvota.cpp:993:15
-_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x1777d0; // type:data evidence:rtti
-_ZTINSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x1777ec; // type:data evidence:rtti
-_ZTVN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x1777f8; // type:data evidence:rtti
-_ZTIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x177810; // type:data evidence:rtti
+_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x1777d0; // type:data size:0x1c evidence:rtti
+_ZTINSt3__220__shared_ptr_emplaceIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEENS_9allocatorIS6_EEEE = 0x1777ec; // type:data size:0xc evidence:rtti
+_ZTVN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x1777f8; // type:data size:0x18 evidence:vote:2+rtti by:12588,12589
+_ZTIN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEE = 0x177810; // type:data size:0xc evidence:rtti
 srcloc.90d27bc1d36c = 0x17781c; // type:data size:0x10 evidence:srcloc ctelasvota.cpp:1014:15
 _ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISD_EEEE = 0x17782c; // type:data size:0x1c evidence:rtti
 _ZTINSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISD_EEEE = 0x177848; // type:data size:0xc evidence:rtti
@@ -35190,9 +35211,9 @@ srcloc.ae2cdf8f300a = 0x181998; // type:data size:0x10 evidence:srcloc cmovie.cp
 _ZTVN3api11CMovieFieldE = 0x1819a8; // type:data size:0x30 evidence:vote:1+rtti by:5524
 srcloc.5ae60de2314f = 0x1819d8; // type:data size:0x10 evidence:srcloc cmoviefield.cpp:53:12
 _ZTIN3api11CMovieFieldE = 0x1819e8; // type:data size:0xc evidence:rtti
-_ZTVNSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x1819f4; // type:data evidence:rtti
-_ZTINSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x181a20; // type:data evidence:rtti
-_ZTIZN3api11CMovieFieldC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6CMovieEEENS_12EAnchorPointEE3$_0 = 0x181a2c; // type:data evidence:rtti
+_ZTVNSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x1819f4; // type:data size:0x2c evidence:rtti
+_ZTINSt3__210__function6__funcIZN3api11CMovieFieldC1ERKNS2_6SPointERKNS_10shared_ptrINS2_6CMovieEEENS2_12EAnchorPointEE3$_0FvvEEE = 0x181a20; // type:data size:0xc evidence:rtti
+_ZTIZN3api11CMovieFieldC1ERKNS_6SPointERKNSt3__210shared_ptrINS_6CMovieEEENS_12EAnchorPointEE3$_0 = 0x181a2c; // type:data size:0x8 evidence:rtti
 _ZTVN3api12CBeepFieldMTE = 0x181a34; // type:data size:0x28 evidence:rtti
 _ZTIN3api12CBeepFieldMTE = 0x181a5c; // type:data size:0xc evidence:rtti
 _ZTIN3api10IFormFieldINS_9IScreenMTEEE = 0x181a68; // type:data size:0xc evidence:rtti
@@ -37589,6 +37610,7 @@ _ZN4vota16g_numeroDigitadoE = 0x1bf948; // type:data size:0xc evidence:vote:86
 _ZN4vota14g_votosEleitorE = 0x1bf954; // type:data size:0xc evidence:vote:30
 _ZN4vota22g_dataHoraDesligamentoE = 0x1bf960; // type:data size:0xc evidence:vote:4 by:12018,12061
 _ZN4vota4implL14s_mutexGetInstE@app/uenux2/src/app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp.o = 0x1bf96c; // type:data size:0x18 evidence:vote:3 by:5925
+_ZN4vota12_GLOBAL__N_16s_gifsE = 0x1bf984; // type:data size:0xc evidence:vote:6 by:6643,13527
 _ZN4vota20TECLAS_TESTE_TECLADOE = 0x1bf990; // type:data size:0xc evidence:vote:64 by:11805,12862,14478
 _ZN4vota10CTelasVota7s_mutexE = 0x1bf99c; // type:data size:0x18 evidence:vote:1 by:407
 _ZN4vota10CTelasVota11s_instanciaE = 0x1bf9b4; // type:data size:0x4 evidence:vote:3 by:407,12882
@@ -38626,7 +38648,8 @@ _ZN3api21INSTRUCAO_PADRAO_MENUE = 0x1bf5f0; // type:data size:0xc evidence:calle
 # cimagefieldupdate.cpp:32 of api::CImageFieldUpdate's constructor, which binaryen inlined into it (/usr/bin/grep -rlE
 # 'i32\.const (1538404|1579028)($|[^0-9])' build/out/splat/pieces/asm prints 3059.wat alone for each); ours holds both
 # likewise. No vote reaches it: its caller in our link, 6595, matches through the content pass (no census pair or
-# anchor, so it casts no vote at step 8), and its other target callers, 6592 and 7787, are not written. Our body differs
+# anchor, so it casts no vote at step 8), and of its other target callers 6592 is in the link (unit 378's, matched)
+# and 7787 is not written. Our body differs
 # from the target's (src/units/110-*.mk). Without this line (a scan of copies without it and without the match lines
 # of 6595 and 11869, beside a control) 6595 reads no-candidate and 11869, which calls it, unresolved.
 _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_SB_N5comum9CQRCodeDS7EOrigemE = func:3059; // size:0xaf1 evidence:rtti-vptr
@@ -38643,3 +38666,31 @@ _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_1
 # (comum::CRdv::SalvaExterno and SalvaInterno, the only callers in our link), which fall without it, and counts them for
 # nothing; no other vote reaches the name (no census pair: the bodies differ).
 _ZN3api14CEncryptedFileC2ERKNSt3__210shared_ptrIN7ecourna3api8security16ISymmetricCipherEEE = func:1692; // evidence:callers+content its own rows (above): a shared_ptr copied to +0 and +4, +8 to +24 zeroed, this returned; every target caller hands the result to CEncryptedFile's members; ours differs in the zero stores' order
+# 6627: std::make_shared<api::CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>>, ctelasvota.cpp's
+# instance. Its body, read without the match, is the only target function that holds both 1538008, the address point of
+# __shared_ptr_emplace<api::CDataText<DS_NomeCargoNeutroComEscolha>>'s vtable (ledger/vtables.json, 1538000 + 8), and
+# 1538048, CDataText<DS_NomeCargoNeutroComEscolha>'s (1538040 + 8), and builds the object between them (the copy
+# constructors 365 and 374 of the post's details, 3018): /usr/bin/grep -rlE 'i32\.const 1538008($|[^0-9])'
+# build/out/splat/pieces/asm prints 6627, 12591 and 12592, and for 1538048 6627, 12588 and 12589, the block's and the
+# class's destructors, which construct nothing. Ours holds both likewise. Its one target caller, 1192 (two call sites,
+# aligned one to one), is named by 3064's call vote (3064 is srcloc-anchor). Our body differs, 72 over 329 rows at the
+# tree's flags (the inlined optional copies' branches), and the same with the object built with strict aliasing; the
+# remainder is not explained (src/units/378-uenux2-ctelasvota-criatela.mk). Without this line 1192 reads unresolved
+# self-voted on this name.
+_ZNSt3__211make_sharedB8ne210108IN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEEJRS5_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS9_EEDpOT0_ = func:6627; // evidence:callers+content
+# 6624: vota::(anonymous namespace)::adicionaBaseTelaVotoNuloConsulta, ctelasvota.cpp's, by its record: its body, read
+# without a match, loads the std::source_location record at 1538076 (ctelasvota.cpp:1014, column 15, that function's
+# signature), which no other target function loads (/usr/bin/grep -rlE 'i32\.const 1538076($|[^0-9])'
+# build/out/splat/pieces/asm prints 6624 alone), and ours loads it from the same throw. Its target callers are 6626 and
+# 6616 (CriaTelaVotoNuloConsulta, CriaTelaConferenciaVotoNuloConsulta), one call each, aligned with ours. Our body differs
+# in frame offsets (src/units/378-uenux2-ctelasvota-criatela.mk), so the record anchors nothing, and neither caller is
+# an anchor: 6626's content anchor, the "CONFIRMAR este voto" array at 474912, has a second holder of its own shape in
+# 3063. Without this line 6626 and 6616 read no-candidate.
+_ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_ = func:6624; // evidence:callers+content
+# 6608: vota::(anonymous namespace)::adicionaBaseTelaVotoNuloCandidato, ctelasvota.cpp's, by its record: its body, read
+# without a match, loads the std::source_location record at 1538168 (ctelasvota.cpp:1049, column 15), which no other
+# target function loads (/usr/bin/grep -rlE 'i32\.const 1538168($|[^0-9])' build/out/splat/pieces/asm prints 6608
+# alone), and ours loads it from the same throw. Its target callers are 1591 and 1767 (CriaTelaVotoNuloCandidato,
+# CriaTelaConferenciaVotoNuloCandidato), one call each, aligned with ours; neither has a record or an anchor. Our body
+# differs in frame offsets (src/units/378-uenux2-ctelasvota-criatela.mk), so the record anchors nothing.
+_ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb = func:6608; // evidence:callers+content

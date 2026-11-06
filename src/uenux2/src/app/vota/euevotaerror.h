@@ -199,6 +199,15 @@ enum EUeVotaError {
     // record ctelasvota.cpp:3366) throws; the name is chosen from its message, "Sem suporte a mais de 2 suplentes": no
     // evidence names it
     EUE_VOTA_VISUALIZACAO_CANDIDATO_SUPLENTES_DEMAIS = 9356,
+    // the values are the codes the screen builders of ctelasvota.cpp throw, each with vota::MensagemErroCargo's text,
+    // when the post is not of the screen's kind: vota::CTelasVota::CriaTelaVotoCargoSemCandidato (target fn 3064,
+    // record ctelasvota.cpp:1585) and adicionaBaseTelaVotoBrancoCandidato (fn 6646, record :964) over "não é de
+    // candidato", and adicionaBaseTelaVotoNuloConsulta (fn 6624, record :1014) over "não é de consulta" and
+    // adicionaBaseTelaVotoNuloCandidato (fn 6608, record :1049) over "não é de candidato", one code; the names are
+    // chosen from the screens and the messages: no evidence names them
+    EUE_VOTA_TELA_VOTO_CARGO_SEM_CANDIDATO_CARGO_INVALIDO = 9354,
+    EUE_VOTA_TELA_VOTO_BRANCO_CANDIDATO_CARGO_INVALIDO = 9341,
+    EUE_VOTA_TELA_VOTO_NULO_CARGO_INVALIDO = 9344,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

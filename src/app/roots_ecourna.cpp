@@ -69,10 +69,10 @@ __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { retur
 // 2248, 11188, 11253 and 11478, are in the link.
 
 // The CStringUtils members src/units/00-ecourna-app-dados-identificadoreleitor.mk adds last. The target callers not in
-// our link that these stand for: ToUpper's copying form (5156), 6592, and table slot 29,
-// which the executable TU's code takes. The copying Replace's (2677) went: its callers 3651 (fragment 379), 3689 and
-// api::CProgressBar::Draw (10977) are in the link. Split's (1880) went: its callers 654, 2380, 3689, 5869, 11377 and
-// 12065 are in the link.
+// our link that these stand for: ToUpper's copying form (5156), table slot 29, which the executable TU's code takes
+// (its other caller, 6592, is in the link: src/units/378-uenux2-ctelasvota-criatela.mk). The copying Replace's (2677)
+// went: its callers 3651 (fragment 379), 3689 and api::CProgressBar::Draw (10977) are in the link. Split's (1880) went:
+// its callers 654, 2380, 3689, 5869, 11377 and 12065 are in the link.
 __attribute__((noinline)) std::string UsaMaiusculasB(const std::string& s) { return "b" + CStringUtils::ToUpper(s); }
 __attribute__((noinline)) int UsaBase64B(const SComResumo& v)
 {

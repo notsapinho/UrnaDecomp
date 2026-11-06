@@ -4,11 +4,12 @@
 # CMovie or CMovieFrame existed) and the 4943 enumerator of api/gui/eueguierror.h. CMovieFrame's constructor is in
 # cmovie.cpp too: it has no target function (binaryen inlines it into its one caller, simulador::CWasmResource's slot
 # 4, fn 8605, unit 127's), so it is compared with nothing but through 8605, which matches (unit 127's fragment).
+# CMovie::ProximoFrame (fn 5525, declared in cmovie.h), the frame advance that the timer callback of api::CMovieField
+# calls twice (fn 11056 holds both calls, so binaryen keeps it out of line), is written last in cmovie.cpp, a choice,
+# as a select of the next index or 0 (an if storing 0 after the increment's store gave 8 over 24 rows, 4 inserted); its
+# name is chosen (src/units/378-uenux2-ctelasvota-criatela.mk). The constructor's two callers, 1593 and 8605, are in
+# the link (1593, unit 378's, calls it from the std::make_shared of a one-frame movie), so the roots file that stood for
+# 1593 went.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CMOVIE_SRCS := src/api/gui/cmovie.cpp
 UENUX2_SRCS += $(CMOVIE_SRCS)
-# the ctor's two callers are fns 1593 and 8605; 8605 is written (unit 127), and 23-uenux2-cmovie-roots.cpp stands for
-# 1593, which is not, so the ctor keeps two call sites that drop its `this` return
-$(ROOT)/$(APP)/23-uenux2-cmovie-roots.o: $(ROOT)/src/units/23-uenux2-cmovie-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/23-uenux2-cmovie-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/23-uenux2-cmovie-roots.o

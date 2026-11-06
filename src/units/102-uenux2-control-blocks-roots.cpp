@@ -30,8 +30,6 @@
 #include "api/gui/ccutfieldpaper.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
-#include "api/gui/cmovie.h"
-#include "api/gui/cmoviefield.h"
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/coptionvalidation.h"
 #include "api/gui/cpreshownothing.h"
@@ -65,15 +63,12 @@
 
 extern "C" {
 extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CMovieFieldENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cdatatext_crespostasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum18CRespostasDSNumeroEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cdatatext_ccandidaturasdsnome[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum19CCandidaturasDSNomeEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cdatatext_ccandidaturasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum21CCandidaturasDSNumeroEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cdatatext_ccargodsnomesexocandidato[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum25CCargoDSNomeSexoCandidatoEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cpreshowprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN4vota19CPreShowProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN4vota22CProgressoEncerramentoENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
@@ -134,11 +129,6 @@ template struct SBloco<std::string, std::string>;
 template struct SBloco<ecourna::api::security::ISymmetricCipher, TAes>;
 template struct SBloco<comum::IGravador, comum::CGravadorWSQ>;
 
-__attribute__((optnone, noinline)) std::shared_ptr<api::CMovie> w102_filme(
-    std::vector<api::CMovieFrame> quadros, const api::SPoint& tamanho)
-{
-    return std::make_shared<api::CMovie>(std::move(quadros), tamanho);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CProgressoEncerramento> w102_progresso()
 {
     return std::make_shared<vota::CProgressoEncerramento>();
@@ -149,11 +139,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<ecourna::api::security::CTrng
     return std::make_shared<ecourna::api::security::CTrng>();
 }
 
-__attribute__((optnone, noinline)) std::shared_ptr<api::CMovieField> w102_campo_filme(
-    const api::SPoint& p, const std::shared_ptr<api::CMovie>& filme, api::EAnchorPoint a)
-{
-    return std::make_shared<api::CMovieField>(p, filme, a);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<api::CWavFile> w102_wav(const api::CWavAudio& a, const void* d)
 {
     return std::make_shared<api::CWavFile>(a, d);
@@ -170,10 +155,6 @@ template struct SBloco<TGravador, comum::CGravadorVersoesArquivos>;
 template struct SBloco<TGravador, comum::CGravadorLog>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
 
-__attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w102_preshow()
-{
-    return std::make_shared<vota::CPreShowProgressBar>();
-}
 __attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorMR> w102_copiador(comum::TMunicipioID municipio,
     comum::TZonaID zona, comum::TSecaoID secao, char fase, comum::EExtensaoArquivoResultado extensao)
 {
@@ -209,15 +190,12 @@ struct SW102Roots {
     SW102Roots()
     {
         w102_sink = w102_vt_cdataimage_ccandidaturasdsfoto;
-        w102_sink = w102_vt_cmoviefield;
-        w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;
         w102_sink = w102_vt_cdatatext_crespostasdsnumero;
         w102_sink = w102_vt_cdatatext_ccandidaturasdsnome;
         w102_sink = w102_vt_cdatatext_ccandidaturasdsnumero;
         w102_sink = w102_vt_cdatatext_ccargodsnomesexocandidato;
-        w102_sink = w102_vt_cpreshowprogressbar;
         w102_sink = w102_vt_cprogressoencerramento;
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;
