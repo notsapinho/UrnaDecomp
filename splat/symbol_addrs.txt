@@ -38482,9 +38482,6 @@ _ZN12_GLOBAL__N_18freelistE = 0x1d8de0; // type:data size:0x4 evidence:vote:6 by
 _ZN12_GLOBAL__N_14heapE = 0x1d8df0; // type:data size:0x200 evidence:vote:9 by:6175,12142
 # ---- hand edits below this line: kept by regeneration, they win over generated lines ----
 _ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE = func:3707; // evidence:callers+content its target callers are exactly 1931, 2296 and 6033 (CRdvVota count slots: Candidato, the merged Nominais..Cargo and Legenda/Partido bodies), ours exactly Candidato and the two binaryen-merged count bodies; one of the 2 target functions building "Cargo " + n + " nao encontrado" and throwing _ZTI CBaseError<EUeRdvError,{4650,4850}> (0x17cda4), the other (11350, comum::asn::CConversorEleicoesVota vtable slot 2) is never called directly
-# 5498: stores 1582836, the address point of CTextFieldMultiLine's vtable (rtti, 0x1826ec + 8); the only other holders are its two
-# destructors 10922/10923 (pair-addr), and its two callers 2782/12055 build a __shared_ptr_emplace<CTextFieldMultiLine> (rtti).
-_ZN3api19CTextFieldMultiLineC2ERKNS_5SRectERKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_ = func:5498; // size:0xe6 evidence:rtti-vptr
 # 4636: slot 0 (the complete destructor, table index 69) of CError's vtable (rtti, 0x174abc) and of CBaseError<EUeGuiError>'s
 # (ledger/vtables.json); our D1 is an alias of D2, so D2 is the name our link carries.
 _ZN7ecourna3api9exception6CErrorD2Ev = func:4636; // size:0x20 evidence:vtable-slot
