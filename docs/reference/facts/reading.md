@@ -1133,7 +1133,8 @@ three and `unresolved` for 5181, which waits for a name:
   binaryen's inliner copies each parameter of a body it inlines, so the target may hold the body as a one-caller
   function its caller forwards to: 2811 written as such a forwarder took the target's frame and head and kept a copy, of
   another parameter (`95 over 349` against `138 over 354`, unit 388's fragment). Which parameter's copy survives is not
-  known. And 5480 (`api::CIniFile::Carrega`) differs from the target in which locals binaryen packs alone (`1173 over
+  known. And 5480 (`api::CIniFile::Carrega`) differs from the target, read as which locals binaryen packs alone (`1173
+  over
   4214`, every replaced row an operand): ours zeroes a section iterator's local the target leaves, in four source forms
   that give one object (unit 379's fragment). Record what was tried in the fragment and leave such a body written or
   unwritten as how-to step 5 says.

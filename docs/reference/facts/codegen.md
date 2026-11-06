@@ -679,7 +679,8 @@ TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict
 
 So a frame larger than the target's, with every dropped result in a slot of its own, points at calls the target made
 inside a helper clang inlined: 3064 (`CTelasVota::CriaTelaVotoCargoSemCandidato`) and the footers 1102 and 1190 took the
-target's offsets only with their adders in internal helpers, a `void` one for 1102's rectangle (unit 378's fragment).
+target's offsets only with their adders in internal helpers, a `void` one for 1102's and 1190's rectangles (unit 378's
+fragment).
 Which of the marked slots merge follows the
 colouring's own order, which no probe here has measured: 11891's message function gave other pairs in a slot than the
 target's in eight forms (a result dropped, named, in a block, in an `if`'s init-statement, in a helper) and stays a trap

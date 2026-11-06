@@ -127,7 +127,7 @@
 # 6616, 6601 before 6595, 6594, 6592, 6587; 3074, 3064 before 3054; 1192 before 1190), but for 6643 before 6646 in band
 # 2 (the gif map's tree member, which AdicionaGif at 428 mentions first, against 6646's record :964). Inverted pairs of
 # ctelasvota.cpp.o's matched members (how-to step 3, "The order of two members"; ledger/ordinals.tsv's bands, the
-# object's own function order): 571 at 778b28ff, 998 at c97e48e1; 487 new and 60 gone (CTextField's block members 12628
+# object's own function order): 571 at 0fb386d8, 998 at 7149483a; 487 new and 60 gone (CTextField's block members 12628
 # and 12631 link earlier now). Three of the new are between two of this file's own functions: 13176 (NumeroDigitado) and
 # 13137 (AdicionaInstrucaoTeclas's lambda) before 13527 in band 1, and 6643 before 6646 in band 2; every other has a
 # template instance, a control block, a lambda's invoke or an exit destructor on a side. The object's fonts now hold

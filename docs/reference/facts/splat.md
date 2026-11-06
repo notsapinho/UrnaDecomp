@@ -961,7 +961,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     wasm fn ../target/vota_web_wasm.wasm 12862` disassembles `f6071(p0, 1833368, 1833364, 1833360, 4, 1, 12)` and
     `... 10879` `f6071(p0, 1839296, 1839292, 1839288, 8, 5, 16)`. Binaryen merges ours the same way:
     `awk -F'\t' '$1==6071 || $1==12862 || $1==10879 {print $1, $2}' splat/scan.tsv` prints the merge body
-    `byn$mgfn-shared$__cxx_global_array_dtor.120` for 6071 and the two destructors' own symbols (at c97e48e1; the
+    `byn$mgfn-shared$__cxx_global_array_dtor.120` for 6071 and the two destructors' own symbols (at 7149483a; the
     suffix follows `ctelasvota.cpp`'s statics, how-to step 10's local symbols). Without `ESCAPES` our link holds no
     merged body and 12862's destructor whole: a scratch link with a variant `cinistrings.cpp.o` whose `ESCAPES` is a
     `const std::pair<const char*, char>[]` (workflow.md W13, "One variant object in the whole link") has no line for

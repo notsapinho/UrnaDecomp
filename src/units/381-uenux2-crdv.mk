@@ -64,7 +64,7 @@
 #   CompleteLoad, whose calls would put 5765 and 5764 first (a reading): there 5762 would sit before 5765 and 5764 in
 #   our object while CompleteLoad is not written. With DynamicCreate (5761) written at its records' lines (unit 383),
 #   5762's line, below it, inverts that pair: 5762 links before 5761 in the target (ledger/ordinals.tsv's ordinals 4434
-#   and 4435), after it in ours (ld_index 2605 against 2586 at c97e48e1; 5765 2603, 5764 2601, 5757 2611, so 5761 also
+#   and 4435), after it in ours (ld_index 2605 against 2586 at 7149483a; 5765 2603, 5764 2601, 5757 2611, so 5761 also
 #   links before 5765 and 5764, the pairs unit 383's fragment names).
 #
 # Names. The census pairs 1551, 1701, 2826, 5762, 6035 and 6036 at the shape tier only (moved: none -> shape), so step 8
