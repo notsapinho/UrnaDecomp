@@ -31,16 +31,6 @@
 // f5870 · 87 B · unmatched · placement: link order · name unknown
 // void f5870(i32, i32) { ... }
 
-// link-order cluster 910 · uses=2
-
-// f6639 · 622 B · unmatched · placement: link order · name unknown
-// void f6639(i32, i32) { ... }
-
-// link-order cluster 917 · uses=2
-
-// f6681 · 476 B · unmatched · placement: link order · name unknown
-// void f6681(i32, i32) { ... }
-
 // link-order cluster 928 · uses=2
 
 // f6958 · 863 B · unmatched · placement: link order · name unknown
@@ -60,11 +50,6 @@
 
 // f2072 · 16 B · unmatched · placement: link order · name unknown
 // void f2072(i32, i32) { ... }
-
-// link-order cluster 1239 · uses=8
-
-// f1591 · 658 B · unmatched · placement: link order · name unknown
-// void f1591(i32, i32, i32, i32, i32) { ... }
 
 // component comum
 

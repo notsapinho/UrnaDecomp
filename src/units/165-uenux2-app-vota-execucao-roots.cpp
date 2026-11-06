@@ -10,13 +10,11 @@
 // - vota::CExecucaoVotaCooperativa's constructor (fn 7828) is in the target's table (slot 126), so its own address is
 //   taken, which also keeps the vtable it stores; no reconstructed code takes it.
 // - vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target, none reconstructed: two stand-ins below.
-// - vota::DesenhaDescricaoModo (fn 4620) has two direct callers in the target, CPreShowFormVota::PreShow (fn 7707,
-//   reconstructed) and CPreShowProgressBar's slot 2 (fn 13550, not): ModoProgressBar stands for 13550, so binaryen keeps
-//   4620 out of line as the target does; with 7707 alone it inlines 4620 there.
+// - vota::DesenhaDescricaoModo (fn 4620) has two direct callers in the target, CPreShowFormVota::PreShow (fn 7707) and
+//   CPreShowProgressBar's slot 2 (fn 13550, fragment 391's, written), both in the link: no stand-in.
 // Declared through asm labels with the objects' signatures; no header.
 extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioInterativoERN3api23CInteractiveFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");
-extern "C" void w4620_modo(int, int) __asm__("_ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE");
 
 namespace {
 
@@ -39,13 +37,6 @@ __attribute__((noinline)) void FormulariosVota(int resultado, int builder, int p
     w576_formulario(resultado + 8, builder, segundo);
 }
 
-// stands for fn 13550
-__attribute__((noinline)) int ModoProgressBar(int tela, int ponto)
-{
-    w4620_modo(tela, ponto + 4);
-    return ponto - 3;
-}
-
 const void* volatile w165_sink;
 
 struct SW165Roots {
@@ -54,7 +45,6 @@ struct SW165Roots {
         w165_sink = reinterpret_cast<const void*>(&w7828_construtor);
         w165_sink = reinterpret_cast<const void*>(&FormularioVota);
         w165_sink = reinterpret_cast<const void*>(&FormulariosVota);
-        w165_sink = reinterpret_cast<const void*>(&ModoProgressBar);
     }
 } w165_roots;
 

@@ -155,16 +155,16 @@
 # font {20, 1} and the colours 3 and 0 (cpreshowformvota.h says what places 4620 here and why its point is by value).
 # Measured with pnpm wasm score against names.tsv before step 8: 7707 3 over 28 rows, 4620 6 over 109 rows, operand rows
 # only. The census paired both (`addr`), and step 8 named them `pair-addr` and 5564 `call` (of the two new pairs, 4620
-# is the one that calls it). 4620's other target caller is 13550 (CPreShowProgressBar's slot 2, not reconstructed):
-# with 7707 its only caller in our link, binaryen inlined 4620 into it (names.tsv named no DesenhaDescricaoModo), so the
-# roots file's ModoProgressBar stands for 13550. The same bytes (try-tu.sh --symbols on copies, each function's
-# disassembly compared): in 7707 the point as a named const local; in 4620 `modo.size() > 0` for `!modo.empty()`, an
-# early return, `modo` not const, the CFixedText as a named const local. Not the same: a `const api::SPoint&` parameter
-# (7707 then stores the point once, at +12, and passes that; the target stores it twice and passes +8), and the font as
-# a named local (4620's frame offsets move, the font above the CFixedText). The band places nothing: 4620 is alone in
-# its stretch of ledger/tu-clusters.tsv (695, uses 2), between two OpenSSL objects. Chosen: 4620's name, its being a
-# free function of vota, its parameters' names, and the two functions' place in the file, before
-# GetFormularioInterativo. Put after GetFormulario instead, they leave the object's data in the same order
+# is the one that calls it). 4620's other target caller is 13550 (CPreShowProgressBar's slot 2): with 7707 its only
+# caller in our link, binaryen inlined 4620 into it (names.tsv named no DesenhaDescricaoModo), and the roots file's
+# ModoProgressBar stood for 13550 until fragment 391 wrote it. The same bytes (try-tu.sh --symbols on copies, each
+# function's disassembly compared): in 7707 the point as a named const local; in 4620 `modo.size() > 0` for
+# `!modo.empty()`, an early return, `modo` not const, the CFixedText as a named const local. Not the same: a
+# `const api::SPoint&` parameter (7707 then stores the point once, at +12, and passes that; the target stores it twice
+# and passes +8), and the font as a named local (4620's frame offsets move, the font above the CFixedText). The band
+# places nothing: 4620 is alone in its stretch of ledger/tu-clusters.tsv (695, uses 2), between two OpenSSL objects.
+# Chosen: 4620's name, its being a free function of vota, its parameters' names, and the two functions' place in the
+# file, before GetFormularioInterativo. Put after GetFormulario instead, they leave the object's data in the same order
 # (wasm-objdump -x on both objects), the target's run's: CPreShowFormVota's vtable and typeinfo, IPreShow<IScreen>'s
 # typeinfo, CFixedText's vtable and typeinfo, the block's vtable and typeinfo (our object also emits IText's typeinfo
 # after CFixedText's, which the target's run does not hold: its block vtable follows CFixedText's typeinfo).

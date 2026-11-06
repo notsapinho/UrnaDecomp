@@ -1,8 +1,11 @@
 // api::CStepsProgressBar (/home/rubio/tse/uenux2/src/api/gui/cstepsprogressbar.cpp). This comment is the
 // reconstruction's. Target functions of this file:
-//   13550 holds the constructor, CStepsProgressBar(const uedword, const std::vector<std::string> &, const SRect &,
-//         seven const TColor), inlined there (vota::CPreShowProgressBar's slot 2); its throw is the record at line 428,
-//         column 15, which stays free for it (not reconstructed)
+//   the constructor, CStepsProgressBar(const uedword, const std::vector<std::string> &, const SRect &, seven const
+//         TColor), has no target function: binaryen inlined it into its one caller, 13550 (vota::CPreShowProgressBar's
+//         slot 2, app/vota/eleitor/comum/cpreshowprogressbar.cpp), behind a second prologue; its throw is the record at
+//         line 428, column 15. It ends with SetPassoAtual (a chosen name), the clamp of the current step and the
+//         form's refresh, which clang inlines: written in the constructor's body instead, or with Invalidate's
+//         statements in place of the call, the constructor's code is the same (its disassembly compared)
 //   3665 / 10973  ~CStepsProgressBar() (complete / deleting; out of line, the D0 calls the D2)
 //   10969 GetTypeName() const, 10968 Rect() const, 10970 Move(const SPoint&)
 //   5504  Draw(IScreen&) const, with the private Recalcula and the file-local Escolhe, CriaContorno and Fecha, which have
@@ -21,6 +24,7 @@
 #include <vector>
 
 #include "api/gui/cfixedtext.h"
+#include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
 
@@ -266,169 +270,28 @@ std::vector<SPathCommand> CriaContorno(const SRect& area, bool primeiro, bool ul
 
 } // namespace
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (original lines 273-411: content not recovered)
+#line 412
+CStepsProgressBar::CStepsProgressBar(const uedword passoAtual, const std::vector<std::string>& passos, const SRect& rect,
+                                     const TColor corFundoFeito, const TColor corFundoAtual,
+                                     const TColor corFundoPendente, const TColor corTextoFeito,
+                                     const TColor corTextoAtual, const TColor corTextoPendente, const TColor corBorda)
+    : IFormField<IScreen>()
+    , m_passos(passos)
+    , m_rect(rect)
+    , m_corFundoFeito(corFundoFeito)
+    , m_corFundoAtual(corFundoAtual)
+    , m_corFundoPendente(corFundoPendente)
+    , m_corTextoFeito(corTextoFeito)
+    , m_corTextoAtual(corTextoAtual)
+    , m_corTextoPendente(corTextoPendente)
+    , m_corBorda(corBorda)
+{
+    if (passos.empty()) {
+        throw CUeGuiError(EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS, "Quantidade de segmentos deve ser maior que zero");
+    }
+    SetPassoAtual(passoAtual);
+}
 
 
 
@@ -516,6 +379,17 @@ std::string CStepsProgressBar::GetTypeName() const
 SRect CStepsProgressBar::Rect() const
 {
     return m_rect;
+}
+
+void CStepsProgressBar::SetPassoAtual(const uedword passo)
+{
+    const uedword atual = std::min<uedword>(m_passos.size(), passo);
+    if (atual == m_passoAtual) {
+        return;
+    }
+
+    m_passoAtual = atual;
+    Invalidate();
 }
 
 } // namespace api

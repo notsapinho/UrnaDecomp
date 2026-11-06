@@ -21,14 +21,14 @@ namespace vota {
 
 // RTTI: CPreShowFormVota is an si_class of api::IPreShow<api::IScreen>, vtable @1532600 [174, 144, 7707], and
 // CPreShowProgressBar an si_class of it, vtable @1536544 [174, 144, 13550]. Slot 2 of the first, PreShow (fn 7707), is
-// written in cpreshowformvota.cpp, where it is the key function; the second is a head only, its slot 2 (fn 13550) not
-// reconstructed (a trap in src/units/378-uenux2-ctelasvota-criatela-pending.cpp, so the vtable links). Its constructor
-// is implicit: the CriaTela* screens of ctelasvota.cpp store its vptr inside their std::make_shared (no call), which an
-// implicit or inline constructor gives (the declared, undefined one this head had did not link). Neither class is
-// final: their blocks' __on_zero_shared go through the vtable (fns 172 and 411). The path is chosen, under
-// app/vota/comum: no record names either class, and the header holds both because the second derives from the first.
-// CPreShowProgressBar's vtable lies after vota::impl::CPoliticaExecucaoEleitor's typeinfo (@1536388), not beside
-// CPreShowFormVota's, so its key function is in another file (a reading).
+// written in cpreshowformvota.cpp, where it is the key function; the second's, PreShow (fn 13550), is its key function
+// in app/vota/eleitor/comum/cpreshowprogressbar.cpp (written, not matched: src/units/391-uenux2-cpreshowprogressbar.mk).
+// Its constructor is implicit: the CriaTela* screens of ctelasvota.cpp store its vptr inside their std::make_shared (no
+// call), which an implicit or inline constructor gives (the declared, undefined one this head had did not link).
+// Neither class is final: their blocks' __on_zero_shared go through the vtable (fns 172 and 411). The path is chosen,
+// under app/vota/comum: no record names either class, and the header holds both because the second derives from the
+// first; it is not beside cpreshowprogressbar.cpp, whose place the second's vtable gives (after
+// vota::impl::CPoliticaExecucaoEleitor's typeinfo @1536388, not beside CPreShowFormVota's).
 class CPreShowFormVota : public api::IPreShow<api::IScreen> {
 public:
     void PreShow(api::IScreen& tela) override;
