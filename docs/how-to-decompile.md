@@ -541,8 +541,8 @@ inline a function the target calls from several places, and the caller's object 
 it into the one caller our link gives it: a roots stand-in that gives it the target's call sites is the fix, not a
 question for clang. A body that differs in local numbers alone can be such a callee (try it out of line before a source
 form), a leaf whose result binaryen dropped after the locals were laid out (§R10 has 728, 3890 and 3510), the caller's
-and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three); §R10 has two
-remainders none of these moves (a parameter copied before a loop, binaryen's packing of locals). Write such a function
+and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three); §R10 has one
+remainder none of these moves (a parameter copied before a loop) and a zero set the order moved. Write such a function
 out of line and leave it unrooted, so that it has one caller in our link too, and in another TU than its caller when
 clang would inline it or read its attributes there (8533's tone sequences); "Names no evidence gives" below says which
 class and namespace it takes, §R10's last paragraph which tree, and §C4 how a measured order picks its file when no

@@ -37,7 +37,7 @@
 #
 # api::TerminaComBarraInvertida (target fn 5484, 131 B), matched, in src/uenux2/src/api/io/cinistrings.cpp, a new file,
 # declared in a new api/io/cinistrings.h: whether a line ends in a run of backslashes of odd length. Evidence: its one
-# target caller, fn 5480 (8780 B, written in fragment 379, not matched), calls it twice and holds the records of
+# target caller, fn 5480 (8780 B, matched in fragment 379), calls it twice and holds the records of
 # api::CIniStrings::ParseKeyLine (cinistrings.cpp lines 183 and 187, written in fragment 379); in use band 2
 # (ledger/ordinals.tsv) it and 5485, another helper only 5480 calls, link right before cinikey.cpp's CIniKey::operator=
 # (5483), and in the data
