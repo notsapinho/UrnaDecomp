@@ -6,7 +6,8 @@
 # - comum::CEleitores::CompleteLoad(const std::string&, const std::string&) and CompleteLoad(), with the comparators
 #   ComparaImpedidos and ComparaDinamicos, in celeitores.cpp (unit 110's), and api::CDataMap::SetRegistros in
 #   api/io/cdatamap.h (unit 113's header);
-# - comum::CRdv::CarregaInterno and Carrega, with a file-internal LeCifrado, in crdv.cpp (unit 381's);
+# - comum::CRdv::CarregaInterno and Carrega, which reads through CRdv::Le (unit 241's private reader), in crdv.cpp
+#   (unit 381's);
 # - comum::CJustificador::Carrega in cjustificador.cpp (unit 113's list);
 # - comum::CRegistradorMesario::Carrega in cregistradormesario.cpp (unit 278's list);
 # - RecuperarTodos of comum::servico::CJustificadorServico (cjustificadorservico.cpp, unit 163's list) and of
@@ -44,19 +45,21 @@
 #   begin;
 # - then fn 2543 (comum::VerificaIntegridadeVotos, unit 98, written and unmatched under the user's rule). Every record
 #   lies behind a prologue, so none is 6734's (how-to step 1): its name, CarregaEleitores, is chosen from what it loads;
-#   its being a member of fn 509's class is the member rule (it reads and writes that class's byte at +1,
-#   m_eleitoresCarregados, a chosen name, cestadoaudio.h). +72 of the GetVota() object is
+#   its being a member of fn 509's class follows the member rule (it reads and writes that class's byte at +1,
+#   m_eleitoresCarregados, a chosen name, cestadoaudio.h), and the membership and the byte's being private are
+#   choices (a free function over CEstadoAudio& gives the same bytes: "Chosen", below). +72 of the GetVota() object is
 #   md::estadoaplicacao::CEstadoGeralVota::m_treinamentoEleitor in our layout (the optional<api::CDateTime> before it
 #   ends at +72): GetTreinamentoEleitor() gives the target's load, `GetDhUltimoVoto().has_value()` reads +68 (one row).
 #   That the test skips the voters' load in training mode is a reading of the name.
 #
 # The callers' places. 6734's file: band 2 (ledger/ordinals.tsv) runs 6745 and 6743 (CEstadoAudio::SelecionaModo0 and
 # SelecionaModo1, cestadoaudio.cpp.o) before 6734 in link order; written after SelecionaModo1, CarregaEleitores keeps
-# that order (ld_index 2524, 2525, 2531). Its line, the file's last function, is a choice. Each member it holds goes in
-# its class's own .cpp, the member rule; the wrapper CompleteLoad() is celeitores.cpp's, which defines the CompleteLoad
-# its 48 bytes call, and its being a member overload is chosen. A wrapper of the same shape, a 32-byte frame of
-# GetPathEstatico(FLASH_INTERNA)'s string around an 848-byte frame, holds CEleitores::StaticLoad's records 395 and 407
-# in 7787 (pnpm wasm fn ... 7787), not written.
+# that order (ld_index 2521, 2522 and 2529 at bbc88b35). Its line, the file's last function, is a choice. Each member it
+# holds goes in its class's own .cpp: no record places CRdv's two, the two Carrega or the wrapper, so their files are
+# choices, resting on the measured link order ("Link order", below); the wrapper CompleteLoad() is celeitores.cpp's,
+# which defines the CompleteLoad its 48 bytes call, and its being a member overload is chosen. A wrapper of the same
+# shape, a 32-byte frame of GetPathEstatico(FLASH_INTERNA)'s string around an 848-byte frame, holds
+# CEleitores::StaticLoad's records 395 and 407 in 7787 (pnpm wasm fn ... 7787), not written.
 #
 # CompleteLoad, read from the 864 bytes: it throws 7834 with "Não existe o arquivo {}" unless api::CSystem::ExistFile
 # of the database's path (412); builds the paths of the list at +88 (m_lista3, MontaCaminhos, 1936), reads their
@@ -76,10 +79,11 @@
 # Forms, each by what the rows show (pnpm wasm score ../target/vota_web_wasm.wasm 6734 <link> <our CarregaEleitores>,
 # whole links of the tree at the time; 1336 over 3290 rows with the first draft, 131 over 2938, every row an operand,
 # with what is written):
-# - The RDV load reads through LeCifrado, which returns the vector: the target's frame has the CEncryptedFile at +24,
-#   the vector at +12 and the path at +0, and destroys the file before Desconverte. A vector declared first and the file
-#   in a block gave the vector the top slot (its zeroing at +36 and +44 in the first draft's rows). Carrega(path) beside
-#   CarregaInterno mirrors Salva and SalvaInterno (crdv.cpp), a choice; the three are one frame by clang's inlining.
+# - The RDV load reads through CRdv::Le, which returns the vector (7174's ConfereArquivo reads through it too): the
+#   target's frame has the CEncryptedFile at +24, the vector at +12 and the path at +0, and destroys the file before
+#   Desconverte. A vector declared first and the file in a block gave the vector the top slot (its zeroing at +36 and
+#   +44 in the first draft's rows). Carrega(path) beside CarregaInterno mirrors Salva and SalvaInterno (crdv.cpp), a
+#   choice; the three are one frame by clang's inlining.
 # - 5763 needs a second call site: with CarregaEleitores its only caller in our link, binaryen inlined it (352 rows
 #   inserted in the first draft, 265 of them one run, that body). The roots' TelasVota stands for its other target
 #   caller, 7787.
@@ -122,12 +126,13 @@
 # are chosen.
 #
 # Link order. 6734 needs cestadoaudio.cpp.o ahead of celeitores.cpp.o and cjustificador.cpp.o: at unit 116's place
-# (after both) CarregaEleitores scored 631 over 2967 rows, 568 operand-only, 29 inserted, 28 deleted, local numbers
-# only; a replay of the link's wasm-opt (docs/reference/facts/codegen.md C4) with CarregaEleitores moved ahead of
-# CompleteLoad and its wrapper alone gave 170 over 2938, ahead of those and the justificador load 131 over 2938, every
-# row an operand, which the real link with the move gives too. The target's .bss agrees: CEstadoAudio's statics lie at
-# 0x1bf92c, below CEleitores's (0x1c0ec8), CRdvVota's (0x1c0f54), CJustificador's (0x1c0f8c) and CRegistradorMesario's
-# (0x1d2494). So cestadoaudio.cpp heads unit 110's list (src/units/README.md "Names"), ahead of celeitordetalhe.cpp and
+# (after both) CarregaEleitores scored 631 over 2967 rows, 568 operand-only, 29 inserted, 28 deleted, the same
+# instructions moved (local gets and tees, two loads, a select, an add, a call); a replay of the link's wasm-opt
+# (docs/reference/facts/codegen.md C4) with CarregaEleitores moved ahead of CompleteLoad and its wrapper alone gave 170
+# over 2938, ahead of those and the justificador load 131 over 2938, every row an operand, which the real link with the
+# move gives too. The target's .bss agrees: CEstadoAudio's statics lie at 0x1bf92c, below CEleitores's (0x1c0ec8),
+# CRdvVota's (0x1c0f54), CJustificador's (0x1c0f8c) and CRegistradorMesario's (0x1d2494). So cestadoaudio.cpp heads unit
+# 110's list (src/units/README.md "Names"), ahead of celeitordetalhe.cpp and
 # the DAO, which 5761 needs right before celeitores.cpp (unit 383). Counted as codegen.md C4 counts, over .bss alone
 # (the object has no vtable, typeinfo or record; friction posted): 43 of the 264 objects with named .bss data lie out of
 # the data's order against it at the head of unit 110's list, 43 after celeitordetalhe.cpp, 44 between the DAO and
@@ -147,8 +152,9 @@
 # landing made idle went from the roots of units 91, 110, 113, 190 and 216 (their roots' comments say which; 110's,
 # 113's and 216's fragments too), and so did units 98's and 128's calls for 6734 (their fragments say which).
 #
-# Chosen, beside the names above: CompleteLoad()'s and CarregaInterno's being members, Carrega's and LeCifrado's
-# existence and linkage beyond what the frame shows, SetRegistros's name, the comparators' linkage, the locals' and
+# Chosen, beside the names above: CarregaEleitores's, CompleteLoad()'s and CarregaInterno's being members,
+# m_eleitoresCarregados's being private, Carrega's existence and its reading through Le beyond what the frame shows,
+# the files of the members no record places, SetRegistros's name, the comparators' linkage, the locals' and
 # parameters' names, the lines in cestadoaudio.cpp, crdv.cpp, cjustificador.cpp, cregistradormesario.cpp and the
 # servicos' files, and in celeitores.cpp every line but the three records' (the comparators at 183 and 188, CompleteLoad
 # from 202, the wrapper from 255).

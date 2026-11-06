@@ -205,7 +205,7 @@
 #   the other 32 of the 34 match rows celeitores.cpp.o, celeitordetalhe.cpp.o and cimpedido.cpp.o then held stay (1393
 #   and 1937 joined them later), while this object moved after celeitordetalhe.cpp.o instead (46 over 828 as well) took
 #   1703's twin name to another object. The target's band 2 has 5764 after ValidaIdentidadesEleitor (5765) in link
-#   order, and so has our object since CompleteLoad, which calls 5765 first, is written (ld_index 2603 and 2604;
+#   order, and so has our object since CompleteLoad, which calls 5765 first, is written (ld_index 2601 and 2602 at bbc88b35;
 #   src/units/386-uenux2-carregaeleitores.mk). Chosen: its being private, its lines but the throw's, the locals' names,
 #   the message's being const (its being a named local is measured: built inside the throw it scores 126 over 837 in the
 #   old order and 80 over 831 in this one), and CImpedido's three accessors (cimpedido.h). CEleitorIdentidade's

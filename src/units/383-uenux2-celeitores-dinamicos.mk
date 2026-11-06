@@ -76,8 +76,8 @@
 # before 5764 and 5765, and 3762 before 3763, three pairs inverted while CompleteLoad was not written. DynamicCreate's
 # records hold it at lines 298 to 361 (placing.md P9, a record bounds the order), and the target's order is that of a
 # TU where CompleteLoad (records :205 to :238) mentions 5764, 5765 and 3763 first: written (fragment 386, held by fn
-# 6734), it does, and the three pairs take the target's order (ld_index 5765 2603, 5764 2604, 3763 2608 against 5761
-# 2613 and 3762 2616).
+# 6734), it does, and the three pairs take the target's order (ld_index at bbc88b35: 5765 2601, 5764 2602, 3763 2606
+# against 5761 2611 and 3762 2614).
 #
 # Chosen: every local's name (temMunicipal, temEstadual, temFederal, vota, dinamicos, gravados, dinamicoDAO, porEleitor)
 # and the lambda's parameters; the comparator's being a lambda (a function object in an anonymous namespace or a local

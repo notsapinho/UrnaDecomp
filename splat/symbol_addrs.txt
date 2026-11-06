@@ -38693,15 +38693,16 @@ _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_1
 # this+4, adding 1 to the count at the control block's +4 when there is one, zeroes this+8 to this+24 (i32 +16, i64
 # +8, i32 +20) and returns this; it is the only target function with its depth-0 fingerprint, addr and shape hashes
 # (pnpm wasm fingerprint ../target/vota_web_wasm.wasm --depth 0). Each of its target callers, 5736, 5737, 6734 and 7174
-# (fns 6734 and 7174 named by the record celeitores.cpp:205 and by vtable), passes the object it returns to
-# api::CEncryptedFile's matched members and destroys it with ~CEncryptedFile (1691): Write (2766) and Save (2767), or
-# Load (3653) and Read (3652). That is the constructor over the layout those members read (api/io/cencryptedfile.h).
+# (6734 and 7174 placed by srcloc-anchor lines on the records celeitores.cpp:205 and csincronizavota.cpp 290 and 303,
+# their names chosen), passes the object it returns to api::CEncryptedFile's matched members and destroys it with
+# ~CEncryptedFile (1691): Write (2766) and Save (2767), or Load (3653) and Read (3652). That is the constructor over the layout those members read (api/io/cencryptedfile.h).
 # Our body is written and differs at every flag measured: 5 over 30 rows at the tree's flags (pnpm wasm score; 2
 # replaced, 3 deleted), where every spelling measured stores +16 and +20 as one i64; the remainder is not explained
-# (src/units/381-uenux2-crdv.mk, src/units/128-uenux2-cencryptedfile.mk). Since 7174 is in the link (unit 241), step 8
-# names 1692 too, `call by:7174`, and the line carries nothing: weighed by removal (a scan on copies without the line,
-# run twice beside a control, and splat-build on the copies), no row moves and the build gives the target's sha256.
-# docs/reference/splat.md section 2 cites it as an example of the kind, so it goes in a commit of its own with that doc.
+# (src/units/381-uenux2-crdv.mk, src/units/128-uenux2-cencryptedfile.mk). Since 7174 and 6734 are in the link (unit
+# 241, fragment 386), step 8 names 1692 too, by their calls, and the line alone carries nothing: weighed by removal (a
+# scan on copies without the line, run twice beside a control, and splat-build on the copies), no row moves and the
+# build gives the target's sha256; with the name out on both sides 5736, 5737, 6734, 6737 and 7174 fall. It stays as
+# the example of its kind that docs/reference/splat.md section 2 cites.
 _ZN3api14CEncryptedFileC2ERKNSt3__210shared_ptrIN7ecourna3api8security16ISymmetricCipherEEE = func:1692; // evidence:callers+content its own rows (above): a shared_ptr copied to +0 and +4, +8 to +24 zeroed, this returned; every target caller hands the result to CEncryptedFile's members; ours differs in the zero stores' order
 # 6627: std::make_shared<api::CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>>, ctelasvota.cpp's
 # instance. Its body, read without the match, is the only target function that holds both 1538008, the address point of
@@ -38754,6 +38755,7 @@ _ZN5comum24CGeracaoVersoesContratos17ObtemDependenciasERKNSt3__212basic_stringIc
 # StartState stores at slot 1529, unit 387) and 12110 (CGeraBU's slot 2, not written). Our body differs: 52 over 963
 # rows at the tree's flags (pnpm wasm score; 45 operand-only, 5 inserted, 2 deleted), and unit 215 measured forms with
 # -fno-strict-aliasing too; the remainder is not explained (src/units/215-uenux2-api-app-leftovers.mk). The line
-# carries 12039, the one caller in our link, which falls without it (unresolved self-voted on step 8's `call by:12039`),
-# and counts it for nothing; no other vote reaches the name (no census pair: the bodies differ).
+# carries 12039, the one caller in our link, which falls without it (unresolved self-voted on step 8's `call` line),
+# and 12040 with it (splat-build refuses 12040 once 12039 is out: self-voted on 12039's name, which only 12040's table
+# store votes for); it counts 12039 for nothing; no other vote reaches the name (no census pair: the bodies differ).
 _ZNK5comum2md15estadoaplicacao12CEstadoGeral25GetDadosQRCodeCertificadoEb = func:5634; // evidence:callers+content its own body (above): the one target function loading the tail @1226 ("{}:{}"), two calls of 5635, alone on its depth-0 fingerprint, addr and shape; ours differs (52 over 963 rows)

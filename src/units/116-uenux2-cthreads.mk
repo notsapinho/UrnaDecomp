@@ -274,8 +274,8 @@
 #   invoke_vi(41 /* &f6737 */, p0);` in pnpm wasm lift's output), and it reads nothing of it (local 0 takes its frame
 #   pointer in the prologue). In use band 2 it lies beside this object's SelecionaModo1 and SelecionaModo0
 #   (6743, 6745; the OpenSSL rows between them read as link-order.md L1's digit-zone scramble), two thousand indices from
-#   csincronizavota.cpp.o's band-2 run, 4657 to 4687 (ledger/ordinals.tsv). Our ld_index: 3129, 3130, 3131 for 6745,
-#   6743, 6737.
+#   csincronizavota.cpp.o's band-2 run, 4657 to 4687 (ledger/ordinals.tsv). Our ld_index at bbc88b35: 2521, 2522, 2523
+#   for 6745, 6743, 6737 (cestadoaudio.cpp heads unit 110's list since fragment 386).
 # - What it holds, under its 16-byte frame: VerificaUrnaDesligando's test and throw (record csincronizavota.cpp 47:15,
 #   1685's folded location); in a voter training (comum::CAppInfo::EhTreinamentoEleitor, 697) the RDV files of both
 #   flashes removed (api::CSystem::RemoveFile, 2760, on 1551's and 1701's paths) and the RDV saved to the internal

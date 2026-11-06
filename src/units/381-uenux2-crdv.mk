@@ -56,7 +56,8 @@
 #   score on links of this unit before steps 7 to 9).
 #   Salva has no target function: our link drops its out-of-line copy (no line in names.tsv). Its name, const and
 #   being private, SalvaInterno's and SalvaExterno's names and const are chosen.
-# - Their order: band 2 links 5737 before 5736, and crdv.cpp defines SalvaInterno first (ld_index 7018 and 7019).
+# - Their order: band 2 links 5737 before 5736, and crdv.cpp defines SalvaInterno first (ld_index 7251 and 7252 at
+#   bbc88b35).
 #   Lines in crdv.cpp: the records' lines 60, 78, 90 and 93 are blank (functions not written); the file's five
 #   functions (the two paths, Salva, SalvaInterno, SalvaExterno) follow them, from line 96, a choice.
 # - Lines in celeitores.cpp, chosen: GetArquivoBancoDadosInterno at 278, between CompleteLoad's last record (238) and
@@ -68,7 +69,8 @@
 #   5762's line, below it, inverts that pair: 5762 links before 5761 in the target (ledger/ordinals.tsv's ordinals 4434
 #   and 4435), after it in ours (ld_index 2605 against 2586 at 7149483a; 5765 2603, 5764 2601, 5757 2611, so 5761 also
 #   links before 5765 and 5764, the pairs unit 383's fragment names). Since fragment 386 wrote CompleteLoad, 5765 and
-#   5764 link before 5761 (ld_index 2603, 2604 and 2613) and 5762 after it (2627): that one pair stays inverted.
+#   5764 link before 5761 (ld_index 2601, 2602 and 2611 at bbc88b35) and 5762 after it (2625): that one pair stays
+#   inverted.
 #
 # Names. The census pairs 1551, 1701, 2826, 5762, 6035 and 6036 at the shape tier only (moved: none -> shape), so step 8
 # names none of them, and step 9's scan matches all six from those pairs (source `ledger`). 5737 and 5736 have no census

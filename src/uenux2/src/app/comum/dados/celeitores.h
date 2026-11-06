@@ -122,7 +122,7 @@ public:
     // No target index: binaryen inlined it into its one caller, fn 7174 (vota::impl::CSincronismoVotoEleitor::
     // Sincroniza), behind a 32-byte frame: the current record's dynamic data (GetDinamico, fn 1271) written through a
     // temporary dao::CEleitorDinamicoDAO over the internal flash's database (Atualizar, fn 5775, called directly). Its
-    // name, const and line are chosen (src/units/241-uenux2-app-vota-eleitor.mk has the frame).
+    // name, const, line, file and being a member are chosen (src/units/241-uenux2-app-vota-eleitor.mk has the frame).
     void GravaEleitorCorrenteMI() const;
     // fn 1393: the current record's CEleitorDetalhe::GetBiometria (fn 1937), returned through the result's address. Its
     // six callers (fns 10425, 10465, 10474, 10478, 10500, 10512, vota's identification states) call it on

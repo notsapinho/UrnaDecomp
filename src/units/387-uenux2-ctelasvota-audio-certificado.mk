@@ -82,8 +82,9 @@
 #   (docs/reference/facts/codegen.md C5), 12 over 208, operand-only. Matches since 5634 is named (below); named by
 #   12040's table vote.
 # - Places: use band 1 holds 12042 and 12041 (the statics' exit destructors), 12040, 12039 and 12038 (ProcessInput,
-#   record :39), in that link order, so StartState is defined above line 36 and the callback is internal, declared in an
-#   anonymous namespace above StartState and defined after ProcessInput: its first mention, in StartState, puts it
+#   record :39), in that link order, so StartState is defined above line 36; the callback's internal linkage is a choice
+#   (external, the object's order is the same), declared in an anonymous namespace above StartState and defined after
+#   ProcessInput: its first mention, in StartState, puts it
 #   between the two (how-to step 3). The lines above line 39 are a layout of ours: the three includes and StartState
 #   took the blank lines between the functions there.
 # - Chosen: the callback's and helper's names, their linkage and lines, `front()` for the first list, StartState's
@@ -94,8 +95,9 @@
 # splat/symbol_addrs.txt names it from its own body: the one target function that loads the tail @1226 ("{}:{}"), alone
 # on its depth-0 fingerprint, addr and shape hashes, with two calls of 5635; its comment has the commands. Weighed by
 # removal on copies (docs/reference/splat.md "Reviewing a match"): without the line, 12039 is unresolved self-voted and
-# splat-build refuses it (UNCONFIRMED); nothing else moves. It goes when a generated vote of another holding match
-# (12110's, once written) repeats it, weighed by removal.
+# splat-build refuses it (UNCONFIRMED), and with 12039's match line out the build refuses 12040 too (self-voted on
+# 12039's name, which 12040's table store alone votes for); nothing else moves. It goes when a generated vote of
+# another holding match (12110's, once written) repeats it, weighed by removal.
 #
 # Stretch, not worked further: vota::CTelasVota::CriaTelaMaisInformacoes (6599, unit 110's, differs): 306 over 2151 rows
 # in this link (278 operand-only, 14 inserted, 14 deleted; the rows beyond operands are loads at +76 and +12 through

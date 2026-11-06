@@ -15,8 +15,8 @@
 // the same function. Draw (fns 12593, 12708) matches since MaskText is written (units 92 and 173); while MaskText was a
 // trap, binaryen inlined it and the body collapsed to one `unreachable`.
 //
-// The constructor's shape is chosen: fns 4185 and 2384 build the mask from different arguments, and each instantiation
-// needs its own, so a forwarding template stands for them. It copies the text into its member: fns 6624 (inlined from
+// The constructor's shape is chosen: fn 4185 builds the mask from its own arguments (2384 has the second one,
+// below), so a forwarding template stands for it. It copies the text into its member: fns 6624 (inlined from
 // vota::AdicionaCampoNumero, ctelasvota.cpp) and 4185 increment the text's count for the parameter and then reload it
 // and compare it with -1 with no store, which the copy's increment and the parameter's release fold into, and a move
 // (`m_texto(std::move(texto))`) does not give (6624 scored 69 over 322 rows with the move against 56 with the copy,

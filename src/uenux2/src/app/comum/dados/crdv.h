@@ -46,8 +46,8 @@ public:
 
     // No target index: steps of fn 7174 (vota::impl::CSincronismoVotoEleitor::Sincroniza), their one caller, which
     // holds each behind a 48-byte frame of its own, as binaryen inlined them: Converte's bytes saved to the RDV's
-    // ".tmp" path, and that file read back and passed to Confere. They read m_cifrador and call slots, so they are
-    // CRdv's members; their names and const are chosen (src/units/381-uenux2-crdv.mk).
+    // ".tmp" path, and that file read back and passed to Confere. They read m_cifrador and call slots, so being
+    // CRdv's members is a reading; their names and const are chosen (src/units/381-uenux2-crdv.mk).
     void SalvaTemporarioInterno() const;
     bool ConfereTemporarioInterno() const;
     void SalvaTemporarioExterno() const;

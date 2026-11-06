@@ -17,7 +17,7 @@
 namespace vota {
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, unnamed
-// callees (491, 1935, 2821, 5545, 2860, 5866, 5869 and 5870 are named now: units 205, 110, 31, 268): 2543 and 5480; its
+// callees (491, 1935, 2821, 2543, 5545, 2860, 5866, 5869 and 5870 are named now: units 205, 110, 98, 31, 268): 5480; its
 // other callees have names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's
 // 1164, 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, 227's
 // 3825 and 3826, and 2281, std::set<std::string>'s hinted insert from the tree root roots_set.cpp, among them).
