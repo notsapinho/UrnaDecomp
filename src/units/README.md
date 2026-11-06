@@ -529,15 +529,17 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     callers that leaves one out, or a note that names a removed stand-in or a moved object by its name. The sweep of a
     whole tip, with what it printed at e7d03612, is
     [../../docs/reference/facts/units.md](../../docs/reference/facts/units.md) §U16. Read each call it lists
-    by its callee: the callee's target callers, each with its `ours` column (`-` when not in our link) and verdict,
+    by its callee: the callee's target callers, each with its `ours` column (`-` when not in our link) and verdict, for
+    one callee or a list in one pass over both files (W23's callee list holds libc and libc++ hubs with hundreds of
+    callers, which a reader skips when no stand-in calls them),
 
     ```sh
-    c=3704; for i in $(awk -F'\t' -v c=$c '$2==c {print $1}' ledger/callgraph.tsv | sort -un); do awk -F'\t' -v i=$i '$1==i {print $1, $3, $5}' splat/scan.tsv; done
+    awk -F'\t' -v list="3704" 'BEGIN {n = split(list, a, " "); for (i = 1; i <= n; i++) want[a[i]] = 1} NR==FNR {s[$1] = $3 " " $5; next} FNR==1 {next} ($2 in want) && !(($1, $2) in seen) {seen[$1, $2]; print $2 ": " $1, s[$1]}' splat/scan.tsv ledger/callgraph.tsv
     ```
 
-    prints `5604 - no-candidate`, `5635 5720 match` and `10273 11647 match` (at e7d03612; `ours` moves with the link). A
-    written caller with no symbol line reads `-` too (5604, unit 155's `Gera`), here and in the sweep, which then counts
-    it as waiting: look its symbol up in
+    prints `3704: 5604 - no-candidate`, `3704: 5635 5720 match` and `3704: 10273 11647 match` (at e7d03612; `ours`
+    moves with the link). A written caller with no symbol line reads `-` too (5604, unit 155's `Gera`), here and in
+    the sweep, which then counts it as waiting: look its symbol up in
     `build/out/wasm-map/vota_web/names.tsv`, and its call in our link (how-to step 10's `wasm-objdump` awk). A sink's
     storers are the functions that load its vptr (the address-point grep below). A note that names a removed stand-in is
     found by that name (`LC_ALL=C git grep -n -w <stand-in> -- src docs`). A stand-in whose last caller a lane brings
