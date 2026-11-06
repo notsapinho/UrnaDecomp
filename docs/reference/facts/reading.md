@@ -1779,6 +1779,7 @@ addresses, so one value can be a literal's tail, an integer and a slot at once. 
         - elem[1094] = ref.func:13298
 
 So a constant is a slot when the parameter that takes it or the member that stores it is a function pointer, and the
-function the slot names fits the caller's class (a comparator, a callback of its data); a pair of words whose difference
-is a tail's length is a literal's begin and end; a size before `call 137` and a multiple of an element's size are
-integers. Count a slot among a function's callees only on that reading.
+function the slot names fits the caller's class (a comparator, a callback of its data): 7787 also stores 7554 and 7809
+as words, and their slots hold 7-Zip code (8603 and 8407, `owner` `7zip` in `ledger/functions.tsv`), so they are
+integers. A pair of words whose difference is a tail's length is a literal's begin and end; a size before `call 137`
+and a multiple of an element's size are integers. Count a slot among a function's callees only on that reading.

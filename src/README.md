@@ -53,8 +53,8 @@ unwritten with no stub, and are found by their record (`docs/reference/facts/pla
 
 ```
 // <stubs>
-// f1455 · 496 B · unmatched · name unknown
-// void f1455(i32, i32) { ... }
+// f6734 · 6461 B · unmatched · name unknown
+// void f6734(i32) { ... }
 // </stubs>
 ```
 

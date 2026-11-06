@@ -231,11 +231,8 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   is 12039): `fn` lists its slot among the strings referenced, and the element section names it
   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
   `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). A slot can also lie inside a
-  literal, and `fn` then lists it as a tail, `(+N into M)`: the words 1086 to 1100 are slots and lie in
-  `"{:05}{:04}{:04}{}{}{}{}"` at 1071. Read the use: a word passed where the callee takes a function pointer, or stored
-  into a member of that type, is a slot (2384 passes 1087, fn 13424, as `api::CFormBuilder::AddTextField`'s `std::string
-  (*)()`), and two words whose difference is the tail's length are a `string_view` of the literal (2725's 1090 and
-  1094). Count it as a callee, and put it
+  literal, which `fn` lists as a tail, `(+N into M)`, and an integer can equal a slot: read each word by its use
+  (`docs/reference/facts/reading.md` §R23). Count a slot as a callee, and put it
   in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
   named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A callee the lane writes, which the link
   keeps, resolves only when its own callees do: wasm-ld stops on an undefined symbol that live code calls. So follow
@@ -292,10 +289,8 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
     which an anchor or a `vtable` pair casts only when the two bodies are the same opcodes (`docs/reference/splat.md`
     §2): the row, the object and the destructor land together, and a row written one remainder off stays `unresolved` on
     it (7160). The row's unit's pending notes are the other place to read first;
-  - its literals' tails. Most `(+N into M)` lines `pnpm wasm fn` lists are integers in the data range or a tail's
-    start, which re-points by content. A library template over a struct compares sizes in bytes, so divide such a
-    constant by the element's size before reading it as a pointer: 3762, `__introsort` over 84-byte elements, holds 2015
-    and 10753, sort.h's `__limit` and `__ninther_threshold` (24 and 128 elements, one less and one more). A loaded end
+  - its literals' tails. Most `(+N into M)` lines `pnpm wasm fn` lists are integers in the data range (a size, a
+    multiple of an element's size: §R23) or a tail's start, which re-points by content. A loaded end
     pointer (`M + len` among its operands, `len` from
     `ledger/strings.tsv`) waits for the host's writer when no code of our link holds the host and its text is not in
     our plain wasm (11253, 11254 and 8168 waited so for 10425's `"-{:02}-{:02}"`, 8963). One whose host our link holds
@@ -308,9 +303,8 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   piece (`/usr/bin/grep -rlE 'i32\.const <slot>($|[^0-9])' build/out/splat/pieces/asm`), checked in the element
   section and used as a slot (an `invoke_*` first argument, a `call_indirect` operand, a stored function pointer the
   code calls), since an integer can equal a slot: 11852 stores `2594` beside `2582` as a value and keeps no 11423, whose
-  keeper is its class's vptr store (`docs/reference/facts/reading.md` §R20). A constant right before `call 137`
-  (`operator new`) is a size, whatever slot it equals (7787's 32 and 236), and a stored word names a slot only when its
-  function fits what the class stores there (7787 stores 7554 and 7809 as words, and their slots hold 7-Zip code). A
+  keeper is its class's vptr store (`docs/reference/facts/reading.md` §R20), and a size before `call 137` or a stored
+  word whose slot's function does not fit the class is no slot either (§R23). A
   static's exit destructor (10 to 14 B,
   its only reference its table slot, which `__cxa_atexit` gets at run time) has no keeper a search sees:
   `wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'ref\.func:10682$'` prints `elem[3848]`, and
@@ -359,9 +353,8 @@ It returns, and posts as a `rounds/` result: the verdict (matched, or not matcha
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
-without a match, nor from one whose change costs a row its base matches: it posts the loss as a `facts/` post (the rows
-step 9's `join` moves, and what would bring each back) and commits it only on a branch the coordinator asks for to weigh
-it, which is a measurement and never lands (how-to step 9 says how such a commit is made).
+without a match, nor from one whose change costs a row its base matches: it posts the loss as a `facts/` post, and
+how-to step 9 says what that post holds and on which branch alone the change may be committed.
 
 Count the matches by target index, not by line. `git diff main -- splat/matched.txt` shows the added lines, but a
 line removed there is not always a lost match: a twin whose surviving name moved is removed under its old symbol and

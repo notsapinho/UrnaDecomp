@@ -375,9 +375,11 @@ Two rules guard the evidence:
   (§2; `guardedObject` in `asmlift-wasm/src/splat-sub.ts`): it is not the function's own when the object's name has
   other evidence, and else it holds as the object does, through a match that uses the object. 5158
   (`CStringUtils::ToLower`) reads `acentuadas` and its guard, which it alone votes for, and holds through 9402, the
-  object's static destructor. For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
-  byte, voted by 8461 alone): say in the fragment what else ties the operand to the object, such as the other
-  target functions that read the same address. The rule asks this only of an `address symbol …` reading. A copy (the
+  object's static destructor. For an object of a few bytes that agreement is thin
+  (`vota::CControlaReconhecimento::s_tentativa`, four bytes, voted by the matched 5403 alone: `/usr/bin/grep -F
+  's_tentativaE =' splat/symbol_addrs.txt`): say in the fragment what else ties the operand to the object, such as
+  the other target functions that read the same address, its static destructor first. The rule asks this only of an
+  `address symbol …` reading. A copy (the
   same string, read-only bytes or `source_location` record at another address) is no name and no vote: our side
   offers it from the target's data, so the rule asks nothing of an operand that took one, and the body alone decides
   it. A function name voted only by the match's own call or table operand holds
@@ -712,14 +714,14 @@ The two ways differ in what picks the readings of the ambiguous operands:
 
 A `vote:N by:<this index>` data name was read from this very body, so for that operand the review shows only what §3's
 byte comparison shows. To see what such a name carries, run the review with `--symbols` on a copy of the symbol file
-without its line. 8461 (`api::ISound::Wait`) and `api::CSystem::s_dorme`, which only 8461 votes for, from
-`asmlift-wasm/`:
+without its line. 5403 (`vota::CControlaReconhecimento::PrimeiraTentativa`) and
+`vota::CControlaReconhecimento::s_tentativa`, which only 5403 votes for, from `asmlift-wasm/` (e7d03612):
 
 ```sh
-mkdir -p ../build/out/splat-review-facts && /usr/bin/grep -v '_ZN3api7CSystem7s_dormeE' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-without-s_dorme.txt
-pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 8461 -o ../build/out/splat-review-facts/8461 \
-  --symbols ../build/out/splat-review-facts/symbols-without-s_dorme.txt | /usr/bin/grep -E '^(preferred|the gate)' | cut -c1-110
-# preferred readings:    UNRESOLVED: +0x37 i32.const <address>: an address of ours: _ZN3api7CSystem7s_dormeE (.dat
+mkdir -p ../build/out/splat-review-facts && /usr/bin/grep -v '_ZN4vota23CControlaReconhecimento11s_tentativaE' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-without-s_tentativa.txt
+pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 5403 -o ../build/out/splat-review-facts/5403 \
+  --symbols ../build/out/splat-review-facts/symbols-without-s_tentativa.txt | /usr/bin/grep -E '^(preferred|the gate)' | cut -c1-110
+# preferred readings:    UNRESOLVED: +0x1 i32.const <address>: an address of ours: _ZN4vota23CControlaReconhecimen
 # the gate is the match's own bytes: FAIL (… s)
 ```
 

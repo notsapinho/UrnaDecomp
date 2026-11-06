@@ -155,13 +155,11 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   this rule gives, inside a landed unit's list: a place outside every list that inverts fewer pairs is not taken, and
   the fragment gives its count. A new file has no old place: one with matches of its own whose order decides nothing
   weighs its own fragment's list (the next free number) and the landed lists beside its data neighbours, and takes the
-  lowest of §C4's counts, the objects with records and no vtable counted too (fragment 372's two files, in unit 93's
-  list). Its fragment gives the count at each place weighed, the data-neighbour pairs it leaves inverted, and against
-  the next place the pairs that differ, which are the objects linked between the two places: named when few, by
-  directory when many (fragment 372). A count reads which objects' data the symbol file and the records name, so later
-  landings that name data move it with no object moving: it carries the commit it was taken at, and a landing that
-  merges a fragment stating one recounts it on the merged link. The move can rename a twin's match line, which step 9
-  does. A file in another unit's list
+  lowest of §C4's record-aware counts (fragment 372's two files, in unit 93's list). Its fragment gives the count at
+  each place weighed, the data-neighbour pairs it leaves inverted, and against the next place the pairs that differ
+  (§C4's `names` lists them): named when few, by directory when many (fragment 372). A count moves as landings name
+  data (§C4), so it carries the commit it was taken at, and a landing that merges a fragment stating one recounts it on
+  the merged link. The move can rename a twin's match line, which step 9 does. A file in another unit's list
   stays its own unit's: its fragment keeps the header comment, the companions and the row, with no source list when
   every source moved, and says which list compiles its files; that list's fragment says why, with the measurement (unit
   188's `simulador.cpp` sits in unit 101's list for 4879, unit 245's three files in unit 96's). A new file whose
@@ -544,7 +542,8 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     storers are the functions that load its vptr (the address-point grep below). A note that names a removed stand-in is
     found by that name (`LC_ALL=C git grep -n -w <stand-in> -- src docs`). A stand-in whose last caller a lane brings
     into the link goes in the lane's commit, code and comment (how-to step 10), and one a landing's merges make idle
-    goes in the merge or a code commit right after them. One idle since before is named by whoever finds it and goes in
+    goes in the merge or, found after it, in a code commit of its own before the comments-only one, named in the result.
+    One idle since before is named by whoever finds it and goes in
     a commit of its own, with a link without it that moves no row ("Going earlier"), or in a lane's commit when the lane
     claims its file, measured the same way and named in the commit and the result. One in a file another active stage
     claims is left to the landing, with a link without it measured and its lines named in the result; when only its

@@ -499,12 +499,8 @@ makes the tree, from a checkout whose build is current (W5):
 
 Its `splat` must print the target's sha256 with the base's count first: a stale link fails as the branch does. Do not
 change a test to suit one link. A landing changes the case that fails on its merge, to read the rule and not the number,
-in the merge commit. An object a case reads that the target lacks stays in our link for the test alone
-(`asmlift-wasm/README.md` "Tests"), kept by the narrowest code that emits it, a `typeid` reference for a typeinfo, never
-by code whose bodies can win binaryen's fold of a real object's twins: a call of `greg_weekday`'s range check kept
-`bad_weekday`'s typeinfo and also its destructors, twins of `bad_year`'s, so 2846 and eight rows took `bad_weekday`
-names from `roots_boost.o` in place of their own objects'. Before steps 7 to 9, run `pnpm test` on a probe edit and
-read step 9's scan for renamed or moved match rows.
+in the merge commit. An object a case reads that the target lacks stays in our link for the test alone, and
+`asmlift-wasm/README.md` "Tests" says what may keep it and what a probe edit runs before steps 7 to 9.
 
 One more way a run alone can mislead (bb6f018):
 
@@ -1024,9 +1020,8 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    adds no index. Search each deleted file's name and each removed identifier.
 4. **A sink whose storers are in the link.** A vtable sink's comment need not name the functions that store its vptr:
    for the vtable it names, `/usr/bin/grep -rlE 'i32\.const <vptr>($|[^0-9])' build/out/splat/pieces/asm` lists them,
-   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing (the class's own destructors,
-   reached only through that vtable, do not count: `src/units/README.md` "Companion files"; [units.md](units.md) §U16
-   lists a tip's idle stand-ins and sinks).
+   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing (a storer as
+   `src/units/README.md` "Companion files" counts it; [units.md](units.md) §U16 lists a tip's idle stand-ins and sinks).
 5. **A stand-in that takes an address,** `&name` of an `__asm__`-labelled function in a static constructor: no `call`
    shows it, so read its callee's callers from the scan, not from the comment, which can be stale either way (callers
    it calls missing that are in the link).
@@ -1039,7 +1034,8 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    files>`; 126 lines in 64 fragments at e7d03612) and re-measure, re-run the examples that print the moved code's
    numbers, or date each with the commit it was taken at.
 8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
-   the line, and no index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
+   the line, and so does one that takes an anchor kind from its pair ([splat.md](splat.md) §S8, the ninth kind); no
+   index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
    it; this lists every quote the symbol file no longer holds (9 at e7d03612):
 
        LC_ALL=C /usr/bin/grep -n -o -E 'vote:[0-9]+ by:[0-9]+(,[0-9]+)*' src/units/*.mk src/units/*.cpp | while IFS=: read f n q; do /usr/bin/grep -q -F "evidence:$q" splat/symbol_addrs.txt || echo "$f:$n: $q"; done
