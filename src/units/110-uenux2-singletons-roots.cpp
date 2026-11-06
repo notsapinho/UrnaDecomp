@@ -14,17 +14,17 @@
 //                       stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, CHV::GetHorarioVerao 5745, and GetCargo 861 once, for
 //                       13550 (its 11 other callers are in the link)
-//   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
+//   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fn 7787 (6734, fragment 386's, is in the link)
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
 //                       in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
-//   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
-//   MontaListas         comum::MontaCaminhos 1936: fns 6734 and 7787 (5772, GetEleitoresEstaticos, is in the link)
-//   LeEstaticos         CEleitores::GetEleitoresEstaticos 5772: fns 6734 and 7787
-//   CarregaDetalhes     CEleitores::LoadEleitorDetalhe 5764: fns 6734 and 7787, one call without dynamic data and one
-//                       with
+//   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fn 7787 (6734 is in the link)
+//   MontaListas         comum::MontaCaminhos 1936: fn 7787 (6734 and 5772, GetEleitoresEstaticos, are in the link)
+//   LeEstaticos         CEleitores::GetEleitoresEstaticos 5772: fn 7787 (6734 is in the link)
+//   CarregaDetalhes     CEleitores::LoadEleitorDetalhe 5764: fn 7787, without dynamic data (6734, which passes them, is
+//                       in the link)
 //   vt_CEleitores       comum::CEleitores's vtable (@1559112), whose one slot is QuantidadeAptosPorAbrangencia (fn 2824):
 //                       the target stores its vptr in fn 7787 alone (a constructor inlined there), which is not
 //                       written; the sink goes when 7787 lands
@@ -114,7 +114,6 @@ __attribute__((noinline)) int DestroiDecoradores(int p)
 
 __attribute__((noinline)) void ValidaEleitores(int eleitores, int eleitor)
 {
-    w5765(eleitores, eleitor);
     w5765(eleitores, eleitor + 108);
 }
 
@@ -135,26 +134,22 @@ __attribute__((noinline)) int ConsultaDinamicos(int detalhe)
 
 __attribute__((noinline)) void LeImpedidos(int resultado, int arquivos)
 {
-    w5767(resultado, arquivos);
     w5767(resultado + 12, arquivos + 24);
 }
 
 __attribute__((noinline)) void MontaListas(int resultado, int diretorio, int nomes)
 {
-    w1936(resultado, diretorio, nomes);
     w1936(resultado + 12, diretorio, nomes + 12);
 }
 
-__attribute__((noinline)) void LeEstaticos(int resultado, int eleitores, int diretorio, int outroResultado)
+__attribute__((noinline)) void LeEstaticos(int resultado, int eleitores, int diretorio)
 {
-    w5772(resultado, eleitores, diretorio);
-    w5772(outroResultado, eleitores, diretorio);
+    w5772(resultado + 12, eleitores, diretorio);
 }
 
 __attribute__((noinline)) void CarregaDetalhes(int resultado, int eleitores, int eleitor, int impedidos, int indice)
 {
     w5764(resultado, eleitores, eleitor, impedidos, indice, 0);
-    w5764(resultado + 204, eleitores, eleitor + 108, impedidos, indice, eleitor + 216);
 }
 
 const void* volatile singletons_sink;

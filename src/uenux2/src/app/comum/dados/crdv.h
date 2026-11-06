@@ -48,6 +48,10 @@ public:
     // names them; the names and const are chosen. crdv.cpp defines them (src/units/381-uenux2-crdv.mk).
     void SalvaInterno() const;
     void SalvaExterno() const;
+    // CarregaInterno: the RDV read back from the internal flash's "rdv.dat" and handed to Desconverte (slot 12, through
+    // the vtable): fn 6734 holds it behind a 48-byte prologue, on CRdvVota::GetInst()'s result
+    // (src/units/386-uenux2-carregaeleitores.mk). No record names it: the name, after SalvaInterno, is chosen.
+    void CarregaInterno();
 
 protected:
     md::RdvPosicionadorPtr m_posicionador;
@@ -60,6 +64,9 @@ private:
     // it (src/units/381-uenux2-crdv.mk). It reads m_cifrador and calls Converte through the vtable (slot 11), on a
     // class that is not final, so it is CRdv's member; its name, const and being private are chosen.
     void Salva(const std::string& arquivo) const;
+    // Carrega: CarregaInterno's body, which clang inlines (one frame): Salva's other direction, its existence, name and
+    // being private chosen.
+    void Carrega(const std::string& arquivo);
 };
 
 // The path of "rdv.dat" in the work directory of the internal flash (target fn 1551) and of the external one (fn

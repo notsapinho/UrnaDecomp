@@ -6,7 +6,6 @@
 // names the target callers it stands for. Declared through asm labels with the objects' signatures (a constructor
 // returns this); address-taken from a static constructor.
 extern "C" {
-int w216_1391() __asm__("_ZN5comum13CJustificador7GetInstEv");
 int w216_2822(int) __asm__("_ZNK5comum10CEleitores33QuantidadeHabilitacaoSemBiometriaEv");
 int w216_2821(int) __asm__("_ZNK5comum10CEleitores31QuantidadeHabilitacaoBiometricaEv");
 int w216_1935(int) __asm__("_ZNK5comum10CEleitores31QuantidadeHabilitacaoBiograficaEv");
@@ -20,10 +19,6 @@ namespace {
 
 const void* volatile w216_sink;
 
-// Stands for fn 1391's caller (comum::CJustificador::GetInst) 6734 (unit 138's 11835, unit 152's 10587, unit 119's
-// 10797, unit 283's 10590, fragment 325's 5971, unit 122's 11616 and fragment 372's 12105 are in the link): one call,
-// the one that stood for 12105 having gone with it.
-__attribute__((noinline)) int Justificadores() { return 13 - 11 * w216_1391(); }
 // Stands for fn 2822's callers 12098 and 12110 (10699, unit 277's, and 11242, unit 155's, are in the link).
 __attribute__((noinline)) int HabilitadosSemBiometria(int a) { return 5 * w216_2822(a) + w216_2822(a + 4); }
 // Stands for the callers of fn 2821 (12098, 12110) and fn 1935 (12098, 12110) not in the link (10701 and 10700, unit
@@ -51,7 +46,6 @@ __attribute__((noinline)) void ConstroiHV(int a, int h)
 struct S216Roots {
     S216Roots()
     {
-        w216_sink = reinterpret_cast<const void*>(&Justificadores);
         w216_sink = reinterpret_cast<const void*>(&HabilitadosSemBiometria);
         w216_sink = reinterpret_cast<const void*>(&HabilitadosPorTipo);
         w216_sink = reinterpret_cast<const void*>(&FotosCandidatura);

@@ -66,6 +66,15 @@ public:
     // files' paths; src/units/383-uenux2-celeitores-dinamicos.mk has the evidence and the forms measured.
     void DynamicCreate(const std::string& banco) const;
 
+    // CompleteLoad: the records celeitores.cpp:205, :219 and :238 give the signature (codes 7834 to 7836). It has no
+    // target index: fn 6734 (vota::CEstadoAudio::CarregaEleitores, cestadoaudio.h) holds it behind an 864-byte prologue
+    // inside the 48-byte frame of the overload with no parameter, which passes GetPathEstatico(FLASH_INTERNA)'s string
+    // and GetArquivoBancoDadosInterno() (both inlined by binaryen). The overload's existence is that frame; its being a
+    // member overload and its name are chosen. src/units/386-uenux2-carregaeleitores.mk has the evidence and the forms
+    // measured.
+    void CompleteLoad(const std::string& diretorio, const std::string& banco);
+    void CompleteLoad();
+
     void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
     // MarcaVotou: the records celeitores.cpp:456 and 460 (vota::CSincronismoOperador::StartState, target fn 10210, holds
     // it inlined by binaryen, one call). It counts the voter at +104 (an increment of that word). The counter's name is
@@ -127,7 +136,8 @@ private:
     // `ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_string...`, no K: not const) names the member and
     // its parameter, and it reads `this`: the lists at +76 and +64 (each prefixed with the directory by MontaCaminhos,
     // fn 1936, and read through LeArquivos, fn 5771) and the type at +100 it decorates each voter with. Its callers are
-    // CompleteLoad (fn 6734) and StaticLoad (fn 7787), not written. Its being private is chosen.
+    // CompleteLoad (held by fn 6734, src/units/386-uenux2-carregaeleitores.mk) and StaticLoad (held by fn 7787, not
+    // written). Its being private is chosen.
     std::vector<md::CEleitorDecorator> GetEleitoresEstaticos(const std::string& diretorio);
 
     // fn 5764, record celeitores.cpp:719, which gives the signature: the voter's record, with the impediments of the
@@ -154,7 +164,9 @@ private:
     std::vector<std::string> m_lista3;
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
     unsigned int m_qtdVotaram;
-    int m_naoRecuperado3;
+    // The byte at +108: CompleteLoad stores 1 there last (fn 6734's rows); no reader of it is read here. Its name and
+    // its type, bool for a byte the body stores, are chosen.
+    bool m_completo;
     std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> m_identidades;
 
     static std::unique_ptr<CEleitores> s_instance;

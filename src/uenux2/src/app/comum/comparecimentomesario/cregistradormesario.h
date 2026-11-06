@@ -38,6 +38,10 @@ public:
     // the throw's) names it, and fn 10337 (IGestorDadoMesario::StartState) holds it inlined by binaryen, a 16-byte frame of
     // its own. Its being public, called with no wrapper, is chosen.
     void SaveCurrentInternal();
+    // Carrega: the map cleared, every comparecimento m_servico's RecuperarTodos returns added (and the section's into
+    // m_mesariosSecao), then the cursor reset. Fn 6734 holds it behind a 96-byte prologue, on GetInst()'s result
+    // (src/units/386-uenux2-carregaeleitores.mk). No record names it: the name is chosen.
+    void Carrega();
 
     // The three maps vota::CRegistraDigitalOperador's searches walk (fn 10451 holds each behind a frame of its own,
     // binaryen's inlining): the section's mesarios with a finger of habilitation (m_mesariosSecao's records whose

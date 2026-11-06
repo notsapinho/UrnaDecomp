@@ -106,4 +106,18 @@ std::map<md::CEleitorIdentidade, md::CComparecimentoMesario> CRegistradorMesario
     return mesarios;
 }
 
+void CRegistradorMesario::Carrega()
+{
+    m_registros.clear();
+    m_corrente = m_registros.end();
+    const std::vector<md::CComparecimentoMesario> comparecimentos = m_servico.RecuperarTodos();
+    std::for_each(comparecimentos.begin(), comparecimentos.end(), [this](const md::CComparecimentoMesario& comparecimento) {
+        Add(comparecimento, comparecimento);
+        if (comparecimento.PertenceSecao()) {
+            m_mesariosSecao.insert({comparecimento.GetMesario(), comparecimento});
+        }
+    });
+    Reset();
+}
+
 } // namespace comum

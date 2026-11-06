@@ -5,7 +5,8 @@
 //   stands for 12098.
 // - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905; 1164 (unit
 //   95's), 3771 (unit 280's), 11905 (unit 176's), 1937 (unit 110's), 11587 (unit 305's), 11626 (unit 160's), 11629 (unit
-//   200's) and 5740 (unit 89's, which holds the call inlined by binaryen from a helper of clocal.cpp) are in the link.
+//   200's), 5740 (unit 89's, which holds the call inlined by binaryen from a helper of clocal.cpp) and 6734 (fragment
+//   386's) are in the link, so one call stands for 7787.
 // - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11569, 11661 (1164, unit 95's, 11569, unit
 //   206's, 10226, unit 116's, 2725, unit 293's, and 5371, unit 214's, are in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
@@ -53,10 +54,9 @@ __attribute__((noinline)) void UmaRaiz(void* destino)
     ::new (Em(destino, 12)) path(CPath::GetPathRoot());
 }
 
-__attribute__((noinline)) void DoisEstaticos(void* destino, comum::EFlashOrigem origem)
+__attribute__((noinline)) void UmEstatico(void* destino, comum::EFlashOrigem origem)
 {
-    ::new (destino) path(CPath::GetPathEstatico(origem));
-    ::new (Em(destino, 12)) path(CPath::GetPathEstatico(comum::FLASH_EXTERNA));
+    ::new (Em(destino, 12)) path(CPath::GetPathEstatico(origem));
 }
 
 __attribute__((noinline)) void DoisDinamicos(void* destino, comum::EFlashOrigem origem)
@@ -100,7 +100,7 @@ struct SRoots190 {
     SRoots190()
     {
         r190_sink = reinterpret_cast<const void*>(&UmaRaiz);
-        r190_sink = reinterpret_cast<const void*>(&DoisEstaticos);
+        r190_sink = reinterpret_cast<const void*>(&UmEstatico);
         r190_sink = reinterpret_cast<const void*>(&DoisDinamicos);
         r190_sink = reinterpret_cast<const void*>(&DoisLogs);
         r190_sink = reinterpret_cast<const void*>(&DoisMR);

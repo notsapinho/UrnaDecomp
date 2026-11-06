@@ -26,24 +26,4 @@
 
 // f5363 · 198 B · unmatched · placement: link order · name unknown
 // void f5363(i32, i32) { ... }
-
-// link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f5723 · 22 B · unmatched · placement: link order · name unknown
-// void f5723(i32, i32) { ... }
-
-// link-order cluster 825 · uses=2 · neighbours' file uenux2/src/app/comum/dados/chv.cpp
-
-// f5751 · 951 B · unmatched · placement: link order · name unknown
-// ? f5751(i32, i32, i32) { ... }
-
-// link-order cluster 828 · uses=2 · neighbours' file uenux2/src/app/comum/dados/celeitores.cpp
-
-// f5766 · 5577 B · unmatched · placement: link order · name unknown
-// void f5766(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1106 · uses=4 · neighbours' file uenux2/src/app/comum/dados/chv.cpp
-
-// f2820 · 189 B · unmatched · placement: link order · name unknown
-// void f2820(i32, i32, i32, i32, i32) { ... }
 // </stubs>

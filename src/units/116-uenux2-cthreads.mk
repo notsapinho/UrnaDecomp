@@ -267,7 +267,10 @@
 #   link-map), and the scan matches Run.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
-CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+# cestadoaudio.cpp stays this unit's file, compiled in unit 110's list, at its head: fragment 386's
+# CEstadoAudio::CarregaEleitores (6734), written there, matches only with that object ahead of celeitores.cpp.o and
+# cjustificador.cpp.o (src/units/386-uenux2-carregaeleitores.mk has the measurement and the count of the move).
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

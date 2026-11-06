@@ -34,11 +34,22 @@ public:
 
     void Reset() { m_corrente = m_registros.begin(); }
 
+    // SetRegistros: the record map taken by value, moved in, and the cursor set to its first record. Fn 6734 holds it
+    // inlined at CEleitores::CompleteLoad's end: the base's `this` (CEleitores + 4) computed apart before the move
+    // assignment, the cursor set before the by-value map's destruction, and that map in a frame slot of its own (an
+    // argument temporary carries no lifetime marker: src/units/386-uenux2-carregaeleitores.mk). The name and its being
+    // a member here are chosen.
+    void SetRegistros(Container registros)
+    {
+        m_registros = std::move(registros);
+        Reset();
+    }
+
     // The number of records, the map's size: vota::CControlaReconhecimento::StartState (fn 10512) reads that word of
     // comum::CEleitores's map (CEleitores's +12) in place. Its name and its being a member here are chosen.
     size_t GetQuantidade() const { return m_registros.size(); }
 
-    // (original lines 41-94: content not recovered)
+    // (original lines 52-94: content not recovered)
 #line 95
     RecordType* GetCurrent() const
     {

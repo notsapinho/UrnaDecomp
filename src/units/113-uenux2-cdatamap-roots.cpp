@@ -19,17 +19,16 @@
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741, needs no stand-in: its target callers 5725, 10587 and 10590 are in the link.
 //   Add over this key, 5725 (6734, 10590), and the copy of the pair's second member, 3743 (5725, 6734, 10590): 10590
-//   (unit 283, through comum::CJustificador::Justifica) and 5725 are in the link, and a stand-in each stands for 6734.
+//   (unit 283, through comum::CJustificador::Justifica), 5725 and 6734 (fragment 386) are in the link: no stand-in.
 //   cjustificador.cpp's object is ahead of this one on the link line, so 5725 is its copy, as in the target (its
 //   record lies in that object's data); fragment 113 says why it matches only with strict aliasing there.
 // - CRegistradorMesario::Registra, 5378, has its two call sites in 10337 (unit 135, in the link). Add(KeyType,
-//   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): cregistradormesario.cpp's
-//   object is ahead of this one on the link line, so its copies are the link's; a stand-in here only adds their second
-//   call site.
+//   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): both callers are in the link
+//   (6734, fragment 386's, holds CRegistradorMesario::Carrega), and the stand-in for 6734 went.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade,
 //   int> stands for the callers not written (2225 and 2264 are, units 50 and 110, 3614, unit 221, 3728, fragment
-//   225, and 2805, fragment 310), and binaryen merges the copies.
+//   225, 2805, fragment 310, and 6734, fragment 386), and binaryen merges the copies.
 // - comum::CJustificador's constructor, 3742 (1391 and 11474, both in the link, 11474 through fragment 372): its two
 //   call sites keep it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 //   Its stand-in went with 11474.
@@ -40,21 +39,12 @@
 //   three times, fragment 372's 12105 twice), and the stand-in for 12105 went.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
-#include <new>
 
 #include "api/io/cdatamap.h"
-#include "app/comum/comparecimentomesario/cregistradormesario.h"
-#include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
-#include "app/comum/dados/celeitordetalhe.h"
 #include "app/comum/dados/md/cpartido.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
-#include "app/comum/justificativa/cjustificador.h"
-#include "app/comum/justificativa/cjustificadordetalhe.h"
-#include "ecourna/app/dados/cnumeroinscricaoeleitoral.hpp"
 
 using TMapaPartidos = api::CDataMap<unsigned short, comum::md::CPartido>;
-using TMapaJustificados = api::CDataMap<ecourna::app::dados::CNumeroInscricaoEleitoral, comum::CJustificadorDetalhe>;
-using TComparecimento = comum::md::CComparecimentoMesario;
 
 namespace {
 
@@ -75,17 +65,6 @@ __attribute__((noinline)) bool AvancaDois(TMapa& mapa)
     return mapa.GetCurrent() != nullptr;
 }
 
-// Stands for the load loop 6734 holds: every row goes in the map, and a row of the section in the second map as well.
-__attribute__((noinline)) int CarregaUm(api::CDataMap<comum::md::CComparecimentoMesarioPK, TComparecimento>& mapa,
-    std::map<comum::md::CEleitorIdentidade, TComparecimento>& mesariosSecao, const TComparecimento& dado)
-{
-    mapa.Add(dado, dado);
-    if (dado.PertenceSecao()) {
-        mesariosSecao.insert({dado.GetMesario(), dado});
-    }
-    return 13;
-}
-
 // Stands for 10842 (2225, 2264 and 3614 are in the link), which searches and inserts in another tree of this key.
 __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa,
                                            const comum::md::CEleitorIdentidade& eleitor)
@@ -97,23 +76,6 @@ __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidad
     return 23;
 }
 
-// Stands for 6734 (comum::CEleitores::CompleteLoad, not written), the other target caller of Add over this key
-// (5725; 10590, through comum::CJustificador::Justifica, is in the link): two call sites, since binaryen inlines a
-// function called once.
-__attribute__((noinline)) int AdicionaJustificado(TMapaJustificados& mapa,
-                                                  const TMapaJustificados::Container::value_type& registro)
-{
-    mapa.Add(registro);
-    return 31;
-}
-
-// Stands for 6734, which copies the detail into the pair it builds (10590 and 5725 are in the link).
-__attribute__((noinline)) int CopiaDetalhe(void* destino, const comum::CJustificadorDetalhe& origem)
-{
-    new (destino) comum::CJustificadorDetalhe(origem);
-    return 37;
-}
-
 const void* volatile w113_sink;
 
 struct SW113Roots {
@@ -121,10 +83,7 @@ struct SW113Roots {
     {
         w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
-        w113_sink = reinterpret_cast<const void*>(&CarregaUm);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
-        w113_sink = reinterpret_cast<const void*>(&AdicionaJustificado);
-        w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
     }
 } w113_roots;
 

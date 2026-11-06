@@ -55,6 +55,13 @@ public:
     void SetTeclasTesteTeclado(char esperada, char pressionada);
     std::pair<char, char> GetTeclasTesteTeclado() const;
 
+    // CarregaEleitores: target fn 6734. Once only (the byte at +1), it loads the RDV, the voters
+    // (CEleitores::CompleteLoad) unless the vote state's training flag is set, the justifications and the mesarios,
+    // then checks the votes' integrity (comum::VerificaIntegridadeVotos). No record names it (each record its body
+    // holds is CompleteLoad's): its name and its line are chosen; src/units/386-uenux2-carregaeleitores.mk has the
+    // evidence.
+    void CarregaEleitores();
+
 private:
     CEstadoAudio();
 

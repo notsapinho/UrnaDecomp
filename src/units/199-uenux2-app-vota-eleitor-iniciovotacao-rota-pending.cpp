@@ -4,7 +4,8 @@
 // typeinfo, with no change when the member lands (src/units/README.md "Pending members").
 //
 // vota::CGeraDadosDinamicos, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.cpp:
-// - StartState 11865 (slot 2, record :47, whose line stays blank there): fns 6734 and 6737, with no name (fn 491 is named now: unit 205); its
+// - StartState 11865 (slot 2, record :47, whose line stays blank there): fn 6737, with no name (fn 491 is named now:
+//   unit 205, and 6734, vota::CEstadoAudio::CarregaEleitores, matches: fragment 386); its
 //   other callees are named (vota::CEstadoAudio::GetInst, fn 509, an api::EUeAssertError throw, and
 //   CVerificaHorarioZeresima::GetInst, fn 5947, unit 138).
 //
