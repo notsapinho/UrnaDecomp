@@ -241,7 +241,7 @@
 #   line, so the tree root src/app/roots_messagequeue.cpp, which gave 501 at this TU's rule (unit 269), went.
 # - 2369 (vota::CTelasVota::IncrementaBarraSincronismo, in ctelasvota.cpp, unit 110's source, an add-only hunk):
 #   `m_barraSincronismo->Incrementa()`, the shared_ptr at +180 (5508, matched); out of line, since 7174 (uenux2, -O3,
-#   not written) calls it four times. Its name, its being a member, its file and its line (in the gap before
+#   unit 241's) calls it four times. Its name, its being a member, its file and its line (in the gap before
 #   GetTelaCargo's record, 3530) are chosen; in use band 5 it links after 2380 and 2376, as their indices order them
 #   (ld_index 2795, 2811, 2827). Unit 110's fragment and README row name it.
 # - The -Oz copies come with what is written: 2737 and 977 because 5500's form calls find(const char*) out of line, and

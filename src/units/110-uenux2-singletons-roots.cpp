@@ -16,8 +16,6 @@
 //                       13550 (its 11 other callers are in the link)
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
-//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fn 7174 (2822, 2825, 6034, 10210, 10635 and 11616 are
-//                       in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
@@ -67,7 +65,6 @@ int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
 
 void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
 void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
-int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
@@ -128,11 +125,6 @@ __attribute__((noinline)) int QuantidadesAptos(int eleitores)
     return (quantidade[0] & 0xffff) + (quantidade[1] >> 16);
 }
 
-__attribute__((noinline)) int ConsultaDinamicos(int detalhe)
-{
-    return w1271(detalhe + 204) * 3;
-}
-
 __attribute__((noinline)) void LeImpedidos(int resultado, int arquivos)
 {
     w5767(resultado, arquivos);
@@ -171,7 +163,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w407);
         singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
-        singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);

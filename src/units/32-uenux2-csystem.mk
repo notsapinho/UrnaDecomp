@@ -187,8 +187,9 @@
 # the same and when the backup exists; then the second is renamed to the backup, the first to the second (and on
 # failure the backup back), each through RenameResource, whose message is the throw's after `contexto + " - "`; last
 # the backup goes, with RemoveTree and rmdir when ExistDir says a directory, RemoveFile's code when ExistFile says a
-# file. Its one target caller, 7174 (vota::impl::CSincronismoVotoEleitor's slot 2), calls it twice with an empty third
-# string: the roots' RepoeDois stands for it, and ZeraAmbos and RemoveUmaArvore, which stood for 5455, are gone.
+# file. Its one target caller, 7174 (vota::impl::CSincronismoVotoEleitor's slot 2, unit 241), calls it twice with an
+# empty third string; RepoeDois, which stood for it, went when 7174 was written, and ZeraAmbos and RemoveUmaArvore,
+# which stood for 5455, are gone.
 # The target's frames, read from pnpm wasm fn's disassembly: 48 B for ReplaceFile's three strings, and nested in it
 # 608, 544 and 160 B, the frames of PrepareReplace, TemporaryPath and ReplaceResource, which binaryen inlined (with
 # libc's mkstemp inside TemporaryPath's). clang inlines an internal function of one call site, so PrepareReplace and

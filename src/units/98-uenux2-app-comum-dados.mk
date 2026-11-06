@@ -93,8 +93,8 @@
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its
 #   `const md::CEleitorDinamico&` result are chosen: no record gives them. Its target callers
-#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2822, 2825 and 6034 (unit 110), 10210 and 10635
-#   (unit 104) and 11616 (unit 122), and a stand-in of unit 110's roots for 7174.
+#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616, all in the link: 2822, 2825 and 6034 (unit 110), 10210 and
+#   10635 (unit 104), 11616 (unit 122) and 7174 (unit 241, through CEleitores::GravaEleitorCorrenteMI).
 # - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 matches
@@ -290,8 +290,12 @@
 #   ten. A `callers+content` hand line in splat/symbol_addrs.txt naming it by them is the route to its name once 2543
 #   can land: with the stand-in it carried 2543 alone (weighed by removal: only 2543's and 11514's rows moved). While
 #   our link inlines 11514, it has no body of its own to name, so neither the line nor the stand-in is in the tree.
-# - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: two calls of 2543 for its callers 6734, 7174 and 12098, and
-#   one of 2834 for 7787 (12244, unit 102's, and 5953, unit 150's, are in the link; the call for 5953 went with it).
+# - 2543's name: its third target caller, 7174 (unit 241), is in the link and matches through a `callers+content` hand
+#   line in splat/symbol_addrs.txt that names 2543 from its own rows (alone on the depth-0 hashes); 2543 itself stays
+#   written and unmatched, for the reason above.
+# - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: two calls of 2543 for its callers 6734 and 12098 (7174, which
+#   calls it twice, is in the link), and one of 2834 for 7787 (12244, unit 102's, and 5953, unit 150's, are in the
+#   link; the call for 5953 went with it).
 # Chosen: the names (VerificaVotosCargo, ChaveCandidatura, ChaveResposta, Procura, GetMapaCargos included), the free
 # functions' linkage and files, GetMapaCargos' being a member (m_todos's access is our header's), the parameters'
 # names, and the lines.

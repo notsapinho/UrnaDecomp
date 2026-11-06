@@ -694,4 +694,9 @@ void CLogVota::LogaMesarioCancelouEntradaDados()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
+void CLogVota::LogaVotoComputado()
+{
+    loga("O voto do eleitor foi computado");
+}
+
 } // namespace vota

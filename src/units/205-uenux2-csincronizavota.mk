@@ -19,8 +19,11 @@
 #         and 3335, 3335 stubbed in src/ecourna/unplaced.cpp, between them). Its callers, 7709 and 7710
 #         (vota::CThreadVota's TrataErro), traps in unit 116's pending file, and 10226 (CThreadMonitor::Run, unit
 #         116's, matched); w205_desligando stands for the first two.
-# and, with no target index of their own: VerificaUrnaDesligando (record 47:15, inlined by clang into each of its seven
-# target callers, 491, 1836, 3333, 4662, 6737, 7174 and 10590), SincronizaAssinaturaRelatorio (binaryen inlined it into
+# and, with no target index of their own: VerificaUrnaDesligando (record 47:15, held inlined by its seven target
+# holders: by clang in 491, 1836, 3333 and 4662, in SincronizaJustificativa (inlined into 10590) and in 7174's
+# SincronizaVotoMI and SincronizaVotoMV, and by binaryen in 6737, its one out-of-line caller, unit 116's
+# vota::CEstadoAudio::GeraDadosDinamicos: that paragraph has the reading), SincronizaAssinaturaRelatorio (binaryen
+# inlined it into
 # 1836, its one caller, behind a stack frame of its own), AssinaESincroniza (an anonymous-namespace helper clang
 # inlines into 4657) and SincronizaJustificativa (binaryen inlined it into its one caller, vota::CPedeAnoNascimento::
 # ProcessInput, fn 10590, behind a 176-byte frame; a chosen name, after SincronizaEstadoGeral, and unit 283's fragment
@@ -93,16 +96,42 @@
 # being a static member, as this class's others, are chosen. Its other callers, 7160 and 7306 (units 329 and 104), are
 # in the link, and the roots' w205_estado_geral that stood for them went.
 #
-# Not written here: SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (records 290 and 303, in the anonymous
-# namespace), which fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) holds inlined; 6737, which holds
-# VerificaUrnaDesligando inlined too and calls 1551, 1701, 2826, 5736, 5737 and 5762 (unit 381's) and 5761. Fn 1164,
-# CArquivosSavd::GetInst, which most members here call,
+# The steps of fn 6737 (vota::CEstadoAudio::GeraDadosDinamicos, unit 116's cestadoaudio.cpp, whose paragraph has the
+# evidence), static members here with no target index: CriaBancoDadosMI and CriaBancoDadosMV (CEleitores::DynamicCreate,
+# 5761, on 2826's and 5762's paths) and SincronizaAssinaturaDadosDinamicos (the package copies 122 to 124, 199 to 201
+# and 134 to 136, or 123 to 125, 200 to 202 and 135 to 137, after the turn's test, as SincronizaAssinaturaVota's).
+# 6737 calls each once, from another file, and binaryen inlines them behind frames of 16, 16 and 32 bytes, the
+# target's. Their names, their being members and their lines after SincronizaJustificativa are chosen.
+#
+# vota::impl::CSincronismoVotoEleitor::Sincroniza, target fn 7174 (unit 241's csincronismovotoeleitor.cpp, whose
+# fragment has the evidence for the whole), holds this file's halves of the vote's synchronization, two static members
+# with no target index that binaryen inlines into it (one call each): SincronizaVotoMI, behind a 48-byte frame, and
+# SincronizaVotoMV, behind a 16-byte one. Each holds by clang VerificaUrnaDesligando and the anonymous
+# SincronizaRDVInternoSeguro or SincronizaRDVExternoSeguro, whose throws are records 290 and 303 (vota error 9300 or
+# 9301, "Falha na gravação do RDV na MI" or "... na MV"): the RDV saved to the flash's ".tmp" file, read back and
+# checked (CRdv's members, unit 381's file), CUeVotaError when the check fails, comum::VerificaIntegridadeVotos (2543,
+# unit 98's) and the ".tmp" file moved over the RDV's (comum::SubstituiRdvInterno or SubstituiRdvExterno). Then the
+# flash's vota state is saved (CAppInfo::SalvaVotaInterno or SalvaVotaExterno, 3790, 3789). In MI, outside a voter
+# training, the current voter's dynamic record is written to the database (CEleitores::GravaEleitorCorrenteMI, unit
+# 110's file) and synced and file 110 signed (AssinaESincroniza, which clang inlines here too), then files 83 and 31 are
+# signed under one CAssinadorVota and synced; in MV, outside a training, CopiaBancoDadosMV copies the database file
+# (ESavdArquivoUE 110 to 111 between the flashes' work directories) and calls GravaBancoDadosMV (4682), and
+# SincronizaAssinaturaRDV copies packages 122 to 124 and 134 to 136 (123 to 125 and 135 to 137), then a sync. Each
+# ends with VerificaAssinaturaMI or MV (3290, 3288, unit 168's) of "vota.vsu", "rdv.vsu" and, outside a training,
+# "uenux.vsu". CopiaBancoDadosMV and SincronizaAssinaturaRDV are static members too, which clang leaves out of line in
+# SincronizaVotoMV (wasm-objdump -d of the object: two calls; cost 1400 against 250 for the first on a scratch
+# compile), so binaryen inlines each behind a frame of its own (80 and 32 bytes, the target's). The anonymous
+# functions' lines are their records', the gap between them blank; the other lines, the names of the members and of
+# their steps, their being static members and the scope of the two signings in place are chosen.
+# Fn 1164, CArquivosSavd::GetInst, which most members here call,
 # is unit 95's, matched with strict aliasing in its TU (that fragment has the measurement); its name comes
 # from the calls of 1501 and 1836 (step 8's `call by:1501,1836`).
 #
 # s_urnaDesligando is a plain bool (csincronizavota.h): vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065,
 # unit 104) tests it in a loop, at the loop's head only, and returns when it is set. That return, not the flag's type,
 # gives the target's loop: std::atomic<bool> compiles 12065 to the same object.
+# Stand-ins that went with 6737 and 7174 in the link: w205_assina (AssinaRDVEBancoDados, for 6737) and w205_banco
+# (GravaBancoDadosMV, for 7174); the roots file's header says what each remaining one stands for.
 CSINCRONIZAVOTA_SRCS := src/api/hwil/euedesligandoerror.cpp src/app/vota/comum/csincronizavota.cpp
 UENUX2_SRCS += $(CSINCRONIZAVOTA_SRCS)
 # nothing in the link calls most of these functions yet: 205-uenux2-csincronizavota-roots.cpp gives each its call sites.

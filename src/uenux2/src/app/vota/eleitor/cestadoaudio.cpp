@@ -1,5 +1,13 @@
 #include "app/vota/eleitor/cestadoaudio.h"
 
+#include "api/util/csynchronizer.h"
+#include "api/util/csystem.h"
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/crdv.h"
+#include "app/comum/dados/crdvvota.h"
+#include "app/vota/comum/csincronizavota.h"
+
 namespace vota {
 
 CEstadoAudio& CEstadoAudio::GetInst()
@@ -32,6 +40,29 @@ void CEstadoAudio::SelecionaModo0()
 void CEstadoAudio::SelecionaModo1()
 {
     m_modo = MODO_1;
+}
+
+void CEstadoAudio::GeraDadosDinamicos()
+{
+    CSincronizaVota::VerificaUrnaDesligando();
+    if (comum::CAppInfo::EhTreinamentoEleitor()) {
+        api::CSystem::RemoveFile(comum::GetArquivoRdvInterno());
+        api::CSystem::RemoveFile(comum::GetArquivoRdvExterno());
+        const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+        rdv.SalvaInterno();
+        CSincronizaVota::AssinaRDVEBancoDados();
+        rdv.SalvaExterno();
+    } else {
+        const comum::CEleitores& eleitores = comum::CEleitores::GetInst();
+        const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+        CSincronizaVota::CriaBancoDadosMI(eleitores);
+        rdv.SalvaInterno();
+        CSincronizaVota::AssinaRDVEBancoDados();
+        CSincronizaVota::CriaBancoDadosMV(eleitores);
+        rdv.SalvaExterno();
+    }
+    CSincronizaVota::SincronizaAssinaturaDadosDinamicos();
+    api::CSynchronizer::GetInst().Sync();
 }
 
 void CEstadoAudio::Desativa()

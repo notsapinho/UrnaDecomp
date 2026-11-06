@@ -15,8 +15,32 @@
 # - Rows this unit's sources release in other units: 7181 (unit 192), with the executable TU's has<T> and push<T> thunks
 #   2741 and 5398 that it calls and the TU's set<ISincronismoVotoEleitor>, 9437, over them (unit 170's paragraph).
 #
-# Pending, trapped in 241-uenux2-app-vota-eleitor-pending.cpp (its header says what it waits for):
-# CSincronismoVotoEleitor::Sincroniza (7174), the class's key function, so the pending object emits its vtable.
+# Written since: CSincronismoVotoEleitor::Sincroniza (7174, slot 2, 3288 B), the class's key function, in
+# csincronismovotoeleitor.cpp after GetInst, so that object emits the vtable (the pending file that trapped it went).
+# - The body: frameless, it calls CTelasVota::GetInst().IncrementaBarraSincronismo() (407, 2369) four times, around
+#   vota::CSincronizaVota::SincronizaVotoMI, CLogVota::GetInst().LogaVotoComputado() (184, then
+#   "O voto do eleitor foi computado" to comum::IEventosLog::loga, 233, behind a 16-byte frame of its own, the shape of
+#   the CLogVota members clogvota.h lists) and SincronizaVotoMV, and returns true. The two halves are
+#   csincronizavota.cpp's: they hold its anonymous SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (records
+#   290 and 303), which only that file can call, and binaryen inlined each into 7174, its one caller, behind a 48- and a
+#   16-byte frame (unit 205's fragment says what they do). Their steps in other files take frames of their own in 7174
+#   as binaryen inlined each into its one caller: CRdv's SalvaTemporarioInterno, ConfereTemporarioInterno and their
+#   Externo pair and comum::SubstituiRdvInterno and SubstituiRdvExterno (crdv.cpp, unit 381: 48 bytes each),
+#   CEleitores::GravaEleitorCorrenteMI (celeitores.cpp, unit 110's list: 32 bytes) and LogaVotoComputado (clogvota.cpp:
+#   16 bytes).
+# - The frames' layouts are the forms': the ".tmp" path as comum::GetArquivoRdvTemporarioInterno() (or Externo), a
+#   function clang inlines (with a named std::string in each user instead, ReplaceFile's three strings sat in another
+#   order); the read back as CRdv::ConfereArquivo over CRdv::Le, two private members clang inlines (with Le alone, a
+#   64-byte frame against the target's 48: the bytes below the path); the database written through a temporary
+#   dao::CEleitorDinamicoDAO (as a named local after a named path, the path's and the DAO's offsets swapped). pnpm
+#   wasm score on the link: 258 over 1491 rows (4 inserted) before those three, 181 over 1487 after, all operand-only
+#   (calls, the flag's address and the throw's destructor slot).
+# - Names: 2543 (comum::VerificaIntegridadeVotos, unit 98's, written and no match: the user's rule) has a
+#   `callers+content` hand line in splat/symbol_addrs.txt; step 8's own line for it is `call by:7174`, which the
+#   build's fixed point refuses as self-voted: weighed by removal (a scan on copies, run twice beside a control, and
+#   splat-build), without the hand line 7174 reads unresolved and the build stops on UNCONFIRMED. With it, 7174 is
+#   `srcloc-anchor` (its records 290 and 303) and matches.
+# - Chosen: the names of the steps and of the halves, their files where no record names one, and the lines.
 #
 # Written since: CFimVotoEleitor::StartState (7198, slot 2, record cfimvotoeleitor.cpp:42), the class's key function,
 # so cfimvotoeleitor.cpp.o emits the vtable. It shows the form at +156 of vota::CTelasVota (slot 2, through a getter
@@ -45,14 +69,11 @@
 #   rows keep the target's order (ld_index 4592 < 4593 for 7212, 7202; 4361 < 4362 for 7181, 7178).
 # - Data: csincronismovotoeleitor.cpp's data in the target holds GetInst's record (@1534132), the interface's typeinfo
 #   (@1534148), CSincronismoVotoEleitor's vtable (@1534156) and typeinfo (@1534176), then instance<T>'s records; ours
-#   holds the class's vtable and typeinfo in the pending object, Sincroniza's, until 7174 is written.
+#   emits the class's vtable and typeinfo in csincronismovotoeleitor.cpp.o now, after GetInst's record and the
+#   interface's own vtable and typeinfo (wasm-objdump -x -j Data of the object).
 #
 # Chosen, no evidence names them: the paths of both headers, the files' lines other than the two records', GetInst's
 # place in cfimvotoeleitor.cpp, the statics' names, EVENTO_NENHUM for the base constructor's 0, and this fragment's
 # order against unit 192 (above).
 APP_VOTA_ELEITOR_SRCS := src/app/vota/eleitor/cfimvotoeleitor.cpp src/app/vota/eleitor/csincronismovotoeleitor.cpp
 UENUX2_SRCS += $(APP_VOTA_ELEITOR_SRCS)
-APP_VOTA_ELEITOR_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/241-uenux2-app-vota-eleitor-pending.o: $(ROOT)/src/units/241-uenux2-app-vota-eleitor-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/241-uenux2-app-vota-eleitor.mk $(APP_VOTA_ELEITOR_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/241-uenux2-app-vota-eleitor-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/241-uenux2-app-vota-eleitor-pending.o

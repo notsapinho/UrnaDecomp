@@ -235,11 +235,6 @@
 // f6689 · 281 B · unmatched · placement: link order · name unknown
 // void f6689(i32, i32, i32) { ... }
 
-// link-order cluster 921 · uses=2
-
-// f6737 · 878 B · unmatched · placement: link order · name unknown
-// void f6737(i32) { ... }
-
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f3528 · 530 B · unmatched · placement: link order · name unknown

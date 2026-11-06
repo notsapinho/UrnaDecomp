@@ -23,10 +23,9 @@
 # The destructor (fn 1691), and Write and Read (2766, 3652), which hold MemWrite (records 142, 145) and MemRead (161 to
 # 167): the same object keeps MemWrite and MemRead out of line (wasm-objdump -d of cencryptedfile.cpp.o), and binaryen
 # inlines each into its one caller, so 2766 sets up its frame after the early return, where MemWrite's own begins. Their
-# target callers are 5736, 5737, 6734 and 7174: 5736 and 5737 (comum::CRdv::SalvaExterno and SalvaInterno, unit 381)
-# are in the link, and the roots file stands in for 6734 and 7174 with Read and the destructor. Write's and Save's two
-# call sites from 5736 and 5737 keep them out of line, so neither has a stand-in for 7174 (a link without them moved
-# no row).
+# target callers are 5736, 5737, 6734 and 7174: 5736, 5737 (comum::CRdv::SalvaExterno and SalvaInterno, unit 381) and
+# 7174 (unit 241) are in the link, and the roots file stands in for 6734 with Read and the destructor. Write and Save
+# have every target caller in the link and no stand-in.
 #
 # Evidence for the forms (whole link, pnpm wasm score against the target before steps 7 to 9):
 # - Write and Read return uedword, MemWrite's or MemRead's count or 0, which every caller drops and binaryen removes:
@@ -78,7 +77,8 @@
 #   `dados[dados.size() - 1 - i]`, the read's size as `cifrado.size()`, and std::swap.
 # - Chosen: the enumerator names of 5987 to 5993 (api/io/eueioerror.h, from the messages), the loop counter's int, the
 #   locals' names, and the lines between the records.
-# Its target callers 6734 and 7174 are not written: the roots file calls Load twice for them.
+# Its target callers are 6734 and 7174: 7174 (unit 241) is in the link with two calls, and the roots file calls Load
+# once for 6734, not written.
 CENCRYPTEDFILE_SRCS := src/api/io/cencryptedfile.cpp
 UENUX2_SRCS += $(CENCRYPTEDFILE_SRCS)
 

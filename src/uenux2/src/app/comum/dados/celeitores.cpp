@@ -408,4 +408,9 @@ std::string CEleitorDadoTTE::Text()
     return "Transferência Temporária";
 }
 
+void CEleitores::GravaEleitorCorrenteMI() const
+{
+    dao::CEleitorDinamicoDAO(GetArquivoBancoDadosInterno()).Atualizar(GetDetalheCorrente().GetDinamico());
+}
+
 } // namespace comum

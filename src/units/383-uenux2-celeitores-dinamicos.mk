@@ -89,17 +89,15 @@
 # CApresentacaoFotoEleitor's operator== being defaulted; the names of the state values, read from ecourna's
 # CEstadoComparecimento.
 #
-# Stand-ins: 383-uenux2-celeitores-dinamicos-roots.cpp's CriaDinamicos stands for 6737's two calls of 5761. 3763's
-# third caller, 6734, needs none: 5761 calls it twice. Unit 91's roots' calls for 5761 (3768's constructor, once; 3759
-# and 3758) went with it.
+# Stand-ins: none (below). 3763's third caller, 6734, needs none: 5761 calls it twice. Unit 91's roots' calls for 5761
+# (3768's constructor, once; 3759 and 3758) went with it.
 
 # celeitores.cpp includes the DAO's header, whose SQL headers include Boost, and celeitordinamicodao.cpp left unit
 # 91's list, whose line gave it the path (an include path, not a flag of the code: unit 66's fragment says why).
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/celeitores.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 
-# the caller (fn 6737) is not reconstructed yet: 383-uenux2-celeitores-dinamicos-roots.cpp reaches DynamicCreate the
-# way the target does
-$(ROOT)/$(APP)/383-uenux2-celeitores-dinamicos-roots.o: $(ROOT)/src/units/383-uenux2-celeitores-dinamicos-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/383-uenux2-celeitores-dinamicos.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/383-uenux2-celeitores-dinamicos-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/383-uenux2-celeitores-dinamicos-roots.o
+# No roots: DynamicCreate's one target caller, fn 6737 (vota::CEstadoAudio::GeraDadosDinamicos, unit 116), is in the
+# link and calls it twice, each time with another database file's path (2826's "uenux.db" and 5762's), through
+# vota::CSincronizaVota::CriaBancoDadosMI and CriaBancoDadosMV, which binaryen inlines into it; the stand-in that
+# stood for those two calls, CriaDinamicos, went with its roots file.

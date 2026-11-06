@@ -31,8 +31,8 @@ __attribute__((noinline)) void LancaOsDois(int primeiro, int segundo)
     w2263_root(segundo + 16);
 }
 
-// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos): 6734, 7174 (twice) and 12098, none in the
-// link.
+// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos) 6734 and 12098, not in the link; the third,
+// 7174, which calls it twice, is (unit 241).
 __attribute__((noinline)) void VerificaDuasVezes(int vezes)
 {
     w2543_root();

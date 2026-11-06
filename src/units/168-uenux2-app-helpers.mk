@@ -103,8 +103,9 @@
 #   difference: 16 over 72 rows, operand-only; the one line `numObrigatorias - numImpresso + numAdicionais`, the printed
 #   count a TQtdImpresso, an int or bound to a const reference: 20 over 74 (2 inserted, 2 deleted: clang adds the extras
 #   first).
-# - The roots give each two call sites: 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) calls 3288 and 3290 three
-#   times each, 12081 and 12974 call 4582; 7174 and 12974 are not written (12081 is since, unit 104). votadefs.cpp
+# - The roots give 4582 two call sites: 12081 and 12974 call it, 12974 is not written (12081 is since, unit 104); 7174
+#   (vota::impl::CSincronismoVotoEleitor's slot 2, unit 241) calls 3288 and 3290 three times each, and their stand-in
+#   went with it. votadefs.cpp
 #   includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost, hence the include path on its object.
 #
 # vota::CriaArquivoImprimindo (fn 1488, 405 B) and vota::RemoveArquivoImprimindo (fn 1487, 587 B), above EhTreinamento
