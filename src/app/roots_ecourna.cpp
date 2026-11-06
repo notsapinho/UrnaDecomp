@@ -9,7 +9,6 @@
 #include "ecourna/app/dados/cfabricaidentificadoreleitor.hpp"
 #include "ecourna/app/dados/cnumerocpf.hpp"
 #include "ecourna/app/dados/cnumeroidentificacaolivre.hpp"
-#include "ecourna/app/dados/cnumeroinscricaoeleitoral.hpp"
 
 namespace {
 
@@ -28,11 +27,14 @@ struct SComResumo {
 extern "C" void urna_resumo_hash(void* resultado, const SComResumo& geral) __asm__(
     "_ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv");
 
+// CNumeroInscricaoEleitoral's constructor (fn 1241) and IIdentificadorEleitor::GetNumero, which binaryen folds into
+// api::CFixedText::GetText (fn 1139), have no call here: every target caller of each is in the link since fn 6734
+// (src/units/386-uenux2-carregaeleitores.mk) is, and make_shared<CNumeroInscricaoEleitoral>'s control block comes from
+// cjustificador.cpp.o, whose CJustificador::Carrega 6734 holds (src/units/README.md "Whose copy"). The blocks' shared
+// slot 2 (fn 3803) takes CNumeroCPF's name from this object.
 std::shared_ptr<ecourna::app::dados::IIdentificadorEleitor> CriaIdentificador(int tipo, const std::string& numero)
 {
     switch (tipo) {
-    case 1:
-        return std::make_shared<ecourna::app::dados::CNumeroInscricaoEleitoral>(numero);
     case 2:
         return std::make_shared<ecourna::app::dados::CNumeroCPF>(numero);
     default:
@@ -85,7 +87,7 @@ __attribute__((noinline)) std::string UsaIdentificador(int tipo, const std::stri
 {
     auto id = CriaIdentificador(tipo, numero);
     auto outro = ecourna::app::dados::CFabricaIdentificadorEleitor::Cria(tipo, numero + "1");
-    return id->Formatado() + id->GetNumero() + outro->Formatado();
+    return id->Formatado() + outro->Formatado();
 }
 
 } // namespace

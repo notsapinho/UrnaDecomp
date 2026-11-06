@@ -3402,7 +3402,7 @@ _ZNK5comum3asn13IConversorASNIN28ModuloTiposResultadosEcoUrna4UrnaENS_2md5CUrnaE
 _ZN5comum3asn5Utils27DesconverteTipoLocalVotacaoEN19ModuloTiposCadastro16TipoLocalVotacaoE = func:3800; // size:0x1e3 evidence:srcloc-anchor
 _ZN5comum3asn5Utils24ConverteTipoLocalVotacaoENS_17ETipoLocalVotacaoE = func:3801; // size:0x206 evidence:srcloc-anchor
 _ZN5comum3asn5Utils14ConverteDataJEERKN3api5CDateE = func:3802; // size:0xc7 evidence:call by:11385,11394
-_ZNSt3__220__shared_ptr_emplaceIN7ecourna3app5dados25CNumeroInscricaoEleitoralENS_9allocatorIS4_EEE16__on_zero_sharedEv = func:3803; // size:0xb evidence:pair-addr
+_ZNSt3__220__shared_ptr_emplaceIN7ecourna3app5dados10CNumeroCPFENS_9allocatorIS4_EEE16__on_zero_sharedEv = func:3803; // size:0xb evidence:pair-addr
 _ZThn12_N5boost10wrapexceptISt16invalid_argumentED0Ev = func:3804; // size:0x37 evidence:pair-addr
 _ZThn12_N5boost10wrapexceptISt16invalid_argumentED1Ev = func:3805; // size:0x34 evidence:pair-addr
 _ZN5boost10wrapexceptISt16invalid_argumentED2Ev = func:3809; // size:0x31 evidence:table by:3810,5834,5837
