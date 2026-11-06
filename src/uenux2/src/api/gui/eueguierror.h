@@ -121,9 +121,9 @@ enum EUeGuiError {
     // the value is the code api::CApplicationContextGuard's constructor throws (record capplicationcontextstack.cpp 45:15,
     // inlined into fn 676); the name is chosen from its message, "O contexto não pôde ser criado": no evidence names it
     EUE_GUI_APPLICATIONCONTEXTGUARD_CONTEXTO_NAO_CRIADO = 5013,
-    // the value is the code api::CStepsProgressBar's constructor throws (record cstepsprogressbar.cpp 428:15, inlined into
-    // fn 13550); the name is chosen from its message, "Quantidade de segmentos deve ser maior que zero": no evidence
-    // names it
+    // the value is the code api::CStepsProgressBar's constructor throws (record cstepsprogressbar.cpp 428:15, inlined
+    // into fn 13550); the name is chosen from its message, "Quantidade de segmentos deve ser maior que zero": no
+    // evidence names it
     EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS = 5014,
     // the values are the codes api::CInputMenuField::AddItem (target fn 1693) throws (records cinputmenufield.cpp
     // 320:15 and 339:15); the names are chosen from their messages, "Um CInputMenuField não comporta mais que 99 itens"

@@ -15,12 +15,12 @@
 # app/vota/comum/cpreshowformvota.h (its comment says why).
 #
 # What 13550 does, read from its folded readout (the body written gives each of these rows, its locals aside): the
-# screen cleared (IScreen's slot 4 with 1), vota::DesenhaDescricaoModo (4620) at {320, 30}, one step per choice of each
-# post comum::CCargos keeps (CConfiguracaoEleicao::GetCargo, 861; the post's GetNomeNeutro, 1547, with " - " and
-# GetOrdinalEscolha, 2258, when it has more than one choice), the steps counted until the current post's current choice
-# (CCargos's GetCurrentEleicaoID 2835 and GetCurrentCargoID 1938 unless IsFim, 602; vota::g_escolhaAtual), and with two
-# steps or more an api::CStepsProgressBar over (2, 2, the screen's width - 3, 30) in the colours 3, 2, 36, 2, 1, 3 and
-# 0, drawn (5504) and destroyed (3665).
+# screen cleared (IScreen's slot 4 with 1), vota::CPreShowFormVota::DesenhaDescricaoModo (4620) at {320, 30}, one step
+# per choice of each post comum::CCargos keeps (CConfiguracaoEleicao::GetCargo, 861; the post's GetNomeNeutro, 1547,
+# with " - " and GetOrdinalEscolha, 2258, when it has more than one choice), the steps counted until the current post's
+# current choice (CCargos's GetCurrentEleicaoID 2835 and GetCurrentCargoID 1938 unless IsFim, 602;
+# vota::g_escolhaAtual), and with two steps or more an api::CStepsProgressBar over (2, 2, the screen's width - 3, 30) in
+# the colours 3, 2, 36, 2, 1, 3 and 0, drawn (5504) and destroyed (3665).
 #
 # What matches it: 13550 is `match` with every row of `pnpm wasm score` an operand (47 over 1007 rows, same 960,
 # replaced 47 [47 operand-only], inserted 0, deleted 0; the one row that is no call or data address is the CUeGuiError
@@ -47,20 +47,25 @@
 #   rect written in place gives the same object.
 # - in the constructor (unit 41's): the value-initialized base and `std::min<uedword>(m_passos.size(), passo)`, whose
 #   other operand order gives 303 over 1033 rows.
-# - vota::DesenhaDescricaoModo (4620, in unit 165's cpreshowformvota.cpp) a member of CPreShowFormVota, so PreShow
-#   passes it `this`: 297 over 1028 rows with it a free function, 49 over 1008 as the member (the rest of this body
-#   unchanged). Binaryen's dead-argument elimination drops the argument, so 4620 keeps its type and its match (6 over
-#   109 rows, as before), and so does 7707, its other caller (3 over 28); step 9 renamed 4620's match line to the
-#   member's symbol. cpreshowformvota.h says why it is a member; the forms that pass `this` otherwise are not measured.
-# - the current post held as a comum::CCargos::TCargoEleicao (`cargoEleicaoAtual`), its fields assigned in the
-#   `if (!fim)` and compared one by one: 49 over 1008 rows with the two ids as scalars, 47 over 1007 so (the cargo
+# - the object passed to DesenhaDescricaoModo (4620, in unit 165's cpreshowformvota.cpp): 297 over 1028 rows with 4620
+#   taking the screen and the point alone, 49 over 1008 with PreShow's `this` passed (the rest of this body unchanged).
+#   Binaryen's dead-argument elimination drops the argument, so 4620 keeps its type and its match (6 over 109 rows, as
+#   before), and so does 7707, its other caller (3 over 28). The bytes decide that the object is passed, not how: 4620
+#   a member of CPreShowFormVota and 4620 a free function taking the object (both PreShows passing `*this`) give the
+#   same code, 4620's symbol aside (`wasm-objdump -d` of both objects compared); the member is chosen (below), and step
+#   9 renamed 4620's match line to its symbol. cpreshowformvota.h says why the object is passed.
+# - the current post held as a comum::CCargos::TCargoEleicao (`cargoEleicaoAtual`) and compared field by field, against
+#   the two ids as scalars: 49 over 1008 rows with the scalars, 47 over 1007 with the pair (the cargo
 #   compare's operands: the target loads the post's cargo first, then compares the current one). clang orders that
 #   compare in its IR, and binaryen keeps clang's order: optimize-instructions moves a local.get right of a load and
 #   then sorts it left by node kind, so each of the six runs on 13550 flips it (13550 printed after each pass, build
 #   below). With a scalar `TCargoID cargoAtual` clang widens its phi to i32 (`icmp eq i32 %phi, %zext`: the phi first);
 #   the pair's field stays i8 and the compare keeps the source's order (`icmp eq i8 %load, %field`, the IR of this
-#   object). `item == cargoEleicaoAtual`, the pair's operator==, gives another object (the pair form measured below);
-#   the pair default-constructed or built from (0, 0) gives this one.
+#   object). `item == cargoEleicaoAtual`, the pair's operator==, gives another object (the pair form measured below),
+#   and so do the compare's operands swapped. Which pair form holds the current post the bytes leave open: the pair
+#   default-constructed or built from (0, 0) with its fields assigned in the `if (!fim)`, assigned whole there from its
+#   constructor or from `std::make_pair`, or a `const` pair initialized from a ternary on `fim` with no `if`, each gives
+#   this object (the value-initialized pair is chosen, below).
 #
 # Why `this` decides the locals (a reading, with what was measured): in the target, 13550's parameter 0's local, `this`,
 # holds GetInst's range result, the steps vector's end pointer (with its two zero sets on the loop's guard) and the
@@ -97,7 +102,8 @@
 # link.
 #
 # Chosen: the file's name, the locals' names and types where the bytes leave them open (`uedword passoAtual`, `unsigned
-# escolha`, `cargoEleicaoAtual`, the pair value-initialized), the steps' colours as plain TColor casts.
+# escolha`, `cargoEleicaoAtual`, the pair value-initialized and its fields assigned in the `if`), 4620 a member of
+# CPreShowFormVota among the forms that pass it the object, the steps' colours as plain TColor casts.
 #
 # 5504's name: `api::CStepsProgressBar::Draw` fills slot 2 of that class's vtable in both links (ledger/vtables.json:
 # [3665, 10973, 5504, ...]), and step 8 named it so (`evidence:vtable`) until 13550 anchored (`srcloc-anchor`, on the
@@ -110,7 +116,9 @@
 # emits the vtable now, and unit 378's pending file (the trap) went. Stand-ins this unit made idle went, call by call:
 # unit 41's roots file (DestroiBarrasPassos, 3665's second caller), unit 165's ModoProgressBar (4620), unit 88's
 # MesmoCargo (1938) and NomesNeutros (1547) and one call each of SomaEleicoes (2835, for 11209 now) and Ordinais (2258,
-# for 12811 now), and unit 110's ConsultaTodos call of GetCargo (861), which stood for 13550 alone. The constructor's
+# for 12811 now), and unit 110's ConsultaTodos call of GetCargo (861), which stood for 13550 alone. With 13550 every
+# target caller of the CUeGuiError constructor thunk (406) is in the link, so unit 14's roots file, two throw sites for
+# 406, went at the landing (the link without it moved no row; unit 14's fragment). The constructor's
 # throw takes EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS (5014) in api/gui/eueguierror.h; of the 632 objects the edited
 # headers (that enum, cstepsprogressbar.h, cpreshowformvota.h) recompile, only the two roots files this unit edits
 # changed (md5 against 8f35addb's objects). Making 4620 a member (cpreshowformvota.h again) changes

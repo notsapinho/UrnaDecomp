@@ -49,8 +49,8 @@ protected:
     // target 13550's vector end holds the local of 13550's own `this`, which clang's register coloring gives a later
     // value only once `this` has a live range (a reading), and with this function free 13550 scores 297 over 1028 rows,
     // as this member, the rest unchanged, 49 over 1008 (src/units/391-uenux2-cpreshowprogressbar.mk has both links). A
-    // free function that takes the object would pass it too (not measured): the member form, its access, its name and
-    // its parameters' names are chosen.
+    // free function that takes the object passes it too, with the same code, 4620's symbol aside (the two objects'
+    // disassembly compared): the member form, its access, its name and its parameters' names are chosen.
     void DesenhaDescricaoModo(api::IScreen& tela, api::SPoint posicao);
 };
 
