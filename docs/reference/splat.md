@@ -161,8 +161,8 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
-  merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store. It suits a callee no vote
-  reaches: its callers in the link all named by `vtable`, or one that the content pass names only once this name is in,
+  merged constructor that does the store. It suits a callee no vote reaches: its callers in the link all named by
+  `vtable`, or one that the content pass names only once this name is in,
   and its other target callers not written. 3059's line is such a case: 6595, its one caller in the link, matches
   through it, and 3059 alone holds `__shared_ptr_pointer<api::CQRCodeImage*, …>`'s address point (`/usr/bin/grep -rlE
   'i32\.const 1538404($|[^0-9])' build/out/splat/pieces/asm` prints only its piece). Once such a

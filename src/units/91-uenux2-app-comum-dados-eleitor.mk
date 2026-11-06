@@ -7,9 +7,9 @@
 # (1715, 2260), thunks of fn 710, with unit 94's constructor; CComparecimentoMesarioDAO's Inserir (10403, slot 3), its
 # two converters ConverteEstadoBiometria and ConverteDedoHabilitacao (5391, 5390, records ccomparecimentomesariodao.cpp
 # lines 200 and 232) and CBaseError<comum::EUeComumComparecimentoMesarioError>'s constructor they throw with (3611, a
-# thunk of fn 710; app/comum/comparecimentomesario/euecomumcomparecimentomesarioerror.h). 1715's name is a hand edit,
-# evidence:rtti-vptr (the only target function holding that vptr); 2297 calls it, and the line is older than the votes
-# of what an anchor's vote names.
+# thunk of fn 710; app/comum/comparecimentomesario/euecomumcomparecimentomesarioerror.h). 1715's name is step 8's
+# vptr-anchor (the only target function holding that vptr); the rtti-vptr hand edit that named it first went once that
+# line gave the same name.
 # All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.

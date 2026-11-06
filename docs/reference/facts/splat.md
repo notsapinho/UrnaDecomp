@@ -700,7 +700,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
 5. **480, 1715 and 2260, thunks of 710.** Each is `f710(p0, p1, p2, p3, <vptr>)`, so each needs unit 94's constructor,
    which forms 710, and throws of its own enum in the same link: 480 unit 95's `EUeComumError`, 1715 and 2260 units 66's
    and 91's. No lane had both, so each came at a merge. The vptr is the class's address point in `ledger/vtables.json`.
-   1715's name is the `rtti-vptr` hand edit; 2260's is `evidence:call by:11471,11472`.
+   1715's and 2260's names are step 8's `vptr-anchor` (`/usr/bin/grep -E '= func:(1715|2260);' splat/symbol_addrs.txt`);
+   1715's `rtti-vptr` hand edit went once that line gave the same name, and a scan without it moved no row.
 6. **9046 and 9047, `CBaseError<EDadosFederacoesError>`'s thunk and `CFederacao`'s constructor.** Their lines depend on
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
