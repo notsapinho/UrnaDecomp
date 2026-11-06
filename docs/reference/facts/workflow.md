@@ -1035,9 +1035,9 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    numbers, or date each with the commit it was taken at.
 8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
    the line, and no index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
-   it; this lists every quote the symbol file no longer holds (10 at e7d03612):
+   it; this lists every quote the symbol file no longer holds (9 at e7d03612):
 
-       LC_ALL=C /usr/bin/grep -n -o -E 'vote:[0-9]+ by:[0-9,]+' src/units/*.mk src/units/*.cpp | while IFS=: read f n q; do /usr/bin/grep -q -F "evidence:$q" splat/symbol_addrs.txt || echo "$f:$n: $q"; done
+       LC_ALL=C /usr/bin/grep -n -o -E 'vote:[0-9]+ by:[0-9]+(,[0-9]+)*' src/units/*.mk src/units/*.cpp | while IFS=: read f n q; do /usr/bin/grep -q -F "evidence:$q" splat/symbol_addrs.txt || echo "$f:$n: $q"; done
 
 The base is the side whose comments have not been searched against the other's matches: for a lane merged onto
 `main`, `main` (or the merge's first parent); when `main` merges `origin/main`, the first parent already holds every
