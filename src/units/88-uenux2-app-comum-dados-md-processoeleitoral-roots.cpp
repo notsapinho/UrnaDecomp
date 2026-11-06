@@ -4,18 +4,20 @@
 // 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
 // call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
 //   1708  CCargos::Next               11209 12098 12110 (7352, 4442, unit 197's, and 5604, unit 155's, are in the link)
-//   1938  GetCurrentCargoID           13550 (11212, 11213, 11214 and 11793 are in the link)
-//   2835  GetCurrentEleicaoID         11209 13550 (5604, unit 155's, is in the link)
+//   1938  GetCurrentCargoID: no stand-in, its callers 13550 (fragment 391's), 11212, 11213, 11214 and 11793 are in the
+//         link
+//   2835  GetCurrentEleicaoID         11209 (5604, unit 155's, and 13550, fragment 391's, are in the link)
 //   1267  CProcessoEleitoral::GetPleito2  7787 (2787, 5586, 11191, 1543, 11902 and 11223 are in the link)
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787, and 5747, written (3715 holds it inlined), 12272 (unit
 //         110's) and 11888 (unit 104's), in the link
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
-//   1547  GetNomeNeutro               13550, and 2796, 2302, 4464, 6999 and 12587, which are written
+//   1547  GetNomeNeutro: no stand-in, its callers 13550 (fragment 391's), 2796, 2302, 4464, 6999 and 12587 are
+//         written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
 //   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
-//   2258  GetOrdinalEscolha           12811 13550, and 4464 and 12587, which are written
+//   2258  GetOrdinalEscolha           12811, and 4464, 12587 and 13550 (fragment 391's), which are written
 //   5651  CPleito::GetEleicao: no stand-in, its callers 3744 (fragment 388's) and 3775
 //         (CConfiguracaoEleicao::GetCargos) are in the link
 //   5648  CPleito::GetSituacoesEleicoes: no stand-in, its callers 3713 (fragment 388's) and 271
@@ -41,12 +43,10 @@
 // asm labels with the object's signatures; compiled as uenux2 code.
 extern "C" {
 void w1708(int) __asm__("_ZN5comum7CCargos4NextEv");
-int w1938(int) __asm__("_ZNK5comum7CCargos17GetCurrentCargoIDEv");
 int w2835(int) __asm__("_ZNK5comum7CCargos19GetCurrentEleicaoIDEv");
 int w1267(int) __asm__("_ZNK5comum2md18CProcessoEleitoral10GetPleito2Ev");
 int w1388(int) __asm__("_ZNK5comum2md6CCargo19GetDetalheCandidatoEv");
 int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
-void w1547(int, int) __asm__("_ZNK5comum2md6CCargo13GetNomeNeutroEv");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
@@ -64,14 +64,9 @@ __attribute__((noinline)) void AvancaDois(int cargos)
     w1708(cargos);
 }
 
-__attribute__((noinline)) int MesmoCargo(int a, int b)
-{
-    return w1938(a) == w1938(b);
-}
-
 __attribute__((noinline)) int SomaEleicoes(int a, int b)
 {
-    return w2835(a) + w2835(b) + 3;
+    return w2835(a) + b + 3;
 }
 
 __attribute__((noinline)) int MesmoPleito(int a, int b)
@@ -89,11 +84,6 @@ __attribute__((noinline)) int DistanciaSuplentes(int detalhe, int a, int b)
     return w1545(detalhe, a) - w1545(detalhe, b) + 5;
 }
 
-__attribute__((noinline)) void NomesNeutros(int saida, int a, int b)
-{
-    w1547(saida + 12, b + a);
-}
-
 __attribute__((noinline)) int XorCargos(int a, int b)
 {
     return w2257(a) ^ w2257(b);
@@ -101,7 +91,6 @@ __attribute__((noinline)) int XorCargos(int a, int b)
 
 __attribute__((noinline)) void Ordinais(int saida, int cargo, int a)
 {
-    w2258(saida + 36, cargo, a);
     w2258(saida + 48, cargo, a + 2);
 }
 
@@ -138,12 +127,10 @@ struct SProcessoEleitoralRoots {
     SProcessoEleitoralRoots()
     {
         processoeleitoral_sink = reinterpret_cast<const void*>(&AvancaDois);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&MesmoCargo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&MesmoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaDetalhes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaSuplentes);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&NomesNeutros);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);

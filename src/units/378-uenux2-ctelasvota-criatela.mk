@@ -1,9 +1,8 @@
 # Unit 378: no source of its own. It adds to unit 110's app/vota/eleitor/comum/ctelasvota.cpp (and ctelasvota.h) the
 # vote screens CTelasVota's constructor (target fn 7787, not written) builds per post, and the helpers they share; its
-# roots stand for 7787's calls of them, and its pending object traps the one member their vtable needs that cannot be
-# written yet (src/units/README.md "Landing a unit" item 2). Scores are `pnpm wasm score` against the plain link
-# (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that differ in calls and data addresses
-# alone.
+# roots stand for 7787's calls of them (src/units/README.md "Landing a unit" item 2). Scores are `pnpm wasm score`
+# against the plain link (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that differ in
+# calls and data addresses alone.
 #
 # Matched (33, the comm of docs/how-to-decompile.md step 10 against the commit this unit started from): 3064
 # CTelasVota::CriaTelaVotoCargoSemCandidato, 6626 CriaTelaVotoNuloConsulta, 6616 CriaTelaConferenciaVotoNuloConsulta,
@@ -84,8 +83,9 @@
 # - 13176 NumeroDigitado returns vota::g_numeroDigitado (table slot 1098, which 6624's helper and 3060 store: one
 #   function, so a named one); defined near the top, after AdicionaGifCargo (3076), a choice the use band does not
 #   bound: 13527 (the gif map's exit destructor), a higher band-1 index, links after it in our object (below).
-# - CPreShowProgressBar: its declared constructor is gone (implicit), and its key function PreShow (13550) is the
-#   trap in 378-uenux2-ctelasvota-criatela-pending.cpp, whose header says what it waits for.
+# - CPreShowProgressBar: its declared constructor is gone (implicit). Its key function PreShow (13550) was the trap of
+#   this unit's pending file until fragment 391 wrote it, in app/vota/eleitor/comum/cpreshowprogressbar.cpp, whose
+#   object emits the vtable now; the pending file and its rule went with it.
 # The gif screens and the VotoBranco/VotoNulo pairs:
 # - 1593 AdicionaGif(comum::md::CVoto::ETipo, api::CFormBuilder &, bool): the gif of a vote type
 #   (":/resource/gifs/votoBranco.gif", "votoNulo.gif", "votoLegenda.gif", ledger/strings.tsv @169156, @169127,
@@ -150,6 +150,4 @@
 # before (0 matches added or renamed, no status or stub file written).
 $(ROOT)/$(APP)/378-uenux2-ctelasvota-criatela-roots.o: $(ROOT)/src/units/378-uenux2-ctelasvota-criatela-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/378-uenux2-ctelasvota-criatela.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/378-uenux2-ctelasvota-criatela-roots.cpp -o $(R)
-$(ROOT)/$(APP)/378-uenux2-ctelasvota-criatela-pending.o: $(ROOT)/src/units/378-uenux2-ctelasvota-criatela-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/378-uenux2-ctelasvota-criatela.mk $(ROOT)/src/uenux2/src/app/vota/comum/cpreshowformvota.h
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/comum/cpreshowprogressbar.cpp) -c src/units/378-uenux2-ctelasvota-criatela-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/378-uenux2-ctelasvota-criatela-roots.o $(APP)/378-uenux2-ctelasvota-criatela-pending.o
+override EXTRA_OBJS += $(APP)/378-uenux2-ctelasvota-criatela-roots.o
