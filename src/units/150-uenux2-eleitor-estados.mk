@@ -11,9 +11,22 @@
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
 # name rests on. CVisualizarCandidatos::StartState is written and differs (below), so the pending file went.
 #
-# Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name. 3251 matches now; its
-# match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings, ahead of
-# md::CVotosCargos' map's from unit 13's InsereCedula (unit 197); 2386 is still not written.
+# Matched since ctelascargo.cpp builds without strict aliasing. CTelasCargo's constructor (fn 2386; records
+# ctelascargo.cpp:67 and :72, codes 9328 and 9329, euevotaerror.h). Its code, from its rows: the map copied (libc++'s
+# map copy, whose insert(first, last) binaryen inlines: a second prologue around the loop, which calls __find_equal, fn
+# 3251, whose match line names the twin src/app/roots_set.cpp's std::map<uebyte, std::string> instance brings), the id
+# formatted once ("Cargo {} ", one unsigned) before both tests, the member's size tested, then the first element with a
+# null form (the member's begin walked) and its screen's name (NomeTela, 6718). In the whole link with strict aliasing,
+# src/app/vota/'s setting, it scored 37 over 433 rows, 3 deleted (`pnpm wasm score`): the target reads `__child` again
+# after libc++'s __insert_node_at stores the begin node, a load strict aliasing lets clang drop
+# (docs/reference/facts/app-flags.md F6). A whole link with ctelascargo.cpp.o alone compiled with -fno-strict-aliasing
+# scored 28 over 433, every one an operand, and with the file in src/Makefile's UENUX2_NOTBAA_FILES (the user's
+# decision) 2386 matches and no other row moves. Only this object defines that insert in our link: that the target's
+# copy is this file's, not another object's the target links first and builds without it (ctelasvota.cpp's, if 7787
+# copies a TMapa: not shown), is a reading. Chosen: std::find_if with a lambda (other forms of the search not measured),
+# the prefix's name, the enumerators' names, every line but the records' (<algorithm> took a blank line of the run above
+# NomeTela). NomesTela, the roots' stand-in for 2386's calls of NomeTela, and unit 197's Procura, for its call of 3251,
+# went; TelasCargo stands for 7787's five calls with two.
 #
 # Written since. CConfirmaVotoSemCandidato's GetInst, its constructor and its two statics: the target holds GetInst,
 # the constructor inlined, in fn 4459 (vota::CEleitorVotando::ChamaEstadoProximoCargo, src/units/197-uenux2-celeitorvotando.mk),
@@ -132,9 +145,15 @@
 # and 4 over 184 (5950), all operand-only. Band 2 runs 5954, 5953, 5952, 5951 (GetCargo), 5950 (ledger/ordinals.tsv),
 # and our link gives 5953, 5952, GetCargo and 5950 rising ld_index (names.tsv), so CarregaCandidaturas is defined above
 # GetCargo and its first mention of construct_at puts 5952 between them; GetCargos after LimpaFiltros is a choice. The
-# roots stand in for 5953's other target caller, 11884 (pending in unit 104), and 5950's, 5710 (not written), with one
-# call each (CandidaturasCarregadas, CandidaturasRelocadas). The file reaches Boost through cconfiguracaoeleicao.h now
+# roots stand in for 5950's other target caller, 5710 (not written), with one call (CandidaturasRelocadas); 5953's,
+# 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through cconfiguracaoeleicao.h now
 # (the include path below).
+#
+# cvisualizarcandidatos.cpp also holds CVisualizarCandidatos::GetPartidos, defined after GetCargos (a choice), and the
+# header SetPartido, both for unit 104's 11884, which holds them inlined and matches: GetPartidos is out of line here
+# (binaryen inlines it into its one caller; it has no frame), and cvisualizarcandidatos.h says what each rests on.
+# GetPartidos has no target function of its own, and this object's other functions compile as before it (compared by
+# function, relocated operands masked).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \

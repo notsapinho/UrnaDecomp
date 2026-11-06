@@ -154,10 +154,11 @@
 #
 # How the names hold. instance<T> pair only by srcloc-anchor: at the census's depth 2 their fingerprints take in 212's and
 # 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the
-# scan refuses (reference/splat.md "No circular evidence"). Two kinds of hand edit in splat/symbol_addrs.txt carry the
-# rest, with their evidence there: _ZN3api20g_polySingletonsInfoE from the table slot its word holds (a slot below 1024
-# counts two telling bytes, and placing by content takes four), and each has<T> whose call has one voter from T's type
-# name. 1654 and 2160 have two voters and need no such line. Neither kind reads a match.
+# scan refuses (reference/splat.md "No circular evidence"). Hand edits in splat/symbol_addrs.txt carry the rest, with
+# their evidence there: each has<T> whose call has one voter, from T's type name; 1654 and 2160 have two voters and need
+# no such line, and none reads a match. _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
+# (slot 284, 11265's only one; a slot below 1024 counts two telling bytes, and placing by content takes four), until
+# step 8 named it by the votes of 316 and 433, and it went (a scan and a build without it kept every row).
 #
 # Inlining. binaryen inlined CPolySingletonList::instance<T> into CPolySingleton<T>::instance: each target body has a
 # second stack prologue (i32.sub(g0, 576)), our object has two functions, and the link has one caller of the second, so

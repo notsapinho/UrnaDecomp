@@ -228,7 +228,8 @@
 # 2846 matches as this object's bad_year D0, the name the target's bad_year vtable gives it. 3804 to 3809, 3899 and
 # 3900 match as the byte-identical members and merges of app/roots_boost.o's wrapexcept<std::invalid_argument>, which
 # links first, and 3901 as that class's throw_exception merge: those names are the link order's pick, the target's
-# vtables holding these bodies under bad_year, bad_month and bad_day_of_month (step 9 renamed the nine lines). The
+# vtables holding these bodies under bad_year, bad_month and bad_day_of_month (step 9 renamed the nine lines); the
+# target's own wrapexcept<std::invalid_argument> is 5127 to 5133, 9335 and 9336. The
 # probe keeps bad_weekday's typeinfo alone for a toolkit test: a call of greg_weekday's range check gave bad_weekday's
 # twins of these bodies, which named them and took 2846 to app/roots_boost.o (measured on a link with that call).
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and

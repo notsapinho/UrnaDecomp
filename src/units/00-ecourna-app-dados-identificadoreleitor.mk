@@ -40,12 +40,29 @@
 # EncodeBase64 into, returning `.substr(0, 8)` of the result for an object with a std::vector<uebyte> at +168 (callers
 # 3059, 7787, 11222). The object is comum::md::estadoaplicacao::CEstadoGeral (its packages' hash), and 3703 is written
 # as its GetResumoHashVersoesPacotes in unit 215's cestadogeral.cpp, for unit 287's 11222; roots_ecourna.cpp's stand-in
-# calls it for 7787 (3059, unit 110's, is in the link). It is 133 rows over 556, among them both size computations: the
-# target's is
-# (n << 2) - ((n / 3) << 3), and base64.cpp's `(n / 3 + n % 3) * 4` compiles to an i32.mul of n / 3 by 3 (so do
-# `4 * (...)`, the terms swapped, `n / 3 * 4 + n % 3 * 4` and `n % 3` written out); `(n - n / 3 * 2) * 4` computes both
-# without one (base64.cpp's object, instruction kinds only). base64.cpp stays as it was: the rows of 3703 that differ
-# are in the code it holds from it (read from pnpm wasm score's alignment).
+# calls it for 7787 (3059, unit 110's, is in the link). It matches, its body placed by a srcloc-anchor line on the two
+# records of the EncodeBase64 it holds inlined, which carries our name over (the name is chosen: unit 215), with
+# base64.cpp's Base64Encode and EncodeBase64's size in the forms below. No record covers that code (EncodeBase64's two
+# throws are the only records, and base64_encode and Base64Encode are the reconstruction's), so each form is chosen for
+# what 3703's code shows (evidence: pnpm wasm fn 3703) and measured in the whole link (pnpm wasm score of 3703 against
+# our GetResumoHashVersoesPacotes, the other three forms in place); 133 over 556 rows with none of them:
+# - Both size computations, EncodeBase64's buffer and Base64Encode's test of it, are (n << 2) - ((n / 3) << 3) in the
+#   target. `(n - n / 3 * 2) * 4` gives that, and so do `n * 4 - n / 3 * 8` and `4 * (n - 2 * (n / 3))` (EncodeBase64's
+#   code in base64.cpp's object, call indices masked, against a control of the same path length). `(n / 3 + n % 3) * 4`,
+#   the form this file had, keeps an i32.mul of n / 3 by 3; `4 * (...)`, `n / 3 * 4 + n % 3 * 4` and `n % 3` written out
+#   give its object, and the terms swapped another (10 lines differ) that keeps the multiply too; with it, 103 over 544
+#   rows.
+# - Base64Encode's emptiness test compares the vector's end with its begin, where EncodeBase64's own compares begin with
+#   end: `dados.size() == 0` gives that order, as `!dados.size()` does; `dados.empty()` gives 59 over 531 rows.
+# - When base64_encode's malloc returns NULL, the target skips the encoding and goes on to the length test and the copy:
+#   Base64Encode does not test the encoded pointer (with that test, 67 over 531 rows).
+# - The success path assigns the encoded length with no test of it for 0: Base64Encode returns a bool and gives the
+#   length back through its size argument. An int status (0 or -1) with a size_t* argument gives the same object;
+#   returning the length, tested for 0 in EncodeBase64 (the form this file had), gives 90 over 543 rows.
+# With all four, before step 8: 57 over 530 rows, all operand-only (calls, data, __THREW__'s address and the table slots
+# of __cxa_throw and of the error's destructor). Not the same object: Base64Encode over a pointer and a size instead of
+# the vector, whose size test then comes before the buffer's and the pointer's. Base64Encode's name and signature are
+# chosen, as before.
 #
 # CStringUtils' string members, all matched, none named by a record, so every name below, each being a
 # CStringUtils member and each one's line is chosen; the overloads follow Trim's pair and unit 12's Replace. That their

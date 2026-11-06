@@ -11,9 +11,14 @@
 
 namespace api {
 
+CEncryptedFile::CEncryptedFile(const ecourna::api::security::TSharedSymmetricCipher& cifrador)
+    : m_cifrador(cifrador), m_posicao(0)
+{
+}
+
 CEncryptedFile::~CEncryptedFile() = default;
 
-// (original lines 16-32: content not recovered)
+// (original lines 21-32: content not recovered)
 #line 33
 void CEncryptedFile::Load(const std::string& nome)
 {

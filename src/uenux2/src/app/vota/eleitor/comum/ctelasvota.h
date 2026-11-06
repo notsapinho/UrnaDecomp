@@ -31,6 +31,7 @@ class CCargo;
 
 namespace comum {
 class CAppState;
+using TPartidoID = ueword;
 } // namespace comum
 
 namespace comum::md {
@@ -178,8 +179,8 @@ public:
     // constructors (inlined with their GetInst into fns 7481 and 11797), call CTelasVota::GetInst() (fn 407) right
     // before it and drop the result, the reading made for fns 6580 and 6581: a static member called through the
     // instance. Use band 2 of ctelasvota.cpp.o puts it after the map instance 6579 and before the destructor 6548, so it
-    // is defined between SorteiaTeclasTesteTeclado and ~CTelasVota (ld_index 2813, between 2800 and 2814). Its name and
-    // its being CTelasVota's are chosen.
+    // is defined between TelaTesteTeclado and ~CTelasVota (ld_index 2716, between 2704 and 2717 at 894335de). Its name
+    // and its being CTelasVota's are chosen.
     static std::shared_ptr<api::IForm<api::IScreen>> GetTelaContinuaVotacao();
     // The screens of vota::CInspecionaUrna and vota::CUrnaInspecionada (+12 of each): TelaTextoConfirmaCorrige("Por
     // favor, inspecione cabina e urna.", "Continuar", std::nullopt) and TelaNeutra("Inspeção terminada.&Siga as
@@ -321,10 +322,32 @@ CFormInterativoTelaVota TelaMRModoDemo();
 std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorCargo(
     bool todos, const std::set<comum::md::CCargo>& cargos);
 
+// The party filter's menu, which vota::CMenuFiltrarCandidatosPorPartido::StartState (fn 11884) holds behind a second
+// stack-pointer prologue (a 160-byte frame) with no call of CTelasVota::GetInst() before it: a free function, out of
+// line in the object and inlined by binaryen. Evidence, the body: the status header (5), "Visualização de candidatos"
+// at (320, 40) in the 30-point font (@474888) and "Filtragem por partido" at (320, 75) in the 25-point one (@474992),
+// centred, colours 2 over 1; with no party, "Nenhum partido disponível!" at (320, 200) in that font and the label of
+// CORRIGE ('D', "Retornar") through fn 653; else a menu at (10, 120) in the 20-point font (@474896) through
+// api::AddInputMenuField (fn 3675) with "Selecione o partido: " and 310, an item "Todos" whose std::any holds the party
+// 0 (std::any's handler for unsigned short, fn 12888), whose search text is "0" and whose format is "%S - %T"
+// (api::CMenuItem::SetFormatString, record cinputmenufield.cpp:156), then the menu's format "%S"
+// (api::CInputMenuField::SetFormatString, record :468; both held behind prologues of their own), one item per party of
+// the set (ordered, each read from its node at each use: a reference) with the text "" (two byte stores, where
+// std::string() zeroes all twelve bytes), the party in its std::any and its number as its search text
+// (std::to_string of an int, fn 296), and the labels of CONFIRMA ('C', "Confirmar seleção") and CORRIGE ('D',
+// "Retornar"); then "telaFiltragemCandidatosPorPartido" through GetFormularioInterativo (fn 576). It returns the form
+// and the menu, as TelaFiltragemCandidatosPorCargo does. Why ctelasvota.cpp: the three fonts are this file's
+// constants (the reading above). Its place there, after TelaMenuVisualizacaoCandidatos, puts std::any's handler for
+// unsigned short (fn 12888) after the pair's (12894), as the file's end would, and 12888 still inverts two band-1
+// pairs (unit 104's fragment). Chosen: that place, the name (from the form's), the parameter's name, its being a free
+// function of vota, and comum::TPartidoID declared again above as ccandidatura.h declares it (an alias: no include).
+std::pair<CFormInterativoTelaVota, std::shared_ptr<api::CInputMenuField>> TelaFiltragemCandidatosPorPartido(
+    const std::set<comum::TPartidoID>& partidos);
+
 // The keyboard test's screen and key sequence, which vota::testeteclado::CTesteTeclado::StartState (fn 11805) holds
-// behind second stack-pointer prologues, one caller each: TelaTesteTeclado and SorteiaTeclasTesteTeclado, defined in
-// ctelasvota.cpp (TelaTesteTeclado holds GetKeyboardLayout, record ctelasvota.cpp:1301), and AdicionaCaixaTecla, which
-// TelaTesteTeclado calls per key, defined in ctesteteclado.cpp. TECLAS_TESTE_TECLADO, the 13 key names, is defined in
+// behind second stack-pointer prologues, one caller each: TelaTesteTeclado, defined in ctelasvota.cpp (it holds
+// GetKeyboardLayout, record ctelasvota.cpp:1301), and SorteiaTeclasTesteTeclado and AdicionaCaixaTecla (which
+// TelaTesteTeclado calls per key), defined in ctesteteclado.cpp. TECLAS_TESTE_TECLADO, the 13 key names, is defined in
 // ctelasvota.cpp after CTelasVota's statics and read above them. TTeclasTesteTeclado is the type of CTesteTeclado's
 // +36, each key's name mapped to the char its key gives and to its box. src/units/217-uenux2-ctesteteclado.mk has the
 // evidence and the choices (all names here are chosen).

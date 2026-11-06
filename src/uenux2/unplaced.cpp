@@ -126,11 +126,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 808 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp
-
-// f5649 · 257 B · unmatched · placement: link order · name unknown
-// void f5649(i32, i32, i32) { ... }
-
 // link-order cluster 821 · uses=2 · neighbours' file uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp
 
 // f5712 · 35 B · unmatched · placement: link order · name unknown
@@ -180,11 +175,6 @@
 // f6601 · 504 B · unmatched · placement: link order · name unknown
 // void f6601(i32, i32) { ... }
 
-// link-order cluster 1000 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp
-
-// f3713 · 437 B · unmatched · placement: link order · name unknown
-// void f3713(i32, i32, i32) { ... }
-
 // link-order cluster 1012 · uses=3 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
 
 // f3780 · 235 B · unmatched · placement: link order · name unknown
@@ -219,20 +209,10 @@
 // f2839 · 57 B · unmatched · placement: link order · name unknown
 // void f2839(i32, i32) { ... }
 
-// link-order cluster 1142 · uses=5
-
-// f2135 · 136 B · unmatched · placement: link order · name unknown
-// ? f2135(i32, i32) { ... }
-
 // link-order cluster 1224 · uses=8
 
 // f1507 · 53 B · unmatched · placement: link order · name unknown
 // void f1507(i32, i32, i32) { ... }
-
-// link-order cluster 1283 · uses=14
-
-// f921 · 584 B · unmatched · placement: link order · name unknown
-// void f921(i32, i32) { ... }
 
 // no link-order cluster
 
@@ -295,14 +275,6 @@
 
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
-
-// link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
-
-// f5737 · 132 B · unmatched · placement: link order · name unknown
-// void f5737(i32) { ... }
-
-// f5736 · 132 B · unmatched · placement: link order · name unknown
-// void f5736(i32) { ... }
 
 // link-order cluster 918 · uses=2
 

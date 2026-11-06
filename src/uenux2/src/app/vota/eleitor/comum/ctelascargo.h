@@ -42,7 +42,9 @@ std::string NomeTela(const ETelaVotacao tela);
 // which fn 4135 inlines with its `this` at the node's +20; all three are in ctelascargo.cpp. Recovered: the layout: 2386
 // stores its TCargoID at +0 with i32.store8 and starts a map at +4, and 4135 reads that byte with i32.load8_u for the
 // first {} of its message and walks the map at +4. The inner map's types are record 1536832's (ctelasvota.h). Both members
-// are declared only, this header's path beside ctelascargo.cpp is chosen, and so are the data members' names.
+// are defined in ctelascargo.cpp: the constructor is written, its one remainder that file's strict aliasing, and
+// GetTela is inlined into 4135 (src/units/150-uenux2-eleitor-estados.mk). This header's path beside
+// ctelascargo.cpp is chosen, and so are the data members' names.
 class CTelasCargo {
 public:
     using TMapa = std::map<ETelaVotacao, CFormInterativoTelaVota>;

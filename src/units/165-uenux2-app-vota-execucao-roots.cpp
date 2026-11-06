@@ -22,11 +22,11 @@ namespace {
 
 // vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target (2291, 2376, 6569, 6592, 6595, 6599, 7787,
 // 11804, 11805, 11809, 11881, 11884, 11888, 11892, 12040, 12055), none reconstructed but 11804, 11805 and 11809 (unit
-// 217's; 11805 not matched), 2376 (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp), 12055 (unit 37's, not matched),
-// 11881, 11888 and 11892 (unit 104's), 6599 (unit 110's CriaTelaMaisInformacoes, not matched), 6569 and 6595 (unit
-// 110's CriaTelaVisualizacaoCandidato and CriaTelaAntesHorarioZeresima) and 2291 (vota::CRetirarMR::GetInst, unit
-// 156's, with ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo inlined): these two stand in for the others, so it
-// keeps more than one call site. Their bodies differ from each other's and from every target function.
+// 217's), 2376 (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp), 12055 (unit 37's, not matched),
+// 11881, 11884, 11888 and 11892 (unit 104's), 6599 (unit 110's CriaTelaMaisInformacoes, not matched), 6569 and 6595
+// (unit 110's CriaTelaVisualizacaoCandidato and CriaTelaAntesHorarioZeresima) and 2291 (vota::CRetirarMR::GetInst,
+// unit 156's, with ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo inlined): these two stand in for the others, so
+// it keeps more than one call site. Their bodies differ from each other's and from every target function.
 __attribute__((noinline)) void FormularioVota(int resultado, int builder, int nome)
 {
     w576_formulario(resultado, builder, nome);

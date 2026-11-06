@@ -11,19 +11,18 @@
 # all operand-only.
 #
 # Written, not matched: ImprimeVersoesPacotes (11222, slot 4), named by its vtable slot, 26 over 537 rows, all
-# operand-only (calls, data and one table slot). It is `unresolved` on two things it waits for, which pnpm wasm
-# splat-remap against this link lists: `+01c4 i32.const 1061: an address of ours: string tail occurs 4098 times`, the
-# end of its "{}{}{}", which the target holds as the tail of "{:05}{:04}{:04}{}{}{}{}" (string 1071, loaded by
-# vota::CGeraBU::StartState, fn 12110, not written), and `+0320 call 3607: ...GetResumoHashVersoesPacotes... has no
-# target function`, the call of fn 3703 (below). In a scratch whole link (tools/round/try-tu.sh with a TU that returns
-# that literal) and with a scratch copy of the symbol file that names 3703 our GetResumoHashVersoesPacotes, splat-remap
-# prints `target 11222: IDENTICAL`; with the literal and no such name, only the call is left. So 11222 waits for 12110
-# (the literal) and for a name for 3703.
-# - comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (3703) is written in unit 215's
-#   cestadogeral.cpp (its fragment and cestadogeral.h have the notes): it differs, 133 over 556 rows, in the code it
-#   holds inlined from ecourna's base64.cpp (unit 00's note), so no srcloc-anchor names it (the opcodes differ), and its
-#   one caller in our link, 11222, is named by its vtable slot, which casts no vote. A callers+content hand line for it
-#   would carry 11222's call and nothing else, and 11222 waits for the literal as well, so there is none.
+# operand-only (calls, data and one table slot). It is `unresolved` on the one thing it waits for, which pnpm wasm
+# splat-remap lists on the link where 3703 matched: `+01c5 i32.const 1077: an address of ours: string tail occurs 4098
+# times`, the end of its "{}{}{}", which the target holds as the tail of "{:05}{:04}{:04}{}{}{}{}" (string 1071, loaded
+# by vota::CGeraBU::StartState, fn 12110, not written). It also waited for a name for the fn 3703 it calls (`call ...
+# GetResumoHashVersoesPacotes... has no target function`), which 3703's match gives (below). Before that match, in a
+# scratch whole link (tools/round/try-tu.sh with a TU that returns that literal) and with a scratch copy of the symbol
+# file that names 3703 our GetResumoHashVersoesPacotes, splat-remap printed `target 11222: IDENTICAL`; with the literal
+# and no such name, only the call was left. So 11222 waits for 12110 (the literal).
+# - comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (3703, a chosen name) is written in unit 215's
+#   cestadogeral.cpp (its fragment and cestadogeral.h have the notes) and matches since ecourna's base64.cpp, which it
+#   holds inlined, has the forms unit 00's note measures; step 8 places it by a srcloc-anchor line on that code's two
+#   records, EncodeBase64's.
 #
 # ImprimeTituloJE (11223, slot 3) and the slots of its lambda's std::function (vtable @1576316: 11221, 11219, 2881,
 # 11218, 11217) are written in cgeradorrelversaopacotedados.cpp and match, with fragment 317 (whose header has the

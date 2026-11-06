@@ -6,12 +6,16 @@
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
-// and 11892, none reconstructed but 11881, 11888 and 11892 (unit 104's): VisualizarCandidatos stands for 11884 and
-// 11891 with two calls. Its vptr store keeps that class's vtable.
+// and 11892, all in the link but 11891 (the four are unit 104's states): VisualizarCandidatos stands for 11891 with
+// one call. Its vptr store keeps that class's vtable.
 //
 // vota::NomeTela (fn 6718) has two direct callers in the target, CTelasCargo's constructor (fn 2386) and
-// CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. 4135 is written; NomesTela stands for
-// 2386, which is not, with two calls.
+// CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. Both are in the link, so NomesTela,
+// which stood for 2386, went.
+//
+// vota::CTelasCargo's constructor (fn 2386) has one direct caller in the target, fn 7787 (CTelasVota's constructor),
+// not reconstructed, which calls it five times: TelasCargo stands for it with two calls, the cargo's id varied as
+// 7787's calls vary it.
 //
 // api::CPolySingletonList::has<api::ITextToSpeech> (fn 3281, an 11-byte thunk into binaryen's merge, fn 1166) has three
 // direct callers in the target: fn 2079 (api::CPolySingleton<api::ITextToSpeech>::instance, whose copy the target keeps
@@ -29,8 +33,8 @@
 //
 // vota::CVisualizarCandidatos::CarregaCandidaturas (fn 5953) has two direct callers in the target, fns 11884 and 11888
 // (vota::CMenuFiltrarCandidatosPorPartido's and PorCargo's StartState; 11888 calls it from
-// CVisualizarCandidatos::GetCargos, which it holds inlined): 11888 is in the link; CandidaturasCarregadas stands for
-// 11884 with one call.
+// CVisualizarCandidatos::GetCargos, which it holds inlined): both are in the link, so it has no stand-in (a link
+// without CandidaturasCarregadas, which stood for 11884, moved no row).
 //
 // std::__uninitialized_allocator_relocate over comum::md::CCandidatura (fn 5950, the copy 5953's push_back makes
 // cvisualizarcandidatos.cpp.o emit first) has two direct callers in the target, fns 5953 (in the link) and 5710 (not
@@ -40,11 +44,12 @@
 extern "C" {
 int w150_instrucao() __asm__("_ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv");
 int w150_visualizar() __asm__("_ZN4vota21CVisualizarCandidatos7GetInstEv");
-void w150_nome_tela(void* nome, int tela) __asm__("_ZN4vota8NomeTelaENS_12ETelaVotacaoE");
+int w150_telas_cargo(void* telas, int id, const void* mapa) __asm__(
+    "_ZN4vota11CTelasCargoC1EhRKNSt3__23mapINS_12ETelaVotacaoENS1_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_"
+    "9IInputKbdEEEEENS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_SA_EEEEEE");
 extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
 int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
 int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
-void w150_carrega(void* estado) __asm__("_ZN4vota21CVisualizarCandidatos19CarregaCandidaturasEv");
 void w150_reloca(void* alocador, void* inicio, void* fim, void* destino) __asm__(
     "_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md12CCandidaturaEEEPS4_EEvRT_T0_S9_S9_");
 }
@@ -53,10 +58,10 @@ namespace {
 
 const void* volatile eleitor_estados_sink;
 
-// stands for fns 11884 and 11891 (11881, 11888 and 11892 are in the link)
+// stands for fn 11891 (11881, 11884, 11888 and 11892 are in the link)
 __attribute__((noinline)) int VisualizarCandidatos(int vezes)
 {
-    return w150_visualizar() + (vezes > 1 ? w150_visualizar() : 3);
+    return w150_visualizar() + vezes * 3;
 }
 
 // stands for fn 7787 (7377 is in the link)
@@ -65,14 +70,12 @@ __attribute__((noinline)) int InstrucaoAcessibilidade(int vezes)
     return w150_instrucao() + (vezes > 2 ? w150_instrucao() : 5);
 }
 
-// stands for fn 2386; the strings are left as they are, as nothing calls this
-__attribute__((noinline)) int NomesTela(int tela)
+// stands for fn 7787; the objects are left as they are, as nothing calls this
+__attribute__((noinline)) int TelasCargo(char* telas, const void* mapa, int id)
 {
-    char nome[12];
-    char outro[12];
-    w150_nome_tela(nome, tela);
-    w150_nome_tela(outro, tela + 2);
-    return nome[11] + outro[11];
+    w150_telas_cargo(telas, id, mapa);
+    w150_telas_cargo(telas + 16, id + 1, mapa);
+    return id + 2;
 }
 
 // stands for fn 14478
@@ -85,13 +88,6 @@ __attribute__((noinline)) int TemFala()
 __attribute__((noinline)) int CargoVisualizado(const void* estado, const void* outro)
 {
     return w150_cargo(estado) - static_cast<const char*>(outro)[3];
-}
-
-// stands for fn 11884 (11888 is in the link)
-__attribute__((noinline)) int CandidaturasCarregadas(void* estado)
-{
-    w150_carrega(estado);
-    return 19;
 }
 
 // stands for fn 5710 (5953 is in the link)
@@ -107,10 +103,9 @@ struct SEleitorEstadosRoots {
     {
         eleitor_estados_sink = reinterpret_cast<const void*>(&InstrucaoAcessibilidade);
         eleitor_estados_sink = reinterpret_cast<const void*>(&VisualizarCandidatos);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&NomesTela);
+        eleitor_estados_sink = reinterpret_cast<const void*>(&TelasCargo);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
         eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&CandidaturasCarregadas);
         eleitor_estados_sink = reinterpret_cast<const void*>(&CandidaturasRelocadas);
     }
 } eleitor_estados_roots;

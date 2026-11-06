@@ -44,10 +44,30 @@ public:
     virtual void Desconverte(const std::vector<uebyte>& dados) = 0;
     virtual bool Confere(const std::vector<uebyte>& dados) const = 0;
 
+    // Target fns 5737 and 5736: Salva of GetArquivoRdvInterno's or GetArquivoRdvExterno's path. No record, slot or RTTI
+    // names them; the names and const are chosen. crdv.cpp defines them (src/units/381-uenux2-crdv.mk).
+    void SalvaInterno() const;
+    void SalvaExterno() const;
+
 protected:
     md::RdvPosicionadorPtr m_posicionador;
     ecourna::api::security::TSharedSymmetricCipher m_cifrador;
     uebyte m_digitosPartido;
+
+private:
+    // Converte's bytes written through an api::CEncryptedFile over m_cifrador and saved to the path given. No target
+    // function is its own: SalvaInterno and SalvaExterno hold its code, its locals above their string, as clang inlines
+    // it (src/units/381-uenux2-crdv.mk). It reads m_cifrador and calls Converte through the vtable (slot 11), on a
+    // class that is not final, so it is CRdv's member; its name, const and being private are chosen.
+    void Salva(const std::string& arquivo) const;
 };
+
+// The path of "rdv.dat" in the work directory of the internal flash (target fn 1551) and of the external one (fn
+// 1701), as a string: CPath::GetPathTrab of that flash with the name appended. No record, slot or RTTI names them;
+// their names and their being free functions (they read no class state) are chosen, and crdv.cpp is a reading: their
+// bands allow clocal.cpp's tail too, and CRdv's 5736 and 5737 beside them give this file. Each is a thunk of a body
+// binaryen merged with celeitores.h's function of the same flash: 1551 and 2826 call 6036, 1701 and 5762 6035.
+std::string GetArquivoRdvInterno();
+std::string GetArquivoRdvExterno();
 
 } // namespace comum

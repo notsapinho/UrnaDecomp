@@ -115,12 +115,16 @@ UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app
 # 11778, 11779, 11782, 11783, 11787, 11788) store the vptr before they copy the capture, as only code without TBAA
 # does. In celeitorencontrado.cpp the copy of std::set<ETipoIdentificadorEleitor>'s range insert that
 # CEleitorEncontrado::StartState calls (fn 6733, and with it fn 10635) has the target's locals only without TBAA;
-# its other target caller, fn 7787, is not written, so that the target's copy is this file's is a reading. The other
-# files of their directories keep strict aliasing (docs/reference/facts/app-flags.md §F6 has the measurements, and
-# those of the files measured and not listed).
+# its other target caller, fn 7787, is not written, so that the target's copy is this file's is a reading. In
+# ctelascargo.cpp the copy of std::map<ETelaVotacao, CFormInterativoTelaVota>'s range insert that vota::CTelasCargo's
+# constructor (fn 2386) holds inlined reads the child pointer again after the begin node's store only without TBAA;
+# 2386's one target caller, fn 7787, is not written either, so that the target's copy is this file's is a reading. The
+# other files of their directories keep strict aliasing (docs/reference/facts/app-flags.md §F6 has the measurements,
+# and those of the files measured and not listed).
 UENUX2_NOTBAA_FILES := src/app/vota/eleitor/comum/ctelasvota.cpp src/app/vota/eleitor/iniciovotacao/crelvotautil.cpp \
                        src/app/vota/eleitor/cvotacaostateaudio.cpp src/app/vota/eleitor/cconferevotoemcargo.cpp \
-                       src/app/vota/operador/leidentidade/celeitorencontrado.cpp
+                       src/app/vota/operador/leidentidade/celeitorencontrado.cpp \
+                       src/app/vota/eleitor/comum/ctelascargo.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports

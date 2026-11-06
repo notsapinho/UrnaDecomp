@@ -22,8 +22,11 @@
 #
 # The destructor (fn 1691), and Write and Read (2766, 3652), which hold MemWrite (records 142, 145) and MemRead (161 to
 # 167): the same object keeps MemWrite and MemRead out of line (wasm-objdump -d of cencryptedfile.cpp.o), and binaryen
-# inlines each into its one caller, so 2766 sets up its frame after the early return, where MemWrite's own begins. The
-# roots file stands in for their target callers (5736, 5737, 6734, 7174).
+# inlines each into its one caller, so 2766 sets up its frame after the early return, where MemWrite's own begins. Their
+# target callers are 5736, 5737, 6734 and 7174: 5736 and 5737 (comum::CRdv::SalvaExterno and SalvaInterno, unit 381)
+# are in the link, and the roots file stands in for 6734 and 7174 with Read and the destructor. Write's and Save's two
+# call sites from 5736 and 5737 keep them out of line, so neither has a stand-in for 7174 (a link without them moved
+# no row).
 #
 # Evidence for the forms (whole link, pnpm wasm score against the target before steps 7 to 9):
 # - Write and Read return uedword, MemWrite's or MemRead's count or 0, which every caller drops and binaryen removes:
@@ -40,15 +43,20 @@
 # above its record line, and Write's and Read's lines between Save and MemWrite. Save comes before Write in the object and
 # Load before Read: in their use bands (4 and 3) the higher target index links first.
 #
-# Not written:
-# - The constructor (fn 1692), which copies the cipher's shared_ptr into +0 and +4 and zeroes +8 to +20. In the target
-#   +16 (i32), +8 (i64) and +20 (i32) are three stores in that order; every spelling measured merges +16 and +20 into
-#   one i64 store (a scratch class of this layout at UENUX2_CXXFLAGS, its object's stores: the position as an in-class
-#   initializer, in the member-init list, assigned in the body, value-initialized, after m_dados.clear(), from
-#   m_dados.size(); the content moved from a temporary; the cipher assigned in the body; the same at -Oz). A
+# Written and not matched (for unit 381's comum::CRdv::SalvaInterno and SalvaExterno, which construct one):
+# - The constructor (fn 1692), which copies the cipher's shared_ptr into +0 and +4 and zeroes +8 to +20, in the
+#   plainest form (`: m_cifrador(cifrador), m_posicao(0) {}`), above the destructor (a chosen line; band 7 puts 1692
+#   before 1691). In the target +16 (i32), +8 (i64) and +20 (i32) are three stores in that order; every spelling
+#   measured merges +16 and +20 into one i64 store (a scratch class of this layout at UENUX2_CXXFLAGS, its object's
+#   stores: the position as an in-class initializer, in the member-init list, assigned in the body, value-initialized,
+#   after m_dados.clear(), from m_dados.size(); the content moved from a temporary; the cipher assigned in the body; the
+#   same at -Oz; again on a scratch class at api/'s flags, with strict aliasing and without, and at -O2 and -O1). A
 #   position taken from a parameter is stored first. A call after the content's stores (a member defined in another TU)
-#   leaves +16 and +8 as the target has them, and binaryen inlining a function with one caller would put the +20 store
-#   after them: a reading, and nothing names such a member.
+#   leaves +16 and +8 as the target has them (measured on the scratch class), and binaryen inlining a function with one
+#   caller would put the +20 store after them: a reading, and nothing names such a member. In the link 1692 scores 5
+#   over 30 rows (pnpm wasm score: 2 replaced, 3 deleted, the zero stores). No generated route names it (no census
+#   pair), and its callers in the link, 5736 and 5737, match only through its name: a callers+content hand line in
+#   splat/symbol_addrs.txt gives it from its own rows (fragment 381 has the removal check).
 #
 # Load (target fn 3653), at its seven records (lines 36 to 73): it throws for an empty name (5987) and a file that does
 # not exist (5988, CSystem::ExistFile, 412), reads the file whole through ecourna's CFile ("rb"), decrypts it through the

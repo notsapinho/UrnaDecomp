@@ -50,6 +50,13 @@ enum EUeGuiError {
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
+    // the values are the codes api::CProgressBar's constructor throws (records cprogressbar.cpp 52:15, 58:15 and
+    // 67:15, inlined into target fn 5545); the names are chosen from their messages, "Limite inferior ({}) >= limite
+    // superior ({})", "Largura da barra ({}) não comporta a margem ({})" and "Altura da barra ({}) não comporta a
+    // margem ({})": no evidence names them
+    EUE_GUI_PROGRESSBAR_LIMITES_INVALIDOS = 4944,
+    EUE_GUI_PROGRESSBAR_LARGURA_INSUFICIENTE = 4945,
+    EUE_GUI_PROGRESSBAR_ALTURA_INSUFICIENTE = 4946,
     // the value is the code api::CQRCodeGuard's constructor (target fn 5502) throws; the name is chosen from its message,
     // "Não foi possível criar o QR code": no evidence names it
     EUE_GUI_QRCODEGUARD_FALHA_AO_CRIAR = 4947,

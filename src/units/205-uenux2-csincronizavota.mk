@@ -95,8 +95,8 @@
 #
 # Not written here: SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (records 290 and 303, in the anonymous
 # namespace), which fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) holds inlined; 6737, which holds
-# VerificaUrnaDesligando inlined too and calls 1551, 1701, 2826, 5736, 5737, 5761 and 5762, none of them matched. Fn 1164, CArquivosSavd::GetInst, which
-# most members here call,
+# VerificaUrnaDesligando inlined too and calls 1551, 1701, 2826, 5736, 5737 and 5762 (unit 381's) and 5761. Fn 1164,
+# CArquivosSavd::GetInst, which most members here call,
 # is unit 95's, matched with strict aliasing in its TU (that fragment has the measurement); its name comes
 # from the calls of 1501 and 1836 (step 8's `call by:1501,1836`).
 #

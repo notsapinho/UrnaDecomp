@@ -22,7 +22,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp` and `operador/leidentidade/celeitorencontrado.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` and `src/app/comum/justificativa/cjustificador.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp`, `eleitor/iniciovotacao/crelvotautil.cpp`, `eleitor/cvotacaostateaudio.cpp`, `eleitor/cconferevotoemcargo.cpp`, `operador/leidentidade/celeitorencontrado.cpp` and `eleitor/comum/ctelascargo.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp`, `src/app/comum/gravadores/cgeracaoversoescontratos.cpp`, `src/app/comum/validamidia/cfabricaconteudomidiastart.cpp` and `src/app/comum/justificativa/cjustificador.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -35,8 +35,9 @@ identifier units) with `tools/round/appflags/compare.sh`:
   at -O3, ≥ 173 at -O1/-O2/-Os/-Oz; the `To*`/`HexToInt` thunks; the `CNumero*` `Formatado` bodies).
 - **-fexceptions.** 134 of 194 ecourna functions that load a `source_location` record call an `invoke_*` import
   (landing pads).
-- **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53); `gnu++20` equals `c++20`
-  byte for byte.
+- **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53 at 3977f421, with the forms
+  base64.cpp had then, whose code 3703 holds inlined; unit 00's fragment has today's); `gnu++20` equals `c++20` byte
+  for byte.
 - **No -fPIC**: F5.
 - **Paths.** `-ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna`
   produces an object byte-identical to compiling at the real path (`cmp` of three objects). The include root is
@@ -302,12 +303,12 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   inlining thresholds differ, so a body can separate them with no loop ([levels.md](levels.md) §V2 has the remarks and
   what to read first on a body that differs in what is inlined). With the tree at -O3 every match holds and 25 rows more
   match, among them the bodies that call `std::string::append` where -O2 inlines it ([levels.md](levels.md) §V3).
-- **`-std=c++23`, decided on the whole tree.** uenux2 first took `-std=c++20` from ecourna's measurement (F1's 3703 is
-  an ecourna function, and ecourna stays there). At 84f5d8d the whole tree at `-std=c++23` lost no match and matched
-  three rows more: 8799 (`CWasmScreenMT::ShowText`, an rvalue `substr`) and two of libc++'s `__assign_with_size` copies
-  that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only `__escaped_output_table` (§V3 of
-  [levels.md](levels.md) has the measurement and the commands). One `-std` for the whole tree is still a reading: no
-  site tells one directory from another.
+- **`-std=c++23`, decided on the whole tree.** uenux2 first took `-std=c++20` from ecourna's measurement (F1's 3703
+  holds ecourna's EncodeBase64 inlined, and ecourna stays there). At 84f5d8d the whole tree at `-std=c++23` lost no
+  match and matched three rows more: 8799 (`CWasmScreenMT::ShowText`, an rvalue `substr`) and two of libc++'s
+  `__assign_with_size` copies that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only
+  `__escaped_output_table` (§V3 of [levels.md](levels.md) has the measurement and the commands). One `-std` for the
+  whole tree is still a reading: no site tells one directory from another.
 - **The stand-ins keep `-std=c++20`.** At `-std=c++23` too they move no row into or out of `match`, but `roots_ecourna.o`'s
   `vector<unsigned char>` instance of `__assign_with_size` then merges with comum's copy and gives 1158 its name
   ([levels.md](levels.md) §V3).
@@ -419,7 +420,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `dados/md/`'s) with its callee 2872, which the symbol file names by 11453's call. The split is a reading of the original
   build's settings, made from the rows: TSE's build gave `src/api/`, comum's data classes, the voting application and the
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
-  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for the five files
+  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for the six files
   `UENUX2_NOTBAA_FILES` lists, whose own rows say the other way (below); `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
   directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, matched), which holds
@@ -466,7 +467,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   ledger/ordinals.tsv`), whose records, 1571152 and 1571548, bracket 11349's (1571272 to 1571484), while `md/rdv/`'s
   band-2 functions are 5638 to 5645 (`cvotoscargos.cpp`'s records from 1573700: `ledger/source-locations.tsv`).
 
-  Five files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
+  Six files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
   `uenux2_cxxflags` leaves them out of the strict-aliasing test. The first four are each read from code that only their
   own functions reach. In `eleitor/comum/ctelasvota.cpp`, the initializer-list constructor of `GetKeyboardLayout`'s
   `std::map<std::string, SLayoutTecla>` (6579), which only that anonymous-namespace function calls (record
@@ -492,7 +493,16 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
   of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
   neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
-  object's is a reading: the file was listed last, on the user's decision (below).
+  object's is a reading: the file was listed fifth, on the user's decision (below). In `eleitor/comum/ctelascargo.cpp`
+  (unit 150), `vota::CTelasCargo`'s constructor (2386) holds inlined the copy of
+  `std::map<ETelaVotacao, CFormInterativoTelaVota>`'s range insert (`insert(first, last)`, a second prologue around the
+  loop), and the target reads `*__child` again after libc++'s `__insert_node_at` stores the begin node, which only code
+  without TBAA does: in the whole link it scores 37 over 433 rows with strict aliasing (3 deleted, that load) and 28
+  over 433, operand-only, with the object alone built without it. Only this object defines that insert in our link
+  (`llvm-nm -A --defined-only` over `build/out/app`); 2386's one target caller is 7787 (five calls), not written, so
+  that the target's copy is this file's, and not that of an object the target links first and builds without strict
+  aliasing (`ctelasvota.cpp`'s, if 7787 copies the map), is a reading: the file was listed last, on the user's
+  decision (below).
 
   A lambda's N is its rank in the order clang mangles the enclosing function's lambdas, not their source order: one
   passed to a template instantiated where it is written (`std::bind`), or a generic lambda at its first call, is
@@ -559,15 +569,22 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with 12240 matches, 6733 and 10635
   turn `match`, no other row moves and the symbol file is unchanged.
 
+  `ctelascargo.cpp` (unit 150) was measured first in a whole link with the file added to the list on the command line
+  (F9 item 6): 2386 turns `match` and no other row moves. It is listed since c93602e1 (12843 matches), measured there
+  in place: with it in the list the compile lines `make -n -B -C src link` prints (906) differ in its object's alone, by
+  `-fno-strict-aliasing`; the edit recompiled 836 objects, and of the link's 1113 objects 1112 are `cmp`-equal to
+  c93602e1's and the other is that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with
+  12844 matches, 2386 turns `match`, no other row moves and the symbol file gains 2386's line alone (`srcloc-anchor`).
+
   So the target's copies of the token iterator (4307, whose callers are 5492 and 6999 only) and of the `const char*`
   parser (2062: 2416, 5782, 6833, 6999) have no TBAA while `cinputmenufield.cpp` has it. Whose copies they are, no row
   says: `cvotacaostateaudio.cpp`'s in a link order with it ahead of `cinputmenufield.cpp` (not measured), or another
   TU's; the tree root stands for the token iterator's either way (unit 97's fragment), and the parser's come from
   `app/comum/dados/cqrcodeds.cpp` (5782, built without strict aliasing, ahead of `cinputmenufield.cpp`), whose object
   replaced the tree root's stand-in for them with no row moving. Whether the original build gave
-  `-fno-strict-aliasing` to `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`
-  and `celeitorencontrado.cpp` alone or to more of `app/vota/`, the rows do not say beyond these measurements: listing
-  the five files is the reading that keeps every match.
+  `-fno-strict-aliasing` to `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`,
+  `celeitorencontrado.cpp` and `ctelascargo.cpp` alone or to more of `app/vota/`, the rows do not say beyond these
+  measurements: listing the six files is the reading that keeps every match.
 
   One file of `gravadores/` has it: `cgeracaoversoescontratos.cpp` (unit 268), whose `ObtemDependencias` (5869) copies
   a `std::set<std::string>` and inserts into one. The target's copy calls libc++'s

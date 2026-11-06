@@ -161,8 +161,8 @@
 #   is a reading of its use bands (how-to step 3, rule 5), and measured with pnpm wasm score in the plain link: in
 #   cinputmenufield.cpp, 162 over 528 rows (16 inserted, 18 deleted); here, 29 over 512, every row an operand (calls,
 #   data, and the five rows of the default instruction string's .bss address, which a hand line names: unit 84's
-#   fragment). It is named by its srcloc-anchor. The stand-in for its target caller not written (11884) stays in unit
-#   84's roots (MenuPorPartido); 11888's went once 11888 was in the link.
+#   fragment). It is named by its srcloc-anchor. Its three target callers, 11881, 11884 and 11888 (unit 104's), are in
+#   the link, and the stand-ins that stood for 11884's and 11888's calls in unit 84's roots went.
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
 # no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of

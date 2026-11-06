@@ -174,4 +174,12 @@ public:
     static std::string Text();
 };
 
+// The path of "uenux.db" in the work directory of the internal flash (target fn 2826) and of the external one (fn
+// 5762), as a string: CPath::GetPathTrab of that flash with the name appended. No record, slot or RTTI names them;
+// their names and their being free functions (they read no class state) are chosen. 5762's band puts it in
+// celeitores.cpp; 2826 is here by its pair with 5762 and CompleteLoad's call, a reading. Each is a thunk of a body
+// binaryen merged with crdv.h's function of the same flash: 2826 and 1551 call 6036, 5762 and 1701 6035.
+std::string GetArquivoBancoDadosInterno();
+std::string GetArquivoBancoDadosExterno();
+
 } // namespace comum

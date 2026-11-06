@@ -60,20 +60,20 @@
 # pair-fingerprint. Their callers are fragment 227's sources, so the roots below need no stand-in for them.
 #
 # comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (target fn 3703, 1126 B), added for unit 287's
-# ImprimeVersoesPacotes (11222), in cestadogeral.cpp after SetAjusteDataHora, written and `differs`: 133 over 556 rows
-# (pnpm wasm score, whole link). It is the first 8 characters of ecourna::api::security::EncodeBase64 of the hash at
-# +168 (the packages' hash, cestadogeral.h), and holds EncodeBase64 inlined by binaryen with its records base64.cpp:247
-# and :267, EncodeBase64's one caller in our link as in the target; the rows that differ are that inlined code's,
-# base64.cpp's form (unit 00's note; read from the score's alignment). Its target callers are 3059 (unit 110's, in our
-# link, written and not matched), 7787, not in it (src/app/roots_ecourna.cpp's UsaBase64B stands for it; UsaBase64A,
-# for 3059, went), and 11222, in it. No vote names 3703: 3059 is named by a hand line and 11222 by vtable, and
-# neither casts one. In use band 3 it links
-# after 3705 and 3704, so after SetAjusteDataHora in the file. The hash goes into a named local before substr(0, 8):
-# this tree's -std=c++23 makes the temporary's substr the rvalue overload, which docs/reference/facts/app-flags.md F1
-# measured changing 3703 (that form was not linked here). No generated line names it: its opcodes differ, so no
-# srcloc-anchor, and its caller in our link, 11222, is named by its vtable slot, which casts no vote (unit 287 says why
-# there is no hand line). Chosen: the name, its being a member (it reads the class's +168, private in cestadogeral.h),
-# the file (the class's own) and its line.
+# ImprimeVersoesPacotes (11222), in cestadogeral.cpp after SetAjusteDataHora, written, and matched since ecourna's
+# base64.cpp, whose code it holds inlined, took the four forms unit 00's note measures (none of its own lines changed;
+# before them it scored 133 over 556 rows, pnpm wasm score, whole link, the rows that differed that inlined code's). It
+# is the first 8 characters of ecourna::api::security::EncodeBase64 of the hash at +168 (the packages' hash,
+# cestadogeral.h), and holds EncodeBase64 inlined by binaryen with its records base64.cpp:247 and :267, EncodeBase64's
+# one caller in our link as in the target. Its target callers are 3059 (unit 110's, in our link, written and not
+# matched), 7787, not in it (src/app/roots_ecourna.cpp's UsaBase64B stands for it; UsaBase64A, for 3059, went), and
+# 11222, in it. No vote names 3703: 3059 is named by a hand line and 11222 by vtable, and neither casts one; step 8
+# names it by a srcloc-anchor line on EncodeBase64's two records, which places the body and carries our name over, so
+# the name stays a choice (no hand line names it). In use band 3 it links after 3705 and 3704, so after
+# SetAjusteDataHora in the file. The hash goes into a named local before substr(0, 8): this tree's -std=c++23 makes the
+# temporary's substr the rvalue overload, which docs/reference/facts/app-flags.md F1 measured changing 3703 (with
+# base64.cpp's earlier forms; that form was not linked here). Chosen: the name, its being a member (it reads the class's
+# +168, private in cestadogeral.h), the file (the class's own) and its line.
 #
 # comum::md::estadoaplicacao::CEstadoGeral::GetDadosQRCode (target fn 5636, 3903 B), matched, in cestadogeral.cpp: the
 # state as key and value pairs for comum::CQRCodeDS (fragment 299, which has the class's evidence), each pushed with

@@ -11,17 +11,16 @@
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.h"
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 
 namespace vota {
 
-// CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name (491, 1935 and 2821 are named now (units 205 and 110)): 2543, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
-// (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889, 5891
-// and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, fragment 227's 3825 and 3826, and
-// 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).
+// CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, unnamed
+// callees (491, 1935, 2821 and 5545 are named now: units 205, 110, 31): 2543, 2860, 5480, 5866, 5869 and 5870; its
+// other callees have names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's
+// 1164, 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, 227's
+// 3825 and 3826, and 2281, std::set<std::string>'s hinted insert from the tree root roots_set.cpp, among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -49,16 +48,6 @@ void CGravaResultado::StartState()
 // the target releases it right after the call; in a block, an if's init-statement or a helper clang inlines, the form
 // shares their slot too, and discarded, the SPoint shares the form's.
 void CMenuFiltrarCandidatosPorNumero::ProcessInput()
-{
-    __builtin_trap();
-}
-
-// CMenuFiltrarCandidatosPorPartido::StartState: fn 11884 (3643 B), record cmenufiltrarcandidatosporpartido.cpp:39 (its
-// line stays blank there), not written: its menu holds api::CMenuItem::SetFormatString and
-// api::CInputMenuField::SetFormatString inlined (records cinputmenufield.cpp:156 and 468), which are not written, and
-// it calls fn 5953 (CVisualizarCandidatos::CarregaCandidaturas, written in cvisualizarcandidatos.cpp) before it collects
-// the candidatures' parties into a set in its frame.
-void CMenuFiltrarCandidatosPorPartido::StartState()
 {
     __builtin_trap();
 }

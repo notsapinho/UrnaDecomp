@@ -45,7 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
-| `uenux2-tbaa` | the TSE application's directories and files built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/` but its `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp` and `celeitorencontrado.cpp`, `mock/app/simulador/wasm/`, comum's `carquivossavd.cpp`, `gravadores/cgeracaoversoescontratos.cpp`, `validamidia/cfabricaconteudomidiastart.cpp`, `justificativa/cjustificador.cpp`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` but not `UENUX2_NOTBAA_FILES` | 12 |
+| `uenux2-tbaa` | the TSE application's directories and files built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/` but its `ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`, `celeitorencontrado.cpp` and `ctelascargo.cpp`, `mock/app/simulador/wasm/`, comum's `carquivossavd.cpp`, `gravadores/cgeracaoversoescontratos.cpp`, `validamidia/cfabricaconteudomidiastart.cpp`, `justificativa/cjustificador.cpp`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` but not `UENUX2_NOTBAA_FILES` | 12 |
 | `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (its object first on the link line), and `mock/app/comum/cappinfobuilder.cpp` at its rule (second) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
@@ -124,9 +124,9 @@ share it.
   `gravadores/cgeracaoversoescontratos.cpp`, `validamidia/cfabricaconteudomidiastart.cpp` and
   `justificativa/cjustificador.cpp` build with strict aliasing
   and the rest of `comum` without, so a `component` row of `comum` takes `uenux2`'s flags wherever its function was, a
-  guess; `vota`'s five files without it (`ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`,
-  `cconferevotoemcargo.cpp`, `celeitorencontrado.cpp`) divide `vota` the other way. A row with a strong name is
-  resolved by its object instead. `api` is in no setup's list, so an `api` row comes only by a name.
+  guess; `vota`'s six files without it (`ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`,
+  `cconferevotoemcargo.cpp`, `celeitorencontrado.cpp`, `ctelascargo.cpp`) divide `vota` the other way. A row with a
+  strong name is resolved by its object instead. `api` is in no setup's list, so an `api` row comes only by a name.
 
 ## The dataset
 

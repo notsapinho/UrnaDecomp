@@ -82,7 +82,27 @@ std::set<comum::md::CCargo> CVisualizarCandidatos::GetCargos()
     return cargos;
 }
 
-// (original lines 85-114: content not recovered)
+std::set<comum::TPartidoID> CVisualizarCandidatos::GetPartidos()
+{
+    CarregaCandidaturas();
+    std::set<comum::TPartidoID> partidos;
+    for (const comum::md::CCandidatura& candidatura : m_candidaturas) {
+        if (m_candidato && *m_candidato != 0 && candidatura.GetCandidatoID() != *m_candidato) {
+            continue;
+        }
+        if (m_cargo && *m_cargo != 0 && candidatura.GetCargoID() != *m_cargo) {
+            continue;
+        }
+        const comum::TPartidoID partido = candidatura.GetPartidoID();
+        if (m_partido && *m_partido != 0 && partido != *m_partido) {
+            continue;
+        }
+        partidos.insert(partido);
+    }
+    return partidos;
+}
+
+// (original lines 105-114: content not recovered)
 #line 115
 void CVisualizarCandidatos::StartState()
 {

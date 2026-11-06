@@ -136,12 +136,13 @@
 # read CRelatorioTesteImpressora's (5586; both are in the link now, 11911 unit 296's and 11869 unit 138's, and the
 # stand-in that read it for 11869 went). Without a reader binaryen
 # drops the result: 1281 scored 9 over 215 rows, 5726 3 over 17 and 5586 11 over 99, each with the target's result row
-# deleted; with the readers, 7, 1 and 9, all operand-only. libc++'s vector<CEleicaoPE>::push_back and the version map's
-# __find_equal are called through __asm__ labels with the objects' signatures (wasm-objdump -x), so this file
-# instantiates neither: with one caller each, binaryen inlined push_back into CarregaPleito (no body for 5777) and
-# __find_equal into the hinted insert (3870 scored 270 over 345, 244 inserted); with the stand-ins 3870 scores 2 over
-# 101, 3869 0 over 246, 5777 13 over 420. The stand-ins for 3752 and 5738 (unit 89; 5738's went once its other caller,
-# 1543, was in the link, and 3752's once its caller 4160, unit 110's, was) and the 5586 reader were here because this
+# deleted; with the readers, 7, 1 and 9, all operand-only. The version map's __find_equal is called through an __asm__
+# label with the object's signature (wasm-objdump -x), so this file does not instantiate it: with one caller, binaryen
+# inlined it into the hinted insert (3870 scored 270 over 345, 244 inserted); with the stand-in 3870 scores 2 over 101
+# and 3869 0 over 246. vector<CEleicaoPE>::push_back (5777) had a stand-in too (13 over 420 with it, no body without),
+# and CPleito's constructor (5652) one for 3713; both went once fragment 388's 5649 and 3713 were in the link. The
+# stand-ins for 3752 and 5738 (unit 89; 5738's went once its other caller, 1543, was in the link, and 3752's once its
+# caller 4160, unit 110's, was) and the 5586 reader were here because this
 # unit's chain needed them; unit 123's vtable sink went when 5586 was written, and w280_informacao, which
 # stood for 3735's caller 11629, when unit 200 wrote it (3735's callers 11587, 11626 and 11629 are all in the link). A
 # stand-in goes when every target caller its comment names is in the link.
