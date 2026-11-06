@@ -21,16 +21,6 @@
 // f5634 · 2021 B · unmatched · placement: link order · name unknown
 // void f5634(i32, i32, i32) { ... }
 
-// link-order cluster 840 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/cversoesarquivos.cpp
-
-// f5869 · 402 B · unmatched · placement: link order · name unknown
-// void f5869(i32, i32, i32, i32) { ... }
-
-// link-order cluster 841 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
-
-// f5870 · 87 B · unmatched · placement: link order · name unknown
-// void f5870(i32, i32) { ... }
-
 // link-order cluster 910 · uses=2
 
 // f6639 · 622 B · unmatched · placement: link order · name unknown

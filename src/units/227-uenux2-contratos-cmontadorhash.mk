@@ -71,12 +71,9 @@
 # 5371 went. Unit 03's fragment and row say so.
 #
 # fn 5869, CDependenciasContratos::GetValor's other caller (comum::CGeracaoVersoesContratos::ObtemDependencias, a
-# chosen name), is fragment 268's, written in app/comum/gravadores/cgeracaoversoescontratos.cpp and not matched; that
-# fragment has its measurements.
-#
-# Not written, and what each waits for:
-# - CGeracaoVersoesContratos's destructor (fn 5866, the four trees from +36 down, fns 1397 and 2859): not written; its
-#   band place, after md/cversoesarquivos.cpp's rows, is not cgeracaoversoescontratos.cpp's.
+# chosen name), is fragment 268's, written in app/comum/gravadores/cgeracaoversoescontratos.cpp and matched; that
+# fragment has its measurements, and those of CGeracaoVersoesContratos's destructor (fn 5866, the four trees from +36
+# down, fns 1397 and 2859), matched there too.
 #
 # Chosen (each header marks its own): the classes' members and parameter names; that each md class holds its INI object
 # as a member (a base would give the same layout; not measured); ListaHashesArquivos's and ListaHashesDiretorio's names,
