@@ -2922,7 +2922,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3056	sqlite3_config	3107	symbol	match	readings: address symbol,address string	1347	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 3057	ossl_cipher_var_keylen_set_ctx_params	3169	symbol	match	readings: address string	149	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon.o
 3058	_ZN3api12CFormBuilder18AddTextFieldUpdateIPFNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKS8_EEENS2_10shared_ptrINS_10IFormFieldINS_7IScreenEEEEET_RKNS_6SPointERKNS2_6chrono8durationIxNS2_5ratioILx1ELx1000EEEEERKNS_5SFontESA_NS_14ETextAlignmentE	5621	symbol	match	readings: address symbol	352	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-3059	_ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_SB_N5comum9CQRCodeDS7EOrigemE	4140	symbol	unresolved	ours +0x825 call 3775: _ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv has no target function	2801	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+3059	_ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_SB_N5comum9CQRCodeDS7EOrigemE	4140	symbol	differs	+0x14 target +0x13 local.set 7 | ours +0x13 local.set 6	2801	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 3060	-	-	-	no-candidate	no symbol and no ledger pair	294	none	libc++	0	-
 3061	rsa_signverify_init	3155	symbol	match	readings: address string	581	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-rsa_sig.o
 3062	mac_newctx	3156	symbol	match	readings: address string	189	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-mac_legacy_sig.o
@@ -3566,7 +3566,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3700	_ZN5comum10CCalculaCV13CalculaCodigoEv	3885	symbol	match	readings: address symbol,table slot,address string,address srcloc,address content	1946	none	ecourna	1	app/uenux2/src/app/comum/relatorios/ccalculacv.cpp.o
 3701	_ZN5comum2md15estadoaplicacao16CEstadoGeralVota15IncrementaQtdBUEv	3656	symbol	match	-	15	byte	vota	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeralvota.cpp.o
 3702	_ZN5comum2md15estadoaplicacao15CAjusteDataHora14AdicionaDeltaTEi	2230	symbol	match	readings: table slot,address string,address srcloc,address symbol	494	none	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cajustedatahora.cpp.o
-3703	-	-	-	no-candidate	no symbol and no ledger pair	1126	none	ecourna	0	-
+3703	_ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv	3775	symbol	match	readings: address symbol,table slot,address string,address srcloc,address same-content	1126	shape	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp.o
 3704	_ZN3api14CPolySingletonINS_6pkcs117IPkcs11EE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE	3777	symbol	match	readings: address symbol,address string,address same-content,address srcloc,table slot	2126	none	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp.o
 3705	_ZN5comum2md15estadoaplicacao12CEstadoGeral17SetAjusteDataHoraERKNS1_15CAjusteDataHoraE	3776	symbol	match	-	12	byte	vota	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp.o
 3706	-	-	-	no-candidate	no symbol and no ledger pair	82	none	libc++	0	-
