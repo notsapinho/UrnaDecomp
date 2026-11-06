@@ -6,7 +6,10 @@
 //   where clang inlines all 12 appends (the object calls __grow_by_and_replace instead), and 49 over 725 with
 //   cwasmscreen.cpp.o compiled at -O3, which keeps the 12 append calls. What is left there is the width and height:
 //   the target narrows std::abs(x1 - x2) + 1 to 16 bits with one extend16_s, and every form tried in a probe, at both
-//   levels, gives a shift pair (a TPosition local, a static_cast, ++ on a TPosition, a helper returning one).
+//   levels, gives a shift pair (a TPosition local, a static_cast, ++ on a TPosition, a helper returning one). In 14
+//   probe forms at the tree's flags (the fragment's paragraph on slot 20, 9104, which shows the same extension), only
+//   the forms whose 16-bit value also goes to a TPosition parameter gave `extend16_s(x + 1)` to an int use; 9018 passes
+//   each size once, to std::to_string(int) (fn 296), so the form that gives it is not known.
 // Move each member into cwasmscreen.cpp when it is reconstructed, and delete this file with the last one.
 
 #include "uenux2/mock/app/simulador/wasm/cwasmscreen.h"
