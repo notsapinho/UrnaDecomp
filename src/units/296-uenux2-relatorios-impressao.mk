@@ -7,8 +7,9 @@
 # comum::CDataSourcesRelatorio<CRdvVota, CEleitores>::LinhaPartido (11261) in unit 183's cdatasourcesrelatorio.h;
 # comum::asn::CConversorLocal::DoDesconverte (11452) in unit 157's asn/cconversorlocal.cpp and comum::CAppInfo::
 # LeGeralInterno (2273) in unit 109's appinfo/cappinfo.cpp, the two of CLocal's loader (5740, matched since in unit
-# 89's clocal.cpp, which calls both) that landed before it. Paths relative to src/uenux2. This fragment compiles the two new files; the others extend their units,
-# whose fragments point here, and this unit's roots keep its stand-ins.
+# 89's clocal.cpp, which calls both) that landed before it. Paths relative to src/uenux2. This fragment compiles
+# auxiliaresrelatorio.cpp; cqrcodeimagepaper.cpp, this unit's other new file, is compiled from unit 196's list (2772,
+# below); the others extend their units, whose fragments point here, and this unit's roots keep its stand-ins.
 #
 # Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596 and 11911
 # (vtable) and 11452 (srcloc-anchor, record cconversorlocal.cpp:70). Scores before steps 7 to 9 (pnpm wasm score against
@@ -19,15 +20,25 @@
 # While that literal was not in the link, 5591 stayed `no-candidate` (splat-remap: `+1559 i32.const 370742: an address
 # of ours: string tail occurs 4098 times`) and 11911 `unresolved` on 5591's name.
 #
-# Written, not matched:
-# - 2772, the constructor, `differs` in local numbers alone: 97 over 696 rows, 7 inserted and 7 deleted, every one a
-#   local.get/set/tee whose index the target and ours swap (the frame pointers' and, at the copy of the result's vector,
-#   the size's and the new block's). Not explained. Measured on whole links with one object swapped
-#   (docs/reference/facts/workflow.md W13) and on this link: the constructor above or below MontaImagem in the .cpp,
-#   `return {imagem, ...}` against a named QrcodeData, the bit's index in one expression, and the copy as
-#   `std::vector<uebyte>(imagem.begin(), imagem.end())` each give the same module (shasum -a 256 of the wasm);
-#   cqrcodeimagepaper.cpp.o linked before cstringutils.cpp.o (docs/reference/facts/codegen.md C4) gives the same score.
-#   Its name holds by its records (srcloc-anchor), so 5591's two calls re-point.
+# 2772, the constructor, matches with MontaImagem defined above it in cqrcodeimagepaper.cpp and cqrcodeimagepaper.cpp.o
+# linked before cstringutils.cpp.o, SetBit's object (unit 196's list compiles both, in that order). On the whole link
+# before steps 7 to 9 (pnpm wasm score at the default depth, at 76661cb7 with these edits) it scores 44 over 689 rows,
+# every one an operand: the std::format calls' packed strings and two table slots. At 76661cb7, with neither order, it
+# was 97 over 696, 7 rows inserted and 7 deleted, and the two bodies compare equal with local indices, calls and
+# constants masked (wasm-objdump -d): the size, the new block and the new end of the result vector's copy share their
+# three locals with the width, the loop index and the vector's end in another pairing than the target's. Replays of the
+# link's wasm-opt -Oz on r02 (docs/reference/facts/codegen.md C4, "Trying orders on binaryen alone"), the functions
+# reordered in its text: MontaImagem above the constructor, the two below SetBit's functions, 97 over 696; the
+# constructor above MontaImagem, both above SetBit's functions, 97 over 696; MontaImagem, then the constructor, then
+# SetBit's, 44 over 689, the score of this link. Measured before on whole links with one object swapped
+# (docs/reference/facts/workflow.md W13), with cstringutils.cpp.o first: the constructor below MontaImagem, `return
+# {imagem, ...}` against a named QrcodeData, the bit's index in one expression and the copy as
+# `std::vector<uebyte>(imagem.begin(), imagem.end())` each gave the same module as the constructor above (shasum -a 256
+# of the wasm); and with the constructor above, cqrcodeimagepaper.cpp.o linked before cstringutils.cpp.o gave the same
+# score. The object order is the target data's (cqrcodeimagepaper.cpp's records @1582124 to @1582156, cstringutils.cpp's
+# @1584560 to @1584592), and unit 196's fragment counts the move; the order of the two definitions is the measured
+# choice the constructor's having no record leaves. Its name holds by its records (srcloc-anchor), so 5591's two calls
+# re-point.
 #
 # What the bytes decide (the same score, measured on the whole link unless said):
 # - 5591 calls the slots of cimprimirextratocarga.h through the vtable at +36 (slot 9) and so on, in the order of that
@@ -102,10 +113,11 @@
 # address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
 # api::CQRCodeGuard's constructor, went, and so did the stand-in for 5591's caller 11869 once 11869 (unit 138's) was
 # in the link with 11911.
-RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp src/api/gui/cqrcodeimagepaper.cpp
+RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp
 UENUX2_SRCS += $(RELATORIOS_IMPRESSAO_SRCS)
-# cqrcodeimagepaper.cpp includes api/gui/cqrcodeguard.h, which includes libqrencode's qrencode.h, and UENUX2_CXXFLAGS
-# has no path to it. An include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
+# cqrcodeimagepaper.cpp (compiled from unit 196's list) includes api/gui/cqrcodeguard.h, which includes libqrencode's
+# qrencode.h, and UENUX2_CXXFLAGS has no path to it. An include path is not a flag of the code
+# (asmlift-wasm/benchmark/README.md "The compile setups").
 $(ROOT)/$(APP)/uenux2/src/api/gui/cqrcodeimagepaper.cpp.o: UENUX2_CXXFLAGS += -Ithird_party/libqrencode
 # nothing in the skeleton gives some of these functions their target's call sites: the roots stand for those callers,
 # through asm labels, so the rule needs no header
