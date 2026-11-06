@@ -162,7 +162,10 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
   merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store. It suits a callee no vote
-  reaches: its callers in the link all named by `vtable` and its other target callers not written. Once such a
+  reaches: its callers in the link all named by `vtable`, or one that the content pass names only once this name is in,
+  and its other target callers not written. 3059's line is such a case: 6595, its one caller in the link, matches
+  through it, and 3059 alone holds `__shared_ptr_pointer<api::CQRCodeImage*, …>`'s address point (`/usr/bin/grep -rlE
+  'i32\.const 1538404($|[^0-9])' build/out/splat/pieces/asm` prints only its piece). Once such a
   function matches, step 8's `vptr-anchor` names it from the same operand: 1150, `CMostraEleitorVotando::GetInst`, the
   one holder of 1593008, is `vptr-anchor` since it matched.
 - `rtti-operand`: the only target function holding a class's vtable and typeinfo addresses.
@@ -181,9 +184,11 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   disagreement ([facts/asn1.md](facts/asn1.md) §A5 has the tally; no tool runs it). A body written and one flag from
   the target takes this kind too: its comment gives the score at that flag and what the callee's own rows show, and
   counts only the callers that hold without the line (426, unit 31's `AddField`). So does a written body that differs
-  at every flag measured, when its own rows single it out among the target's functions (content only it loads, or,
-  when another target function loads that content too, its rows as a whole: the comment names the other loaders and
-  what tells them apart): its
+  at every flag measured, when its own rows single it out among the target's functions: content only it loads, or, when
+  another target function loads that content too or the body loads none, its rows as a whole, unique on the
+  `fingerprint`, `addr` and `shape` hashes of `pnpm wasm fingerprint <target> --depth 0`, with what its target callers
+  do with its result (1692, a constructor that loads no address, is alone on all three); the comment names the other
+  loaders, if any, and what tells them apart. Its
   comment gives the score at the tree's flags, says the remainder is not explained, and counts no caller the line
   carries; a function it calls that calls it back (an operator and its inverse, 5477 and 5478) is no caller that can
   land until it matches. When the line carries every caller it
@@ -331,8 +336,11 @@ layout puts there ([facts/libraries.md](facts/libraries.md) §B10). Otherwise th
   its record once per TU that inlines it, so the target holds 10 such keys at more than one address. Each address is a
   copy, with no first among them: every reading says `address same-content`, the target body picks one, and a key the
   target does not hold leaves the body `unresolved` ([facts/splat.md](facts/splat.md) §S12);
-- a read-only object by its exact bytes, found once (up to 64 copies when found more often), when it holds 4 bytes
-  or more: a smaller one is `object too small to identify by content` (`resolveBytes`), and no vote names it. wasm-ld's
+- a read-only object by its exact bytes, found once, when it holds 4 bytes or more. Found more often, the copies offered
+  are the places at its alignment among the first 65 places of those bytes at any offset (`resolveBytes`), up to 64 of
+  them: a row's `bytes occur N+ times` counts those, not every place, so 5545's eight zero bytes read `22+` though the
+  target holds them at a multiple of 4 far more often, and the 22 offered are the lowest, not every copy. A smaller one
+  is `object too small to identify by content` (`resolveBytes`), and no vote names it. wasm-ld's
   map gives no object's alignment, so our address stands in for it: an object our link puts at a multiple
   of 4 is looked for only at multiples of 4, any other one anywhere. A typeinfo name (`_ZTS…`) is looked
   for anywhere, wherever our link puts it, since its alignment is 1 ([facts/splat.md](facts/splat.md) §S9);
@@ -375,9 +383,8 @@ Two rules guard the evidence:
   it. A function name voted only by the match's own call or table operand holds
   only if another holding match calls it or has a constant the target reads as its table slot, or if the function is
   a match itself: its own body, re-pointed, confirms the name (`selfVoted` in `splat-sub.ts` skips a matched callee).
-  Caller and callee then land or leave together: without 1705's match line (`evidence:call by:5778`), `splat-build`
-  refuses 5778 as `UNCONFIRMED: self-voted`, so the fragment names the pair and a landing that withdraws the callee
-  checks the caller. The rule reads the
+  Caller and callee then land or leave together (without 1705's match line, `evidence:call by:5778`, `splat-build`
+  refuses 5778 as `UNCONFIRMED: self-voted`). The rule reads the
   line's `by:` list, so it fires only on a line that has one (§2): a `call` name whose voter is a pair the propagation
   loop formed has no list and passes the build however few voters it has (5564 under 4620), which a reviewer weighs
   ("Reviewing a match"). A constant
@@ -386,11 +393,14 @@ Two rules guard the evidence:
   when their votes come from two target bodies (two call sites, or two slots of the function) that are pairs
   themselves (an anchor, a seed, or a function a vote named whose bodies are the same opcodes, §2): 5827 and 11450 name
   1711 so, by its slots 2289 and 2288. A written caller with no record, vptr or census pair votes for nothing until it
-  is named itself (1255, which has none, voted for 502 only then). They land or leave together: withdrawing one turns
-  the other `unresolved
-  self-voted`, so a landing that drops one checks the other. A callee with one caller that can land has no second vote
-  to wait for: a `callers+content` hand edit from what its own body holds gives the name (unit 100's `has<T>`, by the
-  `T` each one names). What it holds includes where a data word it passes lies, when that place is all that tells it
+  is named itself (1255, which has none, voted for 502 only then). Such matches, and a caller and its matched callee,
+  land or leave together: withdrawing one turns the other `unresolved self-voted`, so the fragment names them and a
+  landing that drops one checks the others. A callee with one caller that can land has no second vote to wait for, and
+  one whose other target callers are not written need not wait for theirs: a `callers+content` hand edit from what its
+  own body holds gives the name (unit 100's `has<T>`, by the `T` each one names), or `rtti-vptr` when its body alone
+  holds a class's address point (3059's, §2), and it goes once a generated vote of a second holding match repeats it
+  ("Reviewing a match", the line a generated one has caught up with). What it holds includes where a data word it passes
+  lies, when that place is all that tells it
   from siblings of one shape: thunks `f2921(p0, p1, <priority>, <word>)` whose word lies in the data of the object
   whose function calls them, at the distances our link gives that object's data (3593's and 5574's lines, the `Depura`
   wrappers of `cthreadoperador.cpp` and `cvalidamidia.cpp`). That names the function, never the word. A `.bss`
@@ -615,7 +625,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   `func:N` of a matched index that gained a line, and the data lines it adds or drops. Some lines move at every
   landing whatever the unit: the `pair-addr` lines of matched SQLite functions that drop out and come back, 7-Zip's
   `g_Alloc` names placed by our slot numbers, and, less often now that step 8 reads an aligned constant whose two
-  values address one string as an address, an `evidence:table` name that a matched index gains or loses.
+  values address one string as an address, an `evidence:table` name that a matched index gains or loses, and a `vote:N`
+  that halves while its name and address stay.
   [facts/splat.md](facts/splat.md) §S8 lists them, with the command that separates them from a range's own lines and
   the one that traces a `table` line to its voters. Read the lines the range drops for matched indices too: a vtable
   slot our link fills with a body that is not the target's can take a matched function's name away (§S8, the fifth
@@ -626,7 +637,12 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   that define both: `TMPDIR=/tmp build/docker-build.sh bash -c "find build/out/app -name '*.o' -print0 | xargs -0
   /emsdk/upstream/bin/llvm-nm -A --defined-only" | /usr/bin/grep -F <part of the name>` (4890's
   `CPolySingleton<ISystemDateTime>::set<CWasmSystemDateTime>` is `simulador.cpp.o`'s, and `isystemdatetime.cpp.o`
-  defines the `set(unique_ptr)` its callers name). The fragment then says the name is the link order's. The target
+  defines the `set(unique_ptr)` its callers name). The other function can be a library archive's member, which that
+  command does not read: add the sysroot's archives, `L=/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten`
+  and `TMPDIR=/tmp build/docker-build.sh bash -c "/emsdk/upstream/bin/llvm-nm -A --defined-only $L/libc++.a $L/libc.a
+  $L/libc_optz.a $L/libc++abi.a"` (5570, `std::allocator<std::string>::allocate` from `roots_coderenv.o`, is also
+  `libc++.a(path.o)`'s allocator of `pair<string_view, PathPartKind>`, one 12-byte-element body). The fragment then says
+  the name is the link order's. The target
   merges instances too: a library template whose code does not depend on one argument (a tree's `__find_equal` over
   its mapped type) can be one target body for several instances. Read what each target caller of the new match does
   around the call (`pnpm wasm fn <target> <caller>`): 2805's callers allocate nodes of 236 bytes (3614), 84 (5376,
@@ -791,9 +807,10 @@ awk '/^# ---- hand edits below/ {h=1; next} /^#/ || !NF {next} h {if ($1 in g) p
 
 Such a line goes when the scan above and `splat-build --symbols <that copy>`, without it, keep every row, unless it is
 `merged-body`; a range whose match touches it removes it, whether it went idle in that range or before (how-to step
-9). The build decides when its generated twin has one voter, the match itself, by any kind (`vote:N`, `table`, `call`,
-with `by:<this index>`): the scan can add the match back where the build's fixed point refuses it as
-`UNCONFIRMED: self-voted`. A hand line no generated line repeats can carry nothing too, since a body whose re-pointed
+9). A line whose generated twin has one voter, the match the line carries (`vote:N`, `table` or `call` with `by:<that
+index>`), stays while the callee is no match itself: without it the build's fixed point refuses that match as
+`UNCONFIRMED: self-voted`, though the scan adds it back, so the build decides (3593's line, whose twin reads
+`evidence:call by:10204`). A hand line no generated line repeats can carry nothing too, since a body whose re-pointed
 bytes occur once comes back by content: run the same two on every new hand line before it lands.
 
 In both ways the maps get the matches of `splat/matched.txt` first (`withMatches(maps, matches)` with the `matches` of

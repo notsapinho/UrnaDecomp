@@ -134,7 +134,11 @@ still order the caller's loads and stores otherwise (`cpleito.cpp`'s `ObtemIDsEl
 88). A gap's comment can hide a record of a function with no stub, a library-group function such as a lambda the scan
 files under libc++ (12272 at line 3366 of `ctelasvota.cpp`), so list the file's records before writing into a gap:
 `awk -F'\t' '$2 ~ /comum\/ctelasvota\.cpp$/ {print $3, $6}' ledger/source-locations.tsv` prints each record's line and
-function. The lines a record names for a function no file of ours
+function. A record's function name can also fix a line no record is on: a template instantiated over a lambda spells the
+lambda by its place, `(lambda at <file>:<line>:<col>)`, so that lambda keeps its line and column, and code moved above
+it moves the record's text (6561's record of line 487 names a lambda of `CTelasVota::CriaTelaVisualizacaoCandidato` at
+`ctelasvota.cpp:3323:29`; `awk -F'\t' '$5 ~ /lambda at/ {print $2, $3, $6}' ledger/source-locations.tsv` lists such
+records, one at e7d03612). The lines a record names for a function no file of ours
 writes (a constructor its only caller inlined, a pending member) stay blank too, and the members you write go after
 them, or before them when evidence says so: their lines are then a choice, which the file's header comment or the
 fragment's header says. When the members already written after those lines leave no run before the next record long
@@ -279,7 +283,15 @@ the fragment lists, its `-externs.cpp` included, into one scratch directory, cha
 with `--skip-units <fragment>.mk --component <the sources' directory under src/> --roots <the unit's -roots.cpp>`.
 `--component` gives the copies their tree's flags and path map, and the externs file, which has no rule of its own once
 the fragment is skipped, the flags it has in the fragment. Run the unchanged copy first: it must reproduce the committed
-result.
+result. When the fragment's sources lie in several directories (unit 00's `ECOURNA_SRCS` lists files of
+`api/exception/`, `api/security/`, `api/util/` and `app/dados/`), one `--component` cannot give each copy its path.
+Compile the changed source alone instead: copy it to `build/out/<handle>/vp/<tree>/<its path in the tree>`, take its
+line from `tools/round/try-tu.sh --print-flags <source>`, add `-ffile-prefix-map=/work/build/out/<handle>/vp/<tree>=<the
+target of the line's first -ffile-prefix-map>`, put the copy in place of the `-c` path with an `-o`, and run the line
+through `TMPDIR=/tmp build/docker-build.sh bash -c "<line>"`. The unchanged copy's object is the tree's (`cmp` with
+`build/out/app/ecourna/api_security_base64.cpp.o` for `api/security/base64.cpp` prints nothing); swap the variant's into
+a copy of the link's `link.cmd` as [../docs/reference/facts/workflow.md](../docs/reference/facts/workflow.md) §W13 "One
+variant object in the whole link" does, and the unchanged copy's link gives the plain link's sha256 (12 s at e7d03612).
 
 Times: `--single` takes about 7 s on an idle machine and the whole link about a minute (compile, both links,
 census). Both are mostly docker runs, so they grow with the machine's load: `--single` takes about 35 s while a fresh

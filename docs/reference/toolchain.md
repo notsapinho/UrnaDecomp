@@ -70,18 +70,25 @@ into the C++ objects, not a `--js-library`. Their bodies are extracted verbatim 
 
 **Packager payload.** `--preload-file <dir>@/` over the unpacked asset tree reproduces `vota_web_wasm.data` byte for byte.
 
-**Export order.** wasm-ld emits exports in object order on the link line. It places the function table right after the
-exports of the first object that imports it ([facts/toolchain.md](facts/toolchain.md) §T5). In the target the table sits
-between `votaInit` and `votaPressKey`. So the first object on the link line defines `votaInit` first among its exports.
-It defines others too: `votaSetAudioEnabled` (`Ib`, fn 10240) holds the record of `(anonymous namespace)::CVotaWebEngine::
-SetAudioEnabled(bool)` at `vota_web_wasm.cpp:592`, a class only that file can hold, and `main`'s
-`std::__function::__func<main::$_0, void ()>` has its typeinfo and vtable in that TU's data. As `Ib` follows `Gb`
-(`votaPressKey`) and `Hb` (`votaTick`), those two are that TU's as well; inside one object the table's export comes where
-the object's own symbol order puts it, which is not measured. Our link does not give the target's order until `votaInit`
-is written there: the executable TU's `votaPressKey` and `votaSetAudioEnabled` come first, then the table, then the
-stand-ins' `votaInit`, `votaTick`, `votaGetStateJson` and `main` (`wasm-objdump -x -j Export
-build/out/wasm/vota_web/vota_web_wasm.wasm`, named through the glue). The splat build takes the target's export
-section, so no match depends on it.
+**Export order.** wasm-ld emits exports in object order on the link line, and inside one object in that object's symbol
+order, which follows its definitions; the function table comes right after the export whose definition first refers to
+it ([facts/toolchain.md](facts/toolchain.md) §T5). In the target the table sits between `votaInit` and `votaPressKey`,
+so the first object on the link line defines `votaInit` first among its exports and refers to the table there. It
+defines the other exports too: `votaSetAudioEnabled` (`Ib`, fn 10240) holds the record of `(anonymous
+namespace)::CVotaWebEngine::SetAudioEnabled(bool)` at `vota_web_wasm.cpp:592`, a class only that file can hold, and
+`main`'s `std::__function::__func<main::$_0, void ()>` has its typeinfo and vtable in that TU's data. So the target's
+export section gives that TU's order of definition: `votaInit`, `votaPressKey`, `votaTick`, `votaSetAudioEnabled`,
+`votaGetStateJson`, `main`. Our executable TU (unit 170) defines all but `votaInit`, whose stand-in,
+`src/app/vota_init.cpp`, links after it, so at e7d03612 our exports run `votaPressKey`, `votaTick`, the table,
+`votaSetAudioEnabled`, `votaGetStateJson`, `main` and `votaInit`, the table after `votaTick`, the TU's first function
+that refers to it (`wasm-objdump -x -j Export build/out/wasm/vota_web/vota_web_wasm.wasm`, named through the glue:
+`LC_ALL=C /usr/bin/grep -o -E '_(vota[A-Za-z]+|main)=Module\["_(vota[A-Za-z]+|main)"\]=wasmExports\["[^"]+"\]'
+build/out/wasm/vota_web/vota_web_wasm.js`). The splat build takes the target's export section, so no match depends on
+the exports. Our table's first slots come from the same TU's first references, and some matches hang on their numbers
+([facts/splat.md](facts/splat.md) §S10 item 28). Until `votaInit` is written in that TU, nothing is changed to move our
+exports or slot numbers toward the target's alone (a `votaInit` of the TU's own beside the stand-in, a definition moved
+for its slot): such a change is no source the target shows, and §T5 has what a variant that replaces the stand-in
+drops.
 
 ## 3. Compile flags per component
 

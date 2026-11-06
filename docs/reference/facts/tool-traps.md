@@ -61,7 +61,8 @@ awk -F'\t' '$1==3939 {print substr($2, 1, 16)}' ../splat/scan.tsv               
 ```
 
 So read a one-caller row's caller in `splat/scan.tsv` before taking its body out of line as a puzzle of the source.
-When neither the twin nor the merge's other members are identified, a roots stand-in gives the second call site
+When neither the twin nor the merge's other members are identified, no stand-in gives the call the merge took away: a
+stand-in stands only for a caller the target shows, so the caller stays unmatched with the function inlined into it
 (`src/units/README.md` "Companion files", 11514 under 2543).
 
 ## X2. Probe links
@@ -108,6 +109,9 @@ When neither the twin nor the merge's other members are identified, a roots stan
 11. A make error a second after the start is the environment's before the code's: a stopped Colima VM fails each
    compile with make's `Error 1` lines, and the log's first `ERROR` says `failed to connect to the docker API`
    (`/usr/bin/grep -m1 ERROR <log>`; `colima status`, then `colima start`).
+   The VM can also stop in the middle of a build, under a heavy load or when the host shuts down, and does not start
+   again by itself after the host boots: the compiles in flight end with `Terminated: 15`. make deletes none of their
+   targets, so each keeps its older object, which the rerun recompiles; `cmp` what you compare after it.
 
 ## X4. Fetching from the TSE site
 
@@ -354,6 +358,11 @@ lie in that data, and `-ffile-prefix-map` rewrites only the trees' `/work/src/â€
 its length. An unchanged copy of `cconversoreleicoesvota.cpp` compiled from `build/out/` differed from the landed
 object in 22 lines of 2115, every one such an addend (`i32.const 600` against `564`). Compile the control beside the
 variants, under a name of the same length, and compare each variant with it (the control against itself: 0).
+A name of another length moves the addends only when it crosses an alignment step, so one variant can differ by them
+alone while others of other lengths do not (an 18-character name did, beside two that did not, every differing line of
+`cnomearquivo.cpp`'s `NomeArquivoAbrangencia` an `i32.const` into the data). Before reading a diff as a code difference,
+count its lines that are no `i32.const`: `diff <control> <variant> | /usr/bin/grep '^[<>]' | /usr/bin/grep -vc
+'i32.const'`.
 
 ## X14. Reading the scan and the pieces
 

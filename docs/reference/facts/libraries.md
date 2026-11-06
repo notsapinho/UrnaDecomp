@@ -371,8 +371,9 @@ date parsing, clock or lexical_cast code: the app's uses of those are its own ob
 what the app link made of them (the probe's header comment).
 
 The probe is also what `src/app/roots_boost.cpp` includes, a stand-in under the roots rules (`src/units/README.md`
-"Companion files"), so an edit of it for the link changes this study's build too. Read the 1.89.0 column again after
-one (1.90.0 and 1.91.0 need their release's headers in `third_party/boost`); from the urna root, then from
+"Companion files"), so an edit of it for the link changes this study's build too, and can take away an object a
+real-link test reads: run the cases `asmlift-wasm/README.md` "Tests" lists before steps 7 to 9. Read the 1.89.0 column
+again after one (1.90.0 and 1.91.0 need their release's headers in `third_party/boost`); from the urna root, then from
 `asmlift-wasm/` (the census line with today's probe; with the probe's earlier `probe_datetime` and `probe_lexical`,
 as at cb34a517, it read `matched 41 (fingerprint 19, shape 22, byteExact 10), bytes 4354/101725 (4.3%)`, and the five
 `dispose()` rows read the same with either probe):
