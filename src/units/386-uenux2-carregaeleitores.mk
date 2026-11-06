@@ -147,8 +147,9 @@
 # it as `UNCONFIRMED: self-voted`), and a `callers+content` hand line named 2543 from its own rows; with both in, that
 # line carries nothing (removed on copies: no row moves; with the name out on both sides 6734 and 7174 fall): it went.
 #
-# Roots (386-uenux2-carregaeleitores-roots.cpp): TelasVota stands for 7787 (its calls of 6734 and of 5763), and
-# GeraDadosDinamicos for 11865 (its call of 6734); each goes when its target caller is in the link. The stand-ins this
+# Roots (386-uenux2-carregaeleitores-roots.cpp): TelasVota stands for 7787 (its calls of 6734 and of 5763), and goes
+# when 7787 is in the link; GeraDadosDinamicos, which stood for 11865 (its call of 6734), went once unit 199 wrote
+# 11865, the other target caller of 6734, whose call keeps two call sites with TelasVota's. The stand-ins this
 # landing made idle went from the roots of units 91, 110, 113, 190 and 216 (their roots' comments say which; 110's,
 # 113's and 216's fragments too), and so did units 98's and 128's calls for 6734 (their fragments say which).
 #

@@ -14,10 +14,10 @@
 #   app/vota/log/clogvota.cpp, unit 119's file) inlined by binaryen;
 # - vota::CGeraDadosDinamicos (cgeradadosdinamicos.{h,cpp}, its record :47): GetInst, constructor and statics, which
 #   binaryen inlines into CPreZeresima::GetEstadoPassouNoTeste (fn 5945, unit 138), and the statics' exit destructors
-#   (11867, 11866).
-# The class heads say what each layout rests on; 199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp names the
-# slot left (CGeraDadosDinamicos::StartState 11865) and what it waits for; CInicioVotacao's StartState 11988 and
-# ProcessTick 11987 are written since (below). CVerificaEleicaoPassou's GetInst, constructor and statics are
+#   (11867, 11866); StartState (fn 11865) is written since (below).
+# The class heads say what each layout rests on. Every slot of the four vtables is written: the -pending.cpp went with
+# its last member, CGeraDadosDinamicos::StartState 11865 (below); CInicioVotacao's StartState 11988 and
+# ProcessTick 11987 are written since too (below). CVerificaEleicaoPassou's GetInst, constructor and statics are
 # written since in unit 104's shape, whose names they take (chosen): binaryen inlines GetInst into its one target
 # caller, fn 7160 (vota::CAjusteInicial::StartState, unit 329), and the statics' exit destructors 11915 and 11916 wait
 # for that match (unit 329's fragment). The roots' line that kept the class's vtable stood for 7160 and went with it,
@@ -69,6 +69,25 @@
 #   the two slots; its name, its linkage and its file (the callers') are chosen. Its stub sat in uenux2/unplaced.cpp
 #   under a link-order cluster whose neighbours' file is iniciovotacao/cgeradorresumozeresima.cpp, a hint, not the
 #   file (src/README.md "Stubs").
+# - vota::CGeraDadosDinamicos::StartState (fn 11865, slot 2, record :47 column 51). Its rows (pnpm wasm fn
+#   ../target/vota_web_wasm.wasm 11865): vota::CEstadoAudio::GetInst (fn 509), then comum::CAppInfo::GetInst (fn 185),
+#   then GeraDadosDinamicos (fn 6737) and CarregaEleitores (fn 6734) on 509's result, then GetVota (fn 261, the
+#   non-const overload, with 51, TURNO_ATUAL) on 185's; an api::EUeAssertError throw through fn 463 with code 3478 and
+#   the text "Assert (vota.GetEstadoVota() == EAVINICIAL || vota.GetEstadoVota() == EAVGERADADOSDINAMICOS)"
+#   (ledger/strings.tsv 399187) unless the state at GetVota()'s +0 is 49 or 50 (one unsigned compare of the state less
+#   49 with 2); 51 (EAVAGUARDAHORAZERESIMA) stored there, cestadogeralvota.h's SetEstadoVota, which binaryen inlines;
+#   vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491); CVerificaHorarioZeresima::GetInst() (fn 5947) stored
+#   at +4, m_pNextState. The text names the local vota. CAppInfo::GetInst is called before 6737 and 6734 and GetVota
+#   after them, so its result is a local declared above the two calls (a reading of the calls' order). The record's
+#   column is the ASSERT invocation's closing parenthesis on a line of its own (api/util/eueasserterror.h says what
+#   that gives the enumerator's name). 14 over 49 rows, all operand-only (pnpm wasm score on the plain link before
+#   steps 7 to 9: the calls, the data addresses and the throw's destructor slot, the target's 69 against our 43); step
+#   8 names it by srcloc-anchor. StartState is the class's key function, so cgeradadosdinamicos.cpp.o emits the
+#   vtable and typeinfo now, which the -pending.o did; the target's vtable (@1545964, 44 bytes) ends where the record
+#   of :47 (@1546008) begins. In band 1 (ledger/ordinals.tsv) 11867, 11866 and 11865 run in that order of ld_index
+#   (names.tsv): the statics stay defined above StartState. It made two stand-ins idle, and both went (steps 6 to 9
+#   run again without them moved no row): unit 386's GeraDadosDinamicos (11865's call of 6734) and unit 138's
+#   ChamaVerificaHorarioZeresima (its call of 5947), that roots file's last.
 #
 # Chosen, no evidence names them: the paths, by how-to step 3's rule 4 (the class name in lower case) where no record
 # names the file (cdefinerotaprevotacao.cpp, ciniciovotacao.cpp), each header beside its .cpp, and the directory:
@@ -83,7 +102,10 @@
 # (column 19 of :70) and the lines of every function no record places (cverificaeleicaopassou.cpp's StartState starts
 # where its records fall; ciniciovotacao.cpp's and cdefinerotaprevotacao.cpp's functions are in link order: the statics'
 # destructors precede their class's slots in band 0, so the statics are defined above them); the destructor declared
-# first in CInicioVotacao, StartState as the key function in the other three classes.
+# first in CInicioVotacao, StartState as the key function in the other three classes. In CGeraDadosDinamicos::
+# StartState: the locals estadoAudio and appInfo (vota is the text's), the blank lines between the statics and the
+# function and its lines above the ASSERT (only :47 is the record's), EUA_GERADADOSDINAMICOS_ESTADOINVALIDO's name
+# (eueasserterror.h), and the using-directive for comum.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_ROTA_SRCS := src/app/vota/eleitor/iniciovotacao/cdefinerotaprevotacao.cpp \
@@ -97,9 +119,3 @@ UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_ROTA_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cdefinerotaprevotacao.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/ciniciovotacao.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificaeleicaopassou.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# The members not reconstructed: 199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp gives the vtables trapping
-# bodies, compiled with the unit's flags; its prerequisites are every header of both trees, as unit 138's are
-INICIOVOTACAO_ROTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.o: $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota.mk $(INICIOVOTACAO_ROTA_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/199-uenux2-app-vota-eleitor-iniciovotacao-rota-pending.o

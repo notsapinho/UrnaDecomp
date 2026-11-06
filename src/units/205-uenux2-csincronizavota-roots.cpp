@@ -16,9 +16,9 @@
 //   the link);
 // - SincronizaRelatorios (fn 1836): callers 11943 and 11946 (in the link: fragment 325's notes), 12105 (three times,
 //   in the link: fragment 372's) and 12110, the slot 2 of four vota states.
-// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 23 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
-//   11830, 11855, 11902, 11905, 11908 (written, unit 176), 11911, 11920, 11924, 11927, 11931, 11940, 11991, 12031,
-//   12034, 12065, 12077 and 12081.
+// - SincronizaEstadoGeralVota (fn 491): 31 callers, of which 27 are in the link: 5972, 7306, 7481, 10710, 10734, 10797,
+//   11830, 11855, 11865, 11869, 11902, 11905, 11908 (written, unit 176), 11911, 11920, 11924, 11927, 11931, 11940,
+//   11943, 11991, 12031, 12034, 12065, 12077, 12081 and 12105; 7787, 12098, 12110 and 12134 are not.
 // - SincronizaEstadoGeral (fn 3333): callers 7160, 7306 and 10710 (units 329, 104 and 277), all in the link: its
 //   stand-in went.
 // - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
@@ -50,8 +50,8 @@ __attribute__((noinline)) int w205_desligando(int passo)
     return passo + 5;
 }
 
-// stands for SincronizaEstadoGeralVota's (fn 491's) 8 target callers that are not in the link (the list above names
-// the 23 that are)
+// stands for SincronizaEstadoGeralVota's (fn 491's) 4 target callers that are not in the link, 7787, 12098, 12110 and
+// 12134 (the list above names the 27 that are)
 __attribute__((noinline)) int w205_estado(int vezes)
 {
     vota::CSincronizaVota::SincronizaEstadoGeralVota();
