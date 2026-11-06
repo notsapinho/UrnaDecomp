@@ -56,14 +56,15 @@ DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase
 # join the link here.
 override EXTRA_OBJS += $(ASN1MOD_OBJS)
 
-# DADOS_ASN_TRY=1 in the environment leaves the converter TUs and their roots out, so tools/round/try-tu.sh can compile the
-# same TUs as candidates while the module objects above stay linked.
+# DADOS_ASN_TRY=1 in the environment leaves the converter TUs out, so tools/round/try-tu.sh can compile the same TUs as
+# candidates while the module objects above stay linked.
 ifndef DADOS_ASN_TRY
 ECOURNA_SRCS += $(DADOS_ASN_SRCS)
 # prerequisites only (no recipe: the generic rule compiles them): the ASN.1 headers, which the generic rule does not name
 $(foreach u,$(DADOS_ASN_SRCS),$(eval $(ROOT)/$(APP)/ecourna/$(subst /,_,$(u)).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# the converters' users are not reconstructed yet: 04-ecourna-app-dados-asn-roots.cpp keeps them the way the target reaches them
-$(ROOT)/$(APP)/04-ecourna-app-dados-asn-roots.o: $(ROOT)/src/units/04-ecourna-app-dados-asn-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/04-ecourna-app-dados-asn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/04-ecourna-app-dados-asn-roots.o
+# No roots: the target reaches the converters' DoConverte/DoDeconverte only through their vtables, and every vtable
+# has a function in the link that stores its vptr, which keeps it as the roots file's sink did: CConversorTurno's 9179
+# and 9190, CConversorFase's 9052, 9056, 9179 and 9190, CConversorCargoID's 11349, 11351 and 11352, CConversorFoto's
+# 11422 and 11440, CConversorIdentificadorEleitor's 9112 and 9114, CConversorLabelParametrizado's 9156 and 9164,
+# CConversorTituloRelatorio's 5102 and 9161. The roots file went with its last sink.
 endif

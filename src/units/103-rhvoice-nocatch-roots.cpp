@@ -10,8 +10,10 @@
 //   string::operator=(const string&) (1700, elem[30]: 212, 7840, 10619; 10619, unit 170's, is in the link).
 //   string::reserve (7735, elem[465]: 5360, 9963; 5360, unit 227's, is in the link and passes it).
 // - Called directly in the target by callers not written yet, so two noinline callers stand in for them:
-//   the push_back of std::vector<std::pair<std::string, unsigned short>> (1682: 727, 855, 3577, 5298, 5318, 9869, 9911),
-//   and the D2 of std::__split_buffer<std::string, std::allocator<std::string>&> (5184: 9516; 9404, unit 00's, is in the link).
+//   the push_back of std::vector<std::pair<std::string, unsigned short>> (1682: 727, 855, 3577, 5298, 5318, 9869,
+//   9911).
+//   The D2 of std::__split_buffer<std::string, std::allocator<std::string>&> (5184) needs none: its target callers,
+//   9404 (unit 00's) and 9516, are in the link.
 // Declared through asm labels with the objects' signatures, so this file instantiates nothing and every body comes from
 // the object that defines it. Compiled as uenux2 code.
 extern "C" {
@@ -19,7 +21,6 @@ int w12979_root_0(int, int) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIc
 int w1700_root_0(int, int) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_");
 void w7735_root_0(int, int) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7reserveEm");
 void w1682_root_0(int, int) __asm__("_ZNSt3__26vectorINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEtEENS5_IS8_EEE9push_backB8ne210108EOS8_");
-int w5184_root_0(int) __asm__("_ZNSt3__214__split_bufferINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS4_IS6_EEED2Ev");
 }
 
 namespace {
@@ -35,13 +36,6 @@ __attribute__((noinline)) void InsereSimboloOutro(int simbolos, int primeiro)
     w1682_root_0(simbolos + 24, primeiro + 16);
 }
 
-// A D2 returns this in the object, and neither caller reads it, so binaryen removes the result as the target's did.
-__attribute__((noinline)) void LiberaTemporarios(int primeiro, int segundo)
-{
-    w5184_root_0(primeiro);
-    w5184_root_0(segundo + 20);
-}
-
 void* volatile w103_sink;
 
 struct SW103Roots {
@@ -52,7 +46,6 @@ struct SW103Roots {
         w103_sink = reinterpret_cast<void*>(&w7735_root_0);
         w103_sink = reinterpret_cast<void*>(&InsereSimbolo);
         w103_sink = reinterpret_cast<void*>(&InsereSimboloOutro);
-        w103_sink = reinterpret_cast<void*>(&LiberaTemporarios);
     }
 } w103_roots;
 

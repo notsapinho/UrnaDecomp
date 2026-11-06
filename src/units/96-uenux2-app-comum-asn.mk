@@ -142,8 +142,8 @@ COMUM_ASN_SRCS := src/app/comum/asn/util.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp \
   src/app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.cpp
 UENUX2_SRCS += $(COMUM_ASN_SRCS)
-# the converters that call these members are not reconstructed yet: 96-uenux2-app-comum-asn-roots.cpp gives each its
-# second call site, the way the target reaches them
+# the members' callers are all in the link now; 96-uenux2-app-comum-asn-roots.cpp keeps CConversorDadosCandidato's
+# vtable, whose one storer (11448) is not written
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 $(ROOT)/$(APP)/96-uenux2-app-comum-asn-roots.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk

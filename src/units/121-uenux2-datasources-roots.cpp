@@ -10,9 +10,10 @@
 //   constructor is declared only: fn 6652 builds the source with a call of fn 5729, which stores its byte and returns
 //   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
 //   so the target holds one body for both and does not tell which source defines it.
-// - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fn
-//   10465, and by 652, 1150, 1901, 2734, 2747, 5397 and 10440, which are in the link). The one of api::CInputMenuField
-//   (1579324) went: its builder, fn 3675 (unit 120's file), is in the link.
+// No control block is left: std::string's __shared_ptr_emplace<T> (vptr 1588328, stored by fn 10465, and by 652, 1150,
+// 1901, 2734, 2747, 5397 and 10440) went, its builder and sink with it, once those functions were in the link, one
+// storer giving the reference the sink gave; the one of api::CInputMenuField (1579324) went once its builder, fn 3675
+// (unit 120's file), was.
 // And two stand-in callers, of CCalculaCV's destructor and Reinicia, kept by their addresses: each comment names the
 // target callers it stands for. The one of vota::AdicionaCampoNumerico (fn 1151) went: its last target caller not in the
 // link, fn 10500 (unit 239's), is. So did those of IncluiString (fn 942) and CalculaCodigo (fn 3700): their target
@@ -38,17 +39,11 @@
 
 extern "C" {
 extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRespostasDSNumeroEEE");
-extern const char w121_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEEE");
 }
 
 __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
 {
     const api::CDataText<comum::CRespostasDSNumero> texto(comum::CRespostasDSNumero{digitos});
-}
-
-__attribute__((optnone, noinline)) std::shared_ptr<std::string> w121_string(const std::string& valor)
-{
-    return std::make_shared<std::string>(valor);
 }
 
 namespace {
@@ -79,7 +74,6 @@ struct SW121Roots {
         w121_sink = reinterpret_cast<const void*>(&w121_destroi_calcula);
         w121_sink = reinterpret_cast<const void*>(&w121_reinicia);
         w121_sink = w121_vt_respostas;
-        w121_sink = w121_vt_string;
     }
 } w121_roots;
 

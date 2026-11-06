@@ -33,8 +33,9 @@
 #   crelutil.cpp.o's has<CCalculaCV> stayed a whole body (`differs` against the thunk 1954). Its copy is the roots
 #   object's, at APP_CXXFLAGS (no tree object instantiates it); compiled at src/app/vota's flags (-O3 -std=c++23, strict
 #   aliasing), the roots object gives that function the same code (wasm-objdump -d, calls and constants masked).
-# - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
-#   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
+# - 631, emplace_back's slow path, and 14476 and 321, which the roots keep (their comments there; 871's calls went once
+#   its target callers were in the link). 631's second arg is the typeinfo by reference, so m_tipo is a
+#   std::reference_wrapper here, one of the same-bytes forms below.
 # - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7962 7966
 #   7982 7989 7994 8000 8019 8024 8029 8042 8044 8047 8055 10308 10413 10455 10498 10538 10575 10596 10632 10668 10702
 #   10741 10780 10873 12048, and __on_zero_shared 4739 4772 5381 8009 8051. Each is reached by a never-called

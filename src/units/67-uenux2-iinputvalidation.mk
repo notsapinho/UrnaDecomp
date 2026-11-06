@@ -11,17 +11,13 @@
 # (docs/reference/facts/reading.md §R6), and the derived deleting destructor holds the base destructor's body (an inline
 # one, §R5). 12502 and 2980 are merge thunks in the target (into 1723 and 1722, the shared bodies of RHVoice
 # destructors of the same shape), and binaryen merges ours into the same two bodies. The unit is two headers and has no
-# source of its own: no record names a file of either class, and the TUs that build the objects are not
-# reconstructed, so the roots file below builds a COptionValidation the way fn 5913 does, which emits the vtables and
-# their members, and keeps both vtables (see its header). The headers' paths (the class names in lower case, beside the
-# recorded api/gui/cinputmenufield.cpp, which defines the fourth derived class CMenuValidation), the member names
-# isValid and isValidChar, their const, the data member's name and the constructors' explicit are chosen; each header
-# says why. Not reconstructed: CControlValidation (its slot 2 is the same body as 4022; api/gui/cnumbervalidation.h has
-# CNumberValidation, whose copies of 4022 and 2980 the match lines name, ctelasvota.cpp.o's, the first on the link line
-# to emit them).
+# source of its own: no record names a file of either class. No roots: fn 5913 (unit 59's cmenubase.cpp), which does
+# `new COptionValidation(<string>)` and stores both vptrs, is in the link, and ctelasvota.cpp's object, the first on the
+# link line to emit them, gives the vtables and their members, so the roots file, which built a COptionValidation in a
+# function the link drops and kept both vtables in its sink, went. The headers' paths (the class names in lower case,
+# beside the recorded api/gui/cinputmenufield.cpp, which defines the fourth derived class CMenuValidation), the member
+# names isValid and isValidChar, their const, the data member's name and the constructors' explicit are chosen; each
+# header says why. Not reconstructed: CControlValidation (its slot 2 is the same body as 4022;
+# api/gui/cnumbervalidation.h has CNumberValidation, whose copies of 4022 and 2980 the match lines name,
+# ctelasvota.cpp.o's, the first on the link line to emit them).
 # CMenuValidation (10900, 10899 in cinputmenufield.cpp) is unit 84's.
-# Every header the roots file includes is in src/uenux2/src/api/gui/, which the wildcard below names ($(UENUX2_HDRS) is
-# set after src/Makefile reads the fragments: here it would be empty).
-$(ROOT)/$(APP)/67-uenux2-iinputvalidation-roots.o: $(ROOT)/src/units/67-uenux2-iinputvalidation-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/67-uenux2-iinputvalidation.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/67-uenux2-iinputvalidation-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/67-uenux2-iinputvalidation-roots.o

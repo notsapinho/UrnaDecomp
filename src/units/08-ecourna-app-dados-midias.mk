@@ -24,8 +24,8 @@ $$(ROOT)/$$(APP)/ecourna/$(subst /,_,$(1)).o: $$(ROOT)/src/ecourna/$(1) $$(ROOT)
 	$$(H) mkdir -p $$(APP)/ecourna && build/docker-build.sh em++ $$(ECOURNA_CXXFLAGS) -fno-strict-overflow -c /work/src/ecourna/$(1) -o $$(R)
 endef
 $(foreach u,$(DADOS_MIDIAS_SRCS),$(eval $(call DADOS_MIDIAS_RULE,$(u))))
-# 08-ecourna-app-dados-midias-roots.cpp keeps four of the converters' vtables and BytesToHexString the way the target
-# reaches them; its comment says which target functions store each vptr
+# 08-ecourna-app-dados-midias-roots.cpp keeps BytesToHexString the way the target reaches it; its comment says which
+# target functions store each converter's vptr, all in the link, so it keeps no vtable
 $(ROOT)/$(APP)/08-ecourna-app-dados-midias-roots.o: $(ROOT)/src/units/08-ecourna-app-dados-midias-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/08-ecourna-app-dados-midias-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/08-ecourna-app-dados-midias-roots.o

@@ -12,8 +12,6 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ORIGEMCONFIGURACAO_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.cpp
 UENUX2_SRCS += $(ORIGEMCONFIGURACAO_SRCS)
-# the converter's users are not reconstructed yet: 17-uenux2-cconversororigemconfiguracao-roots.cpp keeps its vtable the
-# way the target reaches it
-$(ROOT)/$(APP)/17-uenux2-cconversororigemconfiguracao-roots.o: $(ROOT)/src/units/17-uenux2-cconversororigemconfiguracao-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/17-uenux2-cconversororigemconfiguracao-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/17-uenux2-cconversororigemconfiguracao-roots.o
+# No roots: the target reaches DoConverte and DoDesconverte only through the converter's vtable (@1570240), and fn
+# 11363 (cconversorprocessoeleitoral.cpp, unit 140), which stores its vptr, is in the link, so the roots file and its
+# sink went.

@@ -59,8 +59,6 @@
 # header.
 CWASMNULLTEXTTOSPEECH_SRCS := mock/app/simulador/wasm/cwasmnulltexttospeech.cpp
 UENUX2_SRCS += $(CWASMNULLTEXTTOSPEECH_SRCS)
-# nothing reconstructed builds the speech yet: 82-uenux2-cwasmnulltexttospeech-roots.cpp keeps the vtable, as the
-# constructor's vptr store does
-$(ROOT)/$(APP)/82-uenux2-cwasmnulltexttospeech-roots.o: $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/82-uenux2-cwasmnulltexttospeech-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/82-uenux2-cwasmnulltexttospeech-roots.o
+# No roots: the target reaches every member through the vtable only, and fn 8302 (unit 188), which holds a copy of the
+# implicit constructor inlined, stores its vptr and is in the link (13877, the executable TU's copy, is the other
+# storer), so the roots file and its sink went.

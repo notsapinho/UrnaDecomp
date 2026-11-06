@@ -14,8 +14,10 @@ int rdados_registro_2(int, int, int) __asm__("_ZN7ecourna3app5dados29CRegistroId
 void rdados_registro_hab(int, int) __asm__("_ZNK7ecourna3app5dados29CRegistroIdentificacaoEleitor27GetIdentificadorHabilitacaoEv");
 void rdados_registro_pri(int, int) __asm__("_ZNK7ecourna3app5dados29CRegistroIdentificacaoEleitor25GetIdentificadorPrincipalEv");
 int rdados_serial(int, int) __asm__("_ZN7ecourna3app5dados12CSerialMidiaC2ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
-// a library helper the target keeps out of line because other (unreconstructed) callers share it: std::regex's
-// (const char*, flags) ctor (fn 2416, 4 uses)
+// std::regex's (const char*, flags) constructor (fn 2416). Its target callers, 5492, 6999 and 9258, are in the link,
+// and each passes the same flags, so with no other caller binaryen folds the flags parameter, which the target's 2416
+// keeps: a link without UsaBibliotecas gives 2416 the type (i32, i32) -> i32, and 2416, 5492, 9258 and 10901 leave
+// `match`. UsaBibliotecas passes other flags, so it stands for the parameter, not for a caller.
 int rdados_regex_ctor(int, int, int) __asm__("_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEEC2B8ne210108EPKcNS_15regex_constants18syntax_option_typeE");
 }
 

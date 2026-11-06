@@ -517,9 +517,9 @@ says otherwise:
   `api::persistencia::CDAORepositorio::s_daos` (0x1d24cc) and `comum::util::CMonitoraAlimentacao::s_inst` (0x1d2b10)
   (`splat/symbol_addrs.txt`). Our link has no slot among uenux2's objects; fragment 187 puts the objects after RHVoice
   and zlib. In the companions' slot instead (`override EXTRA_OBJS += $(QRENCODE_OBJS)` in place of fragment 187's
-  `RHVOICE_OBJS` line, which puts them between unit 17's roots and unit 187's), `make -C src link`, `census`,
-  `splat-symbols` and `splat-match` printed 10539 matches, 17 added and 0 renamed, and `splat/matched.txt` came out
-  line for line as in fragment 187's slot.
+  `RHVOICE_OBJS` line, which put them between unit 17's roots, a file since gone, and unit 187's), `make -C src
+  link`, `census`, `splat-symbols` and `splat-match` printed 10539 matches, 17 added and 0 renamed, and
+  `splat/matched.txt` came out line for line as in fragment 187's slot.
 - **The order inside the library**, in link order, where the target reads it: the uses==2 band 5352 and 5351
   (`qrinput.o`), 5350 (`bitstream.o`), 5349 (`qrspec.o`), 5348 (`split.o`), 5347 and 5346 (`mqrspec.o`); the uses==3
   band 3597 and 3596 (`qrinput.o`), then 3595 (`rsecc.o`); the uses==10 band 1254, then 1253 (`mmask.o`), so `mmask.o`
@@ -545,9 +545,10 @@ says otherwise:
   less 2, in padding before the array in both links, and the scan places an address only through the object holding
   it ("is in no data object of ours"). 3595's `generator[length - 2]`, `generator - 62`, lies in the object before the
   array: in the target the 24 bytes before `initialized`, where rsecc.o's order puts `RSECC_mutex`, which no target
-  function reads; in our link 2 bytes into `RSECC_mutex` after RHVoice, or in unit 17's roots sink in the companions'
-  slot. Step 8 names that object by 3595's one vote at 0x1d2510, which is 4 bytes off `RSECC_mutex`'s place in one slot
-  and another object in the other: our `.bss` reaches the target's residue mod 16 by chance only.
+  function reads; in our link 2 bytes into `RSECC_mutex` after RHVoice, or, in the companions' slot when it was
+  measured, in unit 17's roots sink (that file went since). Step 8 names that object by 3595's one vote at 0x1d2510,
+  which is 4 bytes off `RSECC_mutex`'s place in one slot and another object in the other: our `.bss` reaches the
+  target's residue mod 16 by chance only.
 - **Step 8's other change.** With these objects in the link, step 8 dropped 7-Zip's `g_BigAlloc = 0x10fce4; … size:0x8
   evidence:content` (`git log -p -S 'g_BigAlloc = 0x10fce4' -- splat/symbol_addrs.txt` shows it added with the
   executable TU, unit 170, and dropped with fragment 187). The line was wrong: it lay 8 bytes into

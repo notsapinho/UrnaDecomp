@@ -9,7 +9,8 @@
 // - the w102_ functions and SFonte hold the std::make_shared<T> of a __shared_ptr_emplace<T>. They need T's constructor
 //   declared, not defined, and the block does not depend on its parameters: each is what the class's header declares.
 // clang emits the block in this object with the builder. The target reaches its members only through its vtable, whose
-// address the builder stores, so the sink below is the reference the target has.
+// address the builder stores, so the sink below is the reference the target has. A block whose vptr a function of the
+// link stores needs neither: its builder and sink went (the fragment lists them).
 //
 // Every block's kind was checked against the target's own vptr store: emplace where the builder calls make_shared,
 // pointer where it allocates the T and the block apart. No stand-in stays in the link
@@ -27,15 +28,9 @@
 
 #include "api/audio/alsa/cwavfile.h"
 #include "api/audio/logger.h"
-#include "api/gui/ccutfieldpaper.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
-#include "api/gui/cnewlinefieldpaper.h"
-#include "api/gui/coptionvalidation.h"
 #include "api/gui/cpreshownothing.h"
-#include "api/gui/cqrcodeimagefieldpaper.h"
-#include "api/gui/ctextfieldpaper.h"
-#include "api/gui/iinputvalidation.h"
 #include "api/persistencia/idao.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
 #include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
@@ -56,10 +51,6 @@
 #include "app/comum/md/cidentificacaournacontingencia.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/fimvotacao/cprogressoencerramento.h"
-#include "ecourna/api/security/caescipher.hpp"
-#include "ecourna/api/security/cblockcipher.hpp"
-#include "ecourna/api/security/ctrng.hpp"
-#include "ecourna/app/dados/resultadournacadastro/cidentificacaojustificativa.hpp"
 
 extern "C" {
 extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
@@ -72,13 +63,7 @@ extern const char w102_vt_cdatatext_ccargodsnomesexocandidato[] __asm__("_ZTVNSt
 extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN4vota22CProgressoEncerramentoENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
-extern const char w102_vt_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN7ecourna3api8security5CTrngENS_9allocatorIS4_EEEE");
-extern const char w102_vt_ccutfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cpreshownothing_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_7IScreenEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
-extern const char w102_vt_ctextfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CTextFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_coptionvalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17COptionValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cnewlinefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorbu[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum11CGravadorBUENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorlog[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorLogENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorrdv[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorRDVENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
@@ -92,9 +77,6 @@ extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__22
 extern const char w102_vt_cvisitantefoto[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn14CVisitanteFotoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_ijustificadordao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao16IJustificadorDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_icomparecimentomesariodao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao25IComparecimentoMesarioDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
-extern const char w102_vt_cblockcipher_caescipher_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security12CBlockCipherINS3_10CAesCipherENS3_5CTrngEEENS_10shared_ptrINS3_16ISymmetricCipherEE27__shared_ptr_default_deleteISA_S7_EENS_9allocatorIS7_EEEE");
-extern const char w102_vt_cidentificacaojustificativa[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3app5dados27CIdentificacaoJustificativaENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
-extern const char w102_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIS6_E27__shared_ptr_default_deleteIS6_S6_EENS4_IS6_EEEE");
 }
 
 namespace api {
@@ -109,34 +91,18 @@ struct SBloco {
     }
 };
 
-using TFormPaper = api::IFormField<api::IPaper>;
 using TDao = api::persistencia::IDAO;
-using TAes = ecourna::api::security::CBlockCipher<ecourna::api::security::CAesCipher, ecourna::api::security::CTrng>;
 
-template struct SBloco<TFormPaper, api::CTextFieldPaper>;
-template struct SBloco<TFormPaper, api::CCutFieldPaper>;
-template struct SBloco<TFormPaper, api::CNewLineFieldPaper>;
-template struct SBloco<api::IInputValidation, api::COptionValidation>;
 template struct SBloco<TDao, comum::dao::IComparecimentoMesarioDAO>;
 template struct SBloco<TDao, comum::dao::IJustificadorDAO>;
 template struct SBloco<comum::md::CIdentificacaoSecao, comum::md::CIdentificacaoSecao>;
 template struct SBloco<comum::md::CIdentificacaoUrnaContingencia, comum::md::CIdentificacaoUrnaContingencia>;
-using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
-template struct SBloco<TJustificativa, TJustificativa>;
 template struct SBloco<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>;
-template struct SBloco<api::CQRCodeImageFieldPaper, api::CQRCodeImageFieldPaper>;
-template struct SBloco<std::string, std::string>;
-template struct SBloco<ecourna::api::security::ISymmetricCipher, TAes>;
 template struct SBloco<comum::IGravador, comum::CGravadorWSQ>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CProgressoEncerramento> w102_progresso()
 {
     return std::make_shared<vota::CProgressoEncerramento>();
-}
-
-__attribute__((optnone, noinline)) std::shared_ptr<ecourna::api::security::CTrng> w102_trng()
-{
-    return std::make_shared<ecourna::api::security::CTrng>();
 }
 
 __attribute__((optnone, noinline)) std::shared_ptr<api::CWavFile> w102_wav(const api::CWavAudio& a, const void* d)
@@ -199,13 +165,7 @@ struct SW102Roots {
         w102_sink = w102_vt_cprogressoencerramento;
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;
-        w102_sink = w102_vt_ctrng;
-        w102_sink = w102_vt_ccutfieldpaper;
         w102_sink = w102_vt_cpreshownothing_iscreen;
-        w102_sink = w102_vt_ctextfieldpaper;
-        w102_sink = w102_vt_coptionvalidation;
-        w102_sink = w102_vt_cnewlinefieldpaper;
-        w102_sink = w102_vt_cqrcodeimagefieldpaper;
         w102_sink = w102_vt_cgravadorbu;
         w102_sink = w102_vt_cgravadorlog;
         w102_sink = w102_vt_cgravadorrdv;
@@ -219,9 +179,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cvisitantefoto;
         w102_sink = w102_vt_ijustificadordao_idao;
         w102_sink = w102_vt_icomparecimentomesariodao_idao;
-        w102_sink = w102_vt_cblockcipher_caescipher_ctrng;
-        w102_sink = w102_vt_cidentificacaojustificativa;
-        w102_sink = w102_vt_string;
     }
 } w102_roots;
 

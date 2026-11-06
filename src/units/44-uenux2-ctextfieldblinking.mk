@@ -32,8 +32,6 @@
 # the wildcard below names ($(UENUX2_HDRS) is set after src/Makefile reads the fragments: here it would be empty).
 CTEXTFIELDBLINKING_SRCS := src/api/gui/ctextfieldblinking.cpp
 UENUX2_SRCS += $(CTEXTFIELDBLINKING_SRCS)
-# nothing calls the destructors directly in the target, which reaches them through the vtable only:
-# 44-uenux2-ctextfieldblinking-roots.cpp keeps the vtable, as the constructor inlined into fn 1265 does
-$(ROOT)/$(APP)/44-uenux2-ctextfieldblinking-roots.o: $(ROOT)/src/units/44-uenux2-ctextfieldblinking-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/44-uenux2-ctextfieldblinking.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/44-uenux2-ctextfieldblinking-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/44-uenux2-ctextfieldblinking-roots.o
+# No roots: nothing calls the destructors directly in the target, which reaches them through the vtable only, and fn
+# 1265 (unit 31's CFormBuilder::AddBlinkingTextField), into which the target inlines the constructor that stores the
+# vptr, is in the link, so the roots file and its sink went.

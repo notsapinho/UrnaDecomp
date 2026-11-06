@@ -68,8 +68,8 @@ CWASMSCREENMT_SRCS := mock/app/simulador/wasm/cwasmscreenmt.cpp src/api/gui/cbee
     src/api/gui/cclockfieldmt.cpp src/api/gui/cpreshowclearmt.cpp
 UENUX2_SRCS += $(CWASMSCREENMT_SRCS)
 # nothing reconstructed creates the screen yet (unit 31's MT builders create CPreShowClearMT, fns 1694 and 301):
-# 78-uenux2-cwasmscreenmt-roots.cpp keeps the vtables, std::string::assign and the control blocks the way the target
-# reaches them; it reads the classes' headers
+# 78-uenux2-cwasmscreenmt-roots.cpp keeps std::string::assign and the control blocks the way the target reaches them
+# (the fields' vtables need no sink: fns 1072, 941 and 728 store their vptrs); it reads the classes' headers
 $(ROOT)/$(APP)/78-uenux2-cwasmscreenmt-roots.o: $(ROOT)/src/units/78-uenux2-cwasmscreenmt-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/78-uenux2-cwasmscreenmt.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.h
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/78-uenux2-cwasmscreenmt-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/78-uenux2-cwasmscreenmt-roots.o
