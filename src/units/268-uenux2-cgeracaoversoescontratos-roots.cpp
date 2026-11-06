@@ -71,8 +71,7 @@ struct SW268RootsConjunto {
 // Stands in for the target callers of fn 2860, api::CPolySingletonList::has<comum::CGeracaoVersoesContratos> (the
 // template of api/pattern/cpolysingletonlist.h): fn 12098, which calls it three times, and fn 14478
 // (__wasm_call_ctors, the static initializer of a TU not written, which calls has<T>(g_polySingletonsInfo()) and drops
-// the result). One call for each. This object's copy is the link's: no object of ours instantiates the template for
-// this class.
+// the result). One call for each. The link's copy is cgeracaoversoescontratos.cpp's, whose GetInst instantiates it.
 __attribute__((noinline)) int w268_tem()
 {
     return api::CPolySingletonList::has<comum::CGeracaoVersoesContratos>()
@@ -97,21 +96,29 @@ __attribute__((noinline)) void w268_formata(void* destino, const std::string& de
         TArgumentos(std::make_format_args(versoes, "20260601173148"));
 }
 
-// Stands in for the target callers of fn 5866, comum::CGeracaoVersoesContratos's destructor (out of line in
-// cgeracaoversoescontratos.cpp): fn 12098, whose code after the push of the singleton deletes the object a
-// std::unique_ptr holds, and fn 11636, __on_zero_shared of std::__shared_ptr_pointer<CGeracaoVersoesContratos*, ...>
-// (slot 2 of its vtable, whose address point 1553552 only 12098 stores). Each is `if (p) { f5866(p); f136(p); }`: it
-// drops the result and frees the object. One call for each.
-__attribute__((noinline)) void w268_destroi(comum::CGeracaoVersoesContratos& primeira,
-    comum::CGeracaoVersoesContratos& segunda)
+// Stands in for fn 12098, a target caller of fn 5866, comum::CGeracaoVersoesContratos's destructor (out of line in
+// cgeracaoversoescontratos.cpp): its code after the push of the singleton deletes the object a std::unique_ptr holds,
+// `if (p) { f5866(p); f136(p); }`, which drops the result and frees the object. The other target caller, fn 11636
+// (__on_zero_shared of the control block below), is in the link. One call.
+__attribute__((noinline)) void w268_destroi(comum::CGeracaoVersoesContratos& geracao)
 {
-    primeira.~CGeracaoVersoesContratos();
-    segunda.~CGeracaoVersoesContratos();
+    geracao.~CGeracaoVersoesContratos();
 }
+
+// The control block std::__shared_ptr_pointer<comum::CGeracaoVersoesContratos*,
+// std::default_delete<comum::CGeracaoVersoesContratos>, std::allocator<comum::CGeracaoVersoesContratos>> (vtable
+// @1553544, slots 174, 144, 11636, 11635, 144): push<T>, which CGeracaoVersoesContratos::GetInst reaches through
+// CPolySingleton<T>::set, builds it from the std::unique_ptr, and its address point 1553552 is stored by fn 12098 alone
+// (/usr/bin/grep -rlE 'i32\.const 1553552($|[^0-9])' build/out/splat/pieces/asm prints only vota/12098.wat), which
+// holds GetInst inlined. GetInst is written in cgeracaoversoescontratos.cpp, the destructor's TU, and nothing calls it,
+// so wasm-ld drops it: this sink stands for 12098's store, keeps the vtable that object emits, and goes when 12098 is
+// in the link.
+extern const char w268_bloco_vt[] __asm__(
+    "_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGeracaoVersoesContratosENS_14default_deleteIS2_EENS_9allocatorIS2_EEEE");
 
 namespace {
 
-void* volatile w268_sink_contratos[3];
+void* volatile w268_sink_contratos[4];
 
 struct SW268RootsContratos {
     SW268RootsContratos()
@@ -119,6 +126,7 @@ struct SW268RootsContratos {
         w268_sink_contratos[0] = reinterpret_cast<void*>(&w268_tem);
         w268_sink_contratos[1] = reinterpret_cast<void*>(&w268_formata);
         w268_sink_contratos[2] = reinterpret_cast<void*>(&w268_destroi);
+        w268_sink_contratos[3] = const_cast<char*>(w268_bloco_vt);
     }
 } w268_roots_contratos;
 

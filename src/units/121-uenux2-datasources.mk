@@ -245,8 +245,8 @@
 # compare equal. The names and types no evidence gives are marked as chosen where they are declared: crespostasds.h,
 # cescolheopcao.h, ccalculacv.h and crespostaconsulta.h's GetNumero.
 #
-# Pending, with what each waits for: CGeracaoVersoesContratos's block (11635, 11636) waits for GetInst (unit 268's
-# fragment); the blocks and members over a lambda or another TU's anonymous namespace wait for the function that
+# Pending, with what each waits for (CGeracaoVersoesContratos's block, 11635 and 11636, matched since with GetInst in
+# unit 268): the blocks and members over a lambda or another TU's anonymous namespace wait for the function that
 # spells them (11107, 11109 and 11108 matched with fn 502, AddStatusHeader, cformbuilder.cpp, and 12524, 12522, 12530,
 # 12529, 12520 with fn 6561, ctelasvota.cpp's, for CTelasVota::CriaTelaVisualizacaoCandidato's photos): 12587, 12588,
 # 12589, 12592, 12591 for fn 6627 (ctelasvota.cpp's

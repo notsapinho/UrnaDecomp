@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**12,928 of 14,343 functions matched (90.13%), 4,284,141 of 5,883,903 code bytes (72.81%).**
+**12,930 of 14,343 functions matched (90.15%), 4,284,180 of 5,883,903 code bytes (72.81%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -29,9 +29,9 @@ name ([Not attributed](#not-attributed)).
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
 | TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 3,112 / 3,285 | 94.73% | 1,539,454 / 2,168,476 | 70.99% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,201 / 8,294 | 86.82% | 2,229,872 / 3,145,292 | 70.90% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,203 / 8,294 | 86.85% | 2,229,911 / 3,145,292 | 70.90% |
 | not attributed | `unknown`, `app` | 2,615 / 2,764 | 94.61% | 514,815 / 570,135 | 90.30% |
-| **total** | | **12,928 / 14,343** | **90.13%** | **4,284,141 / 5,883,903** | **72.81%** |
+| **total** | | **12,930 / 14,343** | **90.15%** | **4,284,180 / 5,883,903** | **72.81%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -62,7 +62,7 @@ come from getting the version, the flags and the link order right, not from writ
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,190 / 3,258 | 97.91% | 951,072 / 1,014,603 | 93.74% |
-| `libc++` | 1,778 / 1,957 | 90.85% | 318,873 / 439,879 | 72.49% |
+| `libc++` | 1,780 / 1,957 | 90.96% | 318,912 / 439,879 | 72.50% |
 | `sqlite` | 922 / 927 | 99.46% | 713,977 / 772,965 | 92.37% |
 | `7zip` | 491 / 970 | 50.62% | 45,754 / 292,539 | 15.64% |
 | `RHVoice` | 436 / 740 | 58.92% | 68,691 / 450,027 | 15.26% |
@@ -120,10 +120,10 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 12,928 | 4,284,141 | matched |
-| `differs` | 269 | 255,437 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `match` | 12,930 | 4,284,180 | matched |
+| `differs` | 268 | 255,420 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 473 | 579,984 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 673 | 764,341 | our link has no body for it yet |
+| `no-candidate` | 672 | 764,319 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,355 | 1,355 | 0 | 0 | 0 |
-| `fingerprint` | 644 | 643 | 0 | 1 | 0 |
-| `addr` | 7,941 | 7,774 | 45 | 121 | 1 |
+| `byte` | 1,357 | 1,357 | 0 | 0 | 0 |
+| `fingerprint` | 642 | 641 | 0 | 1 | 0 |
+| `addr` | 7,942 | 7,776 | 44 | 121 | 1 |
 | `shape` | 1,299 | 1,257 | 32 | 10 | 0 |
-| `none` | 3,104 | 1,899 | 192 | 341 | 672 |
+| `none` | 3,103 | 1,899 | 192 | 341 | 671 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved
