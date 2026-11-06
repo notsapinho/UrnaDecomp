@@ -1128,16 +1128,16 @@ three and `unresolved` for 5181, which waits for a name:
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
   whose result every caller drops (unit 00's fragment).
 
-  Two locals-only remainders no lever above moves. A parameter copied into a local before a loop (`local.get 1;
+  A locals-only remainder no lever above moves. A parameter copied into a local before a loop (`local.get 1;
   local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
   binaryen's inliner copies each parameter of a body it inlines, so the target may hold the body as a one-caller
   function its caller forwards to: 2811 written as such a forwarder took the target's frame and head and kept a copy, of
   another parameter (`95 over 349` against `138 over 354`, unit 388's fragment). Which parameter's copy survives is not
-  known. And 5480 (`api::CIniFile::Carrega`) differs from the target, read as which locals binaryen packs alone (`1173
-  over
-  4214`, every replaced row an operand): ours zeroes a section iterator's local the target leaves, in four source forms
-  that give one object (unit 379's fragment). Record what was tried in the fragment and leave such a body written or
-  unwritten as how-to step 5 says.
+  known. Record what was tried in the fragment and leave such a body written or unwritten as how-to step 5 says. A zero
+  set of an inlined callee's local that ours keeps and the target drops is no such remainder until §C4's order of the
+  caller and that callee is tried: 5480 (`api::CIniFile::Carrega`) kept its section iterator's zero (`1173 over 4214`,
+  every replaced row an operand) in four source forms that give one object, and matched with Carrega defined right
+  above Interpreta, the parse binaryen inlines into it; Carrega first in the file gave `1184` (unit 379's fragment).
 
 **Whose frame a prologue is.** The second prologue is the frame of the function around the code that follows it, which
 need not be the function whose records that code holds. A temporary built for a call's argument sits in the caller's

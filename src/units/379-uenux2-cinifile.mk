@@ -12,8 +12,9 @@
 # api::CIniKey>'s tree destroy (1397) and its __emplace_hint_unique_key_args<std::string, const value_type&> (3650),
 # libc++ instances our link keeps from cinisection.cpp.o, whose operator= is their first user there; and 6071, 12862
 # and 10879, the exit destructor of TrataEscapes's static, by a hand line (below). FindKey (10877) moved into
-# cinifile.cpp under the new class, and step 9 renamed its match line.
-# Written and not matched: Carrega (5480), below with what it waits for.
+# cinifile.cpp under the new class, and step 9 renamed its match line. Carrega (5480) matches with its definition right
+# above Interpreta's ("The order of Carrega and Interpreta", below), and step 8 names it by evidence:srcloc-anchor (the
+# records of ReadLine, ParseKeyLine and CIniSection::operator= it holds inlined, which no other target function loads).
 #
 # What 5480 holds (pnpm wasm fn and pnpm wasm lift of the target): a stack frame of 80 bytes for the loader itself, and
 # behind second prologues the functions binaryen inlined into it, each with one caller: ecourna's CFile::ReadLine (160
@@ -38,8 +39,8 @@
 # FindKey and EndKey move from cinistrings.cpp into cinifile.cpp, their bodies unchanged; fragment 227's GetValor and
 # the contract headers name the new class.
 #
-# The loader's shape (each measured with pnpm wasm score against 5480 in the plain link; the score moved from 3189 over
-# 5239 rows, the first form, to the one below):
+# The loader's shape (each measured with pnpm wasm score against 5480 in the plain link, Interpreta then defined above
+# Carrega; the score moved from 3189 over 5239 rows, the first form, to 1173 over 4214, and the order below closed it):
 # - Carrega is a static member that reads the lines into a std::vector<std::string> and returns Interpreta(linhas), a
 #   private static member that returns the object it builds (chosen names). The end nodes' stores lie inside the inlined
 #   128-byte frame, after the read, so the parse is a function of its own that builds the object (a reading). As a
@@ -74,18 +75,31 @@
 #   as the target's inlined copy (the object compiled both ways, wasm-objdump -d), where the string declared first gave
 #   +142, +16 (1178 -> 1173); with the stores swapped and the string first, the loop lost its rotation. Line 356's
 #   record stays on its line.
-# Now: `score 1173 over 4214 rows (same 3041, replaced 1016 [1016 operand-only], inserted 79, deleted 78)`. The inserted
-# and deleted rows pair up opcode for opcode (local.get, call, i32.add, block, ...) but for an `i32.const 0` with its
-# local.set and a local.tee: before Interpreta's frame our 5480 zeroes two locals, 16 (the bool) and 11 (the section's
-# iterator), where the target's zeroes local 12 (the bool) only and holds the iterator in local 9, which it writes
-# before only on paths that end at __resumeException; and ours keeps the result's address in a second local (local.tee
-# 8) where the target's uses local 0. Interpreta's object zeroes both, the bool and the iterator, ahead of the loop in
-# each of the section's forms above, std::optional<iterator> too (wasm-objdump -d of the object). The rows that differ
-# are binaryen's packing of locals (a reading). Measured without a change of these rows (the same score): object orders
-# in a copy of link.cmd (docs/reference/facts/workflow.md W13: cinistrings.cpp.o ahead of cinikey.cpp.o;
-# cinisection.cpp.o or cinikey.cpp.o after cinifile.cpp.o; cfile.cpp's ahead of it or after it; cinifile.cpp.o ahead of
-# cinikey.cpp.o or of cinistrings.cpp.o is worse, 1596), and cinifile.cpp's functions in other orders (the same, 1594
-# with SetSection and SetKey after Interpreta, 1184 with Carrega first).
+#
+# The order of Carrega and Interpreta (measured; Interpreta has no target index, so no band place, record or data places
+# it: docs/reference/facts/codegen.md C4). With Interpreta defined above Carrega, the rest as written: `score 1173 over
+# 4214 rows (same 3041, replaced 1016 [1016 operand-only], inserted 79, deleted 78)`. The inserted and deleted rows
+# paired up opcode for opcode (local.get, call, i32.add, block, ...) but for an `i32.const 0` with its local.set and a
+# local.tee: before Interpreta's frame our 5480 zeroed two locals, 16 (the bool) and 11 (the section's iterator), where
+# the target's zeroes local 12 (the bool) only and holds the iterator in local 9, which it writes before only on paths
+# that end at __resumeException; and ours kept the result's address in a second local (local.tee 8) where the target's
+# uses local 0. Interpreta's object zeroes both, the bool and the iterator, ahead of the loop in each of the section's
+# forms above, std::optional<iterator> too (wasm-objdump -d of the object). With Carrega defined right above Interpreta,
+# after SetKey, as written (the object then holds Carrega ahead of Interpreta, wasm-objdump -x -j Function, and
+# cinifile.cpp's other functions in their order): `score 189 over 4135 rows (same 3946, replaced 189 [189 operand-only],
+# inserted 0, deleted 0)` against our 5607, every replaced row a call, a data address (__THREW__, __errno_storage), a
+# table slot or a packed format string (6009's and 6010's messages), and steps 7 to 9 match it. Carrega's other places,
+# each a variant of cinifile.cpp in a copy of link.cmd (docs/reference/facts/workflow.md W13): above SetKey, `1096 over
+# 4209`; above SetSection, or first in the file, `1184 over 4217` (one module). On binaryen alone, in a replay of the
+# -Oz of the link with Interpreta above Carrega on a text copy of its input (codegen.md C4, "Trying orders on binaryen
+# alone"): Carrega's function moved ahead of Interpreta's gives the same 189 over 4135; Carrega's or Interpreta's locals
+# renumbered in that input (reversed, or shuffled with three seeds), or Interpreta's zero set of the iterator removed
+# from it, give that link's r05.wasm byte for byte. So the functions' order in the module decides these rows, and
+# clang's local numbers do not; how binaryen's inlining gets there from that order is not traced. Measured with
+# Interpreta above Carrega, without a change of the rows (the same score): object orders in a copy of link.cmd
+# (cinistrings.cpp.o ahead of cinikey.cpp.o; cinisection.cpp.o or cinikey.cpp.o after cinifile.cpp.o; cfile.cpp's ahead
+# of it or after it; cinifile.cpp.o ahead of cinikey.cpp.o or of cinistrings.cpp.o is worse, 1596), and cinifile.cpp's
+# functions in other orders (1594 with SetSection and SetKey after Interpreta).
 #
 # 2234, ProcuraNaoEscapado (texto, procurado): find, then an odd run of backslashes before the match means escaped,
 # searched again after it. The target dispatches find's result with a br_table on pos + 1, npos to the exit that sets
@@ -124,11 +138,11 @@
 # cinistrings.cpp.o without ESCAPES holds no merged body and 12862's destructor whole (docs/reference/facts/splat.md S10
 # item 30).
 #
-# Choices besides those above: the helpers' names, their being free functions of api with external linkage (they read
-# no class state; the loader is another TU's, so they cannot be internal) and cinistrings.cpp's lines but 183 and 187;
-# EhSecao; the error enumerators 6007, 6009 and 6010 (eueioerror.h, from the messages); the members' names and the
-# locals. The codes and messages are the target's (6009 "Linha inválida [{}]", 6010 "Linha com nome inválido [{}]",
-# 6007 "O nome de uma seção é constante.").
+# Choices besides those above: the helpers' names, their being free functions of api with external linkage (they read no
+# class state; the loader is another TU's, so they cannot be internal) and cinistrings.cpp's lines but 183 and 187;
+# EhSecao; the error enumerators 6007, 6009 and 6010 (eueioerror.h, from the messages); the members' names, the order of
+# cinifile.cpp's functions but Carrega's place right above Interpreta, and the locals. The codes and messages are the
+# target's (6009 "Linha inválida [{}]", 6010 "Linha com nome inválido [{}]", 6007 "O nome de uma seção é constante.").
 #
 # Roots: 379-uenux2-cinifile-roots.cpp stands for 5480's one caller, 12098 (two calls). The stand-ins for 5480 in units
 # 175 and 215 went, and so did src/app/roots_uenux2.cpp's ChaveA and ChaveB, which stood for 5483's callers 5480 and
