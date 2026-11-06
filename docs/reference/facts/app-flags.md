@@ -35,8 +35,9 @@ identifier units) with `tools/round/appflags/compare.sh`:
   at -O3, ≥ 173 at -O1/-O2/-Os/-Oz; the `To*`/`HexToInt` thunks; the `CNumero*` `Formatado` bodies).
 - **-fexceptions.** 134 of 194 ecourna functions that load a `source_location` record call an `invoke_*` import
   (landing pads).
-- **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53); `gnu++20` equals `c++20`
-  byte for byte.
+- **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53 at 3977f421, with the forms
+  base64.cpp had then, whose code 3703 holds inlined; unit 00's fragment has today's); `gnu++20` equals `c++20` byte
+  for byte.
 - **No -fPIC**: F5.
 - **Paths.** `-ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna`
   produces an object byte-identical to compiling at the real path (`cmp` of three objects). The include root is
@@ -302,12 +303,12 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   inlining thresholds differ, so a body can separate them with no loop ([levels.md](levels.md) §V2 has the remarks and
   what to read first on a body that differs in what is inlined). With the tree at -O3 every match holds and 25 rows more
   match, among them the bodies that call `std::string::append` where -O2 inlines it ([levels.md](levels.md) §V3).
-- **`-std=c++23`, decided on the whole tree.** uenux2 first took `-std=c++20` from ecourna's measurement (F1's 3703 is
-  an ecourna function, and ecourna stays there). At 84f5d8d the whole tree at `-std=c++23` lost no match and matched
-  three rows more: 8799 (`CWasmScreenMT::ShowText`, an rvalue `substr`) and two of libc++'s `__assign_with_size` copies
-  that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only `__escaped_output_table` (§V3 of
-  [levels.md](levels.md) has the measurement and the commands). One `-std` for the whole tree is still a reading: no
-  site tells one directory from another.
+- **`-std=c++23`, decided on the whole tree.** uenux2 first took `-std=c++20` from ecourna's measurement (F1's 3703
+  holds ecourna's EncodeBase64 inlined, and ecourna stays there). At 84f5d8d the whole tree at `-std=c++23` lost no
+  match and matched three rows more: 8799 (`CWasmScreenMT::ShowText`, an rvalue `substr`) and two of libc++'s
+  `__assign_with_size` copies that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only
+  `__escaped_output_table` (§V3 of [levels.md](levels.md) has the measurement and the commands). One `-std` for the
+  whole tree is still a reading: no site tells one directory from another.
 - **The stand-ins keep `-std=c++20`.** At `-std=c++23` too they move no row into or out of `match`, but `roots_ecourna.o`'s
   `vector<unsigned char>` instance of `__assign_with_size` then merges with comum's copy and gives 1158 its name
   ([levels.md](levels.md) §V3).

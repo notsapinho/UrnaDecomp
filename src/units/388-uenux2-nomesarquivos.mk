@@ -68,20 +68,22 @@
 #   election that PossuiMunicipio keeps, pushed through fn 760.
 #
 # Forms, compared function by function on objects with call and global indices masked (docs/how-to-decompile.md step 3):
-# - same bytes: the switch and an if chain in ajustaAbrangenciaUFMunicipio; `std::string ufArquivo(uf)` and `= uf`;
-#   insert({...}) and insert(std::make_pair(...)) in 3744; std::copy_if with std::back_inserter and a range-for with
-#   push_back in 5649.
-# - differ (so the written form is evidence): the cases in the order FEDERAL, ESTADUAL, MUNICIPAL (6 lines of
-#   NomeArquivoAbrangencia's code), the UF set before the municipality in the federal case (822 lines); emplace and
-#   try_emplace in 3744 (180 lines each), the CEleicaoPE bound by reference instead of copied (587 lines); in 3713 the
-#   elections or the situations in a named local before the constructor call (6 and 54 lines).
+# - same bytes: the switch and an if chain in ajustaAbrangenciaUFMunicipio, and its cases in the order FEDERAL,
+#   ESTADUAL, MUNICIPAL (6 lines differ against a control of a shorter file name, three data addresses each way: the
+#   longer path moves the data; at paths of one length the two objects differ only in the record path's directory
+#   name); `std::string ufArquivo(uf)` and `= uf`; insert({...}) and insert(std::make_pair(...)) in 3744;
+#   std::copy_if with std::back_inserter and a range-for with push_back in 5649.
+# - differ (so the written form is evidence): the UF set before the municipality in the federal case (822 lines);
+#   emplace and try_emplace in 3744 (180 lines each), the CEleicaoPE bound by reference instead of copied (587 lines);
+#   in 3713 the elections or the situations in a named local before the constructor call (6 and 54 lines).
 # - the builder's parameters: the phase by value (3744 loads it before the second prologue), the UF by reference and
 #   copied inside, the municipality by value (the helper writes it), the abrangencia by value; chosen beside that
 #   reading, not compiled otherwise.
 # Chosen: every name above (NomesArquivosEleicao, NomeArquivoAbrangencia, GetEleicoesMunicipio, FiltraMunicipio,
 # GetSituacoesMunicipio, PossuiMunicipio, the parameters'), the builder's being a static member of CNomeArquivo, 3744's
 # being a free function of comum, 5649's and 3713's and the helper's being members, PossuiMunicipio's being inline in
-# the class, the parameter types where no record prints them (uedword, md::TEleicaoID), and every line but :208.
+# the class, the parameter types where no record prints them (uedword, md::TEleicaoID), the order of
+# ajustaAbrangenciaUFMunicipio's cases, and every line but :208.
 #
 # Not matched, and what each waits for:
 # - fn 2811 (678 B, 7787 x4, stub in src/uenux2/unplaced.cpp) is not written. For each election GetEleicoesMunicipio

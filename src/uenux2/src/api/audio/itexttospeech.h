@@ -76,14 +76,14 @@ class CWavFile;
 //   elimination folded into the body (how-to step 2).
 // - Its one target caller is fn 7787, 14 times, all inside a frame of their own there that loads the records of
 //   vota::CInstrucaoVotacaoAcessibilidade::CacheInstructionAudio (cinstrucaovotacaoacessibilidade.cpp:157 and :161),
-//   read as that member, which binaryen inlined into 7787 (how-to step 3's signs): so 921 is read as that file's TU's
-//   copy.
+//   read as that member, which binaryen inlined into 7787 (how-to step 3's signs), and 921 as that file's TU's copy.
 // Chosen as well: the names GetOptions, MakeKey, Lookup, Store, Cache, ECache and its enumerators, Get and Put; ECache
 // an enum (an int compared with 1 gives the same rows), and public, declared ahead of Cache, whose parameter names it;
-// Cache's default argument for the kind; MakeKey a member (how-to step 3: its callers pass an object it never
-// reads; a free function that takes the object first gives the same rows); the cast that makes the tag a prvalue (a
-// C-style cast gives the same rows), which converts nothing on the chosen long long and may stand for a conversion from
-// the original member's type. src/units/237-uenux2-itexttospeech.mk lists the other forms measured.
+// Cache's default argument for the kind and the kind's place after the text; MakeKey a member (how-to step 3: its
+// callers pass an object it never reads; a free function that takes the object first gives the same rows); the cast
+// that makes the tag a prvalue (a C-style cast gives the same rows), which converts nothing on the chosen long long and
+// may stand for a conversion from the original member's type. src/units/237-uenux2-itexttospeech.mk lists the other
+// forms measured.
 class ITextToSpeech {
 public:
     struct SOptions {

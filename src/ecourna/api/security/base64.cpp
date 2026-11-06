@@ -1,3 +1,6 @@
+// base64_encode and Base64Encode are the reconstruction's: no record names either. Base64Encode's checks and its
+// result, and EncodeBase64's size form, are chosen for the code target fn 3703 holds inlined
+// (src/units/00-ecourna-app-dados-identificadoreleitor.mk).
 #include "ecourna/api/security/base64.hpp"
 
 #include <cstdlib>
@@ -44,9 +47,6 @@ char* base64_encode(const unsigned char* data, size_t input_length, size_t* outp
     return encoded_data;
 }
 
-// The reconstruction's, as base64_encode is: no record names this helper. Its checks and its result, and EncodeBase64's
-// size form, are chosen for the code target fn 3703 holds inlined
-// (src/units/00-ecourna-app-dados-identificadoreleitor.mk).
 bool Base64Encode(const std::vector<uebyte>& dados, char* saida, size_t& tamanhoSaida)
 {
     if (saida == NULL || dados.data() == NULL || dados.size() == 0 ||

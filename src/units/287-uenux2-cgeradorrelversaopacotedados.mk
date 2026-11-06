@@ -19,9 +19,10 @@
 # scratch whole link (tools/round/try-tu.sh with a TU that returns that literal) and with a scratch copy of the symbol
 # file that names 3703 our GetResumoHashVersoesPacotes, splat-remap printed `target 11222: IDENTICAL`; with the literal
 # and no such name, only the call was left. So 11222 waits for 12110 (the literal).
-# - comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (3703) is written in unit 215's
-#   cestadogeral.cpp (its fragment and cestadogeral.h have the notes) and matches, named by a srcloc-anchor line, since
-#   ecourna's base64.cpp, which it holds inlined, has the forms unit 00's note measures.
+# - comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (3703, a chosen name) is written in unit 215's
+#   cestadogeral.cpp (its fragment and cestadogeral.h have the notes) and matches since ecourna's base64.cpp, which it
+#   holds inlined, has the forms unit 00's note measures; step 8 places it by a srcloc-anchor line on that code's two
+#   records, EncodeBase64's.
 #
 # ImprimeTituloJE (11223, slot 3) and the slots of its lambda's std::function (vtable @1576316: 11221, 11219, 2881,
 # 11218, 11217) are written in cgeradorrelversaopacotedados.cpp and match, with fragment 317 (whose header has the

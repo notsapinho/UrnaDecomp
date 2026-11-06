@@ -3,7 +3,7 @@
 # (unit 82's header, whose comment has the evidence of each member), and Cache (fn 921, below), which keeps a text's
 # audio in the kept map. No source of its own: the target's copies of the first are the executable TU's, and the tree
 # root src/app/roots_texttospeech.cpp emits them at that TU's rule, VOTA_WEB_CXXFLAGS (its rule and its APP_OBJS entry
-# are src/Makefile's; its comment says whose copies and why there); Cache's copy is a vota TU's, which
+# are src/Makefile's; its comment says whose copies and why there); Cache's copy is read as a vota TU's, which
 # 237-uenux2-itexttospeech-roots.cpp emits at that TU's flags. This file holds the evidence, the measurements and the
 # rule of 237-uenux2-itexttospeech-roots.cpp, the stand-ins.
 #
@@ -53,12 +53,12 @@
 # never reads), the cast's spelling, the root's file name, the stand-ins' names.
 #
 # Stand-ins of 237-uenux2-itexttospeech-roots.cpp while it compiled at APP_CXXFLAGS (it called through __asm__ labels
-# and included nothing): w237_guarda for fn 921 (5685's other direct caller), and w237_par for fn 3552 (the one reader of 1928's
-# result) until unit 229's root brought 3552. Measured, before 921 was written, on a variant link without them: 11447
-# 372 over 394 (367 inserted: 5685 inlined into it), and a drop deleted in each of 11436 (two), 3722, 3746 and 5720;
-# with them every one is operand-only. w237_par went with 3552 in the link (from unit 229's root, which reads 1928's
-# result): a link without it moves no row (unit 229's fragment). w237_guarda went with 921 in the link, whose own call
-# of 5685 is 5685's second call site (below).
+# and included nothing): w237_guarda for fn 921 (5685's other direct caller), and w237_par for fn 3552 (the one reader
+# of 1928's result) until unit 229's root brought 3552. Measured, before 921 was written, on a variant link without
+# them: 11447 372 over 394 (367 inserted: 5685 inlined into it), and a drop deleted in each of 11436 (two), 3722, 3746
+# and 5720; with them every one is operand-only. w237_par went with 3552 in the link (from unit 229's root, which reads
+# 1928's result): a link without it moves no row (unit 229's fragment). w237_guarda went with 921 in the link, whose own
+# call of 5685 is 5685's second call site (below).
 #
 # Hand lines: the five that a generated line now repeats or that nothing needs went from splat/symbol_addrs.txt: 3746
 # and 3764 (unit 158's, callers+content; 3746 has a generated pair-addr line) and 3618, 3627 and 5423 (unit 100's has<T>
@@ -157,8 +157,8 @@
 #   docs/reference/facts/workflow.md W13; pnpm wasm score at the default depth): with eCacheKept written in Cache and no
 #   parameter, 921 scores 136 over 358 rows (87 inserted: Store inlined; -Rpass=inline on this object's compile prints
 #   Store into Cache at cost 210, threshold 250); as written, Store costs 280 there, stays a call, and 921 matches.
-# - Chosen (the header lists them): the name Cache, the kind's default argument, ECache's place and access, the
-#   stand-in's name.
+# - Chosen (the header lists them): the name Cache, the kind's default argument and its place after the text (the folded
+#   parameter leaves no trace of either), ECache's place and access, the stand-in's name.
 # Matches with it (1, none lost, against 5d769991 by index, how-to step 10): 921, from the census's pair (shape) with
 # Cache, read against its caller (above) and its callees, 5758, 5754, 5685 and 5750 (matched from
 # src/app/roots_texttospeech.o). No match line was renamed and no hand line added; step 8 changed no line of

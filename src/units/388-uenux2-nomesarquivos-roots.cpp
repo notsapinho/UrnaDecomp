@@ -1,16 +1,16 @@
 // Roots of fragment 388 (src/units/388-uenux2-nomesarquivos.mk): the references the target keeps its members by while
 // their callers are not in the link. Each stand-in's body is no target function's, and each builds what it gets in
 // place, so this TU emits no destructor of a library template (src/units/README.md "Companion files").
-// - comum::NomesArquivosEleicao (fn 3744): fns 2811 and 7787 call it once each, and neither is written;
-//   w388_eleicao calls it twice, with no argument one constant at both calls, so binaryen folds none. The target's
-//   table holds it (slot 2463), so its address is taken too.
+// - comum::NomesArquivosEleicao (fn 3744): fns 2811 and 7787 call it once each, and neither is written; w388_eleicao
+//   calls it twice, with no argument one constant at both calls, so binaryen folds none. The target's table holds it
+//   (slot 2463), so its address is taken too.
 // - comum::md::CPleito::GetEleicoesMunicipio (fn 5649): fns 2811 and 3713 call it once each; 3713 is in the link, and
 //   w388_eleicoes calls it once for 2811.
-// - comum::md::CPleito::FiltraMunicipio (fn 3713): fn 7787 calls it three times, its one target caller; w388_filtra
-//   calls it twice.
+// - comum::md::CPleito::FiltraMunicipio (fn 3713): fn 7787, its one caller, calls it three times; w388_filtra twice.
 // - std::filesystem::__remove (fn 2135, libc++.a's operations.o): fn 7787 calls it four times, with a null error_code,
 //   and the target's table holds it (slot 6046), so dead-argument elimination keeps that parameter there. w388_remove
-//   calls it twice through an __asm__ label with the archive symbol's signature, and its address is taken.
+//   calls it twice through an __asm__ label with the archive symbol's signature, and its address is taken. No target
+//   code loads 2463 or 6046 (`/usr/bin/grep -rlE 'i32\.const <slot>($|[^0-9])' build/out/splat/pieces/asm`: none).
 #include <new>
 #include <string>
 
