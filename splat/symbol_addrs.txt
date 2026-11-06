@@ -38699,22 +38699,6 @@ _ZN3api21INSTRUCAO_PADRAO_MENUE = 0x1bf5f0; // type:data size:0xc evidence:calle
 # from the target's (src/units/110-*.mk). Without this line (a scan of copies without it and without the match lines
 # of 6592, 6595 and 11869, beside a control) 6592 and 6595 read no-candidate and 11869, which calls 6595, unresolved.
 _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_SB_N5comum9CQRCodeDS7EOrigemE = func:3059; // size:0xaf1 evidence:rtti-vptr
-# 1692: its own rows, read without the match: it copies the shared_ptr its second parameter points at into this+0 and
-# this+4, adding 1 to the count at the control block's +4 when there is one, zeroes this+8 to this+24 (i32 +16, i64
-# +8, i32 +20) and returns this; it is the only target function with its depth-0 fingerprint, addr and shape hashes
-# (pnpm wasm fingerprint ../target/vota_web_wasm.wasm --depth 0). Each of its target callers, 5736, 5737, 6734 and 7174
-# (6734 and 7174 placed by srcloc-anchor lines on the records celeitores.cpp:205 and csincronizavota.cpp 290 and 303,
-# their names chosen), passes the object it returns to api::CEncryptedFile's matched members and destroys it with
-# ~CEncryptedFile (1691): Write (2766) and Save (2767), or Load (3653) and Read (3652). That is the constructor over
-# the layout those members read (api/io/cencryptedfile.h).
-# Our body is written and differs at every flag measured: 5 over 30 rows at the tree's flags (pnpm wasm score; 2
-# replaced, 3 deleted), where every spelling measured stores +16 and +20 as one i64; the remainder is not explained
-# (src/units/381-uenux2-crdv.mk, src/units/128-uenux2-cencryptedfile.mk). Since 7174 and 6734 are in the link (unit
-# 241, fragment 386), step 8 names 1692 too, by their calls, and the line alone carries nothing: weighed by removal (a
-# scan on copies without the line, run twice beside a control, and splat-build on the copies), no row moves and the
-# build gives the target's sha256; with the name out on both sides 5736, 5737, 6734, 6737 and 7174 fall. It stays as
-# the example of its kind that docs/reference/splat.md section 2 cites.
-_ZN3api14CEncryptedFileC2ERKNSt3__210shared_ptrIN7ecourna3api8security16ISymmetricCipherEEE = func:1692; // evidence:callers+content its own rows (above): a shared_ptr copied to +0 and +4, +8 to +24 zeroed, this returned; every target caller hands the result to CEncryptedFile's members; ours differs in the zero stores' order
 # 6627: std::make_shared<api::CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>>, ctelasvota.cpp's
 # instance. Its body, read without the match, is the only target function that holds both 1538008, the address point of
 # __shared_ptr_emplace<api::CDataText<DS_NomeCargoNeutroComEscolha>>'s vtable (ledger/vtables.json, 1538000 + 8), and

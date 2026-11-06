@@ -53,9 +53,9 @@
 #   position taken from a parameter is stored first. A call after the content's stores (a member defined in another TU)
 #   leaves +16 and +8 as the target has them (measured on the scratch class), and binaryen inlining a function with one
 #   caller would put the +20 store after them: a reading, and nothing names such a member. In the link 1692 scores 5
-#   over 30 rows (pnpm wasm score: 2 replaced, 3 deleted, the zero stores). No generated route names it (no census
-#   pair), and its callers in the link, 5736 and 5737, match only through its name: a callers+content hand line in
-#   splat/symbol_addrs.txt gives it from its own rows (fragment 381 has the removal check).
+#   over 30 rows (pnpm wasm score: 2 replaced, 3 deleted, the zero stores). No census pair names it; step 8 names it
+#   by the calls of 6734 and 7174, and its callers 5736 and 5737 match only through that name (fragment 381 has the
+#   removal checks of the hand line that named it before).
 #
 # Load (target fn 3653), at its seven records (lines 36 to 73): it throws for an empty name (5987) and a file that does
 # not exist (5988, CSystem::ExistFile, 412), reads the file whole through ecourna's CFile ("rb"), decrypts it through the

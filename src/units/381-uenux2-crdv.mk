@@ -74,17 +74,15 @@
 #
 # Names. The census pairs 1551, 1701, 2826, 5762, 6035 and 6036 at the shape tier only (moved: none -> shape), so step 8
 # names none of them, and step 9's scan matches all six from those pairs (source `ledger`). 5737 and 5736 have no census
-# pair (their call of the constructor differs) and match by the content pass once 1692 has a name. No generated route
-# names 1692: a callers+content hand line in splat/symbol_addrs.txt does, from its own rows (the only target function
-# with its depth-0 fingerprint, addr and shape hashes, a shared_ptr copied to +0 and +4, +8 to +24 zeroed, `this`
-# returned) and from what every target caller does with the object (CEncryptedFile's matched Write and Save, or Load and
-# Read, then ~CEncryptedFile, fn 1691). Weighed by removal (docs/reference/splat.md "Reviewing a match"): a scan, run
-# twice, on copies without the line and without the match lines of 5736 and 5737 leaves 12798 match rows (5736 and 5737
-# no-candidate, 1692 no-candidate) where the control on the same match copy with every name leaves 12800 (1692 differs),
-# and splat-build on either copy gives the target's sha256: the line carried 5736 and 5737 alone. Since fragment 386,
-# 6734's call names 1692 too (`call by:6734`), and the line carries nothing (removed, alone or with 5769's, every row
-# stays and splat-build gives the target's sha256); it goes in a commit of its own with docs/reference/splat.md section
-# 2, which cites it.
+# pair (their call of the constructor differs) and match by the content pass once 1692 has a name. No census pair or
+# anchor names 1692, and while 5736 and 5737 were its only callers in the link a callers+content hand line named it from
+# its own rows (the only target function with its depth-0 fingerprint, addr and shape hashes, a shared_ptr copied to +0
+# and +4, +8 to +24 zeroed, `this` returned) and from what every target caller does with the object; weighed then, it
+# carried 5736 and 5737 (12798 match rows against the control's 12800). Since fragment 386 and unit 241, step 8 names
+# 1692 by the calls of 6734 and 7174 (`call`), and the hand line went: at b1593f92 a scan run twice on copies without it
+# and without the match lines of 5736, 5737, 6734, 6737 and 7174, beside a control on the same match copy, moved no
+# row (12940 on both), alone or with 5769's, and splat-build gave the target's sha256 on both; with the name out on both
+# sides of the hand-edit marker 5736, 5737, 6737 (no-candidate), 6734, 7174 and 11865 (unresolved) fall.
 #
 # Written since, for fn 7174 (vota::impl::CSincronismoVotoEleitor::Sincroniza, unit 241's fragment), with no target
 # index of their own: CRdv::SalvaTemporarioInterno and SalvaTemporarioExterno (Salva of the ".tmp" path),
