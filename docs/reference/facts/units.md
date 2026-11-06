@@ -599,3 +599,103 @@ UTF-8 is what most non-ASCII fragments hold, quotes of accented target literals 
 writes
 Latin-1, the safe edit of a TSE source, leaves in a `src/units/` file it edits; the README's rule asks UTF-8, and
 `check_encoding.py` passes either.
+
+## U15. A table slot no target function loads
+
+The element section can hold a function whose slot no code reads. 3744 (slot 2463), 3745 (2464) and libc++'s `__remove`,
+2135 (6046), are in the table, and no piece loads their numbers:
+
+```sh
+grep -E 'elem\[(2463|2464|6046)\] ' <(wasm-objdump -x -j Elem target/vota_web_wasm.wasm)
+#   - elem[2463] = ref.func:3744
+#   - elem[2464] = ref.func:3745
+#   - elem[6046] = ref.func:2135
+/usr/bin/grep -rlE 'i32\.const (2463|2464|6046)($|[^0-9])' build/out/splat/pieces/asm | wc -l
+#        0
+```
+
+Their numbers lie only in the target's data, in a run of 44 entries of five words, `[slot, w, slot, slot, 32]` (`w`
+28492 at both ends, other values between), from 670564 to 671443, one entry for every slot from 2437 to 2489 (exit
+destructors' slots among them). Nothing of ours emits such a run, and what emits it is not known:
+
+```sh
+python3 -I -B -c "import json,struct;m=json.load(open('build/out/splat/pieces/manifest.json'));s=[d for d in m['data'] if d['offset']['value']<=670564<d['offset']['value']+d['size']][0];w=struct.unpack('<220I',open('build/out/splat/pieces/'+s['path'],'rb').read()[670564-s['offset']['value']:][:880]);print(w[:10],w[-5:])"
+# (2437, 28492, 2437, 2437, 32, 2438, 28492, 2438, 2438, 32) (2489, 28492, 2489, 2489, 32)
+```
+
+The slot is the table's all the same, and binaryen treats a function the table holds otherwise: it does not inline it
+for having one call site ([tool-traps.md](tool-traps.md) §X1), and the target keeps a parameter of 2135 that every call
+passes as a null `error_code*`. So a roots file takes the address: without it, dead-argument elimination folds that
+null, our body is `(i32)->(i32)` where the target's keeps `(i32 i32)->(i32)`: 2135 scored 28 over 67 rows so, and 6 over
+65, operand-only, with the address in a sink (d491daad), where it matches.
+
+## U16. The idle stand-ins of a tip
+
+`src/units/README.md` "Finding the idle ones" says what is idle. This sweep lists every candidate at once: each function
+of a fragment's roots object (or of `roots_ecourna.o`, unit 00's call-site roots) that pairs with no target function,
+with the calls it makes whose callee's target callers are all in our link with the call (`<target callee>x<calls>`,
+`(second site)` when nothing else in our link calls it), and each roots sink whose vptr a function of our link other
+than the vtable's own members stores. It reads the plain link, `names.tsv`, the scan, the call graph,
+`ledger/vtables.json`, the symbol file and the pieces, all of one commit, from the checkout's root:
+
+```sh
+wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm > build/out/<handle>/plain.dis
+python3 -I -B - build/out/<handle>/plain.dis <<'PY'
+import collections, csv, glob, json, os, re, sys
+rd = lambda p: csv.DictReader(open(p, errors='replace'), delimiter='\t')
+roots = lambda o: o.endswith('-roots.o') or o.endswith('/roots_ecourna.o')
+obj = {int(r['index']): r['object'] for r in rd('build/out/wasm-map/vota_web/names.tsv')}
+held = {int(r['index']): int(r['ours']) for r in rd('splat/scan.tsv') if r['ours'] != '-'}
+tgt = {o: i for i, o in held.items()}
+callers = collections.defaultdict(set)
+for r in rd('ledger/callgraph.tsv'): callers[int(r['callee'])].add(int(r['caller']))
+calls, f = collections.defaultdict(collections.Counter), None
+for line in open(sys.argv[1]):
+    m = re.match(r'[0-9a-f]+ func\[(\d+)\]', line) or re.search(r'\|\s+call (\d+)\b', line)
+    if m and ' func[' in line: f = int(m.group(1))
+    elif m and f is not None: calls[f][int(m.group(1))] += 1
+sites = collections.Counter()
+for g in calls:
+    if not roots(obj.get(g, '')): sites.update(calls[g])
+for a in sorted(obj, key=lambda a: (obj[a], a)):
+    if not roots(obj[a]) or a in tgt: continue
+    idle, rest = [], 0
+    for b, n in sorted(calls[a].items()):
+        t = tgt.get(b)
+        if t is None: continue
+        if any(c not in held or not calls[held[c]][b] for c in callers[t]): rest += 1
+        else: idle.append('%dx%d%s' % (t, n, '' if sites[b] > 1 else ' (second site)'))
+    if idle: print('calls' if rest else 'function', os.path.basename(obj[a]), 'func[%d]' % a, ' '.join(idle))
+vt = {v['vptr']: v for v in json.load(open('ledger/vtables.json'))}
+sym = dict(re.findall(r'^(_ZTV\S+) = (0x[0-9a-f]+);', open('splat/symbol_addrs.txt').read(), re.M))
+want = {}
+for p in sorted(glob.glob('src/units/*-roots.cpp') + glob.glob('src/app/roots_*.cpp')):
+    for lab in re.findall(r'__asm__\(\s*"(_ZTV[^"]+)"\)', open(p, encoding='latin-1').read()):
+        if lab in sym and int(sym[lab], 16) + 8 in vt: want[int(sym[lab], 16) + 8] = (os.path.basename(p), lab)
+st = collections.defaultdict(set)
+for w in glob.glob('build/out/splat/pieces/asm/*/*.wat'):
+    for c in re.findall(r'i32\.const (\d+)\b', open(w, errors='replace').read()):
+        if int(c) in want: st[int(c)].add(int(re.match(r'\d+', os.path.basename(w)).group()))
+for vp, (p, lab) in sorted(want.items(), key=lambda kv: kv[1]):
+    live = sorted(i for i in st[vp] if i in held and i not in vt[vp]['functions'])
+    if live: print('sink', p, lab, 'storers in our link:', *live[:6])
+PY
+```
+
+At e7d03612 (plain link sha256 `f70571e5…`) it prints 20 `function` lines, 12 `calls` lines and 49 `sink` lines in
+about 5 s, among them:
+
+```
+function 89-uenux2-clocal-roots.o func[10104] 3710x2
+calls 110-uenux2-singletons-roots.o func[10414] 1073x2 1926x2 2817x2
+calls 116-uenux2-cthreads-roots.o func[10390] 270x1
+calls roots_ecourna.o func[3634] 1838x2 5106x1 (second site) 5107x1 (second site)
+sink 102-uenux2-control-blocks-roots.cpp _ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperE… storers in our link: 1264
+```
+
+Each line is a lead, read before anything goes. A call to build the stand-in's own body is listed too (270, a `GetInst`
+that reaches a member); a `(second site)` call keeps its callee out of line and is no idle call; a stand-in that reads
+its callee's result goes only with a link without it that keeps the result ("When it goes"). A written caller with no
+symbol line reads `-` in the scan, so its callee's calls count as waiting here and are left out: the per-callee command
+of "Finding the idle ones" settles them. Tree roots other than `roots_ecourna.o` hold instances, which "Whose copy"
+governs, and are not read.
