@@ -11618,6 +11618,7 @@ kdf_sshkdf_derive = func:13545; // size:0x25c evidence:pair-addr
 kdf_sshkdf_reset = func:13546; // size:0x79 evidence:pair-addr
 kdf_sshkdf_free = func:13547; // size:0x8a evidence:pair-addr
 kdf_sshkdf_new = func:13548; // size:0x15 evidence:pair-addr
+_ZN4vota19CPreShowProgressBar7PreShowERN3api7IScreenE = func:13550; // size:0x846 evidence:vtable
 kdf_scrypt_derive = func:13552; // size:0x53d evidence:pair-addr
 kdf_scrypt_reset = func:13553; // size:0x56 evidence:pair-addr
 kdf_scrypt_free = func:13554; // size:0x7e evidence:pair-addr
@@ -29587,7 +29588,7 @@ _ZTSN7ecourna3api9exception10CBaseErrorINS_3app5dados3asn15EAsnMidiasErrorEXtlNS
 str.ef7942cc380c = 0x113094; // type:data size:0x70 evidence:string "N7ecourna3api9exception10CBaseErrorINS_3"…
 srcloc.03811b958110 = 0x113104; // type:data size:0x10 evidence:srcloc cconversorinformacaomidia.cpp:94:11
 _ZTVN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x113114; // type:data size:0x18 evidence:rtti
-g_Alloc = 0x113120; // type:data size:0x8 evidence:content
+g_BigAlloc = 0x113120; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x11312c; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x113138; // type:data size:0x34 evidence:rtti
 str.addd7f13cb6b = 0x113138; // type:data size:0x34 evidence:string "N7ecourna3app5dados3asn25CConversorInfor"…

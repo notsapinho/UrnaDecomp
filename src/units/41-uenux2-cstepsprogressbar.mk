@@ -2,8 +2,17 @@
 # 10973, slot 1), with GetTypeName (10969, slot 7) and Rect (10968, slot 8), in src/uenux2/src/api/gui/cstepsprogressbar.cpp,
 # the file the constructor's std::source_location record names (cstepsprogressbar.cpp:428:15
 # api::CStepsProgressBar::CStepsProgressBar(const uedword, const std::vector<std::string> &, const SRect &, const TColor
-# x7)). The constructor is not reconstructed: it is inlined into fn 13550 (slot 2 of vota::CPreShowProgressBar), which
-# keeps its stub, so line 428 stays free for it. No record falls in the destructor, GetTypeName or Rect, so their lines
+# x7)). The constructor is written there, its throw on the record's line (code 5014,
+# EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS in api/gui/eueguierror.h, its name chosen), and has no target function of its
+# own: binaryen inlined it into its one caller, fn 13550 (slot 2 of vota::CPreShowProgressBar, fragment 391's, written
+# and not matched), behind a second prologue (the caller reads the C1's returned `this`, codegen.md C6). Read from
+# 13550: the base value-initialized (its data at +4 to +24 cleared before the vptr store, codegen.md C9:
+# `: IFormField<IScreen>()`), the vector copied, the rect and the seven colours stored, the throw when the given steps
+# are empty, then the current step clamped to their number, stored and the form refreshed when it changed: SetPassoAtual
+# (its name and its being public chosen), with `std::min<uedword>(m_passos.size(), passo)`, whose operand order is the
+# target's select's (the other order swaps it: 13550 303 over 1033 rows against 297 over 1028, fragment 391's). The
+# setter written in the constructor's body, or Invalidate's statements in its place, give the constructor the same code
+# (the object's disassembly compared). No record falls in the destructor, GetTypeName or Rect, so their lines
 # (after the constructor's) are a choice; their order (destructor, then GetTypeName, then Rect) follows the four
 # members that share a use band in the target, where the D0 comes first and Rect last (the solver's ordinals in
 # ledger/ordinals.tsv: 10973 4279, Move 10970 4281, 10969 4282, 10968 4283). The destructor is user-declared and
@@ -94,8 +103,5 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)
-# the destructor's caller other than the deleting destructor (fn 13550) is not reconstructed yet:
-# 41-uenux2-cstepsprogressbar-roots.cpp gives it a second direct caller and takes its address
-$(ROOT)/$(APP)/41-uenux2-cstepsprogressbar-roots.o: $(ROOT)/src/units/41-uenux2-cstepsprogressbar-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/41-uenux2-cstepsprogressbar.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/41-uenux2-cstepsprogressbar-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/41-uenux2-cstepsprogressbar-roots.o
+# No roots: the destructor's target callers, the D0 10973 and fn 13550 (fragment 391's, written), are both in the link;
+# the roots file's stand-in for 13550 (DestroiBarrasPassos) went with it.

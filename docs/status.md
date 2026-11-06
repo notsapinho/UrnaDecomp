@@ -121,13 +121,13 @@ candidate are not placed by anything yet.
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
 | `match` | 12,928 | 4,284,141 | matched |
-| `differs` | 269 | 255,437 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `differs` | 270 | 257,555 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 473 | 579,984 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 673 | 764,341 | our link has no body for it yet |
+| `no-candidate` | 672 | 762,223 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 3,112 `match`, 48 `differs`, 40 `unresolved` and 85 `no-candidate`.
+For TSE code alone: 3,112 `match`, 49 `differs`, 40 `unresolved` and 84 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,355 | 1,355 | 0 | 0 | 0 |
-| `fingerprint` | 644 | 643 | 0 | 1 | 0 |
+| `byte` | 1,354 | 1,354 | 0 | 0 | 0 |
+| `fingerprint` | 645 | 644 | 0 | 1 | 0 |
 | `addr` | 7,941 | 7,774 | 45 | 121 | 1 |
 | `shape` | 1,299 | 1,257 | 32 | 10 | 0 |
-| `none` | 3,104 | 1,899 | 192 | 341 | 672 |
+| `none` | 3,104 | 1,899 | 193 | 341 | 671 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved
