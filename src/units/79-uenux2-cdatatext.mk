@@ -33,7 +33,9 @@
 #                                                12518 12517, 12313 12311; slot 2 of two with std::function, 2967;
 #                                                12309 12306 and 12313 12311 (CDataText<function<string()>>'s and
 #                                                CQRCodeImage's) link from ctelasvota.cpp.o since 12055's builder is
-#                                                written, the same bytes (they still match)
+#                                                written, and 12518 12517 (CDataImage<vector<unsigned char> (*)()>'s)
+#                                                since 6689 (unit 387) is, the same bytes (they still match); the
+#                                                roots' stand-ins for 6689 and 12040 went with unit 387
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times
 # 3661 reads as libc++'s fill insert of a std::vector<unsigned char> (it grows the buffer, fills with the byte the last

@@ -21,6 +21,13 @@
 // and compare it with -1 with no store, which the copy's increment and the parameter's release fold into, and a move
 // (`m_texto(std::move(texto))`) does not give (6624 scored 69 over 322 rows with the move against 56 with the copy,
 // both in the whole link: src/units/378-uenux2-ctelasvota-criatela.mk).
+//
+// A second constructor, for <CFramedText>: fn 2384 (vota::AdicionaCamposInputVazio, ctelasvota.cpp, through
+// api::CFormBuilder::AddMaskedTextField, which it holds behind a second stack-pointer prologue) builds the mask with
+// the alignment the text's slot 3 (IText::GetAlignment) returns, called after the field's vptr store and right
+// before CFramedText's constructor (fn 1385), which a read in the mem-initializer gives (an argument of make_shared,
+// evaluated before it allocates, would come first: a reading, not compiled). Its parameters' types and names, and
+// its being a constructor of the class rather than a form of the adder, are chosen.
 
 #include <string>
 #include <utility>
@@ -40,6 +47,11 @@ public:
     template <typename... TArgs>
     explicit CMaskedTextField(SharedIText texto, TArgs&&... args)
         : m_mask(std::forward<TArgs>(args)...), m_texto(texto)
+    {
+    }
+
+    CMaskedTextField(SharedIText texto, size_t tamanho, const SPoint& posicao, const SFont& fonte)
+        : m_mask(tamanho, posicao, fonte, texto->GetAlignment()), m_texto(texto)
     {
     }
 

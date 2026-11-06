@@ -23,7 +23,8 @@
 #              puts CasaRegex (5465, this file's) between cgenerictags.cpp's 5466-5468 and csystem.cpp's 5463, so
 #              cstringutils.cpp.o lies between those objects in the link. Its name, its being a static member and the
 #              lambda's form are chosen too.
-#              Whole link, before steps 7 to 9: 8 over 320 rows, all operand-only. The roots stand for 12039 and 12110.
+#              Whole link, before steps 7 to 9: 8 over 320 rows, all operand-only. The roots stand for 12110 (12039,
+#              unit 387's, is in the link).
 # Chosen: the parameter's and the locals' names; 7025's local constant in the .cpp, as
 # app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp names a code the shared header lacks
 # (api/util/eueutilerror.h has no enumerator for it; the constant goes when it gains one); GetVersionNumber's line

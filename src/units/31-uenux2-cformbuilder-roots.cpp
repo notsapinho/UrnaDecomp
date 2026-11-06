@@ -21,14 +21,17 @@
 //                     (AddTextField over a CTextSource and over a std::function, with no text), 941 (AddBuzz) and 728
 //                     (AddClock) went: every target caller of the four is in the link (5409's 1150 and 2734, 5419's
 //                     1905, 941's 13 and 728's 16), and the link without those calls moved no row (steps 6 to 10)
-//   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245 and 426
+//   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 2244, 2245 and 426
 //                     (their calls of 3680, AddRect, went: its three target callers, 1102, 1190 and 3064, unit 378's,
-//                     are in the link, and the link without those calls moved no row),
+//                     are in the link, and the link without those calls moved no row; their calls of 5547, AddImage,
+//                     went: its two target callers, 12040, unit 387's, and 12055, unit 37's, are in the link with the
+//                     call, and the link without those calls moved no row),
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265 (3064,
 //                     1190, 6608, 6624 and 6646, unit 378's, are in the link, and 3064 for the adders above); 1255,
 //                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040, 12055, 12065 and
 //                     12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and 6599, unit 110's,
-//                     11812, unit 217's, and 11881, 11884, 11888 and 11892, unit 104's, are in the link); TelaB for
+//                     11812, unit 217's, 11881, 11884, 11888 and 11892, unit 104's, and 12040, unit 387's, are in the
+//                     link); TelaB for
 //                     7787, the
 //                     caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243
@@ -38,9 +41,8 @@
 //   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
 //                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
 //                     their defaults
-//   TextoMultiLinha   7787 and 12040, the callers of 2782 (AddTextFieldMultiLine) not in the link (1588, unit 110's,
-//                     and 3074, unit 378's, are): it calls it twice, with another rectangle and alignment the second
-//                     time
+//   TextoMultiLinha   7787, the caller of 2782 (AddTextFieldMultiLine) not in the link (1588, unit 110's, 3074, unit
+//                     378's, and 12040, unit 387's, are): one call; the one for 12040 went
 //   RelatorioA        the caller of 193, 604, 198 and 1264 not in the link, 12110, one call of each, and 12110 for
 //                     2775, two (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, 2248, unit 220's, and 12105,
 //                     fragment 372's, which call them too, are in the link: the calls that stood for 12105 went). Its
@@ -79,10 +81,9 @@ __attribute__((noinline)) int TelaMTB(const std::string& texto, const api::SPoin
 
 __attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte,
                                     api::ETextAlignment alinhamento, api::TColor corTexto, api::TColor corFundo,
-                                    std::string (*origem)(), const api::SharedIImage& imagem)
+                                    std::string (*origem)())
 {
     api::CFormBuilder form;
-    form.AddImage(imagem, posicao);
     form.AddDoubleLineField(origem, posicao, posicao, posicao.x, fonte, corFundo);
     form.AddTextField(origem, posicao, fonte, alinhamento);
     api::CFormBuilder::SharedField campo = form.AddTextField(texto, posicao, fonte, alinhamento, corTexto, corFundo);
@@ -96,14 +97,12 @@ __attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint&
 }
 
 __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte,
-                                    const api::CFormBuilder::SharedField& campo, std::string (*origem)(),
-                                    const api::SharedIImage& imagem)
+                                    const api::CFormBuilder::SharedField& campo, std::string (*origem)())
 {
     api::CFormBuilder form;
     form.AddField(campo);
     form.AddTextField(origem, posicao, fonte, api::ALINHAMENTO_CENTRO);
     form.AddDoubleLineField(origem, posicao, api::SPoint{posicao.y, posicao.x}, posicao.y, fonte, static_cast<api::TColor>(1));
-    form.AddImage(imagem, api::SPoint{posicao.y, posicao.x});
     form.AddFill(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(1));
     form.AddLine(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(2));
     form.AddBlinkingTextField(texto, api::SPoint{posicao.y, posicao.x}, fonte, api::ALINHAMENTO_DIREITA);
@@ -125,8 +124,7 @@ __attribute__((noinline)) int RotuloTecla(api::CFormBuilder& form, const std::st
 __attribute__((noinline)) int TextoMultiLinha(api::CFormBuilder& form, const std::string& texto, const api::SRect& rect,
                                               const api::SFont& fonte, api::ETextAlignment alinhamento)
 {
-    form.AddTextFieldMultiLine(texto, rect, fonte, alinhamento);
-    return form.AddTextFieldMultiLine(texto, api::SRect{rect.top, rect.left, rect.bottom, rect.right}, fonte, api::ALINHAMENTO_CENTRO).use_count();
+    return form.AddTextFieldMultiLine(texto, rect, fonte, alinhamento).use_count();
 }
 
 __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std::string& texto, std::string (*fonte)(), size_t linhas,

@@ -11,6 +11,9 @@
 //   5546  AddTextRectField         over a CFixedText, after AddTextField 202 (the fragment says why)
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
 //   5545  AddProgressBar           written, differs: the fragment says what it waits for
+//   -     AddMaskedTextField       a CMaskedTextField<CFramedText> over a CFixedText: 2384's (ctelasvota.cpp)
+//                                  code, which it holds inlined (cformbuilder.h says why), after
+//                                  AddProgressBar, its place a choice
 //   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
 //         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
 //   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
@@ -32,7 +35,9 @@
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/cfillfield.h"
 #include "api/gui/cfixedtext.h"
+#include "api/gui/cframedtext.h"
 #include "api/gui/cimagefield.h"
+#include "api/gui/cmaskedtextfield.h"
 #include "api/gui/cmoviefield.h"
 #include "api/gui/cdsimagefield.h"
 #include "api/gui/clinefield.h"
@@ -205,7 +210,16 @@ std::shared_ptr<CProgressBar> CFormBuilder::AddProgressBar(uedword limite, const
     return barra;
 }
 
-// (original lines 208-289: content not recovered)
+CFormBuilder::SharedField CFormBuilder::AddMaskedTextField(const std::string& texto, const size_t tamanho,
+                                                           const SPoint& posicao, const SFont& fonte)
+{
+    const auto text = std::make_shared<CFixedText>(texto);
+    SharedField campo = std::make_shared<CMaskedTextField<CFramedText>>(text, tamanho, posicao, fonte);
+    AddField(campo);
+    return campo;
+}
+
+// (original lines 222-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {

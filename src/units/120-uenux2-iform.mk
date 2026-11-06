@@ -116,8 +116,8 @@
 #   popped from a vector {2, 0, 1}, draws a line 50 above the bottom of the area and returns the form's first
 #   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits (AddInputControl(int), 5530's code, which clang
 #   inlines). Of its 14 target callers 2376 is written (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, which passes
-#   api::CApplication::s_areaTela and false); the roots' RotulosA and RotulosB pass the same for the others, and binaryen
-#   folds both to the target's three parameters. What fixes its form, each measured on a copy of
+#   api::CApplication::s_areaTela and false), and all but 7787 are in the link since; the roots' RotulosA passes the
+#   same for 7787 (RotulosB, for 12040, went with unit 387), and binaryen folds both to the target's three parameters. What fixes its form, each measured on a copy of
 #   this tree's link.cmd with the variant objects swapped in (`pnpm wasm score`), or on the object where it says so:
 #   - The key loop holds a branch on the bool, which clang unswitches (the object holds the loop twice) and binaryen,
 #     with the bool folded, cuts to one loop. Without such a branch the frame is 528 bytes, the target's 544, and the bad

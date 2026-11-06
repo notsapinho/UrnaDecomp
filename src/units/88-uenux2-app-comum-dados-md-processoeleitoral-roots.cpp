@@ -32,13 +32,14 @@
 //   3774  CConfiguracaoEleicao::GetCargosEleicoes  7787 (4454, unit 197's FinalizaEleitor, is in the link)
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
 // here, 2796's, so binaryen inlines it there, as the second stack prologue in 2796 shows it did. CNomesCargo's
-// constructor has one, 11369's, and goes the same way. comum::asn::CConversorNomesCargo's vtable keeps slots 2 and 3, as
-// the vtable's own reference does in the target (the bodies 11368 and 11369 have no direct caller).
+// constructor has one, 11369's, and goes the same way. comum::asn::CConversorNomesCargo's vtable, which keeps slots 2
+// and 3 (the bodies 11368 and 11369 have no direct caller), has no sink: 11359 and 11375 (CConversorSuplencia's and
+// CConversorDetalheCandidato's DoDesconverte) store its vptr and are in the link, and the link without the sink moved
+// no row.
 // The stand-ins differ from each other and from every target function, and no argument is one constant at every call
 // site, so dead-argument elimination folds none in. They are address-taken from a static constructor. Declared through
 // asm labels with the object's signatures; compiled as uenux2 code.
 extern "C" {
-extern const char nomescargo_vt[] __asm__("_ZTVN5comum3asn20CConversorNomesCargoE");
 void w1708(int) __asm__("_ZN5comum7CCargos4NextEv");
 int w1938(int) __asm__("_ZNK5comum7CCargos17GetCurrentCargoIDEv");
 int w2835(int) __asm__("_ZNK5comum7CCargos19GetCurrentEleicaoIDEv");
@@ -136,7 +137,6 @@ const void* volatile processoeleitoral_sink;
 struct SProcessoEleitoralRoots {
     SProcessoEleitoralRoots()
     {
-        processoeleitoral_sink = nomescargo_vt;
         processoeleitoral_sink = reinterpret_cast<const void*>(&AvancaDois);
         processoeleitoral_sink = reinterpret_cast<const void*>(&MesmoCargo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoes);

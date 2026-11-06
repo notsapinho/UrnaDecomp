@@ -25,18 +25,13 @@ namespace {
 // 217's), 2376 (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp), 12055 (unit 37's, not matched),
 // 11881, 11884, 11888 and 11892 (unit 104's), 6599 (unit 110's CriaTelaMaisInformacoes, not matched), 6569 and 6595
 // (unit 110's CriaTelaVisualizacaoCandidato and CriaTelaAntesHorarioZeresima), 6592 (unit 110's
-// CriaTelaConfirmaImpressaoZeresima) and 2291 (vota::CRetirarMR::GetInst, unit 156's, with ctelasvota.cpp's
-// TelaLacreTampa and TelaMRModoDemo inlined): these two stand in for the others, so it keeps more than one call site.
-// Their bodies differ from each other's and from every target function.
+// CriaTelaConfirmaImpressaoZeresima), 2291 (vota::CRetirarMR::GetInst, unit 156's, with ctelasvota.cpp's
+// TelaLacreTampa and TelaMRModoDemo inlined) and 12040 (unit 387's CMostraQRCodeCertificado::StartState, with
+// CTelasVota::CriaTelaQRCodeCertificado inlined): this one stands for the other, 7787, with one call; the two-call
+// stand-in for 7787 and 12040 went.
 __attribute__((noinline)) void FormularioVota(int resultado, int builder, int nome)
 {
     w576_formulario(resultado, builder, nome);
-}
-
-__attribute__((noinline)) void FormulariosVota(int resultado, int builder, int primeiro, int segundo)
-{
-    w576_formulario(resultado, builder, primeiro);
-    w576_formulario(resultado + 8, builder, segundo);
 }
 
 // stands for fn 13550
@@ -53,7 +48,6 @@ struct SW165Roots {
     {
         w165_sink = reinterpret_cast<const void*>(&w7828_construtor);
         w165_sink = reinterpret_cast<const void*>(&FormularioVota);
-        w165_sink = reinterpret_cast<const void*>(&FormulariosVota);
         w165_sink = reinterpret_cast<const void*>(&ModoProgressBar);
     }
 } w165_roots;

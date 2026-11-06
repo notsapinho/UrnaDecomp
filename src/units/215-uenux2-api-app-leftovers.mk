@@ -22,10 +22,10 @@
 # the target has 48 and +12; with slot 10 returning a 36-byte object whose vector at +0 is copied through an accessor
 # (api::pkcs11::SResultadoCertificado, ipkcs11.h), 11 over 121, all operand-only (the static's address, calls).
 # CEstadoGeral::GetDadosQRCodeCertificado (target fn 5634, 2021 B, a chosen name), after it in cestadogeral.cpp, written
-# and not matched (no-candidate: nothing names it, so its stub in src/uenux2/unplaced.cpp stays): the certificate's QR
-# code fields; cestadogeral.h has what the body does and its callers, fns 12110 and 12039, neither written (unit 220's
-# roots stand for both). It stays written: it is 5635's one caller, and the stand-ins' destruction of its result brings
-# fn 5980 (unit 220). Whole link: first written with the second certificate's size inside the count's expression and the
+# and not matched (`differs`): the certificate's QR code fields; cestadogeral.h has what the body does and its
+# callers, fn 12110, not written (unit 220's roots stand for it), and fn 12039, unit 387's, which matches since through
+# a `callers+content` hand line of this name in splat/symbol_addrs.txt (its own body singles it out; the line's comment
+# has the evidence). It stays written: it is 5635's one caller and 12039's callee. Whole link: first written with the second certificate's size inside the count's expression and the
 # hex text's length read after the result vector is declared, 75 over 973 rows (15 inserted, 14 deleted); as written, 52
 # over 963 (45 operand-only, 5 inserted, 2 deleted). The remainder is the destruction of that second call's result: the
 # target frees it with no store of its end pointer (`__end_ = __begin_`, which our object keeps) and computes the size

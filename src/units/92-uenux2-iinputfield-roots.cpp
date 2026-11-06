@@ -9,7 +9,8 @@
 // CInputFieldControl<IScreenMT>'s vtable, IInputField<IScreenMT>'s and its lambda's __func vtable, and build
 // __shared_ptr_pointer<CInputFieldControl<IScreenMT>*>, so nothing below stands for those either, and so is fn 5410
 // (vota::MontaTelaEleitorPodeVotar, unit 161), whose inlined CMTFormBuilder::AddInputControl(int) builds
-// __shared_ptr_emplace<CInputFieldControl<IScreenMT>> and stores CInputFieldControlBase<IScreenMT>'s vtable. So is fn
+// __shared_ptr_emplace<CInputFieldControl<IScreenMT>> and stores CInputFieldControlBase<IScreenMT>'s vtable (the
+// block's sink went: 5410 stores its vptr, and the link without it moved no row). So is fn
 // 2383 (vota::AdicionaCampoNumerico, unit 110's ctelasvota.cpp), which builds a CInputField<CFramedText> and its
 // __shared_ptr_pointer block and stores both vtables, so nothing below stands for those. So is fn 6624
 // (adicionaBaseTelaVotoNuloConsulta, unit 110's ctelasvota.cpp: src/units/378-uenux2-ctelasvota-criatela.mk), whose
@@ -40,7 +41,6 @@
 #include "api/gui/iscreen.h"
 
 extern "C" {
-extern const char w92_emplace_controlmt_vt[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CInputFieldControlINS1_9IScreenMTEEENS_9allocatorIS4_EEEE");
 extern const char w92_pointer_masked_vt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api16CMaskedTextFieldINS1_11CFramedTextEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 }
 
@@ -66,9 +66,9 @@ namespace {
 //
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
 // 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 inlined into 3060)
-// in the link. These two stand in for the
-// others: the target's callers pass different lengths, points, fonts and alignments, so these do too, and each has a
-// body no target function has.
+// and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two stand
+// in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
+// these do too, and each has a body no target function has.
 __attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
 {
     return new api::CFramedText(n, p, f, api::ALINHAMENTO_CENTRO);
@@ -94,7 +94,6 @@ struct SW92Roots {
         w92_sink = reinterpret_cast<const void*>(&NovaMoldura);
         w92_sink = reinterpret_cast<const void*>(&MolduraEm);
         w92_sink = reinterpret_cast<const void*>(&CampoNumeroA);
-        w92_sink = w92_emplace_controlmt_vt;
         w92_sink = w92_pointer_masked_vt;
     }
 } w92_roots;

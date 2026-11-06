@@ -98,6 +98,17 @@ public:
     std::shared_ptr<CProgressBar> AddProgressBar(uedword limite, const SPoint& canto, const SPoint& oposto,
                                                  const SFont& fonte, const std::string& texto);
 
+    // a CMaskedTextField<CFramedText> over a CFixedText of texto (alignment 0), its frames as many as tamanho, the
+    // alignment read from the text (CMaskedTextField's constructor for it): the code fn 2384 (vota::
+    // AdicionaCamposInputVazio, ctelasvota.cpp) holds behind a second stack-pointer prologue of 16 bytes (the field's
+    // copy for AddField), with "" and the font @474880 (FONTE_NUMERO, ctelasvota.cpp's), a parameter dead-argument
+    // elimination folds, a reading as for AddTextRectField. Evidence for another TU than its caller's: 2384 keeps the
+    // "" temporary's destruction after the call (its long-mode byte tested and the buffer freed), which our clang drops
+    // when the helper is in ctelasvota.cpp and only reads its parameter; with the helper there 2384 scored 134 over
+    // 363 rows, and 17 over 353, operand-only, with it in this TU (pnpm wasm score, whole link). That it is a member
+    // of CFormBuilder, as the file's other CFixedText adders are, its name and its parameters' order are chosen.
+    SharedField AddMaskedTextField(const std::string& texto, size_t tamanho, const SPoint& posicao, const SFont& fonte);
+
     SharedField AddDoubleLineField(std::string (*fonte)(), const SPoint& linha1, const SPoint& linha2, TPosition maxX,
                                    const SFont& font, TColor corFundo);
 

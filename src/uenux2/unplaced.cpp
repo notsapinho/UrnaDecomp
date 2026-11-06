@@ -16,11 +16,6 @@
 // f5622 · 942 B · unmatched · placement: link order · name unknown
 // void f5622(i32, i32) { ... }
 
-// link-order cluster 804 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
-
-// f5634 · 2021 B · unmatched · placement: link order · name unknown
-// void f5634(i32, i32, i32) { ... }
-
 // link-order cluster 910 · uses=2
 
 // f6639 · 622 B · unmatched · placement: link order · name unknown
@@ -219,11 +214,6 @@
 
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
-
-// link-order cluster 918 · uses=2
-
-// f6689 · 281 B · unmatched · placement: link order · name unknown
-// void f6689(i32, i32, i32) { ... }
 
 // link-order cluster 921 · uses=2
 

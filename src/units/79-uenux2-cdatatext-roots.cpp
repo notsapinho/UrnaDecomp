@@ -4,9 +4,8 @@
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it
 //     so) and const std::string& (*)() (3060), CDataTextFmt over std::string
-//     (*)(const std::string&) (3058 builds it so) and const std::string (*)(const std::string&) (2028), CDataImage
-//     over std::vector<unsigned char> (*)() (6689),
-//     and CQRCodeImage (12040), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
+//     (*)(const std::string&) (3058 builds it so) and const std::string (*)(const std::string&) (2028), and CDataText
+//     over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
 //     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
 //     and so do CDataText over comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185 builds both), whose
 //     GetText (12649, 12742) calls the source's operator, matched (5807) or inlined by binaryen (unit 180's);
@@ -18,10 +17,12 @@
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
 // are template instances of landed headers, compiled with APP_CXXFLAGS like the other stand-ins. The destructors have no
 // direct caller: they are reached through the vtables the constructors store and through the control blocks.
-// CQRCodeImage's constructor, fn 3662, has three direct callers in the target, 3059, 12040 and 12055; 12055 is in the
-// link (unit 37: its std::make_shared is in vota::CTelasVota::CriaTelaQRCodeBU, ctelasvota.cpp, which binaryen inlines
-// into it), and so is 3059 (unit 110's, SharedIImage(new X), whose __shared_ptr_pointer block comes from its object
-// since, and whose stand-in here went), and one stand-in calls it here for 12040, so it stays a function of its own.
+// CQRCodeImage's constructor, fn 3662, has three direct callers in the target, 3059, 12040 and 12055, all in the link:
+// 12055 (unit 37: its std::make_shared is in vota::CTelasVota::CriaTelaQRCodeBU, ctelasvota.cpp, which binaryen
+// inlines into it), 3059 (unit 110's, SharedIImage(new X), whose __shared_ptr_pointer block comes from its object) and
+// 12040 (unit 387's, through ctelasvota.cpp's CTelasVota::CriaTelaQRCodeCertificado, inlined into it the same way);
+// the stand-ins for 3059 and 12040 went. So did the one for CDataImage over std::vector<unsigned char> (*)(), whose
+// builder 6689 (unit 387's, ctelasvota.cpp) is in the link: that instance and its block come from ctelasvota.cpp.o.
 // CDataText over std::function<std::string()> and its control block, which only 12055 builds with std::make_shared,
 // come from ctelasvota.cpp.o since then, and the stand-in for it went. The stand-ins differ in their bodies and are
 // address-taken from a static constructor. They take
@@ -39,28 +40,23 @@
 #include <utility>
 #include <vector>
 
-#include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
 #include "api/gui/cdatatextfmt.h"
-#include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextsource.h"
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 
 namespace {
 
-using api::CDataImage;
 using api::CDataText;
 using api::CDataTextFmt;
 using api::CTextSource;
-using api::SharedIImage;
 using api::SharedIText;
 
 using FonteTexto = std::string (*)();
 using FonteReferencia = const std::string& (*)();
 using FonteFormato = std::string (*)(const std::string&);
 using FonteFormatoConst = const std::string (*)(const std::string&);
-using FonteImagem = std::vector<unsigned char> (*)();
 using FuncaoTexto = std::function<std::string()>;
 
 __attribute__((noinline)) SharedIText TextoDaFonte(const CTextSource& fonte, api::ETextAlignment alinhamento)
@@ -111,11 +107,6 @@ __attribute__((noinline)) SharedIText TextoFormatoConstProprio(FonteFormatoConst
     return std::shared_ptr<CDataTextFmt<FonteFormatoConst>>(new CDataTextFmt<FonteFormatoConst>(fonte, formato, alinhamento));
 }
 
-__attribute__((noinline)) SharedIImage ImagemDaFonte(FonteImagem fonte)
-{
-    return std::make_shared<CDataImage<FonteImagem>>(fonte);
-}
-
 // Stands for fn 6528, which builds CDataText<comum::CCargoDSNomeSexoCandidato> with std::make_shared (vptr 1537644).
 __attribute__((noinline)) SharedIText TextoCargoSexo(const comum::CCargoDSNomeSexoCandidato& fonte)
 {
@@ -134,11 +125,6 @@ __attribute__((noinline)) SharedIText TextoCandidaturaNumero(const comum::CCandi
     return std::make_shared<CDataText<comum::CCandidaturasDSNumero>>(fonte);
 }
 
-__attribute__((noinline)) SharedIImage ImagemQRCodeCompartilhada(api::TPosition tamanho, const FuncaoTexto& fonte)
-{
-    return std::make_shared<api::CQRCodeImage>(tamanho, fonte);
-}
-
 void* volatile w79_sink;
 
 struct SW79Roots {
@@ -147,10 +133,8 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoCompartilhado);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonteFormatado);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConst);
-        w79_sink = reinterpret_cast<void*>(&ImagemQRCodeCompartilhada);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConstProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFuncaoProprio);
-        w79_sink = reinterpret_cast<void*>(&ImagemDaFonte);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonte);
         w79_sink = reinterpret_cast<void*>(&TextoReferencia);
