@@ -355,17 +355,18 @@ stub. A recorded function that is neither written in the file nor stubbed there 
 pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` is 90 lines, its record of 3744 is line 208, and f3744's stub is
-line 88 (`LC_ALL=C /usr/bin/grep -n '^// f3744 ' <file>`; 3c1ef19d); `stubs.py --check` passes. A function in a slot of
-a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
-vtable holds. A record inside a class body (a template
-member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
-though a record names the function: `stubs.py` takes only blank lines outside every function and class
-(`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).
-`src/uenux2/src/api/gui/cstepsprogressbar.cpp` (unit 41) has one record, line
-428, of the constructor that 13550 inlines; its gap ends at `#line 425`, f13550's stub takes lines 425 to 428, and the
-unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps the lines between its namespace's
-opening and its destructor at 78 blank around its constructor's records at 52, 58 and 67, and that run stays blank:
+`src/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp` is 90 lines, the record 3744 loads is line 208 (the throw of
+`ajustaAbrangenciaUFMunicipio`, which 3744 holds inlined behind a second prologue; band 3 and table slots 2463 and 2464
+put 3744 itself beside 3745), and f3744's stub is line 88 (`LC_ALL=C /usr/bin/grep -n '^// f3744 ' <file>`; 3c1ef19d);
+`stubs.py --check` passes. A function in a slot of a vtable our link holds has no stub at all (how-to step 9), so such
+an example holds only for a function no linked vtable holds. A record inside a class body (a template member defined in
+its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`, though a record
+names the function: `stubs.py` takes only blank lines outside every function and class (`LC_ALL=C /usr/bin/grep -n '^//
+f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`). `src/uenux2/src/api/gui/cstepsprogressbar.cpp` (unit 41) has one
+record, line 428, of the constructor that 13550 inlines; its gap ends at `#line 425`, f13550's stub takes lines 425 to
+428, and the unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps the lines between its
+namespace's opening and its destructor at 78 blank around its constructor's records at 52, 58 and 67, and that run stays
+blank:
 
 ```sh
 awk 'NR==52||NR==58||NR==67||NR==78 {print NR": ["$0"]"}' src/uenux2/src/api/gui/cprogressbar.cpp

@@ -684,8 +684,11 @@ linkonce copy of it differ with no code changed: such an object imports the symb
 absence. A type renamed or moved to another scope does the same to every includer that emits a template instance over
 it: the object differs in those symbols' names only, its masked disassembly the same (295 includers of `cfotos.h`
 compiled, one so when `CFotos::SFotoIndexada` became `SIndiceFoto`); name such objects in the commit message as
-name-only changes. An object of another unit that differs for real is named in the commit and re-measured
-([agents.md](../../agents.md) "Shared build outputs").
+name-only changes. An include that brings a header's guarded template or inline statics adds their initializers to
+every includer, which then differs though the link drops the repeats: `cparterdv.cpp.o` went from 0 to 48
+`__cxx_global_var_init`/`_ZGV` symbols with an `iform.h` include, and the plain link with the base's object gave the
+same sha256; settle such an object with that one-variant link (below) before calling it harmless. An object of another
+unit that differs for real is named in the commit and re-measured ([agents.md](../../agents.md) "Shared build outputs").
 
 When the range also edits a source that includes the header, the base object differs by that edit, and the question
 is today's source with the base's header. Compile today's sources with the base header put first, `-iquote <dir>` with
@@ -1021,7 +1024,9 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    adds no index. Search each deleted file's name and each removed identifier.
 4. **A sink whose storers are in the link.** A vtable sink's comment need not name the functions that store its vptr:
    for the vtable it names, `/usr/bin/grep -rlE 'i32\.const <vptr>($|[^0-9])' build/out/splat/pieces/asm` lists them,
-   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing.
+   and once one is in `splat/matched.txt` or `names.tsv` the sink stands for nothing (the class's own destructors,
+   reached only through that vtable, do not count: `src/units/README.md` "Companion files"; [units.md](units.md) §U16
+   lists a tip's idle stand-ins and sinks).
 5. **A stand-in that takes an address,** `&name` of an `__asm__`-labelled function in a static constructor: no `call`
    shows it, so read its callee's callers from the scan, not from the comment, which can be stale either way (callers
    it calls missing that are in the link).
@@ -1211,7 +1216,9 @@ How-to step 10 ("Landing onto a moved main") resolves the conflicts. These pass 
   `-pending.cpp` goes with its last member, with its rule and its `EXTRA_OBJS` entry, though neither side removed them.
 - **A gap line** (`// (original lines N-M: …)` over a `#line`) that both sides renumbered conflicts: take the side whose
   code the merge keeps around it. Step 9 writes the numbers again (`N files written`), and the object is the same either
-  way, since the `#line` sets the lines.
+  way, since the `#line` sets the lines, except where a record names a lambda by its place (`(lambda at
+  <file>:<line>:<col>)`): keep every line of that lambda's function where it was
+  ([src/README.md](../../../src/README.md) "Gaps" has the fact and the `awk` that lists them).
 - **A hand line carried into a side taken whole.** A second `git checkout HEAD -- splat/symbol_addrs.txt` after the
   carry drops it with no message: take a side of a generated file once, before carrying, and check with read-only
   commands after. After step 8, `N hand edits kept` (entries, not the section's comment lines) is the parent's count

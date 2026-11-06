@@ -478,7 +478,7 @@ To measure "the same bytes" for one function of a TU, compare that function's di
 the object-local numbers masked, against a control compiled beside the variants under a name of the same length, not the
 landed object, and count the lines each cut takes before reading a 0
 ([facts/tool-traps.md](reference/facts/tool-traps.md) §X12 has the masks and the control). A variant that differs in
-`i32.const` data addresses alone was compiled under a longer name: its records moved the data (§C1). Mask with Python,
+`i32.const` data addresses alone was compiled under a longer name: its records moved the data (§X12). Mask with Python,
 or `[[:<:]]` in `sed`: macOS `sed` has no `\b` ([facts/workflow.md](reference/facts/workflow.md) §W9). `cmp` of two
 objects compares the whole TU, and a variant of one member then fails it. Change one occurrence per variant: a text
 substitution that matches twice rewrites another member too. [facts/codegen.md](reference/facts/codegen.md) §C1 lists
@@ -1440,19 +1440,21 @@ a stronger pair demotes an anchor's name, so a data name becomes `self-voted` an
 a new anchor whose small constants differ from the target's votes them as table slots, the rows that leave all naming
 one slot in their detail (§S8 item 1). `git diff splat/symbol_addrs.txt` shows each evidence change. Fix it with the
 name's own evidence, not by withdrawing a line. A change that costs a match does not land, a brief that asks for its
-state recorded included: commit the last state that keeps every row, and post the costly change beside it (a patch or
-a `wip/<lane>` branch, which never lands) with the `join`'s rows and its link's sha256, for the coordinator to weigh. A
-row can also leave because an instance of yours took the symbol (step 3), a stronger name moved (below), a line you
-added above a record of a matched function moved the record (step 3; [src/README.md](../src/README.md) "Gaps" has the
-sign, and `TMPDIR=/tmp make -C src check-srcloc` lists it), or an edit of a header or a signature changed what another
-unit's object instantiates, so a linkonce copy the link took from it now comes from another object or none (unit 253's
-`-Oz` copies of 857, 1249, 2240, 9872 and 10145 after `IServicoEstado::Salva` took `const ESTADO&`): read `names.tsv`'s
-object column for the lost rows' symbols against the base's link, and that object's function list before and after.
-A displaced copy takes along the callees only it reached: when your object's instance of a library template links
-ahead of another object's, the other copy's out-of-line callees can lose their last caller, and their matches go
-(11616's `parse_iso_time` took five `vector<std::string>` helpers so). List the base object's relocations of the
-displaced copy's callees (`wasm-objdump -d -r <the base's object>`), and give the lost rows' target callers a stand-in.
-And with no source at fault, for one link's data layout, in four cases:
+state recorded included: the lane posts the loss as a `facts/` post (the rows the `join` moves and what would bring each
+back), and commits that state only on a branch the coordinator asks for to weigh it, a measurement that never lands. On
+that branch remove exactly the lines of the rows the `join` moves from `match`, run step 9 again so `status.py` and
+`stubs.py` run, and name the indices in the commit message; `comm -23` against the base lists them. A row can also leave
+because an instance of yours took the symbol (step 3), a stronger name moved (below), a line you added above a record of
+a matched function moved the record (step 3; [src/README.md](../src/README.md) "Gaps" has the sign, and `TMPDIR=/tmp
+make -C src check-srcloc` lists it), or an edit of a header or a signature changed what another unit's object
+instantiates, so a linkonce copy the link took from it now comes from another object or none (unit 253's `-Oz` copies of
+857, 1249, 2240, 9872 and 10145 after `IServicoEstado::Salva` took `const ESTADO&`): read `names.tsv`'s object column
+for the lost rows' symbols against the base's link, and that object's function list before and after. A displaced copy
+takes along the callees only it reached: when your object's instance of a library template links ahead of another
+object's, the other copy's out-of-line callees can lose their last caller, and their matches go (11616's
+`parse_iso_time` took five `vector<std::string>` helpers so). List the base object's relocations of the displaced copy's
+callees (`wasm-objdump -d -r <the base's object>`), and give the lost rows' target callers a stand-in. And with no
+source at fault, for one link's data layout, in four cases:
 
 - **An object at address 0x100000.** `-Oz` writes the add of that address as a subtract, so a body that adds it reads
   `differs` with `i32.const -1048576` on our side ([facts/codegen.md](reference/facts/codegen.md) §C7).
@@ -1576,20 +1578,21 @@ point refuses, and what removing one line at a time cannot show. Run the same on
 no removal shows carrying anything goes: a line a generated one has caught up with (the `awk` there), and a `func:` line
 for a body the content pass finds alone. The `awk` is no removal: a hand line whose generated twin's only voter is the
 row the hand line carries stays (6627's line under a generated `call by:1192`: without it 1192 is `unresolved
-self-voted`). Then weigh the lines you keep again on the file you commit. After a landing,
-weigh every hand line whose function or matched callers your new matches touch, with a generated twin or not: the `awk`
-lists only the caught-up ones, and 3764's `callers+content` line carried nothing once the executable TU's copy
-re-pointed. A line names a new match's index, or the function a new match calls: the searches by the new indices and by
-their callees ([facts/workflow.md](reference/facts/workflow.md) §W23) list both. A line found idle for a cause your
-landing did not bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
+self-voted`). Then weigh the lines you keep again on the file you commit. After a landing, weigh every hand line whose
+function or matched callers your new matches touch, with a generated twin or not: the `awk` lists only the caught-up
+ones, and 3764's `callers+content` line carried nothing once the executable TU's copy re-pointed. A line names a new
+match's index, or the function a new match calls: the searches by the new indices and by their callees
+([facts/workflow.md](reference/facts/workflow.md) §W23) list both. A line found idle for a cause your landing did not
+bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
 `vector<ASN1::AbstractData*>::push_back`) goes in a commit of its own with the docs that cite it, after a `queue/` post;
 your commit keeps it. A line a generated twin caught up with is not such a case: a range whose match touches it removes
-it whenever it went idle ([reference/splat.md](reference/splat.md) "Reviewing a match"), with the doc that cites it as
-an example changed in the same commit. A merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an
-internal one), is one our link derives: it is no evidence of the target, it moves with link order, and step 9 renames a
-match line to the new one. It earns a hand line only when the removal shows rows that fall without it, and a landing
-that moves the first member rewrites that line's name from `names.tsv`'s `<binaryen>` row (2924's held its three thunks
-until 2924 matched: [facts/splat.md](reference/facts/splat.md) §S10 item 2).
+it whenever it went idle ([reference/splat.md](reference/splat.md) "Reviewing a match"), unless a doc cites it as an
+example, when it goes in a commit of its own with that doc (`api::g_polySingletonsInfo`'s `content` line, 9c5ede00). A
+merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an internal one), is one our link derives: it
+is no evidence of the target, it moves with link order, and step 9 renames a match line to the new one. It earns a hand
+line only when the removal shows rows that fall without it, and a landing that moves the first member rewrites that
+line's name from `names.tsv`'s `<binaryen>` row (2924's held its three thunks until 2924 matched:
+[facts/splat.md](reference/facts/splat.md) §S10 item 2).
 
 A data name is the same question: a generated `vote:1 by:<index>` line is a name whose only evidence is the one body that
 voted, and the build's check is that body's bytes and the object's (four bytes for

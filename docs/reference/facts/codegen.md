@@ -274,11 +274,8 @@ to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fra
   ```
 
   Without the flag the same `cmp` differs. Compile every variant of a comparison from one directory, with one name
-  length, when you do not map them: a record holds the path, so a longer name can cross an alignment step and move every
-  later data address by 16, and the variant then differs in `i32.const` lines alone (a case-order variant of
-  `ajustaAbrangenciaUFMunicipio` in `cnomearquivo.cpp`, 18 characters against the control's 11, differed in 6 such lines
-  and in none under a name of the same length). Before calling a form evidence, count the lines of the diff that are not
-  `i32.const` (`diff a b | /usr/bin/grep '^[<>]' | /usr/bin/grep -vc 'i32.const'`).
+  length, when you do not map them: a longer name can cross an alignment step and move every later data address
+  ([tool-traps.md](tool-traps.md) §X12 has the case and the count to take before reading such a diff).
 - **A copy's base name names its dynamic initializer.** A TU with one (a static whose constructor runs at start-up,
   such as a singleton's `s_instance`) names it `_GLOBAL__sub_I_<base name>`, which no prefix map rewrites, so a copy
   under another name differs in that symbol and every offset after it. Keep the base name, in a directory of its own:
@@ -547,20 +544,20 @@ rank, and the script stops on it. Count on the plain `build/out/wasm/vota_web/li
 home-made count over a link line that holds a variant object under another path drops that object's pairs with no
 message (unit 278's move counted 478 and 31 so, against 515 and 33 over the plain line). The count reads which objects'
 data the symbol file names, so it moves as later landings name data, with no object moving (unit 278's move: 515 agree
-and 33 inverted at b3b6d4bb, 537 and 39 on the merged link at fac8e5ce): give a count with the commit it was taken at,
-and a landing that merges a fragment that states one counts it again on the merged link. Confirm the chosen place with a
-scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). The
-target's `.rodata` (`_ZTS` names, strings) orders apart, so never mix the two segments ([link-order.md](link-order.md)
-§L7 item 15 reads one object's run). A destination neighbour that is itself out of the data's order with the objects
-crossed makes every crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour,
-inverted more than it restored, with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function
-moved between two files that stay in place reorders no object: its code and the linkonce data it emits change object, so
-read the target's neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count
-over our order. 3675 (`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block,
-whose vtable (1579316) follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between
-`cframedtext.cpp`'s 3676 and `cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's
-order in our link goes between them where they are adjacent; `src/units/README.md` "Names" says which places a new file
-weighs and what its fragment names.
+and 33 inverted at b3b6d4bb, 537 and 39 on the merged link at fac8e5ce); `src/units/README.md` "Names" says what a
+fragment states with it and when a landing counts again. Confirm the chosen place with a scratch link of the plain
+`link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). The target's `.rodata` (`_ZTS`
+names, strings) orders apart, so never mix the two segments ([link-order.md](link-order.md) §L7 item 15 reads one
+object's run). A destination neighbour that is itself out of the data's order with the objects crossed makes every
+crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour, inverted more than it
+restored, with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function moved between two files
+that stay in place reorders no object: its code and the linkonce data it emits change object, so read the target's
+neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count over our order. 3675
+(`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316)
+follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
+`cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's order in our link goes
+between them where they are adjacent; `src/units/README.md` "Names" says which places a new file weighs and what its
+fragment names.
 
 **Trying orders on binaryen alone.** A relink costs about 40 s an order, and a chain of several inlined functions has
 many. The link's own `wasm-opt -Oz` step can run alone instead: `link-map` writes it as line 3 of
