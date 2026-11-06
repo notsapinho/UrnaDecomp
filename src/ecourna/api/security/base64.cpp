@@ -1,3 +1,6 @@
+// base64_encode and Base64Encode are the reconstruction's: no record names either. Base64Encode's checks and its
+// result, and EncodeBase64's size form, are chosen for the code target fn 3703 holds inlined
+// (src/units/00-ecourna-app-dados-identificadoreleitor.mk).
 #include "ecourna/api/security/base64.hpp"
 
 #include <cstdlib>
@@ -44,23 +47,22 @@ char* base64_encode(const unsigned char* data, size_t input_length, size_t* outp
     return encoded_data;
 }
 
-size_t Base64Encode(const std::vector<uebyte>& dados, char* saida, size_t tamanhoSaida)
+bool Base64Encode(const std::vector<uebyte>& dados, char* saida, size_t& tamanhoSaida)
 {
-    if (saida == NULL || dados.data() == NULL || dados.empty() || tamanhoSaida < (dados.size() / 3 + dados.size() % 3) * 4) {
-        return 0;
+    if (saida == NULL || dados.data() == NULL || dados.size() == 0 ||
+        tamanhoSaida < (dados.size() - dados.size() / 3 * 2) * 4) {
+        return false;
     }
     size_t tamanhoCodificado = 0;
     char* codificado = base64_encode(dados.data(), dados.size(), &tamanhoCodificado);
-    if (codificado == NULL) {
-        return 0;
-    }
     if (tamanhoCodificado > tamanhoSaida) {
         free(codificado);
-        return 0;
+        return false;
     }
     memcpy(saida, codificado, tamanhoCodificado);
     free(codificado);
-    return tamanhoCodificado;
+    tamanhoSaida = tamanhoCodificado;
+    return true;
 }
 
 } // namespace
@@ -68,7 +70,7 @@ size_t Base64Encode(const std::vector<uebyte>& dados, char* saida, size_t tamanh
 // Blank lines below keep both throws on the lines the target's std::source_location records
 // (ledger/source-locations.tsv).
 
-// (original lines 71-243: content not recovered)
+// (original lines 73-243: content not recovered)
 #line 244
 std::string EncodeBase64(const std::vector<uebyte>& dados)
 {
@@ -77,17 +79,16 @@ std::string EncodeBase64(const std::vector<uebyte>& dados)
     }
 
     std::string resultado;
-    const size_t tamanho = (dados.size() / 3 + dados.size() % 3) * 4;
+    size_t tamanho = (dados.size() - dados.size() / 3 * 2) * 4;
     char* buffer = static_cast<char*>(malloc(tamanho));
-    const size_t escrito = Base64Encode(dados, buffer, tamanho);
 
-    // (original lines 255-264: content not recovered)
+    // (original lines 254-264: content not recovered)
 #line 265
-    if (escrito == 0) {
+    if (!Base64Encode(dados, buffer, tamanho)) {
         free(buffer);
         throw CSecurityError(ESE_FALHA_BASE64, "Nao foi converter para base64.");
     }
-    resultado.assign(buffer, escrito);
+    resultado.assign(buffer, tamanho);
     free(buffer);
     return resultado;
 }

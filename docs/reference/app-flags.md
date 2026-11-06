@@ -28,8 +28,9 @@ an `assert`; the flag is pinned by the missing `__assert_fail` import, [facts/to
 `-ffunction-sections -fdata-sections`, tried together with `-fvisibility=hidden` in a test whose method is not
 recorded, changed 11 bytes of one libc helper and nothing of the units. Visibility on its own does change ecourna:
 with `ECOURNA_EXTRA=-fvisibility=default` all 82 of its objects differ and 4 matches break
-([facts/app-flags.md](facts/app-flags.md) §F5, §F9 item 9). `-std=c++23` is excluded for ecourna: it changes
-`EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue `substr() &&` overload. uenux2 took
+([facts/app-flags.md](facts/app-flags.md) §F5, §F9 item 9). `-std=c++23` is excluded for ecourna: it changed
+`EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue `substr() &&` overload (at 3977f421,
+with the forms base64.cpp had then). uenux2 took
 `-std=c++20` from that ecourna measurement until the whole tree was measured at `-std=c++23`: no match lost, and its
 own function 8799 (the same rvalue `substr`) and two libc++ copies its objects emit match ([facts/levels.md](facts/levels.md)
 §V3). The stand-ins stay at `-std=c++20` (same section). `-std=c++17` does not

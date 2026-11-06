@@ -6,9 +6,9 @@
 //   (docs/reference/facts/levels.md V1); 11530, 5750, 5758 and 11436 have landing pads, so an -fexceptions object's,
 //   which no object of uenux2's rule is (UENUX2_CXXFLAGS has no -fexceptions). So this file compiles at
 //   VOTA_WEB_CXXFLAGS, the executable TU's rule, ahead of the uenux2 objects that emit the same members at their tree's
-//   flags (cwasmnulltexttospeech.cpp and src/units/158-uenux2-api-pending.cpp; crhvoicetexttospeech.cpp and
-//   simulador.cpp emit none of them). That the copies are that TU's is a reading: votaInit (fn 7840, not written)
-//   builds the implementer (fn 13877, its table slot in 7840's invoke_ii).
+//   flags (cwasmnulltexttospeech.cpp, src/units/158-uenux2-api-pending.cpp and unit 237's roots, whose Cache calls
+//   MakeKey, Lookup and Store; crhvoicetexttospeech.cpp and simulador.cpp emit none). That the copies are that TU's is
+//   a reading: votaInit (fn 7840, not written) builds the implementer (fn 13877, its table slot in 7840's invoke_ii).
 // - The shape (src/units/README.md "Companion files", "A class with no key function"): an optnone function at namespace
 //   scope that nothing calls builds the implementer as votaInit does, with std::make_unique; clang emits
 //   ITextToSpeech's vtable and every inline member it names here, and wasm-ld drops the builder and keeps those copies,

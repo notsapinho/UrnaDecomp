@@ -1,10 +1,10 @@
-// The anonymous-namespace helpers of /home/rubio/tse/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp, and two of
-// the file's name builders. The helpers' throws are records of the target, so their positions in this file are fixed:
+// The anonymous-namespace helpers of /home/rubio/tse/uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp, and the file's
+// name builders. The helpers' throws are records of the target, so their positions in this file are fixed:
 //   2828  FormataFase(EUrnaFase)                   record at line 38, column 19
 //   1161  FormataNumero(uedword, uedword)          record at line 48, column 15
 //   3773  FormataUF(const std::string &)           record at line 73, column 15
-// The record at line 208, ajustaAbrangenciaUFMunicipio's, which fn 3744 holds, is not written. The builders (fns 1705
-// and 3772) have no record: their names and lines are chosen (src/units/131-uenux2-cnomearquivo.mk).
+// and ajustaAbrangenciaUFMunicipio's at line 208, column 11, inlined into NomeArquivoAbrangencia, which fn 3744 holds.
+// The builders have no record: their names and lines are chosen (src/units/131-uenux2-cnomearquivo.mk, fragment 388).
 
 #include "app/comum/nomearquivo/cnomearquivo.h"
 
@@ -82,9 +82,36 @@ std::string CNomeArquivo::NomeArquivoLocal(uedword municipio, uedword zona, uedw
     return FormataNumero(municipio, 5) + FormataNumero(zona, 4) + FormataNumero(secao, 4) + ("-" + tipo) + "." + extensao;
 }
 
-} // namespace comum
+// (original lines 104-192: content not recovered)
+#line 193
+namespace {
 
-// <stubs>
-// f3744 · 2521 B · unmatched · name unknown
-// void f3744(i32, i32, i32, i32, i32, i32, i32) { ... }
-// </stubs>
+void ajustaAbrangenciaUFMunicipio(TMunicipioID& municipio, std::string& uf, const md::ETipoAbrangencia& abrangencia)
+{
+    switch (abrangencia) {
+        case md::ABRANGENCIA_MUNICIPAL:
+            return;
+        case md::ABRANGENCIA_ESTADUAL:
+            municipio = 0;
+            return;
+        case md::ABRANGENCIA_FEDERAL:
+            municipio = 0;
+            uf = "BR";
+            return;
+    }
+    throw CUeComumNomeArquivoError(EUE_NOMEARQUIVO_ABRANGENCIA_INVALIDA,
+        std::format("Abrangência inválida: {}", static_cast<int>(abrangencia)));
+}
+
+} // namespace
+
+std::string CNomeArquivo::NomeArquivoAbrangencia(EUrnaFase fase, uedword idEleicao, const std::string& uf,
+    TMunicipioID municipio, md::ETipoAbrangencia abrangencia, const std::string& tipo, const std::string& extensao)
+{
+    std::string ufArquivo = uf;
+    ajustaAbrangenciaUFMunicipio(municipio, ufArquivo, abrangencia);
+    return FormataFase(fase) + FormataNumero(idEleicao, 5) + FormataUF(ufArquivo) + FormataNumero(municipio, 5) +
+           ("-" + tipo) + "." + extensao;
+}
+
+} // namespace comum

@@ -1,9 +1,11 @@
 # uenux2: api::ITextToSpeech's Synthesize (target fn 11530, slot 0) and what it calls: the options, the key, the lookup
 # and the store of the recent-audio cache and the kept map, written inline in src/uenux2/src/api/audio/itexttospeech.h
-# (unit 82's header, whose comment has the evidence of each member). No source of its own: the target's copies are the
-# executable TU's, and the tree root src/app/roots_texttospeech.cpp emits them at that TU's rule, VOTA_WEB_CXXFLAGS
-# (its rule and its APP_OBJS entry are src/Makefile's; its comment says whose copies and why there). This file holds the
-# evidence, the measurements and the rule of 237-uenux2-itexttospeech-roots.cpp, the stand-ins.
+# (unit 82's header, whose comment has the evidence of each member), and Cache (fn 921, below), which keeps a text's
+# audio in the kept map. No source of its own: the target's copies of the first are the executable TU's, and the tree
+# root src/app/roots_texttospeech.cpp emits them at that TU's rule, VOTA_WEB_CXXFLAGS (its rule and its APP_OBJS entry
+# are src/Makefile's; its comment says whose copies and why there); Cache's copy is read as a vota TU's, which
+# 237-uenux2-itexttospeech-roots.cpp emits at that TU's flags. This file holds the evidence, the measurements and the
+# rule of 237-uenux2-itexttospeech-roots.cpp, the stand-ins.
 #
 # Matches (50, none lost, against a081739b by index, how-to step 10):
 # - from the root, ITextToSpeech's members: 11530 Synthesize, 5758 MakeKey, 5754 Lookup, 5750 Store, 11436
@@ -50,12 +52,13 @@
 # Chosen (the header lists them): every name, the enum, MakeKey a member (how-to step 3: its callers pass an object it
 # never reads), the cast's spelling, the root's file name, the stand-ins' names.
 #
-# Stand-ins, 237-uenux2-itexttospeech-roots.cpp, at APP_CXXFLAGS (it calls through __asm__ labels and includes nothing):
-# w237_guarda for fn 921 (5685's other direct caller), and w237_par for fn 3552 (the one reader of 1928's result) until
-# unit 229's root brought 3552. Measured on a variant link without them: 11447 372 over 394 (367 inserted: 5685 inlined
-# into it), and a drop deleted in each of 11436 (two), 3722, 3746 and 5720; with them every one is operand-only.
-# w237_guarda goes when 921 is in the link. w237_par went with 3552 in the link (from unit 229's root, which reads 1928's
-# result): a link without it moves no row (unit 229's fragment).
+# Stand-ins of 237-uenux2-itexttospeech-roots.cpp while it compiled at APP_CXXFLAGS (it called through __asm__ labels
+# and included nothing): w237_guarda for fn 921 (5685's other direct caller), and w237_par for fn 3552 (the one reader
+# of 1928's result) until unit 229's root brought 3552. Measured, before 921 was written, on a variant link without
+# them: 11447 372 over 394 (367 inserted: 5685 inlined into it), and a drop deleted in each of 11436 (two), 3722, 3746
+# and 5720; with them every one is operand-only. w237_par went with 3552 in the link (from unit 229's root, which reads
+# 1928's result): a link without it moves no row (unit 229's fragment). w237_guarda went with 921 in the link, whose own
+# call of 5685 is 5685's second call site (below).
 #
 # Hand lines: the five that a generated line now repeats or that nothing needs went from splat/symbol_addrs.txt: 3746
 # and 3764 (unit 158's, callers+content; 3746 has a generated pair-addr line) and 3618, 3627 and 5423 (unit 100's has<T>
@@ -83,8 +86,9 @@
 #   ~shared_ptr<basic_regex_implementation> of ecourna's cstringutils.cpp.o) where the target calls 388, read as waiting
 #   for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body ahead of the runtime: it matches since unit 229's
 #   root emits that copy.
-# - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 matches from unit 229's root, and 1928's line names
-#   that root's pair<string, shared_ptr<IAbstractVisitor>> copy now, the same body, which links ahead of this one's.
+# - 13877 (unit 82's fragment) is not written (921 is now, below); 3552 matches from unit 229's root, and 1928's line
+#   names that root's pair<string, shared_ptr<IAbstractVisitor>> copy now, the same body, which links ahead of this
+#   one's.
 #
 # CPolySingleton<api::ITextToSpeech>::set<simulador::CWasmNullTextToSpeech>, target fn 4162 (143 bytes, landing pads),
 # added after the rest: the executable TU's copy, which votaInit (fn 7840, not written) reaches through invoke_vii's
@@ -125,6 +129,40 @@
 # with the builder first, as the root was first written, 12189, and 7667 `differs` on the frame slot of depura's
 # std::format_string (+584 in ours where the target has +280, the slots between 8 off), as the executable TU's other
 # push bodies do (unit 170's fragment, whose reading this fits: the slot follows which format code a TU emits first).
-$(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
+#
+# api::ITextToSpeech::Cache, target fn 921 (584 bytes, no landing pads), added after the rest, inline in the header
+# beside Synthesize (the header's comment has what its body shows).
+# - Whose copy. Its one target caller, fn 7787 (not written), calls it 14 times, all inside a frame of their own there
+#   (a second stack-pointer prologue of 48 bytes at +0x241bb) that loads the records of
+#   vota::CInstrucaoVotacaoAcessibilidade::CacheInstructionAudio, cinstrucaovotacaoacessibilidade.cpp:161 (1533776, at
+#   +0x24240, before the calls, which run from +0x242dd to +0x24513) and :157 (1533760, at +0x2456f, in its throw):
+#   pnpm --silent wasm fn ../target/vota_web_wasm.wasm 7787 | /usr/bin/grep -E 'call 921 |i32.const 15337(60|76) '.
+#   So CacheInstructionAudio was a function of its own that binaryen inlined into 7787 (how-to step 3's signs), its
+#   calls of Cache were emitted in cinstrucaovotacaoacessibilidade.cpp's TU, and 921 is read as that TU's copy (no
+#   other target function calls it). That file builds at uenux2's -O3 with strict aliasing (src/app/vota/ is in
+#   UENUX2_TBAA_DIRS, the file not in UENUX2_NOTBAA_FILES). What the calls pass, read from 7787's code: the
+#   ITextToSpeech instance and, for each of five speeds, 13 key names (fn 744, api::KeyName) and the message fn 4407
+#   returns.
+# - The rule. The roots object now emits Cache, TSE code meant to match, so it compiles at that file's flags,
+#   $(call uenux2_cxxflags,...) of its path, no longer at APP_CXXFLAGS (src/units/README.md "Companion files"). Compiled
+#   with and without -fno-strict-aliasing, its Cache and its stand-in are the same code (llvm-objdump -d of both
+#   objects, raw); 86 of its other 109 functions differ (object-local numbers masked), Lookup, SRecentCache::Put, the
+#   maps' members and std::format code among them, linkonce copies that objects ahead of it on the link line define
+#   too: of this object the link keeps Cache and the stand-in alone (awk -F'\t' '$3 ~ /237-uenux2/'
+#   build/out/wasm-map/vota_web/names.tsv). So no match rests on that flag.
+# - The stand-in. w237_cache stands for 7787 and calls Cache twice (7787 has 14 calls), each with the default kind,
+#   eCacheKept, so that binaryen keeps 921 out of line and its dead-argument elimination folds the one value every
+#   call passes into the body, the constant 1 the target's 921 passes Store.
+# - Measured, the variant link (this object compiled against a variant of the header, linked in its place:
+#   docs/reference/facts/workflow.md W13; pnpm wasm score at the default depth): with eCacheKept written in Cache and no
+#   parameter, 921 scores 136 over 358 rows (87 inserted: Store inlined; -Rpass=inline on this object's compile prints
+#   Store into Cache at cost 210, threshold 250); as written, Store costs 280 there, stays a call, and 921 matches.
+# - Chosen (the header lists them): the name Cache, the kind's default argument and its place after the text (the folded
+#   parameter leaves no trace of either), ECache's place and access, the stand-in's name.
+# Matches with it (1, none lost, against 5d769991 by index, how-to step 10): 921, from the census's pair (shape) with
+# Cache, read against its caller (above) and its callees, 5758, 5754, 5685 and 5750 (matched from
+# src/app/roots_texttospeech.o). No match line was renamed and no hand line added; step 8 changed no line of
+# splat/symbol_addrs.txt.
+$(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

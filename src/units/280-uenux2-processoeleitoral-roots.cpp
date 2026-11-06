@@ -15,9 +15,6 @@
 #include "ecourna/app/dados/asn/midias/cconversorinformacaomidia.hpp"
 
 extern "C" {
-// std::vector<comum::md::CEleicaoPE>::push_back(const CEleicaoPE&), carregaprocessoeleitoral.cpp.o's copy
-void w280_push_back(void* eleicoes, const void* eleicao) __asm__(
-    "_ZNSt3__26vectorIN5comum2md10CEleicaoPEENS_9allocatorIS3_EEE9push_backB8ne210108ERKS3_");
 // std::map<unsigned int, std::string>'s __tree::__find_equal<unsigned int>(hint, parent, dummy, key), cpe.cpp.o's copy
 int w280_find_equal(void* arvore, void* dica, void** pai, void** vazio, const unsigned* chave) __asm__(
     "_ZNSt3__26__treeINS_12__value_typeIjNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEENS_19__map_value_"
@@ -59,21 +56,6 @@ __attribute__((noinline)) std::size_t w280_extensao(const std::string& arquivo)
     return api::TrocaExtensao(arquivo, "w280").size() + 280;
 }
 
-// stands for fn 3713, the other caller of CPleito's constructor (fn 5652)
-__attribute__((noinline)) void w280_pleito(void* destino, const comum::md::TVectorEleicaoPE& eleicoes,
-    const comum::md::TMapVersaoPacoteEleicao& versoes, const std::vector<comum::md::CSituacoesEleicoes>& situacoes,
-    const std::string& nome, const api::CDate& data)
-{
-    ::new (destino) comum::md::CPleito(280, nome, data, eleicoes, versoes, situacoes);
-}
-
-// stands for fn 5649, the other caller of std::vector<CEleicaoPE>::push_back (fn 5777)
-__attribute__((noinline)) std::size_t w280_eleicoes(comum::md::TVectorEleicaoPE& eleicoes, const comum::md::CEleicaoPE& eleicao)
-{
-    w280_push_back(&eleicoes, &eleicao);
-    return eleicoes.size() + 280;
-}
-
 // stands for fn 5808, the other caller of the version map's __find_equal (fn 3869; 3870 and 11349 are in the link)
 __attribute__((noinline)) int w280_busca(comum::md::TMapVersaoPacoteEleicao& versoes, unsigned chave)
 {
@@ -88,9 +70,6 @@ comum::SIdentificacaoArquivo* (*volatile w280_sink_identificacao)(void*, comum::
 std::size_t (*volatile w280_sink_copia)(void*, const comum::md::CPleito&);
 std::size_t (*volatile w280_sink_cabecalho)(const std::string&);
 std::size_t (*volatile w280_sink_extensao)(const std::string&);
-void (*volatile w280_sink_pleito)(void*, const comum::md::TVectorEleicaoPE&, const comum::md::TMapVersaoPacoteEleicao&,
-    const std::vector<comum::md::CSituacoesEleicoes>&, const std::string&, const api::CDate&);
-std::size_t (*volatile w280_sink_eleicoes)(comum::md::TVectorEleicaoPE&, const comum::md::CEleicaoPE&);
 int (*volatile w280_sink_busca)(comum::md::TMapVersaoPacoteEleicao&, unsigned);
 
 struct SProcessoEleitoralRoots {
@@ -101,8 +80,6 @@ struct SProcessoEleitoralRoots {
         w280_sink_copia = w280_copia;
         w280_sink_cabecalho = w280_cabecalho;
         w280_sink_extensao = w280_extensao;
-        w280_sink_pleito = w280_pleito;
-        w280_sink_eleicoes = w280_eleicoes;
         w280_sink_busca = w280_busca;
     }
 } processoeleitoral_roots;

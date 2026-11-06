@@ -1,15 +1,17 @@
 #pragma once
 
+#include <map>
 #include <string>
 
+#include "app/comum/dados/md/processoeleitoral/cpleito.h"
 #include "app/comum/eurnafase.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
 
-namespace md {
-class CPleito;
-} // namespace md
+// The municipality's identifier as ajustaAbrangenciaUFMunicipio's record (cnomearquivo.cpp:208) spells it, unqualified
+// in comum: app/comum/md/cidentificacaourna.h says what shows it. Repeating the alias here is a choice.
+using TMunicipioID = uedword;
 
 // The phase's letter, a 5-digit number, "-" and the type, "." and the extension, with no UF: fn 3771 (comum's
 // processo eleitoral load) holds it behind a stack frame of its own, calling FormataFase (fn 2828) and FormataNumero
@@ -26,9 +28,10 @@ std::string NomeArquivoPE(EUrnaFase fase, uedword idPE, const std::string& tipo,
 // numbers more, then "-" and the type, "." and the extension. Fns 3744, 3771 and 5740 call those helpers inside a second
 // stack frame, which reads as three more builders of this file that binaryen inlined into their only caller
 // (reading.md R10); 3771's is NomeArquivoPE above, 5740's NomeArquivoLocal (a 112-byte frame: a 5-digit and two 4-digit
-// numbers, "-" and the type, "." and the extension, the parts NomeArquivoSecao ends with), and 3744's is not
-// reconstructed, so not declared. NomeArquivoLocal's name, its being a static member and its parameters' types are
-// chosen, as the others'. That the class has no other member is not known.
+// numbers, "-" and the type, "." and the extension, the parts NomeArquivoSecao ends with), and 3744's
+// NomeArquivoAbrangencia (a 528-byte frame, below). NomeArquivoLocal's and NomeArquivoAbrangencia's names, their being
+// static members and their parameters' types are chosen, as the others'. That the class has no other member is not
+// known.
 class CNomeArquivo {
 public:
     static std::string NomeArquivoUF(EUrnaFase fase, uedword pleito, const std::string& uf, const std::string& tipo,
@@ -37,6 +40,14 @@ public:
         uedword zona, uedword secao, const std::string& tipo, const std::string& extensao);
     static std::string NomeArquivoLocal(uedword municipio, uedword zona, uedword secao, const std::string& tipo,
         const std::string& extensao);
+    // The builder fn 3744 holds behind a 528-byte frame of its own (binaryen's inlining of a function with one caller):
+    // a copy of the UF, ajustaAbrangenciaUFMunicipio's switch (record :208) inlined, then the phase's letter, the
+    // election's 5-digit number, the UF, the municipality's 5-digit number, "-" and the type, "." and the extension. It
+    // calls the anonymous-namespace helpers, so it is this file's code; its one caller, 3744, is another TU's, so the
+    // object keeps it out of line and binaryen inlines it (reading.md R10). No record names it: its name, its being a
+    // static member and the parameters' types are chosen.
+    static std::string NomeArquivoAbrangencia(EUrnaFase fase, uedword idEleicao, const std::string& uf,
+        TMunicipioID municipio, md::ETipoAbrangencia abrangencia, const std::string& tipo, const std::string& extensao);
 };
 
 // The election's part of a section's file name: the phase, the processo eleitoral's id and the state, at +0, +4 and +8,
@@ -68,5 +79,14 @@ std::string NomeArquivoEleitores(const SIdentificacaoArquivo& identificacao, ued
     ueword secao);
 std::string NomeArquivoEleitoresTTE(const SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
     ueword secao);
+
+// Target fn 3744, in cnomearquivoeleitores.cpp beside 3745 (src/units/388-uenux2-nomesarquivos.mk says what places it):
+// for one election of the pleito, when it holds a candidate's post (md::CEleicaoPE::PossuiCargoCandidato, fn 5653), the
+// name NomeArquivoAbrangencia builds, keyed by the election's abrangencia. Its callers, fns 2811 and 7787, pass the
+// identification at +0 and +8, the pleito and the municipality apart, and fn 7787 "ca" and "dat". No record names it:
+// its name, its being a free function of comum declared here and the parameters' types are chosen.
+std::map<md::ETipoAbrangencia, std::string> NomesArquivosEleicao(const SIdentificacaoArquivo& identificacao,
+    const md::CPleito& pleito, TMunicipioID municipio, md::TEleicaoID idEleicao, const std::string& tipo,
+    const std::string& extensao);
 
 } // namespace comum

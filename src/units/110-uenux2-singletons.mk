@@ -666,8 +666,8 @@
 #   block's result (our object, before binaryen, writes the three zeros in that branch: wasm-objdump -d), and binaryen
 #   numbers the locals otherwise from there. Not explained. Same score with this object built with strict aliasing (a
 #   variant object in the whole link, not a flag change) and with the image helper an external inline function (the same
-#   wasm, sha256 equal). It also waits for 3703's name (CEstadoGeral::GetResumoHashVersoesPacotes, unit 215's, written
-#   and no-candidate), which no vote reaches either. 3059 stays written: 6595 calls it.
+#   wasm, sha256 equal). The 3703 it calls (CEstadoGeral::GetResumoHashVersoesPacotes, unit 215's) matches since
+#   unit 00's base64.cpp forms; the scan reads 3059 `differs` at +0x14, a local. 3059 stays written: 6595 calls it.
 # - The image field: AdicionaImagemAtualizada, internal to this file, takes the image by value and returns the field
 #   after api::CFormBuilder::AddField, so the image's copy is released before the field (the target's order of the two
 #   releases, after the call); as a template over the image's type, deduced, which api::CFormBuilder's
