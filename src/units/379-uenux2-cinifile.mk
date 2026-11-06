@@ -10,10 +10,10 @@
 # census's pairs (3651 and 5485, pair-addr) and by their callers' calls (2234, 2235 and 2236, evidence:call); libc's
 # isblank (6272, which 2235 calls twice beside isspace: libc.a's isblank.o, no source); std::map<std::string,
 # api::CIniKey>'s tree destroy (1397) and its __emplace_hint_unique_key_args<std::string, const value_type&> (3650),
-# libc++ instances our link keeps from cinisection.cpp.o, whose operator= is their first user there; and 6071 and 12862
-# (below). FindKey (10877) moved into cinifile.cpp under the new class, and step 9 renamed its match line.
-# Written and not matched: Carrega (5480) and the exit destructor of TrataEscapes's static (10879), each below with what
-# it waits for.
+# libc++ instances our link keeps from cinisection.cpp.o, whose operator= is their first user there; and 6071, 12862
+# and 10879, the exit destructor of TrataEscapes's static, by a hand line (below). FindKey (10877) moved into
+# cinifile.cpp under the new class, and step 9 renamed its match line.
+# Written and not matched: Carrega (5480), below with what it waits for.
 #
 # What 5480 holds (pnpm wasm fn and pnpm wasm lift of the target): a stack frame of 80 bytes for the loader itself, and
 # behind second prologues the functions binaryen inlined into it, each with one caller: ecourna's CFile::ReadLine (160
@@ -107,13 +107,14 @@
 # step 3, unit 230: the overload set forces it).
 # 3651's static (ESCAPES, @1839288, the ten escapes the target's static initializer 14478 stores) is in an anonymous
 # namespace, a choice; our link holds it as three words, the symbol file's ESCAPES.0 to .2. Its exit destructor 10879
-# reads `unresolved self-voted` on ESCAPES.2: 3651's match votes for .0 and .1, and the third word, 1839296, is loaded
-# by 10879 and 14478 (__wasm_call_ctors) only (/usr/bin/grep -rlE 'i32\.const 1839296($|[^0-9])'
-# build/out/splat/pieces/asm). It waits for a match of 14478; a hand line would rest on 10879's own operand (how-to step
-# 9, "Hand edits"). 10879 is a thunk into the body binaryen keeps for it and for vota::TECLAS_TESTE_TECLADO's exit
-# destructor (12862, ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862 are: 6071 and 12862 match, and a link
-# with a cinistrings.cpp.o without ESCAPES holds no merged body and 12862's destructor whole
-# (docs/reference/facts/splat.md S10 item 30).
+# matches by ESCAPES.2's callers+content hand line (splat/symbol_addrs.txt): 3651's match votes for .0 and .1, and the
+# third word, 1839296, is read by 10879 and written by 14478 (__wasm_call_ctors) only (/usr/bin/grep -rlE
+# 'i32\.const 1839296($|[^0-9])' build/out/splat/pieces/asm), the static constructors' stores of 0 and of the block's
+# end of capacity: a .bss object led by a target function other than the match (how-to step 9, "Hand edits"). Without
+# the line 10879 reads `unresolved self-voted` on that name. 10879 is a thunk into the body binaryen keeps for it and
+# for vota::TECLAS_TESTE_TECLADO's exit destructor (12862, ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862
+# are: 6071 and 12862 match, and a link with a cinistrings.cpp.o without ESCAPES holds no merged body and 12862's
+# destructor whole (docs/reference/facts/splat.md S10 item 30).
 #
 # Choices besides those above: the helpers' names, their being free functions of api with external linkage (they read
 # no class state; the loader is another TU's, so they cannot be internal) and cinistrings.cpp's lines but 183 and 187;

@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**12,903 of 14,343 functions matched (89.96%), 4,253,984 of 5,883,903 code bytes (72.30%).**
+**12,904 of 14,343 functions matched (89.97%), 4,254,012 of 5,883,903 code bytes (72.30%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -30,8 +30,8 @@ name ([Not attributed](#not-attributed)).
 | --- | --- | ---: | ---: | ---: | ---: |
 | TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 3,101 / 3,285 | 94.40% | 1,520,846 / 2,168,476 | 70.13% |
 | upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 7,198 / 8,294 | 86.79% | 2,228,617 / 3,145,292 | 70.86% |
-| not attributed | `unknown`, `app` | 2,604 / 2,764 | 94.21% | 504,521 / 570,135 | 88.49% |
-| **total** | | **12,903 / 14,343** | **89.96%** | **4,253,984 / 5,883,903** | **72.30%** |
+| not attributed | `unknown`, `app` | 2,605 / 2,764 | 94.25% | 504,549 / 570,135 | 88.50% |
+| **total** | | **12,904 / 14,343** | **89.97%** | **4,254,012 / 5,883,903** | **72.30%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -80,7 +80,7 @@ The library versions and the evidence for them are in `third_party/MANIFEST.md`.
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `unknown` | 1,428 / 1,508 | 94.69% | 234,761 / 258,975 | 90.65% |
-| `app` | 1,176 / 1,256 | 93.63% | 269,760 / 311,160 | 86.69% |
+| `app` | 1,177 / 1,256 | 93.71% | 269,788 / 311,160 | 86.70% |
 <!-- /status:unattributed -->
 
 `unknown` holds functions that `ledger/func-attribution.tsv` gives no component, and `app` holds functions the
@@ -91,7 +91,7 @@ scan's `object` column):
 <!-- status:unattributed-origin -->
 | our candidate is compiled from | `unknown` matched / total | `app` matched / total |
 | --- | ---: | ---: |
-| our uenux2 units | 202 / 213 | 768 / 791 |
+| our uenux2 units | 202 / 213 | 769 / 791 |
 | OpenSSL | 668 / 673 | 157 / 157 |
 | SQLite | 240 / 242 | 37 / 38 |
 | our ecourna units | 99 / 101 | 102 / 103 |
@@ -120,9 +120,9 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 12,903 | 4,253,984 | matched |
+| `match` | 12,904 | 4,254,012 | matched |
 | `differs` | 267 | 256,532 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 475 | 580,414 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `unresolved` | 474 | 580,386 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 698 | 792,973 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -181,7 +181,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `byte` | 1,356 | 1,356 | 0 | 0 | 0 |
 | `fingerprint` | 640 | 639 | 0 | 1 | 0 |
-| `addr` | 7,933 | 7,765 | 45 | 122 | 1 |
+| `addr` | 7,933 | 7,766 | 45 | 121 | 1 |
 | `shape` | 1,303 | 1,260 | 32 | 11 | 0 |
 | `none` | 3,111 | 1,883 | 190 | 341 | 697 |
 <!-- /status:tiers -->

@@ -38694,3 +38694,14 @@ _ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERK
 # CriaTelaConferenciaVotoNuloCandidato), one call each, aligned with ours; neither has a record or an anchor. Our body
 # differs in frame offsets (src/units/378-uenux2-ctelasvota-criatela.mk), so the record anchors nothing.
 _ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb = func:6608; // evidence:callers+content
+# ESCAPES.2: the third word of api's (anonymous namespace)::ESCAPES (src/uenux2/src/api/io/cinistrings.cpp, unit 379's
+# notes), the std::vector<std::pair<std::string, char>>'s end of capacity, at 1839296. Besides 10879, its exit
+# destructor, one target function writes it: 14478 (__wasm_call_ctors, the static constructors) stores 0 at 1839292,
+# 1839288 and 1839296, allocates 160 bytes (call 137: ten 16-byte elements), stores the block at 1839288 and the block
+# plus 160 at 1839296, fills the ten escapes and later stores their end at 1839292 (offsets 0x961 to 0x99c and 0xaac of
+# build/out/splat/pieces/asm/libc++/14478-wasm_call_ctors.wat; /usr/bin/grep -rlE 'i32\.const 1839296($|[^0-9])'
+# build/out/splat/pieces/asm prints 10879 and 14478 alone). The words .0 and .1 are voted by 3651 and 10879. 10879 is
+# f6071(p0, 1839296, 1839292, 1839288, 8, 5, 16): ours scores 4 over 10 rows, all operand-only (the three words and the
+# call), and splat-remap reads it IDENTICAL with this name. The line carries 10879 alone, which reads unresolved
+# self-voted on this name without it.
+_ZN3api12_GLOBAL__N_17ESCAPESE.2 = 0x1c10c0; // type:data size:0x4 evidence:callers+content written by 14478 (__wasm_call_ctors), 0 and then the end of ESCAPES's 160-byte block, beside .0 and .1; read by its exit destructor 10879
