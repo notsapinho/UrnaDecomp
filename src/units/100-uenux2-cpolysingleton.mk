@@ -109,10 +109,11 @@
 #   170's fragment has what that waits for: the reading of the frame paragraph above holds there too, since a scratch
 #   push instantiated above the TU's code, ahead of its other format code, gives every push the target's slot.
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
-#   line (5866, matched in unit 268), which only the destructor's TU gives, GetInst's (a reading), so the block waits
-#   for GetInst (unit 268's fragment). has<CGeracaoVersoesContratos> (2860) matches from unit 268's roots, whose
-#   stand-in calls it for 12098 and 14478 (that fragment). CCalculaCV's block (11262, 11263) waits for its builder in
-#   ccalculacv.cpp; unit 121's fragment says why no roots builder stands in for it.
+#   line (5866), which only the destructor's TU gives, GetInst's (a reading); both match from that object, where unit
+#   268 writes GetInst, with a sink for the block's vtable in its roots (that fragment). has<CGeracaoVersoesContratos>
+#   (2860) matches from the same object, whose GetInst instantiates it; unit 268's roots stand-in calls it for 12098 and
+#   14478 (that fragment). CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
+#   unit 121's fragment says why no roots builder stands in for it.
 # - has<T>: written. The target's 3387 calls 608 and instance's 512 calls 305: the executable TU's two find
 #   instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged body, takes the slot as
 #   its last argument). Our uenux2 copies have no landing pads, so the two were byte-identical, binaryen kept one, and a
