@@ -16,7 +16,7 @@
 # no hint parameter) and case-sensitive (no copy of the text is upper-cased).
 #
 # Its callers: the target calls 5502 directly from 10967 (api::CQRCodeImage::GetData, written in unit 79's
-# cqrcodeimage.cpp, which differs: unit 79's fragment says why) and 2772 (api::CQRCodeImagePaper's constructor, which
+# cqrcodeimage.cpp, matched) and 2772 (api::CQRCodeImagePaper's constructor, which
 # holds MontaImagem inlined, written in unit 296's cqrcodeimagepaper.cpp), both in the link, so the roots file whose
 # w204_dado stood for 2772, the second call site that keeps 5502 out of line, went with unit 296. Unit 187's roots
 # stand-in for 5502's call of QRcode_encodeString went with this unit. With the guard's destructor in the link, 1254
