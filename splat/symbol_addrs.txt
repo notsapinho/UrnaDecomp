@@ -1448,7 +1448,7 @@ _ZN5comum8CRelUtil26IncluiCabecalhoEleicoesMZSERN3api17CPaperFormBuilderERKNSt3_
 _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initIPKcTnNS_9enable_ifIXsr31__has_forward_iterator_categoryIT_EE5valueEiE4typeELi0EEEvSA_SA_ = func:1544; // size:0x10 evidence:pair-addr
 _ZNK5comum2md17CDetalheCandidato11GetSuplenteEh = func:1545; // size:0x63 evidence:srcloc-anchor
 _ZNK5comum2md6CCargo7TemFotoEv = func:1546; // size:0x10 evidence:pair-fingerprint
-_ZNK5comum2md6CCargo13GetNomeNeutroEv = func:1547; // size:0xb8 evidence:call by:2302,2796,4464
+_ZNK5comum2md6CCargo13GetNomeNeutroEv = func:1547; // size:0xb8 evidence:call by:2302,2796,4464,13550
 _ZNK5comum2md16CEleitorDinamico27GetTituloMesarioHabilitacaoEv = func:1548; // size:0x4c evidence:srcloc-anchor
 _ZZNSt3__28__format23__create_packed_storageB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS0_15__output_bufferIcEEEEcEEJA9_KcKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEEvRyPNS_24__basic_format_arg_valueIT_EEDpRT0_ENKUlvE_clEv = func:1549; // size:0xc8 evidence:pair-fingerprint
 _ZNSt3__26__treeINS_12__value_typeIhjEENS_19__map_value_compareIhNS_4pairIKhjEENS_4lessIhEELb1EEENS_9allocatorIS6_EEE7destroyEPNS_11__tree_nodeIS2_PvEE = func:1550; // size:0x20 evidence:call
@@ -4187,7 +4187,7 @@ bn_get_bits = func:4616; // size:0x6b evidence:pair-fingerprint
 BN_RECP_CTX_set = func:4617; // size:0x3b evidence:pair-addr
 DH_new_by_nid = func:4618; // size:0x9 evidence:pair-addr
 ossl_dh_new_by_nid_ex = func:4619; // size:0x5d evidence:pair-addr
-_ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE = func:4620; // size:0xe5 evidence:pair-addr
+_ZN4vota16CPreShowFormVota20DesenhaDescricaoModoERN3api7IScreenENS1_6SPointE = func:4620; // size:0xe5 evidence:pair-addr
 BN_security_bits = func:4621; // size:0x6d evidence:pair-addr
 bn2binpad = func:4622; // size:0x1b6 evidence:pair-fingerprint
 BN_MONT_CTX_copy = func:4623; // size:0x63 evidence:pair-addr
@@ -4808,7 +4808,7 @@ _ZNK3api20CTextFieldDoubleLine12GetTextLinesEv = func:5499; // size:0xb60 eviden
 _ZN3api10CRectFieldC2ERKNS_5SRectENS_6TColorE = func:5501; // size:0x3a evidence:pair-addr
 _ZN3api12CQRCodeGuardC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:5502; // size:0x35f7 evidence:srcloc-anchor
 _ZN5comum14IInterfaceSavdD2Ev = func:5503; // size:0x17 evidence:pair-addr
-_ZNK3api17CStepsProgressBar4DrawERNS_7IScreenE = func:5504; // size:0x2cee evidence:vtable
+_ZNK3api17CStepsProgressBar4DrawERNS_7IScreenE = func:5504; // size:0x2cee evidence:call by:13550
 _ZNSt3__26vectorIN3api17CStepsProgressBar9SSegmentoENS_9allocatorIS3_EEE26__swap_out_circular_bufferERNS_14__split_bufferIS3_RS5_EE = func:5505; // size:0x151 evidence:pair-addr
 _ZN3api12CProgressBar10IncrementaEv = func:5508; // size:0x6e evidence:pair-addr
 _ZN3api12CProgressBarD2Ev = func:5509; // size:0x4a evidence:pair-addr
@@ -11618,7 +11618,7 @@ kdf_sshkdf_derive = func:13545; // size:0x25c evidence:pair-addr
 kdf_sshkdf_reset = func:13546; // size:0x79 evidence:pair-addr
 kdf_sshkdf_free = func:13547; // size:0x8a evidence:pair-addr
 kdf_sshkdf_new = func:13548; // size:0x15 evidence:pair-addr
-_ZN4vota19CPreShowProgressBar7PreShowERN3api7IScreenE = func:13550; // size:0x846 evidence:vtable
+_ZN4vota19CPreShowProgressBar7PreShowERN3api7IScreenE = func:13550; // size:0x846 evidence:srcloc-anchor
 kdf_scrypt_derive = func:13552; // size:0x53d evidence:pair-addr
 kdf_scrypt_reset = func:13553; // size:0x56 evidence:pair-addr
 kdf_scrypt_free = func:13554; // size:0x7e evidence:pair-addr
@@ -38761,3 +38761,9 @@ _ZN5comum24CGeracaoVersoesContratos17ObtemDependenciasERKNSt3__212basic_stringIc
 # and 12040 with it (splat-build refuses 12040 once 12039 is out: self-voted on 12039's name, which only 12040's table
 # store votes for); it counts 12039 for nothing; no other vote reaches the name (no census pair: the bodies differ).
 _ZNK5comum2md15estadoaplicacao12CEstadoGeral25GetDadosQRCodeCertificadoEb = func:5634; // evidence:callers+content its own body (above): the one target function loading the tail @1226 ("{}:{}"), two calls of 5635, alone on its depth-0 fingerprint, addr and shape; ours differs (52 over 963 rows)
+# 5504: slot 2 (Draw) of api::CStepsProgressBar's vtable (rtti, 0x18232c; ledger/vtables.json [3665, 10973, 5504, ...])
+# in both links, which step 8 names by `vtable` until 13550, its one direct caller, anchors (`srcloc-anchor`, on the
+# constructor's record it holds inlined): 13550's own call vote then names it (`call by:13550`), self-voted
+# (docs/reference/splat.md 3), and 13550 reads `unresolved self-voted` without this line. Our Draw differs (unresolved
+# on the table slot of CabeEmUmaLinha, 10972: unit 41's fragment); the line goes once it matches.
+_ZNK3api17CStepsProgressBar4DrawERNS_7IScreenE = func:5504; // size:0x2cee evidence:vtable-slot

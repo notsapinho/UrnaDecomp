@@ -2,7 +2,7 @@
 # vota::CExecucaoVota and vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor and constructor,
 # vota::CAguardaInicio's slots, vota::impl::IPoliticaExecucaoEleitor's destructor and GetInst,
 # vota::impl::CPoliticaExecucaoEleitor's LimpaBufferInput and vota::GetFormularioInterativo, the builder of the forms with
-# a vota::CPreShowFormVota, whose PreShow draws the mode text through vota::DesenhaDescricaoModo. Paths relative to
+# a vota::CPreShowFormVota, whose PreShow draws the mode text through its member DesenhaDescricaoModo. Paths relative to
 # src/uenux2.
 #
 # Target functions, by the object that holds them:
@@ -149,7 +149,8 @@
 # around the records' columns (lines 33, 34 and 37 put each call where its record says; how the text before each call
 # is shared out is a choice). Which of CExecucaoVotaCooperativa's slots 2 and 3, one body, the source defines first.
 #
-# CPreShowFormVota::PreShow (7707) and vota::DesenhaDescricaoModo (4620), in cpreshowformvota.cpp, match. 7707 calls
+# CPreShowFormVota::PreShow (7707) and CPreShowFormVota::DesenhaDescricaoModo (4620), in cpreshowformvota.cpp, match.
+# 7707 calls
 # api::IScreen's slot 4 with 1, then 4620 with the point {340, 5}; 4620 draws the text api::CApplication::GetDescricaoModo
 # (5564, unit 171's) gives, when it is not empty, through IScreen's slot 19, with an api::CFixedText of alignment 2, the
 # font {20, 1} and the colours 3 and 0 (cpreshowformvota.h says what places 4620 here and why its point is by value).
@@ -163,8 +164,11 @@
 # `const api::SPoint&` parameter (7707 then stores the point once, at +12, and passes that; the target stores it twice
 # and passes +8), and the font as a named local (4620's frame offsets move, the font above the CFixedText). The band
 # places nothing: 4620 is alone in its stretch of ledger/tu-clusters.tsv (695, uses 2), between two OpenSSL objects.
-# Chosen: 4620's name, its being a free function of vota, its parameters' names, and the two functions' place in the
-# file, before GetFormularioInterativo. Put after GetFormulario instead, they leave the object's data in the same order
+# 4620 takes `this`, a member of CPreShowFormVota that reads no state, which binaryen's dead-argument elimination
+# drops: measured through 13550's locals (297 over 1028 rows with 4620 free, 49 over 1008 as the member, the rest
+# unchanged; cpreshowformvota.h and fragment 391 say why), 7707 and 4620 scoring as above with it (step 9 renamed
+# 4620's match line to the member's symbol). Chosen: 4620's name, the member form among those that pass `this`, its
+# access, its parameters' names, and the two functions' place in the file, before GetFormularioInterativo. Put after GetFormulario instead, they leave the object's data in the same order
 # (wasm-objdump -x on both objects), the target's run's: CPreShowFormVota's vtable and typeinfo, IPreShow<IScreen>'s
 # typeinfo, CFixedText's vtable and typeinfo, the block's vtable and typeinfo (our object also emits IText's typeinfo
 # after CFixedText's, which the target's run does not hold: its block vtable follows CFixedText's typeinfo).

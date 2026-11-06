@@ -156,11 +156,11 @@
 # function, relocated operands masked).
 #
 # app/vota/eleitor/comum/cpreshowprogressbar.cpp is fragment 391's file (vota::CPreShowProgressBar::PreShow, 13550,
-# written and not matched), listed here for its place: the target's data put its vtable right before ctelascargo.cpp's
-# records, and before ctelascargo.cpp.o is the place of fewest objects out of the data's order among those weighed
-# (docs/reference/facts/codegen.md C4's record-aware count, at 8f35addb: 237 here, 238 after ctelascargo.cpp.o, 275
-# after cpoliticaexecucaoeleitor.cpp.o in unit 165's list, 427 at fragment 391's own place). Its order decides no byte
-# measured (fragment 391 has the scores).
+# matched), listed here for its place: the target's data put its vtable right before ctelascargo.cpp's records, and
+# before ctelascargo.cpp.o is the place of fewest objects out of the data's order among those weighed
+# (docs/reference/facts/codegen.md C4's record-aware count, on 59a65ba6 with fragment 391's match: 236 here, 237 after
+# ctelascargo.cpp.o, 274 after cpoliticaexecucaoeleitor.cpp.o in unit 165's list, 426 at fragment 391's own place). Its
+# order decides no byte measured (fragment 391 has the scores).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \

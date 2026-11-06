@@ -4483,7 +4483,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4617	59	2	-	openssl	skeleton	4757	addr	1	BN_RECP_CTX_set
 4618	9	2	openssl	openssl	skeleton	4715	addr	1	DH_new_by_nid
 4619	93	2	openssl	openssl	skeleton	4716	addr	7	ossl_dh_new_by_nid_ex
-4620	229	2	app	api	skeleton	5829	addr	6	vota::DesenhaDescricaoModo(api::IScreen&, api::SPoint)
+4620	229	2	app	api	skeleton	5829	addr	6	vota::CPreShowFormVota::DesenhaDescricaoModo(api::IScreen&, api::SPoint)
 4621	109	2	app	-	skeleton	4763	addr	5	BN_security_bits
 4622	438	2	app	openssl	skeleton	4764	fingerprint	0	bn2binpad
 4623	99	2	app	openssl	skeleton	4762	addr	3	BN_MONT_CTX_copy

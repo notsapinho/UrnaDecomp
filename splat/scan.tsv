@@ -4483,7 +4483,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4617	BN_RECP_CTX_set	4757	symbol	match	-	59	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_recp.o
 4618	DH_new_by_nid	4715	symbol	match	-	9	addr	openssl	1	openssl/O3/crypto/dh/libcrypto-lib-dh_group_params.o
 4619	ossl_dh_new_by_nid_ex	4716	symbol	match	readings: address string	93	addr	openssl	1	openssl/O3/crypto/dh/libcrypto-lib-dh_group_params.o
-4620	_ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE	5829	symbol	match	readings: address symbol	229	addr	api	1	app/uenux2/src/app/vota/comum/cpreshowformvota.cpp.o
+4620	_ZN4vota16CPreShowFormVota20DesenhaDescricaoModoERN3api7IScreenENS1_6SPointE	5829	symbol	match	readings: address symbol	229	addr	api	1	app/uenux2/src/app/vota/comum/cpreshowformvota.cpp.o
 4621	BN_security_bits	4763	symbol	match	-	109	addr	app	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 4622	bn2binpad	4764	symbol	match	-	438	fingerprint	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 4623	BN_MONT_CTX_copy	4762	symbol	match	-	99	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_mont.o
@@ -13413,7 +13413,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 13547	kdf_sshkdf_free	14577	symbol	match	readings: address string	138	addr	openssl	1	openssl/O3/providers/implementations/kdfs/libdefault-lib-sshkdf.o
 13548	kdf_sshkdf_new	14578	symbol	match	readings: address string	21	addr	openssl	1	openssl/O3/providers/implementations/kdfs/libdefault-lib-sshkdf.o
 13549	kdf_scrypt_gettable_ctx_params@openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o	14579	symbol	match	readings: address same-content	7	addr	unknown	2	openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o
-13550	_ZN4vota19CPreShowProgressBar7PreShowERN3api7IScreenE	12455	symbol	differs	+0x5f target +0x5e local.set 20 | ours +0x5e local.set 17	2118	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/cpreshowprogressbar.cpp.o
+13550	_ZN4vota19CPreShowProgressBar7PreShowERN3api7IScreenE	12455	symbol	match	readings: address symbol,address string,address srcloc,table slot	2118	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/cpreshowprogressbar.cpp.o
 13551	kdf_scrypt_settable_ctx_params@openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o	14580	symbol	match	readings: address content-repointed	7	addr	unknown	2	openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o
 13552	kdf_scrypt_derive	14581	symbol	match	readings: address string	1341	addr	openssl	1	openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o
 13553	kdf_scrypt_reset	14582	symbol	match	readings: address string	86	addr	openssl	1	openssl/O3/providers/implementations/kdfs/libdefault-lib-scrypt.o

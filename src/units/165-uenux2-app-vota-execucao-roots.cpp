@@ -10,8 +10,8 @@
 // - vota::CExecucaoVotaCooperativa's constructor (fn 7828) is in the target's table (slot 126), so its own address is
 //   taken, which also keeps the vtable it stores; no reconstructed code takes it.
 // - vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target, none reconstructed: one stand-in below.
-// - vota::DesenhaDescricaoModo (fn 4620) has two direct callers in the target, CPreShowFormVota::PreShow (fn 7707) and
-//   CPreShowProgressBar's slot 2 (fn 13550, fragment 391's, written), both in the link: no stand-in.
+// - vota::CPreShowFormVota::DesenhaDescricaoModo (fn 4620) has two direct callers in the target, CPreShowFormVota::PreShow
+//   (fn 7707) and CPreShowProgressBar's slot 2 (fn 13550, fragment 391's), both in the link: no stand-in.
 // Declared through asm labels with the objects' signatures; no header.
 extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioInterativoERN3api23CInteractiveFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");

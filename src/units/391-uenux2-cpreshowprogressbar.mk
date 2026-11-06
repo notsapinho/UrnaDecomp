@@ -1,11 +1,12 @@
 # Unit 391: vota::CPreShowProgressBar::PreShow (target fn 13550, slot 2 of the class's vtable @1536544, its key
-# function), written in src/uenux2/src/app/vota/eleitor/comum/cpreshowprogressbar.cpp and not matched, with
-# api::CStepsProgressBar's constructor (record cstepsprogressbar.cpp:428:15), which 13550 holds behind a second prologue
-# (binaryen inlined it, so it has no target function of its own), written in unit 41's cstepsprogressbar.cpp (that
-# fragment has what the constructor rests on). This fragment lists no source: unit 150's list compiles
-# cpreshowprogressbar.cpp, before ctelascargo.cpp, for its place (that fragment has the count). Scores are `pnpm wasm
-# score ../target/vota_web_wasm.wasm 13550 <link> <ours>` at the default depth, whole link at the tree's flags, on
-# 8f35addb with this unit.
+# function), matched, in src/uenux2/src/app/vota/eleitor/comum/cpreshowprogressbar.cpp, with api::CStepsProgressBar's
+# constructor (record cstepsprogressbar.cpp:428:15), which 13550 holds behind a second prologue (binaryen inlined it,
+# so it has no target function of its own), written in unit 41's cstepsprogressbar.cpp (that fragment has what the
+# constructor rests on). This fragment lists no source: unit 150's list compiles cpreshowprogressbar.cpp, before
+# ctelascargo.cpp, for its place (that fragment has the count). Scores are `pnpm wasm score
+# ../target/vota_web_wasm.wasm 13550 <link> <ours>` at the default depth, whole link at the tree's flags: the forms
+# measured before vota::DesenhaDescricaoModo became a member (below) on 8f35addb with this unit, the rest on 59a65ba6
+# with this unit.
 #
 # The file: no record names it. PreShow is the class's one out-of-line virtual member, so its object emits the vtable
 # and typeinfo, which the target's data hold between cpoliticaexecucaoeleitor.cpp's records (@1536400 to @1536543) and
@@ -21,17 +22,12 @@
 # steps or more an api::CStepsProgressBar over (2, 2, the screen's width - 3, 30) in the colours 3, 2, 36, 2, 1, 3 and
 # 0, drawn (5504) and destroyed (3665).
 #
-# Where it stands: 297 over 1028 rows (same 731, replaced 247 [242 operand-only], inserted 21, deleted 29), the scan's
-# row `differs` at +0x5e (local.set 20 | local.set 17). Every row that differs is a local's number, or a row the diff
-# aligns around them, but three: the post loop's guard, which the target writes
-# `if (begin == end) { p0 = 0; br } p0 = 0;` and ours `if (begin != end)`; the push_back growth's compare, `i32.gt_u`
-# against our `i32.lt_u` with its operands the other way round (binaryen can swap a compare's operands,
-# docs/reference/facts/codegen.md C1; that the locals decide it here is a reading); and `i32.const 69` against our 43,
-# the CUeGuiError throw's destructor slot (a table slot). The guard follows the locals: the target keeps the steps
-# vector's end pointer in the parameter's local, after GetInst's result, so the two zero sets stay, where ours has it in
-# a local of its own whose zero sets binaryen drops (the forms below that give it the parameter's local give the
-# target's guard). So what is left is binaryen's packing of locals (docs/reference/facts/reading.md R10, "Locals alone",
-# as 5480's in unit 379): not explained.
+# What matches it: 13550 is `match` with every row of `pnpm wasm score` an operand (47 over 1007 rows, same 960,
+# replaced 47 [47 operand-only], inserted 0, deleted 0; the one row that is no call or data address is the CUeGuiError
+# throw's destructor, table slot 69 against our 43, which re-points to 4636). The last two forms of the list below made
+# it so, and api::CStepsProgressBar::Draw (5504), its callee, needs a hand line (below). The object's place decides
+# nothing measured: a link with cpreshowprogressbar.cpp in a list of this fragment's own (before cprogressbar.cpp.o)
+# gives the same 47 over 1007.
 #
 # Forms the bytes decide, each measured against the one before it (rows of the score or the object's disassembly):
 # - the more-than-one-choice test as a `const bool` read before the choice loop: the target tests `>= 2` in the loop on
@@ -51,8 +47,35 @@
 #   rect written in place gives the same object.
 # - in the constructor (unit 41's): the value-initialized base and `std::min<uedword>(m_passos.size(), passo)`, whose
 #   other operand order gives 303 over 1033 rows.
+# - vota::DesenhaDescricaoModo (4620, in unit 165's cpreshowformvota.cpp) a member of CPreShowFormVota, so PreShow
+#   passes it `this`: 297 over 1028 rows with it a free function, 49 over 1008 as the member (the rest of this body
+#   unchanged). Binaryen's dead-argument elimination drops the argument, so 4620 keeps its type and its match (6 over
+#   109 rows, as before), and so does 7707, its other caller (3 over 28); step 9 renamed 4620's match line to the
+#   member's symbol. cpreshowformvota.h says why it is a member; the forms that pass `this` otherwise are not measured.
+# - the current post held as a comum::CCargos::TCargoEleicao (`cargoEleicaoAtual`), its fields assigned in the
+#   `if (!fim)` and compared one by one: 49 over 1008 rows with the two ids as scalars, 47 over 1007 so (the cargo
+#   compare's operands: the target loads the post's cargo first, then compares the current one). clang orders that
+#   compare in its IR, and binaryen keeps clang's order: optimize-instructions moves a local.get right of a load and
+#   then sorts it left by node kind, so each of the six runs on 13550 flips it (13550 printed after each pass, build
+#   below). With a scalar `TCargoID cargoAtual` clang widens its phi to i32 (`icmp eq i32 %phi, %zext`: the phi first);
+#   the pair's field stays i8 and the compare keeps the source's order (`icmp eq i8 %load, %field`, the IR of this
+#   object). `item == cargoEleicaoAtual`, the pair's operator==, gives another object (the pair form measured below);
+#   the pair default-constructed or built from (0, 0) gives this one.
 #
-# Forms tried for the locals, none the target's: the current post compared as a pair,
+# Why `this` decides the locals (a reading, with what was measured): in the target, 13550's parameter 0's local, `this`,
+# holds GetInst's range result, the steps vector's end pointer (with its two zero sets on the loop's guard) and the
+# destroy loop's iterator, the three values clang gives one local in the link's r02 text. Binaryen's -Oz optimizes
+# 13550 three times (its function passes before inlining, then once per inlining-optimizing iteration that inlines into
+# it). With `this` unused, the first round's coalesce-locals takes the reverse order, where fim (a copy carrier, with
+# few uses) takes the parameter's index before the end, so the end gets an index of its own and rse drops its zero
+# sets; from then on the end is live at the function's entry, which interferes with the parameters, and the later
+# rounds give `this`'s index to the choice counter. Measured with a build of the image's binaryen
+# (version_130-4-gb9c72894) that prints coalesce-locals' inputs and choices, whose `wasm-opt -Oz` on r02-stripped.wasm
+# gives r05.wasm byte for byte: on the r02 text with clang's local of those three values renamed to local 0 and the
+# cargo compare's operands swapped, the replay gives 47 over 1007 rows, every one an operand, before this source did;
+# the r02 text as clang wrote it from the scalar ids gives 297 over 1028.
+#
+# Forms tried for the locals with 4620 free (8f35addb), none the target's: the current post compared as a pair,
 # `item == comum::CCargos::TCargoEleicao(eleicaoAtual, cargoAtual)` (or a pair variable), 99 over 1019 rows (same 920,
 # replaced 79 [75 operand-only], inserted 12, deleted 8), its locals near the target's, but its test branchless (an
 # `i32.and` of the two compares) and its post id masked (`& 255`) before the loop, where the target branches and
@@ -74,7 +97,15 @@
 # link.
 #
 # Chosen: the file's name, the locals' names and types where the bytes leave them open (`uedword passoAtual`, `unsigned
-# escolha`, the ids initialized to 0), the steps' colours as plain TColor casts.
+# escolha`, `cargoEleicaoAtual`, the pair value-initialized), the steps' colours as plain TColor casts.
+#
+# 5504's name: `api::CStepsProgressBar::Draw` fills slot 2 of that class's vtable in both links (ledger/vtables.json:
+# [3665, 10973, 5504, ...]), and step 8 named it so (`evidence:vtable`) until 13550 anchored (`srcloc-anchor`, on the
+# constructor's record it holds): 13550's call vote now names it (`evidence:call by:13550`), a name voted by the match
+# alone, so the scan reads 13550 `unresolved self-voted` on its call of 5504 (docs/reference/splat.md, "No circular
+# evidence"). The `vtable-slot` hand line for 5504 in splat/symbol_addrs.txt keeps the slot's evidence, which no match
+# gives; without it 13550 leaves `match`. 5504's own body is written and differs (unit 41's fragment), and the line goes
+# once 5504 matches.
 # No roots: 13550 is reached through its vtable, which the CriaTela* screens' vptr stores keep (unit 378); this object
 # emits the vtable now, and unit 378's pending file (the trap) went. Stand-ins this unit made idle went, call by call:
 # unit 41's roots file (DestroiBarrasPassos, 3665's second caller), unit 165's ModoProgressBar (4620), unit 88's
@@ -82,6 +113,9 @@
 # for 12811 now), and unit 110's ConsultaTodos call of GetCargo (861), which stood for 13550 alone. The constructor's
 # throw takes EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS (5014) in api/gui/eueguierror.h; of the 632 objects the edited
 # headers (that enum, cstepsprogressbar.h, cpreshowformvota.h) recompile, only the two roots files this unit edits
-# changed (md5 against 8f35addb's objects).
+# changed (md5 against 8f35addb's objects). Making 4620 a member (cpreshowformvota.h again) changes
+# cpreshowformvota.cpp.o and this object only: ctelasvota.cpp.o and unit 102's roots object, the header's other
+# includers, compiled against the header before and after are byte-identical, and so is every other object of the link
+# line (md5 of all 1102 before and after rebuilding the tree with the new header).
 # cpreshowprogressbar.cpp reaches Boost through cconfiguracaoeleicao.h.
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/comum/cpreshowprogressbar.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)

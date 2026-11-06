@@ -3,7 +3,7 @@
 // class's key function, and the vtable and typeinfo its object emits lie in the target's data between
 // cpoliticaexecucaoeleitor.cpp's records (@1536400 to @1536543) and ctelascargo.cpp's (@1536576), where this
 // directory's files run in name order, so the file is this directory's, named after the class (the name a choice).
-// Written and not matched: src/units/391-uenux2-cpreshowprogressbar.mk has the forms measured and what is left.
+// src/units/391-uenux2-cpreshowprogressbar.mk has the forms measured and the choices.
 #include "app/vota/comum/cpreshowformvota.h"
 
 #include <string>
@@ -24,11 +24,10 @@ void CPreShowProgressBar::PreShow(api::IScreen& tela)
 
     std::vector<std::string> passos;
     const bool fim = comum::CCargos::GetInst().IsFim();
-    comum::TEleicaoID eleicaoAtual = 0;
-    comum::TCargoID cargoAtual = 0;
+    comum::CCargos::TCargoEleicao cargoEleicaoAtual;
     if (!fim) {
-        eleicaoAtual = comum::CCargos::GetInst().GetCurrentEleicaoID();
-        cargoAtual = comum::CCargos::GetInst().GetCurrentCargoID();
+        cargoEleicaoAtual.first = comum::CCargos::GetInst().GetCurrentEleicaoID();
+        cargoEleicaoAtual.second = comum::CCargos::GetInst().GetCurrentCargoID();
     }
     const comum::md::TQtdEscolha escolhaAtual = g_escolhaAtual;
 
@@ -36,7 +35,7 @@ void CPreShowProgressBar::PreShow(api::IScreen& tela)
     bool atingido = fim;
     for (const auto& item : comum::CCargos::GetInst().GetCargos()) {
         const comum::md::CCargo& cargo = comum::CConfiguracaoEleicao::GetInst().GetCargo(item.second);
-        const bool atual = !fim && item.first == eleicaoAtual && item.second == cargoAtual;
+        const bool atual = !fim && item.first == cargoEleicaoAtual.first && item.second == cargoEleicaoAtual.second;
         const bool variasEscolhas = cargo.GetQtdeEscolhas() > 1;
         for (unsigned escolha = 1; escolha <= cargo.GetQtdeEscolhas(); ++escolha) {
             const std::string nome = cargo.GetNomeNeutro();

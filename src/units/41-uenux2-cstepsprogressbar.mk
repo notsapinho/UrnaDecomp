@@ -4,8 +4,8 @@
 # api::CStepsProgressBar::CStepsProgressBar(const uedword, const std::vector<std::string> &, const SRect &, const TColor
 # x7)). The constructor is written there, its throw on the record's line (code 5014,
 # EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS in api/gui/eueguierror.h, its name chosen), and has no target function of its
-# own: binaryen inlined it into its one caller, fn 13550 (slot 2 of vota::CPreShowProgressBar, fragment 391's, written
-# and not matched), behind a second prologue (the caller reads the C1's returned `this`, codegen.md C6). Read from
+# own: binaryen inlined it into its one caller, fn 13550 (slot 2 of vota::CPreShowProgressBar, fragment 391's,
+# matched), behind a second prologue (the caller reads the C1's returned `this`, codegen.md C6). Read from
 # 13550: the base value-initialized (its data at +4 to +24 cleared before the vptr store, codegen.md C9:
 # `: IFormField<IScreen>()`), the vector copied, the rect and the seven colours stored, the throw when the given steps
 # are empty, then the current step clamped to their number, stored and the form refreshed when it changed: SetPassoAtual
@@ -99,9 +99,10 @@
 #   / 4) and of one f64.add; and the text's emptiness, which the target tests in each arm before the merge and ours
 #   after it. They stay written: Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the
 #   table slots of 10972 and 10971 re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's
-#   slot).
+#   slot). Its name holds by a `vtable-slot` hand line since 13550, its one direct caller, matched (fragment 391 says
+#   why); the line goes once Draw matches.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)
-# No roots: the destructor's target callers, the D0 10973 and fn 13550 (fragment 391's, written), are both in the link;
+# No roots: the destructor's target callers, the D0 10973 and fn 13550 (fragment 391's), are both in the link;
 # the roots file's stand-in for 13550 (DestroiBarrasPassos) went with it.
