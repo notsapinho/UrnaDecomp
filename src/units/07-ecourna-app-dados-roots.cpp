@@ -14,19 +14,16 @@ int rdados_registro_2(int, int, int) __asm__("_ZN7ecourna3app5dados29CRegistroId
 void rdados_registro_hab(int, int) __asm__("_ZNK7ecourna3app5dados29CRegistroIdentificacaoEleitor27GetIdentificadorHabilitacaoEv");
 void rdados_registro_pri(int, int) __asm__("_ZNK7ecourna3app5dados29CRegistroIdentificacaoEleitor25GetIdentificadorPrincipalEv");
 int rdados_serial(int, int) __asm__("_ZN7ecourna3app5dados12CSerialMidiaC2ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
-// a library helper the target keeps out of line because other (unreconstructed) callers share it: std::regex's
-// (const char*, flags) ctor (fn 2416, 4 uses)
+// std::regex's (const char*, flags) constructor (fn 2416) holds the target's table slot 6208 (elem[6208]). Its target
+// callers, 5492, 6999 (twice) and 9258, are in the link and every call passes the flags 512; the table is what keeps
+// that parameter in the target (docs/reference/facts/units.md §U15), so its address is taken here. A link without it
+// gives 2416 the type (i32, i32) -> i32, and 2416, 5492, 9258 and 10901 leave `match`.
 int rdados_regex_ctor(int, int, int) __asm__("_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEEC2B8ne210108EPKcNS_15regex_constants18syntax_option_typeE");
 }
 
 namespace {
 
 void* volatile rdados_sink;
-
-__attribute__((noinline)) int UsaBibliotecas(int a)
-{
-    return rdados_regex_ctor(a, a + 40, 16);
-}
 
 struct SRdadosRoots {
     SRdadosRoots()
@@ -36,7 +33,7 @@ struct SRdadosRoots {
         rdados_sink = reinterpret_cast<void*>(&rdados_registro_hab);
         rdados_sink = reinterpret_cast<void*>(&rdados_registro_pri);
         rdados_sink = reinterpret_cast<void*>(&rdados_serial);
-        rdados_sink = reinterpret_cast<void*>(&UsaBibliotecas);
+        rdados_sink = reinterpret_cast<void*>(&rdados_regex_ctor);
     }
 } rdados_roots;
 

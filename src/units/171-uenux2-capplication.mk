@@ -34,10 +34,11 @@
 #   api/uelog/cescritorlog.h now declares ELogAplicativos there, with a using-declaration in api, which gives
 #   cescritorlog.cpp.o, cloga.cpp.o, cwasmlogd.cpp.o, ieventoslog.cpp.o, cmonitoraalimentacao.cpp.o, clogvota.cpp.o and
 #   cthreadmonitor.cpp.o the same code and data with their symbols renamed (the disassembly with names and offsets
-#   masked, and the data bytes, against the objects of the branch's base); fns 433 and 10260 keep their matches under
-#   the new names. That it is a static member is chosen (it uses no this). The body, in the target's order: the three
-#   strings assigned to the statics at .bss 1839168, 1839180 and 1839192 (std::string's copy assignment inlined), -1 to
-#   s_codigoRetorno, the fourth parameter to the word at 1839204, then
+#   masked, and the data bytes, against the objects of the branch's base); fns 433 and 10260 kept their matches under
+#   the new names (433's went later, with unit 100's calls of 11157: that fragment). That it is a static member is
+#   chosen (it uses no this). The body, in the target's order: the three strings assigned to the statics at .bss
+#   1839168, 1839180 and 1839192 (std::string's copy assignment inlined), -1 to s_codigoRetorno, the fourth parameter to
+#   the word at 1839204, then
 #   std::locale::global(std::locale(std::locale(), new commaAsDecimalSeparator)), whose libc++ code binaryen inlines
 #   (locale::global, __install_ctor: the landing pads are libc++'s), then the stack cleared (the vector's clear inlined,
 #   ~CApplicationContext called) and the first context pushed. The two stores after the strings are written in the

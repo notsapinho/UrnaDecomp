@@ -28,6 +28,9 @@ public:
     virtual ~CComparecimentoMesarioServico();
 
     void Inserir(const md::CComparecimentoMesario& comparecimento) const { m_dao->Inserir(comparecimento); }
+    // RecuperarTodos: the DAO's (slot 8) result handed back; one body with CJustificadorServico's, target fn 5723
+    // (src/units/386-uenux2-carregaeleitores.mk). The name and the const are chosen.
+    std::vector<md::CComparecimentoMesario> RecuperarTodos() const;
 
 private:
     std::shared_ptr<dao::IComparecimentoMesarioDAO> m_dao;

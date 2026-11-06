@@ -53,9 +53,10 @@
 #   holds CCalculaCV::IncluiString inlined (record ccalculacv.cpp:109): CCalculaCV::IncluiResultado, which
 #   ccalculacv.cpp defines and which has no target function, inlined by binaryen into its one caller, as in the target
 #   (clang cannot inline it into another TU's code).
-# - std::vector<std::vector<std::pair<std::string, std::string>>>'s __destroy_vector (fn 5980, 4 over 115), from this
-#   roots object: the stand-ins for 12110 and 12039 destroy fn 5634's result, as those two do. Use band 2 puts the
-#   target's copy right after cmostraqrcodebu.cpp's 5982, in cmostraqrcodecertificado.cpp's object, 12039's (a reading).
+# - std::vector<std::vector<std::pair<std::string, std::string>>>'s __destroy_vector (fn 5980, 4 over 115), matched
+#   from this roots object until unit 387 wrote 12039 in cmostraqrcodecertificado.cpp, whose object links first and
+#   gives it since, the same bytes: use band 2 puts the target's copy right after cmostraqrcodebu.cpp's 5982, in that
+#   object (a reading). The stand-in for 12110 destroys fn 5634's result too, as 12110 does.
 # - CEstadoGeral's RecuperarCertificado (fn 5635) with its static's exit destructor (fn 11268), and
 #   GetDadosQRCodeCertificado (fn 5634, written, no-candidate): unit 215's fragment.
 # Measured: TrailerProporcionalPartido with the code's line appended as one expression, 132 over 1378 (32 inserted, 32
@@ -65,7 +66,8 @@
 # built on the heap first (a reading of libc++'s short strings, not measured). The roots object compiles at app/vota/'s
 # flags; the target keeps 11260's copy from cgeradorbu.cpp's object (comum, no strict aliasing: its record @1575504 lies
 # in that object's run). Measured on a whole link with the roots object built without strict aliasing: 11259, 11260,
-# 11974 and 5967 match either way, and 5980 alone leaves match (its callers 12039 and 12110 are app/vota/ code).
+# 11974 and 5967 match either way, and 5980 alone leaves match (its callers 12039 and 12110 are app/vota/ code; it
+# links from cmostraqrcodecertificado.cpp.o since, not from these roots).
 # Chosen for these: the names ImprimeQuantidade, HeaderNominais, IncluiDadosFinaisCV, IncluiResultado and IsUltimo, the
 # template members' lines but the records' (the helper, CodVerificador and HeaderNominais after TrailerMajoritario), the
 # locals' names.
@@ -88,8 +90,8 @@
 # The roots stand in for the GetInst callers not in the link (fns 12098 and CGeraBU::StartState 12110; 7160, unit 329's,
 # is), for api::CDateTime::operator- (5471), whose other target caller, fn 13012, is not written, for 12110's calls of
 # ImprimeQuantidade (2248, two of its five) and GetDadosQRCodeCertificado (5634, with true) and its table slots of
-# 11259, 11260 and 11974, and for fn 12039's call of 5634 (with false); the stand-ins for those calls (ChamaGeraBU,
-# ChamaCertificado) are address-taken, never called. The stand-ins for 3054's callers (fns 11804, 11809) and 5936's
+# 11259, 11260 and 11974; the stand-in for those calls (ChamaGeraBU) is address-taken, never called. The one for fn
+# 12039's call of 5634 (ChamaCertificado) went: unit 387 wrote 12039. The stand-ins for 3054's callers (fns 11804, 11809) and 5936's
 # (11809, 11812), and the call of CGeraBU's GetInst for fn 7481, went: those callers are in the link. Their comments
 # name each. The roots object compiles at app/vota/'s flags with Boost's headers (it instantiates
 # cdatasourcesrelatorio.h's members, whose kept copies are TSE code; it compiled at APP_CXXFLAGS while its stand-ins

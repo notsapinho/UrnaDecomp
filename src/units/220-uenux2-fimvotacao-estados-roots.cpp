@@ -3,12 +3,12 @@
 // called ones has two or more direct callers in the target (ledger/callgraph.tsv), so the stand-ins give them two call
 // sites each; a function the target reaches by its table slot has its address taken. Each stand-in names the target
 // callers it stands for, and goes when they are in splat/matched.txt or written in the link. The GetInst and operator-
-// callees are declared through asm labels; the others through their headers, since the stand-ins for fn 12110 and fn
-// 12039 instantiate code of those headers (CDataSourcesRelatorio's members, std::vector's destruction): this file
+// callees are declared through asm labels; the others through their headers, since the stand-in for fn 12110
+// instantiates code of those headers (CDataSourcesRelatorio's members, std::vector's destruction): this file
 // compiles at the flags of 12110's directory, app/vota/ (strict aliasing, the fragment's rule), those of
-// cgeradorresumozeresima.cpp, whose copies of CodVerificador (fn 11974) and its helper (fn 5967) the target keeps,
-// and of cmostraqrcodecertificado.cpp, whose copy of the vector's destruction (fn 5980) it keeps by a reading of use
-// band 2; 11260's kept copy is cgeradorbu.cpp's, built without strict aliasing (the fragment has the measurement).
+// cgeradorresumozeresima.cpp, whose copies of CodVerificador (fn 11974) and its helper (fn 5967) the target keeps;
+// the vector's destruction (fn 5980) links from cmostraqrcodecertificado.cpp.o, 12039's, and 11260's kept copy is
+// cgeradorbu.cpp's, built without strict aliasing (the fragment has the measurement).
 #include <string>
 
 #include "api/gui/cpaperformbuilder.h"
@@ -62,13 +62,6 @@ __attribute__((noinline)) int ChamaGeraBU(api::CPaperFormBuilder& builder, const
     return static_cast<int>(geral.GetDadosQRCodeCertificado(true).size()) + n;
 }
 
-// Stands for fn 12039 (a callback in cmostraqrcodecertificado.cpp's object, not written, whose table slot fn 12040
-// stores): its call of GetDadosQRCodeCertificado (fn 5634) with false, whose result it destroys through fn 5980.
-__attribute__((noinline)) int ChamaCertificado(const comum::md::estadoaplicacao::CEstadoGeral& geral)
-{
-    return static_cast<int>(geral.GetDadosQRCodeCertificado(false).size()) * 3;
-}
-
 using DataSources = comum::CDataSourcesRelatorio<comum::CRdvVota, comum::CEleitores>;
 
 struct SW220Roots {
@@ -77,7 +70,6 @@ struct SW220Roots {
         w220_n = ChamaEstadosEncerramentoOutros(w220_n);
         w220_n = DiferencaDatas(w220_n, w220_n + 12);
         w220_sink = reinterpret_cast<const void*>(&ChamaGeraBU);
-        w220_sink = reinterpret_cast<const void*>(&ChamaCertificado);
         // fn 12110's table slots of CDataSourcesRelatorio<CRdvVota, CEleitores>'s TrailerProporcionalPartido (fn 11260,
         // slot 2922), HeaderNominais (fn 11259, slot 2923) and CodVerificador (fn 11974, slot 1633), which it hands to
         // api::CPaperFormBuilder::AddTextField.

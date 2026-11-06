@@ -11,12 +11,12 @@
 //                     3063, 3064, 6626, 6639, 7787, 11804, 11809)
 //                     and of 5530, AddInputControl(int) (7787 and 12055, which pass the keys 6 and 5). Each adder
 //                     gets two call sites
-//   RotulosA, RotulosB  the callers of 653, AddLabeledInputControl, none reconstructed but 2376 (ctelasvota.cpp), 2291
-//                     (CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo),
-//                     11804 and 11809 (unit 217's), 11881, 11884, 11888 and 11892 (unit 104's), 6599 (unit 110's, not
-//                     matched), 6569, 6592 and 6595 (unit 110's): 7787 and 12040, which pass the same two
-//                     constants as 2376 does: they stay while
-//                     those callers wait. The target's 653 has neither of its last two parameters, folded by binaryen:
+//   RotulosA          the caller of 653, AddLabeledInputControl, not reconstructed: 7787 (2376, ctelasvota.cpp, 2291,
+//                     CRetirarMR::GetInst, two calls through ctelasvota.cpp's TelaLacreTampa and TelaMRModoDemo,
+//                     11804 and 11809, unit 217's, 11881, 11884, 11888 and 11892, unit 104's, 6599, unit 110's, not
+//                     matched, 6569, 6592 and 6595, unit 110's, and 12040, unit 387's, are in the link; the stand-in
+//                     for 12040, RotulosB, went), which passes the same two constants as 2376 does: it stays while
+//                     7787 waits. The target's 653 has neither of its last two parameters, folded by binaryen:
 //                     it loads the area's corners from api::CApplication::s_areaTela (.data 1577200) and adds the keys'
 //                     labels, so each passes s_areaTela and false (the flag's sense is cinteractiveformbuilder.cpp's
 //                     choice). 653 is also 5565's (CInputFieldControlBase<IScreen>'s constructor) other caller beside
@@ -69,13 +69,6 @@ __attribute__((noinline)) int RotulosA(api::CInteractiveFormBuilder& form, const
     return static_cast<int>(form.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false).use_count());
 }
 
-__attribute__((noinline)) int RotulosB(api::CInteractiveFormBuilder& form, const std::vector<std::pair<char, std::string>>& teclas,
-                                       int vezes)
-{
-    const auto campo = form.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false);
-    return vezes * static_cast<int>(campo.use_count());
-}
-
 void* volatile w120_sink;
 
 struct SW120Roots {
@@ -86,7 +79,6 @@ struct SW120Roots {
         w120_sink = reinterpret_cast<void*>(&CampoA);
         w120_sink = reinterpret_cast<void*>(&CampoB);
         w120_sink = reinterpret_cast<void*>(&RotulosA);
-        w120_sink = reinterpret_cast<void*>(&RotulosB);
     }
 } w120_roots;
 

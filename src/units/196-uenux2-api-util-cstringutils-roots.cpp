@@ -18,8 +18,8 @@ __attribute__((noinline)) int VersaoDe(int versao)
 } // namespace
 
 // api::CStringUtils::JuntaTags (target fn 3646) has three direct callers in the target: fn 5782 (comum::CQRCodeDS's
-// call operator, fragment 299, in our link) and fns 12039 and 12110 (vota::CGeraBU's slot 2), not in our link. This
-// stands for those two.
+// call operator, fragment 299) and fn 12039 (vota::CMostraQRCodeCertificado's callback, unit 387's), in our link, and
+// fn 12110 (vota::CGeraBU's slot 2), not in it. This stands for 12110.
 extern "C" void w3646_junta(void*, const void*) __asm__(
     "_ZN3api12CStringUtils9JuntaTagsERKNSt3__26vectorINS1_4pairINS1_12basic_stringIcNS1_11char_traitsIcEENS1_"
     "9allocatorIcEEEES9_EENS7_ISA_EEEE");

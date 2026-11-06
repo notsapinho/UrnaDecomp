@@ -61,7 +61,8 @@
 CWASMTHREAD_SRCS := mock/app/simulador/wasm/cwasmthread.cpp mock/app/simulador/wasm/wasmjs.cpp
 UENUX2_SRCS += $(CWASMTHREAD_SRCS)
 # nothing reconstructed builds a thread, and votaInit (7840), which reaches EmitEvent by table slot too, is not written:
-# 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps the vtable and EmitEvent's address (see the file header)
+# 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps EmitEvent's address (see the file header); the vtable needs no
+# sink, since fn 10878, which stores its vptr, is in the link
 $(ROOT)/$(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o: $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o

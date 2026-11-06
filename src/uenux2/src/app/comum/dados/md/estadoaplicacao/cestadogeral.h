@@ -63,9 +63,9 @@ public:
     // correspondence's internal number, +60), MSUE (the load's model, +44) and CERT (the part's slice of the
     // certificate's hex text); with the bool set the count is twice the certificate's byte count over 1082, rounded up
     // in float arithmetic, else 1. Its callers are fn 12110 (vota::CGeraBU's slot 2, with true and the state
-    // comum::CAppInfo::LeGeralInterno returns) and fn 12039 (a callback in cmostraqrcodecertificado.cpp's object, by
-    // use band 1, whose table slot fn 12040 stores; with false and CAppInfo::GetGeral's), neither written. The name,
-    // the bool and its being a member (it reads the members above) are chosen.
+    // comum::CAppInfo::LeGeralInterno returns), not written, and fn 12039 (a callback in cmostraqrcodecertificado.cpp,
+    // whose table slot fn 12040 stores; with false and CAppInfo::GetGeral's), written (unit 387). The name, the bool
+    // and its being a member (it reads the members above) are chosen.
     std::vector<std::vector<std::pair<std::string, std::string>>> GetDadosQRCodeCertificado(bool dividido) const;
 
     // Target fn 3705, out of line in cestadogeral.cpp: its callers (7160, 7306, 10710) read the +52 adjustment inline,

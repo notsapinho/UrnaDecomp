@@ -16,21 +16,6 @@
 // f5622 · 942 B · unmatched · placement: link order · name unknown
 // void f5622(i32, i32) { ... }
 
-// link-order cluster 804 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp
-
-// f5634 · 2021 B · unmatched · placement: link order · name unknown
-// void f5634(i32, i32, i32) { ... }
-
-// link-order cluster 840 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/cversoesarquivos.cpp
-
-// f5869 · 402 B · unmatched · placement: link order · name unknown
-// void f5869(i32, i32, i32, i32) { ... }
-
-// link-order cluster 841 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
-
-// f5870 · 87 B · unmatched · placement: link order · name unknown
-// void f5870(i32, i32) { ... }
-
 // link-order cluster 910 · uses=2
 
 // f6639 · 622 B · unmatched · placement: link order · name unknown
@@ -229,16 +214,6 @@
 
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
-
-// link-order cluster 918 · uses=2
-
-// f6689 · 281 B · unmatched · placement: link order · name unknown
-// void f6689(i32, i32, i32) { ... }
-
-// link-order cluster 921 · uses=2
-
-// f6737 · 878 B · unmatched · placement: link order · name unknown
-// void f6737(i32) { ... }
 
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 

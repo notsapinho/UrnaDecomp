@@ -1,7 +1,9 @@
 // comum::CRdv (/home/rubio/tse/uenux2/src/app/comum/dados/crdv.cpp). The reconstruction's own note: the records
 // of CRdv's constructor (lines 90 and 93) and of comum::(anonymous namespace)::GetCifradorCryptoTable (lines 60 and
 // 78), which fn 7787 holds inlined, are of functions not written, and their lines are blank. Every other line is
-// chosen (src/units/381-uenux2-crdv.mk).
+// chosen (src/units/381-uenux2-crdv.mk). CarregaInterno and Carrega, which fn 6734 holds, are unit 386's: Carrega reads
+// the file through Le, as fn 7174's ConfereArquivo does, and Le returns the vector, which gives both targets' frames
+// (the CEncryptedFile above the vector, destroyed before its user; src/units/386-uenux2-carregaeleitores.mk).
 
 #include "app/comum/dados/crdv.h"
 
@@ -10,12 +12,10 @@
 #include <vector>
 
 #include "api/io/cencryptedfile.h"
+#include "api/util/csystem.h"
 #include "app/comum/cpath.h"
 
 namespace comum {
-
-
-
 
 
 
@@ -103,6 +103,60 @@ std::string GetArquivoRdvExterno()
     return (CPath::GetPathTrab(FLASH_EXTERNA) / "rdv.dat").string();
 }
 
+std::string GetArquivoRdvTemporarioInterno()
+{
+    return GetArquivoRdvInterno() + ".tmp";
+}
+
+std::string GetArquivoRdvTemporarioExterno()
+{
+    return GetArquivoRdvExterno() + ".tmp";
+}
+
+std::vector<uebyte> CRdv::Le(const std::string& arquivo) const
+{
+    api::CEncryptedFile cifrado(m_cifrador);
+    cifrado.Load(arquivo);
+    std::vector<uebyte> dados;
+    cifrado.Read(dados);
+    return dados;
+}
+
+bool CRdv::ConfereArquivo(const std::string& arquivo) const
+{
+    return Confere(Le(arquivo));
+}
+
+void CRdv::SalvaTemporarioInterno() const
+{
+    Salva(GetArquivoRdvTemporarioInterno());
+}
+
+bool CRdv::ConfereTemporarioInterno() const
+{
+    return ConfereArquivo(GetArquivoRdvTemporarioInterno());
+}
+
+void SubstituiRdvInterno()
+{
+    api::CSystem::ReplaceFile(GetArquivoRdvTemporarioInterno(), GetArquivoRdvInterno(), "");
+}
+
+void CRdv::SalvaTemporarioExterno() const
+{
+    Salva(GetArquivoRdvTemporarioExterno());
+}
+
+bool CRdv::ConfereTemporarioExterno() const
+{
+    return ConfereArquivo(GetArquivoRdvTemporarioExterno());
+}
+
+void SubstituiRdvExterno()
+{
+    api::CSystem::ReplaceFile(GetArquivoRdvTemporarioExterno(), GetArquivoRdvExterno(), "");
+}
+
 void CRdv::Salva(const std::string& arquivo) const
 {
     api::CEncryptedFile cifrado(m_cifrador);
@@ -119,6 +173,16 @@ void CRdv::SalvaInterno() const
 void CRdv::SalvaExterno() const
 {
     Salva(GetArquivoRdvExterno());
+}
+
+void CRdv::Carrega(const std::string& arquivo)
+{
+    Desconverte(Le(arquivo));
+}
+
+void CRdv::CarregaInterno()
+{
+    Carrega(GetArquivoRdvInterno());
 }
 
 } // namespace comum

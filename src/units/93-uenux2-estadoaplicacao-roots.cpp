@@ -1,22 +1,23 @@
 // Roots: keep the comum::md::estadoaplicacao classes and their converters in the skeleton link the way the target keeps
 // them. Their users are not reconstructed yet.
-// - The target reaches the converters only through their vtables, so rooting a vtable keeps the same set until the
-//   functions that store its vptr are in the link. CConversorEstadoGeralGap's vtable is rooted: its slots 2 and 3 (fns
-//   11394, 11395) are written, and the target reaches them only through that vtable (table slots 2680 and 2681, no
-//   direct caller). Of the Gap's storers, 10112 is in the link and 7787 is not, so its sink stays. The sinks of the
-//   other three went, each once the target functions that store its vptr were in the link: CConversorEstadoGeralSA's
-//   (slots 11392, 11393), whose one storer is fn 10089 (unit 206's save); CConversorLocalidadeEleitoral's (11388,
-//   11389), stored by fns 11399, 11400, 11403 and 11404 (fragment 172); CConversorAjusteDataHora's (11405, 11406),
-//   stored by fns 11397 and 11398 (unit 124).
+// - The target reaches the converters only through their vtables, so rooting a vtable kept the same set until a
+//   function that stores its vptr was in the link. No sink is left: CConversorEstadoGeralGap's (slots 2 and 3, fns
+//   11394 and 11395, table slots 2680 and 2681, no direct caller) went once fn 10112, one of its two storers (7787 is
+//   the other), was in the link, since one storer gives the reference the sink gave; CConversorEstadoGeralSA's (slots
+//   11392, 11393), whose one storer is fn 10089 (unit 206's save); CConversorLocalidadeEleitoral's (11388, 11389),
+//   stored by fns 11399, 11400, 11403 and 11404 (fragment 172); CConversorAjusteDataHora's (11405, 11406), stored by
+//   fns 11397 and 11398 (unit 124).
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
 //   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota stands
-//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), GetFaseChar (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's
-//   DefineHistoricoCarga and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and CCabecalhoQRCodeBuilder's
-//   constructor (fn 5624, 1956 and 12110: estadoaplicacao_build_qrcode) have none, so one stand-in that calls each
-//   twice. CEstadoGeralVota::IncrementaQtdBU's stand-in (fn 3701) went: its target callers 12065, 12077 and 12081 are
-//   in the link (units 104 and 156). CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their
-//   two call sites each in their one target caller, DoConverte or DoDesconverte (fns 11394, 11395), which are written.
+//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), GetFaseChar (fn 2253, five callers) and
+//   CCabecalhoQRCodeBuilder's DefineHistoricoCarga and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and
+//   CCabecalhoQRCodeBuilder's constructor (fn 5624, 1956 and 12110: estadoaplicacao_build_qrcode) have none, so one
+//   stand-in that calls each twice. CEstadoGeralVota::IncrementaQtdBU's stand-in (fn 3701) went: its target callers
+//   12065, 12077 and 12081 are in the link (units 104 and 156). So did AdicionaDeltaT's (fn 3702): its target callers
+//   7160, 7306 and 10710 are in the link. CConversorEstadoGeralGap's ConverteUrnaAplicativo and
+//   DesconverteUrnaAplicativo (fns 5689, 5690) have their two call sites each in their one target caller, DoConverte or
+//   DoDesconverte (fns 11394, 11395), which are written.
 //   The same for CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (fns 5621, 5620, 5618, 1956 and
 //   12110 each: estadoaplicacao_use_local, which varies every argument so binaryen folds none). Fn 1956 is in the link
 //   now (unit 37), so these stand-ins and estadoaplicacao_use_historico, estadoaplicacao_use_idcarga and
@@ -34,12 +35,10 @@
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2 or
 // ASN.1 header. The stand-ins are only address-taken, so binaryen can fold no argument of theirs.
 extern "C" {
-extern const char estadoaplicacao_gap_vt[] __asm__("_ZTVN5comum3asn24CConversorEstadoGeralGapE");
 void* estadoaplicacao_localidade(void*, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao20CLocalidadeEleitoralC1Ejtt");
 void* estadoaplicacao_sa(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao14CEstadoGeralSAC1ENS_9EEstadoSAEbjtt");
 void* estadoaplicacao_carga(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoCargaC1ENS_10EUrnaTurnoENS_9EUrnaTipoES4_NS_11EUrnaModeloENS_9EUrnaFaseE");
 int estadoaplicacao_fase(const void*) __asm__("_ZNK5comum2md15estadoaplicacao10CDadoCarga11GetFaseCharEv");
-void estadoaplicacao_delta(void*, int) __asm__("_ZN5comum2md15estadoaplicacao15CAjusteDataHora14AdicionaDeltaTEi");
 void estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder20DefineHistoricoCargaERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder17DefineCodigoCargaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void estadoaplicacao_idurna(void*, unsigned) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder12DefineIdUrnaEj");
@@ -75,12 +74,6 @@ __attribute__((noinline)) void estadoaplicacao_build_carga(void* a, void* b, int
 __attribute__((noinline)) int estadoaplicacao_use_fase(const void* a, const void* b)
 {
     return estadoaplicacao_fase(a) + estadoaplicacao_fase(b);
-}
-
-__attribute__((noinline)) void estadoaplicacao_use_delta(void* a, void* b, int delta)
-{
-    estadoaplicacao_delta(a, delta);
-    estadoaplicacao_delta(b, delta + 2);
 }
 
 __attribute__((noinline)) void estadoaplicacao_use_historico(void* a, void* b, const void* cargas)
@@ -120,12 +113,10 @@ __attribute__((noinline)) void estadoaplicacao_build_vota(void** dado, void** ar
 struct SEstadoAplicacaoRoots {
     SEstadoAplicacaoRoots()
     {
-        estadoaplicacao_sink = estadoaplicacao_gap_vt;
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_localidade);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_sa);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_carga);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_fase);
-        estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_delta);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_historico);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_idcarga);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_local);

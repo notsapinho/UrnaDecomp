@@ -1,10 +1,15 @@
 # uenux2 comum::CGeracaoVersoesContratos (app/comum/gravadores/cgeracaoversoescontratos.{h,cpp}, the file the record of
 # its GetInst names, cgeracaoversoescontratos.cpp:38), the one file of comum/gravadores built with strict aliasing
-# (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6): ObtemDependencias (target fn 5869), written
-# and not matched, and the std::set<std::string> instances it brings, of which the insert (fn 5868) matches from this
-# object, and the hinted-insert wrapper its copy calls (fn 1163) and the tree's destroy (fn 633) matched from it until
-# objects ahead of it emitted them too: unit 227's cmontadorhash.cpp.o (1163, with strict aliasing, src/api) and unit
-# 136's cgravadorhashes.cpp.o (633), linked ahead of it in unit 190's list, give the link's copies now.
+# (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6): ObtemDependencias (target fn 5869) and the
+# destructor (fn 5866), matched, with the library instances they bring: of std::set<std::string>, the insert (fn 5868),
+# which matches from this object, and the hinted-insert wrapper its copy calls (fn 1163) and the tree's destroy (fn
+# 633), which matched from it until objects ahead of it emitted them too: unit 227's cmontadorhash.cpp.o (1163, with
+# strict aliasing, src/api) and unit 136's cgravadorhashes.cpp.o (633), linked ahead of it in unit 190's list, give the
+# link's copies now; and std::map<std::string, api::CIniSection>'s tree destroy (fn 2859), which the destructor calls,
+# from this object. The roots also match two functions that only code of fn 12098 (vota::CGravaResultado::StartState,
+# not written) calls besides the static constructors, from the roots object: api::CPolySingletonList::has<
+# CGeracaoVersoesContratos> (fn 2860) and libc++'s std::make_format_args over a std::string and the char array
+# "20260601173148" (fn 5870) (Roots, below).
 #
 # Evidence. fn 5869 is (i32 i32 i32 i32)->(): a std::set<std::string> returned by value, the address of an object it
 # reads at +0 (`this`, a reading: Choices), a string and a set. It calls CDependenciasContratos::GetValor (fn 3826) on
@@ -14,8 +19,28 @@
 # recursion's result (fn 633); then destroys the pieces, copies the set into the result (fn 1163 per element, at the
 # end hint) and destroys the value last. Its one caller besides itself, fn 12098, which stores GetInst's record, builds
 # a 48-byte object (it runs the INI loader, fn 5480, on +0 and on +24, and calls fn 3826 on +0 and fn 3825,
-# CVersoesContratos::GetValor, on +24) and passes it to 5869 for each name of a list, one set for all. In the uses-2
-# band 5869 and 5868 lie between ccopiadormr.cpp's rows and md/cversoesarquivos.cpp's (fn 5867).
+# CVersoesContratos::GetValor, on +24) and passes it to 5869 for each name of a list, one set for all.
+#
+# The destructor, fn 5866 (51 B), destroys the four maps from +36 down, the CIniKey maps (fn 1397) at +36 and +12 and
+# the CIniSection maps (fn 2859) at +24 and +0, those of the two api::CIniFile members (fragment 379), and returns. Its
+# target callers are 12098, whose code after the push of the singleton deletes the object a std::unique_ptr holds, and
+# 11636, __on_zero_shared of std::__shared_ptr_pointer<CGeracaoVersoesContratos*, default_delete<...>, allocator<...>>
+# (slot 2 of the vtable ledger/vtables.json gives, address point 1553552, which only 12098 stores: /usr/bin/grep -rlE
+# 'i32\.const 1553552($|[^0-9])' build/out/splat/pieces/asm). Both are `if (p) { f5866(p); f136(p); }`: the result
+# dropped, then `this` freed. Measured on scratch TUs at this file's rule (llvm-objdump -d), with a std::shared_ptr
+# built from a std::unique_ptr and a std::unique_ptr's delete: with the destructor defined out of line in the TU, both
+# call the D1, drop its result and free the object, as the target's do; with the implicit destructor __on_zero_shared
+# holds the four destroys inlined; with the destructor only declared it frees the D1's result. push<T>'s record for this
+# class (cpolysingletonlist.h:129, at 1553528) follows GetInst's (1553504) in the target's data, so the block is code of
+# GetInst's TU, this file (a reading), and the destructor is defined here. In the uses-2 band (ledger/ordinals.tsv)
+# 5870, 5869, 5868 and 5866 have the ordinals 4337 to 4340, in that link order; 5867 (md/cversoesarquivos.cpp's
+# constructor) sits among them by its ordinal, 434, which sorts as text between 4340 and 4339
+# (docs/reference/facts/link-order.md L1, items 1 and 8), so it is no neighbour. The destructor follows
+# ObtemDependencias and its insert in this object, defined after them (ld_index 5874 to 5876 in
+# build/out/wasm-map/vota_web/names.tsv for 5869, 5868 and 5866). Once GetInst is written on its record's line, its
+# std::unique_ptr mentions the destructor there, and the band's order then puts ObtemDependencias above line 38 (a
+# reading, how-to step 3, "The order of two members"). `= default` and `{}` give cmp-equal objects at this file's rule.
+# Step 8 names 5866 and 2859 (pair-addr).
 #
 # The flag (pnpm wasm score against the target at the default depth, ours from each link's names.tsv):
 # - with -fno-strict-aliasing, the rest of comum/gravadores' flag (the link at e5577685): 5869 14 over 211 rows (5
@@ -36,10 +61,15 @@
 # Of the two callers the stand-in stands for, 5360 (unit 227's) is in the link and calls 1163 twice; 11620 (unit 136's)
 # is in the link but its set is cpath.cpp's code, built without strict aliasing, which calls the emplace instead (unit
 # 190's fragment), so the stand-in stays for 11620.
-# 5869 reads unresolved, at its recursive call (`ours +0x82 call 5687: ... has no target function`): the census pairs it
-# at shape, which names nothing, and its other caller, 12098, is not in the link. It waits for 12098 (its call names
-# 5869) or a census pair that names it; in this link it scores 9 over 206 rows, every differing row a call's or a data
-# address's operand.
+# 5869's name. The body calls itself, and its other target caller, 12098, is not written, so no call vote reaches the
+# name; the census pairs it at shape, which names nothing. Without a name it read unresolved at its recursive call
+# (`ours +0x82 call ...: has no target function`), at 9 over 206 rows, every differing row a call's or a data address's
+# operand. Its line below the hand-edit marker of splat/symbol_addrs.txt is `pair-depth0`: its depth-0 fingerprint, addr
+# and shape hashes are one function's on each side (pnpm wasm fingerprint <wasm> --depth 0); at depths 1 and 2 the
+# fingerprint and addr hashes part through three matched callees whose depth-0 hashes differ between the links (3826,
+# 1880 and 136), and the shape hash is the same. Weighed by removal (docs/reference/splat.md "Reviewing a match": two
+# scans without the line and 5869's match line, beside a control without the match line, then splat-build on each): 5869
+# alone leaves match, to unresolved, and both copies build to the target's sha256 (12908 and 12909 matches).
 #
 # 2281, std::set<std::string>'s __emplace_hint_unique_key_args<std::string, const std::string&> (target callers 1248
 # and 5309, RHVoice's, and 12098), matched from this object while it built without strict aliasing: there clang keeps
@@ -56,26 +86,40 @@
 # steps 6 to 10 with it and the flag turn 1163 and 5868 match and lose none, 11542 to 11544 matches.
 #
 # Choices. The class's members, their names and access, ObtemDependencias's name and its parameters' names are chosen;
-# its being a member is a reading (it reads the object's +0, and 12098 passes it the singleton). Its line, after
-# GetInst's record line, is a choice. The value is a named const local and the second insert repeats `insert`; one form
-# of each was measured. GetInst and the constructor are not written: they wait for 12098 (the INI loader, fn 5480, is
-# written in fragment 379, not matched). Nor is the destructor (fn 5866, a function of its own in the target, called by
-# 12098 and fn 11636): its band place follows md/cversoesarquivos.cpp's rows, not this file's. A
-# std::shared_ptr<CGeracaoVersoesContratos> built from a std::unique_ptr, the target's block
-# (__shared_ptr_pointer<CGeracaoVersoesContratos*, default_delete<...>, ...>, vtable @1553544, whose vptr fn 12098 alone
-# stores, its __on_zero_shared fn 11636), compiled at uenux2's -O3, with strict aliasing or without, inlines the
-# implicit destructor into __on_zero_shared (four tree destroys and the delete), where the target's 11636 calls 5866:
-# the block's TU did not see the destructor's body, or was built at another level (a reading). The stand-in for 1163's
-# callers (two calls through its label), roots_set.cpp's body (an uncalled insert at the end hint) and its name are
-# choices; one form of each was measured. The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152
-# differs and 447 reads unresolved (above), so it links after it; that it is last, after roots_boost.o too, is the
-# choice.
+# its being a member is a reading (it reads the object's +0, and 12098 passes it the singleton). Its line and the
+# destructor's, after GetInst's record line, are choices, and so are the destructor's `= default` (`{}` gives the same
+# object) and its declaration first in the class. The value is a named const local and the second insert repeats
+# `insert`; one form of each was measured. GetInst and the constructor are not written: they wait for 12098 (the INI
+# loader, fn 5480, is written in fragment 379, not matched), and so does the block's own code, 11635 and 11636, which
+# only GetInst's TU, the destructor's, gives (above). The stand-in for 1163's callers (two calls through its label),
+# roots_set.cpp's body (an uncalled insert at the end hint) and its name are choices; one form of each was measured.
+# The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152 differs and 447 reads unresolved
+# (above), so it links after it; that it is last, after roots_boost.o too, is the choice.
+#
+# Roots (268-uenux2-cgeracaoversoescontratos-roots.cpp, at APP_CXXFLAGS; the object compiled at uenux2's -O3 -std=c++23,
+# with strict aliasing and without it, is cmp-equal to it): w268_dependencias stands for 12098's call of 5869,
+# w268_conjunto for 1163's caller 11620 (above), w268_destroi for 5866's callers 12098 and 11636, w268_tem for 2860's
+# callers 12098 (which calls it three times) and 14478 (__wasm_call_ctors: a static initializer of a TU not written
+# calls it and drops the result), and w268_formata for 5870's one caller, 12098, which calls it twice; each calls once
+# per caller it stands for, twice for 5870. 2860 and 5870 match from the roots object, which no object of ours precedes
+# with an instance: has<T> is api/pattern/cpolysingletonlist.h's template (unit 100's), whose target copy reads as
+# GetInst's TU's, this file's (a reading: 12098 holds GetInst's three calls), and make_format_args is libc++'s, whose
+# two target call sites hold the messages of the throws whose records are md/cdependenciascontratos.cpp:27 and
+# md/cversoescontratos.cpp:29, the two md classes' constructors, which 12098 holds behind prologues of their own; its
+# ordinal, 4337, just before 5869's, and that file's records, first of the contract files' in the data, read as
+# md/cdependenciascontratos.cpp's copy (a reading). Its body holds the array's address, which dead-argument elimination
+# folded: the stand-in passes one literal of the same bytes from both calls, and [[clang::noinline]] keeps them (without
+# it clang inlines both and the object defines no make_format_args). Step 8 names 2860 by a content-anchor, the class's
+# typeinfo name, whose target holders are 2860 and 12098 (/usr/bin/grep -rlE 'i32\.const 495375($|[^0-9])'
+# build/out/splat/pieces/asm), 12098 not in our link; 5870 has no symbol line, and step 9 matched it on the census's
+# shape pair (source `ledger` in its first scan): its target caller is 12098 alone, its body loads "20260601173148"
+# (341442), which only it and 12098 load, and its band neighbour 5869 is this unit's.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 W268_SRCS := src/app/comum/gravadores/cgeracaoversoescontratos.cpp
 UENUX2_SRCS += $(W268_SRCS)
-# ObtemDependencias's one target caller besides itself, fn 12098, and fn 1163's callers 5360 and 11620 are not
-# reconstructed: 268-uenux2-cgeracaoversoescontratos-roots.cpp stands for them
+# The target callers not reconstructed (fn 12098 above all; 14478, 11636 and 11620 too) have stand-ins in
+# 268-uenux2-cgeracaoversoescontratos-roots.cpp (Roots, above)
 W268_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/268-uenux2-cgeracaoversoescontratos-roots.o: $(ROOT)/src/units/268-uenux2-cgeracaoversoescontratos-roots.cpp \
     $(ROOT)/src/Makefile $(ROOT)/src/units/268-uenux2-cgeracaoversoescontratos.mk $(W268_HDRS)

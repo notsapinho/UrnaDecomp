@@ -13,8 +13,19 @@
 // std::source_location for the record a real caller's default argument makes: a record here would be none of the target's.
 // w100_todos has no call for api::IInputMT (383) or comum::IControladorRegistraMesarios (356): every target caller of the
 // two is in the link (10590 was 383's last, and 5382, 6008 and 10316 were 356's), and a link without their calls moves
-// no row (the fragment). It calls api::IPaperRelatorios's (905) once (w100_usa_uma), for its one target caller not in
-// the link, 12110 (2890, 3654, 11006, 11852, 11855, 11991, 12068, 12071, 12074 and 12105 are).
+// no row (the fragment). Nor for api::IPower (instance 862, has 4867) or ecourna::api::security::IRng (2030, 5431):
+// every target caller of the four is in the link. Where only one half still waits, it makes that half's calls alone:
+// instance's (w100_instancia) for api::IScreen, api::IUrna, api::IResource and comum::IInterfaceSavd, whose has<T>
+// (3387, 4871, 4872, 5434) have their target callers in the link; has<T>'s (w100_tem) for comum::CCalculaCV,
+// api::IAjusteDataHora and the two IGenericFactory, whose instance (1282, 3204, 4356, 3164) have theirs, and for
+// api::CEscritorLog, whose has<T> (3391) stands for 14478 (__wasm_call_ctors, the static initializer of a TU not
+// written; its other callers, 8302 and 11157, are in the link). Its instance (11157) has no call here: its one
+// target caller, 433 (api::CLoga::loga), is in the link and calls it once, and no table slot or export holds it, so a
+// call here would stand for no caller the target shows. Our link inlines 11157 into 433 where the target keeps it out
+// of line, and both stay unmatched until a caller of 11157 the target shows is found (the fragment). It calls
+// api::IPaperRelatorios's instance (905) once (w100_usa_uma), for its one target caller not in the link, 12110 (2890,
+// 3654, 11006, 11852, 11855, 11991, 12068, 12071, 12074 and 12105 are); its has<T> (4853) has its callers, 905 and
+// 8302, in the link.
 #include <memory>
 #include <source_location>
 #include <stdexcept>
@@ -27,7 +38,6 @@
 #include "api/hwil/ibeep.h"
 #include "api/hwil/ifingerprepare.h"
 #include "api/hwil/iimpressorarelatorios.h"
-#include "api/hwil/ipower.h"
 #include "api/hwil/iurna.h"
 #include "api/ipc/irwsyncctl.h"
 #include "api/ipc/isemaphore.h"
@@ -46,7 +56,6 @@
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 #include "app/vota/eleitor/isincronismovotoeleitor.h"
 #include "app/vota/iexecucaovota.h"
-#include "ecourna/api/security/irng.hpp"
 #include "ecourna/api/security/isymmetriccipherfactory.hpp"
 
 // The vector's __swap_out_circular_buffer (target fn 5786) holds table slot 171, the executable TU's invoke of it, and
@@ -65,11 +74,26 @@ inline int w100_usa()
 }
 
 template <typename T>
+inline int w100_instancia()
+{
+    const std::source_location local;
+    T& a = api::CPolySingleton<T>::instance(api::g_polySingletonsInfo(), local);
+    T& b = api::CPolySingleton<T>::instance(api::g_polySingletonsInfo(), local);
+    return &a == &b ? 3 : 7;
+}
+
+template <typename T>
+inline int w100_tem()
+{
+    return api::CPolySingletonList::has<T>() ? 5 : 7;
+}
+
+template <typename T>
 inline int w100_usa_uma()
 {
     const std::source_location local;
     api::CPolySingleton<T>::instance(api::g_polySingletonsInfo(), local);
-    return api::CPolySingletonList::has<T>() ? 5 : 7;
+    return 5;
 }
 
 [[noreturn]] __attribute__((noinline, cold)) void w100_falha(const char* detalhe)
@@ -80,11 +104,11 @@ inline int w100_usa_uma()
 
 __attribute__((noinline)) int w100_todos()
 {
-    return w100_usa<api::IScreen>() + w100_usa<api::IBeep>() + w100_usa<api::IPower>() + w100_usa<api::IUrna>() + w100_usa<api::IResource>() +
-        w100_usa<comum::CCalculaCV>() + w100_usa_uma<api::IPaperRelatorios>() + w100_usa<comum::IEventosLog>() +
-        w100_usa<api::IAjusteDataHora>() + w100_usa<ecourna::api::security::IRng>() + w100_usa<api::CEscritorLog>() +
-        w100_usa<comum::IInterfaceInit>() + w100_usa<api::IGenericFactory<api::ISemaphore>>() +
-        w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
+    return w100_instancia<api::IScreen>() + w100_usa<api::IBeep>() + w100_instancia<api::IUrna>() +
+        w100_instancia<api::IResource>() + w100_tem<comum::CCalculaCV>() + w100_usa_uma<api::IPaperRelatorios>() +
+        w100_usa<comum::IEventosLog>() + w100_tem<api::IAjusteDataHora>() + w100_tem<api::CEscritorLog>() +
+        w100_usa<comum::IInterfaceInit>() + w100_tem<api::IGenericFactory<api::ISemaphore>>() +
+        w100_tem<api::IGenericFactory<api::ISyncCtl>>() + w100_instancia<comum::IInterfaceSavd>();
 }
 
 // The control block of each singleton: __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>. The target's builder is
@@ -109,25 +133,18 @@ __attribute__((noinline)) int w100_tem_qrcode()
     return api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 9 : (api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 11 : 13);
 }
 
-// Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
-// where clang leaves the calls. Each goes when the target callers below are in our link and call it there; those that
-// are not: of 321's, 5344 10212; of 871's none, its calls here stand for none (1091 since unit 97; 4771, 5560 since
-// unit 116's std::async; 2927, 518, 2650 since unit 229's root; 2893 since unit 206's save; 3373, 8096, 8101 match; 9039,
-// 9135, 13621 since unit 170's has<T> roots and unlock_shared_and_lock's guard; 7667 since src/app/roots_texttospeech.cpp
-// holds the executable TU's copy of set<api::ITextToSpeech>). The two calls of 388 (~shared_ptr<void>) went with 7667,
-// the last of its callers not in the link: a link without them moves no row (unit 237's fragment).
-// - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
-// - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
-__attribute__((optnone, noinline)) void w100_destroi_a(std::unique_lock<std::mutex>* trava, std::__format::__allocating_buffer<char>* buffer)
-{
-    trava->~unique_lock();
-    buffer->~__allocating_buffer();
-}
-
-__attribute__((optnone, noinline)) void w100_destroi_b(std::unique_lock<std::mutex>* trava, std::__format::__allocating_buffer<char>* buffer)
+// A libc++ destructor the target keeps out of line, and uenux2's objects inline: one call site for each target caller
+// below not in our link, in an optnone function where clang leaves the calls. Each goes when its caller is in our link
+// and calls it there.
+// - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233
+//   10090 10212, of which 5344 and 10212 are not.
+// The two calls of 388 (~shared_ptr<void>) went with 7667, the last of its callers not in the link: a link without
+// them moves no row (unit 237's fragment). Those of 871 (unique_lock<mutex>) went too: its target callers, 624 1126
+// 3095 3328 4771 5560 8059 13621 13974, are in the link.
+__attribute__((optnone, noinline)) void w100_destroi(std::__format::__allocating_buffer<char>* buffer, std::__format::__allocating_buffer<char>* outro)
 {
     buffer->~__allocating_buffer();
-    trava->~unique_lock();
+    outro->~__allocating_buffer();
 }
 
 int (*volatile w100_sink)();
@@ -139,8 +156,7 @@ struct SW100Roots {
     SW100Roots()
     {
         w100_sink = w100_todos;
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_destroi_a);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_destroi_b);
+        w100_sink_bloco = reinterpret_cast<void*>(&w100_destroi);
         w100_sink_bloco = reinterpret_cast<void*>(&api::CPolySingletonList::depura);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);

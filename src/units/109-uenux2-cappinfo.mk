@@ -28,9 +28,9 @@
 # string a temporary of the index's statement, it would be freed before the save; that form was not compiled). That the
 # two are const, their order (Interno first, as the target's 3790 above 3789 reads), their lines, and the helper's
 # being a free function and its linkage are chosen. Their
-# callers 491 (unit 205), 10590 (unit 283) and 7174: the roots' SalvaVotas stands for 7174, a call site of each,
-# written while 491 was their one caller in the link (a reading of docs/reference/facts/tool-traps.md X1: binaryen
-# would have inlined both into it and formed no merge; not linked without it).
+# callers 491 (unit 205), 10590 (unit 283) and 7174 (unit 241) are in the link; the roots' SalvaVotas, which stood for
+# 7174, written while 491 was their one caller in the link (a reading of docs/reference/facts/tool-traps.md X1: binaryen
+# would have inlined both into it and formed no merge; not linked without it), went with 7174.
 # CAppInfo::SalvaGeralInterno and SalvaGeralExterno, added with unit 277: SincronizaEstadoGeral (3333, unit 205), their
 # one caller, holds each behind a 16-byte frame of its own, binaryen's inlining of an out-of-line function
 # (docs/reference/facts/reading.md R10): when m_geral holds a value (its flag at +180, read with no call), a

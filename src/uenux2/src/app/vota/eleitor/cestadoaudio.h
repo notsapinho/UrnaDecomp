@@ -13,10 +13,10 @@
 //   ProcessInput (fn 11804) stores the key read at +10 and the expected one (the screen map's char) at +9 when they
 //   differ, and the lambda of the failure screen (fn 12903) copies both into its frame and formats "Falha: Esperada {},
 //   pressionada {}" of their KeyName, +9 first.
-// The object's next members take it as `this`, and neither is written: 6734, which 7787 and 11865 call on it, and 6737,
-// which 11865 calls on it and votaInit reaches through table slot 41, and which reads nothing of it. None of them names
-// the class. Chosen: the class's name, this path, every member's name, the enumerators, and bool for +0, +1 and +8, which
-// hold one-shot flags: char gives the same object.
+// Two more functions take it as `this`: 6734 (CarregaEleitores, below), which 7787 and 11865 call on it, and 6737
+// (GeraDadosDinamicos, below), which 11865 calls on it and votaInit reaches through table slot 41, and which reads
+// nothing of it. None of them names the class. Chosen: the class's name, this path, every member's name, the
+// enumerators, and bool for +0, +1 and +8, which hold one-shot flags: char gives the same object.
 
 #include <memory>
 #include <mutex>
@@ -38,6 +38,11 @@ public:
 
     void SelecionaModo0();
     void SelecionaModo1();
+    // Target fn 6737 (no record): the RDV and the voters' dynamic database written to both flashes and signed, the
+    // signature packages copied, then a sync. Its callers call it on GetInst()'s result; in band 2 it lies beside
+    // SelecionaModo0 and SelecionaModo1, and its body calls vota::CSincronizaVota's members, four of which binaryen
+    // inlines (src/units/116-uenux2-cthreads.mk has the evidence). Its name and its being a member are chosen.
+    void GeraDadosDinamicos();
     void Desativa();
 
     // The tests of modes 0 and 1: fns 215 (8 bytes that SQLite's pragmaVtabEof, a twin, shares) and 3078, which
@@ -54,6 +59,13 @@ public:
     // names, the pair, the parameters and the members' names are chosen.
     void SetTeclasTesteTeclado(char esperada, char pressionada);
     std::pair<char, char> GetTeclasTesteTeclado() const;
+
+    // CarregaEleitores: target fn 6734. Once only (the byte at +1), it loads the RDV, the voters
+    // (CEleitores::CompleteLoad) unless the vote state's training flag is set, the justifications and the mesarios,
+    // then checks the votes' integrity (comum::VerificaIntegridadeVotos). No record names it (each record its body
+    // holds is CompleteLoad's): its name and its line are chosen; src/units/386-uenux2-carregaeleitores.mk has the
+    // evidence.
+    void CarregaEleitores();
 
 private:
     CEstadoAudio();

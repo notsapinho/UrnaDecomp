@@ -36,16 +36,6 @@ __attribute__((noinline)) int w168_separadores(api::CPaperFormBuilder* builder)
     return 31;
 }
 
-// stands for fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2, not written), which calls VerificaAssinaturaMI
-// (fn 3290) and VerificaAssinaturaMV (fn 3288) three times each
-__attribute__((noinline)) void w168_assinaturas(const std::string& arquivo, const std::string& outro)
-{
-    vota::VerificaAssinaturaMI(arquivo);
-    vota::VerificaAssinaturaMV(arquivo);
-    vota::VerificaAssinaturaMI(outro);
-    vota::VerificaAssinaturaMV(outro);
-}
-
 // stands for fn 12974, not written, which calls GetQuantidadeMaximaBUsAdicionais (fn 4582) once and reads what it
 // returns; its other target caller, vota::CEmitirMaisBU::ProcessInput (fn 12081), is in the link (unit 104)
 __attribute__((noinline)) int w168_qtdbu(int base)
@@ -67,7 +57,6 @@ struct SW168Roots {
     {
         w168_sink = reinterpret_cast<const void*>(&w168_treinamento);
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
-        w168_sink = reinterpret_cast<const void*>(&w168_assinaturas);
         w168_sink = reinterpret_cast<const void*>(&w168_qtdbu);
         w168_sink = reinterpret_cast<const void*>(&w168_arquivos);
     }

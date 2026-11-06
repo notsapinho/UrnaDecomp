@@ -492,8 +492,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   operand-only, without it, and 10635, every row an operand, reads `unresolved self-voted` on 6733's name until 6733
   matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
   of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
-  neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
-  object's is a reading: the file was listed fifth, on the user's decision (below). In `eleitor/comum/ctelascargo.cpp`
+  neighbour 6734 (`vota::CEstadoAudio::CarregaEleitores`, which holds `CEleitores::CompleteLoad`'s records) does not
+  call it. So that the target's copy is this file's object's is a reading: the file was listed fifth, on the user's
+  decision (below). In `eleitor/comum/ctelascargo.cpp`
   (unit 150), `vota::CTelasCargo`'s constructor (2386) holds inlined the copy of
   `std::map<ETelaVotacao, CFormInterativoTelaVota>`'s range insert (`insert(first, last)`, a second prologue around the
   loop), and the target reads `*__child` again after libc++'s `__insert_node_at` stores the begin node, which only code
@@ -610,13 +611,13 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   the 795 objects that depend on `src/Makefile`, 916 of the 918 objects of e5577685's build are `cmp`-equal to theirs
   (the others are the file's and unit 268's roots, which gains the stand-in), the plain link is the private link's
   (sha256 `5d5d2247…`), and steps 7 to 9 turn 1163 and 5868 `match` and lose none, 11542 to 11544; `make -C src splat`
-  gives the target's sha256. 5869 stays `unresolved`: its recursive call names nothing, and its other caller, 12098, is
-  not written. The other twelve top-level files of `gravadores/` built with strict aliasing as well give the same link as
-  this file alone, so the file is listed and the directory keeps the flag, which `gravadores/asn/` and `gravadores/md/`
-  need (the table above): listing the file is a choice. Which TU gives the target's 2281, no row says: its TSE caller
-  12098 lies under `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified,
-  and its comment says when it goes. The file's flag is a reading of the original build's settings like the rest of
-  the split.
+  gives the target's sha256. 5869 stayed `unresolved` there: its recursive call named nothing, and its other caller,
+  12098, is not written; it matches since a `pair-depth0` hand line names it (unit 268's fragment). The other twelve
+  top-level files of `gravadores/` built with strict aliasing as well give the same link as this file alone, so the file
+  is listed and the directory keeps the flag, which `gravadores/asn/` and `gravadores/md/` need (the table above):
+  listing the file is a choice. Which TU gives the target's 2281, no row says: its TSE caller 12098 lies under
+  `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified, and its comment
+  says when it goes. The file's flag is a reading of the original build's settings like the rest of the split.
 
   One file of `validamidia/` has it: `cfabricaconteudomidiastart.cpp` (unit 179), whose
   `comum::impl::RemoveArquivosDeSistema` (5571) holds the initializer-list constructor of a `std::map` inlined

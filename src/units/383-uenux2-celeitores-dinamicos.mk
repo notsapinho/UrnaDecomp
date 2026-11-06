@@ -4,7 +4,8 @@
 # 110's list, below), and the instances DynamicCreate's object emits: std::vector<CEleitorDinamico>::__destroy_vector
 # (3763), std::__introsort over CEleitorDinamico with DynamicCreate's comparator (3762) and the helpers it calls,
 # __sort3 (1392), __sort4 (3757), __sort5 (5749) and __insertion_sort_incomplete (5748), std::swap<CEleitorDinamico>
-# (282) and CEleitorDinamico's implicit move assignment (470). All ten match. This fragment holds notes, the Boost path
+# (282, whose match line names ranges::__swap's operator() over the same type since fragment 386's ranges::sort, one
+# body) and CEleitorDinamico's implicit move assignment (470). All ten match. This fragment holds notes, the Boost path
 # of two objects and a roots file; its sources are in units 110's and 91's lists. Scores are `pnpm wasm score <target>
 # <index> <link> <ours>` at the default depth on whole links.
 #
@@ -72,10 +73,11 @@
 # renamed 1594's and 6733's match lines (the set's destroy and range insert); unit 283's roots label for 6733 follows.
 #
 # Order: band 2 runs 5765, 5764, 5763, 5762, 5761 and band 3 3763, 3762 in link order; in celeitores.cpp.o 5761 comes
-# before 5764 and 5765, and 3762 before 3763, three pairs inverted. DynamicCreate's records hold it at lines 298 to 361
-# (placing.md P9, a record bounds the order), and the target's order is that of a TU where CompleteLoad (6734,
-# records :205 to :238, not written) mentions 5764, 5765 and 3763 first: its direct calls (ledger/callgraph.tsv) hold
-# all three. A reading, until 6734 is written.
+# before 5764 and 5765, and 3762 before 3763, three pairs inverted while CompleteLoad was not written. DynamicCreate's
+# records hold it at lines 298 to 361 (placing.md P9, a record bounds the order), and the target's order is that of a
+# TU where CompleteLoad (records :205 to :238) mentions 5764, 5765 and 3763 first: written (fragment 386, held by fn
+# 6734), it does, and the three pairs take the target's order (ld_index at bbc88b35: 5765 2601, 5764 2602, 3763 2606
+# against 5761 2611 and 3762 2614).
 #
 # Chosen: every local's name (temMunicipal, temEstadual, temFederal, vota, dinamicos, gravados, dinamicoDAO, porEleitor)
 # and the lambda's parameters; the comparator's being a lambda (a function object in an anonymous namespace or a local
@@ -89,17 +91,15 @@
 # CApresentacaoFotoEleitor's operator== being defaulted; the names of the state values, read from ecourna's
 # CEstadoComparecimento.
 #
-# Stand-ins: 383-uenux2-celeitores-dinamicos-roots.cpp's CriaDinamicos stands for 6737's two calls of 5761. 3763's
-# third caller, 6734, needs none: 5761 calls it twice. Unit 91's roots' calls for 5761 (3768's constructor, once; 3759
-# and 3758) went with it.
+# Stand-ins: none (below). 3763's third caller, 6734, needs none: 5761 calls it twice. Unit 91's roots' calls for 5761
+# (3768's constructor, once; 3759 and 3758) went with it.
 
 # celeitores.cpp includes the DAO's header, whose SQL headers include Boost, and celeitordinamicodao.cpp left unit
 # 91's list, whose line gave it the path (an include path, not a flag of the code: unit 66's fragment says why).
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/celeitores.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 
-# the caller (fn 6737) is not reconstructed yet: 383-uenux2-celeitores-dinamicos-roots.cpp reaches DynamicCreate the
-# way the target does
-$(ROOT)/$(APP)/383-uenux2-celeitores-dinamicos-roots.o: $(ROOT)/src/units/383-uenux2-celeitores-dinamicos-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/383-uenux2-celeitores-dinamicos.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/383-uenux2-celeitores-dinamicos-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/383-uenux2-celeitores-dinamicos-roots.o
+# No roots: DynamicCreate's one target caller, fn 6737 (vota::CEstadoAudio::GeraDadosDinamicos, unit 116), is in the
+# link and calls it twice, each time with another database file's path (2826's "uenux.db" and 5762's), through
+# vota::CSincronizaVota::CriaBancoDadosMI and CriaBancoDadosMV, which binaryen inlines into it; the stand-in that
+# stood for those two calls, CriaDinamicos, went with its roots file.

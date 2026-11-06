@@ -5,7 +5,8 @@
 //   stands for 12098.
 // - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905; 1164 (unit
 //   95's), 3771 (unit 280's), 11905 (unit 176's), 1937 (unit 110's), 11587 (unit 305's), 11626 (unit 160's), 11629 (unit
-//   200's) and 5740 (unit 89's, which holds the call inlined by binaryen from a helper of clocal.cpp) are in the link.
+//   200's), 5740 (unit 89's, which holds the call inlined by binaryen from a helper of clocal.cpp) and 6734 (fragment
+//   386's) are in the link, so one call stands for 7787.
 // - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11569, 11661 (1164, unit 95's, 11569, unit
 //   206's, 10226, unit 116's, 2725, unit 293's, and 5371, unit 214's, are in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
@@ -20,9 +21,9 @@
 // - GetPathResult (fn 1399): callers 1164 and 1274, both in the link (1164 is unit 95's), so it has no stand-in.
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
 //   5874 (unit 160's), 11630 to 11632, 6041 and 11579 (unit 122's) are in the link.
-// - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 7174, 7787, 12098; 6035 and 6036 (unit 381's merge
+// - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 7787 and 12098; 6035 and 6036 (unit 381's merge
 //   bodies), 1836 and 4657 (unit 205's), 2890 (unit 156's), 11630 to 11634 (unit 122's), 11835 (unit 138's), 11852,
-//   11855, 11991 and 12071 (unit 104's) and 12068 and 12074 (unit 315's) are in the link.
+//   11855, 11991 and 12071 (unit 104's), 12068 and 12074 (unit 315's) and 7174 (unit 241's) are in the link.
 // - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451, all in the link: 2298 and 3898 (unit 122's pathwsq.cpp),
 //   5382 (unit 135's, which holds GetPathWsqRegistradoExterno inlined) and 10451 (unit 221's, which holds
 //   GetPathWsqNaoRegistradoExterno inlined), so it has no stand-in.
@@ -53,10 +54,9 @@ __attribute__((noinline)) void UmaRaiz(void* destino)
     ::new (Em(destino, 12)) path(CPath::GetPathRoot());
 }
 
-__attribute__((noinline)) void DoisEstaticos(void* destino, comum::EFlashOrigem origem)
+__attribute__((noinline)) void UmEstatico(void* destino, comum::EFlashOrigem origem)
 {
-    ::new (destino) path(CPath::GetPathEstatico(origem));
-    ::new (Em(destino, 12)) path(CPath::GetPathEstatico(comum::FLASH_EXTERNA));
+    ::new (Em(destino, 12)) path(CPath::GetPathEstatico(origem));
 }
 
 __attribute__((noinline)) void DoisDinamicos(void* destino, comum::EFlashOrigem origem)
@@ -100,7 +100,7 @@ struct SRoots190 {
     SRoots190()
     {
         r190_sink = reinterpret_cast<const void*>(&UmaRaiz);
-        r190_sink = reinterpret_cast<const void*>(&DoisEstaticos);
+        r190_sink = reinterpret_cast<const void*>(&UmEstatico);
         r190_sink = reinterpret_cast<const void*>(&DoisDinamicos);
         r190_sink = reinterpret_cast<const void*>(&DoisLogs);
         r190_sink = reinterpret_cast<const void*>(&DoisMR);

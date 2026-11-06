@@ -17,8 +17,6 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PARTIDO_SRCS := src/app/comum/dados/asn/cconversorpartido.cpp src/app/comum/dados/md/cpartido.cpp
 UENUX2_SRCS += $(PARTIDO_SRCS)
-# the converter's users are not reconstructed yet: 45-uenux2-cconversorpartido-roots.cpp keeps its vtable the way the
-# target reaches it
-$(ROOT)/$(APP)/45-uenux2-cconversorpartido-roots.o: $(ROOT)/src/units/45-uenux2-cconversorpartido-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/45-uenux2-cconversorpartido.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/45-uenux2-cconversorpartido-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/45-uenux2-cconversorpartido-roots.o
+# No roots: the target reaches DoConverte and DoDesconverte only through the converter's vtable (@1561260), and fns
+# 11457 and 11458 (unit 145's cconversorentidadepartidos.cpp), which store its vptr, are in the link, so the roots file
+# and its sink went.

@@ -1,5 +1,6 @@
 # uenux2 comum's log and CInformacaoEleicao, at the paths their std::source_location records name:
-# - api::CLoga::loga (target fn 433) in src/api/uelog/cloga.cpp, record 26:36;
+# - api::CLoga::loga (target fn 433) in src/api/uelog/cloga.cpp, record 26:36, written and not matched: our link inlines
+#   its callee 11157 into it where the target keeps it out of line (below);
 # - comum::IEventosLog in src/app/comum/log/ieventoslog.cpp: loga (233, a chosen name), logaAlerta (1398, a chosen name)
 #   and ConverteERelatoriosUE (5879, record 426:19), with 2861, CBaseError<comum::EUeComumLogError>'s constructor thunk,
 #   the header euecomumlogerror.h;
@@ -140,8 +141,11 @@
 # std::operator+(string&&, string&&): the first real uenux2 TU that instantiates CPolySingleton<T>::instance links ahead
 # of libc++.a, and its copy at -O2 took 252 (docs/reference/facts/splat.md S10 item 10). The executable TU's object
 # (unit 170), first on the link line at -Oz, holds the target's copy, where src/app/roots_uenux2.cpp held one before.
-# 837, 11157 and 611 now come from this unit's objects, at uenux2's flags, and stay matched; the 13 other instances stay
-# in unit 100's roots object.
+# 837 and 611 now come from this unit's objects, at uenux2's flags, and stay matched; unit 100's fragment says where
+# the other instances come from. 11157 came from cloga.cpp.o too while unit 100's roots called it twice for no caller
+# the target shows; those calls went (the user's decision), binaryen inlines 11157 into its one caller, 433 (above),
+# and both read unmatched: 433 `differs`, 11157 `no-candidate` (unit 100's fragment has the measurement and what they
+# wait for).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_LOG_SRCS := src/api/uelog/cloga.cpp src/app/comum/log/ieventoslog.cpp src/app/comum/log/clogcomum.cpp src/app/comum/informacao/cinformacaoeleicao.cpp

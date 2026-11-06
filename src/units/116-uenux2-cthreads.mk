@@ -34,7 +34,7 @@
 #   __execute 8057 and __sub_wait 8058, future_error's destructor and constructor 8060 and 8061, the future category's
 #   message and name 8062 and 8063, and std::exception_ptr's destructor 3367 (libc++.a's).
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195; the tests
-#   of modes 0 and 1, 215 and 3078 (their paragraph below).
+#   of modes 0 and 1, 215 and 3078 (their paragraph below); GeraDadosDinamicos, 6737 (its paragraph, the last).
 # Not matched, and why: CThreadVota's slots 3 and 4 are traps, listed in the -pending.cpp with what they wait for.
 # CThreadEleitor's slot 2, Run (7061), is written (its paragraph below). ProcessaEventos 4349 is written and reads
 # unresolved on 2072 (below), and the two debug
@@ -267,7 +267,43 @@
 #   link-map), and the scan matches Run.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
-CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+#
+# vota::CEstadoAudio::GeraDadosDinamicos, target fn 6737 (878 B, no record), in cestadoaudio.cpp after SelecionaModo1.
+# - What places it. Its two target callers call it on fn 509's object: 11865 (vota::CGeraDadosDinamicos::StartState,
+#   `call 509; local.set 1; ... local.get 1; call 6737`) and votaInit, 7840 (`p0 = invoke_i(40 /* &f509 */);
+#   invoke_vi(41 /* &f6737 */, p0);` in pnpm wasm lift's output), and it reads nothing of it (local 0 takes its frame
+#   pointer in the prologue). In use band 2 it lies beside this object's SelecionaModo1 and SelecionaModo0
+#   (6743, 6745; the OpenSSL rows between them read as link-order.md L1's digit-zone scramble), two thousand indices from
+#   csincronizavota.cpp.o's band-2 run, 4657 to 4687 (ledger/ordinals.tsv). Our ld_index at bbc88b35: 2521, 2522, 2523
+#   for 6745, 6743, 6737 (cestadoaudio.cpp heads unit 110's list since fragment 386).
+# - What it holds, under its 16-byte frame: VerificaUrnaDesligando's test and throw (record csincronizavota.cpp 47:15,
+#   1685's folded location); in a voter training (comum::CAppInfo::EhTreinamentoEleitor, 697) the RDV files of both
+#   flashes removed (api::CSystem::RemoveFile, 2760, on 1551's and 1701's paths) and the RDV saved to the internal
+#   flash (CRdv::SalvaInterno, 5737, on CRdvVota::GetInst()'s object), CSincronizaVota::AssinaRDVEBancoDados (4668,
+#   called) and the external save (5736); else CEleitores::GetInst and CRdvVota::GetInst, the internal flash's database
+#   (CEleitores::DynamicCreate, 5761, on 2826's path) behind a 16-byte frame of its own, 5737, 4668, the external
+#   flash's (on 5762's path) behind another, 5736; then, behind a 32-byte frame, the copies of packages 122 to 124, 199
+#   to 201 and 134 to 136 (123 to 125, 200 to 202 and 135 to 137 in the second turn); last api::CSynchronizer's Sync.
+# - Why its code is this file's, not csincronizavota.cpp's: written there, the body gets AssinaRDVEBancoDados inlined by
+#   clang (-Rpass=inline on a scratch compile at app/vota's flags: cost 210, threshold 375), where the target calls 4668
+#   twice. Here clang cannot inline it; the call of VerificaUrnaDesligando is that function's one out-of-line call in
+#   the link, which binaryen inlines (its other holders hold the copies clang inlined in csincronizavota.cpp), and so
+#   are the three steps behind frames of their own, CSincronizaVota::CriaBancoDadosMI, CriaBancoDadosMV and
+#   SincronizaAssinaturaDadosDinamicos (unit 205's file): in one file with 6737's code clang inlines the first two (cost
+#   115, threshold 250, on the same scratch compile) and leaves the third out of line (cost 1820). That they are
+#   CSincronizaVota's static members in csincronizavota.cpp is a choice among the files other than this one.
+# - Measured: 61 over 414 rows, all operand-only (pnpm wasm score on the link: calls, the flag's address and the throw's
+#   destructor slot), and the scan's content pass matches it.
+# - Chosen: its name, its being a member of fn 509's class (a free function over the object is the other form, not
+#   compiled), and its place after SelecionaModo1 (band 2's order) and before Desativa (4195, band 3, which says nothing
+#   of the two's order).
+# - Roots: 116-uenux2-cthreads-roots.cpp takes its address, for votaInit's slot 41. Its one direct caller, 11865, is not
+#   written, and the table entry keeps the body out of line without a call (docs/reference/facts/tool-traps.md X1).
+#
+# cestadoaudio.cpp stays this unit's file, compiled in unit 110's list, at its head: fragment 386's
+# CEstadoAudio::CarregaEleitores (6734), written there, matches only with that object ahead of celeitores.cpp.o and
+# cjustificador.cpp.o (src/units/386-uenux2-carregaeleitores.mk has the measurement and the count of the move).
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cajusteinicial.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

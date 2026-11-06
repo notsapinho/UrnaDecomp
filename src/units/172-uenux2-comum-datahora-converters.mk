@@ -104,8 +104,7 @@ $(foreach u,$(COMUM_DATAHORA_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildca
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/cconversorcarga.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/candidatura/cconversorfotocandidato.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
-# the converters' builders are not all written: 172-uenux2-comum-datahora-converters-roots.cpp keeps their vtables the
-# way the target reaches them
-$(ROOT)/$(APP)/172-uenux2-comum-datahora-converters-roots.o: $(ROOT)/src/units/172-uenux2-comum-datahora-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/172-uenux2-comum-datahora-converters.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/172-uenux2-comum-datahora-converters-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/172-uenux2-comum-datahora-converters-roots.o
+# No roots: a converter's slots have no direct caller, and the target reaches them through the vtable, whose vptr the
+# functions that build the converter store. Each vtable has one such function in the link; the last sink,
+# CConversorEstadoGeralVota's (@1568960, slots 11390 and 11391), went once fn 5329 (unit 206), one of its two storers
+# (7787 is the other), was, and the roots file with it.

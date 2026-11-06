@@ -1,7 +1,15 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 33 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 34 come from the objects of units 31, 120, 101, 165,
-# 91, 127, 164, 113, 163, 110, 321, 121 and 280, whose builders are written, so the roots no longer instantiate them:
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 24 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 43 come from the objects of units 31, 120, 101, 165,
+# 91, 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no
+# longer instantiate them. Nine of those went from the roots at once, builder and sink, a link without them moving no
+# row: the pointer blocks of CTextFieldPaper (5613, unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and
+# 12105 store its vptr too), CCutFieldPaper, CNewLineFieldPaper and CQRCodeImageFieldPaper (1264, 198 and 2775, unit
+# 31's cpaperformbuilder.cpp, from which 10994, 10993 and 10992 match), COptionValidation (5913, unit 59's
+# cmenubase.cpp: 11665), CBlockCipher<CAesCipher, CTrng> and the emplace block of CTrng (9489 and 6154, unit 137's
+# csymmetriccipherfactory.cpp: 9479, 9480, 9483, 9482), ecourna's CIdentificacaoJustificativa (11470, unit 66's
+# cjustificadordao.cpp: 11465, 11466) and std::string (10740, unit 277's cconfirmaaudio.cpp; 10749 and 5429 match
+# from chabilitaaudiomanualmente.cpp.o). The others:
 # CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
 # 10683 matches, and 12463 did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was
 # written in unit 110's ctelasvota.cpp, whose object links first and gives it now; 7787, its third builder, is not

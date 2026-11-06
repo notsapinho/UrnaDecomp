@@ -1,6 +1,6 @@
 // Reconstruction's note: comum::CGeracaoVersoesContratos (cgeracaoversoescontratos.cpp, the file the record of its
-// GetInst names): ObtemDependencias only (target fn 5869), which has no record. Line 38 is GetInst's record (fn 12098
-// holds it inlined, not written) and stays blank; ObtemDependencias's line, after it, is a choice.
+// GetInst names): ObtemDependencias (target fn 5869) and the destructor (fn 5866), which have no record. Line 38 is
+// GetInst's record (fn 12098 holds it inlined, not written) and stays blank; their lines, after it, are a choice.
 #include "app/comum/gravadores/cgeracaoversoescontratos.h"
 
 #include "ecourna/api/util/cstringutils.hpp"
@@ -52,5 +52,7 @@ std::set<std::string> CGeracaoVersoesContratos::ObtemDependencias(const std::str
     }
     return dependencias;
 }
+
+CGeracaoVersoesContratos::~CGeracaoVersoesContratos() = default;
 
 } // namespace comum

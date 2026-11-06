@@ -161,8 +161,8 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
-  merged constructor: 1715 is `push f710(p0, p1, p2, p3, 1551080)`, and 710 does the store. It suits a callee no vote
-  reaches: its callers in the link all named by `vtable`, or one that the content pass names only once this name is in,
+  merged constructor that does the store. It suits a callee no vote reaches: its callers in the link all named by
+  `vtable`, or one that the content pass names only once this name is in,
   and its other target callers not written. 3059's line is such a case: 6595, its one caller in the link, matches
   through it, and 3059 alone holds `__shared_ptr_pointer<api::CQRCodeImage*, …>`'s address point (`/usr/bin/grep -rlE
   'i32\.const 1538404($|[^0-9])' build/out/splat/pieces/asm` prints only its piece). Once such a
@@ -231,8 +231,9 @@ matches out until the line follows ([facts/splat.md](facts/splat.md) §S10).
 A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE` (`callers+content`: the static
 constructors build it from a literal only it has, and five functions read it), and `_ZN3api20g_polySingletonsInfoE`
 had one (`content`: the word holds the one slot of 11265, paired on its own) until step 8 named it by the votes of 316
-and 433 and the line went, idle. A `_ZGV` guard that one body reads has such
-evidence in its object: the target keeps our link's distance between the two ([facts/splat.md](facts/splat.md) §S13),
+and 433 and the line went, idle (316's alone since 433 left `match`: unit 100's fragment). A `_ZGV` guard that one body
+reads has such evidence in its object: the target keeps our link's distance between the two
+([facts/splat.md](facts/splat.md) §S13),
 so the object's address, held by another match, places the guard. §3's self-vote rule reads that itself, so such a
 guard takes no hand line (5158's, in §3), when step 8 wrote a line for it: a seed or anchor pair of its reader votes
 for it. A `shape` pair casts no vote until a caller's anchor names the reader (whose `call` vote then makes it vote in

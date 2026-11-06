@@ -1,18 +1,22 @@
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodecertificado.h"
 
 #include "api/gui/cinteractiveform.h"
+#include "api/util/cstringutils.h"
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/vota/euevotaerror.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 
 namespace vota {
+namespace {
+std::string ConteudoQRCodeCertificado();
+} // namespace
 
 CMostraQRCodeCertificado::CMostraQRCodeCertificado()
     : CEstadoComDesligamentoAutomatico(EVENTO_ENTRADA)
 {
 }
-
 CMostraQRCodeCertificado::~CMostraQRCodeCertificado() = default;
-
 CMostraQRCodeCertificado& CMostraQRCodeCertificado::GetInst()
 {
     std::lock_guard<std::mutex> trava(s_mutex);
@@ -21,12 +25,14 @@ CMostraQRCodeCertificado& CMostraQRCodeCertificado::GetInst()
     }
     return *s_inst;
 }
-
 std::unique_ptr<CMostraQRCodeCertificado> CMostraQRCodeCertificado::s_inst;
 std::mutex CMostraQRCodeCertificado::s_mutex;
-
-// (original lines 28-35: content not recovered)
-#line 36
+void CMostraQRCodeCertificado::StartState()
+{
+    m_form = CTelasVota::GetInst().CriaTelaQRCodeCertificado(ConteudoQRCodeCertificado);
+    m_form->Slot2();
+    m_pNextState = this;
+}
 void CMostraQRCodeCertificado::ProcessInput()
 {
     if (m_form->GetEntradas().size() != 1) {
@@ -36,5 +42,19 @@ void CMostraQRCodeCertificado::ProcessInput()
         m_pNextState = &CMostraQRCodeBU::GetInst();
     }
 }
+
+namespace {
+
+std::vector<std::pair<std::string, std::string>> DadosCertificado()
+{
+    return comum::CAppInfo::GetInst().GetGeral().GetDadosQRCodeCertificado(false).front();
+}
+
+std::string ConteudoQRCodeCertificado()
+{
+    return api::CStringUtils::JuntaTags(DadosCertificado());
+}
+
+} // namespace
 
 } // namespace vota

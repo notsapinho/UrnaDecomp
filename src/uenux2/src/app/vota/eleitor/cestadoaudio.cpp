@@ -1,5 +1,16 @@
 #include "app/vota/eleitor/cestadoaudio.h"
 
+#include "api/util/csynchronizer.h"
+#include "api/util/csystem.h"
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/comparecimentomesario/cregistradormesario.h"
+#include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/cintegridadereferencial.h"
+#include "app/comum/dados/crdv.h"
+#include "app/comum/dados/crdvvota.h"
+#include "app/comum/justificativa/cjustificador.h"
+#include "app/vota/comum/csincronizavota.h"
+
 namespace vota {
 
 CEstadoAudio& CEstadoAudio::GetInst()
@@ -34,6 +45,29 @@ void CEstadoAudio::SelecionaModo1()
     m_modo = MODO_1;
 }
 
+void CEstadoAudio::GeraDadosDinamicos()
+{
+    CSincronizaVota::VerificaUrnaDesligando();
+    if (comum::CAppInfo::EhTreinamentoEleitor()) {
+        api::CSystem::RemoveFile(comum::GetArquivoRdvInterno());
+        api::CSystem::RemoveFile(comum::GetArquivoRdvExterno());
+        const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+        rdv.SalvaInterno();
+        CSincronizaVota::AssinaRDVEBancoDados();
+        rdv.SalvaExterno();
+    } else {
+        const comum::CEleitores& eleitores = comum::CEleitores::GetInst();
+        const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+        CSincronizaVota::CriaBancoDadosMI(eleitores);
+        rdv.SalvaInterno();
+        CSincronizaVota::AssinaRDVEBancoDados();
+        CSincronizaVota::CriaBancoDadosMV(eleitores);
+        rdv.SalvaExterno();
+    }
+    CSincronizaVota::SincronizaAssinaturaDadosDinamicos();
+    api::CSynchronizer::GetInst().Sync();
+}
+
 void CEstadoAudio::Desativa()
 {
     m_modo = MODO_DESATIVADO;
@@ -58,6 +92,20 @@ void CEstadoAudio::SetTeclasTesteTeclado(char esperada, char pressionada)
 std::pair<char, char> CEstadoAudio::GetTeclasTesteTeclado() const
 {
     return {m_teclaEsperada, m_teclaPressionada};
+}
+
+void CEstadoAudio::CarregaEleitores()
+{
+    if (!m_eleitoresCarregados) {
+        comum::CRdvVota::GetInst().CarregaInterno();
+        if (!comum::CAppInfo::GetInst().GetVota().GetTreinamentoEleitor()) {
+            comum::CEleitores::GetInst().CompleteLoad();
+        }
+        comum::CJustificador::GetInst().Carrega();
+        comum::CRegistradorMesario::GetInst().Carrega();
+        comum::VerificaIntegridadeVotos();
+        m_eleitoresCarregados = true;
+    }
 }
 
 } // namespace vota

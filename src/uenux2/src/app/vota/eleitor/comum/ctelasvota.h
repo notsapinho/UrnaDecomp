@@ -108,6 +108,22 @@ public:
     CFormInterativoTelaVota CriaTelaQRCodeBU(std::function<std::string()> ajuda, std::function<std::string()> qrcode,
                                              std::function<std::string()> pagina) const;
 
+    // The certificate's QR-code screen ("telaQRCodeCertificado"), which vota::CMostraQRCodeCertificado::StartState (fn
+    // 12040) holds behind a second stack-pointer prologue (a 112-byte frame), built over the std::function StartState
+    // passes by value (table slot 1529, fn 12039). Evidence: the fields, their texts, fonts, colours, positions and order
+    // are 12040's code: the status header (5); an api::CQRCodeImage of 380 over the std::function (std::make_shared, the
+    // block @1539236 CriaTelaQRCodeBU builds too) added at (630, 35), whose field's Rect (slot 8) it reads later;
+    // "Versão: " and api::CApplication::s_versao at (10, bottom - 80) of the screen's area in the 15-point font
+    // (@475008); "Certificado digital" at (10, 45) in the 30-point one (@474888); "O QR code ao lado contém o certificado
+    // desta urna." in an api::SRect from (10, 95) to (the image field's left - 30, bottom - 130) in the 20-point one
+    // (@474896), all left-aligned, colours 2 over 1; the label of CORRIGE ('D', "Retornar") through fn 653; and
+    // "telaQRCodeCertificado" through GetFormularioInterativo (fn 576). Readings, as for CriaTelaQRCodeBU above: that it
+    // is CTelasVota's (12040 calls CTelasVota::GetInst(), fn 407, right before it and drops the result) and that it is
+    // defined in ctelasvota.cpp (the fonts it passes are the file's constants). Static: 12040 scores 204 over 873 rows
+    // with a const member, 47 over 853, operand-only, with a static one (facts/codegen.md C4). Chosen: the name (after
+    // "telaQRCodeBU"'s builder), the parameter's name, TEXTO_CERTIFICADO_DIGITAL, the locals and its place.
+    static CFormInterativoTelaVota CriaTelaQRCodeCertificado(std::function<std::string()> qrcode);
+
     // The candidate's screen vota::CVisualizarCandidatos::StartState (fn 11876) shows for each candidature it pages
     // through (fn 6569): the record of the lambda at ctelasvota.cpp:3366 (fn 12272) names it and its parameters, the
     // lambda at :3323 is its $_0 (CDataImage<__bind<...$_0&, const comum::md::CDadosCandidato&>>'s RTTI), and 11876 calls

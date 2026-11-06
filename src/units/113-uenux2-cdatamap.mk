@@ -15,8 +15,8 @@
 #   (__emplace_unique_key_args<CEleitorIdentidade>), 1703 (find<CEleitorIdentidade>), 860 (__find_equal<CEleitorIdentidade>).
 #   1703 and 860 do not depend on the mapped type: in the target each is one body for every map of this key, and the
 #   match line names the instance of the first object on the link line that emits one (docs/how-to-decompile.md step 3,
-#   "A callee can be a twin"): 860's is unit 225's cvisitanteeleitor.cpp's, the CIndexer map's, since unit 278's list
-#   compiles cregistradormesario.cpp.
+#   "A callee can be a twin"): 860's is celeitores.cpp's, the CEleitorDetalhe map's, since fragment 386's
+#   CompleteLoad instantiates it there (unit 225's cvisitanteeleitor.cpp's, the CIndexer map's, before).
 # - 3743, an out-of-line 2-byte copy of the map's pair's second member, read as CJustificadorDetalhe's copy constructor.
 # - comum::CJustificador's constructor, 3742 (app/comum/justificativa/cjustificador.cpp; the class in cjustificador.h
 #   beside it): CDataMap's constructor from the name "CJustificador", then the comum::servico::CJustificadorServico
@@ -79,8 +79,9 @@
 # compiled without it (its compile line from make -n, swapped into a copy of the plain link's command) 19 over 501,
 # every row an operand (two std::format constants and two table slots), and 10590 the same 199 over 1839 as in the
 # plain link. Its record names it (evidence:srcloc-anchor); the callers+content hand line that named it while it
-# differed went with the flag (weighed by removal: the scan and the build are the same without it). The roots'
-# AdicionaJustificado stands for 6734, its other target caller.
+# differed went with the flag (weighed by removal: the scan and the build are the same without it). Its other target
+# caller, 6734, is in the link (fragment 386's CJustificador::Carrega, held there), and the roots' AdicionaJustificado
+# went.
 #
 # Which inliner: the object keeps Add(value_type), Update, AtualizaMesarioSecao, and __emplace_unique_key_args and
 # __find_equal over the key CComparecimentoMesarioPK, as functions of their own (wasm-objdump -x on the object), and
@@ -92,15 +93,14 @@
 # Aliasing, measured. 5377, 5378 and 5379 reload *__child after the begin-node store in __insert_node_at, and 5725 does
 # not: docs/reference/facts/app-flags.md F6 records that split. The roots object compiles at the tree's flags, as every
 # object of this unit does, so that no match rests on a flag its tree lacks. A stand-in that reached Add over this key
-# gave 5725 112 over 513 rows at the tree's flags, with 12 inserted and 8 deleted, against 21 over 501, all operand-only,
-# at APP_CXXFLAGS: only a copy without -fno-strict-aliasing gives the target's rows, and the flag was not this unit's to
-# change (how-to step 4, "When only a flag closes the gap"): it is cjustificador.cpp's, the object whose copy the link
-# keeps, which builds with strict aliasing since (src/Makefile). The roots' stand-in for 6734 reaches the instance at
-# the tree's flags, and the link keeps cjustificador.cpp's copy, an object ahead of the roots. The instances over the
-# key and over CEleitorIdentidade are the tree's too: from an object without the flag 5377 scored 32 over 695 rows with
-# 5 deleted.
-# GetCurrent, Next and 3741 are the same at both flag sets (the rows compared with local numbers and literal offsets
-# masked), so the flags of the roots object decide nothing for them.
+# gave 5725 112 over 513 rows at the tree's flags, with 12 inserted and 8 deleted, against 21 over 501, all
+# operand-only, at APP_CXXFLAGS: only a copy without -fno-strict-aliasing gives the target's rows, and the flag was not
+# this unit's to change (how-to step 4, "When only a flag closes the gap"): it is cjustificador.cpp's, the object whose
+# copy the link keeps, which builds with strict aliasing since (src/Makefile). The roots' stand-in for 6734 reached the
+# instance at the tree's flags (it went with 6734), and the link keeps cjustificador.cpp's copy, an object ahead of the
+# roots. The instances over the key and over CEleitorIdentidade are the tree's too: from an object without the flag 5377
+# scored 32 over 695 rows with 5 deleted. GetCurrent, Next and 3741 are the same at both flag sets (the rows compared
+# with local numbers and literal offsets masked), so the flags of the roots object decide nothing for them.
 #
 # Evidence for the forms, each by its measured alternative (object functions compared with local numbers and literal
 # offsets masked; "differs" is at that level, 5378's order in a whole link):
@@ -158,7 +158,7 @@
 # binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. 11474, the other data
 # source that holds GetInst's code, matches from cjustificador.cpp (fragment 372's). 5378 and 5379's other callers are
 # 10337 (unit 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal,
-# record 85, inlined) and 6734.
+# record 85, inlined) and 6734 (fragment 386's CRegistradorMesario::Carrega, held there).
 #
 # comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
 # stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:

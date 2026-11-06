@@ -24,8 +24,6 @@
 # same symbols, and they still match. IGravador's key function Slot2, and Slot3, Slot4, Slot5 and Slot6 (fns 11632,
 # 11630, 11634, 11633, 11631), are unit 122's too, in iresultado.cpp, whose object emits IGravador's vtable and
 # typeinfo, which CGravadorWSQ's typeinfo names. Paths relative to src/uenux2.
-# nothing calls the destructors directly in the target, which reaches them through the vtable only:
-# 60-uenux2-cgravadorwsq-roots.cpp keeps the vtable, as the constructor's vptr store in fn 12098's call does
-$(ROOT)/$(APP)/60-uenux2-cgravadorwsq-roots.o: $(ROOT)/src/units/60-uenux2-cgravadorwsq-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/60-uenux2-cgravadorwsq.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/60-uenux2-cgravadorwsq-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/60-uenux2-cgravadorwsq-roots.o
+# No roots: nothing calls the destructors directly in the target, which reaches them through the vtable only, and the
+# constructor (fn 3796, unit 122's cgravadorwsq.cpp), which stores the vptr, is in the link, so the roots file and its
+# sink went; the D2's store of IResultado's vptr keeps IResultado's vtable and destructor (fn 12090) as before.

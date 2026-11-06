@@ -4,8 +4,9 @@
 //   161's 652, unit 221's 5396, 10452 and 10454, unit 282's 2740 and 10468 and unit 152's 10440; Stop stands for the
 //   other callers' flag store. CThreadMonitor::GetInst (fn 1898) needs none: its five
 //   callers are in the link.
-// - CEstadoAudio::GetInst (fn 509, 17 callers): its real callers here are unit 97's 7028 and 1455, 7198 (unit 241),
-//   7377 (197), 10430 (71), 10539 (142) and this unit's 4349, and two stand-ins stand for the other ten.
+// - CEstadoAudio::GetInst (fn 509, 17 callers): 14 are in the link (unit 97's 7028 and 1455, 7198, unit 241, 7377,
+//   197, 10430, 71, 10539, 142, this unit's 4349, and 10209, 10425, 10435, 11804, 12903, 13424 and 13441, the last two
+//   unit 387's), and two stand-ins stand for the other three, 7787, 11865 and 12098.
 // - libc++'s std::__assoc_sub_state::set_value() (target fn 4771, from libc++.a's future.o): its two target callers are
 //   the __execute of CThreadMonitor::SaiPorVotacaoSuspensa's std::async state (fn 10224, cthreadmonitor.cpp's) and
 //   fn 11151, the same member of another std::async state (5568's, api::CApplication::ShowExceptionMsg, not written):
@@ -17,6 +18,7 @@
 #include "app/vota/operador/cthreadoperador.h"
 
 extern "C" void w4771_root_0(void* estado) __asm__("_ZNSt3__217__assoc_sub_state9set_valueEv");
+extern "C" void w6737(void* estado) __asm__("_ZN4vota12CEstadoAudio18GeraDadosDinamicosEv");
 
 namespace {
 
@@ -45,6 +47,7 @@ struct SW116Roots {
         w116_sink = reinterpret_cast<const void*>(&ParaOperadorEMonitor);
         w116_sink = reinterpret_cast<const void*>(&ValorDoAudio);
         w116_sink = reinterpret_cast<const void*>(&ConcluiEstado);
+        w116_sink = reinterpret_cast<const void*>(&w6737);
     }
 } w116_roots;
 

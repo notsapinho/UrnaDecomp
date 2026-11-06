@@ -66,6 +66,15 @@ public:
     // files' paths; src/units/383-uenux2-celeitores-dinamicos.mk has the evidence and the forms measured.
     void DynamicCreate(const std::string& banco) const;
 
+    // CompleteLoad: the records celeitores.cpp:205, :219 and :238 give the signature (codes 7834 to 7836). It has no
+    // target index: fn 6734 (vota::CEstadoAudio::CarregaEleitores, cestadoaudio.h) holds it behind an 864-byte prologue
+    // inside the 48-byte frame of the overload with no parameter, which passes GetPathEstatico(FLASH_INTERNA)'s string
+    // and GetArquivoBancoDadosInterno() (both inlined by binaryen). The overload's existence is that frame; its being a
+    // member overload and its name are chosen. src/units/386-uenux2-carregaeleitores.mk has the evidence and the forms
+    // measured.
+    void CompleteLoad(const std::string& diretorio, const std::string& banco);
+    void CompleteLoad();
+
     void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
     // MarcaVotou: the records celeitores.cpp:456 and 460 (vota::CSincronismoOperador::StartState, target fn 10210, holds
     // it inlined by binaryen, one call). It counts the voter at +104 (an increment of that word). The counter's name is
@@ -110,6 +119,11 @@ public:
     // and reads each in place, with no call of GetCurrent (fn 656). The accessor, its name and its being inline here
     // are chosen, as CJustificador's GetTituloCorrente is.
     const CEleitorDetalhe& GetDetalheCorrente() const { return m_corrente->second; }
+    // No target index: binaryen inlined it into its one caller, fn 7174 (vota::impl::CSincronismoVotoEleitor::
+    // Sincroniza), behind a 32-byte frame: the current record's dynamic data (GetDinamico, fn 1271) written through a
+    // temporary dao::CEleitorDinamicoDAO over the internal flash's database (Atualizar, fn 5775, called directly). Its
+    // name, const, line, file and being a member are chosen (src/units/241-uenux2-app-vota-eleitor.mk has the frame).
+    void GravaEleitorCorrenteMI() const;
     // fn 1393: the current record's CEleitorDetalhe::GetBiometria (fn 1937), returned through the result's address. Its
     // six callers (fns 10425, 10465, 10474, 10478, 10500, 10512, vota's identification states) call it on
     // CEleitores::GetInst()'s result (10500: `f1393(frame, f326())`), so it takes the singleton as `this`: a member, a
@@ -127,7 +141,8 @@ private:
     // `ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_string...`, no K: not const) names the member and
     // its parameter, and it reads `this`: the lists at +76 and +64 (each prefixed with the directory by MontaCaminhos,
     // fn 1936, and read through LeArquivos, fn 5771) and the type at +100 it decorates each voter with. Its callers are
-    // CompleteLoad (fn 6734) and StaticLoad (fn 7787), not written. Its being private is chosen.
+    // CompleteLoad (held by fn 6734, src/units/386-uenux2-carregaeleitores.mk) and StaticLoad (held by fn 7787, not
+    // written). Its being private is chosen.
     std::vector<md::CEleitorDecorator> GetEleitoresEstaticos(const std::string& diretorio);
 
     // fn 5764, record celeitores.cpp:719, which gives the signature: the voter's record, with the impediments of the
@@ -154,7 +169,9 @@ private:
     std::vector<std::string> m_lista3;
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
     unsigned int m_qtdVotaram;
-    int m_naoRecuperado3;
+    // The byte at +108: CompleteLoad stores 1 there last (fn 6734's rows); no reader of it is read here. Its name and
+    // its type, bool for a byte the body stores, are chosen.
+    bool m_completo;
     std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> m_identidades;
 
     static std::unique_ptr<CEleitores> s_instance;

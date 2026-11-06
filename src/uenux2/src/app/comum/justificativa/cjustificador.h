@@ -53,6 +53,10 @@ public:
     void Justifica(const ecourna::app::dados::CNumeroInscricaoEleitoral& titulo, ueword ano);
     void Justifica(const std::string& titulo, ueword ano);
     void SaveCurrentInternal();
+    // Carrega: the map cleared, then every justification m_servico's RecuperarTodos returns added under its voter's
+    // number with its year. Fn 6734 holds it behind a 112-byte prologue, on GetInst()'s result
+    // (src/units/386-uenux2-carregaeleitores.mk). No record names it: the name is chosen.
+    void Carrega();
 
 private:
     servico::CJustificadorServico m_servico;

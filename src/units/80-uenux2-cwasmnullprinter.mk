@@ -93,8 +93,6 @@ CWASMNULLPRINTER_SRCS := src/api/hwil/iimpressorarelatorios.cpp src/api/hwil/eue
 	mock/app/simulador/wasm/cwasmnullprinter.cpp mock/app/simulador/wasm/cwasmnullpaper.cpp \
 	src/api/gui/ccutfieldpaper.cpp src/api/gui/cnewlinefieldpaper.cpp
 UENUX2_SRCS += $(CWASMNULLPRINTER_SRCS)
-# fn 8302, which creates the paper and the printer, is not reconstructed: 80-uenux2-cwasmnullprinter-roots.cpp keeps
-# their vtables the way the target reaches them
-$(ROOT)/$(APP)/80-uenux2-cwasmnullprinter-roots.o: $(ROOT)/src/units/80-uenux2-cwasmnullprinter-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/80-uenux2-cwasmnullprinter.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/80-uenux2-cwasmnullprinter-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/80-uenux2-cwasmnullprinter-roots.o
+# No roots: every virtual member here is reached through a vtable only, and each vtable has a function in the link that
+# stores its vptr: fn 8302 (unit 188) the paper's and the printer's, fn 1264 CCutFieldPaper's and thunk 198
+# CNewLineFieldPaper's (unit 31's cpaperformbuilder.cpp), so the roots file and its two sinks went.

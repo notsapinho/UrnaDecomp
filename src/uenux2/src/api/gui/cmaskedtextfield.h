@@ -15,12 +15,19 @@
 // the same function. Draw (fns 12593, 12708) matches since MaskText is written (units 92 and 173); while MaskText was a
 // trap, binaryen inlined it and the body collapsed to one `unreachable`.
 //
-// The constructor's shape is chosen: fns 4185 and 2384 build the mask from different arguments, and each instantiation
-// needs its own, so a forwarding template stands for them. It copies the text into its member: fns 6624 (inlined from
+// The constructor's shape is chosen: fn 4185 builds the mask from its own arguments (2384 has the second one,
+// below), so a forwarding template stands for it. It copies the text into its member: fns 6624 (inlined from
 // vota::AdicionaCampoNumero, ctelasvota.cpp) and 4185 increment the text's count for the parameter and then reload it
 // and compare it with -1 with no store, which the copy's increment and the parameter's release fold into, and a move
 // (`m_texto(std::move(texto))`) does not give (6624 scored 69 over 322 rows with the move against 56 with the copy,
 // both in the whole link: src/units/378-uenux2-ctelasvota-criatela.mk).
+//
+// A second constructor, for <CFramedText>: fn 2384 (vota::AdicionaCamposInputVazio, ctelasvota.cpp, through
+// api::CFormBuilder::AddMaskedTextField, which it holds behind a second stack-pointer prologue) builds the mask with
+// the alignment the text's slot 3 (IText::GetAlignment) returns, called after the field's vptr store and right
+// before CFramedText's constructor (fn 1385), which a read in the mem-initializer gives (an argument of make_shared,
+// evaluated before it allocates, would come first: a reading, not compiled). Its parameters' types and names, and
+// its being a constructor of the class rather than a form of the adder, are chosen.
 
 #include <string>
 #include <utility>
@@ -40,6 +47,11 @@ public:
     template <typename... TArgs>
     explicit CMaskedTextField(SharedIText texto, TArgs&&... args)
         : m_mask(std::forward<TArgs>(args)...), m_texto(texto)
+    {
+    }
+
+    CMaskedTextField(SharedIText texto, size_t tamanho, const SPoint& posicao, const SFont& fonte)
+        : m_mask(tamanho, posicao, fonte, texto->GetAlignment()), m_texto(texto)
     {
     }
 

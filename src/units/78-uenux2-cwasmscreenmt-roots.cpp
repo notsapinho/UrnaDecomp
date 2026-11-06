@@ -1,10 +1,10 @@
 // Roots: keep unit 78's classes in the skeleton link, reached the way the target reaches them.
 // - simulador::CWasmScreenMT, api::CBeepFieldMT, CBuzzFieldMT and CClockFieldMT: every member is reached through its
 //   vtable only (`awk -F'\t' '$2==8746' ledger/callgraph.tsv` and the same for the other slots print nothing). The one
-//   reference is a vptr store: fns 1072, 941 and 728 (unit 31) hold the fields', so this file takes the fields'
-//   vtables' addresses, which keeps every slot; the screen's is stored by fn 8302 (unit 188), which needs no line here. api::CPreShowClearMT's vptr is
-//   stored by fns 1694 and 301 (unit 31's cmtformbuilder.cpp), the only target functions that load it, so it needs no
-//   line here. The constructors have no caller here, as they have no function of their own in the target.
+//   reference is a vptr store: fns 1072, 941 and 728 (unit 31's cmtformbuilder.cpp, in the link) hold the fields', and
+//   the screen's is stored by fn 8302 (unit 188), so none needs a line here. api::CPreShowClearMT's vptr is stored by
+//   fns 1694 and 301 (unit 31's cmtformbuilder.cpp), the only target functions that load it, so it needs none either.
+//   The constructors have no caller here, as they have no function of their own in the target.
 // - std::string::assign(size_type, char), target fn 1355: the table holds it (elem[6489]: fn 2672, a TU with exceptions,
 //   reaches it through invoke_*), so binaryen keeps its result, and CWasmScreenMT::Clear's calls hold a `drop`. Its
 //   address is taken here for the same reason; without it our link has only direct callers that drop the result, and
@@ -35,9 +35,6 @@
 #include "app/vota/operador/comum/ctextfieldupdatemt.h"
 
 extern "C" {
-extern const char cbeepfieldmt_vt[] __asm__("_ZTVN3api12CBeepFieldMTE");
-extern const char cbuzzfieldmt_vt[] __asm__("_ZTVN3api12CBuzzFieldMTE");
-extern const char cclockfieldmt_vt[] __asm__("_ZTVN3api13CClockFieldMTE");
 int string_assign_fill(int, int, int) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6assignEmc");
 }
 
@@ -56,9 +53,6 @@ const void* volatile cwasmscreenmt_sink;
 struct SCWasmScreenMTRoots {
     SCWasmScreenMTRoots()
     {
-        cwasmscreenmt_sink = cbeepfieldmt_vt;
-        cwasmscreenmt_sink = cbuzzfieldmt_vt;
-        cwasmscreenmt_sink = cclockfieldmt_vt;
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&string_assign_fill);
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&Compartilha<api::IText, api::CFixedText>);
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&Compartilha<SharedCampoMT, api::CBuzzFieldMT>);

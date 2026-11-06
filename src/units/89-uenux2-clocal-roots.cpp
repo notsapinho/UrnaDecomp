@@ -3,18 +3,17 @@
 // taken. Every other function below has direct callers in the target and no table slot (ledger/callgraph.tsv), so each
 // noinline stand-in gives it two call sites and binaryen keeps its body out of line. The stand-ins differ in their operators, so binaryen merges none of them, and they take their
 // arguments as parameters, so dead-argument elimination folds none in. A constructor's result is kept where the target's
-// wasm type keeps it (fns 5674, 5676, 5677, 5679, 3710, 3711) and dropped where it does not (5660). Declared through asm
-// labels with the object's signatures; address-taken from a static constructor. md::CLocal's destructor (5744) is declared
-// here too: clocal.cpp's object emits it, and without this second caller binaryen would inline it into ~CLocal, where the
-// target calls it.
+// wasm type keeps it (fns 5677, 5679) and dropped where it does not (5660). Declared through asm labels with the
+// object's signatures; address-taken from a static constructor. md::CLocal's destructor (5744), CLocal::ValidaCriacao
+// (5673) and VerificaEhSecao (5742), CIndiceFoto's constructor (5659), and CInfoMunicipio's (5674, 5676) and
+// CComplementoMunicipio's (3710, 3711) constructors need none: their target callers (2261 and 5740; 11452, twice; 1933
+// and 11188; 11441 and 11442; 11423 and 11452; 11382, 11424 and 11451) are in the link.
 extern "C" {
 int w401() __asm__("_ZN5comum6CLocal7GetInstEv");
 int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
 int w2838(int) __asm__("_ZN5comum19GetCandidaturaAtualERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 int w5806(int) __asm__("_ZNK5comum19CCandidaturasDSSexoclEv");
 void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
-int w5744(int) __asm__("_ZN5comum2md6CLocalD2Ev");
-void w5673(int) __asm__("_ZNK5comum2md6CLocal13ValidaCriacaoEv");
 int w1003(int) __asm__("_ZNK5comum6CLocal9GetZonaIDEv");
 int w1078(int) __asm__("_ZNK5comum6CLocal10GetSecaoIDEv");
 int w1004(int) __asm__("_ZNK5comum6CLocal12GetMunicipioEv");
@@ -23,18 +22,12 @@ int w1702(int) __asm__("_ZNK5comum6CLocal5GetUFEv");
 void w3753(int, int) __asm__("_ZNK5comum6CLocal14GetUFMinusculaEv");
 int w5743(int) __asm__("_ZNK5comum6CLocal12GetLocalDataEv");
 int w820(int) __asm__("_ZNK5comum6CLocal14UrnaBiometricaEv");
-void w5742(int, int) __asm__("_ZNK5comum6CLocal15VerificaEhSecaoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w1933(int) __asm__("_ZNK5comum6CLocal10GetLocalIDEv");
-int w5676(int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsb");
-int w5674(int, int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsbRKNS0_13CHorarioVeraoE");
 int w3725(int) __asm__("_ZNK5comum2md14CInfoMunicipio15GetHorarioVeraoEv");
 int w5679(int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1Ej");
 int w5677(int, int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1EjRKNS0_13CHorarioVeraoE");
-int w3711(int, int, int) __asm__("_ZN5comum2md21CComplementoMunicipioC1Ejs");
-int w3710(int, int, int, int) __asm__("_ZN5comum2md21CComplementoMunicipioC1EjsRKNS0_13CHorarioVeraoE");
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
 int w5660(int, int, int, int, int, int) __asm__("_ZN5comum2md12CCandidaturaC1EhtjRKNS0_15CDadosCandidatoERKNSt3__26vectorIS2_NS5_9allocatorIS2_EEEE");
-int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS0_8CIndexerE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
@@ -59,16 +52,6 @@ __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stan
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 7787, 11448 (2871, 5950 linked)
 // CLocal's constructor (fn 2262) and destructor (fn 2261) need none: their target callers, 401, 1543, 4160, 5738 and
 // 12105 (fragment 372's), and 401, 1543, 4160, 5738 and 11508, are in the link; Construtores went with 12105.
-__attribute__((noinline)) int LocaisDados(int a, int b) { return w5744(a) * 3 - w5744(b); }
-__attribute__((noinline)) int IndicesFoto(int a, int b, int c, int d)
-{
-    return w5659(a, c, d) - w5659(b, c, d + 8);
-}
-__attribute__((noinline)) void Valida(int a, int b)
-{
-    w5673(a);
-    w5673(b);
-}
 __attribute__((noinline)) int Zonas(int a, int b) { return w1003(a) + w1003(b); }
 __attribute__((noinline)) int Secoes(int a, int b) { return w1078(a) - w1078(b); }
 __attribute__((noinline)) int Municipios(int a, int b) { return w1004(a) ^ w1004(b); }
@@ -82,35 +65,14 @@ __attribute__((noinline)) void UFsMinusculas(int r, int a, int s, int b)
 }
 __attribute__((noinline)) int Dados(int a, int b) { return w5743(a) == w5743(b); }
 __attribute__((noinline)) int Biometricas(int a, int b) { return w820(a) != w820(b); }
-__attribute__((noinline)) void EhSecoes(int a, int b, int f)
-{
-    w5742(a, f);
-    w5742(b, f + 12);
-}
 // Stands for fn 1933's callers 7787 and 12098 (11188 and 1543, unit 123's, 2725, unit 293's, and 11242, unit 155's, are
 // in the link).
 __attribute__((noinline)) int LocaisID(int a, int b) { return (w1933(a) << 2) - w1933(b); }
-__attribute__((noinline)) int Infos(int a, int b, int c, int d, int e, int f)
-{
-    return w5676(a, c, d, e, f) * w5676(b, c + 1, d, e, f);
-}
-__attribute__((noinline)) int InfosVerao(int a, int b, int c, int d, int e, int f, int g)
-{
-    return w5674(a, c, d, e, f, g) % w5674(b, c, d, e + 1, f, g + 20);
-}
 __attribute__((noinline)) int Horarios(int a, int b) { return w3725(a) <= w3725(b); }
 __attribute__((noinline)) int Veroes(int a, int b, int c) { return w5679(a, c) / w5679(b, c + 3); }
 __attribute__((noinline)) int VeroesHorario(int a, int b, int c, int d)
 {
     return w5677(a, c, d) >> (w5677(b, c + 2, d + 20) & 3);
-}
-__attribute__((noinline)) int Complementos(int a, int b, int c, int d)
-{
-    return w3711(a, c, d) << (w3711(b, c, d + 4) & 3);
-}
-__attribute__((noinline)) int ComplementosVerao(int a, int b, int c, int d, int e)
-{
-    return w3710(a, c, d, e) - 7 * w3710(b, c + 5, d, e);
 }
 __attribute__((noinline)) int HorariosComplemento(int a, int b) { return w2795(a) > w2795(b); }
 __attribute__((noinline)) void Candidaturas(int a, int b, int c, int d, int e, int f, int g)
@@ -148,9 +110,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&CandidaturasAtuais);
         clocal_sink = reinterpret_cast<const void*>(&Sexos);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
-        clocal_sink = reinterpret_cast<const void*>(&LocaisDados);
-        clocal_sink = reinterpret_cast<const void*>(&IndicesFoto);
-        clocal_sink = reinterpret_cast<const void*>(&Valida);
         clocal_sink = reinterpret_cast<const void*>(&Zonas);
         clocal_sink = reinterpret_cast<const void*>(&Secoes);
         clocal_sink = reinterpret_cast<const void*>(&Municipios);
@@ -159,15 +118,10 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&UFsMinusculas);
         clocal_sink = reinterpret_cast<const void*>(&Dados);
         clocal_sink = reinterpret_cast<const void*>(&Biometricas);
-        clocal_sink = reinterpret_cast<const void*>(&EhSecoes);
         clocal_sink = reinterpret_cast<const void*>(&LocaisID);
-        clocal_sink = reinterpret_cast<const void*>(&Infos);
-        clocal_sink = reinterpret_cast<const void*>(&InfosVerao);
         clocal_sink = reinterpret_cast<const void*>(&Horarios);
         clocal_sink = reinterpret_cast<const void*>(&Veroes);
         clocal_sink = reinterpret_cast<const void*>(&VeroesHorario);
-        clocal_sink = reinterpret_cast<const void*>(&Complementos);
-        clocal_sink = reinterpret_cast<const void*>(&ComplementosVerao);
         clocal_sink = reinterpret_cast<const void*>(&HorariosComplemento);
         clocal_sink = reinterpret_cast<const void*>(&Candidaturas);
         clocal_sink = reinterpret_cast<const void*>(&Suplentes);

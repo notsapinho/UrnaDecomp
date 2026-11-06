@@ -12,8 +12,8 @@
 NUMVIAS_SRCS := src/app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.cpp \
   src/app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.cpp
 UENUX2_SRCS += $(NUMVIAS_SRCS)
-# the converter's users are not reconstructed yet: 20-uenux2-cconversornumviasimpressasrelatorios-roots.cpp keeps its
-# vtable and gives the data class constructor its second caller, the way the target reaches them
+# 20-uenux2-cconversornumviasimpressasrelatorios-roots.cpp gives the data class constructor its second caller (5324 is
+# not written); the converter's vtable needs no sink, since 11390, 11391, 11394 and 11395 store its vptr
 $(ROOT)/$(APP)/20-uenux2-cconversornumviasimpressasrelatorios-roots.o: $(ROOT)/src/units/20-uenux2-cconversornumviasimpressasrelatorios-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/20-uenux2-cconversornumviasimpressasrelatorios-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/20-uenux2-cconversornumviasimpressasrelatorios-roots.o

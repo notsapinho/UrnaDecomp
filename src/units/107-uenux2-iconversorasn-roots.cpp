@@ -23,10 +23,12 @@
 // its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
 //
-// The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is
-// reached that way, so the sink is the reference the target has. CConversorSeguranca's went: the three target functions
-// that store its vptr, 10270, 10271 and 11411, are written. CConversorDadoLocal's and CConversorDadoCarga's went too:
-// the two target functions that store their vptrs, 11397 and 11398, are written.
+// The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. No sink is left: each went
+// once a function that stores its vptr was in the link, one storer giving the reference the sink gave.
+// CConversorSeguranca's: 10270, 10271 and 11411. CConversorDadoLocal's and CConversorDadoCarga's: 11397 and 11398.
+// CConversorMunicipio's: 11423, 11424, 11451 and 11452. CConversorIdentificacaoAgregada's: 11453 and 11454.
+// CConversorComplementoMunicipio's: 11381, 11423, 11424, 11451 and 11452. CConversorAbrangencia's: 11441, 11457 and
+// 11458.
 #include <new>
 
 #include "app/comum/asn/iconversorasn.h"
@@ -50,10 +52,6 @@
 
 extern "C" {
 int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE");
-extern const char w107_municipio_vt[] __asm__("_ZTVN5comum3asn19CConversorMunicipioE");
-extern const char w107_agregada_vt[] __asm__("_ZTVN5comum3asn31CConversorIdentificacaoAgregadaE");
-extern const char w107_complemento_vt[] __asm__("_ZTVN5comum3asn30CConversorComplementoMunicipioE");
-extern const char w107_abrangencia_vt[] __asm__("_ZTVN5comum3asn21CConversorAbrangenciaE");
 }
 
 namespace {
@@ -85,10 +83,6 @@ struct SIConversorRoots {
     {
         w107_sink = &w107_todos;
         w107_sink_vt = reinterpret_cast<const void*>(&w5632);
-        w107_sink_vt = w107_municipio_vt;
-        w107_sink_vt = w107_agregada_vt;
-        w107_sink_vt = w107_complemento_vt;
-        w107_sink_vt = w107_abrangencia_vt;
     }
 } w107_roots;
 

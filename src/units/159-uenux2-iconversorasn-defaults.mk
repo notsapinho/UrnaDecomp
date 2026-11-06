@@ -35,7 +35,9 @@
 # (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores;
 # nor of CConversorEleicaoPE, whose vptr fn 5778 (unit 280's comum::CarregaPleito) stores, through the converter's
 # constructor out of line in cconversoreleicaope.cpp (fragment 299): its sink went once that constructor was in the
-# link, measured (a link without it moves no row).
+# link, measured (a link without it moves no row); nor of CConversorHistoricoVotoImpresso and CConversorFotoCandidato,
+# whose vptrs fns 10273 (fragment 321's) and 3755 (unit 109's) store, both in the link (a link without the two sinks
+# moves no row).
 #
 # Evidence. Records name each default, its class template and its throw's line and column: iconversorasn.h 89 and 98,
 # iconversorbiometriaasn.h 81, column 15 (a throw in a body in the class). Each thunk passes its instance's record, code
@@ -47,7 +49,7 @@
 #
 # Measured. The defaults match at -O3, the tree's level (unit 96's fragment has the -O2 measurement). 731 forms as the
 # target's only with an inherited DoDesconverte in the link: with CConversorHistoricoVotoImpresso's vtable out of the
-# roots, our merged body is 25 over 183 rows from 731 (pnpm wasm score, 3 rows not operand-only), and with it 11 over
+# link, our merged body is 25 over 183 rows from 731 (pnpm wasm score, 3 rows not operand-only), and with it 11 over
 # 183, all operand-only, and it matches. The only classes that inherit that default are CConversorEntidadeHashes,
 # CConversorEntidadeBU and CConversorHistoricoVotoImpresso (the thunks that pass 7656: 10265, 10272, 10275), so this
 # fragment holds the last.
@@ -77,8 +79,8 @@
 # their vtables, compiled with the tree's flags
 $(ROOT)/$(APP)/159-uenux2-iconversorasn-defaults-pending.o: $(ROOT)/src/units/159-uenux2-iconversorasn-defaults-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/159-uenux2-iconversorasn-defaults.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/159-uenux2-iconversorasn-defaults-pending.cpp -o $(R)
-# the converters' users are not reconstructed yet: 159-uenux2-iconversorasn-defaults-roots.cpp keeps their vtables the
-# way the target reaches them
+# CConversorCandidaturas's builder is not written: 159-uenux2-iconversorasn-defaults-roots.cpp keeps its vtable the way
+# the target reaches it (the others' storers are in the link)
 $(ROOT)/$(APP)/159-uenux2-iconversorasn-defaults-roots.o: $(ROOT)/src/units/159-uenux2-iconversorasn-defaults-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/159-uenux2-iconversorasn-defaults.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/159-uenux2-iconversorasn-defaults-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/159-uenux2-iconversorasn-defaults-pending.o $(APP)/159-uenux2-iconversorasn-defaults-roots.o

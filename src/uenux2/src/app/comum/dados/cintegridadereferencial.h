@@ -57,10 +57,11 @@ CIntegridadeReferencial::TResultado VerificaVotos(const CRdv& rdv, const std::ma
                                                   const CCandidaturas& candidaturas, const CPartidos& partidos,
                                                   const CRespostas& respostas);
 
-// fn 2543: hands VerificaVotos' result to Lanca (fn 2263). Its target callers are comum::CEleitores::CompleteLoad (fn
-// 6734), vota::impl::CSincronismoVotoEleitor::Sincroniza (fn 7174, twice) and vota::CGravaResultado::StartState (fn
+// fn 2543: hands VerificaVotos' result to Lanca (fn 2263). Its target callers are vota::CEstadoAudio::CarregaEleitores
+// (fn 6734), vota::impl::CSincronismoVotoEleitor::Sincroniza (fn 7174, twice) and vota::CGravaResultado::StartState (fn
 // 12098). No record names it: its name and its being a free function of comum with external linkage are chosen. It is
-// written and does not match yet (src/units/98-uenux2-app-comum-dados.mk says what it waits for).
+// written and does not match yet (src/units/98-uenux2-app-comum-dados.mk says what it waits for); step 8 names it by
+// the calls of 6734 and 7174, both in the link.
 void VerificaIntegridadeVotos();
 
 } // namespace comum
