@@ -213,12 +213,22 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   `this`, `docs/reference/facts/reading.md` §R2) needs that reader in the link.
 
   A batch still landing moves the pool of a pick whose base is before it. Count as resolved what its branches match or
-  name (`git show <branch>:splat/symbol_addrs.txt`; for a branch on the other machine, the board's in-flight list and
-  the lane's result post). The rows they write or trap without matching (their diff removes
+  name over their own merge base with the pick's base (`git show <branch>:splat/symbol_addrs.txt` against `git show
+  "$(git merge-base <base> <branch>)":splat/symbol_addrs.txt`; for a branch on the other machine, the board's in-flight
+  list and the lane's result post), less the names the pick's base removed since that merge base: those are the base's
+  decision, not the branch's gain (11157, whose stand-in calls the base removed by the user's decision). The rows they
+  write or trap without matching (their diff removes
   the row's stub, or adds the member to a `-pending.cpp`) are out of the pool until they land, and the pick says which
   lane would take them after; a row a pending comment only mentions is not taken. A member a lane's result reports as
   not attempted, whose row its branch leaves as it was, is in the pool again once that result is posted, unless the
   round's in-flight list keeps it: then the pick lists the rows that need it as waiting for its release.
+
+  A lane that matched nothing is parked: its branch is kept, and its fragment there is the record of the forms it
+  tried. A pick that gives a parked row again reads that fragment (`git show <branch>:src/units/<n>.mk`) and names in
+  the brief a route it did not try. A branch on the other machine is read there (`ssh <host> "git -C <checkout> show
+  <branch>:src/units/<n>.mk"`, [docs/agents.md](../../docs/agents.md) "Two machines") or the coordinator copies the
+  committed fragment into `shared/`; a board archive of an earlier draft is no record, so a parked lane's result names
+  every form it tried.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -353,8 +363,9 @@ It returns, and posts as a `rounds/` result: the verdict (matched, or not matcha
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
-without a match, nor from one whose change costs a row its base matches: it posts the loss as a `facts/` post, and
-how-to step 9 says what that post holds and on which branch alone the change may be committed.
+without a match, nor from one whose change costs a row its base matches, unless the user decides that loss lands: it
+posts the loss as a `facts/` post, and how-to step 9 says what that post holds, on which branch alone the change may be
+committed, and how a loss the user lands is committed.
 
 Count the matches by target index, not by line. `git diff main -- splat/matched.txt` shows the added lines, but a
 line removed there is not always a lost match: a twin whose surviving name moved is removed under its old symbol and

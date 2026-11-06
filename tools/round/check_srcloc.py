@@ -1,6 +1,6 @@
 """Check that the std::source_location records our objects hold are records of the target.
 
-    python3 -I -B tools/round/check_srcloc.py [--strict] [objects…]   # make -C src check-srcloc (after make -C src link)
+    python3 -I -B tools/round/check_srcloc.py [--strict] [objects…]   # make -C src check-srcloc (after link and link-map)
 
 TSE's exception constructors take a std::source_location, so every throw site of a decompiled function compiles to
 a 16-byte record {file name, function name, line, column} in the object's read-only data. The target holds 1,939 of

@@ -173,9 +173,9 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   differs or is inlined leaves the pair standing while deeper hashes part (`pnpm wasm fingerprint <wasm> --depth 0`, on
   each side, prints one index per hash). The hash is `fingerprint`, or `addr` or `shape` where a constant cannot be
   equal: a body's own table slot, or an integer in the data range, which the fingerprint hashes as the bytes it points
-  at. The comment says which and gives the rows that differ: 7909's says `shape` (its slot), 5769's `addr` and `shape`
-  (`i32.const` 2591, 2592, 13824 and 13825, sizes of 24 and 128 elements of 108 bytes).
-  The uniqueness runs over every function of both modules and reads no match, but it compares the same two bodies a
+  at ([facts/reading.md](facts/reading.md) §R23). The comment says which and gives the rows that differ: 7909's says
+  `shape` (its slot). The uniqueness runs over every function of both modules and reads no match, but it compares the
+  same two bodies a
   match would, so a verifier weighs such a line too.
 - `vptr+shape`: the function stores a class's vtable address point, which other functions store too, and its `shape`
   hash is the only one on both sides.
@@ -187,8 +187,7 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   at every flag measured, when its own rows single it out among the target's functions: content only it loads, or, when
   another target function loads that content too or the body loads none, its rows as a whole, unique on the
   `fingerprint`, `addr` and `shape` hashes of `pnpm wasm fingerprint <target> --depth 0`, with what its target callers
-  do with its result (1692, a constructor that loads no address, is alone on all three); the comment names the other
-  loaders, if any, and what tells them apart. Its
+  do with its result; the comment names the other loaders, if any, and what tells them apart. Its
   comment gives the score at the tree's flags, says the remainder is not explained, and counts no caller the line
   carries; a function it calls that calls it back (an operator and its inverse, 5477 and 5478) is no caller that can
   land until it matches. When the line carries every caller it
@@ -371,7 +370,8 @@ Two rules guard the evidence:
   and `UNCONFIRMED` in the build. An object of zeros never agrees, so a `.bss` name that one body votes for alone holds
   only through a second match that uses it, such as the object's static destructor, or a vote of another function
   (`ctors:N`). That other function can be a written body that is no match: the build then checks neither its bytes
-  nor its votes, so a reviewer runs `splat-remap` on it against its index ("Reviewing a match"). A `_ZGV` guard is
+  nor its votes, so a reviewer checks them ("Reviewing a match": the body against its index, or, for our
+  `__wasm_call_ctors`, the object's own store). A `_ZGV` guard is
   placed by its object instead when the target holds the two at our link's distance
   (§2; `guardedObject` in `asmlift-wasm/src/splat-sub.ts`): it is not the function's own when the object's name has
   other evidence, and else it holds as the object does, through a match that uses the object. 5158
@@ -757,7 +757,11 @@ takes both. When the range changed the function's signature, the base's line nam
 and weighs nothing: take every line of the index out instead (`/usr/bin/grep -v '= func:<N>;'`), which shows whether
 the match needs a name at all. The second way decides whether the line stays; the copy needs no new run of
 `splat-symbols`, since step 8 reads no hand line (§2). Follow each scan with `splat-build` on the same two copies: a
-scan that moves no row shows neither that the build accepts them nor that it refuses them. When `status.py --check`
+scan that moves no row shows neither that the build accepts them nor that it refuses them. The build names one layer
+per run: take out the match line of each row it refuses and run it again until it builds, and count those rows with
+what the line carries. A match whose own `call` or `table` name holds only while its callee is a match stays `match`
+in the scan and is refused only once the callee's line is out (12040 over 12039's `table by:12040`, under 5634's
+line). When `status.py --check`
 names scan-only rows on the committed state (the scan keeps a match the build refuses as self-voted,
 [facts/splat.md](facts/splat.md) §S14), every scan adds them back to the copy and the build refuses them whatever
 line is weighed: take those lines out of each copy, the control's too, before `splat-build`. Weigh every line you keep
@@ -796,10 +800,21 @@ Two generated names the build does not weigh, a reviewer does. A callee of a new
 list (§3): `awk -F'\t' '$2==<callee>' ledger/callgraph.tsv` lists its target callers, and when no other is matched,
 the review with `--symbols` on a copy without the callee's line shows whether the match leans on it (4620 fails
 without 5564's), which the fragment says: the name holds through the match's alignment until a second caller lands.
-A data name whose one voter is a written body that is no match (`unresolved` on another name): the build checks
-neither that body's bytes nor its votes, so `pnpm wasm splat-remap <target> <plain> sym:<its symbol> --against
-<its index>` must print `IDENTICAL`, and the fragment names the matches that rest on its votes (a scan without its
-`by:` lines lists them: 20 exit destructors on 10635's before it matched).
+A data name whose voters, the matches that read it aside, are written bodies that are no match (`unresolved` on
+another name): the build checks neither those bodies' bytes nor their votes, so `pnpm wasm splat-remap <target> <plain>
+sym:<its symbol> --against <its index>` must print `IDENTICAL` for each, and the fragment names the matches that rest on
+their votes (a scan and `splat-build` on a copy whose `by:` list leaves them out name those: 20 exit destructors on
+10635's before it matched). Our `__wasm_call_ctors` (14478's pair, `ctors:N`
+or a `by:` list that holds 14478) never prints `IDENTICAL`: each side runs another set of translation units (§2), and
+here it prints `UNRESOLVED (1740)`. Its vote is the run §2 describes, which `ctorVotes` checks row by row, so the
+reviewer checks the object's own store: the voting operand must re-point, which it does when `splat-remap` does not
+list it among the unresolved ones. For `ESCAPES.2`, which 10879 reads and 14478 writes, from `asmlift-wasm/`
+(c3a97777):
+
+```sh
+pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm sym:__wasm_call_ctors --against 14478 | /usr/bin/grep -c -F 'ESCAPESE.2'
+# 0
+```
 
 `make -C src splat-symbols` says nothing of a hand edit a generated line has caught up with. These are the names on both
 sides of the marker, each with its two targets:
@@ -811,9 +826,11 @@ awk '/^# ---- hand edits below/ {h=1; next} /^#/ || !NF {next} h {if ($1 in g) p
 Such a line goes when the scan above and `splat-build --symbols <that copy>`, without it, keep every row, unless it is
 `merged-body`; a range whose match touches it removes it, whether it went idle in that range or before (how-to step
 9). A line whose generated twin has one voter, the match the line carries (`vote:N`, `table` or `call` with `by:<that
-index>`), stays while the callee is no match itself: without it the build's fixed point refuses that match as
-`UNCONFIRMED: self-voted`, though the scan adds it back, so the build decides (3593's line, whose twin reads
-`evidence:call by:10204`). A hand line no generated line repeats can carry nothing too, since a body whose re-pointed
+index>`), can carry that match while the callee is no match itself: without it the build's fixed point can refuse the
+match as `UNCONFIRMED: self-voted`, though the scan adds it back. The build decides: the line stays when `splat-build`
+without it refuses a row (3593's, whose twin reads `evidence:call by:10204`), and goes when other matches that call the
+callee at aligned sites hold the name, which a `by:` list does not show. A hand line no generated line repeats can carry
+nothing too, since a body whose re-pointed
 bytes occur once comes back by content: run the same two on every new hand line before it lands.
 
 In both ways the maps get the matches of `splat/matched.txt` first (`withMatches(maps, matches)` with the `matches` of

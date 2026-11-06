@@ -147,19 +147,29 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   in the pull request or issue that announces the work. The same holds for a landed file a new function needs on the
   other side of another landed unit's file: move it into that unit's list, on the side it measures right (the second
   fragment no longer lists it, "Landing a unit" item 2), and say so in both fragments (`docs/reference/facts/codegen.md`
-  §C4 measures both moves). When that list's fragment is another active stage's (its claim, or a change on an unlanded
+  §C4 measures both moves). When a landed function needs two landed files of two units in another order, either file
+  may move into the other's unit's list: count both moves, each against the file that moves, take the one whose count
+  falls more, and give the other's count in the fragment (2772, on 76661cb7's link line: `cqrcodeimagepaper.cpp` into
+  unit 196's list, 341 to 332, against `cstringutils.cpp` into unit 296's, 341 to 340). When that list's fragment is
+  another active stage's (its claim, or a change on an unlanded
   branch), the move is the list lines alone, a hunk apart from that stage's, with a `queue/` post, and the landing keeps
   both and the measured order. A move lands only when a measured form needs it: a body that matches, or a row that
   holds, only at the new place. One that gains nothing stays out, however the data's order reads. The fragment names the
   pairs of objects the move inverts in the target's data order (§C4 counts them), and the places weighed are the ones
-  this rule gives, inside a landed unit's list: a place outside every list that inverts fewer pairs is not taken, and
-  the fragment gives its count. A new file has no old place: one with matches of its own whose order decides nothing
-  weighs its own fragment's list (the next free number) and the landed lists beside its data neighbours, and takes the
-  lowest of §C4's record-aware counts (fragment 372's two files, in unit 93's list). Its fragment gives the count at
-  each place weighed, the data-neighbour pairs it leaves inverted, and against the next place the pairs that differ
-  (§C4's `names` lists them): named when few, by directory when many (fragment 372). A count moves as landings name
-  data (§C4), so it carries the commit it was taken at, and a landing that merges a fragment stating one recounts it on
-  the merged link. The move can rename a twin's match line, which step 9 does. A file in another unit's list
+  this rule gives, inside a landed unit's list: a place outside every list that inverts fewer pairs is not taken, nor
+  one in a third landed list on the right side of both files (unit 79's for 2772, 286), and the fragment gives their
+  counts. A new file has no old place:
+  one whose order decides nothing, with matches of its own or not, weighs its own fragment's list (the next free number,
+  and the extended unit's list too when the file extends a landed unit) and the landed lists that hold objects of its
+  run in the target's data, not only the two objects right before and after its data, at every position inside each
+  list (§C4), and takes the lowest of §C4's record-aware counts (fragment 372's two files, in unit 93's list). Files
+  that land together move together, each counted with the others at their place. Its fragment gives the count at each
+  place weighed, the data-neighbour pairs it leaves inverted, and against the next place the pairs that differ (§C4's
+  `names` lists them): named when few, by directory when many (fragment 372). A count moves as landings name data
+  (§C4), so it carries the commit it was taken at, and a landing that merges a fragment stating one recounts it on the
+  merged link. A move also changes the pairs of every other move whose span the moved file enters or leaves, so the
+  landing recounts or dates the other fragments' counts that name it (`docs/reference/facts/workflow.md` §W23 kind 7).
+  The move can rename a twin's match line, which step 9 does. A file in another unit's list
   stays its own unit's: its fragment keeps the header comment, the companions and the row, with no source list when
   every source moved, and says which list compiles its files; that list's fragment says why, with the measurement (unit
   188's `simulador.cpp` sits in unit 101's list for 4879, unit 245's three files in unit 96's). A new file whose
@@ -457,7 +467,8 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
   enough, since the storer and the sink give the same reference to the same vtable; a comment that keeps a sink for the
   storers still unwritten reads the rule wrong. A storer is a function of the link other than the vtable's own members
   (its destructors store the vptr but are reached only through it: `ledger/vtables.json`'s `functions` for that vtable),
-  and a builder the link drops is none (an unrooted `optnone` function, "A control block"). A function
+  and a builder the link drops is none (an unrooted `optnone` function, "A control block"), nor a storer's
+  `-pending.cpp` trap, which stores nothing (`CWavFile`'s 10841 keeps units 38's and 102's sinks). A function
   reached through another kind of slot (an
   `invoke_*` thunk, a callback passed by its slot) has its own address taken, and so can a vtable member that also has
   direct callers, which keeps the vtable its vptr store names. `ledger/callgraph.tsv` holds
@@ -587,8 +598,8 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
   takes the location as a parameter of its own, address-taken so nothing folds it, and passes it on (unit 186's
   `w186_erro` did, until 2725, its one target caller, landed). When every target caller holds one inlined throw, so the
   callee's wasm type lacks the location, the stand-in calls the function that holds the throw, which binaryen inlines
-  into it: the record is then the one of every call site (unit 205's `w205_assinatura` calls `VerificaUrnaDesligando`
-  for 1685);
+  into it: the record is then the one of every call site (unit 205's `w205_assinatura` called `VerificaUrnaDesligando`
+  for 1685 until its last caller landed: `git show 815f4554:src/units/205-uenux2-csincronizavota-roots.cpp`);
 - a constant every target caller passes is not in the target's wasm type: binaryen's dead-argument elimination folded
   it into the body (`docs/how-to-decompile.md` step 2). Pass that constant from every stand-in, so the fold happens
   here too. When it is the address of an object a stand-in cannot name (a constant internal to the callers' file, or one
@@ -758,7 +769,11 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     never called and uses no constructor of T (units 78 and 79). The builder can also be one the link drops: an unrooted
     `optnone` function at namespace scope (in the anonymous namespace clang emits none of it, §U13) holds the
     `make_shared<T>` or the `shared_ptr<U>(new T)`, and the static constructor keeps the
-    block's vtable in the sink (unit 83 for `__shared_ptr_pointer`, unit 92 for both kinds). That is sound because the
+    block's vtable in the sink (unit 83 for `__shared_ptr_pointer`, unit 92 for both kinds). The dropped builder can be
+    the real one too: a member right by construction (a singleton's `GetInst`), written unrooted in its own TU while
+    its one target caller is unwritten (`docs/how-to-decompile.md` step 5), emits the block there, with the
+    destructor's shape when that TU defines the destructor, and the sink stands for the caller's store (unit 268's
+    11635 and 11636 through `CGeracaoVersoesContratos::GetInst`). That is sound because the
     target reaches these members only through that vtable, so the sink is the reference the target has, and no body
     depends on the constructor. Check each vtable with the grep for its address point below: the target's own code must
     store it, and the kind must be the one its builder stores. A dropped builder needs T's constructor declared, not
@@ -806,7 +821,10 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     callers do, twice, and build the result in place, `::new (destino) ENTIDADE(conversor.Converte(dado));`, which by
     guaranteed elision emits no constructor or destructor of the result's type, inline members a later object
     defines. The object then emits TSE code, so the flags rule below applies (unit 113 compiles such roots at the
-    tree's flags). A private member (libc++'s `__swap_out_circular_buffer`) cannot be called by name: the roots
+    tree's flags). When clang inlines it at the stand-in's call where the target calls it out of line,
+    `[[clang::noinline]]` on each call statement keeps the calls (unit 190's `CPath::GetPathLog`, unit 268's
+    `std::make_format_args`). A private member (libc++'s `__swap_out_circular_buffer`) cannot be called by name: the
+    roots
     instantiate it explicitly and call it through an `__asm__` label with `[[clang::noinline]]` on each call, as a
     tree root does, and since that copy is the link's only while no object of ours instantiates the member, the roots
     compile at the flags of the target caller's directory (unit 225, 5700).
@@ -893,8 +911,10 @@ split. Each member moves into the class's real source when it is reconstructed, 
 the last one.
 
 A trap is for a member that cannot be written yet (a callee or a type the tree lacks, or no form measured comes
-close, the `-pending.cpp` header giving the forms and their rows: unit 69's 9018; a slot member one remainder off
-stays written), that cannot match until other code lands (a merge thunk, below), or whose real body would cost a
+close, the `-pending.cpp` header giving the forms and their rows; a slot member one remainder off stays written: unit
+69's trap of 9018, `49 over 725` rows with one remainder, a narrowing to 16 bits (`docs/reference/facts/codegen.md`
+§C17), belongs in `cwasmscreen.cpp`), that cannot match until other code lands (a merge thunk, below), or whose real
+body would cost a
 match. A member whose body is written and right keeps it where it belongs, in the
 class or its `.cpp`, and its row stays as it is, whatever the reason outside its source: `docs/how-to-decompile.md`
 step 5, "A written body that does not match yet", has the rule and what to measure. An implicit destructor has no body
@@ -1079,7 +1099,10 @@ compiles: it extends that unit.
    source's fragment names it, unless that unit's roots compile at other flags than the object whose copy the target
    keeps: then the instance goes in the roots of a unit at that object's flags, its own or a tree root, and the
    owner's fragment says which (2279 and 2280, `CPolySingleton` and `DeserializeFromFile` instances, in unit 293's
-   roots at `UENUX2_CXXFLAGS`, where units 100 and 03 compile theirs at `APP_CXXFLAGS`). A caller stand-in for a
+   roots at `UENUX2_CXXFLAGS`, where units 100 and 03 compile theirs at `APP_CXXFLAGS`). That is a root that only
+   instantiates (an explicit instantiation, a tree root): a caller stand-in whose call instantiates a header template
+   goes with the caller's other stand-ins, and the template's fragment says where (unit 268's `w268_tem`, for 2860's
+   `has<comum::CGeracaoVersoesContratos>`, named in unit 100's fragment). A caller stand-in for a
    library instance another unit's object emits follows that object: it goes in that unit's roots, or in a fragment
    of one's own that says whose object the body is while another stage holds that unit. A member with no target index
    of its own (binaryen inlined it into each caller) is

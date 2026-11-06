@@ -10,7 +10,11 @@ run from the repository root, at 0b5f410 where a number moves, and at 182dc6c1 w
 ## P1. What a stub's place is worth
 
 A stub marked `placement: link order` has no record that gives it a line: its file comes from its class's vtable
-or vptr. A stub in a tree's `unplaced.cpp` has no evidence for any file. In `src/ecourna/` every stub is one of these
+or vptr. The vptr can be a temporary's: a function that builds an object and destroys it inline stores that class's
+vptr in the destructor's code, and its stub then sits in that class's file whatever the function is (f13441, a free
+image source of `ctelasvota.cpp`'s, sat in `cfixedimage.cpp` until 36c58e1d): read the vptr store's place in `pnpm
+wasm fn`'s readout before taking the stub's file. A stub in a tree's `unplaced.cpp` has no evidence for any file. In
+`src/ecourna/` every stub is one of these
 two kinds, since most ecourna functions that have records are written, so the record leads to code, not to a stub.
 
 A stub can sit over code we have: `stubs.py` cannot see a non-virtual function that has no record. And a stub can go
@@ -365,9 +369,8 @@ vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
 though a record names the function: `stubs.py` takes only blank lines outside every function and class
 (`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).
-`src/uenux2/src/api/gui/cstepsprogressbar.cpp` (unit 41) has one record, line
-428, of the constructor that 13550 inlines; its gap ends at `#line 425`, f13550's stub takes lines 425 to 428, and the
-unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps the lines between its namespace's
+A stub ends on its record's line (`ctelasvota.cpp`'s f7787, [../../../src/README.md](../../../src/README.md) "Gaps").
+`src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps the lines between its namespace's
 opening and its destructor at 78 blank around its constructor's records at 52, 58 and 67, and that run stays blank:
 
 ```sh
