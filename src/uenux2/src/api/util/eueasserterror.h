@@ -95,6 +95,11 @@ enum EUeAssertError {
     // chosen to that length
     EUA_RETIRARMR_ESTADOINVALIDO = 3476,
     EUA_RETIRARMR_ENCERRINVALIDO = 3477,
+    // vota::CGeraDadosDinamicos::StartState (fn 11865, record cgeradadosdinamicos.cpp 47:51): the text "Assert
+    // (vota.GetEstadoVota() == EAVINICIAL || vota.GetEstadoVota() == EAVGERADADOSDINAMICOS)". The column is less than
+    // the condition's length, so the invocation closes on a line of its own: with the code there indented eight columns
+    // and qualified api::, the column leaves 37 characters for the name, chosen to that length
+    EUA_GERADADOSDINAMICOS_ESTADOINVALIDO = 3478,
     // vota::CVerificaHorarioZeresima::StartState (fn 11871, record cverificahorariozeresima.cpp 64:60) and
     // ProcessTickNaoDesligamento (fn 11870, record 80:61): the text "Assert (appinfo.GetVota().GetEstadoVota() ==
     // EAVAGUARDAHORAZERESIMA)" in both. The columns are less than the condition's length, so each invocation closes on a
