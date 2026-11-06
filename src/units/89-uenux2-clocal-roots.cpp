@@ -49,7 +49,7 @@ __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
-__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 7787, 11448 (2871, 5950 linked)
+__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 7787 (1709, 2871, 5950, and unit 159's 5710 and 11448, linked)
 // CLocal's constructor (fn 2262) and destructor (fn 2261) need none: their target callers, 401, 1543, 4160, 5738 and
 // 12105 (fragment 372's), and 401, 1543, 4160, 5738 and 11508, are in the link; Construtores went with 12105.
 __attribute__((noinline)) int Zonas(int a, int b) { return w1003(a) + w1003(b); }
