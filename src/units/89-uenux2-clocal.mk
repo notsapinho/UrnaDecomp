@@ -54,7 +54,8 @@
 # binaryen keeps one body, whose match line names CRespostas's since crespostas.cpp links first (step 9 renamed it). They read three accessors added for them,
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
 # our link are unit 77's 11215 (2271), 11214 (2840, 1273) and 11213 (2272), and unit 139's 11254 (2271) and 11255 (2272,
-# 2271, 1273); the roots' Consultas stands for the rest, which its comment lists.
+# 2271, 1273); the roots' Consultas, which stood for Busca's last caller not in the link, 11891, went with it (unit
+# 104's), and the roots' comment lists Busca's callers.
 #
 # comum::CCandidaturas::Localiza, named and typed by its record (ccandidaturas.cpp:56:15, its throw: code 7800 and the
 # 42-byte message at 440373 of ledger/strings.tsv, the candidate then the post): it finds the base's key, the post times

@@ -170,7 +170,8 @@ __attribute__((noinline)) int BarraProgresso(api::CFormBuilder& form, const std:
 //   FormMTA, FormMTB      callers of 1694 (4633; 1150, 5341, 5343, 10204, 10214 and 10676 are in the link); their
 //                         calls of 301 (GetInteractiveForm) went: the last of its 49 target callers not in the link,
 //                         10451 (unit 221's), is now
-//   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
+//   FormA, FormB          went: 5550's two target callers, 6117 (binaryen's body of GetForm overloads that build their
+//                         pre-show) and 11891 (unit 104's, holding GetFormSemLimpar inlined), are in the link
 //   FormPapelC   the caller of 357 (Build) not reconstructed, 12110 (11256, 2890, 12005, 11908, 11946, 3872, 3873,
 //                5579, 5977, 3699, 5580, 5970, 5971, 11253 and fragment 372's 12105 are in the link): one call, the
 //                one that stood for 12105 having gone with it
@@ -184,19 +185,6 @@ __attribute__((noinline)) int FormMTB(api::CMTFormBuilder& form, const std::stri
 {
     const auto simples = form.GetForm(std::string());
     return vezes - simples.use_count();
-}
-
-__attribute__((noinline)) int FormA(api::CFormBuilder& form, const std::shared_ptr<api::IPreShow<api::IScreen>>& preShow,
-                                    const std::string& nome)
-{
-    return form.GetForm(preShow, nome).use_count();
-}
-
-__attribute__((noinline)) int FormB(api::CFormBuilder& form, const std::shared_ptr<api::IPreShow<api::IScreen>>& preShow,
-                                    const api::SPoint& posicao, api::TColor cor)
-{
-    form.AddLine(posicao, posicao, cor);
-    return form.GetForm(preShow, std::string()).use_count() + posicao.x;
 }
 
 __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form)
@@ -224,8 +212,6 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&RelatorioA);
         w5544_sink = reinterpret_cast<void*>(&FormMTA);
         w5544_sink = reinterpret_cast<void*>(&FormMTB);
-        w5544_sink = reinterpret_cast<void*>(&FormA);
-        w5544_sink = reinterpret_cast<void*>(&FormB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
         w5544_sink = reinterpret_cast<void*>(&TextoRetangulo);
         w5544_sink = reinterpret_cast<void*>(&BarraProgresso);

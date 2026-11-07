@@ -53,8 +53,8 @@
 # :72 stay blank). Other forms are not measured.
 # CVisualizarCandidatos::GetCargo (fn 5951): the byte at +24 when +25 is set, else 0, m_cargo.value_or(0), out of line
 # in cvisualizarcandidatos.cpp, its place after the statics a choice, and so is its name. Its two target callers,
-# vota::CMenuFiltrarCandidatosPorNumero's slots (fns 11891 and 11892): 11892 matches (unit 104's fragment) and 11891 is
-# pending there, and the roots stand in for it. 0 over 10 rows (pnpm wasm score, whole link, byte-exact); `m_cargo ?
+# vota::CMenuFiltrarCandidatosPorNumero's slots (fns 11891 and 11892), both match (unit 104's fragment), and the roots'
+# stand-in for 11891 went. 0 over 10 rows (pnpm wasm score, whole link, byte-exact); `m_cargo ?
 # *m_cargo : 0` is not measured.
 # CInstrucaoVotacaoAcessibilidade's slots 9 and 10 (ProcessInputAudio 7248, records :54 to :60, code 9314;
 # StartStateAudio 7242, records :129 and :131) and CConfirmaVotoSemCandidato's slots 13 and 9 (EmiteEcoComInputField

@@ -6,8 +6,7 @@
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
-// and 11892, all in the link but 11891 (the four are unit 104's states): VisualizarCandidatos stands for 11891 with
-// one call. Its vptr store keeps that class's vtable.
+// and 11892, unit 104's states, all in the link: VisualizarCandidatos, which stood for 11891, went.
 //
 // vota::NomeTela (fn 6718) has two direct callers in the target, CTelasCargo's constructor (fn 2386) and
 // CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. Both are in the link, so NomesTela,
@@ -28,8 +27,8 @@
 // stayed out of line, and it and 2079 scored as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
 //
 // vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
-// (vota::CMenuFiltrarCandidatosPorNumero's slots, unit 104's): CargoVisualizado stands for 11891, pending, with one
-// call (11892 is in the link).
+// (vota::CMenuFiltrarCandidatosPorNumero's slots, unit 104's), both in the link: CargoVisualizado, which stood for
+// 11891, went.
 //
 // vota::CVisualizarCandidatos::CarregaCandidaturas (fn 5953) has two direct callers in the target, fns 11884 and 11888
 // (vota::CMenuFiltrarCandidatosPorPartido's and PorCargo's StartState; 11888 calls it from
@@ -43,24 +42,16 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 int w150_instrucao() __asm__("_ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv");
-int w150_visualizar() __asm__("_ZN4vota21CVisualizarCandidatos7GetInstEv");
 int w150_telas_cargo(void* telas, int id, const void* mapa) __asm__(
     "_ZN4vota11CTelasCargoC1EhRKNSt3__23mapINS_12ETelaVotacaoENS1_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_"
     "9IInputKbdEEEEENS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_SA_EEEEEE");
 extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
 int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
-int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
 }
 
 namespace {
 
 const void* volatile eleitor_estados_sink;
-
-// stands for fn 11891 (11881, 11884, 11888 and 11892 are in the link)
-__attribute__((noinline)) int VisualizarCandidatos(int vezes)
-{
-    return w150_visualizar() + vezes * 3;
-}
 
 // stands for fn 7787 (7377 is in the link)
 __attribute__((noinline)) int InstrucaoAcessibilidade(int vezes)
@@ -82,20 +73,12 @@ __attribute__((noinline)) int TemFala()
     return w150_tem_fala(w150_info()) + 17;
 }
 
-// stands for fn 11891 (11892 is in the link)
-__attribute__((noinline)) int CargoVisualizado(const void* estado, const void* outro)
-{
-    return w150_cargo(estado) - static_cast<const char*>(outro)[3];
-}
-
 struct SEleitorEstadosRoots {
     SEleitorEstadosRoots()
     {
         eleitor_estados_sink = reinterpret_cast<const void*>(&InstrucaoAcessibilidade);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&VisualizarCandidatos);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TelasCargo);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
     }
 } eleitor_estados_roots;
 

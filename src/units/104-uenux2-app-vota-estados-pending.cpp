@@ -9,7 +9,6 @@
 #include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 #include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
-#include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/cfinalizaoperador.h"
@@ -35,32 +34,6 @@ namespace vota {
 // a progress screen over ctelasvota.cpp's fonts (its AddProgressBar call is fn 5545's second target caller) and the
 // CGeradorResultados steps: none written.
 void CGravaResultado::StartState()
-{
-    __builtin_trap();
-}
-
-// CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), every callee has a name (5446 unit 01's,
-// 1273 unit 89's, 1279 unit 150's). It holds two functions binaryen inlined, each behind a stack prologue of its own:
-// a message screen ("Candidato não encontrado!" over an api::CWait of 2000 ms the caller builds in its own frame) and,
-// inside it, a GetForm over std::shared_ptr<IPreShow<IScreen>>(new CPreShowNothing<IScreen>). Written in a scratch
-// link with the two out of line in other TUs than their callers' (vota::MostraMensagemTemporaria beside ProcessInput,
-// vota::MontaForm in comum/ctelasvota.cpp, names chosen), it scored 33 over 447 rows, all operand-only: calls and data
-// but for one frame slot, the message's second api::SPoint temporary at +12 where the target has +20. Step 8's
-// vptr-anchor then read that 12 and 20 as table slots and took the name of fn 608 (ours 678, at slot 12), and ten
-// matches left (599, 2509, 2924, 3387, 3622, 3928, 4867, 4873, 6131, 11004). It waits for a form of the message whose
-// temporaries take the target's slots.
-// Read since: the caller builds the CWait before the message's prologue (a by-value argument) and the message calls its
-// Wait (fn 5446) last; the message's 35-point font (@520148) lies in api/gui/capplication.cpp's run of the data, after
-// InitApplication's local class's typeinfo name (@519992), and CPreShowNothing<IScreen>'s vtable (@1577920) right after
-// cformbuilder.cpp's records (@1577840 to @1577872): readings that put the message in capplication.cpp and the GetForm
-// in cformbuilder.cpp. On CONFIRMA, when comum::CCandidaturas::Busca (fn 1273, on fn 521's singleton) finds the number
-// for CVisualizarCandidatos::GetCargo's post, it stores the number into vota::CVisualizarCandidatos' optional at +28
-// (its flag at +32), a private member no member of that class's header sets yet. The slot reads as stack colouring; of
-// eight forms compiled at src/api's flags and compared by object, the target's slots (the AddTextField result sharing
-// the SPoint (639, 310)'s, the form apart) came only with that result a named local, which then lives to the end where
-// the target releases it right after the call; in a block, an if's init-statement or a helper clang inlines, the form
-// shares their slot too, and discarded, the SPoint shares the form's.
-void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 {
     __builtin_trap();
 }

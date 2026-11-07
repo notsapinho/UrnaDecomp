@@ -43,6 +43,8 @@
 
 namespace api {
 
+class CWait;
+
 class CApplication {
 public:
     // The level ShowExceptionMsg takes: its lambda's typeinfo name (ledger/strings.tsv, 520532) mangles the type as
@@ -94,5 +96,22 @@ CApplication::EExceptionLevel GetExceptionLevel();
 // them. No record names it: its name, its being a free function of api and its file are chosen; in use band 7 it
 // lies right ahead of GetContexto (1695), and capplication.cpp defines it first of the two.
 std::string Join(const std::vector<std::string>& partes, const std::string& separador);
+
+// The temporary message of target fn 11891 (vota::CMenuFiltrarCandidatosPorNumero::ProcessInput), which holds it behind
+// a second prologue of 48 bytes, inlined by binaryen: an api::CFormBuilder, AddFill from (0, 210) to (639, 310) in
+// colour 30, AddTextField of the message at (320, 242) in FONTE_MENSAGEM (the SFont {35, 0} at .rodata 520148, which
+// 11891 alone reads), centred, in 2 over 30, the form of CFormBuilder::GetFormSemLimpar("") and its slot 3, then the
+// Wait (fn 5446) of the api::CWait the caller builds in its own frame before the prologue (fn 5447, 2000 ms), the
+// form and the builder released after it. The font lies in this file's data, after the typeinfo name of
+// InitApplication's local class (@519992): a reading that puts the function in capplication.cpp. Of the forms
+// measured, only the body in a helper clang inlines gives the target's frame, slots and releases both (the text
+// field's result in the second SPoint's slot and released right after its call, the form's apart): its dropped
+// results carry the inliner's lifetime markers (docs/reference/facts/codegen.md C5); written as statements of this
+// function, the second SPoint shares the form's slot. So capplication.cpp's ExibeMensagemTemporaria, of internal
+// linkage and with the CWait by reference, holds the body (src/units/171-uenux2-capplication.mk has the forms
+// measured). Chosen: both names and the font's, the split and the helper's linkage (a reading of the frame), its being
+// a free function of api (it reads no state of CApplication; its caller is vota's, as GetExceptionLevel's are) and the
+// CWait's passing
+void MostraMensagemTemporaria(const std::string& mensagem, CWait&& espera);
 
 } // namespace api

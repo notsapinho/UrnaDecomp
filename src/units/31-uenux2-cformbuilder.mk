@@ -44,6 +44,15 @@
 # unit 247's (that fragment has the measurements). Chosen: its being an overload, its name, its line after the first
 # GetForm (11140's ld_index, 4508, is below 11139's, 4514, in band 1, as the target's order wants).
 #
+# CFormBuilder::GetFormSemLimpar(nome), no index of its own: the same over a new api::CPreShowNothing<IScreen> (vptr
+# 1577928; its control block's 1578000), which target fn 11891 (unit 104's
+# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput) holds behind a second prologue of 16 bytes, inside the message
+# screen it holds (api::MostraMensagemTemporaria, unit 171's); cformbuilder.h has its evidence and what is chosen. This
+# object emits CPreShowNothing<IScreen>'s vtable and typeinfo first in the link now, right after CPreShowClearScreen's,
+# the target's data order (our map: 0x1822bc after the typeinfo at 0x1822b0; the target's @1577920 after @1577908), and
+# with them the control block, whose __get_deleter, 11137, matches from here: unit 102's roots' builder and sink of
+# that block went. The roots' FormA and FormB went too: 5550's two target callers, 6117 and 11891, are in the link.
+#
 # 426, AddField, is written and `differs` (docs/how-to-decompile.md step 5). At -O2 it scored 292 over 449 rows: clang
 # inlines std::string::append into operator+, and one loop compares the name. The target calls append (fn 160) and holds
 # two copies of that loop, one for a long name and one for a short one, which only -O3's loop unswitching gives. At the

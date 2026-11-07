@@ -213,7 +213,8 @@
 #   byte-identical to std::string's, so step 9 renamed fn 149's match line to it (docs/reference/facts/splat.md S6). The
 #   roots' CarregaDetalhes stands for 5764's caller 7787, with no dynamic data (6734, which passes them, is in the link:
 #   fragment 386). MarcaVotou (lines 456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit
-#   104's pending member), which also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
+#   104's, matched, its object at this list's end: below), which also calls fn 501,
+#   api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
 #   GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is written (below).
 # - GetEleitoresEstaticos (5772; the lambda's __func typeinfo, string 500386, names the member and its parameter, no
 #   const), matched with what it instantiates: LeArquivos<md::CEleitor> (5771, out of line with its two calls; the
@@ -846,6 +847,31 @@
 # one pair more (its vtable is at @1551044 in the target), and codegen.md C4's count against each of the four
 # filter-screen files after ctelasvota.cpp.o is 115 (113 at e7d03612 for PorCargo and PorPartido): the two more are
 # this object and unit 378's pending object, which lie on one side of every place after ctelasvota.cpp.o.
+#
+# vota/operador/csincronismooperador.cpp (unit 104's: vota::CSincronismoOperador) is compiled from this list, at its
+# end: StartState (10210) holds comum::CEleitores::MarcaVotou (this list's celeitores.cpp, records 456 and 460) and
+# through it CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp), both inlined by binaryen, and matches only with its
+# object linked after celeitordetalhe.cpp.o. In unit 104's list, ahead of this one, it scored `40 over 150 rows (same
+# 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`, its locals numbered otherwise (pnpm wasm score, at
+# 0c3a9009); in scratch links of that plain link.cmd with the object moved (docs/reference/facts/workflow.md W13), each
+# of six places after celeitordetalhe.cpp.o in this list gave `28 over 149 rows`, all operand-only, every row a call, a
+# data address or the throws' destructor slot: between celeitordinamicodao.cpp and celeitores.cpp, after celeitores.cpp,
+# after chv.cpp, after md/cvalidadoridentidade.cpp, after ctelasvota.cpp and here; it matched here at step 9. The move
+# is needed for 10210, not by the data's order. Of those places docs/reference/facts/codegen.md C4's record-aware count
+# of objects out of the data's order against it is lowest here: 534, 533, 532, 529, 528 and 523 (531, 530, 527, 526, 525
+# and 524 after cpe.cpp, crespostas.cpp, cmenumaisinformacoesvota.cpp and the PorNumero, PorCargo and PorPartido files,
+# places no link measured), 549 at its place in unit 104's list (at 0c3a9009, and the same on this commit's link).
+# Against that old place it puts in order the 26 objects between the two with records or vtables below
+# CSincronismoOperador's vtable (@1601144) and inverts none: api/gui/primitives.cpp, comum's appinfo/cappinfo.cpp,
+# asn/cconversorabrangencia.cpp and cconversorseguranca.cpp, md/cabrangencia.cpp and cseguranca.cpp, ten of dados/
+# (celeitordetalhe.cpp, dao/celeitordinamicodao.cpp, celeitores.cpp, cfotos.cpp, chv.cpp, cpe.cpp, crespostas.cpp,
+# md/csecaoeleitoral.cpp, md/cvalidadoridentidade.cpp, md/municipiozona/cmunicipio.cpp) and four of dados/asn/
+# (cconversoridentificacaoagregada, estadoaplicacao/cconversordadolocal, municipiozona/cconversormunicipio and
+# cconversorcomplementomunicipio), and ctelasvota.cpp, cmenumaisinformacoesvota.cpp and the four filter screens' files.
+# The other move, celeitordetalhe.cpp into unit 104's list ahead of csincronismooperador.cpp, was counted only (277
+# objects out of order against it where it is, 273 there) and not linked. StartState's place in its .cpp is not free:
+# use band 1 runs 10213, 10211, 10210, 10209 (the statics' exit destructors, StartState, ProcessKey) at consecutive
+# ld_index in names.tsv.
 SINGLETONS_SRCS := src/app/vota/eleitor/cestadoaudio.cpp \
   src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/dao/celeitordinamicodao.cpp \
   src/app/comum/dados/celeitores.cpp \
@@ -855,7 +881,8 @@ SINGLETONS_SRCS := src/app/vota/eleitor/cestadoaudio.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
-  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp
+  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp \
+  src/app/vota/operador/csincronismooperador.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
 # reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the
