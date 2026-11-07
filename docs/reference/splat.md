@@ -149,7 +149,9 @@ parser drops any other line without a word, below the hand-edit marker too, and 
   of a library shifts every later slot. A name is given only when every slot holding our function agrees, no other
   function of ours votes for that target function (binaryen's merged bodies), neither side is named yet, and the
   signatures agree. A pending member's slot holds its trap, so the trap's declaration can name the target function
-  ([../../src/units/README.md](../../src/units/README.md) "Pending members").
+  ([../../src/units/README.md](../../src/units/README.md) "Pending members"). So a `call` vote displaces the line: once
+  its one caller anchors, 5504's `vtable` line became `call by:13550`, which §3 reads as 13550's own vote (the
+  `vtable-slot` hand line below).
 
 A name with conflicting evidence is left out. So is a data name that the target's own bytes contradict.
 
@@ -160,6 +162,9 @@ file regenerates with that number as the only sign (`git checkout HEAD -- splat/
 A hand edit names its evidence in its comment, with the addresses or indices that make it checkable. The kinds in use:
 
 - `vtable`, `vtable-slot`: the function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind does.
+  It suits a slot function whose generated `vtable` line its one caller's `call` vote displaced: the slot is the
+  callee's own evidence, so the line holds the caller (5504's, `api::CStepsProgressBar::Draw`, under 13550: without it
+  `unresolved self-voted` and `UNCONFIRMED: self-voted`), weighed by removal, and goes when the callee matches.
 - `rtti-vptr`: the only target function that holds a class's vtable address point. It stores it, or passes it to a
   merged constructor that does the store. It suits a callee no vote reaches: its callers in the link all named by
   `vtable`, or one that the content pass names only once this name is in,
@@ -191,8 +196,9 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   comment gives the score at the tree's flags, says the remainder is not explained, and counts no caller the line
   carries; a function it calls that calls it back (an operator and its inverse, 5477 and 5478) is no caller that can
   land until it matches. When the line carries every caller it
-  names (each a `vtable` name whose row needs this name), those callers align the call site and count for nothing
-  else: the comment leads with the callee's own rows, read without the match, and says the callers fall without the
+  names (each named by its own evidence, a `vtable` slot or an anchor, whose row needs this name), those callers align
+  the call site and count for nothing else: the comment leads with the callee's own rows, read without the match, and
+  says the callers fall without the
   line (3883's). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
   content to stand on and often no aligned call: its line leads with the target functions other than the match that
   read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what it
@@ -800,11 +806,13 @@ Two generated names the build does not weigh, a reviewer does. A callee of a new
 list (§3): `awk -F'\t' '$2==<callee>' ledger/callgraph.tsv` lists its target callers, and when no other is matched,
 the review with `--symbols` on a copy without the callee's line shows whether the match leans on it (4620 fails
 without 5564's), which the fragment says: the name holds through the match's alignment until a second caller lands.
-A data name whose voters, the matches that read it aside, are written bodies that are no match (`unresolved` on
-another name): the build checks neither those bodies' bytes nor their votes, so `pnpm wasm splat-remap <target> <plain>
-sym:<its symbol> --against <its index>` must print `IDENTICAL` for each, and the fragment names the matches that rest on
-their votes (a scan and `splat-build` on a copy whose `by:` list leaves them out name those: 20 exit destructors on
-10635's before it matched). Our `__wasm_call_ctors` (14478's pair, `ctors:N`
+A name, a data name or a function's by `call` or `table`, whose voters, the matches that read or call it aside, are
+written bodies that are no match (`unresolved` on another name): the build checks neither those bodies' bytes nor
+their votes, so `pnpm wasm splat-remap <target> <plain> sym:<its symbol> --against <its index>` must print `IDENTICAL`
+for each, and the fragment names the matches that rest on their votes (a scan and `splat-build` on a copy whose `by:`
+list leaves them out name those: 20 exit destructors on 10635's before it matched). A copy without the name's line and
+its match line shows whether the match needs the name at all (2028's `call by:6678`: it came back by content, no row
+moved). Our `__wasm_call_ctors` (14478's pair, `ctors:N`
 or a `by:` list that holds 14478) never prints `IDENTICAL`: each side runs another set of translation units (§2), and
 here it prints `UNRESOLVED (1740)`. Its vote is the run §2 describes, which `ctorVotes` checks row by row, so the
 reviewer checks the object's own store: the voting operand must re-point, which it does when `splat-remap` does not

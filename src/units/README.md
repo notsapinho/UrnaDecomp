@@ -525,7 +525,13 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     result: unit 307's read 1903's until its five callers were in, and the link without it keeps `()->(i32)` (fragment
     307). A stand-in that only keeps a library callee of the unit out of line, as the target does, stays only when a row
     moves with it (unit 214's for 3373 and 3372 moved none). A sink goes once one of the vptr's storers is in the link
-    (the bullet above).
+    (the bullet above). A link with removed stand-ins put back shows only that they were inert; to build it, save each
+    base file (`git show <base>:<file>`) under its own basename in a directory of its own (clang names a TU's static
+    initializer after it, `docs/reference/facts/codegen.md` §C1), compile it at the head's line for that object (`make
+    -n -B -C src <object>`, source and `-o` re-pointed), with the base's own objects of the files that survive as the
+    control (each `cmp`-equal), swap them into a copy of `link.cmd`, a deleted file's at its place on the base's
+    `print-LINK_OBJS` line, and scan and build it as `docs/reference/facts/workflow.md` §W13 says. Compare `match` rows
+    only (index and verdict): every other row's `ours` index comes from the plain link, which the stand-ins shift.
   - **Going earlier.** A stand-in may go before its callers are in the link only with a link without it that moves no
     row (`docs/reference/facts/workflow.md` §W13, "One variant object in the whole link"), measured and said in the
     fragment: no row enters or leaves `match`. A stand-in that is a function shifts our later indices, so unmatched
@@ -905,17 +911,19 @@ code, so no match can land on it. It compiles through a rule of its own in the f
 `ECOURNA_SRCS` or `UENUX2_SRCS`), added to `EXTRA_OBJS`, at its source's flags, as the real members will:
 `$(call uenux2_cxxflags,<the source's path>)` in uenux2 (fragment 220's rule). A rule on `$(UENUX2_CXXFLAGS)` keeps
 `-fno-strict-aliasing` where `UENUX2_TBAA_DIRS` drops it, so the vtable and the implicit members the pending object
-emits compile otherwise than the source's would: 11 of the 12 rules `/usr/bin/grep -n 'pending.cpp -o'
-src/units/*.mk` lists are so, 69's for `mock/app/simulador/wasm/cwasmscreen.cpp` among them, written before the
-split. Each member moves into the class's real source when it is reconstructed, and the file and its rule go with
-the last one.
+emits compile otherwise than the source's would: `cat src/units/*.mk | /usr/bin/grep -c 'UENUX2_CXXFLAGS) -c
+src/units/[0-9]*-[a-z0-9-]*-pending.cpp'` counts those rules (4 of the 5 `pending.cpp -o` rules at b3236f02, written
+before the split). Each member moves into the class's real source when it is reconstructed, and the file and its rule
+go with the last one.
 
 A trap is for a member that cannot be written yet (a callee or a type the tree lacks, or no form measured comes
 close, the `-pending.cpp` header giving the forms and their rows; a slot member one remainder off stays written: unit
 69's trap of 9018, `49 over 725` rows with one remainder, a narrowing to 16 bits (`docs/reference/facts/codegen.md`
 §C17), belongs in `cwasmscreen.cpp`), that cannot match until other code lands (a merge thunk, below), or whose real
 body would cost a
-match. A member whose body is written and right keeps it where it belongs, in the
+match. A move out of a trap that matches nothing (`no-candidate` to `differs`) lands with a match, its lane's or that
+of the lane that builds on its branch, not alone (the command file's Stage 2).
+A member whose body is written and right keeps it where it belongs, in the
 class or its `.cpp`, and its row stays as it is, whatever the reason outside its source: `docs/how-to-decompile.md`
 step 5, "A written body that does not match yet", has the rule and what to measure. An implicit destructor has no body
 to trap either: declaring it to trap it changes the class. A destructor the D0 shows out of line (step 5, "The
@@ -1107,7 +1115,9 @@ compiles: it extends that unit.
    of one's own that says whose object the body is while another stage holds that unit. A member with no target index
    of its own (binaryen inlined it into each caller) is
    noted in its class header and in the fragment whose functions hold it; the fragment that compiles its file needs
-   only a pointer. Extending a unit brings into the link a function nothing linked before, which can hold a throw off
+   only a pointer. While the holder is unwritten (a trap, or no file), the note goes in the fragment that compiles the
+   member's file, and the holder's trap comment is brought up to date by the stage that owns it, or at the landing.
+   Extending a unit brings into the link a function nothing linked before, which can hold a throw off
    its record's line (`CTickManager::SearchNextId` threw on line 89 against its record's 128): compare the file's
    throws with their records, and after the link run `check_srcloc.py --strict` on the object
    (`docs/how-to-decompile.md` step 10).

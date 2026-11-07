@@ -228,7 +228,15 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   the brief a route it did not try. A branch on the other machine is read there (`ssh <host> "git -C <checkout> show
   <branch>:src/units/<n>.mk"`, [docs/agents.md](../../docs/agents.md) "Two machines") or the coordinator copies the
   committed fragment into `shared/`; a board archive of an earlier draft is no record, so a parked lane's result names
-  every form it tried.
+  every form it tried. A `differs` row whose fragment says it waits for an order, a flag or a rule is re-read against
+  the current docs: a rule changed since can have opened its route (10210's note waited for "renumbering landed
+  units", which the units README's list moves now allow).
+
+  A hub that holds many functions with no target index of their own over several files (12098) can be prepared: a pick
+  may give lanes before the hub's that write those functions in their real files (how-to step 5, "A body with no
+  index"), expecting no match. Such a branch is kept as a prepared branch, not a parked one; the coordinator merges
+  the prepared branches into the base of the hub's lane, which the pick that plans them names, and their code lands
+  with that lane's match, or with a match of their own lane.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -338,7 +346,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   the lane that owns that file (eleven state classes read `ctelasvota.cpp`'s fonts). When a member's two ties name two
   lanes (it holds one lane's file's code inlined and calls a callee another lane writes), it goes to the lane of the
   callee, as a member that waits for the file owner's landing, and the pick says so (11884 holds `cinputmenufield.cpp`'s
-  two `SetFormatString` and calls 5953). A header
+  two `SetFormatString` and calls 5953). A stand-in in another unit's `-roots.cpp` that stands for a lane's lead is
+  not that lane's file: the lane measures with it in place and lists in its result the stand-ins that stand for its
+  lead, and LAND removes them once the lead is in the link (Stage 4). A header
   several lanes need (a shared enum, a type a record names) is listed in the pick post, with one copy on the board's
   `shared/` that every lane takes byte for byte.
 
@@ -363,7 +373,9 @@ It returns, and posts as a `rounds/` result: the verdict (matched, or not matcha
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
-without a match, nor from one whose change costs a row its base matches, unless the user decides that loss lands: it
+without a match: its branch is kept, and code that moves no row into `match` (a member moved out of a trap, written
+code with no index) lands with a match of its own lane or of the lane whose base takes the branch (Stage 1). Nor does
+anything land from a lane whose change costs a row its base matches, unless the user decides that loss lands: it
 posts the loss as a `facts/` post, and how-to step 9 says what that post holds, on which branch alone the change may be
 committed, and how a loss the user lands is committed.
 
@@ -527,7 +539,9 @@ checkout"). Brief: the rules above, the board paths, the docs it may
 edit (rule 1's list, the help text of the tools they describe, and this command file), and the cut-off: every
 `board/friction/` post since the last DOCS stage. It reads
 each one, every post that corrects it, and the verdicts that judged a doc question, and changes the docs so the next
-contributor does not hit it. It runs every command it writes into a doc, as written, before committing.
+contributor does not hit it. It runs every command it writes into a doc, as written, before committing. A pass that
+changes a rule greps the fragments for the old rule's wording and lists the notes to reword as a follow-up (fragments
+are code comments, a landing's to change).
 Facts that an edited doc depends on move into `docs/reference/facts/` (no doc cites the board). A fix that needs code
 (a Makefile rule, a tool option) is not made here: it is listed as a follow-up for the user. It checks that the
 relative links of every edited doc resolve and that `status.py --check`, `stubs.py --check` and
