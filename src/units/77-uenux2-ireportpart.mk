@@ -107,7 +107,9 @@
 # neither (a probe: clang stores into the object from i64 loads of the parameters, with no temporary and no A::A left),
 # and our out-of-line ones, called once from 11946's builder (fragment 325), give those same shapes. So they are out of
 # line and take their pointers by value (R12). fn 11908 shows what CParteEleitores's does:
-# std::make_shared<api::CFormPart> of its by-value form.
+# std::make_shared<api::CFormPart> of its by-value form. That constructor is defined in fragment 317's
+# cgeradorrellistaeleitores.cpp, the file of its caller MontaEleitores: 11908's rows are binaryen's of an object that
+# drops its result (codegen.md C6; fragment 317 has the measurements).
 #
 # Chosen. Every member name, every parameter name and order, the element type of the pointers 11946 hands no form
 # (cpartecandidatos.h: CParteCandidatos's last three, CParteCandidatosProporcionais's fourth), api::IReportPart, and

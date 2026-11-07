@@ -5437,7 +5437,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5571	2179	2	7zip	comum	-	-	none	-	
 5572	2128	2	app	comum	-	-	none	-	
 5573	16	2	app	-	skeleton	3718	addr	1	std::__2::__exception_guard_exceptions<std::__2::vector<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>::__destroy_vector>::~__exception_guard_exceptions[abi:ne210108]()
-5574	16	2	app	comum	skeleton	5617	addr	2	DepuraInfo(char const*, ...)_7436
+5574	16	2	app	comum	skeleton	5617	addr	2	DepuraInfo(char const*, ...)_7437
 5575	3863	2	app	comum	-	-	none	-	
 5576	12	2	app	ecourna	skeleton	5732	addr	1	comum::CSubstituidorTitulo::~CSubstituidorTitulo()
 5577	7625	2	app	ecourna	-	-	none	-	
@@ -7196,7 +7196,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7330	14	0	app	-	skeleton	8034	addr	1	prefix_puts
 7331	16	0	app	-	skeleton	8035	addr	1	prefix_read
 7332	371	0	app	-	skeleton	8037	addr	6	prefix_write
-7333	12	0	app	-	skeleton	11597	addr	2	__cxx_global_array_dtor_7337
+7333	12	0	app	-	skeleton	11597	addr	2	__cxx_global_array_dtor_7338
 7334	23	0	app	-	skeleton	7574	addr	1	PKCS5_v2_PBKDF2_keyivgen
 7335	23	0	app	-	skeleton	7575	addr	1	PKCS5_v2_PBE_keyivgen
 7336	23	0	app	-	skeleton	7576	addr	1	PKCS5_PBE_keyivgen
@@ -7789,7 +7789,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7923	897	0	libcxx	libc++	skeleton	13315	shape	53	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>::do_put(std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, char, double) const
 7924	382	0	libcxx	libc++	skeleton	13316	addr	12	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>::do_put(std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, char, unsigned long long) const
 7925	13	0	libcxx	libc++	skeleton	13317	addr	1	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>::do_put(std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, char, unsigned long) const
-7926	13	0	app	simulador	skeleton	11498	addr	1	simulador::CWasmTimer::~CWasmTimer()_7619
+7926	13	0	app	simulador	skeleton	11498	addr	1	simulador::CWasmTimer::~CWasmTimer()_7620
 7927	480	0	libcxx	libc++	skeleton	13318	addr	13	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>::do_put(std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, char, long long) const
 7928	874	0	libcxx	-	skeleton	13319	addr	28	std::__2::__num_put<char>::__widen_and_group_int(char*, char*, char*, char*, char*&, char*&, std::__2::locale const&)
 7929	472	0	libcxx	libc++	skeleton	13320	addr	13	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>::do_put(std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, char, long) const
@@ -8179,7 +8179,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8313	114	0	7zip	7zip	skeleton	8931	byte	0	non-virtual thunk to NArchive::N7z::CFolderInStream::GetSubStreamSize(unsigned long long, unsigned long long*)
 8314	114	0	7zip	7zip	skeleton	8932	byte	0	NArchive::N7z::CFolderInStream::GetSubStreamSize(unsigned long long, unsigned long long*)
 8315	711	0	7zip	7zip	-	-	none	-	
-8316	40	0	app	simulador	skeleton	11396	addr	3	simulador::CWasmLogd::~CWasmLogd()_7808
+8316	40	0	app	simulador	skeleton	11396	addr	3	simulador::CWasmLogd::~CWasmLogd()_7809
 8317	12	0	7zip	7zip	-	-	none	-	
 8318	37	0	app	simulador	skeleton	11397	addr	2	simulador::CWasmLogd::~CWasmLogd()
 8319	21	0	-	libc++	skeleton	14505	addr	2	std::__2::format_error::format_error[abi:ne210108](char const*)
@@ -8826,7 +8826,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8960	312	0	app	asn1-modules	skeleton	9736	fingerprint	0	ASN1::SEQUENCE::do_accept(ASN1::ConstVisitor&) const
 8961	292	0	app	asn1-modules	skeleton	9737	byte	0	ASN1::SEQUENCE::do_accept(ASN1::Visitor&)
 8962	12	0	-	-	-	-	none	-	
-8963	20	0	-	simulador	skeleton	11332	shape	3	simulador::CWasmScreen::~CWasmScreen()_7895
+8963	20	0	-	simulador	skeleton	11332	shape	3	simulador::CWasmScreen::~CWasmScreen()_7896
 8964	148	0	asn1	ASN1	skeleton	9757	addr	3	ASN1::OCTET_STRING::do_compare(ASN1::AbstractData const&) const
 8965	61	0	asn1	ASN1	-	-	none	-	
 8966	17	0	asn1	ASN1	skeleton	5258	byte	0	ASN1::OBJECT_IDENTIFIER::do_accept(ASN1::ConstVisitor&) const
@@ -9311,7 +9311,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9445	7	0	app	simulador	skeleton	11288	byte	0	simulador::(anonymous namespace)::CEsperaAudioWasm::Cancelada()
 9446	12	0	app	ecourna	skeleton	10517	shape	1	ecourna::api::sql::sqlite::CSqlResultSet::GetBool(int)
 9447	365	0	app	-	-	-	none	-	
-9448	12	0	app	simulador	skeleton	11290	addr	2	simulador::(anonymous namespace)::CEsperaAudioWasm::~CEsperaAudioWasm()_7970
+9448	12	0	app	simulador	skeleton	11290	addr	2	simulador::(anonymous namespace)::CEsperaAudioWasm::~CEsperaAudioWasm()_7971
 9449	135	0	app	ecourna	skeleton	10520	addr	6	ecourna::api::sql::sqlite::CSqlResultSet::CSqlResultSet(sqlite3*, sqlite3_stmt*)
 9450	18	0	app	libc++	skeleton	8125	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::empty_string*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::empty_string>, std::__2::allocator<RHVoice::userdict::empty_string>>::__get_deleter(std::type_info const&) const
 9451	20	0	libcxx	libc++	skeleton	10522	shape	2	std::__2::__shared_ptr_pointer<ecourna::api::sql::sqlite::CSqlStatement*, std::__2::shared_ptr<ecourna::api::sql::ISqlStatement>::__shared_ptr_default_delete<ecourna::api::sql::ISqlStatement, ecourna::api::sql::sqlite::CSqlStatement>, std::__2::allocator<ecourna::api::sql::sqlite::CSqlStatement>>::__on_zero_shared()
@@ -9494,7 +9494,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9628	10	0	rhvoice	RHVoice	skeleton	8440	addr	2	RHVoice::sound_icon_inserter::~sound_icon_inserter()_14583
 9629	123	0	rhvoice	RHVoice	skeleton	8442	addr	4	RHVoice::speech_processor::~speech_processor()
 9630	20	0	rhvoice	RHVoice	skeleton	8444	byte	0	RHVoice::speech_processor::get_desired_input_size() const
-9631	13	0	rhvoice	-	skeleton	11312	addr	2	__cxx_global_array_dtor_7940
+9631	13	0	rhvoice	-	skeleton	11312	addr	2	__cxx_global_array_dtor_7941
 9632	242	0	rhvoice	RHVoice	skeleton	8445	addr	3	RHVoice::sound_icon_inserter::on_input()
 9633	219	0	rhvoice	RHVoice	-	-	none	-	
 9634	104	0	rhvoice	RHVoice	skeleton	8452	shape	1	RHVoice::volume_controller::on_input()
@@ -9525,7 +9525,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9659	16	0	rhvoice	RHVoice	skeleton	8097	byte	0	RHVoice::userdict::initialism_flag::apply(RHVoice::userdict::word_editor&) const
 9660	18	0	rhvoice	libc++	skeleton	8203	addr	1	std::__2::__shared_ptr_pointer<RHVoice::(anonymous namespace)::hts_dist_to_prev_round_vowel_in_word*, std::__2::shared_ptr<RHVoice::feature_function>::__shared_ptr_default_delete<RHVoice::feature_function, RHVoice::(anonymous namespace)::hts_dist_to_prev_round_vowel_in_word>, std::__2::allocator<RHVoice::(anonymous namespace)::hts_dist_to_prev_round_vowel_in_word>>::__get_deleter(std::type_info const&) const
 9661	34	0	rhvoice	RHVoice	skeleton	8099	addr	3	RHVoice::userdict::unstressed_flag::describe() const
-9662	39	0	rhvoice	-	skeleton	11592	addr	4	__cxx_global_array_dtor_7351
+9662	39	0	rhvoice	-	skeleton	11592	addr	4	__cxx_global_array_dtor_7352
 9663	23	0	rhvoice	RHVoice	skeleton	8100	byte	0	RHVoice::userdict::unstressed_flag::apply(RHVoice::userdict::word_editor&) const
 9664	18	0	libcxx	libc++	skeleton	8204	addr	1	std::__2::__shared_ptr_pointer<RHVoice::(anonymous namespace)::hts_next_syl_coda_length*, std::__2::shared_ptr<RHVoice::feature_function>::__shared_ptr_default_delete<RHVoice::feature_function, RHVoice::(anonymous namespace)::hts_next_syl_coda_length>, std::__2::allocator<RHVoice::(anonymous namespace)::hts_next_syl_coda_length>>::__get_deleter(std::type_info const&) const
 9665	630	0	rhvoice	RHVoice	-	-	none	-	
@@ -10101,7 +10101,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10235	39	0	app	vota	skeleton	12271	shape	7	vota::CExecucaoVota::IniciaThreads()
 10236	57	0	app	vota	skeleton	12273	shape	10	vota::CExecucaoVota::Executa()
 10237	10	0	app	-	skeleton	11032	addr	2	__cxx_global_array_dtor.4_8983
-10238	13	0	app	api	skeleton	11562	addr	2	api::CWavFile::~CWavFile()_7489
+10238	13	0	app	api	skeleton	11562	addr	2	api::CWavFile::~CWavFile()_7490
 10239	15	0	app	-	-	-	none	-	
 10240	76	0	app	-	skeleton	12758	shape	4	votaSetAudioEnabled
 10241	21	1	app	ecourna	skeleton	8060	addr	1	MQRspec_getECCLength
@@ -10217,12 +10217,12 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10351	12	0	app	-	skeleton	11862	addr	2	__cxx_global_array_dtor_6499
 10352	14	0	app	comum	skeleton	12584	shape	3	comum::CDigitalMesarioNaoReconhecida::ProcessInput()
 10353	12	0	app	comum	skeleton	12557	shape	2	comum::CTituloMesarioInvalido::StartState()
-10354	10	0	app	-	skeleton	11324	addr	2	__cxx_global_array_dtor.3_7913
+10354	10	0	app	-	skeleton	11324	addr	2	__cxx_global_array_dtor.3_7914
 10355	12	0	app	-	skeleton	11967	addr	2	__cxx_global_array_dtor_6211
 10356	114	0	app	-	skeleton	11878	shape	9	void api::CPolySingletonList::set<api::ISound>(std::__2::unique_ptr<api::ISound, std::__2::default_delete<api::ISound>>&&, api::TPolySingletonsInfo&)
 10357	130	0	app	comum	-	-	none	-	
 10358	105	0	app	comum	-	-	none	-	
-10359	10	0	app	-	skeleton	11404	addr	2	__cxx_global_array_dtor.2_7790
+10359	10	0	app	-	skeleton	11404	addr	2	__cxx_global_array_dtor.2_7791
 10360	12	0	app	-	skeleton	11983	addr	2	__cxx_global_array_dtor_6165
 10361	17	0	app	libc++	skeleton	10437	addr	1	std::__2::__shared_ptr_pointer<comum::CGravadorEnvelopeArquivo*, std::__2::shared_ptr<comum::IGravador>::__shared_ptr_default_delete<comum::IGravador, comum::CGravadorEnvelopeArquivo>, std::__2::allocator<comum::CGravadorEnvelopeArquivo>>::__get_deleter(std::type_info const&) const
 10362	12	0	app	api	skeleton	10955	addr	2	api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>::~CDataTextFmt()_9163
@@ -10234,14 +10234,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10368	454	0	app	api	-	-	none	-	
 10369	12	0	app	api	skeleton	10962	addr	2	api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>::~CDataTextFmt()_9148
 10370	12	0	app	api	skeleton	10963	addr	2	api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>::~CDataTextFmt()_9147
-10371	10	0	app	-	skeleton	11573	addr	2	__cxx_global_array_dtor.4_7455
+10371	10	0	app	-	skeleton	11573	addr	2	__cxx_global_array_dtor.4_7456
 10372	12	0	app	-	skeleton	10965	addr	2	__cxx_global_array_dtor_9142
 10373	17	0	app	libc++	skeleton	10439	addr	1	std::__2::__shared_ptr_pointer<comum::CGravadorRDV*, std::__2::shared_ptr<comum::IGravador>::__shared_ptr_default_delete<comum::IGravador, comum::CGravadorRDV>, std::__2::allocator<comum::CGravadorRDV>>::__get_deleter(std::type_info const&) const
 10374	12	0	app	api	skeleton	10968	addr	2	api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>::~CDataTextFmt()_9133
 10375	20	0	app	libc++	skeleton	11086	addr	1	std::__2::__function::__func<vota::IConfereVotoEmCargo::StartStateAudio()::$_1, void ()>::target(std::type_info const&) const
 10376	9	0	app	-	skeleton	14140	fingerprint	0	SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>&)
 10377	12	0	app	api	skeleton	10969	addr	2	api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>::~CDataTextFmt()
-10378	10	0	app	-	skeleton	11596	addr	2	__cxx_global_array_dtor.2_7338
+10378	10	0	app	-	skeleton	11596	addr	2	__cxx_global_array_dtor.2_7339
 10379	12	0	app	-	skeleton	10971	addr	2	__cxx_global_array_dtor_9127
 10380	445	0	app	comum	-	-	none	-	
 10381	10	0	app	-	skeleton	11619	addr	2	__cxx_global_array_dtor.2_7243
@@ -10297,7 +10297,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10431	101	0	app	vota	skeleton	11323	addr	2	vota::CEleitorVotouNaoVotou::StartState()
 10432	14	0	app	libc++	-	-	none	-	
 10433	10	0	app	-	skeleton	11802	addr	2	__cxx_global_array_dtor.2_6654
-10434	12	0	app	-	skeleton	11325	addr	2	__cxx_global_array_dtor_7912
+10434	12	0	app	-	skeleton	11325	addr	2	__cxx_global_array_dtor_7913
 10435	200	0	app	vota	-	-	none	-	
 10436	200	0	app	vota	-	-	none	-	
 10437	10	0	app	-	skeleton	11804	addr	2	__cxx_global_array_dtor.2_6647
@@ -10412,9 +10412,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10546	20	0	app	api	skeleton	11448	byte	0	api::CTextFieldUpdateMT::Show()
 10547	16	0	app	-	skeleton	12014	shape	2	api::SPolySingletonInfo& std::__2::vector<api::SPolySingletonInfo, std::__2::allocator<api::SPolySingletonInfo>>::emplace_back<char const*&, std::type_info const&, std::__2::shared_ptr<vota::impl::IPoliticaExecucaoEleitor> const&>(char const*&, std::type_info const&, std::__2::shared_ptr<vota::impl::IPoliticaExecucaoEleitor> const&)
 10548	503	0	app	api	-	-	none	-	
-10549	13	0	app	api	skeleton	11450	addr	2	api::CTextFieldUpdateMT::~CTextFieldUpdateMT()_7701
+10549	13	0	app	api	skeleton	11450	addr	2	api::CTextFieldUpdateMT::~CTextFieldUpdateMT()_7702
 10550	17	0	app	libc++	skeleton	10521	addr	1	std::__2::__shared_ptr_pointer<ecourna::api::sql::sqlite::CSqlStatement*, std::__2::shared_ptr<ecourna::api::sql::ISqlStatement>::__shared_ptr_default_delete<ecourna::api::sql::ISqlStatement, ecourna::api::sql::sqlite::CSqlStatement>, std::__2::allocator<ecourna::api::sql::sqlite::CSqlStatement>>::__get_deleter(std::type_info const&) const
-10551	118	0	app	vota	skeleton	11452	addr	4	vota::impl::CInformacaoThreadOperador::~CInformacaoThreadOperador()_7693
+10551	118	0	app	vota	skeleton	11452	addr	4	vota::impl::CInformacaoThreadOperador::~CInformacaoThreadOperador()_7694
 10552	115	0	app	vota	skeleton	11453	addr	3	vota::impl::CInformacaoThreadOperador::~CInformacaoThreadOperador()
 10553	10	0	app	-	skeleton	11939	addr	2	__cxx_global_array_dtor.2_6281
 10554	18	0	app	vota	skeleton	11455	fingerprint	0	vota::impl::CInformacaoThreadOperador::GetApresentacaoFotoEleitor() const
@@ -10780,8 +10780,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10914	20	0	app	api	skeleton	11542	byte	0	api::CTextFieldUpdate::Hide()
 10915	20	0	app	api	skeleton	11543	byte	0	api::CTextFieldUpdate::Show()
 10916	177	0	app	api	skeleton	11544	addr	2	api::CTextFieldUpdate::Draw(api::IScreen&) const
-10917	13	0	app	api	skeleton	11545	addr	2	api::CTextFieldUpdate::~CTextFieldUpdate()_7544
-10918	104	0	app	api	skeleton	11559	addr	4	api::CTextFieldPaper::~CTextFieldPaper()_7504
+10917	13	0	app	api	skeleton	11545	addr	2	api::CTextFieldUpdate::~CTextFieldUpdate()_7545
+10918	104	0	app	api	skeleton	11559	addr	4	api::CTextFieldPaper::~CTextFieldPaper()_7505
 10919	101	0	app	api	skeleton	11560	addr	3	api::CTextFieldPaper::~CTextFieldPaper()
 10920	25	0	app	api	skeleton	11561	byte	0	api::CTextFieldPaper::Draw(api::IPaper&) const
 10921	73	0	app	api	-	-	none	-	
@@ -10804,7 +10804,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10938	22	0	app	libc++	skeleton	11538	addr	1	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10939	12	0	app	libc++	skeleton	11539	addr	2	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::__clone() const
 10940	21	0	app	api	skeleton	11517	addr	4	api::CTextFieldBlinking::GetTypeName() const
-10941	154	0	app	api	skeleton	11518	addr	4	api::CTextFieldBlinking::~CTextFieldBlinking()_7584
+10941	154	0	app	api	skeleton	11518	addr	4	api::CTextFieldBlinking::~CTextFieldBlinking()_7585
 10942	151	0	app	api	skeleton	11519	addr	3	api::CTextFieldBlinking::~CTextFieldBlinking()
 10943	14	0	app	api	skeleton	11541	shape	2	api::CTextFieldUpdate::Rect() const
 10944	20	0	app	api	skeleton	11521	byte	0	api::CTextFieldBlinking::Hide()
@@ -10817,14 +10817,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10951	14	0	app	api	skeleton	11973	shape	2	api::CTextField::Rect() const
 10952	114	0	app	api	skeleton	11974	byte	0	api::CTextField::Draw(api::IScreen&) const
 10953	32	0	app	api	skeleton	11385	byte	0	api::CTextBox::GetTypeName() const
-10954	87	0	app	api	skeleton	11386	addr	6	api::CTextBox::~CTextBox()_7828
+10954	87	0	app	api	skeleton	11386	addr	6	api::CTextBox::~CTextBox()_7829
 10955	84	0	app	api	skeleton	11387	addr	5	api::CTextBox::~CTextBox()
 10956	500	0	app	api	-	-	none	-	
 10957	175	0	app	api	skeleton	11389	shape	8	api::CTextBox::Move(api::SPoint const&)
 10958	706	0	app	api	skeleton	11390	shape	13	api::CTextBox::Draw(api::IScreen&) const
 10959	34	0	app	api	skeleton	11172	addr	3	api::CFillField::GetTypeName() const
 10960	27	0	app	api	skeleton	11171	byte	0	api::CRectField::Draw(api::IScreen&) const
-10961	82	0	app	api	skeleton	11424	addr	5	api::CQRCodeImageFieldPaper::~CQRCodeImageFieldPaper()_7744
+10961	82	0	app	api	skeleton	11424	addr	5	api::CQRCodeImageFieldPaper::~CQRCodeImageFieldPaper()_7745
 10962	79	0	app	api	skeleton	11425	addr	4	api::CQRCodeImageFieldPaper::~CQRCodeImageFieldPaper()
 10963	30	0	app	api	skeleton	11426	byte	0	api::CQRCodeImageFieldPaper::Draw(api::IPaper&) const
 10964	12	0	app	api	skeleton	11260	addr	2	api::CQRCodeImage::~CQRCodeImage()_8031
@@ -10836,12 +10836,12 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10970	214	0	app	api	skeleton	11548	addr	3	api::CStepsProgressBar::Move(api::SPoint const&)
 10971	2127	0	app	-	-	-	none	-	
 10972	514	0	app	-	skeleton	11550	shape	2	api::(anonymous namespace)::CabeEmUmaLinha(api::IScreen&, std::__2::vector<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>> const&, api::SRect const&, short, int, int, std::__2::vector<api::SRect, std::__2::allocator<api::SRect>>&)
-10973	13	0	app	api	skeleton	11551	addr	2	api::CStepsProgressBar::~CStepsProgressBar()_7524
+10973	13	0	app	api	skeleton	11551	addr	2	api::CStepsProgressBar::~CStepsProgressBar()_7525
 10974	12	0	app	api	skeleton	11552	byte	0	api::CProgressBar::Rect() const
 10975	61	0	app	api	-	-	none	-	
 10976	97	0	app	api	skeleton	11554	addr	1	api::CProgressBar::Move(api::SPoint const&)
 10977	1914	0	app	api	-	-	none	-	
-10978	13	0	app	api	skeleton	11556	addr	2	api::CProgressBar::~CProgressBar()_7515
+10978	13	0	app	api	skeleton	11556	addr	2	api::CProgressBar::~CProgressBar()_7516
 10979	7	0	libcxx	libc++	skeleton	11606	addr	1	std::__2::__function::__func<comum::(anonymous namespace)::MontaCabecalho()::$_0, comum::SQtdeAptos ()>::target_type() const
 10980	20	0	app	libc++	skeleton	11428	addr	1	std::__2::__function::__func<api::CMovieField::CMovieField(api::SPoint const&, std::__2::shared_ptr<api::CMovie> const&, api::EAnchorPoint)::$_0, void ()>::target(std::type_info const&) const
 10981	433	0	app	libc++	-	-	none	-	
@@ -10880,7 +10880,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11014	21	0	app	api	skeleton	11558	addr	4	api::IFormField<api::IPaper>::GetTypeName() const
 11015	15	0	-	api	skeleton	11251	byte	0	api::CCutFieldPaper::Draw(api::IPaper&) const
 11016	166	0	-	-	skeleton	10050	addr	1	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::str[abi:ne210108]() const &
-11017	17	0	libcxx	libc++	skeleton	11293	addr	2	std::__2::__shared_ptr_emplace<simulador::(anonymous namespace)::CEsperaAudioWasm, std::__2::allocator<simulador::(anonymous namespace)::CEsperaAudioWasm>>::~__shared_ptr_emplace()_7965
+11017	17	0	libcxx	libc++	skeleton	11293	addr	2	std::__2::__shared_ptr_emplace<simulador::(anonymous namespace)::CEsperaAudioWasm, std::__2::allocator<simulador::(anonymous namespace)::CEsperaAudioWasm>>::~__shared_ptr_emplace()_7966
 11018	14	0	libcxx	libc++	skeleton	11211	addr	1	std::__2::__shared_ptr_emplace<api::CMenuValidation, std::__2::allocator<api::CMenuValidation>>::~__shared_ptr_emplace()
 11019	17	0	app	libc++	skeleton	11642	addr	1	std::__2::__shared_ptr_pointer<api::CNewLineFieldPaper*, std::__2::shared_ptr<api::IFormField<api::IPaper>>::__shared_ptr_default_delete<api::IFormField<api::IPaper>, api::CNewLineFieldPaper>, std::__2::allocator<api::CNewLineFieldPaper>>::__get_deleter(std::type_info const&) const
 11020	7	0	app	libc++	skeleton	11785	addr	1	std::__2::__function::__func<comum::CGeradorRelVersaoPacoteDados::ImprimeTituloJE()::$_0, comum::SQtdeAptos ()>::target_type() const
@@ -10928,13 +10928,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11062	97	0	app	api	skeleton	11435	addr	1	api::CMovieField::Move(api::SPoint const&)
 11063	109	0	app	api	-	-	none	-	
 11064	30	0	app	api	skeleton	11438	byte	0	api::CMovieField::Draw(api::IScreen&) const
-11065	13	0	app	api	skeleton	11439	addr	2	api::CMovieField::~CMovieField()_7724
+11065	13	0	app	api	skeleton	11439	addr	2	api::CMovieField::~CMovieField()_7725
 11066	34	0	app	api	skeleton	11421	addr	3	api::CLineField::GetTypeName() const
 11067	86	0	app	api	skeleton	11422	byte	0	api::CLineField::Rect() const
 11068	32	0	app	api	skeleton	11423	byte	0	api::CLineField::Draw(api::IScreen&) const
-11069	17	0	libcxx	libc++	skeleton	11295	addr	2	std::__2::__shared_ptr_emplace<api::CEsperaAudio, std::__2::allocator<api::CEsperaAudio>>::~__shared_ptr_emplace()_7958
+11069	17	0	libcxx	libc++	skeleton	11295	addr	2	std::__2::__shared_ptr_emplace<api::CEsperaAudio, std::__2::allocator<api::CEsperaAudio>>::~__shared_ptr_emplace()_7959
 11070	14	0	libcxx	libc++	skeleton	11294	addr	1	std::__2::__shared_ptr_emplace<simulador::(anonymous namespace)::CEsperaAudioWasm, std::__2::allocator<simulador::(anonymous namespace)::CEsperaAudioWasm>>::~__shared_ptr_emplace()
-11071	17	0	-	libc++	skeleton	11488	addr	2	std::__2::__shared_ptr_emplace<simulador::CWasmTimer, std::__2::allocator<simulador::CWasmTimer>>::~__shared_ptr_emplace()_7631
+11071	17	0	-	libc++	skeleton	11488	addr	2	std::__2::__shared_ptr_emplace<simulador::CWasmTimer, std::__2::allocator<simulador::CWasmTimer>>::~__shared_ptr_emplace()_7632
 11072	14	0	-	libc++	skeleton	11296	addr	1	std::__2::__shared_ptr_emplace<api::CEsperaAudio, std::__2::allocator<api::CEsperaAudio>>::~__shared_ptr_emplace()
 11073	17	0	app	libc++	skeleton	11666	addr	1	std::__2::__shared_ptr_pointer<api::CLedFieldMT*, std::__2::shared_ptr<api::IFormField<api::IScreenMT>>::__shared_ptr_default_delete<api::IFormField<api::IScreenMT>, api::CLedFieldMT>, std::__2::allocator<api::CLedFieldMT>>::__get_deleter(std::type_info const&) const
 11074	17	0	app	api	skeleton	12789	addr	2	api::CInteractiveForm<api::IScreen, api::IInputKbd>::Slot7()
@@ -10949,7 +10949,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11083	22	0	app	libc++	skeleton	11628	addr	1	std::__2::__function::__func<api::CPaperFormBuilder::Show(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, bool)::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
 11084	12	0	app	libc++	skeleton	11629	addr	2	std::__2::__function::__func<api::CPaperFormBuilder::Show(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, bool)::$_0, void ()>::__clone() const
 11085	73	0	app	api	-	-	none	-	
-11086	10	0	app	api	skeleton	11530	addr	2	api::CImageFieldUpdate::~CImageFieldUpdate()_7567
+11086	10	0	app	api	skeleton	11530	addr	2	api::CImageFieldUpdate::~CImageFieldUpdate()_7568
 11087	97	0	app	api	-	-	none	-	
 11088	20	0	app	api	skeleton	11532	byte	0	api::CImageFieldUpdate::Hide()
 11089	20	0	app	api	skeleton	11533	byte	0	api::CImageFieldUpdate::Show()
@@ -10957,8 +10957,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11091	61	0	app	api	-	-	none	-	
 11092	80	0	app	api	skeleton	11414	addr	1	non-virtual thunk to api::CDSImageField::Update(std::__2::shared_ptr<api::IImage> const&)
 11093	77	0	app	api	skeleton	11415	addr	1	api::CDSImageField::Update(std::__2::shared_ptr<api::IImage> const&)
-11094	18	0	app	api	skeleton	11418	addr	2	non-virtual thunk to api::CDSImageField::~CDSImageField()_7755
-11095	13	0	app	api	skeleton	11419	addr	2	api::CDSImageField::~CDSImageField()_7754
+11094	18	0	app	api	skeleton	11418	addr	2	non-virtual thunk to api::CDSImageField::~CDSImageField()_7756
+11095	13	0	app	api	skeleton	11419	addr	2	api::CDSImageField::~CDSImageField()_7755
 11096	10	0	app	api	skeleton	11420	addr	1	non-virtual thunk to api::CDSImageField::~CDSImageField()
 11097	17	0	app	api	skeleton	11780	addr	3	api::CImageField::GetTypeName() const
 11098	128	0	app	api	skeleton	11781	addr	5	api::CImageField::~CImageField()_6717
@@ -10966,9 +10966,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11100	9	0	app	-	skeleton	11196	fingerprint	0	HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>&)
 11101	118	0	app	api	-	-	none	-	
 11102	81	0	app	api	skeleton	11784	byte	0	api::CImageField::Draw(api::IScreen&) const
-11103	17	0	-	libc++	skeleton	11492	addr	2	std::__2::__shared_ptr_emplace<simulador::CWasmTimer::State, std::__2::allocator<simulador::CWasmTimer::State>>::~__shared_ptr_emplace()_7625
+11103	17	0	-	libc++	skeleton	11492	addr	2	std::__2::__shared_ptr_emplace<simulador::CWasmTimer::State, std::__2::allocator<simulador::CWasmTimer::State>>::~__shared_ptr_emplace()_7626
 11104	14	0	-	libc++	skeleton	11489	addr	1	std::__2::__shared_ptr_emplace<simulador::CWasmTimer, std::__2::allocator<simulador::CWasmTimer>>::~__shared_ptr_emplace()
-11105	17	0	libcxx	libc++	skeleton	11604	addr	2	std::__2::__shared_ptr_emplace<comum::CParteEleitores, std::__2::allocator<comum::CParteEleitores>>::~__shared_ptr_emplace()_7276
+11105	17	0	libcxx	libc++	skeleton	11604	addr	2	std::__2::__shared_ptr_emplace<comum::CParteEleitores, std::__2::allocator<comum::CParteEleitores>>::~__shared_ptr_emplace()_7277
 11106	14	0	libcxx	libc++	skeleton	11493	addr	1	std::__2::__shared_ptr_emplace<simulador::CWasmTimer::State, std::__2::allocator<simulador::CWasmTimer::State>>::~__shared_ptr_emplace()
 11107	432	0	libcxx	api	-	-	none	-	
 11108	17	0	libcxx	libc++	skeleton	11646	addr	2	std::__2::__shared_ptr_emplace<api::CInputFieldControl<api::IScreenMT>, std::__2::allocator<api::CInputFieldControl<api::IScreenMT>>>::~__shared_ptr_emplace()_7137
@@ -11070,7 +11070,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11204	12	0	app	comum	skeleton	11285	addr	2	comum::CParteEleitores::~CParteEleitores()_7977
 11205	12	0	app	comum	skeleton	11286	addr	1	comum::CParteEleitores::~CParteEleitores()
 11206	75	0	app	comum	skeleton	11287	shape	2	comum::CParteEleitores::Imprime() const
-11207	119	0	app	comum	skeleton	11409	addr	2	comum::CParteCargos::~CParteCargos()_7766
+11207	119	0	app	comum	skeleton	11409	addr	2	comum::CParteCargos::~CParteCargos()_7767
 11208	116	0	app	comum	skeleton	11410	addr	1	comum::CParteCargos::~CParteCargos()
 11209	111	0	app	comum	-	-	none	-	
 11210	10	0	app	comum	skeleton	11186	addr	1	comum::CParteCandidatosProporcionais::~CParteCandidatosProporcionais()_8294
@@ -11277,7 +11277,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11411	7299	0	app	comum	-	-	none	-	
 11412	203	0	app	comum	-	-	none	-	
 11413	167	0	app	comum	-	-	none	-	
-11414	97	0	app	ecourna	skeleton	11582	addr	3	ecourna::api::util::CBitArray::~CBitArray()_7416
+11414	97	0	app	ecourna	skeleton	11582	addr	3	ecourna::api::util::CBitArray::~CBitArray()_7417
 11415	29	0	app	comum	skeleton	12166	shape	6	comum::asn::IConversorASN<ModuloFotosCandidatos::FotoCandidato, comum::md::CFotoCandidato>::DoConverte(comum::md::CFotoCandidato const&) const
 11416	1778	0	app	comum	-	-	none	-	
 11417	94	0	app	ecourna	skeleton	11585	addr	2	ecourna::api::util::CBitArray::~CBitArray()
@@ -11306,7 +11306,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11440	346	0	app	comum	-	-	none	-	
 11441	922	0	app	comum	-	-	none	-	
 11442	1198	0	app	comum	-	-	none	-	
-11443	13	0	app	comum	skeleton	11578	addr	2	comum::asn::CVisitanteFoto::~CVisitanteFoto()_7446
+11443	13	0	app	comum	skeleton	11578	addr	2	comum::asn::CVisitanteFoto::~CVisitanteFoto()_7447
 11444	29	0	app	comum	skeleton	12486	shape	6	comum::asn::IConversorASN<ModuloProcessoEleitoral::Pleito, comum::md::CPleitoDTO>::DoConverte(comum::md::CPleitoDTO const&) const
 11445	281	0	app	comum	skeleton	12020	shape	6	comum::asn::CConversorCandidaturas::DoDesconverte(ModuloCandidatos::EntidadeCandidatos const&) const
 11446	29	0	app	comum	skeleton	12712	shape	6	comum::asn::IConversorASN<ModuloEleicao::Suplencias, comum::md::CSuplencia>::DoConverte(comum::md::CSuplencia const&) const
@@ -11674,7 +11674,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11808	38	0	-	-	skeleton	12050	addr	4	__cxx_global_array_dtor_5938
 11809	1111	0	app	vota	-	-	none	-	
 11810	10	0	-	-	skeleton	12571	addr	2	__cxx_global_array_dtor.2_4321
-11811	12	0	-	-	skeleton	11574	addr	2	__cxx_global_array_dtor_7454
+11811	12	0	-	-	skeleton	11574	addr	2	__cxx_global_array_dtor_7455
 11812	1108	0	app	vota	-	-	none	-	
 11813	10	0	-	-	skeleton	12573	addr	2	__cxx_global_array_dtor.2_4311
 11814	12	0	-	-	skeleton	12054	addr	2	__cxx_global_array_dtor_5932
@@ -11882,10 +11882,10 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12016	37	0	app	-	skeleton	12039	shape	4	__cxx_global_array_dtor_5976
 12017	337	0	app	vota	-	-	none	-	
 12018	119	0	app	vota	-	-	none	-	
-12019	13	0	app	vota	skeleton	11403	addr	1	vota::CExibeAlertaDesligamento::~CExibeAlertaDesligamento()_7792
+12019	13	0	app	vota	skeleton	11403	addr	1	vota::CExibeAlertaDesligamento::~CExibeAlertaDesligamento()_7793
 12020	33	0	app	-	skeleton	13575	addr	2	_ZNSt3__28optionalINS_6localeEEaSB8ne210108IS1_TnNS_9enable_ifIXsr4_AndINS_17integral_constantIbXntu9__is_sameu14__remove_cvrefIT_ES2_EEEENS_7_OrImplIXaantcvbsr10_IsNotSameIS7_S1_EE5valuenesZT1_Li0EEE7_ResultINS5_IbXntu9__is_sameS7_S1_EEEENS_4_NotINS_9is_scalarIS1_EEEEEENS_16is_constructibleIS1_JS6_EEENS_13is_assignableIRS1_S6_EEEE5valueEiE4typeELi0EEERS2_OS6_
 12021	10	0	app	-	skeleton	14749	addr	2	__cxx_global_array_dtor.2_2449
-12022	38	0	app	-	skeleton	11405	addr	3	__cxx_global_array_dtor_7789
+12022	38	0	app	-	skeleton	11405	addr	3	__cxx_global_array_dtor_7790
 12023	316	0	app	vota	-	-	none	-	
 12024	10	0	app	-	skeleton	14786	addr	2	__cxx_global_array_dtor.2_2440
 12025	12	0	app	-	skeleton	15226	addr	2	__cxx_global_array_dtor_2353
@@ -11912,7 +11912,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12046	22	0	app	libc++	skeleton	13104	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
 12047	12	0	app	libc++	skeleton	12512	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone() const
 12048	17	0	app	libc++	skeleton	12109	addr	1	std::__2::__shared_ptr_pointer<comum::md::CIdentificacaoSecao*, std::__2::shared_ptr<comum::md::CIdentificacaoSecao>::__shared_ptr_default_delete<comum::md::CIdentificacaoSecao, comum::md::CIdentificacaoSecao>, std::__2::allocator<comum::md::CIdentificacaoSecao>>::__get_deleter(std::type_info const&) const
-12049	119	0	app	vota	skeleton	11566	addr	4	vota::IQRCodeBUDS::~IQRCodeBUDS()_7471
+12049	119	0	app	vota	skeleton	11566	addr	4	vota::IQRCodeBUDS::~IQRCodeBUDS()_7472
 12050	116	0	app	vota	skeleton	11567	addr	3	vota::IQRCodeBUDS::~IQRCodeBUDS()
 12051	446	0	app	vota	-	-	none	-	
 12052	257	0	app	-	-	-	none	-	
@@ -11967,7 +11967,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12101	18	0	app	vota	skeleton	11501	addr	2	vota::CProgressoEncerramento::Incrementa()
 12102	27	0	app	vota	skeleton	11502	addr	2	vota::CProgressoEncerramento::Finaliza()
 12103	45	0	app	vota	skeleton	11503	addr	2	vota::CProgressoEncerramento::Inicia()
-12104	13	0	app	vota	skeleton	11504	addr	2	vota::CProgressoEncerramento::~CProgressoEncerramento()_7611
+12104	13	0	app	vota	skeleton	11504	addr	2	vota::CProgressoEncerramento::~CProgressoEncerramento()_7612
 12105	18808	0	app	vota	-	-	none	-	
 12106	10	0	-	-	skeleton	15432	addr	2	__cxx_global_array_dtor.11
 12107	12	0	-	-	skeleton	14974	addr	2	__cxx_global_array_dtor_2405
