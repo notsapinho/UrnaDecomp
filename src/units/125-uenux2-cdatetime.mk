@@ -44,17 +44,53 @@
 #              then, so 5476 was the name's one voter; unit 170's object names 4658's callee __itoa (2869), and both
 #              match since. 3612 (unit 152's AtualizaMensagem) is in the link now, and the roots' TempoEmTexto, which
 #              stood for it, went.
-#              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at the tree's
-#              -O3 (86 over 550, 30 over 530): the target splits the day-of-the-year loop on `ano % 4` (two copies, one over a
-#              lookup table), which our -O3 build gives and our -O2 build does not, and keeps the month's store inside
-#              the month loop, where ours sinks it after the loop (and in += nests the month loop in the year loop's
-#              exit). The rest of that remainder is not explained. They stay written: operator- (3648) calls
-#              operator-=, and they call each other. Both are hand-named in splat/symbol_addrs.txt by their own bodies
-#              (callers+content: the day, month, year and weekday words of CDate's layout, the days of each month at
-#              531859, which only they read, and the negated count each sends the other), since their one voter each was
-#              a caller that needs the name, 654 for 5478 and 3648 for 5477.
-#              3648 CDate::operator- matches since 5477 has that name (it was operand-only, 1 over 9 rows, and
-#              `no-candidate`); 654 (CTradutorFrase::Traduz, unit 98) calls it on the "-" sign.
+#              5478 operator+= and 5477 operator-= match (named by pair-addr at step 8), on two things measured in the
+#              whole link (pnpm wasm score in build/out/wasm/vota_web, splat-remap --no-kinds, then steps 7 to 10):
+#              - The loops over the months write `m_mes++` before `resto -= diasNoMes`. With the subtraction first, as
+#                this file had it, they scored 86 over 550 and 30 over 530 rows at the tree's -O3 (291 over 558 and 271
+#                over 543 at -O2, measured before): ours stored the month once, after the loop (and in += nested the
+#                month loop in the year loop's exit), where the target stores 1 before the loop and each increment
+#                inside it. Written increment first, both scored 11 over 522 and 11 over 525, every row a call or a
+#                data address. What the IR of operator-= shows (the file's compile line with -mllvm
+#                -print-after=instcombine,licm and -filter-print-funcs, docs/reference/facts/codegen.md C12): with the
+#                increment's store last in the loop's body, the first InstCombine merges it with `m_mes = 1` into one
+#                store in the loop header, which LICM then sinks after the loop; with the subtraction last the two
+#                stores stay apart, in a loop whose header is the month's switch, and the target's code keeps them in
+#                the loop.
+#                That the target's source had this order is a reading of that measurement. += also writes `m_ano++`
+#                before `resto -= diasNoAno`, a choice: the other order gives the same plain wasm (shasum -a 256).
+#              - The day count of a month comes from clang's switch tables in the non-leap copies of the loops: 12
+#                bytes read as the table's address less 1 plus the month (531859 in the target), and 48 bytes read at
+#                the month less 1 (531872). The scan places the first address through the object it falls in, the last
+#                byte of whatever precedes the table (docs/reference/splat.md 3). In the target that is
+#                cajustedatahora.cpp's typeinfo name of std::default_delete<api::IAjusteDataHora> (0x81d62, size 0x32;
+#                the tables follow it at 0x81d94 and 0x81da0), whose line step 8 writes by content (evidence:content
+#                at bed17f80, now voted by 5477 and 5478 as well). With cdate.cpp.o after
+#                app/comum/dados/asn/candidatura/cindexadorfotos.cpp.o (the order at bed17f80) the address fell in
+#                that object's typeinfo name, and splat-remap stopped there (+0x82, i32.const 531859). So
+#                api/util/cajustedatahora.cpp, unit 101's file, is compiled from this unit's list, right before
+#                cdate.cpp: the target's data have that order in .rodata (those tables) and in .data (cajustedatahora's
+#                control block vtable and typeinfo at 0x182c58 and 0x182c74, then g_seculo at 0x182c80). Either move
+#                that puts cajustedatahora.cpp.o right before cdate.cpp.o gives IDENTICAL for both (splat-remap
+#                --no-kinds), measured: cdate.cpp into unit 101's list after cajustedatahora.cpp, and
+#                cajustedatahora.cpp into this list before cdate.cpp. src/units/README.md "Names" takes the move whose
+#                count falls (docs/reference/facts/codegen.md C4's record-aware count over bed17f80's link line):
+#                cajustedatahora.cpp.o 452 objects out of the data order in unit 101's list, 399 before cdate.cpp.o
+#                (400 after it and 401 after cdatetime.cpp.o, not linked: neither puts it before cdate.cpp.o); the
+#                other move, cdate.cpp.o, 399 here and 450 to 453 at the four places of unit 101's list (452 after
+#                cajustedatahora.cpp.o). The move restores 72 pairs (23 of app/vota/eleitor, 21 of app/comum/dados, 8
+#                of app/comum/gravadores, 20 elsewhere) and inverts 19: ten of app/vota/operador (eight of
+#                leidentidade, cfinalizaoperador, csincronismooperador), outrasopcoes/cfimaquisicaovotos, two of
+#                app/vota/eleitor/fimvotacao, vota/monitor/cthreadmonitor, two of
+#                app/comum/comparecimentomesario/estados, comum/gravadores/asn/util, comum/util/cmonitoraalimentacao
+#                and api/uelog/cloga. It moved no row but
+#                5477 and 5478 into `match`; three twins' match lines took the name of a copy that now links first
+#                (631 and 4739 simulador.cpp.o's, 2924's merge body ITimerScheduler's) and has<IAjusteDataHora> (2469)
+#                is ciniciodeciclo.cpp.o's copy now.
+#              They were hand-named in splat/symbol_addrs.txt by their bodies (callers+content) while they differed;
+#              without those two lines a scan and splat-build keep every row (12961, the target's sha256), so they went.
+#              3648 CDate::operator- matches (operand-only, 1 over 9 rows, and `no-candidate` until 5477 had a name);
+#              654 (CTradutorFrase::Traduz, unit 98) calls it on the "-" sign.
 #              CDate::operator+(int) const, operator-'s counterpart (a copy, then operator+=), has no target function: 654
 #              holds it inlined by binaryen on the "+" sign (it copies the 8-byte date, then calls 5478). Its name, after
 #              operator-'s, and its being out of line in cdate.cpp, as operator- is, are chosen.
@@ -70,7 +106,8 @@
 # %4 with a branch first (5479 at 11 over 378 rows; grouped `(%4 && %100) || %400` it has no branch, 30 over 386);
 # operator-= and operator+= take a month's day count once per iteration, from a variable assigned in the loop's condition
 # (computed again in the body, -O3 keeps two copies: 5477 at 120 over 578), and += its year length the same way (5478 at
-# 124 over 568 without). Written in the target's order and not compared with another: CDate(const std::string &) stores
+# 124 over 568 without), both measured with the subtraction before the increment, the order the file had then.
+# Written in the target's order and not compared with another: CDate(const std::string &) stores
 # the year, the month, the day and the weekday, CDate() the day, the month, the year and the weekday; ConvertFromLocalTime
 # builds the time before the date and stores the date first (two locals, then two assignments); the weekday takes
 # `+= dias % 7` (`+= 7 - dias % 7` in -=) and then `%= 7`, as the target wraps the sum to 16 bits before the remainder.
@@ -101,7 +138,8 @@
 # it by pair-addr; matched at step 9. Its place, after FormatCurrentDate and operator+ (line 133, in the blank run
 # before :203), follows the band (cdatetime.h); the name, const and time_t are chosen.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-CDATETIME_SRCS := src/api/util/cdate.cpp src/api/util/cdatetime.cpp
+# api/util/cajustedatahora.cpp is unit 101's file, listed here before cdate.cpp for 5477 and 5478 (above).
+CDATETIME_SRCS := src/api/util/cajustedatahora.cpp src/api/util/cdate.cpp src/api/util/cdatetime.cpp
 UENUX2_SRCS += $(CDATETIME_SRCS)
 # the callers of these members outside the two files are not reconstructed yet: 125-uenux2-cdatetime-roots.cpp reaches
 # each function the way the target does (its header lists them); it includes no tree header

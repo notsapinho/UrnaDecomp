@@ -10,7 +10,9 @@
 #   emitted with Ajusta(const CDateTime&), its key function. 10876 holds set<IAjusteDataHora> and
 #   push<IAjusteDataHora>, which binaryen inlined (two more prologues), so unit 100's fragment reads it for push. The file
 #   is placed by data order: the vtable (@1584156) and the interface's typeinfo lie between api/io/cinisection.cpp's records and
-#   api/util/cdate.cpp's. api::IAjusteDataHora's header has its members now, with their slots.
+#   api/util/cdate.cpp's. api::IAjusteDataHora's header has its members now, with their slots. Unit 125's list compiles
+#   the file, right before cdate.cpp: CDate's operator+= and operator-= (5478, 5477) match with that object right before
+#   cdate.cpp.o, as the target's data have them, and not at the earlier order (that fragment has both and the counts).
 # - api::CTimer (api/util/ctimer.h, its path chosen, has the layout) and CTimerScheduler::CreateTimer (10846), here in
 #   itimerscheduler.cpp: CTimer's vtable and typeinfo lie with CTimerScheduler's and __shared_ptr_emplace<CTimer>'s right
 #   before this file's first record (1585468), the place api::CSystemDateTime has before isystemdatetime.cpp's, and fn
@@ -49,7 +51,8 @@
 # mock/app/simulador/wasm/simulador.cpp is unit 188's source (fn 8302, the simulator's start), listed here ahead of
 # itimerscheduler.cpp: both instantiate CPolySingleton<ITimerScheduler>::set, whose target copy (fn 4879, record 1531292)
 # is 8302's TU's, and the first object on the link line gives the copy (measured: unit 188's fragment).
-API_UTIL_SINGLETONS_SRCS := src/api/util/cajustedatahora.cpp mock/app/simulador/wasm/simulador.cpp src/api/util/itimerscheduler.cpp
+# (src/api/util/cajustedatahora.cpp, this unit's file, is in unit 125's list: the header says why)
+API_UTIL_SINGLETONS_SRCS := mock/app/simulador/wasm/simulador.cpp src/api/util/itimerscheduler.cpp
 UENUX2_SRCS += $(API_UTIL_SINGLETONS_SRCS)
 # a second call site of libc++'s std::__thread_struct constructor, which api::CTimer::Start calls (the roots file says why)
 $(ROOT)/$(APP)/101-uenux2-api-util-singletons-roots.o: $(ROOT)/src/units/101-uenux2-api-util-singletons-roots.cpp $(ROOT)/src/units/101-uenux2-api-util-singletons.mk $(ROOT)/src/Makefile

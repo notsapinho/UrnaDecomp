@@ -1137,8 +1137,9 @@ it out and put the measurement in the fragment. Step 9 writes its stub back, unl
 $9}' splat/scan.tsv` prints `no-candidate libc++`), and the fragment is then its only note. It stays written, its row as
 it is, when something needs it: a vtable slot whose written body is one remainder off (a trap would only hide it: 10490,
 unit 142, matched once a call of the setter gave its store order; one no measured form comes close to is trapped,
-below), a matched caller, a caller that is written and right but does not match yet (3648 over 5477 and 5478, unit 125),
-or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31). The fragment says what is
+below), a matched caller, a caller that is written and right but does not match yet (3648 over 5477 and 5478, unit 125,
+until the three matched), or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31).
+The fragment says what is
 measured and that the remainder is not explained. A caller then holds only on evidence for the callee's name that does
 not rest on the callee's bytes matching: 5499, `CTextFieldDoubleLine::GetTextLines`, is `differs`, and its callers 10929
 and 10931 match through 10929's `call` vote, which 10929's own record anchors (`/usr/bin/grep -F '= func:5499;'
