@@ -51,4 +51,12 @@ $(ROOT)/$(ASN1_DIR)/roots_asn1.o: $(ROOT)/$(ASN1_DIR)/roots_asn1.cpp $(ROOT)/src
 # put RHVoice before the runtime (docs/reference/facts/link-order.md §L3). Only the first object that defines it moves,
 # to here: the set and the place are measured, not recovered (docs/reference/facts/asn1.md §A2).
 RHVOICE_BEFORE_ASN1 := $(filter %/language.cpp.o,$(RHVOICE_OBJS))
-override EXTRA_OBJS += $(RHVOICE_BEFORE_ASN1) $(ASN1_OBJS) $(ROOT)/$(ASN1_DIR)/roots_asn1.o
+# The runtime's objects link in ASN1_OBJS's name order with asn1.o first. The target's data rank asn1.o's vtables and
+# typeinfos (.rodata, from 0x1183b8) ahead of every other runtime object's, and asn1.o holds the
+# SEQUENCE_OF_Base::resize that binaryen inlines into PERDecoder::do_visit(SEQUENCE_OF_Base&) (8811): with asn1.o after
+# PERDecoder.o, where the name order puts it, 8811 differs in its locals, the order of some operands and one block; with
+# asn1.o first, 8811 matches (src/units/86-asn1-visitors.mk has the scores and the places counted). The other objects
+# keep the name order, which no measured row needs changed. roots_asn1.cpp is generated from ASN1_OBJS, whose order this
+# leaves as it is, so no root changes.
+ASN1_LINK_OBJS := $(filter %/asn1.o,$(ASN1_OBJS)) $(filter-out %/asn1.o,$(ASN1_OBJS))
+override EXTRA_OBJS += $(RHVOICE_BEFORE_ASN1) $(ASN1_LINK_OBJS) $(ROOT)/$(ASN1_DIR)/roots_asn1.o

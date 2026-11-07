@@ -10,11 +10,23 @@
 #   drops that, so one body of ours could not serve both. Since unit 237 our link has both bodies (388 matches from the
 #   executable TU's object, its result read by 11530), and since unit 229's root emits ~shared_ptr<IAbstractVisitor> at
 #   that TU's rule, ahead of the runtime, our 2650's call reaches 388's body.
-# - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which no body of the runtime equals
-#   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
-#   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.
 #
 # What the target decided:
+# - The runtime's object order: asn1.o links first among the runtime's objects (src/mk/asn1.mk), and with it 8811
+#   PERDecoder::do_visit(SEQUENCE_OF_Base&) matches. 8811 holds SEQUENCE_OF_Base::resize, asn1.cxx's, inlined by
+#   wasm-opt. With asn1.o in the name order, after PERDecoder.o, 8811 scores 94 over 382 rows (18 inserted, 15 deleted:
+#   local numbers, the order of some operands and one block more than the target), at 9f0245ef; 543, the callee this
+#   note once named as the cause, matches since unit 89 (docs/reference/facts/asn1.md A5). With asn1.o first it scores 6
+#   over 364, every row a call, and matches. The target's data give the place: ranked by the addresses the symbol file
+#   gives the vtables and typeinfos each object emits in .rodata (the runtime builds without -fPIC), asn1.o is first
+#   (0x1183b8), then ValidChecker.o, AVNDecoder.o, InvalidTracer.o, AVNEncoder.o, BERDecoderPartial.o, BERDecoder.o,
+#   PERDecoder.o, BEREncoder.o, PEREncoder.o, DataLengthCounter.o and DataFree.o. docs/reference/facts/codegen.md C4's
+#   count, over the objects with .rodata vtables and typeinfos alone (C4's script ranks .data.rel.ro and records; this
+#   one that segment's _ZT[VI] names, records left out), on 9f0245ef's plain link.cmd: 12 objects out of the data's
+#   order against asn1.o in the name order, 1 at the head of the runtime's list (RHVoice's language.cpp.o,
+#   RHVOICE_BEFORE_ASN1, whose .rodata lies after the runtime's), rising by one with each ranked object passed to 9
+#   right before PERDecoder.o; 0 before language.cpp.o, outside the runtime's list (src/units/README.md "Names": not
+#   taken). The head is taken.
 # - BERDecoderPartial::decodeHeader (995) writes the type's name in the one << chain: the target builds the string
 #   between " on type " and " on position ". A named string before the chain moves 11 rows.
 # - decodeTime reads len once: 8828 and 8829 compare twice over that one read, which is LLVM sinking one compare to its
@@ -37,6 +49,10 @@
 #   their visitors. The names below keep the roots from taking their addresses, which would stop it.
 #
 # Chosen, with the forms measured to give the same bytes (one function's rows, object-local numbers masked):
+# - asn1.o's place ahead of PERDecoder.o: right before PERDecoder.o (a scratch link of the plain link.cmd, the object
+#   moved) gives 8811 the head's body but for two call operands, the callees' indices, and the same 6 over 364; the
+#   places between were not linked. The head is the count's choice, above. The other runtime objects keep the name
+#   order, which leaves some of them out of the data's order against each other: no row measured needs another.
 # - src/asn1/ValidChecks.cxx: no evidence names it. The band puts 1068 and 1067 before asn1.o's first function, and the
 #   target's checker vtables lie among asn1.o's, so asn1.cxx may hold the checkers. Which of the two TUs is which is not
 #   decided. The members moved as one block, though only those above are measured to need it. Members in

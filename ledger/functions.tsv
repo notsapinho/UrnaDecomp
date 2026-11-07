@@ -614,8 +614,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 748	43	19	7zip	7zip	-	-	none	-	
 749	9	19	7zip	7zip	-	-	none	-	
 750	199	19	-	ASN1	-	-	none	-	
-751	14	18	app	-	skeleton	747	byte	0	ASN1::ENUMERATED::operator=(ASN1::ENUMERATED const&)
-752	40	18	app	ASN1	skeleton	748	addr	1	ASN1::ENUMERATED::ENUMERATED(ASN1::ENUMERATED const&)
+751	14	18	app	-	skeleton	748	byte	0	ASN1::ENUMERATED::operator=(ASN1::ENUMERATED const&)
+752	40	18	app	ASN1	skeleton	749	addr	1	ASN1::ENUMERATED::ENUMERATED(ASN1::ENUMERATED const&)
 753	173	19	-	-	skeleton	684	addr	6	ecourna::api::util::CStringUtils::PreencheAEsquerda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, char, unsigned long)
 754	53	19	rhvoice	RHVoice	skeleton	744	addr	3	HTS_strdup
 755	198	19	rhvoice	RHVoice	skeleton	745	byte	0	HTS_get_token_from_string_with_separator
@@ -856,11 +856,11 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 990	2434	13	app	ecourna	skeleton	992	addr	25	_tr_flush_block
 991	53	13	7zip	7zip	-	-	none	-	
 992	101	13	-	-	-	-	none	-	
-993	272	13	-	ASN1	skeleton	1002	addr	3	void ASN1::PEREncoder::encodeMultiBit<unsigned int>(unsigned int, unsigned int)
+993	272	13	-	ASN1	skeleton	999	addr	3	void ASN1::PEREncoder::encodeMultiBit<unsigned int>(unsigned int, unsigned int)
 994	286	13	asn1	ASN1	skeleton	933	addr	2	ASN1::BEREncoder::encodeHeader(ASN1::AbstractData const&)
 995	347	13	asn1	ASN1	skeleton	934	shape	10	ASN1::BERDecoderPartial::decodeHeader(ASN1::AbstractData&, unsigned int&)
 996	193	13	asn1	ASN1	skeleton	935	fingerprint	0	ASN1::BERDecoder::decodeHeader(ASN1::AbstractData&, unsigned int&)
-997	48	12	app	ASN1	skeleton	999	addr	1	ASN1::CHOICE::~CHOICE()
+997	48	12	app	ASN1	skeleton	1002	addr	1	ASN1::CHOICE::~CHOICE()
 998	864	13	sqlite	libc++	-	-	none	-	
 999	16	13	sqlite	RHVoice	skeleton	993	byte	0	HTS_SStreamSet_get_duration
 1000	25	13	-	-	skeleton	1009	shape	3	api::CDateTime::CDateTime(long long)
@@ -928,8 +928,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1062	132	12	7zip	libc++	-	-	none	-	
 1063	83	12	7zip	7zip	skeleton	891	byte	0	StringsAreEqual_Ascii(wchar_t const*, char const*)
 1064	191	12	7zip	7zip	-	-	none	-	
-1065	193	12	app	ASN1	skeleton	1003	addr	4	ASN1::PERDecoder::decodeLength(unsigned int, unsigned int, unsigned int&)
-1066	42	12	-	ASN1	skeleton	1000	byte	0	ASN1::CountBits(unsigned int)
+1065	193	12	app	ASN1	skeleton	1000	addr	4	ASN1::PERDecoder::decodeLength(unsigned int, unsigned int, unsigned int&)
+1066	42	12	-	ASN1	skeleton	1003	byte	0	ASN1::CountBits(unsigned int)
 1067	44	11	-	-	skeleton	1076	addr	1	ASN1::CHOICE::isStrictlyValid() const
 1068	57	11	-	-	skeleton	1077	addr	1	ASN1::CHOICE::isValid() const
 1069	923	12	rhvoice	RHVoice	skeleton	1065	addr	18	HTS_get_pattern_token
@@ -1233,7 +1233,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1367	84	9	sqlite	-	-	-	none	-	
 1368	15	9	7zip	7zip	skeleton	1073	addr	1	SysFreeString
 1369	175	9	-	ASN1	skeleton	1263	addr	6	ASN1::PEREncoder::encodeLength(unsigned int, unsigned int, unsigned int)
-1370	91	9	-	ASN1	skeleton	1265	addr	1	ASN1::PERDecoder::decodeSingleBit()
+1370	91	9	-	ASN1	skeleton	1264	addr	1	ASN1::PERDecoder::decodeSingleBit()
 1371	455	9	sqlite	-	-	-	none	-	
 1372	376	8	sqlite	-	-	-	none	-	
 1373	2313	9	boost	-	-	-	none	-	
@@ -1382,9 +1382,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1516	246	8	7zip	7zip	-	-	none	-	
 1517	594	8	asn1	ASN1	-	-	none	-	
 1518	261	8	asn1	ASN1	-	-	none	-	
-1519	114	8	openssl	ASN1	skeleton	1521	addr	4	ASN1::toInt(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned long, unsigned long, int)
-1520	123	8	asn1	libc++	skeleton	1522	shape	5	ASN1::read_dec2(std::__2::basic_istream<char, std::__2::char_traits<char>>&)
-1521	89	7	-	ASN1	skeleton	1523	addr	4	ASN1::AbstractString::AbstractString(void const*, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+1519	114	8	openssl	ASN1	skeleton	1526	addr	4	ASN1::toInt(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned long, unsigned long, int)
+1520	123	8	asn1	libc++	skeleton	1527	shape	5	ASN1::read_dec2(std::__2::basic_istream<char, std::__2::char_traits<char>>&)
+1521	89	7	-	ASN1	skeleton	1529	addr	4	ASN1::AbstractString::AbstractString(void const*, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1522	32	8	sqlite	ecourna	skeleton	1689	addr	1	std::__2::__tree<unsigned char, std::__2::less<unsigned char>, std::__2::allocator<unsigned char>>::destroy(std::__2::__tree_node<unsigned char, void*>*)
 1523	67	8	app	vota	skeleton	1152	shape	4	ecourna::api::util::CStringUtils::ToDWord(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1524	705	8	app	simulador	-	-	none	-	
@@ -1530,11 +1530,11 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1664	123	7	7zip	7zip	-	-	none	-	
 1665	103	7	app	libc++	-	-	none	-	
 1666	166	7	7zip	7zip	-	-	none	-	
-1667	49	7	asn1	ASN1	skeleton	1524	addr	1	ASN1::PEREncoder::encodeBlock(char const*, unsigned int)
-1668	335	7	asn1	ASN1	skeleton	1526	byte	0	ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)
-1669	312	7	asn1	ASN1	skeleton	1528	byte	0	ASN1::BERDecoder::decodeHeader(unsigned int&, bool&, unsigned int&)
-1670	4	0	libcxx	libc++abi	skeleton	1685	byte	0	ASN1::ConstVisitor::visitExtensionRoot(ASN1::SEQUENCE const&, int)
-1671	44	6	app	ASN1	skeleton	1682	addr	4	ASN1::AbstractString::AbstractString(ASN1::AbstractString const&)
+1667	49	7	asn1	ASN1	skeleton	1521	addr	1	ASN1::PEREncoder::encodeBlock(char const*, unsigned int)
+1668	335	7	asn1	ASN1	skeleton	1523	byte	0	ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)
+1669	312	7	asn1	ASN1	skeleton	1525	byte	0	ASN1::BERDecoder::decodeHeader(unsigned int&, bool&, unsigned int&)
+1670	4	0	libcxx	libc++abi	skeleton	1683	byte	0	ASN1::ConstVisitor::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+1671	44	6	app	ASN1	skeleton	1685	addr	4	ASN1::AbstractString::AbstractString(ASN1::AbstractString const&)
 1672	98	7	-	ASN1	-	-	none	-	
 1673	105	7	app	ecourna	skeleton	1691	addr	2	std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>::~vector[abi:ne210108]()
 1674	62	7	-	ASN1	skeleton	1536	addr	1	std::__2::__split_buffer<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>&>::~__split_buffer()
@@ -1734,7 +1734,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1868	147	6	7zip	7zip	-	-	none	-	
 1869	62	6	7zip	7zip	skeleton	1876	byte	0	FindCharPosInString(wchar_t const*, wchar_t)
 1870	2	0	rhvoice	RHVoice	skeleton	1936	byte	0	simulador::CWasmScreenMT::ShowImage(api::SPoint const&, api::IImage const&, int)
-1871	117	6	asn1	ASN1	skeleton	1684	byte	0	ASN1::PERDecoder::decodeBlock(char*, unsigned int)
+1871	117	6	asn1	ASN1	skeleton	1682	byte	0	ASN1::PERDecoder::decodeBlock(char*, unsigned int)
 1872	848	6	-	api	-	-	none	-	
 1873	137	6	-	libc++	-	-	none	-	
 1874	82	6	-	ASN1	skeleton	1902	addr	1	std::__2::vector<char, std::__2::allocator<char>>::vector[abi:ne210108](std::__2::vector<char, std::__2::allocator<char>> const&)
@@ -2041,20 +2041,20 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2175	200	5	-	libc++	-	-	none	-	
 2176	102	5	7zip	7zip	-	-	none	-	
 2177	238	5	7zip	7zip	-	-	none	-	
-2178	52	5	asn1	ASN1	skeleton	1897	addr	3	ASN1::PEREncoder::encodeConstrainedLength(ASN1::ConstrainedObject const&, unsigned int)
-2179	186	5	-	ASN1	skeleton	2220	addr	1	bool ASN1::PEREncoder::encodeUnsigned<unsigned int>(unsigned int, unsigned int, unsigned int)
-2180	83	5	asn1	ASN1	skeleton	1898	addr	3	ASN1::PERDecoder::decodeConstrainedLength(ASN1::ConstrainedObject&, unsigned int&)
-2181	227	5	-	ASN1	skeleton	2221	addr	1	bool ASN1::PERDecoder::decodeUnsigned<unsigned int>(unsigned int, unsigned int, unsigned int&)
+2178	52	5	asn1	ASN1	skeleton	1890	addr	3	ASN1::PEREncoder::encodeConstrainedLength(ASN1::ConstrainedObject const&, unsigned int)
+2179	186	5	-	ASN1	skeleton	2217	addr	1	bool ASN1::PEREncoder::encodeUnsigned<unsigned int>(unsigned int, unsigned int, unsigned int)
+2180	83	5	asn1	ASN1	skeleton	1891	addr	3	ASN1::PERDecoder::decodeConstrainedLength(ASN1::ConstrainedObject&, unsigned int&)
+2181	227	5	-	ASN1	skeleton	2218	addr	1	bool ASN1::PERDecoder::decodeUnsigned<unsigned int>(unsigned int, unsigned int, unsigned int&)
 2182	683	5	asn1	ASN1	-	-	none	-	
-2183	207	4	asn1	ASN1	skeleton	2223	addr	11	ASN1::BERDecoderPartial::~BERDecoderPartial()
-2184	452	5	openssl	ASN1	skeleton	1892	addr	11	ASN1::GeneralizedTime::get() const
+2183	207	4	asn1	ASN1	skeleton	2219	addr	11	ASN1::BERDecoderPartial::~BERDecoderPartial()
+2184	452	5	openssl	ASN1	skeleton	1897	addr	11	ASN1::GeneralizedTime::get() const
 2185	1698	5	openssl	ASN1	-	-	none	-	
-2186	468	5	asn1	libc++	skeleton	1894	shape	20	ASN1::UTCTime::set(char const*)
-2187	133	5	asn1	ASN1	skeleton	1891	byte	0	ASN1::CHOICE::createSelection()
-2188	76	4	app	comum	skeleton	2217	byte	0	ASN1::CHOICE::operator=(ASN1::CHOICE const&)
-2189	35	5	app	ASN1	skeleton	2218	addr	2	ASN1::CHOICE::CHOICE(void const*, int, ASN1::AbstractData*)
-2190	42	5	-	ASN1	skeleton	1896	addr	3	ASN1::AbstractString::AbstractString(void const*, char const*)
-2191	97	5	asn1	ASN1	skeleton	1890	byte	0	ASN1::SEQUENCE_OF_Base::erase(std::__2::__wrap_iter<ASN1::AbstractData**>, std::__2::__wrap_iter<ASN1::AbstractData**>)
+2186	468	5	asn1	libc++	skeleton	1899	shape	20	ASN1::UTCTime::set(char const*)
+2187	133	5	asn1	ASN1	skeleton	1895	byte	0	ASN1::CHOICE::createSelection()
+2188	76	4	app	comum	skeleton	2221	byte	0	ASN1::CHOICE::operator=(ASN1::CHOICE const&)
+2189	35	5	app	ASN1	skeleton	2222	addr	2	ASN1::CHOICE::CHOICE(void const*, int, ASN1::AbstractData*)
+2190	42	5	-	ASN1	skeleton	1901	addr	3	ASN1::AbstractString::AbstractString(void const*, char const*)
+2191	97	5	asn1	ASN1	skeleton	1894	byte	0	ASN1::SEQUENCE_OF_Base::erase(std::__2::__wrap_iter<ASN1::AbstractData**>, std::__2::__wrap_iter<ASN1::AbstractData**>)
 2192	379	4	app	-	skeleton	2232	byte	0	ecourna::app::dados::CEstadoComparecimento::CEstadoComparecimento(ecourna::app::dados::CRegistroIdentificacaoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoComparecimento, ecourna::app::dados::CApresentacaoFotoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoHabilitacaoAudio, ecourna::app::dados::CHabilitacaoBiometrica const&)
 2193	176	4	app	-	skeleton	2233	byte	0	ecourna::app::dados::CEstadoComparecimento::CEstadoComparecimento(ecourna::app::dados::CRegistroIdentificacaoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoComparecimento, ecourna::app::dados::CApresentacaoFotoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoHabilitacaoAudio)
 2194	326	5	boost	boost	-	-	none	-	
@@ -2510,16 +2510,16 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2644	85	4	7zip	7zip	skeleton	3523	addr	1	SysAllocString
 2645	86	4	-	-	skeleton	5191	addr	1	SysAllocStringLen
 2646	526	4	7zip	-	skeleton	2648	byte	0	ConvertInt64ToString(long long, char*)
-2647	190	4	asn1	ASN1	skeleton	2692	addr	1	ASN1::getObjectLength(ASN1::AbstractData const&, unsigned int)
-2648	62	3	asn1	ASN1	skeleton	2695	addr	4	ASN1::BERDecoder::~BERDecoder()
-2649	99	4	asn1	ASN1	skeleton	2698	shape	2	ASN1::get_string(std::__2::basic_istream<char, std::__2::char_traits<char>>&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&)
-2650	36	4	asn1	ASN1	skeleton	2693	addr	1	std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>::destroy[abi:ne210108](std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*)
+2647	190	4	asn1	ASN1	skeleton	2687	addr	1	ASN1::getObjectLength(ASN1::AbstractData const&, unsigned int)
+2648	62	3	asn1	ASN1	skeleton	2690	addr	4	ASN1::BERDecoder::~BERDecoder()
+2649	99	4	asn1	ASN1	skeleton	2691	shape	2	ASN1::get_string(std::__2::basic_istream<char, std::__2::char_traits<char>>&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&)
+2650	36	4	asn1	ASN1	skeleton	2688	addr	1	std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>::destroy[abi:ne210108](std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*)
 2651	321	4	asn1	api	skeleton	3734	shape	15	api::CFormStack<api::IPaper>::Notifica()
 2652	264	4	asn1	ASN1	-	-	none	-	
-2653	544	4	asn1	libc++	skeleton	2219	shape	22	ASN1::UTCTime::get() const
+2653	544	4	asn1	libc++	skeleton	2223	shape	22	ASN1::UTCTime::get() const
 2654	31	3	-	ASN1	-	-	none	-	
-2655	196	4	-	-	skeleton	2682	shape	3	std::__2::vector<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>>::reserve(unsigned long)
-2656	144	3	-	ASN1	skeleton	2681	shape	3	ASN1::SEQUENCE_OF_Base::SEQUENCE_OF_Base(ASN1::SEQUENCE_OF_Base const&)
+2655	196	4	-	-	skeleton	2694	shape	3	std::__2::vector<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>>::reserve(unsigned long)
+2656	144	3	-	ASN1	skeleton	2692	shape	3	ASN1::SEQUENCE_OF_Base::SEQUENCE_OF_Base(ASN1::SEQUENCE_OF_Base const&)
 2657	197	3	app	-	skeleton	2715	byte	0	ecourna::app::dados::CHabilitacaoBiometrica::CHabilitacaoBiometrica(unsigned int, CBaseType<unsigned short, (unsigned short)0, (unsigned short)999, 38>, ecourna::app::dados::CDedo::ETipoDedo, CBaseType<ecourna::app::dados::EErroLeituraBiometria, (ecourna::app::dados::EErroLeituraBiometria)0, (ecourna::app::dados::EErroLeituraBiometria)13, 34>, ecourna::app::dados::CEstadoHabilitacaoPorCodigo const&)
 2658	167	3	app	-	skeleton	2716	byte	0	ecourna::app::dados::CEstadoComparecimento::CEstadoComparecimento(ecourna::app::dados::CRegistroIdentificacaoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoComparecimento)
 2659	88	4	app	ecourna	skeleton	2713	addr	3	ecourna::app::dados::CDadosCifracao::~CDadosCifracao()
@@ -2843,7 +2843,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2977	840	4	-	sqlite	skeleton	3029	addr	11	jsonAppendString
 2978	1590	4	sqlite	-	skeleton	3030	addr	31	jsonReturnFromBlob
 2979	2048	4	sqlite	-	skeleton	3032	addr	49	renameResolveTrigger
-2980	12	0	app	api	skeleton	1901	addr	2	RHVoice::xml::element_handler<char>::~element_handler()_1368
+2980	12	0	app	api	skeleton	1896	addr	2	RHVoice::xml::element_handler<char>::~element_handler()_1368
 2981	313	4	sqlite	-	skeleton	3034	addr	12	sqlite3ResultStrAccum
 2982	477	4	sqlite	sqlite	skeleton	3035	addr	11	sqlite3TriggerStepSrc
 2983	528	4	sqlite	sqlite	skeleton	3036	fingerprint	0	fkParentIsModified
@@ -3326,24 +3326,24 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3460	16	0	-	-	skeleton	3548	addr	1	SzAlloc
 3461	148	3	-	-	skeleton	3704	shape	9	api::CFormStack<api::IScreenMT>::Limpa()
 3462	241	3	7zip	-	skeleton	3503	byte	0	ConvertUInt32ToHex8Digits(unsigned int, char*)
-3463	67	3	asn1	ASN1	skeleton	3560	fingerprint	0	ASN1::getHeaderLength(unsigned int, int)
-3464	291	3	asn1	ASN1	skeleton	2687	shape	6	ASN1::PEREncoder::encodeAnyType(ASN1::AbstractData const*)
-3465	112	3	asn1	ASN1	skeleton	2688	addr	3	ASN1::PEREncoder::encodeSmallUnsigned(unsigned int)
-3466	98	3	asn1	ASN1	skeleton	2689	fingerprint	0	ASN1::PEREncoder::encodeBitMap(std::__2::vector<char, std::__2::allocator<char>> const&, unsigned int)
-3467	113	3	asn1	ASN1	skeleton	2690	addr	2	ASN1::PERDecoder::decodeSmallUnsigned(unsigned int&)
-3468	157	3	asn1	ASN1	skeleton	2691	fingerprint	0	ASN1::PERDecoder::decodeBitMap(std::__2::vector<char, std::__2::allocator<char>>&, unsigned int)
-3469	117	3	-	ASN1	skeleton	2694	shape	2	ASN1::BERDecoderPartial::BERDecoderPartial(std::__2::shared_ptr<ASN1::ISeeder>, ASN1::CoderEnv*)
+3463	67	3	asn1	ASN1	skeleton	3554	fingerprint	0	ASN1::getHeaderLength(unsigned int, int)
+3464	291	3	asn1	ASN1	skeleton	2682	shape	6	ASN1::PEREncoder::encodeAnyType(ASN1::AbstractData const*)
+3465	112	3	asn1	ASN1	skeleton	2683	addr	3	ASN1::PEREncoder::encodeSmallUnsigned(unsigned int)
+3466	98	3	asn1	ASN1	skeleton	2684	fingerprint	0	ASN1::PEREncoder::encodeBitMap(std::__2::vector<char, std::__2::allocator<char>> const&, unsigned int)
+3467	113	3	asn1	ASN1	skeleton	2685	addr	2	ASN1::PERDecoder::decodeSmallUnsigned(unsigned int&)
+3468	157	3	asn1	ASN1	skeleton	2686	fingerprint	0	ASN1::PERDecoder::decodeBitMap(std::__2::vector<char, std::__2::allocator<char>>&, unsigned int)
+3469	117	3	-	ASN1	skeleton	2689	shape	2	ASN1::BERDecoderPartial::BERDecoderPartial(std::__2::shared_ptr<ASN1::ISeeder>, ASN1::CoderEnv*)
 3470	12	2	app	api	skeleton	3825	addr	2	api::IObservable<std::__2::vector<api::FormHandle<api::IScreenMT>, std::__2::allocator<api::FormHandle<api::IScreenMT>>>>::~IObservable()
 3471	747	3	asn1	ASN1	-	-	none	-	
-3472	360	3	asn1	ASN1	skeleton	2683	shape	4	ASN1::OBJECT_IDENTIFIER::encodeCommon(std::__2::vector<char, std::__2::allocator<char>>&) const
-3473	441	3	asn1	ASN1	skeleton	2684	shape	5	ASN1::OBJECT_IDENTIFIER::decodeCommon(char const*, unsigned int)
-3474	21	0	asn1	ASN1	skeleton	3566	byte	0	ASN1::AVNDecoder::visitKnownExtension(ASN1::SEQUENCE&, int, int)
-3475	291	3	asn1	ASN1	skeleton	3567	shape	3	std::__2::vector<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>>::push_back[abi:ne210108](ASN1::AbstractData* const&)
+3472	360	3	asn1	ASN1	skeleton	2695	shape	4	ASN1::OBJECT_IDENTIFIER::encodeCommon(std::__2::vector<char, std::__2::allocator<char>>&) const
+3473	441	3	asn1	ASN1	skeleton	2696	shape	5	ASN1::OBJECT_IDENTIFIER::decodeCommon(char const*, unsigned int)
+3474	21	0	asn1	ASN1	skeleton	3559	byte	0	ASN1::AVNDecoder::visitKnownExtension(ASN1::SEQUENCE&, int, int)
+3475	291	3	asn1	ASN1	skeleton	3560	shape	3	std::__2::vector<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>>::push_back[abi:ne210108](ASN1::AbstractData* const&)
 3476	443	3	asn1	-	-	-	none	-	
-3477	98	3	asn1	ASN1	skeleton	3558	shape	2	ASN1::operator<<(std::__2::basic_ostream<char, std::__2::char_traits<char>>&, ASN1::InvalidTracer const&)
-3478	120	3	asn1	ASN1	skeleton	2686	byte	0	ASN1::BMPString::first_illegal_at() const
-3479	110	3	asn1	-	skeleton	3565	addr	4	std::__2::basic_ostream<char, std::__2::char_traits<char>>& std::__2::operator<<[abi:ne210108]<std::__2::char_traits<char>>(std::__2::basic_ostream<char, std::__2::char_traits<char>>&, std::__2::__iom_t4<char> const&)
-3480	192	3	asn1	ASN1	skeleton	3559	byte	0	ASN1::AbstractString::find_first_invalid() const
+3477	98	3	asn1	ASN1	skeleton	3552	shape	2	ASN1::operator<<(std::__2::basic_ostream<char, std::__2::char_traits<char>>&, ASN1::InvalidTracer const&)
+3478	120	3	asn1	ASN1	skeleton	2681	byte	0	ASN1::BMPString::first_illegal_at() const
+3479	110	3	asn1	-	skeleton	3564	addr	4	std::__2::basic_ostream<char, std::__2::char_traits<char>>& std::__2::operator<<[abi:ne210108]<std::__2::char_traits<char>>(std::__2::basic_ostream<char, std::__2::char_traits<char>>&, std::__2::__iom_t4<char> const&)
+3480	192	3	asn1	ASN1	skeleton	3553	byte	0	ASN1::AbstractString::find_first_invalid() const
 3481	49	2	app	ASN1	-	-	none	-	
 3482	365	2	app	-	skeleton	3602	byte	0	ecourna::app::dados::CResultadoUrnaCadastro::CResultadoUrnaCadastro(ecourna::app::dados::CCabecalhoEntidade, ecourna::app::dados::CFaseID, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CResultadoUrnaCadastro::ESituacaoArquivo, std::__2::optional<ecourna::app::dados::CDadosComparecimentoCifrado>)
 3483	445	2	app	-	skeleton	3603	byte	0	ecourna::app::dados::CResultadoUrnaCadastro::CResultadoUrnaCadastro(ecourna::app::dados::CCabecalhoEntidade, ecourna::app::dados::CFaseID, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CResultadoUrnaCadastro::ESituacaoArquivo, std::__2::optional<ecourna::app::dados::CDadosComparecimento>)
@@ -4897,59 +4897,59 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5031	59	2	7zip	7zip	-	-	none	-	
 5032	42	2	7zip	7zip	-	-	none	-	
 5033	255	2	7zip	7zip	-	-	none	-	
-5034	106	0	asn1	ASN1	skeleton	5270	addr	2	ASN1::DataFree::do_visit(ASN1::OpenData&)
-5035	82	0	asn1	ASN1	skeleton	5267	addr	2	ASN1::DataLengthCounter::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+5034	106	0	asn1	ASN1	skeleton	5250	addr	2	ASN1::DataFree::do_visit(ASN1::OpenData&)
+5035	82	0	asn1	ASN1	skeleton	5247	addr	2	ASN1::DataLengthCounter::visitExtensionRoot(ASN1::SEQUENCE const&, int)
 5036	22	0	app	simulador	skeleton	5574	byte	0	simulador::CWasmScreenMT::Led1()
-5037	23	0	asn1	ASN1	skeleton	5268	fingerprint	0	ASN1::DataLengthCounter::do_visit(ASN1::INTEGER const&)
+5037	23	0	asn1	ASN1	skeleton	5248	fingerprint	0	ASN1::DataLengthCounter::do_visit(ASN1::INTEGER const&)
 5038	22	0	app	simulador	skeleton	5575	byte	0	simulador::CWasmScreenMT::Led0()
 5039	15	0	app	simulador	skeleton	5576	byte	0	simulador::CWasmScreenMT::Beep(int)
-5040	117	2	asn1	ASN1	skeleton	3557	addr	3	ASN1::PEREncoder::encodeConstraint(ASN1::ConstrainedObject const&, unsigned int)
-5041	22	0	asn1	ASN1	skeleton	5272	byte	0	ASN1::PrimitiveChecker::do_visit(ASN1::CHOICE const&)
-5042	88	0	asn1	ASN1	skeleton	5273	addr	1	ASN1::BEREncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
-5043	93	0	asn1	ASN1	skeleton	5274	addr	2	ASN1::BEREncoder::do_visit(ASN1::INTEGER const&)
-5044	136	2	asn1	ASN1	skeleton	3561	addr	3	ASN1::BEREncoder::encodeLength(unsigned int)
-5045	184	2	asn1	ASN1	skeleton	3562	addr	4	ASN1::BEREncoder::encodeTag(unsigned int)
-5046	11	0	asn1	ASN1	skeleton	5275	addr	1	ASN1::BEREncoder::do_visit(ASN1::Null const&)
+5040	117	2	asn1	ASN1	skeleton	3551	addr	3	ASN1::PEREncoder::encodeConstraint(ASN1::ConstrainedObject const&, unsigned int)
+5041	22	0	asn1	ASN1	skeleton	5252	byte	0	ASN1::PrimitiveChecker::do_visit(ASN1::CHOICE const&)
+5042	88	0	asn1	ASN1	skeleton	5253	addr	1	ASN1::BEREncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+5043	93	0	asn1	ASN1	skeleton	5254	addr	2	ASN1::BEREncoder::do_visit(ASN1::INTEGER const&)
+5044	136	2	asn1	ASN1	skeleton	3555	addr	3	ASN1::BEREncoder::encodeLength(unsigned int)
+5045	184	2	asn1	ASN1	skeleton	3556	addr	4	ASN1::BEREncoder::encodeTag(unsigned int)
+5046	11	0	asn1	ASN1	skeleton	5255	addr	1	ASN1::BEREncoder::do_visit(ASN1::Null const&)
 5047	32	0	libcxx	libc++	skeleton	5956	addr	1	std::__2::__shared_ptr_emplace<std::__2::vector<unsigned char, std::__2::allocator<unsigned char>>, std::__2::allocator<std::__2::vector<unsigned char, std::__2::allocator<unsigned char>>>>::__on_zero_shared()
 5048	21	2	asn1	libc++	skeleton	9355	addr	2	std::length_error::length_error[abi:ne210108](char const*)
-5049	81	2	asn1	ASN1	skeleton	5279	addr	2	std::__2::__split_buffer<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>&>::~__split_buffer()
+5049	81	2	asn1	ASN1	skeleton	5259	addr	2	std::__2::__split_buffer<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>&>::~__split_buffer()
 5050	98	2	asn1	ASN1	-	-	none	-	
-5051	95	2	asn1	ASN1	skeleton	5281	addr	1	std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>::pair[abi:ne210108]<std::__2::__check_pair_construction<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, 0>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)
+5051	95	2	asn1	ASN1	skeleton	5261	addr	1	std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>::pair[abi:ne210108]<std::__2::__check_pair_construction<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, 0>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)
 5052	10	0	app	api	skeleton	5846	addr	2	api::CFormStack<api::IScreenMT>::CObservable::~CObservable()
-5053	104	2	asn1	ASN1	skeleton	3564	addr	2	ASN1::BERDecoder::BER_Element::~BER_Element()
-5054	93	2	asn1	ASN1	skeleton	5287	shape	2	std::__2::vector<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>::push_back[abi:ne210108](std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+5053	104	2	asn1	ASN1	skeleton	3558	addr	2	ASN1::BERDecoder::BER_Element::~BER_Element()
+5054	93	2	asn1	ASN1	skeleton	5266	shape	2	std::__2::vector<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>>::push_back[abi:ne210108](std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 5055	882	2	asn1	ASN1	-	-	none	-	
 5056	22	2	asn1	api	skeleton	5847	addr	4	api::CFormStack<api::IScreenMT>::GetHandles()
-5057	13	0	asn1	ASN1	skeleton	5278	byte	0	ASN1::BufferSeeder::tell() const
-5058	95	2	asn1	-	skeleton	5276	addr	1	std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>::pair[abi:ne210108](std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const&)
-5059	156	2	asn1	-	skeleton	5277	fingerprint	0	std::__2::pair<std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*> std::__2::__copy_move_unwrap_iters[abi:ne210108]<std::__2::__copy_impl, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*, 0>(std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*)
-5060	201	2	app	-	skeleton	5271	shape	4	ASN1::CoderEnv::decode(std::__2::shared_ptr<ASN1::ISeeder> const&, ASN1::AbstractData&)
-5061	19	0	asn1	ASN1	skeleton	5285	byte	0	ASN1::AVNEncoder::visitKnownExtension(ASN1::SEQUENCE const&, int)
-5062	4	0	asn1	ASN1	skeleton	5269	byte	0	ASN1::Visitor::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
-5063	4	0	asn1	ASN1	skeleton	5286	byte	0	ASN1::Visitor::preVisitExtensions(ASN1::SEQUENCE&)
-5064	65	2	asn1	ASN1	skeleton	5259	byte	0	ASN1::getIntegerDataLength(int)
-5065	45	2	asn1	ASN1	skeleton	3550	byte	0	ASN1::SEQUENCE::BitMap::operator[](unsigned int) const
-5066	123	2	-	-	skeleton	5241	shape	2	ASN1::SEQUENCE::FieldVector::FieldVector(ASN1::SEQUENCE::FieldVector const&)
-5067	90	2	app	asn1-modules	skeleton	5242	addr	1	ASN1::SEQUENCE::FieldVector::~FieldVector()
-5068	16	0	asn1	ASN1	skeleton	5260	addr	1	ASN1::StrictlyValidChecker::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+5057	13	0	asn1	ASN1	skeleton	5258	byte	0	ASN1::BufferSeeder::tell() const
+5058	95	2	asn1	-	skeleton	5256	addr	1	std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>::pair[abi:ne210108](std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const&)
+5059	156	2	asn1	-	skeleton	5257	fingerprint	0	std::__2::pair<std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*> std::__2::__copy_move_unwrap_iters[abi:ne210108]<std::__2::__copy_impl, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*, 0>(std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::__wrap_iter<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>> const*>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>*)
+5060	201	2	app	-	skeleton	5251	shape	4	ASN1::CoderEnv::decode(std::__2::shared_ptr<ASN1::ISeeder> const&, ASN1::AbstractData&)
+5061	19	0	asn1	ASN1	skeleton	5264	byte	0	ASN1::AVNEncoder::visitKnownExtension(ASN1::SEQUENCE const&, int)
+5062	4	0	asn1	ASN1	skeleton	5249	byte	0	ASN1::Visitor::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
+5063	4	0	asn1	ASN1	skeleton	5265	byte	0	ASN1::Visitor::preVisitExtensions(ASN1::SEQUENCE&)
+5064	65	2	asn1	ASN1	skeleton	5288	byte	0	ASN1::getIntegerDataLength(int)
+5065	45	2	asn1	ASN1	skeleton	3561	byte	0	ASN1::SEQUENCE::BitMap::operator[](unsigned int) const
+5066	123	2	-	-	skeleton	5270	shape	2	ASN1::SEQUENCE::FieldVector::FieldVector(ASN1::SEQUENCE::FieldVector const&)
+5067	90	2	app	asn1-modules	skeleton	5271	addr	1	ASN1::SEQUENCE::FieldVector::~FieldVector()
+5068	16	0	asn1	ASN1	skeleton	5241	addr	1	ASN1::StrictlyValidChecker::visitExtensionRoot(ASN1::SEQUENCE const&, int)
 5069	148	2	app	-	skeleton	5580	shape	9	api::CFormStack<api::IScreen>::Limpa()
-5070	16	0	asn1	ASN1	skeleton	5261	addr	1	ASN1::ValidChecker::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+5070	16	0	asn1	ASN1	skeleton	5242	addr	1	ASN1::ValidChecker::visitExtensionRoot(ASN1::SEQUENCE const&, int)
 5071	17	0	app	api	skeleton	5581	shape	2	simulador::CWasmScreen::~CWasmScreen()
-5072	7	0	asn1	ASN1	skeleton	5262	byte	0	ASN1::ValidChecker::do_visit(ASN1::GeneralizedTime const&)
-5073	7	0	asn1	ASN1	skeleton	5263	addr	1	ASN1::ValidChecker::do_visit(ASN1::UTCTime const&)
-5074	13	0	asn1	ASN1	skeleton	5264	byte	0	ASN1::ValidChecker::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-5075	12	1	app	ASN1	skeleton	5265	addr	1	ASN1::AbstractData::getTypeName() const
-5076	200	2	asn1	ASN1	skeleton	3556	addr	3	ASN1::UTCTime::isStrictlyValid() const
-5077	143	2	asn1	ASN1	skeleton	5284	fingerprint	0	ASN1::CHOICE::setID(unsigned int, unsigned int)
-5078	41	2	asn1	ASN1	skeleton	3552	byte	0	ASN1::CHOICE::isSelectionExplicit() const
-5079	46	2	asn1	ASN1	skeleton	5244	byte	0	ASN1::CHOICE::getSelectionTagInternal() const
-5080	38	2	asn1	ASN1	skeleton	3551	byte	0	ASN1::CHOICE::getSelectionInfoTag() const
-5081	17	0	asn1	ASN1	skeleton	5257	byte	0	ASN1::BOOLEAN::do_accept(ASN1::ConstVisitor&) const
-5082	40	1	app	ASN1	skeleton	5256	addr	1	ASN1::INTEGER::INTEGER(ASN1::INTEGER const&)
-5083	17	0	asn1	ASN1	skeleton	5250	byte	0	ASN1::OCTET_STRING::do_accept(ASN1::ConstVisitor&) const
+5072	7	0	asn1	ASN1	skeleton	5243	byte	0	ASN1::ValidChecker::do_visit(ASN1::GeneralizedTime const&)
+5073	7	0	asn1	ASN1	skeleton	5244	addr	1	ASN1::ValidChecker::do_visit(ASN1::UTCTime const&)
+5074	13	0	asn1	ASN1	skeleton	5245	byte	0	ASN1::ValidChecker::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+5075	12	1	app	ASN1	skeleton	5246	addr	1	ASN1::AbstractData::getTypeName() const
+5076	200	2	asn1	ASN1	skeleton	3550	addr	3	ASN1::UTCTime::isStrictlyValid() const
+5077	143	2	asn1	ASN1	skeleton	5263	fingerprint	0	ASN1::CHOICE::setID(unsigned int, unsigned int)
+5078	41	2	asn1	ASN1	skeleton	3563	byte	0	ASN1::CHOICE::isSelectionExplicit() const
+5079	46	2	asn1	ASN1	skeleton	5273	byte	0	ASN1::CHOICE::getSelectionTagInternal() const
+5080	38	2	asn1	ASN1	skeleton	3562	byte	0	ASN1::CHOICE::getSelectionInfoTag() const
+5081	17	0	asn1	ASN1	skeleton	5286	byte	0	ASN1::BOOLEAN::do_accept(ASN1::ConstVisitor&) const
+5082	40	1	app	ASN1	skeleton	5285	addr	1	ASN1::INTEGER::INTEGER(ASN1::INTEGER const&)
+5083	17	0	asn1	ASN1	skeleton	5279	byte	0	ASN1::OCTET_STRING::do_accept(ASN1::ConstVisitor&) const
 5084	156	2	app	ASN1	-	-	none	-	
-5085	17	0	asn1	ASN1	skeleton	5246	byte	0	ASN1::UTCTime::do_accept(ASN1::Visitor&)
-5086	17	0	asn1	ASN1	skeleton	5243	byte	0	ASN1::CHOICE::do_accept(ASN1::ConstVisitor&) const
+5085	17	0	asn1	ASN1	skeleton	5275	byte	0	ASN1::UTCTime::do_accept(ASN1::Visitor&)
+5086	17	0	asn1	ASN1	skeleton	5272	byte	0	ASN1::CHOICE::do_accept(ASN1::ConstVisitor&) const
 5087	46	2	app	-	skeleton	5358	byte	0	ecourna::app::dados::CHabilitacaoBiometrica::CHabilitacaoBiometrica(unsigned int, CBaseType<unsigned short, (unsigned short)0, (unsigned short)999, 38>, ecourna::app::dados::CDedo::ETipoDedo, CBaseType<ecourna::app::dados::EErroLeituraBiometria, (ecourna::app::dados::EErroLeituraBiometria)0, (ecourna::app::dados::EErroLeituraBiometria)13, 34>)
 5088	389	1	app	ecourna	skeleton	5359	shape	19	ecourna::app::dados::CEstadoHabilitacaoPorCodigo::CEstadoHabilitacaoPorCodigo(ecourna::app::dados::CEstadoHabilitacaoPorCodigo::ESituacaoReconhecimentoMesario, ecourna::app::dados::CRegistroIdentificacaoEleitor const&)
 5089	124	2	app	ecourna	skeleton	5360	fingerprint	0	std::__2::__optional_destruct_base<ecourna::app::dados::CRegistroIdentificacaoEleitor, false>::~__optional_destruct_base[abi:ne210108]()
@@ -6003,9 +6003,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 6137	725	2	7zip	7zip	skeleton	6232	addr	16	
 6138	45	2	-	7zip	skeleton	6236	byte	0	
 6139	66	2	-	7zip	skeleton	6234	byte	0	
-6140	59	2	asn1	ASN1	skeleton	6243	byte	0	
-6141	45	2	asn1	ASN1	skeleton	6244	byte	0	
-6142	97	2	asn1	ASN1	skeleton	6241	addr	2	
+6140	59	2	asn1	ASN1	skeleton	6241	byte	0	
+6141	45	2	asn1	ASN1	skeleton	6242	byte	0	
+6142	97	2	asn1	ASN1	skeleton	6244	addr	2	
 6143	44	2	-	ASN1	-	-	none	-	
 6144	258	2	app	ecourna	skeleton	6072	shape	16	
 6145	192	2	app	ecourna	skeleton	6068	addr	1	
@@ -8610,271 +8610,271 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8744	130	0	app	simulador	skeleton	11269	shape	8	simulador::CWasmScreenMT::~CWasmScreenMT()_8008
 8745	127	0	app	simulador	skeleton	11270	shape	7	simulador::CWasmScreenMT::~CWasmScreenMT()
 8746	1371	0	app	simulador	-	-	none	-	
-8747	65	0	asn1	ASN1	skeleton	9866	fingerprint	0	ASN1::DataFree::do_visit(ASN1::SEQUENCE_OF_Base&)
+8747	65	0	asn1	ASN1	skeleton	9814	fingerprint	0	ASN1::DataFree::do_visit(ASN1::SEQUENCE_OF_Base&)
 8748	12	0	asn1	simulador	skeleton	8427	addr	2	RHVoice::mark_event::~mark_event()
-8749	151	0	asn1	ASN1	skeleton	9864	addr	5	ASN1::DataFree::do_visit(ASN1::GeneralizedTime&)
-8750	134	0	asn1	ASN1	skeleton	9865	shape	5	ASN1::DataFree::do_visit(ASN1::UTCTime&)
-8751	36	0	asn1	ASN1	skeleton	9867	byte	0	ASN1::DataFree::do_visit(ASN1::CHOICE&)
-8752	51	0	asn1	ASN1	skeleton	9868	byte	0	ASN1::DataFree::do_visit(ASN1::BMPString&)
-8753	51	0	asn1	ASN1	skeleton	9869	byte	0	ASN1::DataFree::do_visit(ASN1::AbstractString&)
-8754	14	0	asn1	ASN1	skeleton	9871	byte	0	ASN1::DataFree::do_visit(ASN1::OCTET_STRING&)
-8755	34	0	asn1	ASN1	skeleton	9872	byte	0	ASN1::DataFree::do_visit(ASN1::BIT_STRING&)
-8756	17	0	asn1	ASN1	skeleton	9873	byte	0	ASN1::DataFree::do_visit(ASN1::INTEGER&)
+8749	151	0	asn1	ASN1	skeleton	9811	addr	5	ASN1::DataFree::do_visit(ASN1::GeneralizedTime&)
+8750	134	0	asn1	ASN1	skeleton	9812	shape	5	ASN1::DataFree::do_visit(ASN1::UTCTime&)
+8751	36	0	asn1	ASN1	skeleton	9815	byte	0	ASN1::DataFree::do_visit(ASN1::CHOICE&)
+8752	51	0	asn1	ASN1	skeleton	9816	byte	0	ASN1::DataFree::do_visit(ASN1::BMPString&)
+8753	51	0	asn1	ASN1	skeleton	9817	byte	0	ASN1::DataFree::do_visit(ASN1::AbstractString&)
+8754	14	0	asn1	ASN1	skeleton	9818	byte	0	ASN1::DataFree::do_visit(ASN1::OCTET_STRING&)
+8755	34	0	asn1	ASN1	skeleton	9819	byte	0	ASN1::DataFree::do_visit(ASN1::BIT_STRING&)
+8756	17	0	asn1	ASN1	skeleton	9820	byte	0	ASN1::DataFree::do_visit(ASN1::INTEGER&)
 8757	250	0	app	simulador	skeleton	11276	shape	9	simulador::CWasmScreenMT::ShowClock(api::SPoint const&)
 8758	2186	0	app	ecourna	skeleton	11328	shape	156	void api::CPolySingletonList::set<api::IGenericFactory<api::ISemaphore>>(std::__2::unique_ptr<api::IGenericFactory<api::ISemaphore>, std::__2::default_delete<api::IGenericFactory<api::ISemaphore>>>&&, api::TPolySingletonsInfo&)
-8759	60	0	asn1	ASN1	skeleton	9851	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8760	82	0	asn1	ASN1	skeleton	9852	addr	2	ASN1::DataLengthCounter::do_visit(ASN1::GeneralizedTime const&)
-8761	82	0	asn1	ASN1	skeleton	9854	shape	2	ASN1::DataLengthCounter::do_visit(ASN1::UTCTime const&)
-8762	77	0	asn1	ASN1	skeleton	9855	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::OpenData const&)
-8763	39	0	asn1	ASN1	skeleton	9856	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::CHOICE const&)
-8764	36	0	asn1	ASN1	skeleton	9857	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BMPString const&)
-8765	33	0	asn1	ASN1	skeleton	9858	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::AbstractString const&)
-8766	26	0	asn1	ASN1	skeleton	9859	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::OCTET_STRING const&)
-8767	29	0	asn1	ASN1	skeleton	9860	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BIT_STRING const&)
-8768	93	0	asn1	ASN1	skeleton	9861	shape	2	ASN1::DataLengthCounter::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-8769	17	0	asn1	ASN1	skeleton	9863	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BOOLEAN const&)
-8770	21	0	asn1	ASN1	skeleton	9796	shape	1	ASN1::PEREncoder::visitKnownExtension(ASN1::SEQUENCE const&, int)
-8771	32	0	asn1	ASN1	skeleton	9797	addr	1	ASN1::PEREncoder::preVisitExtensions(ASN1::SEQUENCE const&)
-8772	31	0	asn1	ASN1	skeleton	9798	byte	0	ASN1::PEREncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
-8773	89	0	asn1	ASN1	skeleton	9799	addr	1	ASN1::PEREncoder::preVisitExtensionRoots(ASN1::SEQUENCE const&)
-8774	133	0	asn1	ASN1	skeleton	9800	shape	3	ASN1::PEREncoder::do_visit(ASN1::UTCTime const&)
-8775	133	0	asn1	ASN1	skeleton	9801	addr	3	ASN1::PEREncoder::do_visit(ASN1::GeneralizedTime const&)
-8776	12	0	asn1	ASN1	skeleton	9803	shape	1	ASN1::PEREncoder::do_visit(ASN1::OpenData const&)
-8777	95	0	asn1	ASN1	skeleton	9804	addr	1	ASN1::PEREncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8778	152	0	asn1	ASN1	skeleton	9805	shape	4	ASN1::PEREncoder::do_visit(ASN1::CHOICE const&)
-8779	184	0	asn1	ASN1	skeleton	9806	addr	1	ASN1::PEREncoder::do_visit(ASN1::BMPString const&)
-8780	296	0	asn1	ASN1	skeleton	9807	addr	1	ASN1::PEREncoder::do_visit(ASN1::AbstractString const&)
-8781	141	0	asn1	ASN1	skeleton	9808	addr	1	ASN1::PEREncoder::do_visit(ASN1::OCTET_STRING const&)
-8782	94	0	asn1	ASN1	skeleton	9809	addr	1	ASN1::PEREncoder::do_visit(ASN1::BIT_STRING const&)
-8783	134	0	asn1	ASN1	skeleton	9811	shape	3	ASN1::PEREncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-8784	99	0	asn1	ASN1	skeleton	9812	addr	4	ASN1::PEREncoder::do_visit(ASN1::ENUMERATED const&)
-8785	191	0	asn1	ASN1	skeleton	9813	addr	3	ASN1::PEREncoder::do_visit(ASN1::INTEGER const&)
-8786	14	0	asn1	ASN1	skeleton	9814	addr	1	ASN1::PEREncoder::do_visit(ASN1::BOOLEAN const&)
+8759	60	0	asn1	ASN1	skeleton	9800	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8760	82	0	asn1	ASN1	skeleton	9801	addr	2	ASN1::DataLengthCounter::do_visit(ASN1::GeneralizedTime const&)
+8761	82	0	asn1	ASN1	skeleton	9802	shape	2	ASN1::DataLengthCounter::do_visit(ASN1::UTCTime const&)
+8762	77	0	asn1	ASN1	skeleton	9803	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::OpenData const&)
+8763	39	0	asn1	ASN1	skeleton	9804	addr	1	ASN1::DataLengthCounter::do_visit(ASN1::CHOICE const&)
+8764	36	0	asn1	ASN1	skeleton	9805	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BMPString const&)
+8765	33	0	asn1	ASN1	skeleton	9806	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::AbstractString const&)
+8766	26	0	asn1	ASN1	skeleton	9807	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::OCTET_STRING const&)
+8767	29	0	asn1	ASN1	skeleton	9808	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BIT_STRING const&)
+8768	93	0	asn1	ASN1	skeleton	9809	shape	2	ASN1::DataLengthCounter::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+8769	17	0	asn1	ASN1	skeleton	9810	byte	0	ASN1::DataLengthCounter::do_visit(ASN1::BOOLEAN const&)
+8770	21	0	asn1	ASN1	skeleton	9744	shape	1	ASN1::PEREncoder::visitKnownExtension(ASN1::SEQUENCE const&, int)
+8771	32	0	asn1	ASN1	skeleton	9745	addr	1	ASN1::PEREncoder::preVisitExtensions(ASN1::SEQUENCE const&)
+8772	31	0	asn1	ASN1	skeleton	9747	byte	0	ASN1::PEREncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+8773	89	0	asn1	ASN1	skeleton	9748	addr	1	ASN1::PEREncoder::preVisitExtensionRoots(ASN1::SEQUENCE const&)
+8774	133	0	asn1	ASN1	skeleton	9749	shape	3	ASN1::PEREncoder::do_visit(ASN1::UTCTime const&)
+8775	133	0	asn1	ASN1	skeleton	9750	addr	3	ASN1::PEREncoder::do_visit(ASN1::GeneralizedTime const&)
+8776	12	0	asn1	ASN1	skeleton	9751	shape	1	ASN1::PEREncoder::do_visit(ASN1::OpenData const&)
+8777	95	0	asn1	ASN1	skeleton	9752	addr	1	ASN1::PEREncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8778	152	0	asn1	ASN1	skeleton	9753	shape	4	ASN1::PEREncoder::do_visit(ASN1::CHOICE const&)
+8779	184	0	asn1	ASN1	skeleton	9754	addr	1	ASN1::PEREncoder::do_visit(ASN1::BMPString const&)
+8780	296	0	asn1	ASN1	skeleton	9755	addr	1	ASN1::PEREncoder::do_visit(ASN1::AbstractString const&)
+8781	141	0	asn1	ASN1	skeleton	9757	addr	1	ASN1::PEREncoder::do_visit(ASN1::OCTET_STRING const&)
+8782	94	0	asn1	ASN1	skeleton	9758	addr	1	ASN1::PEREncoder::do_visit(ASN1::BIT_STRING const&)
+8783	134	0	asn1	ASN1	skeleton	9759	shape	3	ASN1::PEREncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+8784	99	0	asn1	ASN1	skeleton	9760	addr	4	ASN1::PEREncoder::do_visit(ASN1::ENUMERATED const&)
+8785	191	0	asn1	ASN1	skeleton	9762	addr	3	ASN1::PEREncoder::do_visit(ASN1::INTEGER const&)
+8786	14	0	asn1	ASN1	skeleton	9763	addr	1	ASN1::PEREncoder::do_visit(ASN1::BOOLEAN const&)
 8787	15	0	app	simulador	skeleton	11277	byte	0	simulador::CWasmScreenMT::Buzz(int, int)
-8788	129	0	asn1	ASN1	skeleton	9875	addr	4	ASN1::BEREncoder::do_visit(ASN1::GeneralizedTime const&)
-8789	129	0	asn1	ASN1	skeleton	9879	shape	4	ASN1::BEREncoder::do_visit(ASN1::UTCTime const&)
-8790	134	0	asn1	ASN1	skeleton	9880	addr	2	ASN1::BEREncoder::do_visit(ASN1::OpenData const&)
-8791	75	0	asn1	ASN1	skeleton	9881	addr	1	ASN1::BEREncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8792	78	0	asn1	ASN1	skeleton	9882	addr	1	ASN1::BEREncoder::do_visit(ASN1::CHOICE const&)
-8793	188	0	asn1	ASN1	skeleton	9883	addr	3	ASN1::BEREncoder::do_visit(ASN1::BMPString const&)
-8794	75	0	asn1	ASN1	skeleton	9884	addr	2	ASN1::BEREncoder::do_visit(ASN1::AbstractString const&)
-8795	55	0	asn1	ASN1	skeleton	9885	addr	2	ASN1::BEREncoder::do_visit(ASN1::OCTET_STRING const&)
-8796	142	0	asn1	ASN1	skeleton	9886	addr	4	ASN1::BEREncoder::do_visit(ASN1::BIT_STRING const&)
-8797	125	0	asn1	ASN1	skeleton	9887	shape	4	ASN1::BEREncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-8798	55	0	asn1	ASN1	skeleton	9889	addr	2	ASN1::BEREncoder::do_visit(ASN1::BOOLEAN const&)
+8788	129	0	asn1	ASN1	skeleton	9823	addr	4	ASN1::BEREncoder::do_visit(ASN1::GeneralizedTime const&)
+8789	129	0	asn1	ASN1	skeleton	9824	shape	4	ASN1::BEREncoder::do_visit(ASN1::UTCTime const&)
+8790	134	0	asn1	ASN1	skeleton	9825	addr	2	ASN1::BEREncoder::do_visit(ASN1::OpenData const&)
+8791	75	0	asn1	ASN1	skeleton	9826	addr	1	ASN1::BEREncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8792	78	0	asn1	ASN1	skeleton	9827	addr	1	ASN1::BEREncoder::do_visit(ASN1::CHOICE const&)
+8793	188	0	asn1	ASN1	skeleton	9828	addr	3	ASN1::BEREncoder::do_visit(ASN1::BMPString const&)
+8794	75	0	asn1	ASN1	skeleton	9829	addr	2	ASN1::BEREncoder::do_visit(ASN1::AbstractString const&)
+8795	55	0	asn1	ASN1	skeleton	9831	addr	2	ASN1::BEREncoder::do_visit(ASN1::OCTET_STRING const&)
+8796	142	0	asn1	ASN1	skeleton	9832	addr	4	ASN1::BEREncoder::do_visit(ASN1::BIT_STRING const&)
+8797	125	0	asn1	ASN1	skeleton	9833	shape	4	ASN1::BEREncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+8798	55	0	asn1	ASN1	skeleton	9834	addr	2	ASN1::BEREncoder::do_visit(ASN1::BOOLEAN const&)
 8799	499	0	app	simulador	skeleton	11278	addr	4	simulador::CWasmScreenMT::ShowText(api::SPoint const&, api::IText const&)
-8800	159	0	asn1	ASN1	skeleton	9815	addr	1	ASN1::PERDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
-8801	225	0	asn1	ASN1	skeleton	9816	addr	1	ASN1::PERDecoder::visitKnownExtension(ASN1::SEQUENCE&, int, int)
-8802	139	0	asn1	ASN1	skeleton	9817	addr	2	ASN1::PERDecoder::preVisitExtensions(ASN1::SEQUENCE&)
-8803	141	0	asn1	ASN1	skeleton	9818	fingerprint	0	ASN1::PERDecoder::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
-8804	72	0	asn1	ASN1	skeleton	9819	addr	1	ASN1::PERDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
+8800	159	0	asn1	ASN1	skeleton	9764	addr	1	ASN1::PERDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
+8801	225	0	asn1	ASN1	skeleton	9765	addr	1	ASN1::PERDecoder::visitKnownExtension(ASN1::SEQUENCE&, int, int)
+8802	139	0	asn1	ASN1	skeleton	9766	addr	2	ASN1::PERDecoder::preVisitExtensions(ASN1::SEQUENCE&)
+8803	141	0	asn1	ASN1	skeleton	9767	fingerprint	0	ASN1::PERDecoder::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
+8804	72	0	asn1	ASN1	skeleton	9768	addr	1	ASN1::PERDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
 8805	122	0	asn1	ASN1	-	-	none	-	
 8806	122	0	asn1	ASN1	-	-	none	-	
-8807	111	0	asn1	ASN1	skeleton	9822	addr	1	ASN1::PERDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
-8808	19	0	asn1	ASN1	skeleton	9823	byte	0	ASN1::PERDecoder::do_revisit(ASN1::OpenData&)
+8807	111	0	asn1	ASN1	skeleton	9771	addr	1	ASN1::PERDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
+8808	19	0	asn1	ASN1	skeleton	9772	byte	0	ASN1::PERDecoder::do_revisit(ASN1::OpenData&)
 8809	222	0	asn1	ASN1	-	-	none	-	
 8810	67	0	app	simulador	skeleton	11279	fingerprint	0	simulador::CWasmScreenMT::Clear()
-8811	722	0	asn1	ASN1	-	-	none	-	
-8812	393	0	asn1	ASN1	skeleton	9826	addr	4	ASN1::PERDecoder::do_visit(ASN1::CHOICE&)
-8813	251	0	asn1	ASN1	skeleton	9827	addr	2	ASN1::PERDecoder::do_visit(ASN1::BMPString&)
-8814	383	0	asn1	ASN1	skeleton	9828	addr	2	ASN1::PERDecoder::do_visit(ASN1::AbstractString&)
-8815	258	0	asn1	ASN1	skeleton	9829	addr	3	ASN1::PERDecoder::do_visit(ASN1::OCTET_STRING&)
-8816	150	0	asn1	ASN1	skeleton	9830	addr	3	ASN1::PERDecoder::do_visit(ASN1::BIT_STRING&)
-8817	99	0	asn1	ASN1	skeleton	9831	addr	2	ASN1::PERDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
-8818	140	0	asn1	ASN1	skeleton	9833	addr	4	ASN1::PERDecoder::do_visit(ASN1::ENUMERATED&)
-8819	253	0	asn1	ASN1	skeleton	9834	addr	3	ASN1::PERDecoder::do_visit(ASN1::INTEGER&)
-8820	37	0	asn1	ASN1	skeleton	9835	addr	1	ASN1::PERDecoder::do_visit(ASN1::BOOLEAN&)
+8811	722	0	asn1	ASN1	skeleton	9774	shape	6	ASN1::PERDecoder::do_visit(ASN1::SEQUENCE_OF_Base&)
+8812	393	0	asn1	ASN1	skeleton	9775	addr	4	ASN1::PERDecoder::do_visit(ASN1::CHOICE&)
+8813	251	0	asn1	ASN1	skeleton	9776	addr	2	ASN1::PERDecoder::do_visit(ASN1::BMPString&)
+8814	383	0	asn1	ASN1	skeleton	9777	addr	2	ASN1::PERDecoder::do_visit(ASN1::AbstractString&)
+8815	258	0	asn1	ASN1	skeleton	9778	addr	3	ASN1::PERDecoder::do_visit(ASN1::OCTET_STRING&)
+8816	150	0	asn1	ASN1	skeleton	9779	addr	3	ASN1::PERDecoder::do_visit(ASN1::BIT_STRING&)
+8817	99	0	asn1	ASN1	skeleton	9780	addr	2	ASN1::PERDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
+8818	140	0	asn1	ASN1	skeleton	9781	addr	4	ASN1::PERDecoder::do_visit(ASN1::ENUMERATED&)
+8819	253	0	asn1	ASN1	skeleton	9782	addr	3	ASN1::PERDecoder::do_visit(ASN1::INTEGER&)
+8820	37	0	asn1	ASN1	skeleton	9784	addr	1	ASN1::PERDecoder::do_visit(ASN1::BOOLEAN&)
 8821	18	0	libcxx	libc++	skeleton	8098	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::unstressed_flag*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::unstressed_flag>, std::__2::allocator<RHVoice::userdict::unstressed_flag>>::__get_deleter(std::type_info const&) const
 8822	18	0	libcxx	libc++	skeleton	8102	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::stressed_syl_number*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::stressed_syl_number>, std::__2::allocator<RHVoice::userdict::stressed_syl_number>>::__get_deleter(std::type_info const&) const
 8823	17	0	-	libc++	skeleton	10430	addr	2	std::__2::__shared_ptr_emplace<comum::CCopiadorWSQMR, std::__2::allocator<comum::CCopiadorWSQMR>>::~__shared_ptr_emplace()_10403
-8824	32	0	asn1	ASN1	skeleton	9905	addr	1	ASN1::BERDecoderPartial::setVisitors(std::__2::vector<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>> const&)
-8825	62	0	asn1	ASN1	skeleton	9906	fingerprint	0	ASN1::BERDecoderPartial::visitUnknownExtensions(ASN1::SEQUENCE&)
-8826	762	0	asn1	ASN1	skeleton	9907	shape	10	ASN1::BERDecoderPartial::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
-8827	326	0	asn1	ASN1	skeleton	9908	shape	9	ASN1::BERDecoderPartial::preVisitExtensionRoots(ASN1::SEQUENCE&)
+8824	32	0	asn1	ASN1	skeleton	9850	addr	1	ASN1::BERDecoderPartial::setVisitors(std::__2::vector<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<ASN1::IAbstractVisitor>>>> const&)
+8825	62	0	asn1	ASN1	skeleton	9851	fingerprint	0	ASN1::BERDecoderPartial::visitUnknownExtensions(ASN1::SEQUENCE&)
+8826	762	0	asn1	ASN1	skeleton	9852	shape	10	ASN1::BERDecoderPartial::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
+8827	326	0	asn1	ASN1	skeleton	9853	shape	9	ASN1::BERDecoderPartial::preVisitExtensionRoots(ASN1::SEQUENCE&)
 8828	199	0	asn1	ASN1	-	-	none	-	
 8829	199	0	asn1	ASN1	-	-	none	-	
-8830	138	0	asn1	ASN1	skeleton	9911	shape	2	ASN1::BERDecoderPartial::do_visit(ASN1::TypeConstrainedOpenData&)
+8830	138	0	asn1	ASN1	skeleton	9856	shape	2	ASN1::BERDecoderPartial::do_visit(ASN1::TypeConstrainedOpenData&)
 8831	268	0	asn1	ASN1	-	-	none	-	
 8832	224	0	asn1	ASN1	-	-	none	-	
 8833	14	0	-	libc++	skeleton	10428	addr	1	std::__2::__shared_ptr_emplace<api::Logger, std::__2::allocator<api::Logger>>::~__shared_ptr_emplace()
 8834	2186	0	app	ecourna	skeleton	11417	shape	156	void api::CPolySingletonList::set<api::IGenericFactory<api::IRWSyncCtl>>(std::__2::unique_ptr<api::IGenericFactory<api::IRWSyncCtl>, std::__2::default_delete<api::IGenericFactory<api::IRWSyncCtl>>>&&, api::TPolySingletonsInfo&)
-8835	708	0	asn1	ASN1	skeleton	9914	shape	26	ASN1::BERDecoderPartial::do_visit(ASN1::SEQUENCE_OF_Base&)
-8836	554	0	asn1	ASN1	skeleton	9915	shape	9	ASN1::BERDecoderPartial::do_visit(ASN1::CHOICE&)
-8837	273	0	asn1	ASN1	skeleton	9916	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::BMPString&)
-8838	124	0	asn1	ASN1	skeleton	9917	shape	3	ASN1::BERDecoderPartial::do_visit(ASN1::AbstractString&)
-8839	111	0	asn1	ASN1	skeleton	9918	shape	4	ASN1::BERDecoderPartial::do_visit(ASN1::OCTET_STRING&)
-8840	183	0	asn1	ASN1	skeleton	9919	shape	4	ASN1::BERDecoderPartial::do_visit(ASN1::BIT_STRING&)
+8835	708	0	asn1	ASN1	skeleton	9860	shape	26	ASN1::BERDecoderPartial::do_visit(ASN1::SEQUENCE_OF_Base&)
+8836	554	0	asn1	ASN1	skeleton	9861	shape	9	ASN1::BERDecoderPartial::do_visit(ASN1::CHOICE&)
+8837	273	0	asn1	ASN1	skeleton	9862	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::BMPString&)
+8838	124	0	asn1	ASN1	skeleton	9863	shape	3	ASN1::BERDecoderPartial::do_visit(ASN1::AbstractString&)
+8839	111	0	asn1	ASN1	skeleton	9864	shape	4	ASN1::BERDecoderPartial::do_visit(ASN1::OCTET_STRING&)
+8840	183	0	asn1	ASN1	skeleton	9865	shape	4	ASN1::BERDecoderPartial::do_visit(ASN1::BIT_STRING&)
 8841	250	0	asn1	ASN1	-	-	none	-	
-8842	221	0	asn1	ASN1	skeleton	9921	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::ENUMERATED&)
-8843	252	0	asn1	ASN1	skeleton	9922	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::INTEGER&)
-8844	179	0	asn1	ASN1	skeleton	9923	shape	8	ASN1::BERDecoderPartial::do_visit(ASN1::BOOLEAN&)
-8845	62	0	asn1	ASN1	skeleton	9924	shape	1	ASN1::BERDecoderPartial::do_visit(ASN1::Null&)
+8842	221	0	asn1	ASN1	skeleton	9867	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::ENUMERATED&)
+8843	252	0	asn1	ASN1	skeleton	9868	shape	10	ASN1::BERDecoderPartial::do_visit(ASN1::INTEGER&)
+8844	179	0	asn1	ASN1	skeleton	9869	shape	8	ASN1::BERDecoderPartial::do_visit(ASN1::BOOLEAN&)
+8845	62	0	asn1	ASN1	skeleton	9870	shape	1	ASN1::BERDecoderPartial::do_visit(ASN1::Null&)
 8846	654	0	asn1	ASN1	-	-	none	-	
-8847	500	0	asn1	ASN1	skeleton	9904	shape	4	ASN1::BERDecoderPartial::addVisitor(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)
-8848	56	0	asn1	ASN1	skeleton	9902	addr	1	ASN1::BERDecoderPartial::clearVisitors()
-8849	10	0	asn1	ASN1	skeleton	9925	addr	2	ASN1::BERDecoderPartial::~BERDecoderPartial()_11454
+8847	500	0	asn1	ASN1	skeleton	9849	shape	4	ASN1::BERDecoderPartial::addVisitor(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)
+8848	56	0	asn1	ASN1	skeleton	9847	addr	1	ASN1::BERDecoderPartial::clearVisitors()
+8849	10	0	asn1	ASN1	skeleton	9871	addr	2	ASN1::BERDecoderPartial::~BERDecoderPartial()_11606
 8850	36	0	asn1	-	skeleton	8182	addr	4	__cxx_global_array_dtor_15372
-8851	36	0	asn1	-	skeleton	9927	addr	2	__cxx_global_array_dtor_11449
-8852	45	0	asn1	ASN1	skeleton	9929	byte	0	ASN1::BERDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
-8853	356	0	asn1	ASN1	skeleton	9930	addr	1	ASN1::BERDecoder::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
-8854	367	0	asn1	ASN1	skeleton	9931	shape	3	ASN1::BERDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
+8851	36	0	asn1	-	skeleton	9873	addr	2	__cxx_global_array_dtor_11601
+8852	45	0	asn1	ASN1	skeleton	9875	byte	0	ASN1::BERDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
+8853	356	0	asn1	ASN1	skeleton	9876	addr	1	ASN1::BERDecoder::visitExtensionRoot(ASN1::SEQUENCE&, int, int)
+8854	367	0	asn1	ASN1	skeleton	9877	shape	3	ASN1::BERDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
 8855	194	0	asn1	ASN1	-	-	none	-	
 8856	194	0	asn1	ASN1	-	-	none	-	
-8857	93	0	asn1	ASN1	skeleton	9934	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
+8857	93	0	asn1	ASN1	skeleton	9880	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
 8858	196	0	asn1	ASN1	-	-	none	-	
 8859	209	0	asn1	ASN1	-	-	none	-	
-8860	291	0	asn1	ASN1	skeleton	9937	addr	1	ASN1::BERDecoder::do_visit(ASN1::SEQUENCE_OF_Base&)
-8861	394	0	asn1	ASN1	skeleton	9938	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::CHOICE&)
-8862	188	0	asn1	ASN1	skeleton	9939	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::BMPString&)
-8863	144	0	asn1	ASN1	skeleton	9940	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::AbstractString&)
-8864	131	0	asn1	ASN1	skeleton	9941	addr	1	ASN1::BERDecoder::do_visit(ASN1::OCTET_STRING&)
-8865	192	0	asn1	ASN1	skeleton	9943	addr	1	ASN1::BERDecoder::do_visit(ASN1::BIT_STRING&)
-8866	81	0	asn1	ASN1	skeleton	9944	addr	1	ASN1::BERDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
-8867	126	0	asn1	ASN1	skeleton	9945	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::ENUMERATED&)
-8868	164	0	asn1	ASN1	skeleton	9946	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::INTEGER&)
-8869	129	0	asn1	ASN1	skeleton	9947	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::BOOLEAN&)
-8870	55	0	asn1	ASN1	skeleton	9948	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::Null&)
-8871	10	0	asn1	ASN1	skeleton	9949	addr	2	ASN1::BERDecoder::~BERDecoder()_11418
+8860	291	0	asn1	ASN1	skeleton	9883	addr	1	ASN1::BERDecoder::do_visit(ASN1::SEQUENCE_OF_Base&)
+8861	394	0	asn1	ASN1	skeleton	9885	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::CHOICE&)
+8862	188	0	asn1	ASN1	skeleton	9886	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::BMPString&)
+8863	144	0	asn1	ASN1	skeleton	9887	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::AbstractString&)
+8864	131	0	asn1	ASN1	skeleton	9888	addr	1	ASN1::BERDecoder::do_visit(ASN1::OCTET_STRING&)
+8865	192	0	asn1	ASN1	skeleton	9889	addr	1	ASN1::BERDecoder::do_visit(ASN1::BIT_STRING&)
+8866	81	0	asn1	ASN1	skeleton	9890	addr	1	ASN1::BERDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
+8867	126	0	asn1	ASN1	skeleton	9891	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::ENUMERATED&)
+8868	164	0	asn1	ASN1	skeleton	9892	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::INTEGER&)
+8869	129	0	asn1	ASN1	skeleton	9893	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::BOOLEAN&)
+8870	55	0	asn1	ASN1	skeleton	9895	fingerprint	0	ASN1::BERDecoder::do_visit(ASN1::Null&)
+8871	10	0	asn1	ASN1	skeleton	9896	addr	2	ASN1::BERDecoder::~BERDecoder()_11570
 8872	363	1	asn1	api	-	-	none	-	
-8873	53	0	asn1	ASN1	skeleton	9972	addr	3	ASN1::AVNDecoder::~AVNDecoder()_11376
-8874	85	0	asn1	ASN1	skeleton	9973	fingerprint	0	ASN1::AVNDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
+8873	53	0	asn1	ASN1	skeleton	9921	addr	3	ASN1::AVNDecoder::~AVNDecoder()_11536
+8874	85	0	asn1	ASN1	skeleton	9923	fingerprint	0	ASN1::AVNDecoder::visitUnknownExtensions(ASN1::SEQUENCE&)
 8875	309	0	asn1	ASN1	-	-	none	-	
-8876	222	0	asn1	ASN1	skeleton	9975	shape	5	ASN1::AVNDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
-8877	97	0	asn1	ASN1	skeleton	9976	addr	2	ASN1::AVNDecoder::do_visit(ASN1::GeneralizedTime&)
-8878	97	0	asn1	ASN1	skeleton	9977	shape	2	ASN1::AVNDecoder::do_visit(ASN1::UTCTime&)
+8876	222	0	asn1	ASN1	skeleton	9925	shape	5	ASN1::AVNDecoder::preVisitExtensionRoots(ASN1::SEQUENCE&)
+8877	97	0	asn1	ASN1	skeleton	9926	addr	2	ASN1::AVNDecoder::do_visit(ASN1::GeneralizedTime&)
+8878	97	0	asn1	ASN1	skeleton	9927	shape	2	ASN1::AVNDecoder::do_visit(ASN1::UTCTime&)
 8879	278	1	asn1	api	-	-	none	-	
-8880	22	0	asn1	ASN1	skeleton	9978	byte	0	ASN1::AVNDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
-8881	285	0	asn1	ASN1	skeleton	9979	shape	5	ASN1::AVNDecoder::do_visit(ASN1::SEQUENCE_OF_Base&)
+8880	22	0	asn1	ASN1	skeleton	9928	byte	0	ASN1::AVNDecoder::do_visit(ASN1::TypeConstrainedOpenData&)
+8881	285	0	asn1	ASN1	skeleton	9929	shape	5	ASN1::AVNDecoder::do_visit(ASN1::SEQUENCE_OF_Base&)
 8882	325	0	asn1	ASN1	-	-	none	-	
-8883	629	0	asn1	ASN1	skeleton	9981	shape	6	ASN1::AVNDecoder::do_visit(ASN1::BMPString&)
-8884	15	0	asn1	ASN1	skeleton	9982	fingerprint	0	ASN1::AVNDecoder::do_visit(ASN1::AbstractString&)
-8885	38	0	asn1	ASN1	skeleton	9983	shape	1	ASN1::AVNDecoder::do_visit(ASN1::OCTET_STRING&)
-8886	20	0	asn1	ASN1	skeleton	9984	shape	1	ASN1::AVNDecoder::do_visit(ASN1::BIT_STRING&)
-8887	905	0	asn1	ASN1	skeleton	9985	shape	29	ASN1::AVNDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
-8888	209	0	asn1	ASN1	skeleton	9986	shape	2	ASN1::AVNDecoder::do_visit(ASN1::ENUMERATED&)
-8889	302	0	asn1	ASN1	skeleton	9987	shape	4	ASN1::AVNDecoder::do_visit(ASN1::IntegerWithNamedNumber&)
-8890	124	0	asn1	ASN1	skeleton	9988	shape	2	ASN1::AVNDecoder::do_visit(ASN1::INTEGER&)
-8891	293	0	asn1	ASN1	skeleton	9989	shape	4	ASN1::AVNDecoder::do_visit(ASN1::BOOLEAN&)
-8892	221	0	asn1	ASN1	skeleton	9990	shape	4	ASN1::AVNDecoder::do_visit(ASN1::Null&)
+8883	629	0	asn1	ASN1	skeleton	9932	shape	6	ASN1::AVNDecoder::do_visit(ASN1::BMPString&)
+8884	15	0	asn1	ASN1	skeleton	9933	fingerprint	0	ASN1::AVNDecoder::do_visit(ASN1::AbstractString&)
+8885	38	0	asn1	ASN1	skeleton	9934	shape	1	ASN1::AVNDecoder::do_visit(ASN1::OCTET_STRING&)
+8886	20	0	asn1	ASN1	skeleton	9935	shape	1	ASN1::AVNDecoder::do_visit(ASN1::BIT_STRING&)
+8887	905	0	asn1	ASN1	skeleton	9936	shape	29	ASN1::AVNDecoder::do_visit(ASN1::OBJECT_IDENTIFIER&)
+8888	209	0	asn1	ASN1	skeleton	9937	shape	2	ASN1::AVNDecoder::do_visit(ASN1::ENUMERATED&)
+8889	302	0	asn1	ASN1	skeleton	9938	shape	4	ASN1::AVNDecoder::do_visit(ASN1::IntegerWithNamedNumber&)
+8890	124	0	asn1	ASN1	skeleton	9939	shape	2	ASN1::AVNDecoder::do_visit(ASN1::INTEGER&)
+8891	293	0	asn1	ASN1	skeleton	9940	shape	4	ASN1::AVNDecoder::do_visit(ASN1::BOOLEAN&)
+8892	221	0	asn1	ASN1	skeleton	9941	shape	4	ASN1::AVNDecoder::do_visit(ASN1::Null&)
 8893	18	0	libcxx	libc++	skeleton	8105	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::stress_mark*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::stress_mark>, std::__2::allocator<RHVoice::userdict::stress_mark>>::__get_deleter(std::type_info const&) const
-8894	15	0	asn1	ASN1	skeleton	9894	byte	0	ASN1::BufferSeeder::resize(unsigned int)
-8895	13	0	asn1	ASN1	skeleton	9895	byte	0	ASN1::BufferSeeder::remaining() const
-8896	13	0	asn1	ASN1	skeleton	9896	byte	0	ASN1::BufferSeeder::size() const
-8897	50	0	asn1	ASN1	skeleton	9897	shape	5	ASN1::BufferSeeder::skip(unsigned long)
-8898	50	0	asn1	ASN1	skeleton	9898	shape	5	ASN1::BufferSeeder::seek(unsigned long)
-8899	64	0	asn1	ASN1	skeleton	9899	byte	0	ASN1::BufferSeeder::decodeBlock(char*, unsigned long)
-8900	62	0	asn1	ASN1	skeleton	9900	shape	5	ASN1::BufferSeeder::decodeByte()
-8901	13	0	asn1	ASN1	skeleton	9901	byte	0	ASN1::BufferSeeder::eof() const
+8894	15	0	asn1	ASN1	skeleton	9839	byte	0	ASN1::BufferSeeder::resize(unsigned int)
+8895	13	0	asn1	ASN1	skeleton	9840	byte	0	ASN1::BufferSeeder::remaining() const
+8896	13	0	asn1	ASN1	skeleton	9841	byte	0	ASN1::BufferSeeder::size() const
+8897	50	0	asn1	ASN1	skeleton	9842	shape	5	ASN1::BufferSeeder::skip(unsigned long)
+8898	50	0	asn1	ASN1	skeleton	9843	shape	5	ASN1::BufferSeeder::seek(unsigned long)
+8899	64	0	asn1	ASN1	skeleton	9844	byte	0	ASN1::BufferSeeder::decodeBlock(char*, unsigned long)
+8900	62	0	asn1	ASN1	skeleton	9845	shape	5	ASN1::BufferSeeder::decodeByte()
+8901	13	0	asn1	ASN1	skeleton	9846	byte	0	ASN1::BufferSeeder::eof() const
 8902	193	0	asn1	-	skeleton	12326	addr	6	void std::__2::__call_once_proxy[abi:ne210108]<std::__2::tuple<api::CFormStack<api::IScreenMT>::GetObservable()::'lambda'()&&>>(void*)
-8903	40	0	asn1	ASN1	skeleton	9952	addr	3	ASN1::AVNEncoder::~AVNEncoder()_11409
-8904	162	0	asn1	ASN1	skeleton	9953	shape	3	ASN1::AVNEncoder::afterVisitSequence(ASN1::SEQUENCE const&)
-8905	259	0	asn1	ASN1	skeleton	9954	shape	4	ASN1::AVNEncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+8903	40	0	asn1	ASN1	skeleton	9898	addr	3	ASN1::AVNEncoder::~AVNEncoder()_11562
+8904	162	0	asn1	ASN1	skeleton	9899	shape	3	ASN1::AVNEncoder::afterVisitSequence(ASN1::SEQUENCE const&)
+8905	259	0	asn1	ASN1	skeleton	9901	shape	4	ASN1::AVNEncoder::visitExtensionRoot(ASN1::SEQUENCE const&, int)
 8906	247	0	asn1	ASN1	-	-	none	-	
-8907	370	0	asn1	ASN1	skeleton	9956	shape	9	ASN1::AVNEncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8908	148	0	asn1	ASN1	skeleton	9957	shape	5	ASN1::AVNEncoder::do_visit(ASN1::GeneralizedTime const&)
-8909	148	0	asn1	ASN1	skeleton	9958	shape	5	ASN1::AVNEncoder::do_visit(ASN1::UTCTime const&)
+8907	370	0	asn1	ASN1	skeleton	9903	shape	9	ASN1::AVNEncoder::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8908	148	0	asn1	ASN1	skeleton	9904	shape	5	ASN1::AVNEncoder::do_visit(ASN1::GeneralizedTime const&)
+8909	148	0	asn1	ASN1	skeleton	9905	shape	5	ASN1::AVNEncoder::do_visit(ASN1::UTCTime const&)
 8910	11	0	-	-	skeleton	12327	addr	2	__cxx_global_array_dtor.7_5069
 8911	2186	0	app	ecourna	skeleton	11500	shape	156	void api::CPolySingletonList::set<api::IGenericFactory<api::ISyncCtl>>(std::__2::unique_ptr<api::IGenericFactory<api::ISyncCtl>, std::__2::default_delete<api::IGenericFactory<api::ISyncCtl>>>&&, api::TPolySingletonsInfo&)
-8912	157	0	asn1	ASN1	skeleton	9959	addr	6	ASN1::AVNEncoder::do_visit(ASN1::OpenData const&)
-8913	82	0	asn1	ASN1	skeleton	9960	shape	3	ASN1::AVNEncoder::do_visit(ASN1::CHOICE const&)
-8914	573	0	asn1	ASN1	skeleton	9961	shape	17	ASN1::AVNEncoder::do_visit(ASN1::BMPString const&)
-8915	119	0	asn1	ASN1	skeleton	9962	shape	3	ASN1::AVNEncoder::do_visit(ASN1::AbstractString const&)
-8916	366	0	asn1	ASN1	skeleton	9963	shape	7	ASN1::AVNEncoder::do_visit(ASN1::OCTET_STRING const&)
-8917	482	0	asn1	ASN1	skeleton	9965	shape	11	ASN1::AVNEncoder::do_visit(ASN1::BIT_STRING const&)
-8918	178	0	asn1	ASN1	skeleton	9966	shape	6	ASN1::AVNEncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-8919	114	0	asn1	ASN1	skeleton	9967	shape	2	ASN1::AVNEncoder::do_visit(ASN1::ENUMERATED const&)
-8920	278	0	asn1	ASN1	skeleton	9968	shape	2	ASN1::AVNEncoder::do_visit(ASN1::IntegerWithNamedNumber const&)
-8921	86	0	asn1	ASN1	skeleton	9969	shape	2	ASN1::AVNEncoder::do_visit(ASN1::INTEGER const&)
-8922	74	0	asn1	ASN1	skeleton	9970	shape	4	ASN1::AVNEncoder::do_visit(ASN1::BOOLEAN const&)
-8923	40	0	asn1	ASN1	skeleton	9971	shape	2	ASN1::AVNEncoder::do_visit(ASN1::Null const&)
-8924	121	0	asn1	ASN1	skeleton	9836	addr	9	ASN1::InvalidTracer::~InvalidTracer()_11637
-8925	234	0	asn1	ASN1	skeleton	9837	shape	14	ASN1::InvalidTracer::visitExtensionRoot(ASN1::SEQUENCE const&, int)
-8926	118	0	asn1	ASN1	skeleton	9838	addr	8	ASN1::InvalidTracer::~InvalidTracer()
-8927	534	0	asn1	ASN1	skeleton	9839	shape	34	ASN1::InvalidTracer::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8928	118	0	asn1	ASN1	skeleton	9840	shape	5	ASN1::InvalidTracer::do_visit(ASN1::GeneralizedTime const&)
-8929	30	0	asn1	ASN1	skeleton	9841	shape	3	ASN1::InvalidTracer::do_visit(ASN1::UTCTime const&)
-8930	62	0	asn1	ASN1	skeleton	9842	shape	2	ASN1::InvalidTracer::do_visit(ASN1::OpenData const&)
-8931	125	0	asn1	ASN1	skeleton	9843	shape	7	ASN1::InvalidTracer::do_visit(ASN1::CHOICE const&)
-8932	268	0	asn1	ASN1	skeleton	9844	shape	17	ASN1::InvalidTracer::do_visit(ASN1::BMPString const&)
-8933	281	0	asn1	ASN1	skeleton	9845	shape	17	ASN1::InvalidTracer::do_visit(ASN1::AbstractString const&)
-8934	167	0	asn1	ASN1	skeleton	9846	shape	12	ASN1::InvalidTracer::do_visit(ASN1::OCTET_STRING const&)
-8935	149	0	asn1	ASN1	skeleton	9847	shape	12	ASN1::InvalidTracer::do_visit(ASN1::BIT_STRING const&)
-8936	36	0	asn1	ASN1	skeleton	9848	shape	2	ASN1::InvalidTracer::do_visit(ASN1::OBJECT_IDENTIFIER const&)
-8937	49	0	asn1	ASN1	skeleton	9849	shape	3	ASN1::InvalidTracer::do_visit(ASN1::ENUMERATED const&)
+8912	157	0	asn1	ASN1	skeleton	9906	addr	6	ASN1::AVNEncoder::do_visit(ASN1::OpenData const&)
+8913	82	0	asn1	ASN1	skeleton	9907	shape	3	ASN1::AVNEncoder::do_visit(ASN1::CHOICE const&)
+8914	573	0	asn1	ASN1	skeleton	9908	shape	17	ASN1::AVNEncoder::do_visit(ASN1::BMPString const&)
+8915	119	0	asn1	ASN1	skeleton	9909	shape	3	ASN1::AVNEncoder::do_visit(ASN1::AbstractString const&)
+8916	366	0	asn1	ASN1	skeleton	9913	shape	7	ASN1::AVNEncoder::do_visit(ASN1::OCTET_STRING const&)
+8917	482	0	asn1	ASN1	skeleton	9914	shape	11	ASN1::AVNEncoder::do_visit(ASN1::BIT_STRING const&)
+8918	178	0	asn1	ASN1	skeleton	9915	shape	6	ASN1::AVNEncoder::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+8919	114	0	asn1	ASN1	skeleton	9916	shape	2	ASN1::AVNEncoder::do_visit(ASN1::ENUMERATED const&)
+8920	278	0	asn1	ASN1	skeleton	9917	shape	2	ASN1::AVNEncoder::do_visit(ASN1::IntegerWithNamedNumber const&)
+8921	86	0	asn1	ASN1	skeleton	9918	shape	2	ASN1::AVNEncoder::do_visit(ASN1::INTEGER const&)
+8922	74	0	asn1	ASN1	skeleton	9919	shape	4	ASN1::AVNEncoder::do_visit(ASN1::BOOLEAN const&)
+8923	40	0	asn1	ASN1	skeleton	9920	shape	2	ASN1::AVNEncoder::do_visit(ASN1::Null const&)
+8924	121	0	asn1	ASN1	skeleton	9785	addr	9	ASN1::InvalidTracer::~InvalidTracer()_11788
+8925	234	0	asn1	ASN1	skeleton	9786	shape	14	ASN1::InvalidTracer::visitExtensionRoot(ASN1::SEQUENCE const&, int)
+8926	118	0	asn1	ASN1	skeleton	9787	addr	8	ASN1::InvalidTracer::~InvalidTracer()
+8927	534	0	asn1	ASN1	skeleton	9788	shape	34	ASN1::InvalidTracer::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8928	118	0	asn1	ASN1	skeleton	9789	shape	5	ASN1::InvalidTracer::do_visit(ASN1::GeneralizedTime const&)
+8929	30	0	asn1	ASN1	skeleton	9790	shape	3	ASN1::InvalidTracer::do_visit(ASN1::UTCTime const&)
+8930	62	0	asn1	ASN1	skeleton	9791	shape	2	ASN1::InvalidTracer::do_visit(ASN1::OpenData const&)
+8931	125	0	asn1	ASN1	skeleton	9792	shape	7	ASN1::InvalidTracer::do_visit(ASN1::CHOICE const&)
+8932	268	0	asn1	ASN1	skeleton	9793	shape	17	ASN1::InvalidTracer::do_visit(ASN1::BMPString const&)
+8933	281	0	asn1	ASN1	skeleton	9794	shape	17	ASN1::InvalidTracer::do_visit(ASN1::AbstractString const&)
+8934	167	0	asn1	ASN1	skeleton	9795	shape	12	ASN1::InvalidTracer::do_visit(ASN1::OCTET_STRING const&)
+8935	149	0	asn1	ASN1	skeleton	9796	shape	12	ASN1::InvalidTracer::do_visit(ASN1::BIT_STRING const&)
+8936	36	0	asn1	ASN1	skeleton	9797	shape	2	ASN1::InvalidTracer::do_visit(ASN1::OBJECT_IDENTIFIER const&)
+8937	49	0	asn1	ASN1	skeleton	9798	shape	3	ASN1::InvalidTracer::do_visit(ASN1::ENUMERATED const&)
 8938	50	0	app	api	skeleton	11326	shape	7	api::IScreen::GetFontMetrics(short&, short&, api::SFont const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
-8939	277	0	asn1	ASN1	skeleton	9850	shape	24	ASN1::InvalidTracer::do_visit(ASN1::INTEGER const&)
-8940	17	0	asn1	ASN1	skeleton	9928	byte	0	ASN1::Visitor::do_visit(ASN1::IntegerWithNamedNumber&)
+8939	277	0	asn1	ASN1	skeleton	9799	shape	24	ASN1::InvalidTracer::do_visit(ASN1::INTEGER const&)
+8940	17	0	asn1	ASN1	skeleton	9874	byte	0	ASN1::Visitor::do_visit(ASN1::IntegerWithNamedNumber&)
 8941	31	0	-	ASN1	-	-	none	-	
-8942	13	0	app	ASN1	skeleton	9769	byte	0	ASN1::ENUMERATED::do_compare(ASN1::AbstractData const&) const
-8943	12	0	app	ASN1	skeleton	9770	addr	2	ASN1::ENUMERATED::do_clone() const
-8944	17	0	app	ASN1	skeleton	5253	byte	0	ASN1::ENUMERATED::do_accept(ASN1::ConstVisitor&) const
+8942	13	0	app	ASN1	skeleton	9985	byte	0	ASN1::ENUMERATED::do_compare(ASN1::AbstractData const&) const
+8943	12	0	app	ASN1	skeleton	9986	addr	2	ASN1::ENUMERATED::do_clone() const
+8944	17	0	app	ASN1	skeleton	5282	byte	0	ASN1::ENUMERATED::do_accept(ASN1::ConstVisitor&) const
 8945	7	0	app	simulador	skeleton	11329	byte	0	simulador::CWasmScreen::GetImageSurfaceOps() const
-8946	17	0	app	ASN1	skeleton	5254	byte	0	ASN1::IntegerWithNamedNumber::do_accept(ASN1::ConstVisitor&) const
-8947	38	0	asn1	ASN1	skeleton	9773	addr	3	ASN1::BOOLEAN::do_compare(ASN1::AbstractData const&) const
+8946	17	0	app	ASN1	skeleton	5283	byte	0	ASN1::IntegerWithNamedNumber::do_accept(ASN1::ConstVisitor&) const
+8947	38	0	asn1	ASN1	skeleton	9989	addr	3	ASN1::BOOLEAN::do_compare(ASN1::AbstractData const&) const
 8948	47	0	asn1	-	-	-	none	-	
-8949	17	0	asn1	-	skeleton	5258	byte	0	ASN1::Null::do_accept(ASN1::ConstVisitor&) const
+8949	17	0	asn1	-	skeleton	5287	byte	0	ASN1::Null::do_accept(ASN1::ConstVisitor&) const
 8950	31	0	asn1	-	-	-	none	-	
 8951	137	0	asn1	-	-	-	none	-	
-8952	14	0	asn1	ASN1	skeleton	9747	addr	2	ASN1::GeneralizedTime::do_compare(ASN1::AbstractData const&) const
+8952	14	0	asn1	ASN1	skeleton	9963	addr	2	ASN1::GeneralizedTime::do_compare(ASN1::AbstractData const&) const
 8953	7	0	asn1	simulador	skeleton	11330	byte	0	simulador::CWasmScreen::GetHeight() const
-8954	17	0	asn1	-	skeleton	5245	byte	0	ASN1::GeneralizedTime::do_accept(ASN1::ConstVisitor&) const
-8955	17	0	asn1	-	skeleton	9748	byte	0	ASN1::GeneralizedTime::do_accept(ASN1::Visitor&)
+8954	17	0	asn1	-	skeleton	5274	byte	0	ASN1::GeneralizedTime::do_accept(ASN1::ConstVisitor&) const
+8955	17	0	asn1	-	skeleton	9964	byte	0	ASN1::GeneralizedTime::do_accept(ASN1::Visitor&)
 8956	77	0	-	-	-	-	none	-	
-8957	872	0	app	asn1-modules	skeleton	9734	addr	3	ASN1::SEQUENCE::do_compare(ASN1::AbstractData const&) const
+8957	872	0	app	asn1-modules	skeleton	9952	addr	3	ASN1::SEQUENCE::do_compare(ASN1::AbstractData const&) const
 8958	12	0	app	asn1-modules	-	-	none	-	
 8959	7	0	app	simulador	skeleton	11331	byte	0	simulador::CWasmScreen::GetWidth() const
-8960	312	0	app	asn1-modules	skeleton	9736	fingerprint	0	ASN1::SEQUENCE::do_accept(ASN1::ConstVisitor&) const
-8961	292	0	app	asn1-modules	skeleton	9737	byte	0	ASN1::SEQUENCE::do_accept(ASN1::Visitor&)
+8960	312	0	app	asn1-modules	skeleton	9954	fingerprint	0	ASN1::SEQUENCE::do_accept(ASN1::ConstVisitor&) const
+8961	292	0	app	asn1-modules	skeleton	9955	byte	0	ASN1::SEQUENCE::do_accept(ASN1::Visitor&)
 8962	12	0	-	-	-	-	none	-	
 8963	20	0	-	simulador	skeleton	11332	shape	3	simulador::CWasmScreen::~CWasmScreen()_7896
-8964	148	0	asn1	ASN1	skeleton	9757	addr	3	ASN1::OCTET_STRING::do_compare(ASN1::AbstractData const&) const
+8964	148	0	asn1	ASN1	skeleton	9973	addr	3	ASN1::OCTET_STRING::do_compare(ASN1::AbstractData const&) const
 8965	61	0	asn1	ASN1	-	-	none	-	
-8966	17	0	asn1	ASN1	skeleton	5251	byte	0	ASN1::OBJECT_IDENTIFIER::do_accept(ASN1::ConstVisitor&) const
-8967	12	0	asn1	ASN1	skeleton	9729	addr	2	ASN1::SEQUENCE_OF_Base::create(void const*)
-8968	93	0	asn1	ASN1	skeleton	9776	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8969	30	0	asn1	ASN1	skeleton	9777	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::OpenData const&)
-8970	7	0	asn1	ASN1	skeleton	9778	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::CHOICE const&)
-8971	66	0	asn1	ASN1	skeleton	9779	fingerprint	0	ASN1::StrictlyValidChecker::do_visit(ASN1::BMPString const&)
-8972	66	0	asn1	ASN1	skeleton	9780	fingerprint	0	ASN1::StrictlyValidChecker::do_visit(ASN1::AbstractString const&)
-8973	46	0	asn1	ASN1	skeleton	9781	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::OCTET_STRING const&)
-8974	40	0	asn1	ASN1	skeleton	9782	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::BIT_STRING const&)
-8975	16	0	asn1	ASN1	skeleton	9783	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::ENUMERATED const&)
-8976	82	0	asn1	ASN1	skeleton	9784	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::INTEGER const&)
-8977	104	0	asn1	ASN1	skeleton	9785	addr	1	ASN1::ValidChecker::do_visit(ASN1::SEQUENCE_OF_Base const&)
-8978	30	0	asn1	ASN1	skeleton	9787	addr	1	ASN1::ValidChecker::do_visit(ASN1::OpenData const&)
-8979	7	0	asn1	ASN1	skeleton	9788	addr	1	ASN1::ValidChecker::do_visit(ASN1::CHOICE const&)
-8980	77	0	asn1	ASN1	skeleton	9789	fingerprint	0	ASN1::ValidChecker::do_visit(ASN1::BMPString const&)
-8981	81	0	asn1	ASN1	skeleton	9790	fingerprint	0	ASN1::ValidChecker::do_visit(ASN1::AbstractString const&)
-8982	54	0	asn1	ASN1	skeleton	9791	byte	0	ASN1::ValidChecker::do_visit(ASN1::OCTET_STRING const&)
-8983	48	0	asn1	ASN1	skeleton	9792	byte	0	ASN1::ValidChecker::do_visit(ASN1::BIT_STRING const&)
-8984	35	0	asn1	ASN1	skeleton	9793	byte	0	ASN1::ValidChecker::do_visit(ASN1::ENUMERATED const&)
+8966	17	0	asn1	ASN1	skeleton	5280	byte	0	ASN1::OBJECT_IDENTIFIER::do_accept(ASN1::ConstVisitor&) const
+8967	12	0	asn1	ASN1	skeleton	9948	addr	2	ASN1::SEQUENCE_OF_Base::create(void const*)
+8968	93	0	asn1	ASN1	skeleton	9724	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8969	30	0	asn1	ASN1	skeleton	9725	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::OpenData const&)
+8970	7	0	asn1	ASN1	skeleton	9726	addr	1	ASN1::StrictlyValidChecker::do_visit(ASN1::CHOICE const&)
+8971	66	0	asn1	ASN1	skeleton	9727	fingerprint	0	ASN1::StrictlyValidChecker::do_visit(ASN1::BMPString const&)
+8972	66	0	asn1	ASN1	skeleton	9728	fingerprint	0	ASN1::StrictlyValidChecker::do_visit(ASN1::AbstractString const&)
+8973	46	0	asn1	ASN1	skeleton	9729	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::OCTET_STRING const&)
+8974	40	0	asn1	ASN1	skeleton	9730	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::BIT_STRING const&)
+8975	16	0	asn1	ASN1	skeleton	9731	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::ENUMERATED const&)
+8976	82	0	asn1	ASN1	skeleton	9733	byte	0	ASN1::StrictlyValidChecker::do_visit(ASN1::INTEGER const&)
+8977	104	0	asn1	ASN1	skeleton	9734	addr	1	ASN1::ValidChecker::do_visit(ASN1::SEQUENCE_OF_Base const&)
+8978	30	0	asn1	ASN1	skeleton	9735	addr	1	ASN1::ValidChecker::do_visit(ASN1::OpenData const&)
+8979	7	0	asn1	ASN1	skeleton	9736	addr	1	ASN1::ValidChecker::do_visit(ASN1::CHOICE const&)
+8980	77	0	asn1	ASN1	skeleton	9737	fingerprint	0	ASN1::ValidChecker::do_visit(ASN1::BMPString const&)
+8981	81	0	asn1	ASN1	skeleton	9738	fingerprint	0	ASN1::ValidChecker::do_visit(ASN1::AbstractString const&)
+8982	54	0	asn1	ASN1	skeleton	9739	byte	0	ASN1::ValidChecker::do_visit(ASN1::OCTET_STRING const&)
+8983	48	0	asn1	ASN1	skeleton	9741	byte	0	ASN1::ValidChecker::do_visit(ASN1::BIT_STRING const&)
+8984	35	0	asn1	ASN1	skeleton	9742	byte	0	ASN1::ValidChecker::do_visit(ASN1::ENUMERATED const&)
 8985	144	0	-	simulador	skeleton	11333	addr	1	api::IImageSurfaceOps::ImageRect(std::__2::shared_ptr<api::IImage>, api::SPoint const&, api::EAnchorPoint) const
 8986	2186	0	app	ecourna	skeleton	11577	shape	156	void api::CPolySingletonList::set<api::IGenericFactory<api::IThreadImpl>>(std::__2::unique_ptr<api::IGenericFactory<api::IThreadImpl>, std::__2::default_delete<api::IGenericFactory<api::IThreadImpl>>>&&, api::TPolySingletonsInfo&)
-8987	94	0	asn1	ASN1	skeleton	9794	byte	0	ASN1::ValidChecker::do_visit(ASN1::INTEGER const&)
+8987	94	0	asn1	ASN1	skeleton	9743	byte	0	ASN1::ValidChecker::do_visit(ASN1::INTEGER const&)
 8988	117	0	asn1	-	-	-	none	-	
-8989	14	0	asn1	ASN1	skeleton	9751	addr	2	ASN1::UTCTime::do_compare(ASN1::AbstractData const&) const
-8990	17	0	asn1	-	skeleton	9752	byte	0	ASN1::UTCTime::do_accept(ASN1::ConstVisitor&) const
+8989	14	0	asn1	ASN1	skeleton	9967	addr	2	ASN1::UTCTime::do_compare(ASN1::AbstractData const&) const
+8990	17	0	asn1	-	skeleton	9968	byte	0	ASN1::UTCTime::do_accept(ASN1::ConstVisitor&) const
 8991	89	0	-	simulador	skeleton	11334	addr	1	api::IImageSurfaceOps::ImageRect(api::IImage const&, api::SPoint const&, api::EAnchorPoint) const
 8992	63	0	-	-	-	-	none	-	
 8993	78	0	app	ASN1	-	-	none	-	
 8994	69	0	app	simulador	skeleton	11335	byte	0	api::IImageSurfaceOps::ImageRect(std::__2::vector<unsigned char, std::__2::allocator<unsigned char>> const&, api::SPoint const&, api::EAnchorPoint) const
-8995	83	0	app	ASN1	skeleton	9741	addr	3	ASN1::CHOICE::do_compare(ASN1::AbstractData const&) const
-8996	17	0	app	ASN1	skeleton	5247	byte	0	ASN1::BMPString::do_accept(ASN1::ConstVisitor&) const
-8997	51	0	asn1	ASN1	skeleton	9743	addr	2	ASN1::CHOICE::~CHOICE()_11846
+8995	83	0	app	ASN1	skeleton	9958	addr	3	ASN1::CHOICE::do_compare(ASN1::AbstractData const&) const
+8996	17	0	app	ASN1	skeleton	5276	byte	0	ASN1::BMPString::do_accept(ASN1::ConstVisitor&) const
+8997	51	0	asn1	ASN1	skeleton	9959	addr	2	ASN1::CHOICE::~CHOICE()_11438
 8998	85	0	asn1	simulador	skeleton	11336	addr	1	api::IImageSurfaceOps::ImageSize(api::IImage const&) const
 8999	35	0	asn1	ASN1	-	-	none	-	
-9000	38	0	asn1	ASN1	skeleton	9771	addr	3	ASN1::INTEGER::do_compare(ASN1::AbstractData const&) const
-9001	12	0	asn1	ASN1	skeleton	9772	addr	2	ASN1::INTEGER::do_clone() const
-9002	17	0	asn1	ASN1	skeleton	5255	byte	0	ASN1::INTEGER::do_accept(ASN1::ConstVisitor&) const
-9003	12	0	-	ASN1	skeleton	9755	addr	2	ASN1::AbstractString::create(void const*)
+9000	38	0	asn1	ASN1	skeleton	9987	addr	3	ASN1::INTEGER::do_compare(ASN1::AbstractData const&) const
+9001	12	0	asn1	ASN1	skeleton	9988	addr	2	ASN1::INTEGER::do_clone() const
+9002	17	0	asn1	ASN1	skeleton	5284	byte	0	ASN1::INTEGER::do_accept(ASN1::ConstVisitor&) const
+9003	12	0	-	ASN1	skeleton	9971	addr	2	ASN1::AbstractString::create(void const*)
 9004	17	0	-	simulador	skeleton	11337	byte	0	simulador::CWasmScreen::Clear(int, api::TColor)
-9005	125	0	app	ASN1	skeleton	9756	addr	3	ASN1::AbstractString::do_compare(ASN1::AbstractData const&) const
-9006	17	0	app	ASN1	skeleton	5248	byte	0	ASN1::AbstractString::do_accept(ASN1::ConstVisitor&) const
-9007	10	0	asn1	ASN1	skeleton	9723	addr	2	ASN1::SEQUENCE_OF_Base::~SEQUENCE_OF_Base()_11899
-9008	34	0	asn1	ASN1	skeleton	9732	addr	1	ASN1::SEQUENCE_OF_Base::getTypeName() const
+9005	125	0	app	ASN1	skeleton	9972	addr	3	ASN1::AbstractString::do_compare(ASN1::AbstractData const&) const
+9006	17	0	app	ASN1	skeleton	5277	byte	0	ASN1::AbstractString::do_accept(ASN1::ConstVisitor&) const
+9007	10	0	asn1	ASN1	skeleton	9943	addr	2	ASN1::SEQUENCE_OF_Base::~SEQUENCE_OF_Base()_11494
+9008	34	0	asn1	ASN1	skeleton	9951	addr	1	ASN1::SEQUENCE_OF_Base::getTypeName() const
 9009	144	0	-	simulador	skeleton	11338	addr	2	simulador::CWasmScreen::GetTextWidth(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, api::SFont const&)
-9010	12	0	app	asn1-modules	skeleton	9759	addr	2	ASN1::OCTET_STRING::create(void const*)
-9011	171	0	asn1	ASN1	skeleton	9730	addr	3	ASN1::SEQUENCE_OF_Base::do_compare(ASN1::AbstractData const&) const
+9010	12	0	app	asn1-modules	skeleton	9975	addr	2	ASN1::OCTET_STRING::create(void const*)
+9011	171	0	asn1	ASN1	skeleton	9949	addr	3	ASN1::SEQUENCE_OF_Base::do_compare(ASN1::AbstractData const&) const
 9012	12	0	asn1	ASN1	-	-	none	-	
 9013	16	0	-	simulador	skeleton	5583	byte	0	simulador::CWasmScreen::SetColors(api::TColor, api::TColor)
 9014	262	0	app	ecourna	skeleton	10614	shape	19	ecourna::app::dados::CResultadoUrnaCadastro::GetDadosComparecimentoCifrado() const
@@ -9098,7 +9098,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9232	181	0	-	simulador	skeleton	11359	addr	2	simulador::CWasmScreen::FillRect(api::SRect const&, api::TColor)
 9233	2186	0	app	ecourna	skeleton	11750	shape	156	void api::CPolySingletonList::set<ecourna::api::security::IRng>(std::__2::unique_ptr<ecourna::api::security::IRng, std::__2::default_delete<ecourna::api::security::IRng>>&&, api::TPolySingletonsInfo&)
 9234	18	0	-	-	skeleton	13553	addr	3	__cxx_global_array_dtor_2906
-9235	36	0	-	-	skeleton	9926	addr	4	__cxx_global_array_dtor.2_11450
+9235	36	0	-	-	skeleton	9872	addr	4	__cxx_global_array_dtor.2_11602
 9236	36	0	-	-	skeleton	10480	addr	4	__cxx_global_array_dtor_10267
 9237	36	0	-	-	skeleton	10709	addr	4	__cxx_global_array_dtor.54
 9238	36	0	-	-	skeleton	10710	addr	4	__cxx_global_array_dtor.51
@@ -9846,12 +9846,12 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9980	17	0	-	libc++	skeleton	8675	addr	1	std::__2::__shared_ptr_pointer<boost::regex_iterator_implementation<std::__2::__wrap_iter<char const*>, char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>*, std::__2::shared_ptr<boost::regex_iterator_implementation<std::__2::__wrap_iter<char const*>, char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>>::__shared_ptr_default_delete<boost::regex_iterator_implementation<std::__2::__wrap_iter<char const*>, char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>, boost::regex_iterator_implementation<std::__2::__wrap_iter<char const*>, char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>>, std::__2::allocator<boost::regex_iterator_implementation<std::__2::__wrap_iter<char const*>, char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>>>::__get_deleter(std::type_info const&) const
 9981	17	0	-	libc++	skeleton	9625	addr	1	std::__2::__shared_ptr_pointer<RHVoice::sentence::append_break*, std::__2::shared_ptr<RHVoice::sentence::abstract_command>::__shared_ptr_default_delete<RHVoice::sentence::abstract_command, RHVoice::sentence::append_break>, std::__2::allocator<RHVoice::sentence::append_break>>::__get_deleter(std::type_info const&) const
 9982	17	0	-	libc++	skeleton	9667	addr	1	std::__2::__shared_ptr_pointer<RHVoice::sentence::append_audio*, std::__2::shared_ptr<RHVoice::sentence::abstract_command>::__shared_ptr_default_delete<RHVoice::sentence::abstract_command, RHVoice::sentence::append_audio>, std::__2::allocator<RHVoice::sentence::append_audio>>::__get_deleter(std::type_info const&) const
-9983	17	0	-	libc++	skeleton	9733	addr	1	std::__2::__shared_ptr_pointer<RHVoice::sentence::append_mark*, std::__2::shared_ptr<RHVoice::sentence::abstract_command>::__shared_ptr_default_delete<RHVoice::sentence::abstract_command, RHVoice::sentence::append_mark>, std::__2::allocator<RHVoice::sentence::append_mark>>::__get_deleter(std::type_info const&) const
-9984	17	0	-	libc++	skeleton	9890	addr	1	std::__2::__shared_ptr_pointer<ASN1::BufferSeeder*, std::__2::shared_ptr<ASN1::ISeeder>::__shared_ptr_default_delete<ASN1::ISeeder, ASN1::BufferSeeder>, std::__2::allocator<ASN1::BufferSeeder>>::__get_deleter(std::type_info const&) const
+9983	17	0	-	libc++	skeleton	9732	addr	1	std::__2::__shared_ptr_pointer<RHVoice::sentence::append_mark*, std::__2::shared_ptr<RHVoice::sentence::abstract_command>::__shared_ptr_default_delete<RHVoice::sentence::abstract_command, RHVoice::sentence::append_mark>, std::__2::allocator<RHVoice::sentence::append_mark>>::__get_deleter(std::type_info const&) const
+9984	17	0	-	libc++	skeleton	9836	addr	1	std::__2::__shared_ptr_pointer<ASN1::BufferSeeder*, std::__2::shared_ptr<ASN1::ISeeder>::__shared_ptr_default_delete<ASN1::ISeeder, ASN1::BufferSeeder>, std::__2::allocator<ASN1::BufferSeeder>>::__get_deleter(std::type_info const&) const
 9985	12	0	-	-	skeleton	11703	shape	2	void api::CFileASN::WriteToFile<ModuloEstadoGeralVota::EstadoGeralVota>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, ModuloEstadoGeralVota::EstadoGeralVota const&)
 9986	12	0	-	-	skeleton	12484	shape	2	void api::CPolySingleton<ecourna::api::security::IRng>::set<ecourna::api::security::CPrng>(ecourna::api::security::CPrng*, api::TPolySingletonsInfo&)
-9987	17	0	-	libc++	skeleton	9891	addr	1	std::__2::__shared_ptr_pointer<char*, std::__2::shared_ptr<char []>::__shared_ptr_default_delete<char [], char>, std::__2::allocator<char>>::__get_deleter(std::type_info const&) const
-9988	17	0	-	libc++	skeleton	9892	addr	1	std::__2::__shared_ptr_pointer<ASN1::IAbstractVisitor*, std::__2::shared_ptr<ASN1::IAbstractVisitor>::__shared_ptr_default_delete<ASN1::IAbstractVisitor, ASN1::IAbstractVisitor>, std::__2::allocator<ASN1::IAbstractVisitor>>::__get_deleter(std::type_info const&) const
+9987	17	0	-	libc++	skeleton	9837	addr	1	std::__2::__shared_ptr_pointer<char*, std::__2::shared_ptr<char []>::__shared_ptr_default_delete<char [], char>, std::__2::allocator<char>>::__get_deleter(std::type_info const&) const
+9988	17	0	-	libc++	skeleton	9838	addr	1	std::__2::__shared_ptr_pointer<ASN1::IAbstractVisitor*, std::__2::shared_ptr<ASN1::IAbstractVisitor>::__shared_ptr_default_delete<ASN1::IAbstractVisitor, ASN1::IAbstractVisitor>, std::__2::allocator<ASN1::IAbstractVisitor>>::__get_deleter(std::type_info const&) const
 9989	17	0	-	libc++	skeleton	9992	addr	1	std::__2::__shared_ptr_pointer<RHVoice::language_list::concrete_creator<RHVoice::data_only_language_info>*, std::__2::shared_ptr<RHVoice::language_list::creator>::__shared_ptr_default_delete<RHVoice::language_list::creator, RHVoice::language_list::concrete_creator<RHVoice::data_only_language_info>>, std::__2::allocator<RHVoice::language_list::concrete_creator<RHVoice::data_only_language_info>>>::__get_deleter(std::type_info const&) const
 9990	17	0	-	libc++	skeleton	9993	addr	1	std::__2::__shared_ptr_pointer<RHVoice::data_only_language_info*, std::__2::shared_ptr<RHVoice::language_info>::__shared_ptr_default_delete<RHVoice::language_info, RHVoice::data_only_language_info>, std::__2::allocator<RHVoice::data_only_language_info>>::__get_deleter(std::type_info const&) const
 9991	17	0	-	libc++	skeleton	9995	addr	1	std::__2::__shared_ptr_pointer<RHVoice::language_list::concrete_creator<RHVoice::macedonian_info>*, std::__2::shared_ptr<RHVoice::language_list::creator>::__shared_ptr_default_delete<RHVoice::language_list::creator, RHVoice::language_list::concrete_creator<RHVoice::macedonian_info>>, std::__2::allocator<RHVoice::language_list::concrete_creator<RHVoice::macedonian_info>>>::__get_deleter(std::type_info const&) const
@@ -10054,10 +10054,10 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10188	11	0	rhvoice	-	-	-	none	-	
 10189	12	0	rhvoice	RHVoice	skeleton	8515	addr	2	RHVoice::value::concrete_container<unsigned long>::clone() const
 10190	12	0	rhvoice	RHVoice	skeleton	9643	addr	2	RHVoice::value::concrete_container<RHVoice::break_strength>::clone() const
-10191	42	0	rhvoice	RHVoice	skeleton	9738	shape	1	RHVoice::value::concrete_container<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::print(std::__2::basic_ostream<char, std::__2::char_traits<char>>&) const
+10191	42	0	rhvoice	RHVoice	skeleton	9740	shape	1	RHVoice::value::concrete_container<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::print(std::__2::basic_ostream<char, std::__2::char_traits<char>>&) const
 10192	12	0	rhvoice	RHVoice	-	-	none	-	
 10193	12	0	rhvoice	RHVoice	skeleton	8499	addr	2	RHVoice::dtree::str_equal::~str_equal()_14364
-10194	12	0	rhvoice	RHVoice	skeleton	9753	addr	2	RHVoice::value::concrete_container<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::~concrete_container()
+10194	12	0	rhvoice	RHVoice	skeleton	9761	addr	2	RHVoice::value::concrete_container<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::~concrete_container()
 10195	64	0	rhvoice	RHVoice	skeleton	8516	addr	3	RHVoice::sentence::append_token::~append_token()_14330
 10196	9	0	rhvoice	RHVoice	skeleton	8517	byte	0	RHVoice::sentence::append_token::set_eos()
 10197	11	0	rhvoice	-	-	-	none	-	
@@ -10566,7 +10566,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10700	871	0	app	-	-	-	none	-	
 10701	871	0	app	-	-	-	none	-	
 10702	17	0	app	libc++	skeleton	10966	addr	1	std::__2::__shared_ptr_pointer<api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>*, std::__2::shared_ptr<api::IText>::__shared_ptr_default_delete<api::IText, api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>>, std::__2::allocator<api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>>>::__get_deleter(std::type_info const&) const
-10703	102	0	app	-	skeleton	9878	shape	7	votaPressKey
+10703	102	0	app	-	skeleton	9912	shape	7	votaPressKey
 10704	10	0	app	-	skeleton	12034	addr	2	__cxx_global_array_dtor.2_5920
 10705	12	0	app	-	skeleton	12086	addr	2	__cxx_global_array_dtor_5714
 10706	1498	0	app	vota	-	-	none	-	
@@ -10671,7 +10671,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10805	17	0	-	libc++	skeleton	11407	addr	1	std::__2::__shared_ptr_pointer<api::COptionValidation*, std::__2::shared_ptr<api::IInputValidation>::__shared_ptr_default_delete<api::IInputValidation, api::COptionValidation>, std::__2::allocator<api::COptionValidation>>::__get_deleter(std::type_info const&) const
 10806	17	0	-	libc++	skeleton	11440	addr	1	std::__2::__shared_ptr_pointer<api::CTextFieldUpdateMT*, std::__2::shared_ptr<api::IFormField<api::IScreenMT>>::__shared_ptr_default_delete<api::IFormField<api::IScreenMT>, api::CTextFieldUpdateMT>, std::__2::allocator<api::CTextFieldUpdateMT>>::__get_deleter(std::type_info const&) const
 10807	14	0	-	libc++	-	-	none	-	
-10808	12	0	rhvoice	RHVoice	skeleton	9802	addr	2	RHVoice::sentence::append_mark::~append_mark()
+10808	12	0	rhvoice	RHVoice	skeleton	9830	addr	2	RHVoice::sentence::append_mark::~append_mark()
 10809	111	0	rhvoice	RHVoice	skeleton	10218	fingerprint	0	RHVoice::property<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::check_value(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&) const
 10810	125	0	rhvoice	RHVoice	skeleton	10229	fingerprint	0	RHVoice::property<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::reset()
 10811	99	0	rhvoice	RHVoice	skeleton	10240	addr	5	RHVoice::property<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::~property()
@@ -10685,7 +10685,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10819	14	0	-	libc++	skeleton	10998	addr	1	std::__2::__shared_ptr_emplace<api::CPosixMutex, std::__2::allocator<api::CPosixMutex>>::~__shared_ptr_emplace()
 10820	830	0	-	api	-	-	none	-	
 10821	5	0	-	api	skeleton	10207	byte	0	RHVoice::client::get_audio_buffer_size() const
-10822	47	0	-	api	skeleton	9724	addr	3	ASN1::OBJECT_IDENTIFIER::~OBJECT_IDENTIFIER()_11896
+10822	47	0	-	api	skeleton	9944	addr	3	ASN1::OBJECT_IDENTIFIER::~OBJECT_IDENTIFIER()_11491
 10823	62	0	rhvoice	RHVoice	skeleton	10261	addr	4	RHVoice::enum_property<RHVoice_punctuation_mode>::~enum_property()
 10824	27	0	rhvoice	RHVoice	skeleton	10281	addr	1	RHVoice::property<std::__2::set<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>>>::check_value(std::__2::set<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>> const&, std::__2::set<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>>&) const
 10825	27	0	rhvoice	RHVoice	skeleton	10311	addr	1	RHVoice::property<std::__2::set<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>>>::reset()
@@ -10703,7 +10703,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10837	62	0	rhvoice	RHVoice	skeleton	10407	addr	4	RHVoice::enum_property<bool>::~enum_property()
 10838	10	0	app	api	skeleton	10335	shape	2	api::CRHVoiceTextToSpeech::~CRHVoiceTextToSpeech()_10543
 10839	21	0	app	api	skeleton	12389	shape	4	api::IGenericFactory<api::ISemaphore>::Create(unsigned long)
-10840	44	0	-	api	skeleton	9725	addr	2	ASN1::OBJECT_IDENTIFIER::~OBJECT_IDENTIFIER()
+10840	44	0	-	api	skeleton	9945	addr	2	ASN1::OBJECT_IDENTIFIER::~OBJECT_IDENTIFIER()
 10841	75081	0	app	api	-	-	none	-	
 10842	23822	0	rhvoice	api	-	-	none	-	
 10843	17	0	-	libc++	skeleton	11082	addr	2	std::__2::__shared_ptr_emplace<ecourna::app::dados::CNumeroCPF, std::__2::allocator<ecourna::app::dados::CNumeroCPF>>::~__shared_ptr_emplace()_1077
@@ -10874,7 +10874,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11008	289	0	app	api	skeleton	11639	shape	14	api::IForm<api::IPaper>::Slot3()
 11009	212	0	app	api	skeleton	11640	shape	11	api::IForm<api::IPaper>::Slot2()
 11010	17	0	app	libc++	skeleton	11641	addr	1	std::__2::__shared_ptr_pointer<api::CPreShowNothing<api::IPaper>*, std::__2::shared_ptr<api::IPreShow<api::IPaper>>::__shared_ptr_default_delete<api::IPreShow<api::IPaper>, api::CPreShowNothing<api::IPaper>>, std::__2::allocator<api::CPreShowNothing<api::IPaper>>>::__get_deleter(std::type_info const&) const
-11011	99	0	app	-	skeleton	9877	byte	0	std::__2::__tree_const_iterator<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, void*>*, long> std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CCandidatura>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CCandidatura>>>::find<unsigned int>(unsigned int const&) const
+11011	99	0	app	-	skeleton	9911	byte	0	std::__2::__tree_const_iterator<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, void*>*, long> std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CCandidatura>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CCandidatura>>>::find<unsigned int>(unsigned int const&) const
 11012	43	0	app	api	skeleton	11250	byte	0	api::CNewLineFieldPaper::Draw(api::IPaper&) const
 11013	12	0	app	api	skeleton	11557	addr	2	api::IFormFieldBase<api::IPaper>::~IFormFieldBase()
 11014	21	0	app	api	skeleton	11558	addr	4	api::IFormField<api::IPaper>::GetTypeName() const
