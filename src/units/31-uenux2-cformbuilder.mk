@@ -49,7 +49,8 @@
 # vota::CMenuFiltrarCandidatosPorNumero::ProcessInput) holds behind a second prologue of 16 bytes, inside the message
 # screen it holds (api::MostraMensagemTemporaria, unit 171's); cformbuilder.h has its evidence and what is chosen. This
 # object emits CPreShowNothing<IScreen>'s vtable and typeinfo first in the link now, right after CPreShowClearScreen's,
-# the target's data order (our map: 0x1822bc after the typeinfo at 0x1822b0; the target's @1577920 after @1577908), and
+# the target's data order (our map: 0x1822bc after the typeinfo at 0x1822b0 at 836481cb, 0x18235c after 0x182350 at
+# 543ca8b7; the target's @1577920 after @1577908), and
 # with them the control block, whose __get_deleter, 11137, matches from here: unit 102's roots' builder and sink of
 # that block went. The roots' FormA and FormB went too: 5550's two target callers, 6117 and 11891, are in the link.
 #

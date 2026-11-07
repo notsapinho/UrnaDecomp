@@ -155,7 +155,8 @@
 # ExibeMensagemTemporaria that holds its body, and FONTE_MENSAGEM, the SFont {35, 0} at .rodata 520148 that 11891 alone
 # reads; capplication.h has the body's evidence and what is chosen. Their file: the target's font lies right after the
 # typeinfo name of InitApplication's local facet (@519992, 0x9a bytes), and our link puts FONTE_MENSAGEM right after
-# that name in this object's data too (0x772e4 after 0x77247, build/out/wasm-map/vota_web/vota_web_wasm.map): a reading,
+# that name in this object's data too (build/out/wasm-map/vota_web/vota_web_wasm.map: 0x772e4 after 0x77247 at
+# 836481cb, 0x77384 after 0x772e7 at 543ca8b7): a reading,
 # as the lines (after GetExceptionLevel, in the run the records leave blank) are a choice. The target's frame of 48
 # bytes holds the builder at +36, the fill's result at +28, the second SPoint (639, 310) and then the text field's
 # result at +20, the form at +12, and the first SPoint, the text's SPoint (320, 242) and the "" at +0. Measured in
@@ -171,7 +172,12 @@
 # target's: the inliner gives the two dropped results lifetime markers from the body's start to its end (the IR's
 # lifetime.start and .end around the inlined body), so the text field's result outlives "" and the form and takes the
 # second SPoint (docs/reference/facts/codegen.md C5). That helper written external is not inlined by clang, and taking
-# the CWait by value there copies it into an 80-byte frame. In the whole link 11891 then matched (unit 104's fragment).
+# the CWait by value there copies it into an 80-byte frame. Written `static` instead of in an anonymous namespace, or as
+# a lambda called in place (`[&] { ... }();`), it gives the same function byte for byte (object probes at 836481cb,
+# compared by function with docs/reference/facts/tool-traps.md X12's masks). A helper around part of the body gives
+# other slots: with only the two adders in it the form shares the text field's result's slot, and with AddTextField
+# alone the second SPoint's ("" then shares the text field's). In the whole link 11891 then matched (unit 104's
+# fragment).
 CAPPLICATION_SRCS := src/api/gui/capplication.cpp
 UENUX2_SRCS += $(CAPPLICATION_SRCS)
 $(ROOT)/$(APP)/171-uenux2-capplication-roots.o: $(ROOT)/src/units/171-uenux2-capplication-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/171-uenux2-capplication.mk

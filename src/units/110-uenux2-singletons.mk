@@ -495,15 +495,19 @@
 #   6581, 6580 and 6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix
 #   (names.tsv's ld_index at 894335de 2689, 2692, 2698, 2701 and 2704, then 6569's 2709, 6561's 2711, 6557's 2716 and
 #   the destructor's 2717).
-# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
+# - Data. At cb34a517 the link held this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
 #   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, FONTE_TECLA and FONTE_SUPLENTE
-#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4), the target as {30, 0} @474888,
+#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4; unit 378's FONTE_NUMERO and
+#   FONTE_NOME_CARGO came among them later, and at 543ca8b7 the run reads FONTE_INSTRUCAO_TESTE_TECLADO,
+#   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, those two, FONTE_TITULO, FONTE_VERSAO and FONTE_TECLA from 0x711c8,
+#   FONTE_SUPLENTE at 0x72078), the target as {30, 0} @474888,
 #   {20, 0} @474896, {25, 0} @474992, {15, 0} @475008, {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600:
 #   AdicionaTelaQRCode (3059, above) reads {20, 0} and {35, 0} first, so {35, 0} precedes {25, 0}, one pair against
 #   the target's, and {20, 1} follows it as the target holds it; FONTE_VERSAO's two pairs are
 #   CriaTelaMaisInformacoes' (both below). The key vector went the other way: TelaTesteTeclado, which reads it, is
-#   above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO (0x1babfc) before CTelasVota::s_mutex (0x1bac08)
-#   and s_instancia (0x1bac20), the target's order (src/units/217-uenux2-ctesteteclado.mk).
+#   above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO before CTelasVota::s_mutex and s_instancia, the
+#   target's order (0x1babfc, 0x1bac08 and 0x1bac20 at cb34a517; 0x1bcc10, 0x1bcc1c and 0x1bcc34 at 543ca8b7;
+#   src/units/217-uenux2-ctesteteclado.mk).
 # - Use band 1. Its members 12268 to 12276 (the std::function over the suplentes' lambda) and 12520 to 12530 (6561's
 #   CDataImage and its control block) link before 28 functions of this object that the target's index puts before them:
 #   CInputMenuField::AddItem's std::function (12277 to 12285) and the control blocks of CTextFieldMultiLine (12298,
@@ -846,8 +850,9 @@
 # has the measurement and codegen.md C4's count of objects out of the data order at both places). Linked here, it
 # lies between unit 104's list and ctelasvota.cpp.o, so each move above from unit 104's list crosses it and inverts
 # one pair more (its vtable is at @1551044 in the target), and codegen.md C4's count against each of the four
-# filter-screen files after ctelasvota.cpp.o is 115 (113 at e7d03612 for PorCargo and PorPartido): the two more are
-# this object and unit 378's pending object, which lie on one side of every place after ctelasvota.cpp.o.
+# filter-screen files after ctelasvota.cpp.o was 115 at 241e042b (113 at e7d03612 for PorCargo and PorPartido): the
+# two more are this object and unit 378's pending object, which lay on one side of every place after ctelasvota.cpp.o
+# (the count moves as landings name data: 188 at 543ca8b7, one less for csincronismooperador.cpp's move, below).
 #
 # vota/operador/csincronismooperador.cpp (unit 104's: vota::CSincronismoOperador) is compiled from this list, at its
 # end: StartState (10210) holds comum::CEleitores::MarcaVotou (this list's celeitores.cpp, records 456 and 460) and
@@ -859,9 +864,10 @@
 # data address or the throws' destructor slot: between celeitordinamicodao.cpp and celeitores.cpp, after celeitores.cpp,
 # after chv.cpp, after md/cvalidadoridentidade.cpp, after ctelasvota.cpp and here; it matched here at step 9. The move
 # is needed for 10210, not by the data's order. Of those places docs/reference/facts/codegen.md C4's record-aware count
-# of objects out of the data's order against it is lowest here: 534, 533, 532, 529, 528 and 523 (531, 530, 527, 526, 525
-# and 524 after cpe.cpp, crespostas.cpp, cmenumaisinformacoesvota.cpp and the PorNumero, PorCargo and PorPartido files,
-# places no link measured), 549 at its place in unit 104's list (at 0c3a9009, and the same on this commit's link).
+# of objects out of the data's order against it is lowest here (at 836481cb, and the same at 543ca8b7): 534, 533, 532,
+# 529, 528 and 523 (535 right after celeitordetalhe.cpp.o, and 531, 530, 527, 526, 525 and 524 after cpe.cpp,
+# crespostas.cpp, cmenumaisinformacoesvota.cpp and the PorNumero, PorCargo and PorPartido files, places no link
+# measured), 549 at its place in unit 104's list (at 0c3a9009, 836481cb and 543ca8b7).
 # Against that old place it puts in order the 26 objects between the two with records or vtables below
 # CSincronismoOperador's vtable (@1601144) and inverts none: api/gui/primitives.cpp, comum's appinfo/cappinfo.cpp,
 # asn/cconversorabrangencia.cpp and cconversorseguranca.cpp, md/cabrangencia.cpp and cseguranca.cpp, ten of dados/
@@ -869,6 +875,11 @@
 # md/csecaoeleitoral.cpp, md/cvalidadoridentidade.cpp, md/municipiozona/cmunicipio.cpp) and four of dados/asn/
 # (cconversoridentificacaoagregada, estadoaplicacao/cconversordadolocal, municipiozona/cconversormunicipio and
 # cconversorcomplementomunicipio), and ctelasvota.cpp, cmenumaisinformacoesvota.cpp and the four filter screens' files.
+# Linked here, after cmenuvisualizarcandidatos.cpp.o and the PorNumero, PorCargo and PorPartido files, it leaves the
+# span of each of their moves above, which were measured from unit 104's list while it lay there among the objects they
+# cross and invert: the pair each makes with it is in order now, so each of those moves inverts one object fewer, and
+# codegen.md C4's count against each of the four files is one less: 188 at 543ca8b7, 189 on that link line with this
+# object put back after cfinalizaoperador.cpp.o.
 # The other move, celeitordetalhe.cpp into unit 104's list ahead of csincronismooperador.cpp, was counted only (277
 # objects out of order against it where it is, 273 there) and not linked. StartState's place in its .cpp is not free:
 # use band 1 runs 10213, 10211, 10210, 10209 (the statics' exit destructors, StartState, ProcessKey) at consecutive

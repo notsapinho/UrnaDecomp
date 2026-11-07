@@ -27,11 +27,12 @@
 # folded the test that made it. Written here: the throw tests `numColors <= 0 || numColors > 256`, so that numColors
 # stays unknown to clang below it, and after the size `if (numColors < 256)` clears the palette entries from numColors
 # on with std::memset; GetData passes 256, so binaryen folds both. Chosen: both conditions and what the second test
-# guards. The target holds no code of that path. The clear changes nothing in the result: the palette loop after it
-# writes all 256 entries. A palette loop bounded by numColors, where it would, gives another loop (below). Forms that
-# give the same GetData in that link: the first test as `numColors > 256` alone; the second as `numColors != 256`; in
-# place of the std::memset, a loop over the entries from numColors to 255 storing 0, the same loop storing white (255,
-# 255, 255, 0), or header.resize to the entries in use. Forms that give other code:
+# guards. The target holds no code of that path. The clear changes nothing for any input: the vector's
+# value-initialization had already zeroed those entries, and the palette loop after it writes all 256. A palette loop
+# bounded by numColors, where it would, gives another loop (below). Forms that give the same GetData in that link: the
+# first test as `numColors > 256` alone; the second as `numColors != 256`; in place of the std::memset, a loop over the
+# entries from numColors to 255 storing 0, the same loop storing white (255, 255, 255, 0), or header.resize to the
+# entries in use. Forms that give other code:
 #   the throw's test between the size and the rest: the fill is 1072 bytes from +6 in the object, as with std::abort()
 #   or a return of the header there; __builtin_trap() there (a probe, not a TSE form) gives the target's stores and fill
 #   in the object;
@@ -52,13 +53,14 @@
 # size copied after the rest, header.resize after a default vector, and either parameter order, at -O1, -O2 and -Os and
 # with -fno-strict-aliasing or -fexceptions added; GetData scored 52 over 839 rows then (8 rows inserted, 8 deleted:
 # those stores; pnpm wasm score at 0c3a9009).
-# The rest is read from the bytes. The header's 54 bytes are written field by field through pointers into the vector,
-# with the constant neighbours merged into 8-byte stores: a packed file header whose reserved words are one 32-bit field
-# (two 16-bit fields merge +6..+9 and +10..+17 instead of the target's +6..+13 and +14 alone), then the info header. The
-# width, height and size are its parameters, in the order (size, width, height): GetData then reads the image's size
-# before CQRCodeImage's width at the call, as the target does, where (width, height, size) reads the width first. The
-# target's 1078 = 54 + 4 * 256 and 20000 pixels per meter are its constants. Names chosen: the structs, their fields,
-# the parameters and locals.
+# The rest is read from the bytes. The header's 54 bytes are written field by field, with the constant neighbours merged
+# into 8-byte stores: a packed file header whose reserved words are one 32-bit field (two 16-bit fields merge +6..+9 and
+# +10..+17 instead of the target's +6..+13 and +14 alone), then the info header. Chosen: writing them through pointers
+# into the vector (the type and size are written apart from the rest, so no copy of a whole struct fits, and no other
+# spelling, std::memcpy per field or byte writes, was measured with the two tests). The width, height and size are its
+# parameters, in the order (size, width, height): GetData then reads the image's size before CQRCodeImage's width at
+# the call, as the target does, where (width, height, size) reads the width first. The target's 1078 = 54 + 4 * 256
+# and 20000 pixels per meter are its constants. Names chosen: the structs, their fields, the parameters and locals.
 CBMPCONVERSOR_SRCS := src/api/gui/cbmpconversor.cpp
 UENUX2_SRCS += $(CBMPCONVERSOR_SRCS)
 # no roots: the three target functions that call both, 10316, 10451 and 10465 (units 135, 221 and 282), are in the link,

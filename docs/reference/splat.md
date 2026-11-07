@@ -602,8 +602,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   with each out-of-line callee it calls in place, and allow for what the link removes (an empty base destructor, a
   sized `operator delete` that is `free`). When the target caller is written and does not match, the body is compared
   through the caller's `score` instead, and the fragment gives that score and says whether the rows that differ lie
-  in the inlined body (`CBmpConversor::CreateBitmapHeader` in 10967: its stores of the file header's type and size,
-  unit 79's fragment);
+  in the inlined body (10967's 8 rows, until unit 22's second test of `numColors` matched it, all lay in
+  `CBmpConversor::CreateBitmapHeader`: its stores of the file header's type and size, unit 79's fragment);
 - a body from a companion object. Read the `object` column of each new match in `splat/scan.tsv`, and of each match
   whose object the range moved, since a tree root also takes over matches the base had from another object:
   `join -t "$(printf '\t')" <(git show <base>:splat/scan.tsv | awk -F'\t' 'NR>1 {print $1"\t"$5"\t"$11}' | sort)

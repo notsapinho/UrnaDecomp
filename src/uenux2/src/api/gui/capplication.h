@@ -109,9 +109,9 @@ std::string Join(const std::vector<std::string>& partes, const std::string& sepa
 // results carry the inliner's lifetime markers (docs/reference/facts/codegen.md C5); written as statements of this
 // function, the second SPoint shares the form's slot. So capplication.cpp's ExibeMensagemTemporaria, of internal
 // linkage and with the CWait by reference, holds the body (src/units/171-uenux2-capplication.mk has the forms
-// measured). Chosen: both names and the font's, the split and the helper's linkage (a reading of the frame), its being
-// a free function of api (it reads no state of CApplication; its caller is vota's, as GetExceptionLevel's are) and the
-// CWait's passing
+// measured): the split and the internal linkage are readings of the frame. Chosen: both names and the font's, the
+// anonymous namespace (a `static` helper or a lambda called in place give the same bytes), its being a free function
+// of api (it reads no state of CApplication; its caller is vota's, as GetExceptionLevel's are) and the CWait's passing
 void MostraMensagemTemporaria(const std::string& mensagem, CWait&& espera);
 
 } // namespace api
