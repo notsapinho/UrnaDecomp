@@ -3,8 +3,9 @@
 # was a stub-only file) and creportprinter.cpp (Imprime with DoPrintJob; unit 325 adds that file, below); the voters'
 # list in src/app/comum/relatorios/cgeradorrellistaeleitores.{h,cpp} (a stub-only
 # file until now), whose one user is vota::CImpressaoListaEleitores::StartState (target fn 11908), unit 176's, written
-# with it. Paths relative to src/uenux2. Unit 287's CGeradorRelVersaoPacoteDados::ImprimeTituloJE (11223) is written
-# with this unit in that unit's file, over CEleitores::QuantidadeAptos returning comum::SQtdeAptos (unit 110's
+# with it; that file also defines unit 77's comum::CParteEleitores's constructor (below). Paths relative to
+# src/uenux2. Unit 287's CGeradorRelVersaoPacoteDados::ImprimeTituloJE (11223) is written with this unit in that
+# unit's file, over CEleitores::QuantidadeAptos returning comum::SQtdeAptos (unit 110's
 # celeitores.h, 2823; the RTTI of four std::function<comum::SQtdeAptos()> whose call operator is 2881 says so).
 #
 # Matched: CEleitoresAptos's constructor (1922) and Formata (1921); the call operator four lambdas share (2881; our
@@ -16,17 +17,30 @@
 # link's names.tsv): 1922 0 over 39 rows and 2259 0 over 27 (byte-exact), 1921 27 over 592, 11223 81 over 945, 11234 13
 # over 356, the slots 1 or 2 rows each, all operand-only.
 #
-# Written, not matched:
-# - 11908 (vota::CImpressaoListaEleitores::StartState, with ImprimeListaEleitores, MontaCabecalho and the other parts'
-#   builders, CReport::Imprime with DoPrintJob and CParteEleitores's constructor held inlined): 242 over 2056 rows, 7
-#   inserted and 7 deleted, every one a local.get/set/tee whose index the target and ours permute (the five parts'
-#   pointers and control blocks: the target's part 2 is locals 11 and 12, ours 10 and 14). The target stores
-#   CParteEleitores's member through its control block (+16, +20), ours through the object (+4, +8 of ctrl + 12). Not
-#   explained. Measured, each on a whole link: creport.cpp before or after cgeradorrellistaeleitores.cpp in this list
-#   (the same 242); cgeradorrellistaeleitores.cpp ahead of unit 77's cparteeleitores.cpp (the same); with unit 176's
-#   cimpressaolistaeleitores.cpp ahead of both too, 262 over 2057; CParteEleitores's constructor defined in its class,
-#   221 over 2053 with the constructor's 16-byte frame gone, which the target keeps (a second prologue in 11908). It
-#   stays written: it brings matches only it calls (11234, the slots of MontaCabecalho's and DoPrintJob's lambdas).
+# 11908 (vota::CImpressaoListaEleitores::StartState, with ImprimeListaEleitores, MontaCabecalho and the other parts'
+# builders, CReport::Imprime with DoPrintJob and comum::CParteEleitores's constructor held inlined, the constructor by
+# binaryen, behind a second prologue) matches since that constructor is defined in cgeradorrellistaeleitores.cpp and not
+# in unit 77's cparteeleitores.cpp. With it there 11908 scored 242 over 2056 rows (7 inserted, 7 deleted): ours stored
+# CParteEleitores's member through the object (+4, +8 of the control block + 12) where the target stores it through
+# the control block (+16, +20), and the five parts' pointers took other locals. Our object keeps the constructor's
+# result; the target's rows are what binaryen makes of an object that drops it (the replay below), which says the
+# constructor is the caller's TU's (docs/reference/facts/codegen.md C6: a call of the C1 alias of a constructor the TU
+# defines drops the result). Measured:
+# - on a replay of the link's binaryen (codegen.md C4) with that call's argument made a local.tee of the control block
+#   + 12 and its result dropped: 166 over 2049 rows, none inserted or deleted, and the one row that is no call or data
+#   address is table slot 148 against 91, std::__format::__allocating_buffer<char>::__prepare_write on both sides (fn
+#   7324); with the result dropped and the pointer computed again after the call: 190 over 2051 (2 inserted, 3 deleted);
+# - with the constructor in this TU the object calls its C1 alias and drops the result (wasm-objdump -d); with it in
+#   cparteeleitores.cpp, MontaEleitores's object keeps the result in each spelling tried: as written, a named
+#   std::shared_ptr<CParteEleitores>, std::static_pointer_cast, std::allocate_shared, the form a named local moved in;
+# - on the whole link the constructor in this file gives 166 over 2049 rows, every one an operand, and one module
+#   (sha256 prefix 2f30b66fd0c60d81) whether it is defined above the anonymous namespace, below it or after
+#   ImprimeListaEleitores; it is written below it, a choice. Measured before, each on a whole link and still 242:
+#   creport.cpp before or after cgeradorrellistaeleitores.cpp in this list, and cgeradorrellistaeleitores.cpp ahead of
+#   cparteeleitores.cpp; with unit 176's cimpressaolistaeleitores.cpp ahead of both too, 262 over 2057; the constructor
+#   defined in its class, 221 over 2053 with its 16-byte frame gone, which the target keeps.
+#
+# Written, and matched later:
 # - 11233, SituacaoEleitor (record cgeradorrellistaeleitores.cpp:100:15, its throw, EUE_COMUM_RELATORIOS_9068 and the
 #   target's message): 42 over 565, one row inserted, the test of the voter's biometry flag (+100): the target tests the
 #   byte as nonzero, `i32.eqz`, where md::CEleitor::TemBiometria, defined in its class, gives `i32.const 1; i32.ne`
@@ -35,7 +49,7 @@
 #   defined out of line in md/eleitor/celeitor.cpp (binaryen inlines its two-instruction body at every call: names.tsv
 #   holds no TemBiometria) 11233 scored 40 over 564, all operand-only, and steps 7 to 9 matched it with no row of the
 #   base leaving match. That change is unit 157's now (celeitor.cpp), and 11233 matches with no source of its own
-#   changed, so it has left this list.
+#   changed.
 # - 10884, DoPrintJob's lambda's call operator, matched since unit 325: the target calls 5486, CReport::ImprimePartes,
 #   which clang inlined into it here (24 rows inserted) while both were in creport.cpp. With DoPrintJob in another TU
 #   (creportprinter.cpp, below) it stays a call, and 10884 scores 0 over 5 rows and 5486 (in creport.cpp) 0 over 27,
@@ -86,7 +100,8 @@
 #   record's; the other helpers' names (MontaTitulos, MontaEleitores, MontaLegenda, MontaRodape, CabecalhoEleitores) and
 #   their internal linkage (CabecalhoEleitores lies in the anonymous block between MontaCabecalho, whose RTTI names
 #   comum's anonymous namespace, and SituacaoEleitor, whose record does), ImprimeListaEleitores's name and its being a
-#   free function of comum, TITULO's name and every line but 100 are chosen. Evidence: 11908's 144-byte frame builds
+#   free function of comum, TITULO's name and every line but 100 are chosen; CParteEleitores's constructor is here by
+#   the reading above, its place in the file chosen. Evidence: 11908's 144-byte frame builds
 #   five parts, each with a builder of its own freed right after the part is made, into a CReport from an initializer
 #   list (the five copies' counts raised, the five temporaries released after 2259 returns), so each part is a
 #   function's result in one full-expression; the third is std::make_shared of comum::CParteEleitores (vptr 1576212),

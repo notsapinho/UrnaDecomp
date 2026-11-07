@@ -157,6 +157,16 @@ std::shared_ptr<api::IReportPart> MontaRodape()
 
 } // namespace
 
+// comum::CParteEleitores's constructor (cparteeleitores.h; Imprime, the key function, is in cparteeleitores.cpp),
+// defined in this file, its one caller's. Fn 11908 holds it inlined by binaryen (its 16-byte frame inside) and stores
+// the part's member through the control block, which binaryen gives from an object that drops the constructor's result;
+// docs/reference/facts/codegen.md C6: a call of the C1 alias of a constructor the TU defines drops it.
+// src/units/317-uenux2-relatorios-aptos.mk has the measurements. Its place in this file is chosen.
+CParteEleitores::CParteEleitores(std::shared_ptr<api::IForm<api::IPaper>> form)
+    : m_eleitor(std::make_shared<api::CFormPart>(std::move(form)))
+{
+}
+
 void ImprimeListaEleitores(const std::string& titulo, const std::string& via)
 {
     const api::CReport relatorio({MontaCabecalho(), MontaTitulos(), MontaEleitores(), MontaLegenda(), MontaRodape()});
