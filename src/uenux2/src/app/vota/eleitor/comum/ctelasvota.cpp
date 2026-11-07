@@ -929,14 +929,12 @@ CFormInterativoTelaVota CTelasVota::CriaTelaConfirmaImpressaoZeresima(const std:
     return GetFormularioInterativo(builder, "telaConfirmaImpressaoZeresima");
 }
 
-// (original lines 3130-3166: content not recovered)
-#line 3167
-namespace {
-
+// (original lines 3130-3168: content not recovered)
+#line 3169
 const api::SFont FONTE_BARRA_PROGRESSO{0, 0};
 
-} // namespace
-
+// (original lines 3171-3172: content not recovered)
+#line 3173
 std::pair<std::shared_ptr<api::IForm<api::IScreen>>, std::shared_ptr<api::CProgressBar>> TelaProgressoEncerramento()
 {
     api::CFormBuilder builder;

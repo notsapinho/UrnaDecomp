@@ -44,9 +44,8 @@
 # - Then a font size of 0 becomes floor(0.8 * (bottom - (top + 2 * border))), over the members (+42, +38, +82, read
 #   again after the refresh's indirect call): f64.mul by 0.8, f64.floor and i32.trunc_sat_f64_s in 5545. The
 #   formula's spelling is chosen.
-# In the whole link 5545 scores 52 over 844 rows, every one an operand (`pnpm wasm score ../target/vota_web_wasm.wasm
-# 5545 ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>`); unit 31's fragment says what it waits for. Chosen too:
-# the parameters' and members' names (the header's), the enumerators' names, every line but the records'.
+# 5545, which holds the constructor inlined, matches (unit 31's fragment says what its folded font rests on). Chosen
+# too: the parameters' and members' names (the header's), the enumerators' names, every line but the records'.
 #
 # Draw (10977): the evidence is the target's rows (`pnpm wasm fn ../target/vota_web_wasm.wasm 10977`); what it gives,
 # the forms measured and the choices:

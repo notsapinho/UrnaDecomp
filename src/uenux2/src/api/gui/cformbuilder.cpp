@@ -13,7 +13,7 @@
 //                                  (cformbuilder.h says why), here by the target's data (the fragment)
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
 //   -     GetFormSemLimpar(nome)   over an api::CPreShowNothing<IScreen>, through 5550: code 11891 holds inlined
-//   5545  AddProgressBar           written, differs: the fragment says what it waits for
+//   5545  AddProgressBar           its font named by a hand line (the fragment)
 //   -     AddMaskedTextField       a CMaskedTextField<CFramedText> over a CFixedText: 2384's (ctelasvota.cpp)
 //                                  code, which it holds inlined (cformbuilder.h says why), after
 //                                  AddProgressBar, its place a choice

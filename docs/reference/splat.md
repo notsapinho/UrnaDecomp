@@ -345,12 +345,12 @@ layout puts there ([facts/libraries.md](facts/libraries.md) §B10). Otherwise th
   target does not hold leaves the body `unresolved` ([facts/splat.md](facts/splat.md) §S12);
 - a read-only object by its exact bytes, found once, when it holds 4 bytes or more. Found more often, the copies offered
   are the places at its alignment among the first 65 places of those bytes at any offset (`resolveBytes`), up to 64 of
-  them: a row's `bytes occur N+ times` counts those, not every place, so 5545's eight zero bytes read `22+` though the
-  target holds them at a multiple of 4 far more often, and the 22 offered are the lowest, not every copy. A smaller one
-  is `object too small to identify by content` (`resolveBytes`), and no vote names it. wasm-ld's
-  map gives no object's alignment, so our address stands in for it: an object our link puts at a multiple
-  of 4 is looked for only at multiples of 4, any other one anywhere. A typeinfo name (`_ZTS…`) is looked
-  for anywhere, wherever our link puts it, since its alignment is 1 ([facts/splat.md](facts/splat.md) §S9);
+  them: a row's `bytes occur N+ times` counts those, not every place, so 5545's eight zero bytes read `22+` (ba9a4549,
+  before a hand line named them) though the target holds them at a multiple of 4 far more often, and the 22 offered are
+  the lowest, not every copy. A smaller one is `object too small to identify by content` (`resolveBytes`), and no vote
+  names it. wasm-ld's map gives no object's alignment, so our address stands in for it: an object our link puts at a
+  multiple of 4 is looked for only at multiples of 4, any other one anywhere. A typeinfo name (`_ZTS…`) is looked for
+  anywhere, wherever our link puts it, since its alignment is 1 ([facts/splat.md](facts/splat.md) §S9);
 - **by its re-pointed bytes** (`content-repointed`): a `.data` object, or a read-only one whose exact
   bytes are not in the target (it holds pointers), is our object's bytes with every aligned word that is
   one of our addresses or table slots replaced by what it re-points to (any copy, or the plain integer

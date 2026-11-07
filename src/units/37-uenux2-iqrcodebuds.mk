@@ -46,7 +46,9 @@
 #   computes the screen's height, the area's bottom + 1, into a local of its own and subtracts 48, 27 and 115 from it
 #   (CONFIRMA's and Continuar's rows, the help text's bottom); clang folds that into bottom - 47, - 26 and - 114 for
 #   every form of the height compiled (a TPosition, int, unsigned or uint16_t local, the area's copy with its bottom
-#   moved, a size point; objects and scratch TUs at ctelasvota.cpp's flags). The other inserted and deleted rows are
+#   moved, a size point; objects and scratch TUs at ctelasvota.cpp's flags), and for the height passed by value to an
+#   internal helper that builds each of those points (ba9a4549's object: CONFIRMA's and Continuar's rows at bottom -
+#   47 and - 26 again; clang inlines the helper and folds its subtractions). The other inserted and deleted rows are
 #   where two of the area's fields are kept (a stack value against a local) and the locals' numbers; not explained
 #   apart from the height. Measured on the way, in the whole link: the area read as one local copy (three i16 loads)
 #   732 over 2421; through AreaTela's by-value copy (the target's one i64.load) 756 over 2418; with the layout values

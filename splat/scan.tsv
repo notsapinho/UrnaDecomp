@@ -5408,7 +5408,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5542	-	-	-	no-candidate	no symbol and no ledger pair	52	none	app	0	-
 5543	_ZN3api12CFormBuilder8AddMovieERKNS_6SPointERKNSt3__210shared_ptrINS_6CMovieEEE	5652	symbol	match	readings: address symbol	333	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5544	_ZN3api12CFormBuilder16GetLabeledKeyPosERKNS_5SRectENS_14ETextAlignmentEs	5653	symbol	match	readings: address string,table slot,address srcloc,address symbol	559	none	ecourna	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-5545	_ZN3api12CFormBuilder14AddProgressBarEjRKNS_6SPointES3_RKNS_5SFontERKNSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEE	5655	symbol	differs	+0x5f target +0x5e i32.const 475024 | ours +0x5e i32.const 450372 [ours 569776 = _ZN12_GLOBAL__N_111FONTE_BARRAE+0: _ZN12_GLOBAL__N_111FONTE_BARRAE: no target symbol; bytes occur 22+ times]	2040	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+5545	_ZN3api12CFormBuilder14AddProgressBarEjRKNS_6SPointES3_RKNS_5SFontERKNSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEE	5655	symbol	match	readings: address symbol,address string,table slot,address srcloc	2040	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5546	_ZN3api12CFormBuilder16AddTextRectFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_5SRectERKNS_5SFontE	5657	symbol	match	readings: address symbol,address same-content,address string,address srcloc,table slot	534	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5547	_ZN3api12CFormBuilder8AddImageENSt3__210shared_ptrINS_6IImageEEERKNS_6SPointE	5658	symbol	match	readings: address symbol	166	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5548	_ZN3api5IFormINS_7IScreenEEC2ERKNSt3__26vectorINS3_10shared_ptrINS_10IFormFieldIS1_EEEENS3_9allocatorIS8_EEEERKNS5_INS_8IPreShowIS1_EEEE	6033	symbol	match	readings: address symbol	16	addr	api	1	app/uenux2/src/api/gui/cinteractiveformbuilder.cpp.o
@@ -10685,7 +10685,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10819	_ZNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEED2Ev	10443	symbol	match	readings: address symbol	14	addr	libc++	2	app/102-uenux2-control-blocks-roots.o
 10820	-	-	-	no-candidate	no symbol and no ledger pair	830	none	api	0	-
 10821	_ZNK7RHVoice6client21get_audio_buffer_sizeEv	10207	symbol	match	-	5	byte	api	1	app/roots_rhvoice.o
-10822	_ZN4ASN117OBJECT_IDENTIFIERD0Ev	9724	symbol	unresolved	ours +0x5 i32.const 596524: an address of ours: _ZTVN4ASN117OBJECT_IDENTIFIERE: no target symbol; bytes not in the target; re-pointed bytes not in the target	47	addr	api	1	app/asn1/asn1.o
+10822	_ZN4ASN117OBJECT_IDENTIFIERD0Ev	9724	symbol	unresolved	ours +0x5 i32.const 596516: an address of ours: _ZTVN4ASN117OBJECT_IDENTIFIERE: no target symbol; bytes not in the target; re-pointed bytes not in the target	47	addr	api	1	app/asn1/asn1.o
 10823	_ZN7RHVoice13enum_propertyI24RHVoice_punctuation_modeED2Ev	10261	symbol	match	readings: address symbol	62	addr	RHVoice	1	app/roots_rhvoice.o
 10824	_ZNK7RHVoice8propertyINSt3__23setIjNS1_4lessIjEENS1_9allocatorIjEEEEE11check_valueERKS7_RS7_	10281	symbol	match	-	27	addr	RHVoice	1	app/roots_rhvoice.o
 10825	_ZN7RHVoice8propertyINSt3__23setIjNS1_4lessIjEENS1_9allocatorIjEEEEE5resetEv	10311	symbol	match	-	27	addr	RHVoice	1	app/roots_rhvoice.o
@@ -10703,7 +10703,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10837	_ZN7RHVoice13enum_propertyIbED2Ev	10407	symbol	match	readings: address symbol	62	addr	RHVoice	1	app/roots_rhvoice.o
 10838	_ZN3api20CRHVoiceTextToSpeechD0Ev	10335	symbol	match	-	10	shape	api	1	app/158-uenux2-api-pending.o
 10839	_ZN3api15IGenericFactoryINS_10ISemaphoreEE6CreateEm	12389	symbol	match	readings: address srcloc,address string	21	shape	api	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-10840	_ZN4ASN117OBJECT_IDENTIFIERD2Ev	9725	symbol	unresolved	ours +0x5 i32.const 596524: an address of ours: _ZTVN4ASN117OBJECT_IDENTIFIERE: no target symbol; bytes not in the target; re-pointed bytes not in the target	44	addr	api	1	app/asn1/asn1.o
+10840	_ZN4ASN117OBJECT_IDENTIFIERD2Ev	9725	symbol	unresolved	ours +0x5 i32.const 596516: an address of ours: _ZTVN4ASN117OBJECT_IDENTIFIERE: no target symbol; bytes not in the target; re-pointed bytes not in the target	44	addr	api	1	app/asn1/asn1.o
 10841	_ZN3api20CRHVoiceTextToSpeech12DoSynthesizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_13ITextToSpeech8SOptionsE	10336	symbol	differs	+0x0 target the locals | ours the locals	75081	none	api	1	app/158-uenux2-api-pending.o
 10842	-	-	-	no-candidate	no symbol and no ledger pair	23822	none	api	0	-
 10843	_ZNSt3__220__shared_ptr_emplaceIN3api6CTimerENS_9allocatorIS2_EEED0Ev	7619	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/util/itimerscheduler.cpp.o
