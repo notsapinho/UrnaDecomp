@@ -23,7 +23,16 @@ md::TQtdVoto CRdvVota::Candidato(md::TCargoID cargo, uedword numero, uebyte digi
     return m_votos.Candidato(cargo, numeroCandidato);
 }
 
-// (original lines 26-86: content not recovered)
+std::map<md::TEleicaoID, std::vector<md::CCargo>> CargosPorEleicao()
+{
+    std::map<md::TEleicaoID, std::vector<md::CCargo>> cargos;
+    for (const md::TEleicaoID& eleicao : CConfiguracaoEleicao::GetInst().GetIDsEleicoes()) {
+        cargos.emplace(eleicao, CConfiguracaoEleicao::GetInst().GetCargos(eleicao, false));
+    }
+    return cargos;
+}
+
+// (original lines 35-86: content not recovered)
 #line 87
 SINGLETON_IMPL_GET_INST(CRdvVota, s_mutex, s_instancia)
 

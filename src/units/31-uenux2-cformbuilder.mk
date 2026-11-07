@@ -5,9 +5,9 @@
 # other two .cpp files, whose paths are chosen, each the class's in lower case beside cformbuilder.cpp; cpaperformbuilder.h
 # is a record's. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
-# Target functions, all matched but one, 5545:
+# Target functions, all matched:
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
-#                      5546 (AddTextRectField, below) and 5545 (AddProgressBar, written and differs, below),
+#                      5546 (AddTextRectField, below) and 5545 (AddProgressBar, below),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField, below);
 #                      3678 and 2243 (AddLabeledKey, over a key's name and over a key) and 2782 (AddTextFieldMultiLine), below;
 #                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
@@ -190,30 +190,27 @@
 # after GetForm (5550), which this file has after the adders by choice (above): that pair stays inverted, as 5547's
 # with 5550 is; after GetForm, its block's two members would read inverted against AddBlinkingTextField's two.
 #
-# 5545, AddProgressBar, is written and `differs` (docs/how-to-decompile.md step 5): an api::CProgressBar (unit 40's
-# constructor, which binaryen inlines into it) over RectEntre's rectangle, returned as the bar (cformbuilder.h). Its
-# font is a parameter both target callers, 7787 and 12098, pass as one constant, the SFont {0, 0} @475024, which
-# binaryen folded: 5545 reads its size at that address. In the whole link it scores 52 over 844 rows, every one an
-# operand (`pnpm wasm score`), and the scan stops at that address (`... no target symbol; bytes occur 22+ times`): the
-# roots' BarraProgresso passes a constant of its own with those bytes, eight zero bytes are found too often in the
-# target for the scan to place them, and no target function but 5545 and 7787 reads @475024. With a line naming the
-# stand-in's constant at 0x73f90 in a scratch copy of the symbol file, `pnpm wasm splat-remap
-# ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm sym:<AddProgressBar> --against 5545
-# --symbols <the copy>` prints
-# IDENTICAL. So it waits for that object's name, which a match of 7787 (vota::CTelasVota's constructor, whose file's
-# data hold the object; 12098, cgravaresultado.cpp's CGravaResultado::StartState, passes the same address, so it is no
-# constant internal to ctelasvota.cpp) can give once it is written and passes its own constant; no hand line names it
-# meanwhile, as
-# the stand-in's object is no target object. What the bytes fixed, measured: the size is read before the allocation,
-# after the rectangle, so the rectangle and the size are named locals in that order. `fonte.size` given to make_shared
-# is read in the constructor, after the allocation (3 rows inserted and 3 deleted in the link), and a size local
-# declared before the rectangle is read among the rectangle's loads (the object); `static_cast<TFontSize>(fonte.size)`
-# in the call gives the same function as the two locals (the object, the variants compiled beside each other under
-# names of one length). Its place: after GetForm, in the run before AddStatusHeader's first record: band 1 links its
-# block's members (11111, 11110) after AddBlinkingTextField's and before AddStatusHeader's lambda's block (11109,
-# 11108), the data its vtable @1578496 between theirs, and band 2 puts 5545 after GetForm (5550) and before
-# GetLabeledKeyPos (5544). Unit 108's stand-in call of SRect::Adjust for it, unit 40's vtable sink and unit 102's
-# builder of its control block went: it is in the link.
+# 5545, AddProgressBar: an api::CProgressBar (unit 40's constructor, which binaryen inlines into it) over RectEntre's
+# rectangle, returned as the bar (cformbuilder.h). Its font is a parameter both target callers, 7787 and 12098, pass as
+# one constant, the SFont {0, 0} @475024, which binaryen folded: 5545 reads its size at that address. That constant is,
+# by unit 48's reading of 12098's frames (its fragment), the font ctelasvota.cpp's progress screen passes
+# (vota::TelaProgressoEncerramento, which 12098 holds inlined), named vota::FONTE_BARRA_PROGRESSO by choice and external
+# by a chosen linkage, the user's decision (ctelasvota.h): the roots' BarraProgresso passes it in both calls. Measured
+# in a link that also reaches the screen (the plain link and an object whose caller of the screen a sink keeps): our
+# AddProgressBar keeps the font as a seventh parameter while the roots pass a constant of their own with those bytes,
+# and has the target's six with this one. Eight zero bytes are found too often in the target for the scan to place them
+# (`... no target symbol; bytes occur 22+ times`, ba9a4549), so the name comes from a `callers+content` hand line for
+# @475024 in splat/symbol_addrs.txt, led by 7787's read of it (7787 tests its size and copies it or the SFont {30, 0} at
+# 474888); weighed by removal, it carries 5545 and nothing else. Matched at step 9. What the bytes fixed, measured: the
+# size is read before the allocation, after the rectangle, so the rectangle and the size are named locals in that order.
+# `fonte.size` given to make_shared is read in the constructor, after the allocation (3 rows inserted and 3 deleted in
+# the link), and a size local declared before the rectangle is read among the rectangle's loads (the object);
+# `static_cast<TFontSize>(fonte.size)` in the call gives the same function as the two locals (the object, the variants
+# compiled beside each other under names of one length). Its place: after GetForm, in the run before AddStatusHeader's
+# first record: band 1 links its block's members (11111, 11110) after AddBlinkingTextField's and before
+# AddStatusHeader's lambda's block (11109, 11108), the data its vtable @1578496 between theirs, and band 2 puts 5545
+# after GetForm (5550) and before GetLabeledKeyPos (5544). Unit 108's stand-in call of SRect::Adjust for it, unit 40's
+# vtable sink and unit 102's builder of its control block went: it is in the link.
 #
 # What the bytes fix:
 # - In each of the MT and paper adders the text local outlives the field's allocation: the field's `new` follows the text's
@@ -373,7 +370,9 @@ UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
 # the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and
 # its TextoRetangulo and BarraProgresso pass the fonts the target folds into 5546 and 5545); 728,
-# 941, 5409 and 5419 have every target caller in the link and no call there
-$(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/util/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
+# 941, 5409 and 5419 have every target caller in the link and no call there. It includes ctelasvota.h for
+# vota::FONTE_BARRA_PROGRESSO, so its rule names every uenux2 and ecourna header, computed here as a fragment must
+# ($(UENUX2_HDRS) is empty when the fragments are read)
+$(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/31-uenux2-cformbuilder-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/31-uenux2-cformbuilder-roots.o

@@ -50,11 +50,12 @@ CConversorHabilitacaoBiometrica::TDado CConversorHabilitacaoBiometrica::DoDeconv
                                              "Informação habilitacaoPorCodigo era esperada neste ponto.");
     }
     CConversorEstadoHabilitacaoPorCodigo conversorEstadoHabilitacao;
-    return CHabilitacaoBiometrica(tentativas, ultimoScore, dedo, erro,
-                                  conversorEstadoHabilitacao.Deconverte(entidade.get_habilitacaoPorCodigo()));
+    const CEstadoHabilitacaoPorCodigo estadoHabilitacao =
+        conversorEstadoHabilitacao.Deconverte(entidade.get_habilitacaoPorCodigo());
+    return CHabilitacaoBiometrica(tentativas, ultimoScore, dedo, erro, estadoHabilitacao);
 }
 
-// (original lines 69-76: content not recovered)
+// (original lines 70-76: content not recovered)
 #line 77
 ModuloResultadoUrnaCadastro::ErroLeituraBiometria CConversorHabilitacaoBiometrica::ConverteErroLeituraBiometria(
     TErroLeituraBiometria erro) const

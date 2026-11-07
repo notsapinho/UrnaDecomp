@@ -579,7 +579,7 @@ in the commit that adds it:
    object counts, not only the exit status (from `asmlift-wasm/`):
 
    ```sh
-   TMPDIR=/tmp pnpm --silent bench setups | /usr/bin/grep -E '^(zlib|libqrencode|rhvoice)\b'
+   TMPDIR=/tmp pnpm --silent bench setups | /usr/bin/grep -w -E '^(zlib|libqrencode|rhvoice)'
    # zlib  [ok, 13 objects]  zlib 1.3.1 + minizip
    # libqrencode  [ok, 9 objects]  libqrencode 4.1.1
    # rhvoice-ignore  [ok, 1 object]  RHVoice 1.14.0, the core objects built at -fignore-exceptions (userdict.cpp)

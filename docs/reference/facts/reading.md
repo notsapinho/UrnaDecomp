@@ -850,6 +850,24 @@ of `ITextToSpeech` after `push<ITextToSpeech>`. Compare an object's `wasm-objdum
 target's run to see which order a form reproduces: that is the measurement, and that the source was in that order is
 the reading, marked as one ([../link-order.md](../link-order.md) §2 says what each order is evidence of).
 
+An external constant is created where its file defines it, as an external function is, so a constant's linkage moves it
+among its TU's data; at `-fPIC` the TU then reads it through a `GOT.mem` import, where an internal one is an offset
+from `__memory_base` (ea98137f):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct F { short a, b; int c; };' 'void use(const F*, const char*);' 'namespace { const F kInterno{1, 2, 3}; }' 'extern const F kExterno; const F kExterno{4, 5, 6};' 'void Tela() { use(nullptr, "um"); use(&kInterno, "dois"); use(&kExterno, "tres"); }' > $P/linkage.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/linkage.cpp -o /work/$P/linkage.o
+wasm-objdump -x -j Data $P/linkage.o | /usr/bin/grep -oE 'segment\[[0-9]+\] [^ ]+' | tr '\n' ';'; echo
+# segment[0] <.rodata.kExterno>;segment[1] <.rodata..L.str>;segment[2] <.rodata._ZN12_GLOBAL__N_18kInternoE>;segment[3] <.rodata..L.str.1>;segment[4] <.rodata..L.str.2>;
+wasm-objdump -x -j Import $P/linkage.o | /usr/bin/grep -oE 'GOT\.mem\.[A-Za-z0-9_]+'
+# GOT.mem.kExterno
+```
+
+So a linkage change that a stand-in needs (5545's font, `src/units/README.md` "Companion files") changes the TU's
+object beyond the symbol's binding: compare its functions masked ([tool-traps.md](tool-traps.md) §X12) and its data
+segments' order, not the objects with `cmp`, and read the change on the link's rows.
+
 ## R9. A member with no record: its place in its use band says whether the `.cpp` defines it
 
 `ledger/ordinals.tsv` column `uses` is the band key binaryen's `reorder-functions` sorted by (direct call sites plus
@@ -1099,6 +1117,13 @@ three and `unresolved` for 5181, which waits for a name:
   another TU, inlined by binaryen after the backend folded addresses. 5665 adds 68 to `p0` and loads at 0, 4 and 11;
   reading the member in place gives `offset=68`, `72`, `79` (`10 over 77`), and `CEleitor::GetDataNascimento()` out of
   line in `celeitor.cpp` matches it (unit 91's fragment).
+- **A throw path mid-body, before code of the caller that follows the throwing call** (a release, the next
+  statement). clang's branch folder moves a block with no successor to its own function's end
+  ([codegen.md](codegen.md) §C15), so a throw block the target holds before such code ended a function binaryen
+  inlined, which starts where the arguments it takes are set. 502 (`api::CFormBuilder::AddStatusHeader`) has its push's
+  two throws between the field's release and the data source's; every in-place form (a block, a `try`, a static helper,
+  a lambda) put them after the return, `89 over 976`, and an external `AddDSImageField` that takes the field and pushes
+  it gave `59 over 964`, every row an operand, then the match (unit 31's fragment).
 - **A zero set ahead of a callee's second prologue** is binaryen's: its inliner zeroes the callee's locals at the
   inline site and keeps the set where a path of the callee reads one before writing it. 10425 opens its key-6 path with
   `p1 = 0;` before `SalvaHabilitacaoEleitor`'s 144-byte prologue, which no line of `ProcessKey` gives; our object's own
@@ -1132,10 +1157,11 @@ three and `unresolved` for 5181, which waits for a name:
 - **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
-  [codegen.md](codegen.md) §C4's order, the object's own locals and whether an inlined member is static (§C4 has
-  11172's and 12040's). A differing guard or zero set can be the packing as well: a value in a reused local keeps its
-  zero sets where one in a local of its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result
-  the source has: binaryen's
+  [codegen.md](codegen.md) §C4's order, the object's own locals (including which loops share one local of clang's:
+  compare each local's uses before the first `coalesce-locals` of the callee's first round, its `--extract-function`
+  replay, with the target's grouping) and whether an inlined member is static (§C4 has 11172's and 12040's). A differing
+  guard or zero set can be the packing as well: a value in a reused local keeps its zero sets where one in a local of
+  its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result the source has: binaryen's
   dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
@@ -1149,10 +1175,13 @@ three and `unresolved` for 5181, which waits for a name:
   A locals-only remainder no lever above closes. A parameter copied into a local before a loop (`local.get 1;
   local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
   binaryen's inliner copies every parameter of a body it inlines (one `local.set` each), so the target may hold the body
-  as a one-caller function its caller forwards to. Which copy survives is coalesce-locals' order: it colours the locals
-  heaviest copy weight first, each into the lowest slot it does not interfere with
-  (`CoalesceLocals::pickIndicesFromOrder` in binaryen's source), so a loop's phi local takes the first parameter dead
-  over its range. A frameless forwarder over the whole body has every parameter copied, and parameter 0 goes first: 2811
+  as a one-caller function its caller forwards to. Which copy survives is coalesce-locals' order
+  (`CoalesceLocals::pickIndices` in binaryen's source at b9c72894, a reading): it takes the locals in their index
+  order, which `reorder-locals` set before it (most uses first, then first use), moved up by their copies; puts each
+  into the slot it shares the most copies with among those it does not interfere with (the lowest on a tie); then does
+  the same over the reversed order, kept only when it removes more copies, or as many with fewer locals. So a loop's
+  phi local takes the first parameter dead over its range, and with no copies a local's rank alone decides the
+  packing. A frameless forwarder over the whole body has every parameter copied, and parameter 0 goes first: 2811
   written so took the target's frame and head and kept the result pointer's copy (`95 over 349` against `138 over 354`,
   unit 388's fragment; `83 over 350` with the forwarder defined first). The order of the body's parameters is no lever
   (44 orders on a replay of the link's `wasm-opt`, §C4, each the same score); the target's layout came out on the replay
@@ -1167,8 +1196,12 @@ three and `unresolved` for 5181, which waits for a name:
 **Whose frame a prologue is.** The second prologue is the frame of the function around the code that follows it, which
 need not be the function whose records that code holds. A temporary built for a call's argument sits in the caller's
 frame, so a frame that holds the arguments of a callee's code belongs to a function around that code. And a function of
-internal linkage with one call site in its TU is always inlined by clang, whatever its size: it gets LLVM's last-call
-bonus. Probe `onecall.cpp` (182dc6c1), an anonymous-namespace `Big` of three strings and a loop, called once:
+internal linkage with one call site in its TU is always inlined by clang, whatever its size, at a call site clang reads
+as hot or neutral (the probe's `threshold=250`): it gets LLVM's last-call bonus. At a cold one (`threshold=45`, under a
+branch clang weighs as unlikely) the remark can read `not inlined ... (cost=60, threshold=45)` for an internal function
+called once, which then stays out of line as an external one would (10689's `LimpaEntradas`, unit 121): read the
+remark before calling a frame or an out-of-line body an external function's. Probe `onecall.cpp` (182dc6c1), an
+anonymous-namespace `Big` of three strings and a loop, called once:
 
     #include <string>
     void use(const std::string&);
@@ -1184,17 +1217,18 @@ elections' bounds before the ids set's stores, as the target does, only with the
 anonymous namespace and a lambda alike), and after them with it external or a member (unit 88's fragment). Compile
 both before choosing, and write external only when they give one object.
 
-So such a function's code behind a frame of its own means either an external function around it, which binaryen
-inlined (1937's 576-byte frame holds `"LeBiometriaEleitor(" + identifier + ")"`'s temporaries around
-`legravaentidade.h`'s anonymous-namespace `LeEntidadeBiometria`: written as `comum::CLeitorASN::LeBiometriaEleitor` in a
-TU of its own, it matches, unit 280), or a second caller in its TU that the link dropped: 5455 (`CSystem::ReplaceFile`)
-holds `PrepareReplace` and `ReplaceResource`, whose records put them in `csystem.cpp`'s anonymous namespace, behind
-frames of their own; written with ReplaceFile as their one caller, clang inlined both into one frame (`785 over 1982`),
-and with `CSystem::ReplaceDir` calling them too (the link drops it), clang kept them out of line and binaryen inlined
-them as the target has them (`155 over 1836` after two more source fixes). Write such a caller when the evidence shows
-what it calls, marked as a reading with the score without it (unit 32). Which TU defined such a function, its records'
-place in the data says; where in that TU, the object's data order, which is a reading the comment marks
-([placing.md](placing.md) §P4, "What each order shows"; [../link-order.md](../link-order.md) §2).
+So such a function's code behind a frame of its own, at a call site that is not cold (above), means either an external
+function around it, which binaryen inlined (1937's 576-byte frame holds `"LeBiometriaEleitor(" + identifier + ")"`'s
+temporaries around `legravaentidade.h`'s anonymous-namespace `LeEntidadeBiometria`: written as
+`comum::CLeitorASN::LeBiometriaEleitor` in a TU of its own, it matches, unit 280), or a second caller in its TU that the
+link dropped: 5455 (`CSystem::ReplaceFile`) holds `PrepareReplace` and `ReplaceResource`, whose records put them in
+`csystem.cpp`'s anonymous namespace, behind frames of their own; written with ReplaceFile as their one caller, clang
+inlined both into one frame (`785 over 1982`), and with `CSystem::ReplaceDir` calling them too (the link drops it),
+clang kept them out of line and binaryen inlined them as the target has them (`155 over 1836` after two more source
+fixes). Write such a caller when the evidence shows what it calls, marked as a reading with the score without it (unit
+32). Which TU defined such a function, its records' place in the data says; where in that TU, the object's data order,
+which is a reading the comment marks ([placing.md](placing.md) §P4, "What each order shows";
+[../link-order.md](../link-order.md) §2).
 
 Whether such a function is a member is how-to step 3's member rule ("Names no evidence gives"); these are its cases. One
 that reads or writes its class's state is a member, in the class's `.cpp` unless clang would inline it there where the

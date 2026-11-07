@@ -61,7 +61,18 @@ std::vector<CCargos::TCargoEleicao> CConfiguracaoEleicao::GetCargosEleicoes() co
     return cargos;
 }
 
-// (original lines 84-284: content not recovered)
+std::vector<md::CCargo> CConfiguracaoEleicao::GetTodosCargos() const
+{
+    std::vector<md::CCargo> cargos;
+    for (const md::CEleicaoPE& eleicao : m_pleito.GetEleicoes()) {
+        for (const md::CCargo& cargo : eleicao.GetCargos()) {
+            cargos.push_back(cargo);
+        }
+    }
+    return cargos;
+}
+
+// (original lines 95-284: content not recovered)
 #line 285
 const md::CEleicaoPE& CConfiguracaoEleicao::GetEleicao(const TEleicaoID eleicao) const
 {

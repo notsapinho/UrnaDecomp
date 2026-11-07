@@ -24,12 +24,12 @@ __attribute__((noinline)) int DetalhesConsulta(int cargos)
     return 3 * w232_1923(cargos + 140);
 }
 
-// Stands for fns 5735 and 7787, which call CConfiguracaoEleicao::GetCargos (fn 3775) on GetInst()'s result (fn 187)
-// and pass false; 11629 (unit 200's), which passes true, is in the link. One call passes each value.
+// Stands for fn 7787, which calls CConfiguracaoEleicao::GetCargos (fn 3775) once, on GetInst()'s result (fn 187), and
+// passes false; 3775's other callers, 5735 (comum::CargosPorEleicao, unit 13's), which passes false, and 11629 (unit
+// 200's), which passes true, are in the link.
 __attribute__((noinline)) void CargosEleicao(int destino, unsigned eleicao)
 {
     w232_3775(destino, w232_187(), eleicao, false);
-    w232_3775(destino + 12, w232_187(), eleicao + 1, true);
 }
 
 // Stands for fns 5808 and 7787, which copy a std::vector<md::CDadosCandidato> (52-byte elements) with fn 2870;

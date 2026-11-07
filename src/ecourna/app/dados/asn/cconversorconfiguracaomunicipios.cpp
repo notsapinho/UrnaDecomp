@@ -27,7 +27,10 @@ CConversorConfiguracaoMunicipios::TDado CConversorConfiguracaoMunicipios::DoDeco
     CConversorCabecalhoEntidade conversorCabecalho;
     CConversorConfiguracaoMunicipio conversorConfiguracao;
     const CCabecalhoEntidade cabecalho = conversorCabecalho.Deconverte(entidade.get_cabecalho());
-    return TDado(cabecalho, ParaMapa(DeconverteSequencia(entidade.get_configuracoes(), conversorConfiguracao)));
+    const auto& configuracoes = DeconverteSequencia(entidade.get_configuracoes(), conversorConfiguracao);
+    const TMapConfiguracaoMunicipio mapa = ParaMapa(configuracoes);
+    TDado configuracaoMunicipios(cabecalho, mapa);
+    return configuracaoMunicipios;
 }
 
 std::vector<CConfiguracaoMunicipio> CConversorConfiguracaoMunicipios::ParaVetor(const TMapConfiguracaoMunicipio& mapa)

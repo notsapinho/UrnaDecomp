@@ -29,13 +29,12 @@
 # store; with the base's constructor declared and defined in another TU it calls it and then stores +4, the vptr and +12
 # to +36, the target's order. The new file's place in this list, after cprogressoencerramento.cpp, is chosen: its object
 # is dropped while nothing constructs the class, so no count over the data's order ranks it yet; the target's data put
-# the base's vtable (@1551204) right before comum::CAppState's (cappstate.cpp). With the screen in the link fn 5545
-# (api::CFormBuilder::AddProgressBar) keeps the font parameter both target callers pass as one constant: the screen's
-# FONTE_BARRA_PROGRESSO and unit 31's roots' BarraProgresso (7787's and 12098's stand-in) pass two objects, which a
-# scratch link with one object calling the screen shows (our AddProgressBar's wasm type has seven parameters there, six
-# in the plain link and in the target). So 12098 also waits for 7787's call of 5545 to pass the screen's font, which no
-# stand-in can name while it is internal to ctelasvota.cpp; the user has since allowed its linkage to change for that
-# (extern and declared in ctelasvota.h, the linkage marked chosen), which is not done yet.
+# the base's vtable (@1551204) right before comum::CAppState's (cappstate.cpp). The screen's font,
+# vota::FONTE_BARRA_PROGRESSO, is external, a chosen linkage (the user's decision; ctelasvota.h), and unit 31's roots'
+# BarraProgresso (7787's and 12098's stand-in) passes it, so that fn 5545 (api::CFormBuilder::AddProgressBar) folds the
+# font parameter beside the screen as in the target: with the roots' own copy of its bytes, a scratch link with one
+# object calling the screen gave our AddProgressBar seven parameters, and with this font six, the target's (unit 31's
+# fragment).
 CPROGRESSOENCERRAMENTO_SRCS := src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp src/app/comum/cabstracttelaprogresso.cpp
 UENUX2_SRCS += $(CPROGRESSOENCERRAMENTO_SRCS)
 # nothing reconstructed references the vtable yet: 48-uenux2-cprogressoencerramento-roots.cpp takes its address, which

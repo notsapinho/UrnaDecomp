@@ -200,7 +200,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
   `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
   a body of ours calls something no target function is named for, which the row's `detail` names, and how-to step 1
-  tells the three cases apart.
+  tells the three cases apart. Across both, the rows whose frame differs from the target's have a route of their own
+  (a helper, a merged or an aligned slot, a larger object): `docs/reference/facts/codegen.md` §C5, "Finding the rows
+  whose frame differs", lists every written TSE row whose frame setups differ (9 at ea98137f, 4 s), which `score`
+  counts as one operand row.
 
   A row with no stub and no class of its own (group `app`, `libc++` or `unknown`, or a lambda's `__func` slot) is no
   target by itself: it goes to the lane of its unmatched callers when they are all in one lane, a `__func` slot to the
@@ -282,8 +285,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   holds once another match calls the same function (splat.md §3): 10250 matched when 1684 landed. It holds only where
   our link merges the same bodies binaryen merged in the target. 2294 is the body of five such constructors (its
   callers 170, 210, 235, 255 and 331, `pnpm wasm fn ../target/vota_web_wasm.wasm 2294`; 170's is
-  `CBaseError<comum::EUeComumDadosError, {7800, 8600}>`, by the vptr 1528096 it passes), and no caller of those five
-  is matched yet: a pick past one of them is a measurement, and the pick post says so. The name that resolves can be
+  `CBaseError<comum::EUeComumDadosError, {7800, 8600}>`, by the vptr 1528096 it passes): it matched with 210, 235, 255
+  and 331, whose objects give our link the same merge, and 170 still differs (`splat/scan.tsv`'s rows at ea98137f). A
+  pick past such a body before any of its callers matches is a measurement, and the pick post says so. The name that
+  resolves can be
   a *twin*'s, which a caller of another instantiation with the same body still resolves to (how-to step 3, "A callee
   can be a twin", 760 under 11361). A callee written and `differs` resolves for a lane that writes two of its callers
   from two target bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller):
@@ -374,7 +379,10 @@ splat build's sha256 and match count, the matches added and lost against the bra
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
 without a match: its branch is kept, and code that moves no row into `match` (a member moved out of a trap, written
-code with no index) lands with a match of its own lane or of the lane whose base takes the branch (Stage 1). Nor does
+code with no index) lands with a match of its own lane or of the lane whose base takes the branch (Stage 1). Its
+measurements still belong in the fragments: its result names, per fragment, the note lines to add (a spent route on a
+row's note, a route that matched a twin row), and the next landing that touches that fragment writes them in its
+comments commit (how-to step 5, "A written body that does not match yet"). Nor does
 anything land from a lane whose change costs a row its base matches, unless the user decides that loss lands: it
 posts the loss as a `facts/` post, and how-to step 9 says what that post holds, on which branch alone the change may be
 committed, and how a loss the user lands is committed.

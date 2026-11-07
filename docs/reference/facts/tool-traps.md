@@ -105,9 +105,12 @@ fragment).
 7. `LC_ALL=C grep …` can print nothing where `/usr/bin/grep …` prints matches. A bare `grep`'s silence is no evidence.
 8. Each of these fails quietly when a chain goes on: an empty `join`, a `wc -l` of 0 or a `grep -c` of 0 proves
    nothing until the file it reads is known to be written, and `grep` on an empty variable waits on stdin.
-9. macOS's `sed -E` has no `\b`: `s/\bf[0-9]+\(/f(/g` replaces nothing and exits 0, so a masked diff written with it
-   masks nothing (322 lines against Python's `re`, 54). Use `[[:<:]]` and `[[:>:]]`, or Python, and check that one
-   masked line reads as masked before trusting a count.
+9. `\b` is no word boundary in macOS's `sed -E` ([workflow.md](workflow.md) §W9 has the mask that works) nor in
+   `git grep -E` on macOS (Apple's git 2.54 and Homebrew's 2.56; the toolchain image's git and both systems' `grep -E`
+   honour it): `git grep -c -E '\b543\b' -- docs/reference/splat.md` prints nothing and exits 1 where `git grep -c -w
+   -e 543 -- docs/reference/splat.md` prints `docs/reference/splat.md:1`, so a sweep by `'merged-body|\b543\b'` finds
+   its first half alone and looks complete. Search a word with `-w` (`-w -e` per word, or `-w -E` over an
+   alternation), or guard it, `'(^|[^0-9A-Za-z_])543([^0-9A-Za-z_]|$)'`, which every grep reads alike.
 10. A column cut (`cut -c1-230`) of a symbol-file line can keep a prefix of a `by:` voter's index: 3797's
    `evidence:call by:11584` printed as `by:1158`. Print the evidence whole (`/usr/bin/grep -F '= func:3797;'
    splat/symbol_addrs.txt | /usr/bin/grep -oE 'evidence:.*$'`).

@@ -178,11 +178,7 @@ comum::CAppState* CEscolheOpcao::ConfirmaOpcao()
     case 1:
         CLogVota::GetInst().LogaOperadorSelecionou(TextoAudio());
         if (IsVotacaoBloqueadaPorHorario()) {
-            api::CInteractiveForm<api::IScreenMT, api::IInputMT>& form = *m_form;
-            for (auto* entrada : form.GetEntradas()) {
-                entrada->Clear();
-            }
-            form.SetFocus(0);
+            m_form->LimpaEntradas();
             return &CHorarioVotacaoTerminou::GetInst();
         }
         if (!comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetPermitirHabManualAudio()) {

@@ -17,7 +17,7 @@ public:
     typedef ENTIDADE TEntidade;
     typedef DADO TDado;
 
-    virtual ~IConversorASN() {}
+    virtual ~IConversorASN() = default; // not {}: measured, src/units/105-ecourna-cconversor-asn.mk
 
     // (original lines 22-40: content not recovered)
 #line 41

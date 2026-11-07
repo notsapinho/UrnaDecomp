@@ -528,7 +528,29 @@ locals over the stretch where their values live, which names the target's groups
 -print-after=wasm-reg-coloring` shows which register each value, `ARGUMENT_i32 0` among them, was merged into, with
 `-mllvm -print-machine-bfi -mllvm -print-bfi-func-name=<mangled>` the block frequencies the colouring weighs (a reading
 of LLVM's source: registers by summed use frequency, each into the first colour it does not overlap). Judge a form by
-the group a value lands in, not by one local's index. And whether a member binaryen
+the group a value lands in, not by one local's index. `-fPIC` weighs in: each function then reads `__memory_base` in
+its entry block, one more heavy value, so a value can take another local with the flag and without it. 10380's
+`DefineProximoEstado` keeps its slot constants in local 3 at the tree's `-fPIC` and in `this`'s local 0 without it;
+its TU's record lies in `.data.rel.ro`, so the target built it `-fPIC` ([app-flags.md](app-flags.md) §F5) and the
+flag is no route (ea98137f):
+
+```sh
+O=build/out/app/uenux2/src/app/comum/comparecimentomesario/estados/cencerraregistromesarios.cpp.o
+make -n -B -C src $PWD/$O | /usr/bin/grep -o 'build/docker-build.sh em++ .*' | sed -e 's/ -fPIC / -fno-PIC /' -e "s# -o $O# -o build/out/codegen-facts/nopic.o#" > build/out/codegen-facts/nopic.sh
+TMPDIR=/tmp bash build/out/codegen-facts/nopic.sh 2>/dev/null
+for o in $O build/out/codegen-facts/nopic.o; do wasm-objdump -d $o | awk '/DefineProximoEstado.*>:$/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | awk '/^i32.const/ {c=$2; next} /^local.set/ && c != "" {printf "%s -> %s; ", c, $0} {c=""}'; echo; done
+# 116 -> local.set 3; 60 -> local.set 3; 40 -> local.set 3;
+# 116 -> local.set 0; 60 -> local.set 0; 40 -> local.set 0;
+```
+
+Which local holds a value then decides what binaryen folds: when every exit of a block sets the same locals,
+`simplify-locals` makes the block return the lowest-numbered of them (`optimizeBlockReturn` walks a `std::map` by
+local index, binaryen's source at b9c72894), and `code-folding` merges the exits' equal tails after it. In 10380 the
+block's value is the call's result where the constant sits in local 3, and our link folds the three cases' last
+`instance()` calls into the shared tail, where the target keeps one in each case (unit 135's fragment; the link
+between the two is a reading).
+
+And whether a member binaryen
 inlines is static moves the caller's locals with the same instructions: 12040 (`CMostraQRCodeCertificado::StartState`)
 scores `204 over 873` with its `CTelasVota` screen builder a `const` member under every order tried, and `47 over 853`,
 every row an operand, with it static and called through the same `GetInst()` (scratch links of `link.cmd` with the
@@ -555,10 +577,10 @@ and counts at each place given, the object `x` moved before or after another (c3
 
 ```sh
 python3 -I - /citensmenuvota.cpp.o here after:/ctelasvota.cpp.o <<'END'
-import re, sys
-# usage: python3 -I - <X suffix> <place>... [names] [bss]   place: here | before:<suffix> | after:<suffix>
+import os, re, sys
+# usage: [LINKCMD=<copy>] python3 -I - <X suffix> <place>... [names] [bss]   place: here | before:<suffix> | after:<suffix>
 xs, places = sys.argv[1], [a for a in sys.argv[2:] if a not in ('names', 'bss')]
-order = list(dict.fromkeys(w for w in open('build/out/wasm/vota_web/link.cmd').read().split() if w.endswith('.o')))
+order = list(dict.fromkeys(w for w in open(os.environ.get('LINKCMD', 'build/out/wasm/vota_web/link.cmd')).read().split() if w.endswith('.o')))
 t = {p[0]: int(p[2].rstrip(';'), 0) for p in (l.split() for l in open('splat/symbol_addrs.txt', encoding='latin-1'))
      if len(p) >= 3 and p[1] == '=' and re.fullmatch(r'0x[0-9a-f]+;', p[2])}
 seg = r'\.bss\.([^)]*)' if 'bss' in sys.argv else r'\.data\.rel\.ro\.(_ZT[VI][^)]*)'
@@ -605,7 +627,10 @@ objects, `after:` the last), since the list's head can invert fewer pairs than t
 159's two files: 273 at the head of unit 225's list, 276 beside `cvisitanteeleitor.cpp.o`, at 525b5b8a). Count on the
 plain `build/out/wasm/vota_web/link.cmd` of the committed state: a home-made count over a link line that holds a variant
 object under another path drops that object's pairs with no message (unit 278's move counted 478 and 31 so, against 515
-and 33 over the plain line). The count reads which objects' data the symbol file names, so it moves as later landings
+and 33 over the plain line). A variant's `make -C src link` rewrites that file with the variant's order: count first,
+or keep a copy of the committed state's line (`cp -p build/out/wasm/vota_web/link.cmd <scratch>`) and give it as
+`LINKCMD=<scratch>`; a `tools/round/build-at.sh` worktree of the commit holds one too. The count reads which objects'
+data the symbol file names, so it moves as later landings
 name data, with no object moving (unit 278's move: 515 agree and 33 inverted at b3b6d4bb, 537 and 39 on the merged link
 at fac8e5ce); `src/units/README.md` "Names" says what a fragment states with it and when a landing counts again. Confirm
 the chosen place with a scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13,
@@ -636,6 +661,8 @@ cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
 # same
 ```
 
+The last step prints `warning: no passes specified, not doing any work`: with the minify flag gone it names no pass,
+but it writes the module with `--optimize-stack-ir`, so `r13.wasm` is no copy of `r05.wasm` (`cmp` differs).
 `r05.wasm` is the link's byte for byte, before metadce and the last `wasm-opt`, which change throw sites and locals
 (1150 scored `67 over 779` on `r05.wasm`, a copy of `new`'s result kept in a local, against the link's `65 over 777`),
 so score `r13.wasm`: it gives the link's own scores, and keeps the imports' names, which the minify step left to the
@@ -643,7 +670,8 @@ glue (`pnpm wasm score` reads a minified name from a `.js` beside the module, an
 import call as a differing row). Find the function through the symbol map, whose lines are `<index>:<input index>`: the
 left counts the imports, as `pnpm wasm` does, and the right is the input's defined-function index, `names.tsv`'s
 `ld_index` (its `post_oz_index` counts no imports). From `asmlift-wasm/`, 10689 against our
-`CEscolheOpcao::ProcessInput` (`ld_index` 5765):
+`CEscolheOpcao::ProcessInput` (`ld_index` 5765), measured before 10689 matched, at bed17f80 (unit 121's fragment keeps
+the score):
 
 ```sh
 pnpm --silent wasm score ../target/vota_web_wasm.wasm 10689 ../build/out/codegen-facts/replay/r13.wasm $(awk -F: '$2==5765 {print $1}' ../build/out/codegen-facts/replay/r05.symbols) | /usr/bin/grep '^score'
@@ -669,7 +697,10 @@ cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
 `-Oz` runs its function passes over every function first, then `--dae-optimizing` and `--inlining-optimizing`, which run
 them again, `precompute-propagate` first, on each function they changed. So a caller's locals can be decided in the
 first round, before any inlining (13550's zero sets: `rse` drops them there from a value in a local of its own and keeps
-them from one in a reused local), and `--skip-pass` takes a pass out of every round. A function extracted with its
+them from one in a reused local), or in the round `--dae-optimizing` runs on a function whose parameter it removed (an
+unused `this`): there coalesce-locals packs one local fewer, in reorder-locals' order ([reading.md](reading.md) §R10),
+and can drop a zero set the first round kept, which a source form that only moves the first round's locals does not
+reach. `--skip-pass` takes a pass out of every round. A function extracted with its
 callees and replayed with plain `--inlining` is no replay: two forms of 13550 scored 293 and 345 rows off so, against
 the link's 99 and 297. Replay the whole module. A text written with `-g` after `coalesce-locals` does not assemble
 again: the name section keeps the old local names, two locals print as one, and `wasm-as` stops on `local names must be
@@ -679,7 +710,10 @@ Compare two replays function by function with `pnpm wasm score`, never by their 
 function counts renumber every `call` past the difference, and a body with no change of its own differs. 652's eight
 inlined functions took the target's locals with `GetInst` above the constructor and the dispatcher above both screen
 builders, which one source change and one relink confirmed (`144 over 2051`, all operands); patching LLVM's local
-numbers in 10689's callee left the output unchanged, so binaryen, not the object, decides 10689's locals.
+numbers in 10689's callee left the output unchanged: a renumbering changes nothing, but which values clang puts in one
+local does, since `ssa-nomerge` keeps the values that meet at a loop's head in clang's local. 10689 took the target's
+locals once its callee's clearing loop, whose pointer clang had put in the local of two other loops' pointers, was a
+function of its own that binaryen inlines (unit 121's fragment).
 
 A replay shows the end state only. To see in which pass and which round a function's locals form, build binaryen at
 the image's commit (b9c72894, [toolchain.md](../toolchain.md)) with a print added after each function pass, and run it
@@ -878,7 +912,96 @@ target keeps them apart: a slot with one lifetime-start marker is coloured from 
 with `-mllvm -stackcoloring-lifetime-start-on-first-use=false` (or `-mllvm -no-stack-coloring`) on its compile line,
 which says the target's frame is the conservative one; the source form is a branch on the function's `bool` inside the
 loop, which clang unswitches, so the lambda's message has two lifetime starts, and binaryen drops the dead copy of the
-loop once the `bool` folds (unit 120's fragment). Compile with the flag before hunting an order for a short frame.
+loop once the `bool` folds (unit 120's fragment). Compile with the flag before hunting an order for a short frame. A
+frame that differs by less than one object's slot, or whose objects sum to the same bytes, is where an aligned slot
+sits, not colouring: compare the objects' span with the frame before trying the flags. 6608's frame is 80 bytes, 68 of
+objects rounded up, with the strings' merged slot above the throw's message; with the slots in the other order it was
+64, and neither colouring flag gave 80 (unit 378's fragment; "Where a merged slot sits", below).
+
+**Where a merged slot sits.** Stack colouring runs only when the marked slots total 16 bytes or more. It takes them
+largest first, in creation order among equal sizes, and merges into each one every later slot whose range does not
+overlap it; the merged slot keeps that slot's place and takes the widest alignment among its members. So an object the
+source creates first can sit at the bottom, in the slot of a larger object of another arm (ea98137f):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct P { int x; };' 'struct Q { long long v; };' 'void use(void*);' 'void Two(bool c) { if (c) { P p; use(&p); P p2; use(&p2); } else { Q q; use(&q); } }' 'void Apart(bool c) { if (c) { P p; use(&p); P p2; use(&p2); } else { P q; use(&q); } }' 'void Four(bool c) { if (c) { P p; use(&p); P p2; use(&p2); P p3; use(&p3); } else { P q; use(&q); } }' > $P/mergeslot.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/mergeslot.cpp -o /work/$P/mergeslot.o
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -mllvm -no-stack-coloring -c /work/$P/mergeslot.cpp -o /work/$P/mergeslot-nc.o
+for o in mergeslot mergeslot-nc; do echo "$o:"; wasm-objdump -d $P/$o.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {printf "%s%s", (n++ ? "\n" : ""), $3; c=0; g=0} /global.get 0/ {g=1} /^i32.const/ {if (g) {printf " frame %s", $2; g=0} else c=$2} /^call .*use/ {printf " +%s", c; c=0} END {print ""}'; done
+# mergeslot:
+# <_Z3Twob>: frame 16 +0 +12 +0
+# <_Z5Apartb>: frame 16 +12 +8 +4
+# <_Z4Fourb>: frame 16 +12 +8 +4 +12
+# mergeslot-nc:
+# <_Z3Twob>: frame 16 +12 +8 +0
+# <_Z5Apartb>: frame 16 +12 +8 +4
+# <_Z4Fourb>: frame 16 +12 +8 +4 +0
+```
+
+(Each `+N` is the slot passed to `use`, in source order; `-nc` is without colouring.) `Apart`'s three 4-byte
+slots total 12 bytes and stay apart; `Four`'s `q` takes `p`'s place, the first of four equal slots; `Two`'s `p`,
+created first, takes `q`'s place at the bottom (+0, 8-aligned), and `p2` moves up into the room it left. Read the
+target's grouping of slots this way before trying creation orders (4184's photo rectangle, above the text calls'
+results in ours and below them in the target, no creation order measured moves: unit 378's fragment).
+
+**A slot's alignment.** A memset or a constant copy onto a frame slot itself can raise the slot to its widest store's
+alignment: the IR's `alloca` and `memset` say `align 4` and the object stores `i64.store 3 0` at +0 of a 16-byte frame,
+where the same 12-byte struct zeroed through an interior pointer of a larger local keeps `align=2` stores at +4:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' '#include <new>' 'struct R { int a; int b; char c; };' 'void use(void*);' 'void Slot() { R r{}; use(&r); }' 'void Interior() { struct { int p; R r; } w; R* q = new (&w.r) R(); use(q); }' > $P/slotalign.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/slotalign.cpp -o /work/$P/slotalign.o
+for f in _Z4Slotv _Z8Interiorv; do printf '%s: ' $f; wasm-objdump -d $P/slotalign.o | awk -v f="<$f>:" '$0 ~ f {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | /usr/bin/grep -oE '^(i32\.const [0-9]+|i(32|64)\.store8? [0-9] [0-9]+)' | tr '\n' ';'; echo; done
+# _Z4Slotv: i32.const 16;i32.const 0;i32.store 2 8;i64.store 3 0;i32.const 16;
+# _Z8Interiorv: i32.const 16;i32.const 0;i32.store 2 12;i64.store 2 4;i32.const 4;i32.const 16;
+```
+
+So a target slot at a 4-mod-8 offset zeroed by an `i64.store align=2` was zeroed through another pointer: an interior
+one, or a callee's parameter behind binaryen's inlining ([reading.md](reading.md) §R10, the local that holds the
+frame's address). Read the IR's `alloca` and the object's stores before trying declaration orders (10949, whose
+response the target zeroes so at +4 and ours at +0: unit 170's fragment). The hint shows how the slot was reached, not
+an object that held it (how-to step 3).
+
+**Finding the rows whose frame differs.** `pnpm wasm score` counts a frame's size as an operand-only row, so read the
+frames apart: this prints, for each written TSE row that is `differs` or `unresolved`, the frame setups (`global.get 0;
+i32.const N; i32.sub`) of the target's piece and of our body when the two lists differ (9 rows at ea98137f, 4 s). A
+frame of the same size with other offsets shows only in the scan's `detail` (4184's `offset=52 | offset=60`).
+
+```sh
+mkdir -p build/out/codegen-facts && wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm > build/out/codegen-facts/plain.dis
+python3 -I - <<'END'
+import glob, re
+def frames(lines):
+    out, w = [], []
+    for l in lines:
+        w = (w + [re.sub(r'^\(;[0-9a-f]+;\) *', '', l.strip())])[-3:]
+        if len(w) == 3 and w[0].startswith('global.get 0') and w[1].startswith('i32.const ') and w[2] == 'i32.sub':
+            out.append(int(w[1].split()[1]))
+    return out
+ours, f = {}, None
+for l in open('build/out/codegen-facts/plain.dis'):
+    m = re.match(r' *[0-9a-f]+ func\[(\d+)\]', l)
+    if m: f = int(m.group(1)); ours[f] = []; continue
+    if f is not None and '|' in l: ours[f].append(l.split('|', 1)[1])
+piece = {int(p.rsplit('/', 1)[1].split('.')[0].split('-')[0]): p for p in glob.glob('build/out/splat/pieces/asm/*/*.wat')}
+for r in (l.rstrip('\n').split('\t') for l in open('splat/scan.tsv', encoding='latin-1')):
+    if r[4] not in ('differs', 'unresolved') or not r[10].startswith(('app/uenux2/', 'app/ecourna/')) or not r[2].isdigit():
+        continue
+    t = frames(open(piece[int(r[0])], encoding='latin-1')) if int(r[0]) in piece else []
+    o = frames(ours.get(int(r[2]), []))
+    if t != o: print(r[0], 'target', t, 'ours', o)
+END
+# 2725 target [112, 432, 32, 1168, 480, 320, 32] ours [160, 432, 32, 1168, 480, 304]
+# 5500 target [384] ours [368]
+# 5821 target [160, 480, 480, 112, 144] ours [80, 480, 480, 112, 144]
+# 9116 target [32] ours [16]
+# …                                  (9 rows: those four, 433, 2543, 4027, 8302 and 10878)
+```
+
+A list that differs in its first frame alone is the function's own frame (the cases above); one that differs further
+in is an inlined callee's, a second prologue (how-to step 3, "Code binaryen inlined from another function").
 
 ## C6. At `-fPIC` a call of an out-of-line C1 or D1 stays a call in its own TU, and no remark says so
 
@@ -1121,6 +1244,28 @@ T(...);`): 9106 (`CConversorComparecimentoMesario::DoDeconverte`) scored `47 ove
 the other way, and matched so (unit 09's fragment), as 9216 did (unit 105's). Read the object's lines after the
 constructor's `call invoke_*` for each form before linking.
 
+Whether a local carries a cleanup at all follows its class's destructor's spelling. One written `{}`, even empty, is
+called at the end of the local's scope and in a cleanup at each call that can throw; one defaulted on its first
+declaration (`= default`) with nothing to destroy is called nowhere, a virtual one too, so its locals give no pad. In
+the IR before the passes, at ecourna's flags (ea98137f):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct Brace { virtual ~Brace() {} };' 'struct Dflt { virtual ~Dflt() = default; };' 'void g();' 'void UseBrace() { Brace b; g(); g(); }' 'void UseDflt() { Dflt d; g(); g(); }' > $P/dtor.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fexceptions -std=c++20 -DNDEBUG -Xclang -disable-llvm-passes -S -emit-llvm /work/$P/dtor.cpp -o /work/$P/dtor.ll
+awk '/^define/ {match($0, /@[^(]*/); f=substr($0, RSTART+1, RLENGTH-1)} /^define.*Use/ {u=1; s[f]} /^}/ {u=0} u && /(call|invoke) .*D[12]Ev/ {d[f]++} u && /invoke / {i[f]++} END {for (f in s) print f, "invokes", i[f]+0, "destructor calls", d[f]+0}' $P/dtor.ll | sort
+# _Z7UseDfltv invokes 0 destructor calls 0
+# _Z8UseBracev invokes 2 destructor calls 2
+```
+
+In a body this small the empty cleanup folds away before the object; in a larger one it decides what clang's inliner
+sees. With `IConversorASN`'s destructor `{}`, 9137's call of `DeconverteSequencia` stayed an invoke when inlined and
+its resume took the loop's path; with `= default` 9137 matches and 9066 calls `Deconverte` directly, which binaryen then
+inlines; of the header's 49 including objects only those two change (unit 105's fragment). The vtable's D2 and D0 are
+the same for both spellings (`return this`, `free(this)`: [reading.md](reading.md) §R5), so where a callee's pads or
+resume sit otherwise than the target's and a local in scope has such a class, try the other spelling and compare the
+header's includers ([workflow.md](workflow.md) §W13).
+
 A TU built without `-fexceptions` (every uenux2 TU; emcc then compiles with `-fignore-exceptions`,
 [app-flags.md](app-flags.md)) has no pads: a `try` block compiles as a plain block scope and its handlers leave no
 code or data, so a form that rests on where a scope ends has the `try` block as a same-bytes form (3829's response
@@ -1146,6 +1291,14 @@ and with the space search in `UltimoEspaco`, which takes the line as a parameter
 then matched (unit 14's fragment). Where a loop's shape is made shows with `-mllvm
 -print-after=loop-rotate,inline,jump-threading -mllvm -filter-print-funcs=<mangled>` (or `-print-after-all`) on the TU's
 compile line from `make -n -C src link -W $PWD/<tu>`, `-c … -o <scratch>.o`, the dumps on stderr.
+
+The helper's own pipeline runs Reassociate, LICM and InstCombine before it turns the loop, so a value the helper
+computes from its parameters folds there as it does in place: a value the target computes once and shares between a
+peeled first step and the loop survives only when the caller computes it and passes it in. 10972
+(`api::CStepsProgressBar::CabeEmUmaLinha`) keeps `1 - 2 * margem` so, `4 over 269` with the value passed, where the
+helper that computes it from `margem` folds it as in place (`9 over 272`, `23 over 274`); its compares then keep the
+target's operand order only when formed in a second inlined helper over 16-bit parameters, `Cabe(TPosition,
+TPosition)`, and it matches (unit 41's fragment).
 
 ## C13. A member stored in each arm of a two-way branch
 
@@ -1289,3 +1442,49 @@ of one block folds into an absolute difference, `select(a > b, a - b, b - a)`. S
 `std::to_string(int)` in `Refresh` (9018) come from neither a value used once as an `int` nor one computed before the
 branch; an external helper with `TPosition` parameters would give them, but clang inlines it (cost 230 against 250),
 and no form has given them (unit 69's `-pending.cpp`).
+
+## C18. A store before a loop and one as the body's last statement merge, and LICM sinks the result
+
+When a loop's body has no call (its callees inlined), a store before the loop and a store to the same member as the
+body's last statement merge into one store in the loop's header (InstCombine), which LICM then sinks after the loop: the
+member is stored once, after it. A statement after the store in the body keeps the two apart, the shape of a target that
+stores the member before the loop and again inside it. With a call left in the loop both orders keep both stores. At
+ea98137f, the same with and without `-fno-strict-aliasing`:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct D { short d, m; };' 'static int Days(short m) { switch (m) { case 2: return 28; case 4: case 6: case 9: case 11: return 30; default: return 31; } }' 'void Last(D& x, int r) { x.m = 1; int n; while (r > (n = Days(x.m))) { r -= n; x.m++; } x.d = r; }' 'void First(D& x, int r) { x.m = 1; int n; while (r > (n = Days(x.m))) { x.m++; r -= n; } x.d = r; }' > $P/loopstore.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -c /work/$P/loopstore.cpp -o /work/$P/loopstore.o
+for f in _Z4LastR1Di _Z5FirstR1Di; do printf '%s: ' $f; wasm-objdump -d $P/loopstore.o | awk -v f="<$f>:" '$0 ~ f {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | /usr/bin/grep -oE '^(loop|i32\.store16 [0-9] [0-9]+)' | tr '\n' ';'; echo; done
+# _Z4LastR1Di: loop;i32.store16 1 0;i32.store16 1 2;
+# _Z5FirstR1Di: i32.store16 1 2;loop;i32.store16 1 2;i32.store16 1 0;
+```
+
+`api::CDate::operator-=` and `operator+=` (5477, 5478) store the month before the loop and in it in the target, and
+matched with `m_mes++;` ahead of `resto -= diasNoMes;` in their month loops (unit 125's fragment); a helper for the
+loop (§C12) was not needed. `-mllvm -print-after=instcombine,licm -mllvm -filter-print-funcs=<mangled>` shows the merge
+and the sink.
+
+## C19. A `std::string` concatenation's statements decide its calls
+
+Where clang's object makes other calls than the target (another count of `operator new`, `operator delete`, a string's
+`insert`), the cause can be the statements, not inlining: the same concatenation written in both arms of an `if`, or
+once after an `if` that only prepends, gives other calls and other code. At ea98137f, uenux2's flags:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' '#include <string>' 'void Both(const std::string& a, std::string& b, bool sep) { if (sep) b = a.back() + (" " + b); else b = a.back() + b; }' 'void Once(const std::string& a, std::string& b, bool sep) { if (sep) b = " " + b; b = a.back() + b; }' "std::string Char(const std::string& s) { return ' ' + s; }" 'std::string Str(const std::string& s) { return " " + s; }' > $P/concat.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/concat.cpp -o /work/$P/concat.o
+for f in _Z4Both _Z4Once; do printf '%s:' $f; wasm-objdump -d $P/concat.o | awk -v f="<$f" '$0 ~ f && / func\[/ {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE '_Znwm|_ZdlPvm|6insert|__throw_length_error' | sort | uniq -c | awk '{printf " %s x%s", $2, $1}'; echo; done
+# _Z4Both: 6insert x1 _ZdlPvm x3 _Znwm x2 __throw_length_error x1
+# _Z4Once: _ZdlPvm x2 _Znwm x2 __throw_length_error x1
+for f in _Z4Char _Z3Str; do wasm-objdump -d $P/concat.o | awk -v f="<$f" '$0 ~ f && / func\[/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' > $P/concat-$f.txt; done; cmp $P/concat-_Z4Char.txt $P/concat-_Z3Str.txt && echo same
+# same
+```
+
+`Both` makes seven calls (`operator new` twice, `operator delete` three times, `string::insert` and the length error's
+throw), `Once` five (no `insert`, one delete less). Count the object's calls per form (`wasm-objdump -d`, its `call`
+lines) before spending links on inline thresholds (§C3). A spelling that compiles alike alone can still differ in the
+function: `' ' + s` and `" " + s` give the same body alone (`Char`, `Str`), and 5499
+(`CTextFieldDoubleLine::GetTextLines`) scored `116 over 1447` with the char against `24 over 1437` (unit 28's
+fragment, with the other forms that decide it).

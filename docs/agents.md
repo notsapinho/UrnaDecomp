@@ -200,22 +200,23 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not (the
-  generic rules depend on every header there), the tree's roots object, and the companions whose rules name it: 164
-  compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at 0b5f410
-  ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link until it
-  is fixed. Keep shared headers compiling at every commit. The splat build checks only the matched functions of those
-  units; to show that a restructure left them as they were (a vtable, an inline member a parallel lane builds on), list
-  the objects the edit will rebuild (`make -n -C src link -W $PWD/<file>` for each file added or changed, fragments
+  generic rules depend on every header there; an ecourna header's tree is both trees, since every uenux2 object depends
+  on the ecourna headers too: 726 compiles at ea98137f), the tree's roots object, and the companions whose rules name
+  it: 164 compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at
+  0b5f410 ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
+  until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the matched functions of
+  those units; to show that a restructure left them as they were (a vtable, an inline member a parallel lane builds on),
+  list the objects the edit will rebuild (`make -n -C src link -W $PWD/<file>` for each file added or changed, fragments
   too), keep a copy of them before the first link or try, and compare each after relinking
   ([facts/workflow.md](reference/facts/workflow.md) §W13 has the commands). An object not in the list compares equal
   with itself and proves nothing, and the list can miss one: a companion that holds a header its rule omits, and an edit
-  of an `src/asn1` module header (§W15 has the check). A uenux2 header's list is the whole tree: only the objects whose
-  sources include it, directly or through another header, can change, so a reviewer with no copy from before the edit
-  compiles those from `git archive <commit> src` in scratch (§W13 lists them). An object of another unit that the edit
-  changes is named in the commit message (one that differs only in the names of a renamed type's instances as a
-  name-only change: §W13, "Reading a `DIFFER`"), and what that unit's fragment states about it (a score, a form, a
-  type's shape) is measured again and rewritten (5113's score in unit 69, after `SPathCommand` gained constructors): a
-  fresh rebuild against the lane's own objects cannot see it, only the base compile can.
+  of an `src/asn1` module header (§W15 has the check). A header's list is its whole tree: only the objects whose sources
+  include it, directly or through another header, can change, so a reviewer with no copy from before the edit compiles
+  those from `git archive <commit> src` in scratch (§W13 lists them). An object of another unit that the edit changes is
+  named in the commit message (one that differs only in the names of a renamed type's instances as a name-only change:
+  §W13, "Reading a `DIFFER`"), and what that unit's fragment states about it (a score, a form, a type's shape) is
+  measured again and rewritten (5113's score in unit 69, after `SPathCommand` gained constructors): a fresh rebuild
+  against the lane's own objects cannot see it, only the base compile can.
 - An include added to a header reaches every TU that includes it, and a header that brings guarded template or inline
   statics adds their initializers to each (`votadefs.h` including `cpaperformbuilder.h` gave every includer
   `api::CFormStack<api::IScreen>`'s `s_forms` and `s_mutex`). Declare what the header's own declarations need (a
@@ -290,7 +291,9 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - Run the Python tools with `python3 -I -B`: `-B` keeps `__pycache__` out of the tree.
 - Comment lines in sources, headers, fragments and companions are at most 120 columns. A rename that pushes one past
   rewraps its paragraph, keeping the paragraph's line count in a compiled file with records below it (or shortening a
-  phrase when the count would grow); a line already past it is rewrapped by whoever edits its paragraph. This lists the
+  phrase when the count would grow); a line already past it is rewrapped by whoever edits its paragraph. In a comment
+  block of `# - ` bullets with no blank comment line (a fragment's header), each bullet, up to the next `# - `, is a
+  paragraph: an edit rewraps the long lines of the bullets it touches, not the whole block. This lists the
   added comment lines past it, each counted in its file's charset (Latin-1 in `src/uenux2` and `src/ecourna`, as
   `.editorconfig` gives; `awk` under `LC_ALL=C` counts a UTF-8 fragment's bytes, and every added line passes through it,
   code and README rows too):

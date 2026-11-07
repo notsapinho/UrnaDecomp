@@ -197,15 +197,15 @@ void CDate::operator+=(int dias)
     int resto = DiaDoAno(m_dia, m_mes, m_ano) + dias;
     short diasNoAno;
     while (resto > (diasNoAno = DiasNoAno(m_ano))) {
-        resto -= diasNoAno;
         m_ano++;
+        resto -= diasNoAno;
     }
 
     m_mes = 1;
     uebyte diasNoMes;
     while (resto > (diasNoMes = DiasNoMes(m_mes, m_ano))) {
-        resto -= diasNoMes;
         m_mes++;
+        resto -= diasNoMes;
     }
     m_dia = resto;
 
@@ -229,8 +229,8 @@ void CDate::operator-=(int dias)
     m_mes = 1;
     uebyte diasNoMes;
     while (resto > (diasNoMes = DiasNoMes(m_mes, m_ano))) {
-        resto -= diasNoMes;
         m_mes++;
+        resto -= diasNoMes;
     }
     m_dia = resto;
 

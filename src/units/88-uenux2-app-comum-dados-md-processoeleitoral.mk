@@ -118,40 +118,41 @@
 #   pairs it by content. None of its callers is written, so the roots give it two call sites; 5648's other caller is
 #   3713, fragment 388's CPleito::FiltraMunicipio.
 # - comum::CConfiguracaoEleicao::GetIDsEleicoes (fn 5791, 87 B) and GetCargosEleicoes (fn 3774, 389 B), in
-#   cconfiguracaoeleicao.cpp after the destructor. 5791 pushes the id (+0) of each 52-byte CEleicaoPE of m_pleito into
-#   a vector through push_back(const&): the target calls fn 543, matched as std::vector<long>'s, and our body's call
-#   goes to that body (ours 532, roots_boost.o's, in build/out/wasm-map/vota_web/names.tsv), binaryen keeping one of
+#   cconfiguracaoeleicao.cpp after the destructor. 5791 pushes the id (+0) of each 52-byte CEleicaoPE of m_pleito into a
+#   vector through push_back(const&): the target calls fn 543, matched as std::vector<long>'s, and our body's call goes
+#   to that body (ours 532, roots_boost.o's, in build/out/wasm-map/vota_web/names.tsv), binaryen keeping one of
 #   identical bodies for our std::vector<unsigned int>'s instance (a reading); its callers are 1269
-#   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each
-#   election's id with the id of each of its cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a
-#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando::FinalizaEleitor, unit 197's,
-#   matched) and 7787 (which
-#   holds CCargos::CreateInst; ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})`
-#   gives it, 5 over 195 rows, all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores,
-#   33 over 201 rows (6 inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8).
-#   The scan matched 5791 through the census's pair (`shape`) and 3774 by its content. In use band 2 the target's 5791
-#   comes right after the destructor (5792) in link order, which is what puts it after the destructor here; in use band
-#   3 its 3774 lies after ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all
-#   unwritten then but 3779, a std::__split_buffer instance; 3775 is GetCargos, below), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
-#   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoes for 7787 (4454 is in the link).
+#   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each election's id with the id of each of its
+#   cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a std::vector<CCargos::TCargoEleicao>; its callers are
+#   4454 (vota::CEleitorVotando::FinalizaEleitor, unit 197's, matched) and 7787 (which holds CCargos::CreateInst;
+#   ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})` gives it, 5 over 195 rows,
+#   all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores, 33 over 201 rows (6
+#   inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8). The scan matched 5791
+#   through the census's pair (`shape`) and 3774 by its content. In use band 2 the target's 5791 comes right after the
+#   destructor (5792) in link order, which is what puts it after the destructor here; in use band 3 its 3774 lies after
+#   ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all unwritten then but
+#   3779, a std::__split_buffer instance; 3775 is GetCargos, below), which this file fits (a reading). Chosen: both
+#   names, their being members (they read m_pleito), the line of each and their order. The roots' CargosEleicoes stands
+#   for 7787 (4454 is in the link); their IDsEleicoes, which stood for 5735, went when 5735 (unit 13's
+#   comum::CargosPorEleicao) was written.
 # - comum::CConfiguracaoEleicao::GetCargos (fn 3775, 573 B), in cconfiguracaoeleicao.cpp before GetCargosEleicoes, as
 #   use band 3 orders 3775 before 3774: a copy of the cargos of the pleito's election with that id (CPleito::GetEleicao,
-#   5651, then CEleicaoPE::GetCargos, 2257), empty when the pleito has none, and when its bool is set a copy of that copy
-#   (std::vector<md::CCargo>'s copy constructor, fn 2289, out of line) sorted by std::sort with a function passed by table
-#   slot 2363 (fn 11547: CCargo's byte at +16 compared unsigned, ccargo.h's GetOrdemImpressao). Its callers, 5735 and 7787
-#   (false) and 11629 (true, unit 200's), call it on GetInst()'s result; fragment 232's roots stand in for the first two,
-#   not written; 2289's
-#   other callers (1953, 5777, and 11371 through md::CEleicaoPE's constructor, fragment 299) are in the link. The sort
-#   brings libc++'s instances over md::CCargo with that comparator, and each matches from this object: __introsort
-#   (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),
-#   CDetalheCandidato's move assignment (761), the move assignments of std::optional<CDetalheConsulta> (783) and of
-#   std::vector<CRespostaConsulta> (5784), and CDetalheConsulta's copy (374, a std::construct_at, which matches from
-#   cpe.cpp.o's copy: cpe.cpp, compiled by unit 110 and holding CPE::CreateInst since unit 280's work, is the first
-#   object of the link with an instance, ahead of unit 280's objects in print-LINK_OBJS). 5789 and 761 also call the
-#   destroy of a std::vector<CSuplencia>'s tail (1135), whose one caller in our link was ~CDetalheCandidato (242, unit
-#   110's, `differs` on its locals, binaryen having inlined 1135 there); with these calls 1135 stays out of line, and it
-#   and 242 match from cpe.cpp.o. 365, 2289, 2341 and 3018 keep matching, from cpe.cpp.o's copies now (splat/scan.tsv's
-#   object column): the copies give the same bytes.
+#   5651, then CEleicaoPE::GetCargos, 2257), empty when the pleito has none, and when its bool is set a copy of that
+#   copy (std::vector<md::CCargo>'s copy constructor, fn 2289, out of line) sorted by std::sort with a function passed
+#   by table slot 2363 (fn 11547: CCargo's byte at +16 compared unsigned, ccargo.h's GetOrdemImpressao). Its callers,
+#   5735 and 7787 (false) and 11629 (true, unit 200's), call it on GetInst()'s result; 5735 (unit 13's) and 11629 are in
+#   the link, and fragment 232's roots stand in for 7787, not written; 2289's other callers (1953, 5777, and 11371
+#   through md::CEleicaoPE's constructor, fragment 299) are in the link. The sort brings libc++'s instances over
+#   md::CCargo with that comparator, and each matches from this object: __introsort (5789), __insertion_sort_incomplete
+#   (5785), __sort4 (2829), std::swap of two CCargo (320), CDetalheCandidato's move assignment (761), the move
+#   assignments of std::optional<CDetalheConsulta> (783) and of std::vector<CRespostaConsulta> (5784), and
+#   CDetalheConsulta's copy (374, a std::construct_at, which matches from cpe.cpp.o's copy: cpe.cpp, compiled by unit
+#   110 and holding CPE::CreateInst since unit 280's work, is the first object of the link with an instance, ahead of
+#   unit 280's objects in print-LINK_OBJS). 5789 and 761 also call the destroy of a std::vector<CSuplencia>'s tail
+#   (1135), whose one caller in our link was ~CDetalheCandidato (242, unit 110's, `differs` on its locals, binaryen
+#   having inlined 1135 there); with these calls 1135 stays out of line, and it and 242 match from cpe.cpp.o. 365, 2289,
+#   2341 and 3018 keep matching, from cpe.cpp.o's copies now (splat/scan.tsv's object column): the copies give the same
+#   bytes.
 #   Evidence for the existence test: the target holds it as a loop binaryen inlined from another function (a bool built
 #   as `if (result i32) ... else 0 end` and tested again, how-to step 3) that takes the pleito (+28) and the id, so it is
 #   written as CPleito::ExisteEleicao, out of line in cpleito.cpp, with GetCargos its one caller and no index of its own.
@@ -166,6 +167,25 @@
 #   and ExisteEleicao's being members, the comparator's being a file-static function (use band 1 puts 11547 after this
 #   file's statics' exit destructors, 11551 and 11550, which an external function defined after them fits as well),
 #   ExisteEleicao's std::any_of (a range-for with an early return gives the same code), and every line.
+# - comum::CConfiguracaoEleicao::GetTodosCargos (fn 5790, 3572 B), in cconfiguracaoeleicao.cpp after GetCargosEleicoes:
+#   a copy of every cargo of the pleito's elections, election by election. Its one target caller, 7787, calls it twice
+#   (`call 5790` counts 2 in its piece), each time on GetInst()'s result (`call 187` right before it), and it reads the
+#   elections at +52 and +56 of that instance (m_pleito's). For each election it calls CEleicaoPE::GetCargos (2257) and
+#   pushes each 140-byte cargo back, CCargo's implicit copy and the vector's growth (the reallocation, the moves into
+#   the new buffer, the old elements' destruction) inlined. In use band 2 the target's 5790 comes right after 5791 in
+#   link order (ledger/ordinals.tsv: ordinals 4407 to 4414 run 5792, 5791, 5790, 5788, 5787, 5786, 5785, 5784; 5789 is
+#   another digit zone's), with this object's sort instances 5785 and 5784 after it, so it is this file's (5791 is a
+#   function this object alone defines; 5785 and 5784 match from this object), defined after GetIDsEleicoes. Measured,
+#   the same code (cconfiguracaoeleicao.cpp.o compiled at this file's flags, the function's disassembly with the
+#   object-local numbers masked against a control, docs/reference/facts/tool-traps.md X12: 0 of 1832 lines differ):
+#   emplace_back(cargo) for push_back, and a free function taking `const CConfiguracaoEleicao&` over
+#   GetPleito().GetEleicoes(). Other code: one range insert per election (46 lines against 1832), and index loops over
+#   the two vectors, as GetCargo is written (1858 lines, 1968 differ). `pnpm wasm score` on the whole link before step
+#   8: 52 over 1671 rows, all operand-only; the scan matched it by its content. Fragment 419's roots stand in for 7787;
+#   the roots' XorCargos, which called 2257 twice for 5790 and 7787, calls it once, for 7787. Chosen: the name, its
+#   being a member (it reads m_pleito; the free function above gives the same code), and its line, after
+#   GetCargosEleicoes (no record names it; GetCargos and GetCargosEleicoes are in band 3, so of this file's written
+#   functions the band orders it against GetIDsEleicoes alone).
 # - CPleito's constructor (fn 5652, records cpleito.cpp:64, 67 and 70) copies its six arguments into the members, then
 #   takes the elections' ids in a std::set<TEleicaoID> and throws 8159 when the set is smaller than the elections, 8160
 #   when it is larger than the version map and 8161 when it is not the situations' size (the records' codes and
