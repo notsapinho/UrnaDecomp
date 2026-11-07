@@ -6,10 +6,10 @@
 //         LogaSuspensoMonitoramenteRepeticao(uebyte)                                     record at line 136, column 18
 //         LogaTipoBateria()                                                              records at lines 144, 145, 158
 //         LogaScoreReconhecimentoMesario(const ueint32)                                  record at line 214, column 18
-//         the session members and the signing ones                                   records at lines 44, 50, 56, 62, 166, 172, 178
+//         the session members and the signing ones                                   records listed below
 // (the last four rows have no target index: binaryen inlined the first two into fn 10226, vota::CThreadMonitor's
 // slot 2, the third into fn 5372, comum::CControladorReconhecimentoMesario::ComparaDigitais, the seven into fn 12098)
-// The reconstruction's notes are in unit 111's fragment.
+// The seven's records: lines 44, 50, 56, 62, 166, 172, 178. The reconstruction's notes are in unit 111's fragment.
 
 #include "app/comum/log/clogcomum.h"
 

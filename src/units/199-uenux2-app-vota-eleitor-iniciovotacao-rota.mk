@@ -84,8 +84,9 @@
 #   score on the plain link before steps 7 to 9: the calls, the data addresses and the throw's destructor slot, the
 #   target's 69 against our 43); step 8 named it by srcloc-anchor until our copy of its record (the target's @1546008)
 #   came to sit at 1572864 (0x180000, from a1f3471d to 906f5329), a constant three other functions of ours hold, so it
-#   anchored nothing and step 8 named it by `vtable`; since 2bdc17c3 that copy sits at 0x180050 and srcloc-anchor names
-#   it again (its match line holds either way). StartState is the class's key function,
+#   anchored nothing and step 8 named it by `vtable`; since 2bdc17c3 that copy sits off that address (0x180050 there,
+#   0x180430 at 1a74b66f, a constant only our 11865 holds) and srcloc-anchor names it again (its match line holds either
+#   way). StartState is the class's key function,
 #   so cgeradadosdinamicos.cpp.o emits the vtable and typeinfo now, which the -pending.o did; the target's vtable
 #   (@1545964, 44 bytes) ends where the record of :47 (@1546008) begins. In band 1 (ledger/ordinals.tsv) 11867, 11866
 #   and 11865 run in that order of ld_index (names.tsv): the statics stay defined above StartState. It made two

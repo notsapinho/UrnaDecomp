@@ -139,8 +139,8 @@ public:
     // allocation, a local of another size than 15 ("Argumento inválido, tamanho do local."), sends {254, the local's 15
     // characters} with the command 0x404 through 3829 and keeps the returned text at +4, as EnviarAcaoHSM does; its
     // caller drops the result (the target keeps the two loads of m_mensagem.empty() and reads neither). A member, as it
-    // writes +4 and +16; its name is chosen from the texts it stores, and the local's type from what it reads of it (the
-    // std::string CAssinador keeps at +36).
+    // writes +4 and +16; its name is chosen from the texts it stores, and the local's type from what it reads of it
+    // (the std::string CAssinador keeps at +36).
     bool EnviarLocal(ESavdAplic aplic, const std::string& local);
 
     const std::string& GetMensagem() const { return m_mensagem; }
@@ -175,8 +175,8 @@ std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave, const s
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote);
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote, const std::string& arquivo);
 void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
-// Record iinterfacesavd.cpp:1022 (code 7338); no target index: binaryen inlined it, behind a 496-byte stack frame of its
-// own, into CAssinador::AssinaArquivosResultado, which fn 12098 holds inlined.
+// Record iinterfacesavd.cpp:1022 (code 7338); no target index: binaryen inlined it, behind a 496-byte stack frame of
+// its own, into CAssinador::AssinaArquivosResultado, which fn 12098 holds inlined.
 void AssinarEcourna(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao);
 

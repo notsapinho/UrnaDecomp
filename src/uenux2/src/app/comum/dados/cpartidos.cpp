@@ -1,6 +1,6 @@
-// Reconstruction: comum::CPartidos's singleton (target fns 819, 11502, 11503), its constructor (3751) and destructor (2815),
-// and comum::SiglaPartidoCorrente (11501; cpartidos.h says why it is here). No record names this file, and the path is
-// chosen.
+// Reconstruction: comum::CPartidos's singleton (target fns 819, 11502, 11503), its constructor (3751) and destructor
+// (2815), and comum::SiglaPartidoCorrente (11501; cpartidos.h says why it is here). No record names this file, and the
+// path is chosen.
 #include "app/comum/dados/cpartidos.h"
 
 #include <format>

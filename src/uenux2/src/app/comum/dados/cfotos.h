@@ -48,9 +48,9 @@ public:
     // Whether the map holds the code, keeping it in m_atual when it does: the code target fn 12641
     // (CDataImage<CCandidaturasDSFoto>::GetData, which holds CCandidaturasDSFoto's call operator) holds after a call of
     // GetInst whose result it drops, with GetInst's own code inlined (fn 2819 is its body elsewhere), which only
-    // cfotos.cpp can inline: a static member called through the instance, as fn 12520's source calls GetImagem, frameless,
-    // with one caller, inlined by binaryen (a reading). Its name, its being static and a member, and its body's form are
-    // chosen.
+    // cfotos.cpp can inline: a static member called through the instance, as fn 12520's source calls GetImagem,
+    // frameless, with one caller, inlined by binaryen (a reading). Its name, its being static and a member, and its
+    // body's form are chosen.
     static bool Posiciona(const std::string& id);
 
 private:

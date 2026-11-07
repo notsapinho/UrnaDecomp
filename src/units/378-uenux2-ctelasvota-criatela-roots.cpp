@@ -6,10 +6,10 @@
 // Each call stands for 7787's calls of that function (pnpm wasm fn ../target/vota_web_wasm.wasm 7787, from
 // asmlift-wasm/, its folded readout): binaryen inlines a function called once, so the stand-in calls each callee twice
 // where 7787 calls it two times or more and no other target caller is in the link, and once where one is: 1593, 1192,
-// 1102 and 1190, whose other target callers are in the link (1591 written, not matched) but 6602, 6603, 6605, 6639 and
-// 6681 (not written); a link without their second calls moves no row. It passes the constants 7787 passes where the
-// target's callee has folded them (docs/how-to-decompile.md step 2) and values of its own where the callee keeps the
-// parameter. It goes when 7787 is in the link.
+// 1102 and 1190, whose other target callers are in the link (1591 written, not matched; 6639 and 6681 since they match)
+// but 6602, 6603 and 6605 (not written); a link without their second calls moves no row. It passes the constants 7787
+// passes where the target's callee has folded them (docs/how-to-decompile.md step 2) and values of its own where the
+// callee keeps the parameter. It goes when 7787 is in the link.
 //
 // Declared through asm labels with the objects' signatures (a std::shared_ptr result through its address first), so
 // this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
@@ -69,8 +69,8 @@ namespace {
 // Stands for 6602, 6603 and 6605, one call each: the target callers of 3060 (vota::AdicionaCampoNumero<
 // api::CGrayedFramedText>) besides 6608, which is in the link (awk -F'\t' '$2==3060' ledger/callgraph.tsv). Each is
 // called by 7787 alone (twice) and is not written, so it waits for 7787. 3060 keeps its length and point (its wasm type
-// is (i32 i32 i32 i32)->()), so the calls pass values of their own. The calls of 2028 (vota::AdicionaSiglaPartido) stand
-// for 6602's and 6605's, one each (its other target callers: 6660 and 6671, below, 6678, in the link, and 7787).
+// is (i32 i32 i32 i32)->()), so the calls pass values of their own. The calls of 2028 (vota::AdicionaSiglaPartido)
+// stand for 6602's and 6605's, one each (its other target callers: 6660 and 6671, below, 6678, in the link, and 7787).
 __attribute__((noinline)) int CamposCinza(char* resultado, char* builder, const char* posicao)
 {
     w3060(resultado, builder, 2, posicao);
@@ -82,10 +82,10 @@ __attribute__((noinline)) int CamposCinza(char* resultado, char* builder, const 
 }
 
 // Stands for 6660 and 6671 (adicionaBaseTelaCompletaCandidatoCom2 and Com1, records ctelasvota.cpp:890 and :853, in the
-// anonymous namespace: called by 7787 alone, and not written), one call each of 4185 (vota::AdicionaDadosCandidato), 4184
-// (vota::AdicionaFotoCandidato) and 2028 (vota::AdicionaSiglaPartido), whose third target caller, 6678, is in the link
-// (awk -F'\t' '$2==4185 || $2==4184' ledger/callgraph.tsv). Both callers pass 4185 470 or 639 (639 when the post has no
-// photo) and 4184 1, the values these pass; 6678 passes 639 and 0, so neither parameter folds.
+// anonymous namespace: called by 7787 alone, and not written), one call each of 4185 (vota::AdicionaDadosCandidato),
+// 4184 (vota::AdicionaFotoCandidato) and 2028 (vota::AdicionaSiglaPartido), whose third target caller, 6678, is in the
+// link (awk -F'\t' '$2==4185 || $2==4184' ledger/callgraph.tsv). Both callers pass 4185 470 or 639 (639 when the post
+// has no photo) and 4184 1, the values these pass; 6678 passes 639 and 0, so neither parameter folds.
 __attribute__((noinline)) int BasesCompletaCandidato(char* builder, const char* cargo)
 {
     w4185(builder, cargo, 470);
@@ -98,9 +98,9 @@ __attribute__((noinline)) int BasesCompletaCandidato(char* builder, const char* 
 }
 
 // Stands for 4181 (a substitute's photo, no record: callers 6660 and 6671 only, not written), its one call of 4129
-// (vota::adicionaImagem<comum::CCandidaturasDSFoto>), whose other target caller, 4184, is in the link and calls it twice
-// with the holder's order 0. 4181 passes its own parameter, the substitute's order (6671 passes 1, 6660 2 and 1), so
-// the call passes 1 and the parameter does not fold.
+// (vota::adicionaImagem<comum::CCandidaturasDSFoto>), whose other target caller, 4184, is in the link and calls it
+// twice with the holder's order 0. 4181 passes its own parameter, the substitute's order (6671 passes 1, 6660 2 and 1),
+// so the call passes 1 and the parameter does not fold.
 __attribute__((noinline)) int FotoSuplente(char* resultado, char* builder, const char* posicao)
 {
     w4129(resultado, builder, 1, posicao + 2);

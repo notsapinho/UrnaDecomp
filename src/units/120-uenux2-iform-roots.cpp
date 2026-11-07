@@ -7,8 +7,8 @@
 //                     the name and the bool varied as its are; the stand-in for 6639 and 6681, FormInterativoB, went
 //   CampoA, CampoB    the callers of the control fields' adders, none reconstructed but 2376 (ctelasvota.cpp),
 //                     11804 and 11809 (unit 217's, with ctelasvota.cpp's screens they hold) and 12055 (unit 37's,
-//                     written), and 1591, 3063, 3064, 6626 and 6639 (unit 110's): of 901, AddInputControl() (1591, 2376,
-//                     3063, 3064, 6626, 6639, 7787, 11804, 11809)
+//                     written), and 1591, 3063, 3064, 6626 and 6639 (unit 110's): of 901, AddInputControl() (1591,
+//                     2376, 3063, 3064, 6626, 6639, 7787, 11804, 11809)
 //                     and of 5530, AddInputControl(int) (7787 and 12055, which pass the keys 6 and 5). Each adder
 //                     gets two call sites
 //   RotulosA          the caller of 653, AddLabeledInputControl, not reconstructed: 7787 (2376, ctelasvota.cpp, 2291,

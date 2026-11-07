@@ -121,14 +121,19 @@
 #   binaryen folds (5891's wasm type has four parameters): the roots pass 61 from both stand-ins. std::vector<uebyte>(3)
 #   with the three assigned stores the end pointer before the bytes, as the target does; a braced list stores it after
 #   them (18 over 131 rows, 6 inserted, 6 deleted). The request's two assignments are in 5889's order.
-# - 3829 (named by 5889's call): sends a byte vector and returns the failure's text, empty when the SAVD accepts.
-#   The response vector lives in a block scope of its own, from its declaration to the end of the error branch, and
-#   `return "";` follows the block. Evidence: on the accepting path the target frees the vector and then stores the
-#   empty text (`i32.store8[p0] = 0; i32.store8[p0+11] = 0` after the free, in a block of their own: pnpm wasm fn on
-#   3829), where a `return "";` inside the vector's scope stores the text first and shares the release with the other
-#   returns. Measured in the plain link, this object compiled with each form and linked (pnpm wasm score against 3829):
-#   the scope as written, 31 over 485 rows, every one operand-only and each a call or data operand; the scope opened
-#   above the header's two stores instead gives the same module (cmp of the two wasm files). Before it, the body
+# - 3829 (named by 5889's call): sends a byte vector and returns the failure's text, empty when the SAVD accepts. The
+#   response vector's lifetime ends before the empty text is built, which is the evidence: on the accepting path the
+#   target frees the vector and then stores the empty text (`i32.store8[p0] = 0; i32.store8[p0+11] = 0` after the free,
+#   in a block of their own: pnpm wasm fn on 3829), where a `return "";` inside the vector's scope stores the text first
+#   and shares the release with the other returns. The form is chosen: a bare block from the vector's declaration to the
+#   end of the error branch, `return "";` after it. Two other forms give the same code: the block opened above the
+#   header's two stores (the same module, below), and a
+#   `try { ... } catch (const std::exception& e) { return e.what(); }` around the same statements, its handler on the
+#   closing line (the same object: uenux2 builds without -fexceptions, so emcc compiles with -fignore-exceptions and the
+#   handler leaves no code; cmp of the two objects). Measured in the plain link, this object compiled with each form and
+#   linked (pnpm wasm score against 3829): the scope as written, 31 over 485 rows, every one operand-only and each a
+#   call or data operand; the scope opened above the header's two stores instead gives the same module (cmp of the two
+#   wasm files). Before it, the body
 #   matched no form: 78 over 498 rows (28 of the 32 replaced rows operand-only, 13 inserted, 33 deleted), where the
 #   blocks of the early returns and of the response vector's release nested otherwise. Measured then: with the
 #   response's checks returning early and the header built by a ConverteHeader overload over the vector, which clang

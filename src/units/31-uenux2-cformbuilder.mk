@@ -126,9 +126,9 @@
 #   AddFill and AddLine (band 5), 2782 after AddDoubleLineField and 3058 (band 4), which AddStatusHeader mentions
 #   first, and 3678's call of GetLabeledKeyPos places 5544 there, which band 2 puts after GetForm (5550). Written
 #   above GetForm, 2782's pair with 3058 and 5544's with 5550 read inverted. Their order among themselves and their
-#   lines are chosen. Band 2's other pairs, 5547 with 5550 and each with 6404, read inverted in both placements and
-#   involve nothing the three mention; band 1 lists 12298 and 12300 out of order: another object's copies, which say
-#   nothing (step 3).
+#   lines are chosen. Band 2's other pairs, 5547 with 5550 and each with 6404 (this object's copy then;
+#   ctelasvota.cpp.o's since 2028 is written), read inverted in both placements and involve nothing the three mention;
+#   band 1 lists 12298 and 12300 out of order: another object's copies, which say nothing (step 3).
 #
 # 1265, AddBlinkingTextField: AddTextField's shape over a api::CTextFieldBlinking, whose constructor binaryen inlines
 # here with its timer's lambda (unit 44 has the class). Its name, and the colours 2 and 3 over 1 as constants of the body
@@ -214,8 +214,8 @@
 #   step 3, "The order of two members", over every matched row of each object). Inverted pairs of band 1: 0 of 136 in
 #   cformbuilder.cpp.o, 0 of 3 in cpaperformbuilder.cpp.o, 38 of 231 in cmtformbuilder.cpp.o. Each of the 38 involves 12301-12323,
 #   the class members of CDataText<std::function> and of CDataTextFmt of a function, which can be another object's copies, a
-#   reading, and band 2's two pairs against 6404 stay inverted with them. The other bands' pairs in one object agree: 203
-#   above 202, 2245 above 2244, 5419 above 5409.
+#   reading, and band 2's two pairs against 6404 stay inverted with them (counted while 6404 linked from this object).
+#   The other bands' pairs in one object agree: 203 above 202, 2245 above 2244, 5419 above 5409.
 #
 # The MT builder's input fields: 3674 (AddField), 395 (AddInputControl) and 3673. 395 allocates the field's 64 bytes,
 # builds the CControlValidation and its control block, calls 3673 and releases the validation before the field's vptr

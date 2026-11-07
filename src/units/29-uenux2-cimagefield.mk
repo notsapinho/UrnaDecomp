@@ -21,5 +21,5 @@ UENUX2_SRCS += src/api/gui/cimagefield.cpp
 # No roots: the ctor's five target callers, 502, 4129 (unit 378's vota::adicionaImagem<comum::CCandidaturasDSFoto>,
 # ctelasvota.cpp), 5547, 6561 and 6689, are in the link, and pass the anchors 0 and 1, so binaryen neither inlines it
 # nor folds its anchor argument; the stand-in that built the field the way 4129 does went with its file. The control
-# block they instantiate, __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from ctelasvota.cpp.o, the
-# first object on the link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too)
+# block they instantiate, __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from ctelasvota.cpp.o,
+# the first object on the link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too)

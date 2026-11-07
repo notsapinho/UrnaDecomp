@@ -131,11 +131,14 @@
 # object's own function order): 571 at 0fb386d8, 998 at 7149483a; 487 new and 60 gone (CTextField's block members 12628
 # and 12631 link earlier now). Three of the new are between two of this file's own functions: 13176 (NumeroDigitado) and
 # 13137 (AdicionaInstrucaoTeclas's lambda) before 13527 in band 1, and 6643 before 6646 in band 2; every other has a
-# template instance, a control block, a lambda's invoke or an exit destructor on a side. The object's fonts now hold
+# template instance, a control block, a lambda's invoke or an exit destructor on a side. The object's fonts held
 # FONTE_INSTRUCAO_TESTE_TECLADO, the {35, 0}, the {30, 1}, FONTE_TITULO, FONTE_VERSAO, FONTE_AGUARDE, FONTE_TECLA, the
-# arrays, FONTE_NUMERO, TEXTO_CONFIRMAR_VOTO and FONTE_SUPLENTE in that order (wasm-objdump -x, segments 1 to 420),
-# against the target's {40, 0}, {30, 0}, {20, 0}, "CONFIRMAR este voto", ...: their first readers in the target are
-# 7787's and the unwritten builders'.
+# arrays, FONTE_NUMERO, TEXTO_CONFIRMAR_VOTO and FONTE_SUPLENTE in that order when this was measured (wasm-objdump -x,
+# segments 1 to 420); at 1a74b66f its named fonts run FONTE_INSTRUCAO_TESTE_TECLADO, FONTE_TEXTO_CONFIRMA_CORRIGE,
+# FONTE_NOME_CARGO, FONTE_AGUARDE, FONTE_NUMERO, FONTE_TITULO, FONTE_VERSAO, FONTE_TECLA, TEXTO_CONFIRMAR_VOTO and
+# FONTE_SUPLENTE (wasm-objdump -x -j Data of the object, segments 16 to 526); both against the target's {40, 0},
+# {30, 0}, {20, 0}, "CONFIRMAR este voto", ...: their first readers in the target are 7787's and the unwritten
+# builders'.
 #
 # The candidate's complete screens without substitutes and what they call. Scores: pnpm wasm score against the plain
 # link before step 8, whole link at the tree's flags; frames compared on the object by their frame operands against the
@@ -151,30 +154,32 @@
 #   número de suplentes incompatível" when it has substitutes (QtdSuplentes, 1157); then 4185 with 639, 2028 unless the
 #   post is 25, and 4184 with false when the post has photos. That 25 is the conselheiro distrital is a reading (the gif
 #   map at line 275 pairs it with conselheiroDistrital.gif); no evidence names a constant, and the literal is written.
-#   19 over 84 rows, operand-only; at step 9 it reads `unresolved self-voted`: 4184's name rests on 6678's own call
-#   vote while 4184 differs (below). It waits for 4184's match; no hand line names 4184 (its evidence would be that vote).
+#   19 over 84 rows, operand-only; at step 9 it reads `unresolved self-voted`: 4184's name rests on 6678's own call vote
+#   while 4184 differs (below). It waits for 4184's match; no hand line names 4184 (its evidence would be that vote).
 # - 4185 AdicionaDadosCandidato (no record; target callers 6660, 6671, 6678): the post's name by 12811 through
 #   api::CFormBuilder's AddDoubleLineField (3068: (10, 60), (10, 95), the width + 237, FONTE_NOME_CARGO, background 1)
-#   when the post has photos, else AddTextField (1191: (10, 60)); the number field (adicionaNumeroCandidato); the holder's
-#   name, CDataText<comum::CCandidaturasDSNome>(0), on two lines at (10, 190) and (10, 215) to the width, FONTE_AGUARDE,
-#   background 0, through AdicionaTextoDuasLinhas. That template and AdicionaTextoFonte are vota's now (they were the
-#   anonymous namespace's; 1192's instances, over the internal DS_NomeCargoNeutroComEscolha, stay internal): binaryen
-#   inlines the instance over CCandidaturasDSNome behind a 32-byte prologue, which needs it out of line in clang's
-#   object, as an external template's linkonce instance is and an internal one with one call is not (a reading).
-#   adicionaNumeroCandidato is an internal helper clang inlines: the target's frame holds its point (10, 115) and its
-#   discarded field above 4185's own slots, as a clang-inlined helper's allocas give (42 over 413 rows with the call in
-#   place, 22 with the helper, both operand-only, and with the call in place step 9 read the two points' frame offsets
-#   apart). It calls
-#   the AdicionaCampoNumero overload over a text source (CGrayedFramedText, comum::CCandidaturasDSNumero), which binaryen
-#   inlines behind a 16-byte prologue. Matched at step 9.
-# - 12811 NomeCargoCandidatoComEscolha (no record; no stub: its group is libc++; table slot 1088, which only 4185 loads):
-#   the post's name for the current candidate's sex (CCargoDSNomeSexoCandidato(0, false), a named local: the target's
-#   frame holds it above the name: 50 over 231 rows with a temporary, 2 inserted; 15 over 229, operand-only, with the
-#   local) and, when the post has more
-#   than one choice, " - " and the choice's ordinal, as DS_NomeCargoNeutroComEscolha does. Its first statement binds
-#   CCargos::GetCurrent's result to a reference it never reads: the target calls GetCurrent (332) and drops the result
-#   before the operator, and calls it twice more; that the source spelled that call so is a reading. Its file: use band
-#   1 puts it beside 12812 and 12813, this object's CPreShowProgressBar block's members.
+#   when the post has photos, else AddTextField (1191: (10, 60)); the number field (adicionaNumeroCandidato); the
+#   holder's name, CDataText<comum::CCandidaturasDSNome>(0), on two lines at (10, 190) and (10, 215) to the width,
+#   FONTE_AGUARDE, background 0, through AdicionaTextoDuasLinhas. That template and AdicionaTextoFonte are vota's now
+#   (they were the anonymous namespace's; 1192's instances, over the internal DS_NomeCargoNeutroComEscolha, stay
+#   internal): binaryen inlines the instance over CCandidaturasDSNome behind a 32-byte prologue, which needs it out of
+#   line in clang's object, as an external template's linkonce instance is and an internal one with one call is not (a
+#   reading). adicionaNumeroCandidato is an internal helper clang inlines, which holds the number field whole (its point
+#   and its AdicionaCampoNumero call) and nothing else of the body: the target's frame holds that point (10, 115) and
+#   the field's discarded result above 4185's own slots, as a clang-inlined helper's allocas give
+#   (docs/reference/facts/codegen.md C5; 42 over 413 rows with the call in place, 22 with the helper, both operand-only,
+#   and with the call in place step 9 read the two points' frame offsets apart). The helper's name and its internal
+#   linkage are chosen. It calls the AdicionaCampoNumero overload over a text source (CGrayedFramedText,
+#   comum::CCandidaturasDSNumero), which binaryen inlines behind a 16-byte prologue. Matched at step 9.
+# - 12811 NomeCargoCandidatoComEscolha (no record; no stub: its group is libc++; table slot 1088, which only 4185
+#   loads): the post's name for the current candidate's sex (CCargoDSNomeSexoCandidato(0, false), a named local: the
+#   target's frame holds it above the name: 50 over 231 rows with a temporary, 2 inserted; 15 over 229, operand-only,
+#   with the local) and, when the post has more than one choice, " - " and the choice's ordinal, as
+#   DS_NomeCargoNeutroComEscolha does. Its first statement binds CCargos::GetCurrent's result to a reference it never
+#   reads: the target calls GetCurrent (332) and drops the result before the operator, and calls it twice more. The
+#   bound reference is chosen: a bare `cargos.GetCurrent();` and `(void)cargos.GetCurrent();` give an object cmp-equal
+#   to the tree's. Its file: use band 1 puts it beside 12812 and 12813, this object's CPreShowProgressBar block's
+#   members. Its external linkage is chosen (no record shows it).
 # - 2028 AdicionaSiglaPartido: the current party's abbreviation by comum::SiglaPartidoCorrente (11501, cpartidos.cpp;
 #   table slot 1089) in "{}" at (10, 250), FONTE_AGUARDE, when the urna's parameters say to show the party
 #   (CParametrosUrna::GetApresentarPartido, the byte at +396, 484 from CConfiguracaoEleicao::GetInst()), through
@@ -183,18 +188,20 @@
 #   string (33 over 230 rows, 5 inserted, with the format first; 13 over 225, operand-only, so).
 # - 4184 AdicionaFotoCandidato(builder, bool) (no record of its own: :487 is adicionaFotoEmoldurada's, inlined in each
 #   arm; target callers 6660 and 6671 pass true, 6678 false): the photo by adicionaFotoEmoldurada over
-#   comum::CCandidaturasDSFoto(0) at (639, 35) in 161 x 225, and with the flag, below it, the post's abbreviated name for
-#   the candidate's sex (CCargoDSNomeSexoCandidato(0, true)) in a {20, 0} temporary, centred (6528), at the photo's
-#   centre and bottom + 1, or at (719, 261), the frame's own centre and bottom + 1, when the image is at most 1 wide (the
-#   target calls 6528 in each arm, and 4181 does the same with (x + 55, 443)). Differs: 46 over 276 rows; on the object
-#   the top two frame-slot groups (the photo's field result, the photo's point) come the other way round and the
+#   comum::CCandidaturasDSFoto(0) at (639, 35) in 161 x 225, and with the flag, below it, the post's abbreviated name
+#   for the candidate's sex (CCargoDSNomeSexoCandidato(0, true)) in a {20, 0} temporary, centred (6528), at the photo's
+#   centre and bottom + 1, or at (719, 261), the frame's own centre and bottom + 1, when the image is at most 1 wide
+#   (the target calls 6528 in each arm, and 4181 does the same with (x + 55, 443)). Differs: 46 over 276 rows; on the
+#   object the top two frame-slot groups (the photo's field result, the photo's point) come the other way round and the
 #   photo's rectangle lies above the text calls' results. Not explained. Forms compiled at the tree's flags and read on
 #   the object, none with the target's slots: the photo in each arm (written); the photo once above the flag (one text
 #   call then, and the photo's code once); early return, or the plain arm first; a named font; one call over a computed
-#   point; the text arms in an internal helper over the rectangle, by reference or by value; the named arm in an
-#   internal helper (the closest: the top two groups as the target's, the rectangle still above), with the text arms
-#   swapped or the rectangle passed on by value; adicionaFotoEmoldurada's field result named, default-constructed first,
-#   or its rectangle returned directly.
+#   point; the width and both text calls (the named arm after its photo) in an internal helper over the rectangle, by
+#   reference or by value; the whole named arm, its photo included, in an internal helper (the closest: the top two
+#   groups as the target's, the rectangle still above), with the text arms swapped or with the width and the text calls
+#   in a second helper that takes the rectangle by value; each helper one clang inlines, its extent deciding which
+#   marked temporaries share a slot (docs/reference/facts/codegen.md C5); adicionaFotoEmoldurada's field result named,
+#   default-constructed first, or its rectangle returned directly.
 # - 4129 vota::adicionaImagem<comum::CCandidaturasDSFoto> (target callers 4181 and 4184, which calls it twice):
 #   adicionaImagem is vota's template now, out of the anonymous namespace: its instance over an external type is
 #   linkonce, which clang keeps out of line as the target has it (in the anonymous namespace clang inlined it into
@@ -226,7 +233,9 @@
 # below 4185's own line or at the file's end, the link is byte-identical (sha256). There it reads before CTelasVota's
 # statics' destructors 12862, 12875 and 12882 and the lambdas 13023 and 12903 in band 1, five inverted pairs, which
 # 4185's band-3 place (before 4161's AdicionaLocal) keeps. Their names, their linkage (external for 4185, 4184 and 2028,
-# so the roots reach them; no record shows it) and AdicionaCampoNumero's overload over a source are chosen too.
+# so the roots reach them, and for 12811; adicionaImagem, AdicionaTextoDuasLinhas and AdicionaTextoFonte vota's, out of
+# the anonymous namespace, as measured above; adicionaNumeroCandidato internal, codegen.md C5; no record shows any of
+# it) and AdicionaCampoNumero's overload over a source are chosen too.
 # - 2384, 6689 and 13441 are unit 387's since (its fragment).
 # Roots: 378-uenux2-ctelasvota-criatela-roots.cpp stands for 7787 (its calls of 6639, 6681 and 2028 too), for 6602, 6603
 # and 6605 (3060's other callers, and 2028's calls for 6602 and 6605), for 6660 and 6671 (4185, 4184 and 2028:

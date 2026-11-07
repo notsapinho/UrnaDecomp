@@ -4,14 +4,14 @@
 // flags, so no match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
 // -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplied, 1283, 3697, 3741 and
 // 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
-// 3697 and 5611 come from the first objects on the link line to instantiate them: 1283 from crelutil.cpp's (for unit
-// 123's TituloPartido, 11181), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes from
-// cjustificador.cpp's object, whose Justifica (held by unit 283's 10590) is its first user on the link line. Each
+// 3697 and 5611 come from the first objects on the link line to instantiate them: 1283 from cpartidos.cpp's (for
+// comum::SiglaPartidoCorrente, 11501), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes
+// from cjustificador.cpp's object, whose Justifica (held by unit 283's 10590) is its first user on the link line. Each
 // function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7, all in the link: 2268, 2838, 5604, 6999, 11254, 11972
-//   and 11973), 1283 (9: 5604, 11181, 11213, 11255 and 11261 are in the link), 3125 (4, all in the link). All four in
-//   the link are what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset,
-//   32 or 20.
+//   and 11973), 1283 (9: 5604, 11181, 11213, 11255, 11260, 11261, 11501 and 11976 are in the link), 3125 (4, all in the
+//   link). All four in the link are what makes binaryen form 2919: the second parameter of that body is the pair's
+//   second member's offset, 32 or 20.
 // - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105 and 11206, both in the link), 5611 (5604
 //   and 11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
 //   written Gera) in the link, and those over the voters' map with 12105 (fragment 372's); those over the parties' map

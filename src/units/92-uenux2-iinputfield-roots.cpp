@@ -66,9 +66,9 @@ namespace {
 // 110's, which passes its own parameters on) are in the link, and the stand-in for 2383 went.
 //
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
-// 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 called by 3060 and 4185)
-// and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two stand
-// in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
+// 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 called by 3060 and
+// 4185) and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two
+// stand in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
 // these do too, and each has a body no target function has.
 __attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
 {

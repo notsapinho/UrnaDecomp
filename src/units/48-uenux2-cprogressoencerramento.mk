@@ -9,10 +9,10 @@
 # stores no vptr); it holds a std::shared_ptr to the form (+4), one to the api::CProgressBar (+12) and a std::mutex
 # (+20), which the destructor destroys in reverse order. The destructor is out of line, as the deleting one calling it
 # shows, and declared first, so it is the key function and cprogressoencerramento.o emits the vtable. The constructor
-# (inlined into fn 12098) is not reconstructed (below). Inicia, Finaliza and Incrementa (12103, 12102, 12101, slots 2 to 4, names
-# chosen in the base's header) hold the mutex over CProgressBar's SetValor and Incrementa; a std::unique_lock or
-# std::scoped_lock for the std::lock_guard gives the same object code in Inicia, the one measured. Paths relative to src/uenux2; the generic uenux2 rule depends on the
-# source and every uenux2 header.
+# (inlined into fn 12098) is not reconstructed (below). Inicia, Finaliza and Incrementa (12103, 12102, 12101, slots 2 to
+# 4, names chosen in the base's header) hold the mutex over CProgressBar's SetValor and Incrementa; a std::unique_lock
+# or std::scoped_lock for the std::lock_guard gives the same object code in Inicia, the one measured. Paths relative to
+# src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 # The constructor waits for the screen it takes the form and the bar from. fn 12098 holds std::make_shared of the class
 # (56 bytes: the control block's vptr 1541140, then at +12 the base's vptr 1551212, the members zeroed and this class's
 # vptr 1540596) and the constructor behind a 16-byte stack frame of its own (binaryen's inlining: lines 2582 to 2794 of
