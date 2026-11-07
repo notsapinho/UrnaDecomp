@@ -6,8 +6,8 @@
 # constructors, which fn 11896 holds inlined, and their statics, whose exit-time destructors match (11913 and 11912,
 # 11910 and 11909, 11907 and 11906, 11904 and 11903, each pointer's first). The class heads say what each layout rests
 # on. CImpressaoListaEleitores::StartState (fn 11908) is written in cimpressaolistaeleitores.cpp, over fragment 317's
-# comum::ImprimeListaEleitores, and does not match yet (src/units/317-uenux2-relatorios-aptos.mk has the measurement);
-# its trap and the unit's pending file went with it.
+# comum::ImprimeListaEleitores, and matches since fragment 317's file defines comum::CParteEleitores's constructor
+# (src/units/317-uenux2-relatorios-aptos.mk has the measurements); its trap and the unit's pending file went with it.
 # CImpressaoZeresimaTardia's constructor, GetInst, statics and ProcessInput are written since (below).
 # CConfirmaRegerarZeresima's constructor, GetInst and statics are written, unit 104's shape, and
 # vota::CReinicioVotacao::StartState (fn 11835, unit 138) holds GetInst inlined: the new of 20 bytes, the base's

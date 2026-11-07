@@ -23,7 +23,7 @@
 #   use band 3 (ledger/ordinals.tsv) next to 3745 (NomeArquivoEleitores), after crdvvota.cpp's 3747 to 3750 and before
 #   cjustificador.cpp's 3743 to 3741 in link order, with 27 functions of the band, crdvvota.cpp's, cpartidos.cpp's,
 #   clocal.cpp's and chv.cpp's among them, between it and cnomearquivo.cpp's 3772 and 3773; 2811 lies in band 4 between
-#   crespostas.cpp's 2812 and cjustificador.cpp's 2810. The table agrees: slots 2461 and 2462 are crespostas.cpp's exit
+#   crespostas.cpp's 2812 and cjustificador.cpp's 2809. The table agrees: slots 2461 and 2462 are crespostas.cpp's exit
 #   destructors (11481, 11480), 2463 is 3744, 2464 3745, and 2465 and 2466 are cjustificador.cpp's (11477, 11476)
 #   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`). That 3744 shares 3745's object is a reading; the file is unit
 #   279's chosen one, and 3744 follows 3745 there, as band 3 orders them (ld_index 6043 and 6045 in

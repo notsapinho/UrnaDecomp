@@ -65,7 +65,7 @@
 #   cnomeeleitor.cpp, also gave 10500 172 over 1736 rows, but inverted 24 of that object's 29 pairs and renamed 3883's
 #   merge body. In this order 10500 reads 172 over 1736 rows, all operand rows, and binaryen's merge body of unit 282's
 #   three ProcessInput slots keeps the name of its first member in link order, CInformaBioDesabilitadaDemo's (3883's
-#   hand line in splat/symbol_addrs.txt).
+#   match line in splat/matched.txt).
 # - HabilitaEleitor (5400): LimpaBiometria, then CHabilitaAudioEleitor when IsAudioAtivado, else Post(1) to
 #   CThreadEleitor's queue and CMostraEleitorVotando, the next state stored in each branch (two stores, which
 #   comum::CAppState::SetNextState called in both gives: docs/reference/facts/codegen.md C13; assignments gave one store

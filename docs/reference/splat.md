@@ -199,11 +199,12 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   land until it matches. When the line carries every caller it
   names (each named by its own evidence, a `vtable` slot or an anchor, whose row needs this name), those callers align
   the call site and count for nothing else: the comment leads with the callee's own rows, read without the match, and
-  says the callers fall without the line (3883's). A `.bss` object, or a `.data` or read-only object its bytes cannot
-  place (§3: under 4 bytes, or found at too many places, `bytes occur N+ times`; the comment says which), has no content
-  to stand on and often no aligned call: its line leads with the target functions other than the match that
-  read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what it
-  does there (a compare with a value above 1, an increment, an index), since those uses also give the member's type
+  says the callers fall without the line (3883's did, while 3883 differed; once 3883 matched, the content pass found its
+  body without the line, and the line went: unit 282's fragment). A `.bss` object, or a `.data` or read-only object its
+  bytes cannot place (§3: under 4 bytes, or found at too many places, `bytes occur N+ times`; the comment says which),
+  has no content to stand on and often no aligned call: its line leads with the target functions other than the match
+  that read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what
+  it does there (a compare with a value above 1, an increment, an index), since those uses also give the member's type
   (how-to step 3, "What a body does not decide"); a read-only object's line also gives its bytes and what they encode
   (`__format_spec::__fields_integral`, `37 01`). A static destructor that is a thunk into a body binaryen shares
   (`call <shared>(p0, <address>)`) is a reader too: the line names the shared body and what places the thunk in the

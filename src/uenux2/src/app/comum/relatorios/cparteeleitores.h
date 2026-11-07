@@ -12,11 +12,13 @@ namespace comum {
 // store the vptr, and the control block's __on_zero_shared is the virtual fn 411. In the target both are thunks, 11205
 // into fn 2899 and 11204 into fn 6026, binaryen's merges with api::CFormPart's (and, for 2899, the D2s of
 // comum::servico::CComparecimentoMesarioServico and CJustificadorServico). The D0 holds the D2's body, so the destructor
-// is not out of line; src/units/77-uenux2-ireportpart.mk lists the forms that give the same bytes. The constructor, out
-// of line in cparteeleitores.cpp and inlined by binaryen into its one caller, fn 11908 (a second stack frame inside that
-// body, reading.md R10), takes the form by value and builds the part around it: std::make_shared of api::CFormPart,
-// called with the form's two words. The member's element type is chosen (the fragment says api::CFormPart gives the
-// same bytes), as are the member's name and this header's path: no record names the class.
+// is not out of line; src/units/77-uenux2-ireportpart.mk lists the forms that give the same bytes. The constructor is
+// out of line in cgeradorrellistaeleitores.cpp, the file of its one caller, MontaEleitores; fn 11908 holds both
+// inlined, the constructor by binaryen (a second stack frame inside that body, reading.md R10) from an object that
+// drops its result (codegen.md C6; src/units/317-uenux2-relatorios-aptos.mk has the measurements). It takes the form by
+// value and builds the part around it: std::make_shared of api::CFormPart, called with the form's two words. The
+// member's element type is chosen (src/units/77-uenux2-ireportpart.mk says api::CFormPart gives the same bytes), as are
+// the member's name and this header's path: no record names the class.
 class CParteEleitores : public api::IReportPart {
 public:
     CParteEleitores(std::shared_ptr<api::IForm<api::IPaper>> form);

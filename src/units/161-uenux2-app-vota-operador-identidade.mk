@@ -179,32 +179,54 @@
 # the two classes' order in the target's data (unit 142's fragment has the scores). Two placings give that order, and
 # on whole links both give 10489 93 over 854 and the splat build the target's sha256 with every match:
 # cinformaanonascimentoerrado.cpp moved into unit 142's list ahead of cpedeanonascimentosembiometria.cpp inverts 31
-# object pairs the base had in the data's order (82553 inverted pairs in the whole link); this one inverts 10 (82511;
-# the base's link, 82533), each object moving past the same 54 others. Pairs are read from each object's vtable and
-# typeinfo addresses in splat/symbol_addrs.txt, through the link map. The 10: cpedeanonascimentosembiometria.cpp
-# (@1591496 to @1591540) now after aguardaeleitor/'s cmostraeleitorvotando.cpp and cperguntacodigosuspensao.cpp (unit
-# 142's), celeitordemorando.cpp, csuspensaoautomaticaeleitor.cpp, cperguntaeleitorvotando.cpp and
-# cdesabilitaaudioeleitor.cpp (@1592784 to @1593308), and comum/gravadores/asn/'s cconversorversoesarquivos.cpp,
-# cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp (@1596216 to @1599416).
+# object pairs the base had in the data's order (82553 inverted pairs in the whole link, counted at 7b61f838); this one
+# inverts 10 (82511; the base's link, 82533), each object moving past the same 54 others. Pairs are read from each
+# object's vtable and typeinfo addresses in splat/symbol_addrs.txt, through the link map. The 10:
+# cpedeanonascimentosembiometria.cpp (@1591496 to @1591540) now after aguardaeleitor/'s cmostraeleitorvotando.cpp and
+# cperguntacodigosuspensao.cpp (unit 142's), celeitordemorando.cpp, csuspensaoautomaticaeleitor.cpp,
+# cperguntaeleitorvotando.cpp and cdesabilitaaudioeleitor.cpp (@1592784 to @1593308), and comum/gravadores/asn/'s
+# cconversorversoesarquivos.cpp, cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp
+# (@1596216 to @1599416).
 #
-# Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
+# Written in ccontrolareconhecimento.cpp since, and matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records),
 #   matched since its two next-state stores call comum::CAppState::SetNextState (cappstate.h): on CONFIRMA it calls
 #   LimpaBiometria (3621) and goes to CHabilitaAudioEleitor::GetInst (2743) when IsAudioAtivado (2746) says so, else
 #   posts 1 to CThreadEleitor's queue and goes to CMostraEleitorVotando::GetInst (1150). With the two stores, 12 over 84
 #   rows, operand-only, the queue's address in local 1 where the target reuses local 0; with the calls, 10 over 84,
-#   names only (`pnpm wasm score`, whole link), and it matches (step 9). Unit 282's 3883 differs the same way and its
-#   sources are not this unit's.
+#   names only (`pnpm wasm score`, whole link), and it matches (step 9). Unit 282's 3883 differed the same way and
+#   matches with the same calls (that fragment has its scores).
 # - vota::MontaTelaEleitorPodeVotar (5410, a free function by choice; name chosen), the form both
 #   CControlaReconhecimento::GetInst (1256) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
 #   fill +12 with: AddLed(LED_OPERACAO_0), AddBeep(1), "ELEITOR(A) PODE VOTAR" at {1, 1}, "Assinar o caderno de votação
 #   antes de" at {1, 2}, "votar" at {1, 3} (the tail of "CONFIRMA: votar", built in place), "CONFIRMA: prosseguir" at
 #   {1, 4} on the right, api::CMTFormBuilder::AddInputControl(4) (unit 31's file, inlined by binaryen behind its own
 #   frame), GetInteractiveForm("", true). Its place before AvancaTentativa follows the uses-2 band (5410 links before
-#   5406). 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted): the target copies the builder's address into
-#   another local before the inlined AddInputControl (`local.get 3; local.set 2`), ours does not; with the make_shared
-#   in 5410 itself, 276 over 577; with a parameterless AddInputControl over make_shared<...>(), 219 over 563. Not
-#   explained. Its second caller, 1256, is in the link, and the roots' stand-in for it went.
+#   5406). Its second caller, 1256, is in the link, and the roots' stand-in for it went. It matches with
+#   cmtformbuilder.cpp, whose AddInputControl(int) it holds, compiled at the head of this list (below), ahead of
+#   ccontrolareconhecimento.cpp (docs/reference/facts/codegen.md C4, the callee's object first). With cmtformbuilder.cpp
+#   in unit 31's list, after this one: 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted), the target copying
+#   the builder's address into another local before the inlined AddInputControl (`local.get 3; local.set 2`) where ours
+#   did not; with the make_shared in 5410 itself, 276 over 577; with a parameterless AddInputControl over
+#   make_shared<...>(), 219 over 563; with AddInputControl(int) returning the builder and GetInteractiveForm called on
+#   its result, a byte-identical module at that order, and 207 over 553 again with this list (so no same-bytes form of
+#   the landed one: the two objects swapped into a copy of the link, beside a control that swaps them unchanged and
+#   gives the tree's module). With the callee's object first (copies of the plain link.cmd with one object moved,
+#   docs/reference/facts/workflow.md W13): cmtformbuilder.cpp.o at the head of this list, or right before
+#   ccontrolareconhecimento.cpp.o, or ccontrolareconhecimento.cpp.o right after cmtformbuilder.cpp.o in unit 31's list,
+#   43 over 548 each, every row a call or a data operand; with this list, step 9 matches it, and nothing leaves match.
+# - The move (src/units/README.md "Names", two landed files of two units): codegen.md C4's record-aware count on the
+#   plain link.cmd of the commit that moved it (over ea98137f): cmtformbuilder.cpp from 418 objects out of the data's
+#   order in unit 31's list to 250 at the head of this one (251 to 254 before each of the next four files, down to
+#   ccontrolareconhecimento.cpp), against ccontrolareconhecimento.cpp into unit 31's list, 384 to 284 after
+#   cmtformbuilder.cpp and 283 after cpaperformbuilder.cpp; the first falls more, so cmtformbuilder.cpp moved, to the
+#   head. It inverts no pair and puts 168 into the data's order (the count ranks cmtformbuilder.cpp.o at @1530004,
+#   before each of theirs): 19 of app/vota/operador/confirmaidentidade/, 18 of app/vota/eleitor/iniciovotacao/, 13 of
+#   api/gui/, 13 of app/vota/operador/outrasopcoes/, 11 of app/vota/operador/justificativa/, and 94 of 38 other
+#   directories. The file stays unit 31's (that fragment keeps its notes). Eleven matched rows take their copy from
+#   cmtformbuilder.cpp.o now (splat/scan.tsv's object column against ea98137f's): 11020 to 11023, 11038, 1400 and 3673
+#   from cescolheopcao.cpp.o, 12317, 12323 and 12784 from cformbuilder.cpp.o, and 203 from ccedula.cpp.o, whose match
+#   line step 9 renamed to api::CMTFormBuilder's constructor, the same body.
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
 # its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the
@@ -401,8 +423,10 @@
 # (GetDadosSemBiometria's being out of line is measured, above). s_dedoRegistrado is the mesario's title by 10425's
 # use; its name, an earlier choice, stays.
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeidentidade.cpp \
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The list starts
+# with unit 31's cmtformbuilder.cpp, for 5410 (its paragraph above has the order measured and the counts).
+APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/api/gui/cmtformbuilder.cpp \
+    src/app/vota/operador/leidentidade/cpedeidentidade.cpp \
     src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp \
     src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp \
     src/app/vota/operador/leidentidade/ieleitorimpedidovotar.cpp \

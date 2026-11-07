@@ -30,13 +30,14 @@ void CCabecalhoQRCodeBuilder::DefineCodigoCarga(const std::string& codigoCarga)
     m_codigoCarga = std::format("IDCA:{:.24s} ", codigoCarga);
 }
 
-void CCabecalhoQRCodeBuilder::DefineHistoricoCarga(const std::vector<std::string>& cargas)
+CCabecalhoQRCodeBuilder& CCabecalhoQRCodeBuilder::DefineHistoricoCarga(const std::vector<std::string>& cargas)
 {
     m_historicoCarga = std::format("HIQT:{} ", cargas.size());
     unsigned indice = 0;
     for (const std::string& carga : cargas) {
         m_historicoCarga += std::format("HICA:{}:{:.24s} ", ++indice, carga);
     }
+    return *this;
 }
 
 void CCabecalhoQRCodeBuilder::DefineIdUrna(uedword idUrna)
@@ -198,7 +199,7 @@ void CCabecalhoQRCodeBuilder::DefineEmissao(const api::CDateTime& dataHora)
     m_horaEmissao = std::format("HREM:{} ", dataHora.GetHora().Format("hhmmss"));
 }
 
-// (original lines 201-276: content not recovered)
+// (original lines 202-276: content not recovered)
 #line 277
 void CCabecalhoQRCodeBuilder::preBuild() const
 {
