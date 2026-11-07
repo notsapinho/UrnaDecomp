@@ -717,11 +717,17 @@ TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict
 # _Z7ByValue allocas 4 lifetime starts 0
 ```
 
-Which of the marked slots merge follows the
-colouring's own order, which no probe here has measured: 11891's message function gave other pairs in a slot than the
-target's in eight forms (a result dropped, named, in a block, in an `if`'s init-statement, in a helper) and stays a trap
-(unit 104's `-pending.cpp`). Read which temporaries carry markers in the TU's IR (`-S -emit-llvm`, as above) before
-trying forms for such a remainder.
+Which of the marked slots merge follows how much of the body the helper holds. A result dropped in a helper clang
+inlines carries the inliner's lifetime markers, which in the IR span the whole inlined body (`lifetime.start` before
+the helper's first call, `.end` after its last release), while the stack colouring counts it live from its first use
+to the helper's return; so the helper's extent decides which marked temporaries merge into its slot. 11891's message
+(`api::MostraMensagemTemporaria`, unit 171's fragment) took the target's slots with its whole body in a helper of
+internal linkage (`ExibeMensagemTemporaria`): the text field's dropped result outlives `""` and the form and shares
+the slot of the second `SPoint`, whose range ends before that result's first use; written as statements of the
+function, the second `SPoint` shares the form's slot. A helper around part of the body gives other pairs: with both
+adders in it the form shares the text field's slot, with `AddTextField` alone the second `SPoint`'s (and `""` the text
+field's), object probes at 836481cb. Read which temporaries carry markers in the TU's IR (`-S -emit-llvm`, as above)
+before trying forms for such a remainder, and say in a note that lists a helper form how much of the body it held.
 
 What a TU emitted first decides an inlined template's stack slots too. `CPolySingleton<T>::set` (4879 for
 `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`, whose parts are `always_inline`, and

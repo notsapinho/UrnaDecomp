@@ -1,6 +1,7 @@
 # uenux2 comum::CCandidaturasDSNumero's call operator (src/app/comum/dados/ccandidaturasds.cpp), which binaryen inlines
-# into its one caller, api::CDataText<comum::CCandidaturasDSNumero>::GetText (target fn 12742; unit 79's roots keep the
-# class's vtable, and unit 102's roots object gives the GetText the link keeps).
+# into its one caller, api::CDataText<comum::CCandidaturasDSNumero>::GetText (target fn 12742; 4185, unit 378's
+# vota::AdicionaDadosCandidato, builds the class and stores its vtable, and unit 110's ctelasvota.cpp.o gives the
+# GetText the link keeps).
 #
 # What the bytes give (ccandidaturasds.h has the class): 12742 builds "CCandidaturasDSNumero" for GetCandidaturaAtual
 # (fn 2838), then reads the post's digit count (CConfiguracaoEleicao::GetInst, fn 187, and GetCargo, fn 861, the byte at

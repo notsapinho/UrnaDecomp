@@ -4,11 +4,7 @@
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it
 //     so) and const std::string& (*)() (3060), CDataTextFmt over std::string
-//     (*)(const std::string&) (3058 builds it so) and const std::string (*)(const std::string&) (2028), and CDataText
-//     over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
-//     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
-//     and so do CDataText over comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185 builds both), whose
-//     GetText (12649, 12742) calls the source's operator, matched (5807) or inlined by binaryen (unit 180's);
+//     (*)(const std::string&) (3058 builds it so);
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);
@@ -24,7 +20,11 @@
 // the stand-ins for 3059 and 12040 went. So did the one for CDataImage over std::vector<unsigned char> (*)(), whose
 // builder 6689 (unit 387's, ctelasvota.cpp) is in the link: that instance and its block come from ctelasvota.cpp.o.
 // CDataText over std::function<std::string()> and its control block, which only 12055 builds with std::make_shared,
-// come from ctelasvota.cpp.o since then, and the stand-in for it went. The stand-ins differ in their bodies and are
+// come from ctelasvota.cpp.o since then, and the stand-in for it went. So did the ones for CDataTextFmt over
+// const std::string (*)(const std::string&) by std::make_shared (2028, vota::AdicionaSiglaPartido) and CDataText over
+// comum::CCargoDSNomeSexoCandidato (6528), comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185), whose
+// builders are written in ctelasvota.cpp (unit 378): those instances come from its object. The stand-ins differ in
+// their bodies and are
 // address-taken from a static constructor. They take
 // CTextSource by reference, as fn 5409 does, and build none: the target holds the record at ctextsource.h 37:19 twice, once
 // in each of two TUs, and our link holds no record of that kind yet.
@@ -43,8 +43,6 @@
 #include "api/gui/cdatatext.h"
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/ctextsource.h"
-#include "app/comum/dados/ccandidaturasds.h"
-#include "app/comum/dados/ccargods.h"
 
 namespace {
 
@@ -96,33 +94,10 @@ __attribute__((noinline)) SharedIText TextoFormatoProprio(FonteFormato fonte, co
     return SharedIText(new CDataTextFmt<FonteFormato>(fonte, formato, alinhamento));
 }
 
-__attribute__((noinline)) SharedIText TextoFormatoConst(FonteFormatoConst fonte, const std::string& formato)
-{
-    return std::make_shared<CDataTextFmt<FonteFormatoConst>>(fonte, formato);
-}
-
 __attribute__((noinline)) SharedIText TextoFormatoConstProprio(FonteFormatoConst fonte, const std::string& formato,
                                                                api::ETextAlignment alinhamento)
 {
     return std::shared_ptr<CDataTextFmt<FonteFormatoConst>>(new CDataTextFmt<FonteFormatoConst>(fonte, formato, alinhamento));
-}
-
-// Stands for fn 6528, which builds CDataText<comum::CCargoDSNomeSexoCandidato> with std::make_shared (vptr 1537644).
-__attribute__((noinline)) SharedIText TextoCargoSexo(const comum::CCargoDSNomeSexoCandidato& fonte)
-{
-    return std::make_shared<CDataText<comum::CCargoDSNomeSexoCandidato>>(fonte);
-}
-
-// Stands for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> (vptr 1537440) and
-// CDataText<comum::CCandidaturasDSNumero> (vptr 1537204) with std::make_shared.
-__attribute__((noinline)) SharedIText TextoCandidaturaNome(const comum::CCandidaturasDSNome& fonte)
-{
-    return std::make_shared<CDataText<comum::CCandidaturasDSNome>>(fonte);
-}
-
-__attribute__((noinline)) SharedIText TextoCandidaturaNumero(const comum::CCandidaturasDSNumero& fonte)
-{
-    return std::make_shared<CDataText<comum::CCandidaturasDSNumero>>(fonte);
 }
 
 void* volatile w79_sink;
@@ -132,16 +107,12 @@ struct SW79Roots {
     {
         w79_sink = reinterpret_cast<void*>(&TextoCompartilhado);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonteFormatado);
-        w79_sink = reinterpret_cast<void*>(&TextoFormatoConst);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConstProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFuncaoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonte);
         w79_sink = reinterpret_cast<void*>(&TextoReferencia);
         w79_sink = reinterpret_cast<void*>(&TextoProprio);
-        w79_sink = reinterpret_cast<void*>(&TextoCargoSexo);
-        w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNome);
-        w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNumero);
     }
 } w79_roots;
 

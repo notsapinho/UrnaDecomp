@@ -116,7 +116,8 @@
 # emits the vtable now, and unit 378's pending file (the trap) went. Stand-ins this unit made idle went, call by call:
 # unit 41's roots file (DestroiBarrasPassos, 3665's second caller), unit 165's ModoProgressBar (4620), unit 88's
 # MesmoCargo (1938) and NomesNeutros (1547) and one call each of SomaEleicoes (2835, for 11209 now) and Ordinais (2258,
-# for 12811 now), and unit 110's ConsultaTodos call of GetCargo (861), which stood for 13550 alone. With 13550 every
+# for 12811 then; it went when unit 378 wrote 12811), and unit 110's ConsultaTodos call of GetCargo (861), which stood
+# for 13550 alone. With 13550 every
 # target caller of the CUeGuiError constructor thunk (406) is in the link, so unit 14's roots file, two throw sites for
 # 406, went at the landing (the link without it moved no row; unit 14's fragment). The constructor's
 # throw takes EUE_GUI_STEPSPROGRESSBAR_SEM_SEGMENTOS (5014) in api/gui/eueguierror.h; of the 632 objects the edited

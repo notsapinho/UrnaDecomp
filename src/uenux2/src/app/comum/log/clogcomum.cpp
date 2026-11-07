@@ -6,9 +6,10 @@
 //         LogaSuspensoMonitoramenteRepeticao(uebyte)                                     record at line 136, column 18
 //         LogaTipoBateria()                                                              records at lines 144, 145, 158
 //         LogaScoreReconhecimentoMesario(const ueint32)                                  record at line 214, column 18
-// (the last three have no target index: binaryen inlined the first two into fn 10226, vota::CThreadMonitor's slot 2,
-// and the third into fn 5372, comum::CControladorReconhecimentoMesario::ComparaDigitais)
-// The reconstruction's notes are in unit 111's fragment.
+//         the session members and the signing ones                                   records listed below
+// (the last four rows have no target index: binaryen inlined the first two into fn 10226, vota::CThreadMonitor's
+// slot 2, the third into fn 5372, comum::CControladorReconhecimentoMesario::ComparaDigitais, the seven into fn 12098)
+// The seven's records: lines 44, 50, 56, 62, 166, 172, 178. The reconstruction's notes are in unit 111's fragment.
 
 #include "app/comum/log/clogcomum.h"
 
@@ -38,7 +39,31 @@ CLogComum::CLogComum() = default;
 
 CLogComum::~CLogComum() = default;
 
-// (original lines 41-73: content not recovered)
+void CLogComum::LogaIniciaSessaoMSD()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Inicia uma sessão no MSD");
+}
+
+void CLogComum::LogaFinalizaSessaoMSD()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Finaliza a sessão no MSD");
+}
+
+void CLogComum::LogaIniciaSessaoMSE()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Inicia uma sessão no MSE");
+}
+
+void CLogComum::LogaFinalizaSessaoMSE()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Finaliza a sessão no MSE");
+}
+
+// (original lines 66-73: content not recovered)
 #line 74
 void CLogComum::LogaCopiandoArqResParaFI(EExtensaoArquivoResultado extensao)
 {
@@ -102,7 +127,27 @@ void CLogComum::LogaTipoBateria()
     }
 }
 
-// (original lines 162-211: content not recovered)
+// (original lines 162-163: content not recovered)
+#line 164
+void CLogComum::LogaInicioProcedimentoAssinatura()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Início do procedimento de assinatura dos arquivos de resultados");
+}
+
+void CLogComum::LogaTerminoProcedimentoAssinatura()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Término do procedimento de assinatura dos arquivos de resultados");
+}
+
+void CLogComum::LogaPreparandoAssinaturaArquivosResultado()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Preparando para assinatura dos arquivos de resultados");
+}
+
+// (original lines 182-211: content not recovered)
 #line 212
 void CLogComum::LogaScoreReconhecimentoMesario(const ueint32 score)
 {

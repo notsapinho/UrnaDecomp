@@ -28,4 +28,12 @@ private:
     static std::mutex s_mutex;
 };
 
+// The abbreviation of the current party in the format it is given (std::vformat over GetSigla's string): target fn
+// 11501, reached by table slot 1089 only, which vota's AdicionaSiglaPartido (fn 2028, ctelasvota.cpp) passes to a
+// CDataTextFmt<const std::string (*)(const std::string &)> (RTTI: that type gives the const result and the reference).
+// Its body holds GetInst's code (fn 819), which only cpartidos.cpp can inline, and it sits in band 1 among that
+// object's static destructors (11502, 11503), so it is defined there. Its name, its being a free function (a static
+// member of CPartidos is the other form, not measured) and this header are chosen.
+const std::string SiglaPartidoCorrente(const std::string& formato);
+
 } // namespace comum

@@ -6,7 +6,8 @@
 #   src/api/gui/cqrcodeimage.h, cqrcodeimage.cpp            the .cpp's path evidence: record 36:15; the header's chosen
 # The class templates have no source of their own: every function matched from them is a template instance, emitted here
 # by the roots object, which builds each instantiation the way the target's callers do and takes the place of those callers
-# until they land; 12632's GetText links from unit 102's roots object instead, ahead of this one, the same code. The
+# until they land; 12632's, 12649's and 12742's GetText link from unit 110's ctelasvota.cpp.o instead (6528 and 4185
+# build them, unit 378's), the same code. The
 # target functions:
 #   CDataText<CTextSource>                       D2 10536, D0 10535, GetText 10534
 #   CDataTextFmt<CTextSource>                    D2 10748, D0 10747, GetText 10746
@@ -16,14 +17,16 @@
 #   CDataText<string (*)()>                      GetText 12784 (D2 and D0 are the shared 174 and 144)
 #   CDataText<const string& (*)()>               GetText 12580 (the same)
 #   CDataText<comum::CCargoDSNomeSexoCandidato>  GetText 12632 (the same), a call of the source's operator, fn 2268 (unit 129)
-#                                                (linked from unit 102's roots object)
+#                                                (from ctelasvota.cpp.o, where 6528 builds it)
 #   CDataText<comum::CCandidaturasDSNome>        GetText 12649 (the same), a call of the source's operator, fn 5807 (unit 89),
-#                                                linked from unit 102's roots object
+#                                                from ctelasvota.cpp.o, where 4185 builds it
 #   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301, from unit 110's ctelasvota.cpp.o
 #                                                since its builder (CTelasVota::CriaTelaQRCodeBU's adders, for 12055) is
 #                                                written; the roots' stand-in for 12055 went
 #   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
-#   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404
+#   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404, from ctelasvota.cpp.o
+#                                                since its builder, 2028 (unit 378), is written; the roots' stand-in
+#                                                went, and 6404's line names this class's GetText
 #   CDataImage<vector<unsigned char> (*)()>      GetData 6330 (a twin of __func<string (*)(), string()>'s slot 6)
 #   CQRCodeImage                                 constructor 3662, D2 10966, D0 10964, GetData 10967 (below)
 #   byn$mgfn-shared bodies                       6060 and 6059, of CQRCodeImage's and CDataText<function<string()>>'s D2 and D0;
@@ -35,37 +38,41 @@
 #                                                CQRCodeImage's) link from ctelasvota.cpp.o since 12055's builder is
 #                                                written, and 12518 12517 (CDataImage<vector<unsigned char> (*)()>'s)
 #                                                since 6689 (unit 387) is, the same bytes (they still match); the
-#                                                roots' stand-ins for 6689 and 12040 went with unit 387
+#                                                roots' stand-ins for 6689 and 12040 went with unit 387; 12575 12570
+#                                                (CDataTextFmt<const string (*)(const string&)>'s) link from it
+#                                                since 2028 is written
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times
 # 3661 reads as libc++'s fill insert of a std::vector<unsigned char> (it grows the buffer, fills with the byte the last
 # parameter points to, and throws the vector's length error, fn 158), with the value GetData passes, 255. It matches from
 # cqrcodeimage.cpp.o, GetData's object, at the tree's flags; while GetData was a trap it matched from the roots object,
 # whose stand-in for GetData called it twice.
-# CQRCodeImage::GetData (10967, slot 2) is written in cqrcodeimage.cpp and differs in the place of two stores alone. Two
-# functions binaryen inlined into it each keep a second prologue: the static MontaImagem (record 36:15, its std::format
-# throw, EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA 4948), here, which builds an api::CQRCodeGuard (fn 5502, unit 204) on its
-# frame, and api::CBmpConversor::CreateBitmapHeader (record cbmpconversor.cpp 122:15, unit 22). In the whole link
-# (pnpm wasm score at the default depth) it is 52 over 839 rows: 36 operand-only, 8 inserted and 8 deleted, the 8 being
-# CreateBitmapHeader's stores of the file header's type (+0) and size (+2), which the target makes right after the vector
-# is built and ours after the info header; unit 22's fragment has the forms measured for them. It stays written: it is a
-# vtable slot, which a trap would only hide (docs/how-to-decompile.md step 5). The forms the bytes chose, each measured in
-# the whole link: a row's modules painted by two loops in an if/else on the module's bit, and the rows counted from the
-# QR code's width down to 1 with (y - 1) in the index, 67 over 844 before CreateBitmapHeader's final form. With the rows
-# counted from width - 1 down to 0, the row loop's exit test is `>= 2` where the target's is `> 1`, and the if/else gives
-# 280 over 889 (its object tests escala once above the rows, where the target tests it in each arm), a branch inside one
-# loop 222 over 871 and the colour computed before one loop 303 over 877. The size is read before the width at the call
+# CQRCodeImage::GetData (10967, slot 2) is written in cqrcodeimage.cpp and matches. Two functions binaryen inlined into
+# it each keep a second prologue: the static MontaImagem (record 36:15, its std::format throw,
+# EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA 4948), here, which builds an api::CQRCodeGuard (fn 5502, unit 204) on its frame,
+# and api::CBmpConversor::CreateBitmapHeader (record cbmpconversor.cpp 122:15, unit 22). It matched once
+# CreateBitmapHeader tests numColors twice, the second test between the file header's size and the rest (unit 22's
+# fragment has the reading, the forms measured and the choices); before that it was 52 over 839 rows in the whole link
+# (pnpm wasm score at the default depth, at 0c3a9009), 8 inserted and 8 deleted, the file header's type (+0) and size
+# (+2), which the target stores right after the vector is built and that form after the info header. The forms the bytes
+# chose, each measured in the whole link while CreateBitmapHeader still had its earlier forms (the scores are of those
+# links): a row's modules painted by two loops in an if/else on the module's bit, and the rows counted from the QR
+# code's width down to 1 with (y - 1) in the index, 67 over 844. With the rows counted from width - 1 down to 0, the row
+# loop's exit test is `>= 2` where the target's is `> 1`, and the if/else gives 280 over 889 (its object tests escala
+# once above the rows, where the target tests it in each arm), a branch inside one loop 222 over 871 and the colour
+# computed before one loop 303 over 877. The size is read before the width at the call
 # (CreateBitmapHeader's parameter order, unit 22's fragment). The padding of a row to four bytes is a uint16_t: the
 # target zero-extends it before adding the width. Chosen: every name but MontaImagem's, MontaImagem's being in this TU
 # beside GetData (its record names the file), the definitions' order, and the constructor's place after GetData.
-# CDataText<CCargoDSNomeSexoCandidato>'s control block (12637, 12636) is unit 102's; the roots' std::make_shared of it
-# instantiates the same block, which links from unit 102's object, ahead of this one, as 12632's GetText does.
-# The roots' stand-ins for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> and
-# CDataText<comum::CCandidaturasDSNumero> with std::make_shared and is not written, keep both classes' vtables, which unit
-# 102's dropped builders emit and nothing stored until now: 12649 matches (pnpm wasm score 1 over 7 rows, operand-only,
-# in the whole link before steps 7 to 9), and so does 12742, CDataText<CCandidaturasDSNumero>::GetText, since fn
-# 11973 is in the link: the end of its format string, "{:0{}}", is in the target the tail of "  {}{}{:0{}}" (address
-# 1042), 11973's literal. Its source's call operator is unit 180's, and that fragment has the measurement. The control blocks of both (12654, 12650, 12760, 12752) are unit 102's.
+# CDataText<CCargoDSNomeSexoCandidato>'s control block (12637, 12636) is listed in unit 102's fragment; it links from
+# ctelasvota.cpp.o, where 6528 builds it, as 12632's GetText does. Fn 4185 (unit 378's) builds
+# CDataText<comum::CCandidaturasDSNome> and CDataText<comum::CCandidaturasDSNumero> with std::make_shared and stores
+# both classes' vtables (until it was written, the roots' stand-ins for it kept them): 12649 matches (pnpm wasm score 1
+# over 7 rows, operand-only, in the whole link before steps 7 to 9, then), and so does 12742,
+# CDataText<CCandidaturasDSNumero>::GetText, since fn 11973 is in the link: the end of its format string, "{:0{}}", is
+# in the target the tail of "  {}{}{:0{}}" (address 1042), 11973's literal. Its source's call operator is unit
+# 180's, and that fragment has the measurement. The control blocks of both (12654, 12650, 12760, 12752) are listed in
+# unit 102's fragment and link from ctelasvota.cpp.o.
 # The other instantiations (over comum's and vota's classes, and the three of
 # CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>) wait for those classes, but for two that unit
 # 121 brings: CDataText<vota::CEscolheOpcao::COpcaoDS>, whose GetText (10685) matches, and CDataText<comum::CRespostasDSNumero>;
@@ -82,8 +89,8 @@
 # The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing -std=c++23) and with APP_CXXFLAGS: 131 of the 132
 # functions the two objects share compare equal (133 at APP_CXXFLAGS); what differed was the stand-in TextoFuncao (gone
 # since, with 12055's builder written) and the allocate_shared it inlined at -O3, so every instance the object emits is the same at the tree's flags (measured while
-# the object also emitted 3661, which GetData's object emits now); 12632's and 12649's GetText, which link from unit
-# 102's roots object, are the same code in both.
+# the object also emitted 3661, which GetData's object emits now); 12632's and 12649's GetText, which linked from unit
+# 102's roots object then, are the same code in both.
 # Forms measured not to:
 #   operator()(const std::string&) without `inline`: it stays out of line in the object and binaryen inlines it into 10746,
 #   whose row is then `differs` at +0x3, with an outer block and the string's address in a local;

@@ -19,7 +19,7 @@ namespace {
 
 const void* volatile ccargods_sink;
 
-// Stands for fn 2268's callers 6075, 6076 and 12811 (12632 and 6999 are in the link).
+// Stands for fn 2268's callers 6075 and 6076 (12632, 6999 and 12811, unit 378's, are in the link).
 __attribute__((noinline)) void NomesSexo(int r, int s, int a)
 {
     w2268(r, a + 4);

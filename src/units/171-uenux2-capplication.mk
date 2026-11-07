@@ -150,6 +150,34 @@
 #   log texts that begin "CApplication:" (ledger/strings.tsv 80041, 80069, 80097, 80554, 81522; no i32.const or packed
 #   i64.const of them in build/out/splat/pieces/asm). Those two bodies are not in the target, and a function no vtable
 #   slot holds is never trapped (src/units/README.md "Pending members"), so 5568 waits, and 7709 and 7710 with it.
+# api::MostraMensagemTemporaria (no index: binaryen inlines it into its one caller, 11891, unit 104's
+# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput, behind a 48-byte prologue), the function of internal linkage
+# ExibeMensagemTemporaria that holds its body, and FONTE_MENSAGEM, the SFont {35, 0} at .rodata 520148 that 11891 alone
+# reads; capplication.h has the body's evidence and what is chosen. Their file: the target's font lies right after the
+# typeinfo name of InitApplication's local facet (@519992, 0x9a bytes), and our link puts FONTE_MENSAGEM right after
+# that name in this object's data too (build/out/wasm-map/vota_web/vota_web_wasm.map: 0x772e4 after 0x77247 at
+# 836481cb, 0x77384 after 0x772e7 at 543ca8b7): a reading,
+# as the lines (after GetExceptionLevel, in the run the records leave blank) are a choice. The target's frame of 48
+# bytes holds the builder at +36, the fill's result at +28, the second SPoint (639, 310) and then the text field's
+# result at +20, the form at +12, and the first SPoint, the text's SPoint (320, 242) and the "" at +0. Measured in
+# object probes compiled at src/api's flags, the offsets each call takes read with wasm-objdump -d: with the body
+# written as statements of MostraMensagemTemporaria the second SPoint takes the form's slot, +12, its other slots the
+# target's (the two adders' dropped results get no lifetime markers there: the TU's IR, -S -emit-llvm); with the form
+# `auto`, the CWait by reference, `(void)` on the text field's call, the form declared before the adders and assigned,
+# or std::string() for "", the second SPoint is at +12 too; the text field's result a named local, or a `const auto&`,
+# gives every slot of the target's but releases it at the end, where the target releases it right after the call; named
+# and then reset() or set to nullptr, the slots are the target's, with the null stores and a second release at the end;
+# `std::ignore =`, and a local assigned then reset, give other slots ("" at +8, the form at +20). With the body in a
+# function of internal linkage that clang inlines into a thin MostraMensagemTemporaria, every slot and release is the
+# target's: the inliner gives the two dropped results lifetime markers from the body's start to its end (the IR's
+# lifetime.start and .end around the inlined body), so the text field's result outlives "" and the form and takes the
+# second SPoint (docs/reference/facts/codegen.md C5). That helper written external is not inlined by clang, and taking
+# the CWait by value there copies it into an 80-byte frame. Written `static` instead of in an anonymous namespace, or as
+# a lambda called in place (`[&] { ... }();`), it gives the same function byte for byte (object probes at 836481cb,
+# compared by function with docs/reference/facts/tool-traps.md X12's masks). A helper around part of the body gives
+# other slots: with only the two adders in it the form shares the text field's result's slot, and with AddTextField
+# alone the second SPoint's ("" then shares the text field's). In the whole link 11891 then matched (unit 104's
+# fragment).
 CAPPLICATION_SRCS := src/api/gui/capplication.cpp
 UENUX2_SRCS += $(CAPPLICATION_SRCS)
 $(ROOT)/$(APP)/171-uenux2-capplication-roots.o: $(ROOT)/src/units/171-uenux2-capplication-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/171-uenux2-capplication.mk

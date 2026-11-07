@@ -18,8 +18,9 @@
 // vtable and the field's, so nothing below stands for those either, and so is fn 3060
 // (AdicionaCampoNumero<CGrayedFramedText>, ctelasvota.cpp's, unit 378's), which builds
 // __shared_ptr_emplace<CMaskedTextField<CGrayedFramedText>> and stores both its vtable and the field's (the builder,
-// the destructor emitter and the two sinks that stood for 4185 went). The other users are not reconstructed: fns 7787
-// and 4185 (5913, unit 59's, and 3675, unit 120's, are in the link). So:
+// the destructor emitter and the two sinks that stood for 4185 went), and so is fn 4185 (AdicionaDadosCandidato, unit
+// 378's), whose AdicionaCampoNumero<CGrayedFramedText, comum::CCandidaturasDSNumero> builds the same block. The other
+// users are not reconstructed: fn 7787 (5913, unit 59's, and 3675, unit 120's, are in the link). So:
 // - The optnone functions below are not rooted, and wasm-ld drops them with the constructors. They exist to make clang
 //   emit what the target's builders emit (src/units/README.md "A class with no key function", "A control block"):
 //   w92_emite_mascara calls the destructor by its qualified name; w92_emite_bloco_mascara instantiates the control
@@ -65,9 +66,9 @@ namespace {
 // 110's, which passes its own parameters on) are in the link, and the stand-in for 2383 went.
 //
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
-// 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 inlined into 3060)
-// and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two stand
-// in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
+// 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 called by 3060 and
+// 4185) and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two
+// stand in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
 // these do too, and each has a body no target function has.
 __attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
 {

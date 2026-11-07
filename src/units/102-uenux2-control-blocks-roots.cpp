@@ -28,14 +28,10 @@
 
 #include "api/audio/alsa/cwavfile.h"
 #include "api/audio/logger.h"
-#include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
-#include "api/gui/cpreshownothing.h"
 #include "api/persistencia/idao.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
 #include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
-#include "app/comum/dados/ccandidaturasds.h"
-#include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/crespostasds.h"
 #include "app/comum/gravadores/ccopiadormr.h"
 #include "app/comum/gravadores/cgravadorbu.h"
@@ -53,17 +49,12 @@
 #include "app/vota/eleitor/fimvotacao/cprogressoencerramento.h"
 
 extern "C" {
-extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cdatatext_crespostasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum18CRespostasDSNumeroEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cdatatext_ccandidaturasdsnome[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum19CCandidaturasDSNomeEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cdatatext_ccandidaturasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum21CCandidaturasDSNumeroEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cdatatext_ccargodsnomesexocandidato[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum25CCargoDSNomeSexoCandidatoEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN4vota22CProgressoEncerramentoENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cpreshownothing_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_7IScreenEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cgravadorbu[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum11CGravadorBUENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorlog[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorLogENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorrdv[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum12CGravadorRDVENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
@@ -111,7 +102,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CWavFile> w102_wav(const
 }
 
 using TGravador = comum::IGravador;
-using TPreShow = api::IPreShow<api::IScreen>;
 template struct SBloco<TGravador, comum::CGravadorBU>;
 template struct SBloco<TGravador, comum::CGravadorRDV>;
 template struct SBloco<TGravador, comum::CGravadorRCSecao>;
@@ -119,7 +109,6 @@ template struct SBloco<TGravador, comum::CGravadorEnvelopeArquivo>;
 template struct SBloco<TGravador, comum::CGravadorHashes>;
 template struct SBloco<TGravador, comum::CGravadorVersoesArquivos>;
 template struct SBloco<TGravador, comum::CGravadorLog>;
-template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorMR> w102_copiador(comum::TMunicipioID municipio,
     comum::TZonaID zona, comum::TSecaoID secao, char fase, comum::EExtensaoArquivoResultado extensao)
@@ -142,10 +131,6 @@ struct SFonte {
         return std::make_shared<TCampo>(fonte);
     }
 };
-template struct SFonte<api::CDataText<comum::CCandidaturasDSNumero>, comum::CCandidaturasDSNumero>;
-template struct SFonte<api::CDataText<comum::CCandidaturasDSNome>, comum::CCandidaturasDSNome>;
-template struct SFonte<api::CDataImage<comum::CCandidaturasDSFoto>, comum::CCandidaturasDSFoto>;
-template struct SFonte<api::CDataText<comum::CCargoDSNomeSexoCandidato>, comum::CCargoDSNomeSexoCandidato>;
 template struct SFonte<api::CDataText<comum::CRespostasDSNumero>, comum::CRespostasDSNumero>;
 
 namespace {
@@ -155,17 +140,12 @@ const void* volatile w102_sink;
 struct SW102Roots {
     SW102Roots()
     {
-        w102_sink = w102_vt_cdataimage_ccandidaturasdsfoto;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;
         w102_sink = w102_vt_cdatatext_crespostasdsnumero;
-        w102_sink = w102_vt_cdatatext_ccandidaturasdsnome;
-        w102_sink = w102_vt_cdatatext_ccandidaturasdsnumero;
-        w102_sink = w102_vt_cdatatext_ccargodsnomesexocandidato;
         w102_sink = w102_vt_cprogressoencerramento;
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;
-        w102_sink = w102_vt_cpreshownothing_iscreen;
         w102_sink = w102_vt_cgravadorbu;
         w102_sink = w102_vt_cgravadorlog;
         w102_sink = w102_vt_cgravadorrdv;

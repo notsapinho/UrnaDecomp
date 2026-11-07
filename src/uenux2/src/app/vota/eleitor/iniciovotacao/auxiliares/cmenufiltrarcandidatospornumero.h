@@ -17,7 +17,7 @@ namespace vota {
 // vota::CMenuFiltrarCandidatosPorNumero (RTTI: si_class of comum::CAppState; vtable @1545376 [244, 387, 11892, 7480,
 // 1661, 218, 425, 11891, 425]): it overrides StartState (slot 2) and ProcessInput (slot 7). The 20-byte object adds a
 // std::shared_ptr at +12, to the form StartState builds (fn 11892 replaces it and calls its slot 2). Its pointee is the
-// records' api::CInteractiveForm<IScreen, IInputKbd>: ProcessInput (fn 11891, not written) holds that class's Read()
+// records' api::CInteractiveForm<IScreen, IInputKbd>: ProcessInput (fn 11891) holds that class's Read()
 // (record cinteractiveform.h:57 @1545432, after this class's vtable in the data), and StartState moves in the form
 // vota::TelaFiltragemCandidatosPorNumero (ctelasvota.cpp) gets from GetFormularioInterativo (fn 576), of that type.
 // The destructor is out of line: the deleting one (fn 387) calls it and frees `this`, and it stores no vptr, as a final

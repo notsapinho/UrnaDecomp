@@ -35,13 +35,17 @@
 # 2838, picks the holder or the substitute, frees the literal and only then reads the ESexo at +40: the file-static
 # GetCandidatoAtual, which takes the order as its parameter and which clang inlines, gives that order (measured: 5806
 # matches). Its name, its linkage and the form are chosen; a form that picks after the full expression is not tried.
-# 2838's external linkage is chosen too: the roots stand in for its caller 12641 (12742 matches, from unit 102's roots
-# object), and for 5806's 13101.
+# 2838's external linkage is chosen too. Its target callers are all in the link: 5806, 5807, and 12641 and 12742 from
+# ctelasvota.cpp.o (unit 378's CDataImage<CCandidaturasDSFoto>::GetData, unit 110's
+# CDataText<CCandidaturasDSNumero>::GetText), so the roots' CandidaturasAtuais, which stood for 12641, went (a link
+# with it back moved no row); so did Suplentes, which called md::CCandidatura::GetSuplente (1389) for 12641, the last
+# of its five target callers (5746, 5806, 5807, 12272, 12641) to be in the link (a link with it back moved no row);
+# the roots stand in for 5806's caller 13101.
 # CCandidaturasDSNome's call operator (5807) is 5806's shape with its literal, "CCandidaturasDSNome", and the string at +12 of
 # the candidate, md::CDadosCandidato::GetNomeUrna, for the ESexo: written alike, after GetCandidatoAtual and before 5806's,
 # since the band puts 5807 ahead of 5806 (ld_index 3398 against 3399 in this link). The class gets the byte 5807 reads as
-# a member, with a constructor like CCandidaturasDSSexo's (chosen). Of its target callers 12649 matches (from unit 102's
-# roots object) and 6076 is not written; the roots stand in for it.
+# a member, with a constructor like CCandidaturasDSSexo's (chosen). Of its target callers 12649 matches (from
+# ctelasvota.cpp.o, where 4185 builds its block) and 6076 is not written; the roots stand in for it.
 #
 # comum::CCandidaturas's queries, in ccandidaturas.cpp after RecuperaVersaoPacote (no record; lines and names chosen):
 # GetCandidatosPartido (2272), ExisteCandidato (2271), GetCandidatos (2840) and Busca (1273), measured operand-only
@@ -54,7 +58,8 @@
 # binaryen keeps one body, whose match line names CRespostas's since crespostas.cpp links first (step 9 renamed it). They read three accessors added for them,
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
 # our link are unit 77's 11215 (2271), 11214 (2840, 1273) and 11213 (2272), and unit 139's 11254 (2271) and 11255 (2272,
-# 2271, 1273); the roots' Consultas stands for the rest, which its comment lists.
+# 2271, 1273); the roots' Consultas, which stood for Busca's last caller not in the link, 11891, went with it (unit
+# 104's), and the roots' comment lists Busca's callers.
 #
 # comum::CCandidaturas::Localiza, named and typed by its record (ccandidaturas.cpp:56:15, its throw: code 7800 and the
 # 42-byte message at 440373 of ledger/strings.tsv, the candidate then the post): it finds the base's key, the post times

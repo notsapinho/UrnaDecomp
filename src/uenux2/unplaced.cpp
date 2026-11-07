@@ -165,11 +165,6 @@
 // f10842 · 23822 B · unmatched · placement: link order · name unknown
 // ? f10842(i32, i32) { ... }
 
-// link-order cluster 657 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
-
-// f12641 · 544 B · unmatched · placement: link order · name unknown
-// void f12641(i32, i32) { ... }
-
 // link-order cluster 737 · uses=2
 
 // f5254 · 1114 B · unmatched · placement: link order · name unknown
@@ -194,11 +189,6 @@
 
 // f3528 · 530 B · unmatched · placement: link order · name unknown
 // void f3528(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1046 · uses=3
-
-// f4129 · 280 B · unmatched · placement: link order · name unknown
-// void f4129(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 

@@ -38,9 +38,20 @@ private:
     uebyte m_suplente;
 };
 
+// The photo of the current candidacy's holder or of one of its substitutes. fn 4129 (vota's adicionaImagem over it,
+// app/vota/eleitor/comum/ctelasvota.cpp) stores a byte of its object beside CDataImage<CCandidaturasDSFoto>'s vptr, the
+// order its callers pass (fn 4184 passes 0, the holder; fn 4181 passes its own parameter): the member is that byte, as
+// CCandidaturasDSNome's is. The member's name and type, the constructor and its being explicit are chosen, as
+// CCandidaturasDSNome's are. The call operator is in ccandidaturas.cpp; CDataImage<CCandidaturasDSFoto>::GetData
+// (fn 12641) holds it inlined (src/units/378-uenux2-ctelasvota-criatela.mk says what it reads).
 class CCandidaturasDSFoto {
 public:
+    explicit CCandidaturasDSFoto(uebyte suplente) : m_suplente(suplente) {}
+
     std::vector<uint8_t> operator()() const;
+
+private:
+    uebyte m_suplente;
 };
 
 // The sex of the current candidacy's holder or of one of its substitutes. fn 5806 builds the literal

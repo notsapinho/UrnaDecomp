@@ -213,7 +213,8 @@
 #   byte-identical to std::string's, so step 9 renamed fn 149's match line to it (docs/reference/facts/splat.md S6). The
 #   roots' CarregaDetalhes stands for 5764's caller 7787, with no dynamic data (6734, which passes them, is in the link:
 #   fragment 386). MarcaVotou (lines 456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit
-#   104's pending member), which also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
+#   104's, matched, its object at this list's end: below), which also calls fn 501,
+#   api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174).
 #   GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is written (below).
 # - GetEleitoresEstaticos (5772; the lambda's __func typeinfo, string 500386, names the member and its parameter, no
 #   const), matched with what it instantiates: LeArquivos<md::CEleitor> (5771, out of line with its two calls; the
@@ -339,9 +340,10 @@
 # ctelasvota.h gains four accessors, of the forms at +36, +44, +52 and +124, which fns 3877, 5979, 5959 and 4420 copy
 # after CTelasVota::GetInst() (the header says which); their names are chosen. Chosen too: GetTelaCargo's parameter
 # names, its local, the find form, and its place above the record (lines 3530 to 3538; the constructor's record :3502
-# stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 4184, 6660, 6671, 6678 and the
-# rest of its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn
-# 7787, which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written.
+# stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 6660, 6671 and the rest of
+# its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn 7787,
+# which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written. 6678
+# and 4184 are written (unit 378): 6678's callers 6639 and 6681 are, and 4184 is external, a choice.
 # Not so 6624 (adicionaBaseTelaVotoNuloConsulta), of that namespace too: its target callers are 6626 and 6616,
 # CTelasVota statics, and it is written with them (src/units/378-uenux2-ctelasvota-criatela.mk).
 #
@@ -386,20 +388,17 @@
 # so in that form it would leave the link until a caller here is written; it is written as a function of vota, its
 # callers' namespace (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that
 # lets src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names,
-# its namespace and linkage, and its lines (801 to 804, above line 822, the first record of a caller). Those lines lie
+# its namespace and linkage, and its lines (796 to 799, above line 822, the first record of a caller). Those lines lie
 # inside the file's run of internal records (lines 294 to 1301, all vota::(anonymous namespace)::), between :487 and
 # :822: written external there, the original would close and reopen the anonymous namespace around it, so the place goes
 # with the linkage chosen. Its include line (<string>, which <format>, already included, brings: a choice) took one of
 # the blank lines above line 291. Scored 15 over 340 rows, all operand-only, before step 8; matched at step 9. With its
 # literal ") - " in the link, unit 112's fn 1143 matches too (src/units/112-ecourna-cbasetype.mk).
-# Not written: fn 2028 (502 B; callers 6602, 6605, 6660, 6671, 6678 and 7787; no record, as 690 has none) waits for
-# table slot 1089, which it passes: fn 11501 (573 B, unwritten), which calls CPartidos' constructor and destructor (fns
-# 3751, 2815), its GetInst inlined (a reading); besides 2028 only OpenSSL's ecd_item_verify loads the constant 1089
-# (grep of the split's pieces), so 11501's name waits on 2028 too. Each waiting for a caller in this file: fns 4129 and
-# 6528 (their only callers are 4181 and 4184, adicionaFotoEmoldurada over CCandidaturasDSFoto) build the
-# CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
-# vtables lie between this file's records in the data. Fn 6561, adicionaFotoEmoldurada over the photo reader of
-# CriaTelaVisualizacaoCandidato (record :487), matches: below.
+# Fns 2028 (vota::AdicionaSiglaPartido), which passes table slot 1089, its function 11501 (comum::SiglaPartidoCorrente,
+# cpartidos.cpp: GetInst's code inlined puts it there), 4129 and 6528 (vota::adicionaImagem and AdicionaTextoAlinhado
+# over CCandidaturasDSFoto and CCargoDSNomeSexoCandidato, 4184's callees), whose fields' vtables lie between this
+# file's records in the data, are written and match: src/units/378-uenux2-ctelasvota-criatela.mk. Fn 6561,
+# adicionaFotoEmoldurada over the photo reader of CriaTelaVisualizacaoCandidato (record :487), matches: below.
 #
 # ctelasvota.cpp also holds six screen builders outside CTelasVota, free functions of vota that ctelasvota.h declares
 # (its comment says what places them in this file): AdicionaTelaAguarde (fn 4152), AdicionaCabecalhoTesteTeclado (fn
@@ -494,15 +493,19 @@
 #   6581, 6580 and 6579 (the map instance TelaTesteTeclado first mentions) link before 6569, whose lines the records fix
 #   (names.tsv's ld_index at 894335de 2689, 2692, 2698, 2701 and 2704, then 6569's 2709, 6561's 2711, 6557's 2716 and
 #   the destructor's 2717).
-# - Data. The link holds this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
+# - Data. At cb34a517 the link held this object's fonts as FONTE_TITULO, FONTE_VERSAO, FONTE_INSTRUCAO_TESTE_TECLADO,
 #   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, FONTE_TECLA and FONTE_SUPLENTE
-#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4), the target as {30, 0} @474888,
+#   (build/out/wasm-map/vota_web/vota_web_wasm.map, 0x6f7fc to 0x6f824 and 0x6fdf4; unit 378's FONTE_NUMERO and
+#   FONTE_NOME_CARGO came among them later, and at 543ca8b7 the run reads FONTE_INSTRUCAO_TESTE_TECLADO,
+#   FONTE_TEXTO_CONFIRMA_CORRIGE, FONTE_AGUARDE, those two, FONTE_TITULO, FONTE_VERSAO and FONTE_TECLA from 0x711c8,
+#   FONTE_SUPLENTE at 0x72078), the target as {30, 0} @474888,
 #   {20, 0} @474896, {25, 0} @474992, {15, 0} @475008, {35, 0} @475016, {20, 1} @475032 and {13, 0} @476600:
 #   AdicionaTelaQRCode (3059, above) reads {20, 0} and {35, 0} first, so {35, 0} precedes {25, 0}, one pair against
 #   the target's, and {20, 1} follows it as the target holds it; FONTE_VERSAO's two pairs are
 #   CriaTelaMaisInformacoes' (both below). The key vector went the other way: TelaTesteTeclado, which reads it, is
-#   above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO (0x1babfc) before CTelasVota::s_mutex (0x1bac08)
-#   and s_instancia (0x1bac20), the target's order (src/units/217-uenux2-ctesteteclado.mk).
+#   above GetInst's line now, and the link holds TECLAS_TESTE_TECLADO before CTelasVota::s_mutex and s_instancia, the
+#   target's order (0x1babfc, 0x1bac08 and 0x1bac20 at cb34a517; 0x1bcc10, 0x1bcc1c and 0x1bcc34 at 543ca8b7;
+#   src/units/217-uenux2-ctesteteclado.mk).
 # - Use band 1. Its members 12268 to 12276 (the std::function over the suplentes' lambda) and 12520 to 12530 (6561's
 #   CDataImage and its control block) link before 28 functions of this object that the target's index puts before them:
 #   CInputMenuField::AddItem's std::function (12277 to 12285) and the control blocks of CTextFieldMultiLine (12298,
@@ -756,7 +759,7 @@
 #   caller, 7787, is this file's; the vtables of the two blocks, of CNumberValidation and of CInputField<CFramedText>
 #   (@1538652 to @1539000) lie in this object's data run (records @1538492 and @1539612), so no object linked before
 #   this one emits them: 2383's object is this one or a later one (7787, this file's, builds them too). In this file the
-#   helper and 2383 take lines 777 to 799 of the blank run above MensagemErroCargo, a choice, and the band's order holds
+#   helper and 2383 take lines 772 to 794 of the blank run above MensagemErroCargo, a choice, and the band's order holds
 #   against 2380, 2376 and 2369 (ld_index 2783, 2787, 2805 and 2828 in names.tsv at f9af1d5d). The three includes
 #   they need (api/gui/cframedtext.h, cinputfield.h, cnumbervalidation.h) took three blank lines of the run above line
 #   291.
@@ -845,8 +848,40 @@
 # has the measurement and codegen.md C4's count of objects out of the data order at both places). Linked here, it
 # lies between unit 104's list and ctelasvota.cpp.o, so each move above from unit 104's list crosses it and inverts
 # one pair more (its vtable is at @1551044 in the target), and codegen.md C4's count against each of the four
-# filter-screen files after ctelasvota.cpp.o is 115 (113 at e7d03612 for PorCargo and PorPartido): the two more are
-# this object and unit 378's pending object, which lie on one side of every place after ctelasvota.cpp.o.
+# filter-screen files after ctelasvota.cpp.o was 115 at 241e042b (113 at e7d03612 for PorCargo and PorPartido): the
+# two more are this object and unit 378's pending object, which lay on one side of every place after ctelasvota.cpp.o
+# (the count moves as landings name data: 188 at 543ca8b7, one less for csincronismooperador.cpp's move, below).
+#
+# vota/operador/csincronismooperador.cpp (unit 104's: vota::CSincronismoOperador) is compiled from this list, at its
+# end: StartState (10210) holds comum::CEleitores::MarcaVotou (this list's celeitores.cpp, records 456 and 460) and
+# through it CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp), both inlined by binaryen, and matches only with its
+# object linked after celeitordetalhe.cpp.o. In unit 104's list, ahead of this one, it scored `40 over 150 rows (same
+# 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`, its locals numbered otherwise (pnpm wasm score, at
+# 0c3a9009); in scratch links of that plain link.cmd with the object moved (docs/reference/facts/workflow.md W13), each
+# of six places after celeitordetalhe.cpp.o in this list gave `28 over 149 rows`, all operand-only, every row a call, a
+# data address or the throws' destructor slot: between celeitordinamicodao.cpp and celeitores.cpp, after celeitores.cpp,
+# after chv.cpp, after md/cvalidadoridentidade.cpp, after ctelasvota.cpp and here; it matched here at step 9. The move
+# is needed for 10210, not by the data's order. Of those places docs/reference/facts/codegen.md C4's record-aware count
+# of objects out of the data's order against it is lowest here (at 836481cb, and the same at 543ca8b7): 534, 533, 532,
+# 529, 528 and 523 (535 right after celeitordetalhe.cpp.o, and 531, 530, 527, 526, 525 and 524 after cpe.cpp,
+# crespostas.cpp, cmenumaisinformacoesvota.cpp and the PorNumero, PorCargo and PorPartido files, places no link
+# measured), 549 at its place in unit 104's list (at 0c3a9009, 836481cb and 543ca8b7).
+# Against that old place it puts in order the 26 objects between the two with records or vtables below
+# CSincronismoOperador's vtable (@1601144) and inverts none: api/gui/primitives.cpp, comum's appinfo/cappinfo.cpp,
+# asn/cconversorabrangencia.cpp and cconversorseguranca.cpp, md/cabrangencia.cpp and cseguranca.cpp, ten of dados/
+# (celeitordetalhe.cpp, dao/celeitordinamicodao.cpp, celeitores.cpp, cfotos.cpp, chv.cpp, cpe.cpp, crespostas.cpp,
+# md/csecaoeleitoral.cpp, md/cvalidadoridentidade.cpp, md/municipiozona/cmunicipio.cpp) and four of dados/asn/
+# (cconversoridentificacaoagregada, estadoaplicacao/cconversordadolocal, municipiozona/cconversormunicipio and
+# cconversorcomplementomunicipio), and ctelasvota.cpp, cmenumaisinformacoesvota.cpp and the four filter screens' files.
+# Linked here, after cmenuvisualizarcandidatos.cpp.o and the PorNumero, PorCargo and PorPartido files, it leaves the
+# span of each of their moves above, which were measured from unit 104's list while it lay there among the objects they
+# cross and invert: the pair each makes with it is in order now, so each of those moves inverts one object fewer, and
+# codegen.md C4's count against each of the four files is one less: 188 at 543ca8b7, 189 on that link line with this
+# object put back after cfinalizaoperador.cpp.o.
+# The other move, celeitordetalhe.cpp into unit 104's list ahead of csincronismooperador.cpp, was counted only (277
+# objects out of order against it where it is, 273 there) and not linked. StartState's place in its .cpp is not free:
+# use band 1 runs 10213, 10211, 10210, 10209 (the statics' exit destructors, StartState, ProcessKey) at consecutive
+# ld_index in names.tsv.
 SINGLETONS_SRCS := src/app/vota/eleitor/cestadoaudio.cpp \
   src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/dao/celeitordinamicodao.cpp \
   src/app/comum/dados/celeitores.cpp \
@@ -856,7 +891,8 @@ SINGLETONS_SRCS := src/app/vota/eleitor/cestadoaudio.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporcargo.cpp \
   src/app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatosporpartido.cpp \
-  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp
+  src/app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.cpp \
+  src/app/vota/operador/csincronismooperador.cpp
 UENUX2_SRCS += $(SINGLETONS_SRCS)
 # ctelasvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h for the text CTelasVota::GetTelaDestinoBUs splits, which
 # reaches Boost through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 104 adds the

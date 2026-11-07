@@ -181,6 +181,15 @@ public:
 
     std::shared_ptr<IForm<IScreen>> GetForm(const std::string& nome);
 
+    // the same with an api::CPreShowNothing<IScreen>, so the form is drawn over the screen without clearing it: target
+    // fn 11891 (vota::CMenuFiltrarCandidatosPorNumero::ProcessInput) holds it behind a second prologue of 16 bytes (the
+    // pre-show's std::shared_ptr), inside the message screen it holds (api::MostraMensagemTemporaria, capplication.h),
+    // with "" for the name. CPreShowNothing<IScreen>'s vtable and typeinfo (@1577920, @1577940) lie in this file's data
+    // right after CPreShowClearScreen's, which GetForm(nome) builds, and before the two control blocks' vtables
+    // (@1577952, then @1577992, whose address plus 8 11891 stores): a reading that puts it in cformbuilder.cpp after
+    // GetForm(nome). Its name, its being a member and its line are chosen
+    std::shared_ptr<IForm<IScreen>> GetFormSemLimpar(const std::string& nome);
+
 protected:
     std::vector<SharedField> m_campos;
 

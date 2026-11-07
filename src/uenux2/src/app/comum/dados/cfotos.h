@@ -45,6 +45,13 @@ public:
     // 12520, which calls GetInst() before it and drops the result) and of the vote screens (fn 12641), pass no instance,
     // and it reaches the instance through GetFotoPara. That it is a member, and its parameter's name, are chosen.
     static std::vector<uint8_t> GetImagem(const std::string& id);
+    // Whether the map holds the code, keeping it in m_atual when it does: the code target fn 12641
+    // (CDataImage<CCandidaturasDSFoto>::GetData, which holds CCandidaturasDSFoto's call operator) holds after a call of
+    // GetInst whose result it drops, with GetInst's own code inlined (fn 2819 is its body elsewhere), which only
+    // cfotos.cpp can inline: a static member called through the instance, as fn 12520's source calls GetImagem,
+    // frameless, with one caller, inlined by binaryen (a reading). Its name, its being static and a member, and its
+    // body's form are chosen.
+    static bool Posiciona(const std::string& id);
 
 private:
     // GetFotoPara(const std::string &, const std::string &) finds the photo in m_fotos and keeps it in m_atual (fn 3755
