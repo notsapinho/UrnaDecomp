@@ -34,8 +34,9 @@ class CCargo;
 // RTTI: an si_class of comum::IGravador. vota::CGravaResultado::StartState (fn 12098) builds it as a
 // std::shared_ptr<IGravador>(new CGravadorBU), whose control block's __on_zero_shared is the shared call through the
 // vtable (fn 172), so the class is not final. Recovered: the layout, 304 bytes (12098 allocates it with f137(304)), and
-// the virtual members. The constructor is not written: 12098 holds it inlined, after IGravador's constructor (fn 1396,
-// with the extension 4 and the SAVD file 35): it stores this vptr (@1554132 + 8), copies the api::CDateTime it also
+// the virtual members. The constructor has no target index: 12098 holds it inlined (written in cgravadorbu.cpp, whose
+// header comment says what its frame shows: a public constructor that delegates to a private one), after IGravador's
+// constructor (fn 1396, with the extension 4 and the SAVD file 35): it stores this vptr (@1554132 + 8), copies the api::CDateTime it also
 // passes CGravadorEnvelopeArquivo's constructor to +40 and 12 more bytes to +52, stores ConverteFase(fase) at +64 and
 // 49 at +68, copies a md::estadoaplicacao::CDadoCorrespondencia to +72 (fn 1249), moves a vector to +168 and a map to
 // +180, stores a byte at +192, a 16-bit word at +194 and a word at +196, builds the string "bu.pk1" at +200, stores 1
@@ -82,12 +83,28 @@ public:
     using TVetorVotosVotaveis = std::vector<md::CVotosVotavel>;
     using TQtdEleitor = ueword;
 
+    CGravadorBU(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao,
+        char fase, const api::CDateTime& dataHoraEmissao,
+        const md::estadoaplicacao::CDadoCorrespondencia& correspondencia,
+        std::vector<std::string> historicoCodigosCarga, std::map<md::ETipoAbrangencia, SQtdeAptos> qtdAptos,
+        bool temDetalhamento, ueword qtdEleitoresCompareceram, const CRdv* rdv, const md::CDadosBUVota& dadosVota,
+        const ecourna::app::dados::CDetalhamentoComparecimento& detalhamento);
+
     virtual void GravaResultado(api::CFile& arquivo) const override;
 
     static void AcrescentaVotoVotavel(TVetorVotosVotaveis& votos, md::CVoto::ETipo tipo, TCandidatoID candidato,
         TQtdEleitor quantidade, const md::CCargo& cargo);
 
 private:
+    CGravadorBU(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao,
+        char fase, const api::CDateTime& dataHoraEmissao,
+        const md::estadoaplicacao::CDadoCorrespondencia& correspondencia,
+        std::vector<std::string> historicoCodigosCarga, std::map<md::ETipoAbrangencia, SQtdeAptos> qtdAptos,
+        bool temDetalhamento, ueword qtdEleitoresCompareceram, const CRdv* rdv,
+        std::optional<md::CDadosBUVota> dadosVota, std::optional<md::CTipoApuracaoSA> tipoApuracao,
+        std::optional<md::CDadosBUSA> dadosSA,
+        std::optional<ecourna::app::dados::CDetalhamentoComparecimento> detalhamento);
+
     std::vector<uebyte> LeChavePublica() const;
     md::CEntidadeBU MontaEntidadeBU(const md::CCabecalhoEntidade& cabecalho, const md::CUrna& urna,
         const std::vector<md::CResultadoVotacaoPorEleicao>& resultados,

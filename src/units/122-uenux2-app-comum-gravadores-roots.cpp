@@ -23,7 +23,8 @@
 //   142) are written, and the stand-in for 10425 went.
 // - comum::GetPathWsqRegistrado (fn 5815) needs none now: fns 3614 (unit 221) and 5382 (unit 135) are written.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
-//   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
+//   it: the constructor that stores it (inlined into fn 12098, which is not written) is written but unrooted, so its
+//   address goes into a sink, which stands for 12098.
 // IGravador is abstract, so its constructor (declared with the object's int result) is called through an asm label.
 #include <filesystem>
 #include <map>

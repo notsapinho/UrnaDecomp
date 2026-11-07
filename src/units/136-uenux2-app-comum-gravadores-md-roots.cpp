@@ -8,8 +8,8 @@
 // CEnvelopeGenerico::ValidaCriacao (fn 3822) have their callers among those constructors.
 // The recorders comum::CGravadorHashes, CGravadorLog, CGravadorRDV and CGravadorVersoesArquivos: the target reaches
 // their destructors only through their vtables, which their constructors store (inlined into
-// vota::CGravaResultado::StartState, fn 12098), not written yet; so the vtables' addresses go into a sink, the
-// reference the target has. CGravadorEnvelopeArquivo's vtable and IGravadorEnvelope's are stored by
+// vota::CGravaResultado::StartState, fn 12098, not written yet; the constructors are written, unrooted); so the vtables'
+// addresses go into a sink, which stands for 12098, the reference the target has. CGravadorEnvelopeArquivo's vtable and IGravadorEnvelope's are stored by
 // CGravadorEnvelopeArquivo's constructor (fn 5856, unit 160's) and destructors.
 extern "C" {
 extern const char w136_vt_hashes[] __asm__("_ZTVN5comum15CGravadorHashesE");

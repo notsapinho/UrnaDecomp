@@ -11,7 +11,8 @@
 # functions that only code of fn 12098 (vota::CGravaResultado::StartState, not written) calls besides the static
 # constructors match with the roots' stand-ins: api::CPolySingletonList::has<CGeracaoVersoesContratos> (fn 2860), from
 # this object since GetInst instantiates it, and libc++'s std::make_format_args over a std::string and the char array
-# "20260601173148" (fn 5870), from the roots object (Roots, below).
+# "20260601173148" (fn 5870), from unit 227's md/cdependenciascontratos.cpp.o since the md constructors are written
+# there, and from the roots object before (Roots, below).
 #
 # Evidence. fn 5869 is (i32 i32 i32 i32)->(): a std::set<std::string> returned by value, the address of an object it
 # reads at +0 (`this`, a reading: Choices), a string and a set. It calls CDependenciasContratos::GetValor (fn 3826) on
@@ -134,8 +135,10 @@
 # point (GetInst, above): it goes when 12098 is in the link. 2860 matches from this object, the first of ours with an
 # instance since GetInst is written (has<T> is api/pattern/cpolysingletonlist.h's template, unit 100's, whose target
 # copy reads as GetInst's TU's, this file's: a reading, 12098 holding GetInst's three calls); it matched from the roots
-# object before, at APP_CXXFLAGS, and both copies give the target's body. 5870 matches from the roots object, which no
-# object of ours precedes with an instance: make_format_args is libc++'s, whose
+# object before, at APP_CXXFLAGS, and both copies give the target's body. 5870 matched from the roots object while no
+# object of ours ahead of it instantiated it, and matches from md/cdependenciascontratos.cpp.o (unit 227's list) since
+# the md constructors are written there, unrooted (the same symbol; the stand-in stays for 12098's two calls).
+# make_format_args is libc++'s, whose
 # two target call sites hold the messages of the throws whose records are md/cdependenciascontratos.cpp:27 and
 # md/cversoescontratos.cpp:29, the two md classes' constructors, which 12098 holds behind prologues of their own; its
 # ordinal, 4337, just before 5869's, and that file's records, first of the contract files' in the data, read as
