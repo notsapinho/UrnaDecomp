@@ -4,14 +4,26 @@
 # out-of-line constructors their bodies call (CApresentacaoFotoEleitor, fn 1081 after binaryen's folding;
 # CIdentificadorEleitor(TSharedIdentificadorEleitor), fn 5172).
 # cconversorresultadournacadastro.cpp is unit 105's, with the converters it builds.
-# CConversorHabilitacaoBiometrica::DoDeconverte (9066) is written and `unresolved` on the table slot of
-# IConversorASN<EstadoHabilitacaoPorCodigo, CEstadoHabilitacaoPorCodigo>::Deconverte: the target calls that member with
-# no landing pad and binaryen inlined it there (its 176-byte frame is 9066's fourth stack prologue), where ours invokes
-# it. In the object's LLVM IR the converter local's cleanup pad is empty but joins the pad of the
-# CEstadoHabilitacaoPorCodigo temporary before the resume, so the invoke stays. A temporary converter, the converter
-# declared first in the function, the result in a named local and a named CHabilitacaoBiometrica each keep the invoke
-# (wasm-objdump -d -r of the object); the call is direct only with no converter object to destroy, which no form of this
-# function tried gives.
+# CConversorHabilitacaoBiometrica::DoDeconverte (9066) is written and `differs`. The target calls
+# IConversorASN<EstadoHabilitacaoPorCodigo, CEstadoHabilitacaoPorCodigo>::Deconverte with no landing pad and binaryen
+# inlined it there (its 176-byte frame is 9066's fourth stack prologue). With IConversorASN's destructor `{}` ours
+# invoked it, through its table slot, and the row was `unresolved` there: a temporary converter, the converter
+# declared first in the function, the result in a named local and a named CHabilitacaoBiometrica each kept the invoke
+# (wasm-objdump -d -r of the object). With the destructor `= default` (unit 105's fragment, for 9137) the converter
+# local has no cleanup, the call is direct and binaryen inlines it as the target does: 140 over 873 rows (7 inserted,
+# 5 deleted) with the result passed in the constructor's call, 134 over 870 (4 and 4) with it in a named local, the
+# form written (estadoHabilitacao, a chosen name), which loads ultimoScore after Deconverte's code, where the target
+# does. A const auto& and a non-const local give the same object function; a temporary converter or a named
+# CHabilitacaoBiometrica returned give other code. What is left is DeconverteErroLeituraBiometria's, which binaryen
+# inlines too (9066's third prologue): the target tests `>= 13` before the throw, lays the string's landing pad before
+# the CErroLeituraBiometria call, and keeps that object at +12 above the string at +0. Written with the return in the
+# cases (as here), ours tests `> 12` and lays the pad after the call, with the target's slots; with the cases breaking,
+# the default throwing and the return after the switch, the test and the pad are the target's and the two slots swap
+# (the string at +4): 125 over 868, 2 rows inserted and 2 deleted; `if (> 12) throw` before the return gives the same
+# swap and a signed test (126 over 868). Not found: a form with both. Also measured on the object, each giving our test
+# or other code: a return of each enumerator, a CErroLeituraBiometria of each, thirteen separate returns, the switch on
+# asInt(), the throw in the default with the return in the cases, an if with the return first, a named result in the
+# cases, and the return spelled three other ways.
 # CConversorComparecimentoMesario::DoDeconverte (9106) and CConversorEstadoComparecimento::DoDeconverte (9081) match,
 # each with a form the target's landing pads decide, measured in the whole link (pnpm wasm score) and on the object:
 # - 9106 returns its result through a named local (comparecimento, a chosen name). With `return

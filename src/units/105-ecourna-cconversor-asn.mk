@@ -96,15 +96,34 @@
 # object, named by 9029's call vote. The stand-in goes when 7787 is in the link, the tree root's copy when an object
 # ahead of ecourna's instantiates it.
 #
-# Written, and not a match yet:
-# - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
-#   over 390, 13 and 13, and stops on `target br 2 | ours local.get 2` at +0x279, the placement of the map's cleanup.
-#   With const auto& on the vector, the map a named local and the result a named local returned (the form 9216's
-#   constructor call takes, above): 39 over 379, 2 rows inserted and 3 deleted. What is left is which of the two copies
-#   of the vector's free keeps a __resumeException of its own: the target's after ParaMapa's and the constructor's
-#   pads, ours after the loop's pad. The O3 IR has one resume block for both, so the backend makes that split (not read
-#   further). Also measured: the vector named too, 62 over 388; the map as const auto&, the same link as the map named;
-#   the loop written in this function, with std::transform 283 over 392 and with a range-for 143 over 399.
+# 9137 (CConversorConfiguracaoMunicipios::DoDeconverte) matches with the vector bound to a const reference, the map a
+# named local and the result a named local returned (the form 9216's constructor call takes, above), once
+# api/asn/iconversorasn.hpp declares IConversorASN's destructor `= default` (unit 03's header; it was `{}`):
+# - The target frees the vector on two throw paths: after the loop's landing pad, then a branch to the shared
+#   __resumeException; and after ParaMapa's and the constructor's pads, with a __resumeException of its own. With `{}`
+#   no form measured gave that: the written one scored 39 over 379, 2 rows inserted and 3 deleted, its own resume on
+#   the loop's path (also measured with `{}`: the earlier temporary, `return TDado(cabecalho,
+#   ParaMapa(DeconverteSequencia(...)))`, 118 over 399; const auto& on the vector alone, 65 over 390; the vector
+#   named, 62 over 388; the loop written in this function, with std::transform 283 over 392, with a range-for 143 over
+#   399). With `= default`, 33 over 377, all operand rows (calls, data addresses, the table slot of operator new), and
+#   the row matches.
+# - What the spelling changes, in the TU's IR before the passes (-Xclang -disable-llvm-passes -S -emit-llvm): with `{}`
+#   DoDeconverte calls each converter's destructor twice (the normal and the exception path), with `= default` not at
+#   all, so no cleanup is live at DeconverteSequencia's call. A reading, not measured further: clang then inlines
+#   DeconverteSequencia at a plain call, not an invoke, and its own resume stays among the loop's blocks, where the
+#   resume blocks merge, so the backend's tail duplication gives ParaMapa's path the copy; with `{}` the invoke's unwind
+#   edge sent the callee's resume to the caller's, at the function's end, and the copy went to the loop's path.
+# - The header reaches 49 link objects (docs/reference/facts/workflow.md W13's includer script). After the edit two
+#   differ (cmp before and after): this file's and unit 09's cconversorhabilitacaobiometrica.cpp, in each only
+#   DoDeconverte's code (per function, object-local numbers masked; unit 09's fragment has 9066). The tree rebuilt
+#   whole is cmp-equal elsewhere.
+# - Measured with `= default` (whole link): `return TDado(cabecalho, mapa)`, 59 over 388 (11 rows inserted, 10
+#   deleted); the earlier temporary, 90 over 388, its frame 96 bytes where the target's is 80 (its map keeps a slot of
+#   its own, where the target's shares the loop element's); the header's local declared before the elements'
+#   converter, 50 over 380. The same object function: the vector as a const std::vector by value, the map as const auto&
+#   or not const, and the sequence bound to a const auto& first. The names of the three locals are chosen.
+#
+# Copies that waited for another tree's code:
 # - 1006, 3813: copies that 11616, a uenux2 function, brings first in the link; both match since unit 122 writes it. 1006 was one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
 #   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and the ecourna copy our link
