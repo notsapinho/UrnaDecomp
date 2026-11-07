@@ -15,9 +15,16 @@ namespace vota {
 // record names the class: the vtable and typeinfo lie in app/vota/comum/'s run of the data, before csincronizavota.cpp's
 // first record, and the file, app/vota/comum/cassinadorvota.cpp, is the class's name in lower case, a choice. That the
 // constructor is explicit is a choice.
+// A second constructor has no target index: vota::CGravaResultado::StartState (fn 12098) holds the base's second
+// constructor behind a stack frame of its own (binaryen's inlining) and stores this class's vptr on its result right
+// after that frame's epilogue, so it builds the class through a constructor that passes the base the ESavdAplic 1, the
+// package and the section's numbers and phase. Its parameters and their order are the base's, chosen; that it is out of
+// line in this file, as the first is, is a choice too.
 class CAssinadorVota : public comum::CAssinador {
 public:
     explicit CAssinadorVota(comum::ESavdPacote pacote);
+    CAssinadorVota(comum::ESavdPacote pacote, comum::TMunicipioID municipio, comum::TZonaID zona, comum::TSecaoID secao,
+        char fase);
     ~CAssinadorVota() override;
 };
 

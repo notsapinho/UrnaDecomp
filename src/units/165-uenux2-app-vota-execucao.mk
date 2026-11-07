@@ -19,7 +19,13 @@
 #   (4694, unit 34). The merge keeps the first name in link order, so 4694's match line moved to this class's D0. The
 #   constructor (1501, named by its vptr store), added since: it passes comum::CAssinador's constructor (unit 34's file,
 #   which binaryen inlined into it) the ESavdAplic 1 and its package; its callers are fragment 205's, and the vtable needs
-#   no roots sink any more.
+#   no roots sink any more. A second constructor, added since, with no target index: fn 12098
+#   (vota::CGravaResultado::StartState) holds CAssinador's second constructor behind a 480-byte stack frame and stores
+#   this class's vptr (1532312) on its result right after that frame's epilogue (line 2580 of pnpm wasm fn's folded
+#   readout of 12098), so it builds a CAssinadorVota through a constructor that passes that one the ESavdAplic 1, the
+#   package, three numbers and a char (unit 34's paragraph says what they are). Its parameters are the base's, in the
+#   base's order, chosen; that it is out of line here, beside the first, is a choice, not measured against an inline
+#   one. Unrooted, wasm-ld drops it.
 # - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219), ProcessKey (10217,
 #   below) and ProcessTick (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written
 #   and differs (below).

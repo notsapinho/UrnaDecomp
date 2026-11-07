@@ -39,11 +39,16 @@ enum ESavdPacote : int;
 // recovered, and that it is declared beside ESavdAplic is a choice.
 enum ESavdArquivoUE : int;
 
-// Recovered: only the type of the HSM action comum::EnviarAcaoHSM takes (its record in iinterfacesavd.cpp spells it
+// Recovered: the type of the HSM action comum::EnviarAcaoHSM takes (its record in iinterfacesavd.cpp spells it
 // ESavdCmdHSM): fn 5889 compares it unsigned with the ESavdAplic, as above, then refuses any value above 1, so the
-// action is 0 or 1. Its enumerators are not recovered; `: unsigned int` is the same reading as ESavdAplic's (an
-// unsigned parameter of the member that compares it gives that compare too).
-enum ESavdCmdHSM : unsigned int;
+// action is 0 or 1. `: unsigned int` is the same reading as ESavdAplic's (an unsigned parameter of the member that
+// compares it gives that compare too). The two values are the ones CAssinador::AssinaArquivosResultado (fn 12098 holds
+// it inlined) passes 5889 around the files it signs: 0 before CLogComum's "Inicia uma sessão no MSE/MSD" logs, 1 before
+// "Finaliza a sessão no MSE/MSD". The enumerators' names are chosen from those texts: no evidence names them.
+enum ESavdCmdHSM : unsigned int {
+    SAVD_CMD_HSM_INICIA_SESSAO = 0,
+    SAVD_CMD_HSM_FINALIZA_SESSAO = 1,
+};
 
 // Recovered: the values of the key comum::CPacoteArquivos::RetornaNomeChave names (its record in cpacotearquivos.cpp
 // spells the type ESavdChaveValidar, fn 5900; the cases are 49 to 59). Each name is chosen from the text its case
@@ -128,6 +133,15 @@ public:
     bool VerificarArquivo(ESavdAplic aplic, uedword chave, const std::string& pacote, const std::string& arquivo);
     bool ValidarPacote(ESavdAplic aplic, uedword chave, ueint32 comando, const std::string& pacote);
     bool EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao);
+    // No target index: CAssinador::AssinaArquivosResultado (fn 12098 holds it inlined) holds it behind a 32-byte stack
+    // frame of its own (binaryen's inlining of a function with one caller), between the HSM session's start and the
+    // loop over the files. It refuses an ESavdAplic above 255 ("Argumento inválido para local.") and, after the bytes'
+    // allocation, a local of another size than 15 ("Argumento inválido, tamanho do local."), sends {254, the local's 15
+    // characters} with the command 0x404 through 3829 and keeps the returned text at +4, as EnviarAcaoHSM does; its
+    // caller drops the result (the target keeps the two loads of m_mensagem.empty() and reads neither). A member, as it
+    // writes +4 and +16; its name is chosen from the texts it stores, and the local's type from what it reads of it (the
+    // std::string CAssinador keeps at +36).
+    bool EnviarLocal(ESavdAplic aplic, const std::string& local);
 
     const std::string& GetMensagem() const { return m_mensagem; }
     ueint32 GetCodigo() const { return m_codigo; }
@@ -161,6 +175,9 @@ std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave, const s
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote);
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote, const std::string& arquivo);
 void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
+// Record iinterfacesavd.cpp:1022 (code 7338); no target index: binaryen inlined it, behind a 496-byte stack frame of its
+// own, into CAssinador::AssinaArquivosResultado, which fn 12098 holds inlined.
+void AssinarEcourna(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao);
 
 } // namespace comum

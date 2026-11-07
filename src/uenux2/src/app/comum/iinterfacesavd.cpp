@@ -1,9 +1,9 @@
 // comum::IInterfaceSavd and the SAVD requests (/home/rubio/tse/uenux2/src/app/comum/iinterfacesavd.cpp). The records of
 // the target fix the lines of DesconverteHeader's and DesconverteMensagem's throws (553 to 578), ValidarUE's (886), the
-// ValidarUE over a file's (898, inlined into fn 11179), AssinarUE's (1004, inlined into fn 1277) and EnviarAcaoHSM's
-// (1040); line 1022 stays blank for the record of AssinarEcourna, not written (fn 12098 holds it). Every other line is a
-// choice: the use bands put fn 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and VerificarArquivo (5892)
-// ahead of AssinarArquivo (5891), ahead of ValidarUE (5890). iinterfacesavd.h has the class, and the unit's fragment
+// ValidarUE over a file's (898, inlined into fn 11179), AssinarUE's (1004, inlined into fn 1277), AssinarEcourna's
+// (1022, which fn 12098 holds inlined) and EnviarAcaoHSM's (1040). Every other line is a choice: the use bands put fn
+// 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and VerificarArquivo (5892) ahead of AssinarArquivo (5891),
+// ahead of ValidarUE (5890); EnviarLocal has no target index. iinterfacesavd.h has the class, and the unit's fragment
 // which members are reconstructed.
 
 #include "app/comum/iinterfacesavd.h"
@@ -148,42 +148,44 @@ std::string IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& 
     requisicao.marca = MARCA_SAVD;
     requisicao.tamanho = dados.size();
 
-    std::vector<uebyte> resposta;
-    resposta.reserve(sizeof(requisicao));
-    const uebyte* bytes = reinterpret_cast<const uebyte*>(&requisicao);
-    std::copy(bytes, bytes + sizeof(requisicao), std::back_inserter(resposta));
-    Escreve(resposta);
-    if (!dados.empty()) {
-        Escreve(dados);
-    }
-
-    resposta.clear();
-    ueint32 estado;
-    RecebeMensagem(estado, resposta, sizeof(ueRespostaSavd));
-    if (resposta.size() != sizeof(ueRespostaSavd)) {
-        return "Resposta com tamanho incorreto.";
-    }
-
-    const ueRespostaSavd* header = reinterpret_cast<const ueRespostaSavd*>(resposta.data());
-    if (header->marca != MARCA_SAVD) {
-        return "Resposta com marca incorreta.";
-    }
-    if (header->erro) {
-        codigo = header->codigo;
-        if (header->tamanho) {
-            std::vector<uebyte> mensagem;
-            RecebeMensagem(estado, mensagem, header->tamanho);
-            if (mensagem[0] != MARCA_SAVD) {
-                return "Mensagem com marca incorreta.";
-            }
-
-            const uedword tamanho = header->tamanho;
-            std::string texto;
-            texto.reserve(tamanho - 1);
-            std::copy(mensagem.begin() + 1, mensagem.begin() + tamanho, std::back_inserter(texto));
-            return texto;
+    {
+        std::vector<uebyte> resposta;
+        resposta.reserve(sizeof(requisicao));
+        const uebyte* bytes = reinterpret_cast<const uebyte*>(&requisicao);
+        std::copy(bytes, bytes + sizeof(requisicao), std::back_inserter(resposta));
+        Escreve(resposta);
+        if (!dados.empty()) {
+            Escreve(dados);
         }
-        return "Motivo não informado pelo serviço.";
+
+        resposta.clear();
+        ueint32 estado;
+        RecebeMensagem(estado, resposta, sizeof(ueRespostaSavd));
+        if (resposta.size() != sizeof(ueRespostaSavd)) {
+            return "Resposta com tamanho incorreto.";
+        }
+
+        const ueRespostaSavd* header = reinterpret_cast<const ueRespostaSavd*>(resposta.data());
+        if (header->marca != MARCA_SAVD) {
+            return "Resposta com marca incorreta.";
+        }
+        if (header->erro) {
+            codigo = header->codigo;
+            if (header->tamanho) {
+                std::vector<uebyte> mensagem;
+                RecebeMensagem(estado, mensagem, header->tamanho);
+                if (mensagem[0] != MARCA_SAVD) {
+                    return "Mensagem com marca incorreta.";
+                }
+
+                const uedword tamanho = header->tamanho;
+                std::string texto;
+                texto.reserve(tamanho - 1);
+                std::copy(mensagem.begin() + 1, mensagem.begin() + tamanho, std::back_inserter(texto));
+                return texto;
+            }
+            return "Motivo não informado pelo serviço.";
+        }
     }
     return "";
 }
@@ -211,7 +213,7 @@ std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave, const s
     return tags.EncodeTLV(TAG_SUP, conteudo);
 }
 
-// (original lines 656-849: content not recovered)
+// (original lines 658-849: content not recovered)
 #line 850
 bool IInterfaceSavd::AssinarArquivo(ESavdAplic aplic, ueint32 comando, uebyte operacao, ueint32 arquivo)
 {
@@ -262,8 +264,29 @@ void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote
     }
 }
 
-// (original lines 902-979: content not recovered)
-#line 980
+// (original lines 902-958: content not recovered)
+#line 959
+bool IInterfaceSavd::EnviarLocal(ESavdAplic aplic, const std::string& local)
+{
+    if (aplic > 0xFF) {
+        m_mensagem = "Argumento inválido para local.";
+        return false;
+    }
+
+    std::vector<uebyte> dados(16);
+    if (local.size() != 15) {
+        m_mensagem = "Argumento inválido, tamanho do local.";
+        return false;
+    }
+    dados[0] = MARCA_SAVD;
+    std::copy(local.begin(), local.end(), dados.begin() + 1);
+    ueRequisicaoSavd requisicao;
+    requisicao.aplicacao = aplic;
+    requisicao.comando = 0x404;
+    m_mensagem = EnviarRequisicao(m_codigo, requisicao, dados);
+    return m_mensagem.empty();
+}
+
 bool IInterfaceSavd::EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao)
 {
     if (aplic > 0xFF || acao > 0xFF) {
@@ -292,7 +315,16 @@ void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 
     }
 }
 
-// (original lines 1008-1036: content not recovered)
+// (original lines 1008-1018: content not recovered)
+#line 1019
+void AssinarEcourna(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo)
+{
+    if (!savd.AssinarArquivo(aplic, comando, 61, arquivo)) {
+        throw CUeComumError(EUE_COMUM_ASSINAR_ECOURNA, std::format("Falha ao assinar ({}-Ecourna[{}])", savd.GetMensagem(), arquivo));
+    }
+}
+
+// (original lines 1026-1036: content not recovered)
 #line 1037
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao)
 {
