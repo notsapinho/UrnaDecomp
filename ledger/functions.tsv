@@ -10835,7 +10835,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10969	73	0	app	api	-	-	none	-	
 10970	214	0	app	api	skeleton	11572	addr	3	api::CStepsProgressBar::Move(api::SPoint const&)
 10971	2127	0	app	-	-	-	none	-	
-10972	514	0	app	-	-	-	none	-	
+10972	514	0	app	-	skeleton	11574	shape	2	api::(anonymous namespace)::CabeEmUmaLinha(api::IScreen&, std::__2::vector<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>> const&, api::SRect const&, short, int, int, std::__2::vector<api::SRect, std::__2::allocator<api::SRect>>&)
 10973	13	0	app	api	skeleton	11575	addr	2	api::CStepsProgressBar::~CStepsProgressBar()_7466
 10974	12	0	app	api	skeleton	11576	byte	0	api::CProgressBar::Rect() const
 10975	61	0	app	api	-	-	none	-	

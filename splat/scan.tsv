@@ -5367,7 +5367,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5501	_ZN3api10CRectFieldC2ERKNS_5SRectENS_6TColorE	5506	symbol	match	readings: address symbol	58	addr	api	1	app/uenux2/src/api/gui/crectfield.cpp.o
 5502	_ZN3api12CQRCodeGuardC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5765	symbol	match	readings: address symbol,address string,address srcloc,table slot	13815	shape	ecourna	1	app/uenux2/src/api/gui/cqrcodeguard.cpp.o
 5503	_ZN5comum14IInterfaceSavdD2Ev	5910	symbol	match	readings: address symbol	23	addr	vota-web	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-5504	_ZNK3api17CStepsProgressBar4DrawERNS_7IScreenE	5595	symbol	unresolved	ours +0x2c6 i32.const 3675: a table slot of ours: _ZN3api12_GLOBAL__N_114CabeEmUmaLinhaERNS_7IScreenERKNSt3__26vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERKNS_5SRectEsiiRNS4_ISF_NS8_ISF_EEEE has no target function	11502	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
+5504	_ZNK3api17CStepsProgressBar4DrawERNS_7IScreenE	5595	symbol	unresolved	ours +0x383 i32.const 3676: a table slot of ours: _ZN3api12_GLOBAL__N_116CabeProporcionalERNS_7IScreenERKNSt3__26vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERKNS_5SRectEsiiRNS4_ISF_NS8_ISF_EEEE has no target function	11502	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 5505	_ZNSt3__26vectorIN3api17CStepsProgressBar9SSegmentoENS_9allocatorIS3_EEE26__swap_out_circular_bufferERNS_14__split_bufferIS3_RS5_EE	5596	symbol	match	-	337	addr	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 5506	_ZN3api12_GLOBAL__N_16DivideERKNS_5SRectEiii	5597	symbol	match	-	836	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 5507	_ZN3api12_GLOBAL__N_15TentaERNS_7IScreenERKNSt3__26vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERKNS_5SRectEsPFbS2_SE_SH_siiRNS4_ISF_NS8_ISF_EEEEERNS0_11SDisposicaoE	5598	symbol	match	-	504	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
@@ -10835,7 +10835,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10969	_ZNK3api17CStepsProgressBar11GetTypeNameEv	11571	symbol	match	readings: address string	73	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10970	_ZN3api17CStepsProgressBar4MoveERKNS_6SPointE	11572	symbol	match	-	214	addr	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10971	-	-	-	no-candidate	no symbol and no ledger pair	2127	none	app	0	-
-10972	-	-	-	no-candidate	no symbol and no ledger pair	514	none	app	0	-
+10972	_ZN3api12_GLOBAL__N_114CabeEmUmaLinhaERNS_7IScreenERKNSt3__26vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERKNS_5SRectEsiiRNS4_ISF_NS8_ISF_EEEE	11574	symbol	match	-	514	shape	app	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10973	_ZN3api17CStepsProgressBarD0Ev	11575	symbol	match	-	13	addr	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10974	_ZNK3api12CProgressBar4RectEv	11576	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cprogressbar.cpp.o
 10975	_ZNK3api12CProgressBar11GetTypeNameEv	11577	symbol	match	readings: address string	61	none	api	1	app/uenux2/src/api/gui/cprogressbar.cpp.o

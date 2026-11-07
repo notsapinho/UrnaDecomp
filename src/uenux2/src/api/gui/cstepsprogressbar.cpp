@@ -11,10 +11,13 @@
 //   5504  Draw(IScreen&) const, with the private Recalcula and the file-local Escolhe, CriaContorno and Fecha, which have
 //         no target function of their own: Draw's callees in this file are 5505, 5506 and 5507 only
 //   5507  Tenta, 5506 Divide, 10972 CabeEmUmaLinha and 10971 CabeProporcional, file-local; 10972 and 10971 are the table
-//         slots 3442 and 3443 that Draw passes to Tenta (its i32.const at +0x2c8 and +0x385)
+//         slots 3442 and 3443 that Draw passes to Tenta (its i32.const at +0x2c8 and +0x385). CabeEmUmaLinha holds the
+//         file-local CabemNasAreas and Cabe inlined, which have no target function of their own; that its steps' loop
+//         is in a helper given 1 - 2 * margem is a reading of its code, measured in the unit's fragment
 //   5505  std::vector<SSegmento>::__swap_out_circular_buffer, which the segments' reserve and push_back instantiate
-// Of those Draw reaches, 5505, 5506 and 5507 match and the others differ: src/units/41-uenux2-cstepsprogressbar.mk has
-// the scores. Every helper's name, and the lines of every function but the constructor's record, are a choice.
+// Of those Draw reaches, 5505, 5506, 5507 and 10972 match and the others differ: the unit's fragment,
+// src/units/41-uenux2-cstepsprogressbar.mk, has the scores. Every helper's name, and the lines of every function but
+// the constructor's record, are a choice.
 
 #include "api/gui/cstepsprogressbar.h"
 
@@ -75,6 +78,35 @@ std::vector<SRect> Divide(const SRect& rect, int partes, int seta, int espaco)
     return areas;
 }
 
+bool Cabe(TPosition medida, TPosition disponivel)
+{
+    return medida <= disponivel;
+}
+
+bool CabemNasAreas(IScreen& screen, const std::vector<std::string>& passos, size_t n, const std::vector<SRect>& areas,
+                   const SFont& fonte, TFontSize tamanho, TPosition altura, TPosition alturaUtil, int seta,
+                   int ajusteLargura)
+{
+    TPosition largura;
+    TPosition alturaTexto;
+    for (size_t i = 0; i < n; ++i) {
+        const std::string& texto = passos[i];
+        alturaTexto = 0;
+        largura = 0;
+        screen.GetFontMetrics(largura, alturaTexto, fonte, texto);
+        if (!Cabe(alturaTexto - fonte.size / 5, alturaUtil)) {
+            return false;
+        }
+        const SRect& area = areas[i];
+        const TPosition recuo = tamanho * seta / std::max<TPosition>(1, altura);
+        const TPosition lados = (i > 0 ? seta : 0) + (i != n - 1 ? recuo : 0);
+        if (!Cabe(largura - fonte.size / 3, ajusteLargura + area.right - (area.left + lados))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool CabeEmUmaLinha(IScreen& screen, const std::vector<std::string>& passos, const SRect& rect, TFontSize tamanho,
                     int seta, int espaco, std::vector<SRect>& areas)
 {
@@ -83,30 +115,11 @@ bool CabeEmUmaLinha(IScreen& screen, const std::vector<std::string>& passos, con
         areas.clear();
         return false;
     }
-    TPosition largura;
-    TPosition alturaTexto;
     areas = Divide(rect, n, seta, espaco);
     const SFont fonte{tamanho, 1};
     const TPosition altura = rect.bottom - rect.top + 1;
-    for (size_t i = 0; i < n; ++i) {
-        const std::string& texto = passos[i];
-        alturaTexto = 0;
-        largura = 0;
-        screen.GetFontMetrics(largura, alturaTexto, fonte, texto);
-        const TPosition margem = std::max<TPosition>(1, tamanho / 4);
-        const TPosition alturaUtil = altura - 2 * margem;
-        if (static_cast<TPosition>(alturaTexto - fonte.size / 5) > alturaUtil) {
-            return false;
-        }
-        const SRect& area = areas[i];
-        const TPosition recuo = tamanho * seta / std::max<TPosition>(1, altura);
-        const TPosition lados = (i > 0 ? seta : 0) + (i != n - 1 ? recuo : 0);
-        const TPosition disponivel = area.Width() - 2 * margem - lados;
-        if (static_cast<TPosition>(largura - fonte.size / 3) > disponivel) {
-            return false;
-        }
-    }
-    return true;
+    const TPosition margem = std::max<TPosition>(1, tamanho / 4);
+    return CabemNasAreas(screen, passos, n, areas, fonte, tamanho, altura, altura - 2 * margem, seta, 1 - 2 * margem);
 }
 
 bool CabeProporcional(IScreen& screen, const std::vector<std::string>& passos, const SRect& rect, TFontSize tamanho,
@@ -270,7 +283,7 @@ std::vector<SPathCommand> CriaContorno(const SRect& area, bool primeiro, bool ul
 
 } // namespace
 
-// (original lines 273-411: content not recovered)
+// (original lines 286-411: content not recovered)
 #line 412
 CStepsProgressBar::CStepsProgressBar(const uedword passoAtual, const std::vector<std::string>& passos, const SRect& rect,
                                      const TColor corFundoFeito, const TColor corFundoAtual,
