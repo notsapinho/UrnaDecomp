@@ -4,6 +4,10 @@
 
 namespace comum::asn {
 
+CConversorDadosCandidato::CConversorDadosCandidato(bool sinalizador) : m_sinalizador(sinalizador)
+{
+}
+
 CConversorDadosCandidato::TDado CConversorDadosCandidato::DoDesconverte(const TEntidade& entidade) const
 {
     const std::string codigo = entidade.get_codigo();

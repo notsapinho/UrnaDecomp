@@ -53,13 +53,22 @@
 # word at +4; md::CIndexer as the type of the two words (a reading, cindexer.h says why); the destructor `= default`
 # ({} gives the same object, docs/reference/facts/reading.md R4).
 #
+# The list also compiles unit 159's two files, app/comum/dados/asn/candidatura/cconversorcandidatura.cpp and
+# cconversorcandidaturas.cpp (comum::asn::CConversorCandidatura and CConversorCandidaturas), before
+# cvisitanteeleitor.cpp: the place among those weighed with the fewest objects out of the target's data order
+# (docs/reference/facts/codegen.md C4), where they also link after cconversorcargo.cpp, which then keeps
+# Desconverte<CodigoCargoConsulta>'s copy, so cconversorcandidaturas.cpp's object holds the target's run of data;
+# fragment 159 has the counts and the scores, which no place weighed moved.
+#
 # No roots: the instance of 5700 and its stand-in for fn 11411 went when 11411 was written (fragment 310), and the sink
 # of CVisitanteEleitor's vtable, which stood for the constructor fn 11523 holds, went when 11523 was written (unit
 # 110's celeitores.cpp, through carregaarquivo.cpp's LeEleitores).
 COMUMASN225_SRCS := src/app/comum/dados/md/processoeleitoral/cdetalheconsulta.cpp \
   src/app/comum/dados/md/processoeleitoral/crespostaconsulta.cpp \
   src/app/comum/dados/asn/processoeleitoral/cconversordetalheconsulta.cpp \
+  src/app/comum/dados/asn/candidatura/cconversorcandidatura.cpp \
+  src/app/comum/dados/asn/candidatura/cconversorcandidaturas.cpp \
   src/app/comum/dados/asn/eleitor/cvisitanteeleitor.cpp
 UENUX2_SRCS += $(COMUMASN225_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
-$(foreach u,$(filter %/asn/processoeleitoral/cconversordetalheconsulta.cpp %/asn/eleitor/cvisitanteeleitor.cpp,$(COMUMASN225_SRCS)),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
+$(foreach u,$(filter %/asn/processoeleitoral/cconversordetalheconsulta.cpp %/asn/candidatura/cconversorcandidatura.cpp %/asn/candidatura/cconversorcandidaturas.cpp %/asn/eleitor/cvisitanteeleitor.cpp,$(COMUMASN225_SRCS)),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))

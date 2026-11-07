@@ -541,8 +541,8 @@ inline a function the target calls from several places, and the caller's object 
 it into the one caller our link gives it: a roots stand-in that gives it the target's call sites is the fix, not a
 question for clang. A body that differs in local numbers alone can be such a callee (try it out of line before a source
 form), a leaf whose result binaryen dropped after the locals were laid out (§R10 has 728, 3890 and 3510), the caller's
-and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three); §R10 has two
-remainders none of these moves (a parameter copied before a loop, binaryen's packing of locals). Write such a function
+and callee's order, the object's own locals, or an inlined member's being static (§C4 has the last three); §R10 has one
+remainder none of these closes (a parameter copied before a loop) and a zero set the order moved. Write such a function
 out of line and leave it unrooted, so that it has one caller in our link too, and in another TU than its caller when
 clang would inline it or read its attributes there (8533's tone sequences); "Names no evidence gives" below says which
 class and namespace it takes, §R10's last paragraph which tree, and §C4 how a measured order picks its file when no
@@ -567,7 +567,9 @@ the callee's code where the target computes it at the inline site, before the ca
 source form: in the link for two objects, and in the `.cpp` for one, where a function with no record has a free line and
 records leave room. Either order can be the target's, and the target's data give the objects' order (§P4): when both
 orders give the bytes, keep the data's, and a body that holds a chain inlined from several objects can need the order of
-all of them (4454). Try both orders again after each fix: the better one can flip (3819). §C4 has the method, the orders
+all of them (4454), and a chain over a `.cpp` and another object each definition order tried with each object order
+(2772).
+Try both orders again after each fix: the better one can flip (3819). §C4 has the method, the orders
 a source can give, and a way to try module orders on the link's own binaryen input without relinking. Say in the
 fragment that the order is measured. Two objects' order is their units' lists' order, so a file, a landed one too, whose
 order against another unit's file decides a body moves into that unit's list
@@ -675,7 +677,9 @@ Lines above a file's first record that are ours (includes, a header comment) are
 left there, a new include takes the place of the blank line after the file's own header's include (the blank after
 `namespace … {` stays), and the fragment says so. `make -C src stubs` (step 9 runs it) writes the stubs and
 gaps again around it, each gap comment over the blank lines that are left, and `TMPDIR=/tmp make -C src check-srcloc`
-(after `make -C src link-map`, which the splat build runs: step 10) lists every record of ours that is not the target's.
+(after `make -C src link-map` on the last link, which the splat build runs and a bare relink does not: a map older
+than the wasm keeps every linkonce copy's record, which then fails as `MOVED`) lists every record of ours that is not
+the target's.
 It passes with records that only unmatched functions load, and the tree has some of those already (12 at 0b5f410), so
 check your unit's own objects with `--strict`, which fails on those too (step 10).
 
@@ -709,7 +713,10 @@ A chosen line is a namespace too: records of one `(anonymous namespace)` on an u
 
 A member with no record is placed by its use band in the same way: inside one band of `ledger/ordinals.tsv` (column
 `uses`, which counts table entries and exports as well as calls; `ledger/functions.tsv`'s `uses` does not) the index
-runs in reverse link order, so a member
+runs in reverse link order, but an index's neighbour can be another digit zone's function: print the run's `ordinal`
+column and drop a value with another number of digits before naming a file (`awk -F'\t' '$1>=5864 && $1<=5869 {print
+$1, $2, $5}' ledger/ordinals.tsv` puts 5867, ordinal 434, between 5866's 4340 and 5868's 4339:
+[facts/link-order.md](reference/facts/link-order.md) §L1, consequence 1). So a member
 among the file's external functions is defined in the `.cpp` at that place, and one after all of them is the file's
 last function, or inline or implicit, when nothing earlier in the file calls it; one after a deferred function the
 file emits (a linkonce vtable's slot) is another object's, since clang emits deferred functions after every external
@@ -1438,10 +1445,13 @@ a stronger pair demotes an anchor's name, so a data name becomes `self-voted` an
 a new anchor whose small constants differ from the target's votes them as table slots, the rows that leave all naming
 one slot in their detail (§S8 item 1). `git diff splat/symbol_addrs.txt` shows each evidence change. Fix it with the
 name's own evidence, not by withdrawing a line. A change that costs a match does not land, a brief that asks for its
-state recorded included: the lane posts the loss as a `facts/` post (the rows the `join` moves and what would bring each
-back), and commits that state only on a branch the coordinator asks for to weigh it, a measurement that never lands. On
-that branch remove exactly the lines of the rows the `join` moves from `match`, run step 9 again so `status.py` and
-`stubs.py` run, and name the indices in the commit message; `comm -23` against the base lists them. A row can also leave
+state recorded included, unless the user decides it lands: a stand-in or call that stands for no caller the target
+shows goes whatever it costs ([src/units/README.md](../src/units/README.md) "Companion files", unit 100's 433 and
+11157). Otherwise the lane posts the loss as a `facts/` post (the rows the `join` moves and what would bring each back),
+and commits that state only on a branch the coordinator asks for to weigh it, a measurement that never lands. Either
+way the commit removes exactly the lines of the rows the `join` moves from `match`, runs step 9 again so `status.py` and
+`stubs.py` run, and names the indices in its message (`comm -23` against the base lists them); a loss that lands also
+says in the fragment what each row waits for. A row can also leave
 because an instance of yours took the symbol (step 3), a stronger name moved (below), a line you added above a record of
 a matched function moved the record (step 3; [src/README.md](../src/README.md) "Gaps" has the sign, and `TMPDIR=/tmp
 make -C src check-srcloc` lists it), or an edit of a header or a signature changed what another unit's object
@@ -1528,6 +1538,12 @@ A row of another unit can turn `match` for a reason you can name:
   Such a row rests on the whole link: add it to [facts/splat.md](reference/facts/splat.md) §S10's list, with the objects
   whose swap back loses it, in the same commit (item 27: 4689, a libc++ `~__split_buffer`, kept the target's unused
   load once a range moved the module).
+- **Data at the target's own address.** Step 8 casts no vote for an address both layouts share, so when your objects
+  move a data object to the target's address, a data name only one row voted for goes, and that row, `unresolved
+  self-voted` on it before, matches by content. It rests on the whole link: add it to
+  [facts/splat.md](reference/facts/splat.md) §S10's list in the same commit, and a landing that moves that data takes it
+  out again, a data-layout loss (above): §S10 item 31 has such a row, OpenSSL's `provider_activate` (3138), which its
+  lane's link matched while our `core_dispatch_` sat at 0x199290 as the target's does, and which is out on this tree.
 
 A match the scan found by its body or by the census's pair has `content` or `ledger` in the `source` column of
 `splat/scan.tsv`, in the first scan only. Once the match names the function, a later scan writes `symbol` there, so a
@@ -1574,12 +1590,23 @@ has the two removals (the hand line alone out decides), the scan run twice besid
 lines and keeps every name, `splat-build` on the copies after it, since the scan can add back a match the build's fixed
 point refuses, and what removing one line at a time cannot show. Run the same on a hand line before you add it. A line
 no removal shows carrying anything goes: a line a generated one has caught up with (the `awk` there, which is no
-removal: one whose twin's only voter is the match the line carries stays), and a `func:` line for a body the content
+removal: "Reviewing a match" says which of those stay), and a `func:` line for a body the content
 pass finds alone. Then weigh the lines you keep again on the file you commit. After a landing, weigh every hand line
 whose function or matched callers your new matches touch, with a generated twin or not: the `awk` lists only the
 caught-up ones, and 3764's `callers+content` line carried nothing once the executable TU's copy re-pointed. A line names
 a new match's index, or the function a new match calls: the searches by the new indices and by their callees
-([facts/workflow.md](reference/facts/workflow.md) §W23) list both. A line found idle for a cause your landing did not
+([facts/workflow.md](reference/facts/workflow.md) §W23) list both. Weigh too every hand line whose generated twin the
+range changed: a link-order move or a removed stand-in changes a twin's evidence with no match touching it
+(`ESCAPES.2`'s twin gained 14478's vote in a landing none of whose matches reads it, and its line then carried
+nothing). This lists them against
+the base (at c3a97777 against 76661cb7, 1692's and 5769's):
+
+```sh
+git diff -U0 "${BASE}" -- splat/symbol_addrs.txt | sed -n 's/^+\([^+# ][^ ]*\) = .*/\1/p' | sort -u > build/out/<handle>/twins.txt
+awk '/^# ---- hand edits below/ {h=1; next} h && !/^#/ && NF {print $1}' splat/symbol_addrs.txt | sort -u | comm -12 - build/out/<handle>/twins.txt
+```
+
+A line found idle for a cause your landing did not
 bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
 `vector<ASN1::AbstractData*>::push_back`) goes in a commit of its own with the docs that cite it, after a `queue/` post;
 your commit keeps it. A caught-up line is not such a case: a range whose match touches it removes it

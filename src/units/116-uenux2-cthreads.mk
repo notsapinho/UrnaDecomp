@@ -297,8 +297,9 @@
 # - Chosen: its name, its being a member of fn 509's class (a free function over the object is the other form, not
 #   compiled), and its place after SelecionaModo1 (band 2's order) and before Desativa (4195, band 3, which says nothing
 #   of the two's order).
-# - Roots: 116-uenux2-cthreads-roots.cpp takes its address, for votaInit's slot 41. Its one direct caller, 11865, is not
-#   written, and the table entry keeps the body out of line without a call (docs/reference/facts/tool-traps.md X1).
+# - Roots: 116-uenux2-cthreads-roots.cpp takes its address, for votaInit's slot 41 (7840 is not written). Its one direct
+#   caller, 11865, is in the link since unit 199 wrote it; the address stands for the slot, not for that call
+#   (docs/reference/facts/tool-traps.md X1: a function the table holds keeps its body with one caller).
 #
 # cestadoaudio.cpp stays this unit's file, compiled in unit 110's list, at its head: fragment 386's
 # CEstadoAudio::CarregaEleitores (6734), written there, matches only with that object ahead of celeitores.cpp.o and

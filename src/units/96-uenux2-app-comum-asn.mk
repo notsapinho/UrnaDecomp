@@ -142,10 +142,10 @@ COMUM_ASN_SRCS := src/app/comum/asn/util.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp \
   src/app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.cpp
 UENUX2_SRCS += $(COMUM_ASN_SRCS)
-# the members' callers are all in the link now; 96-uenux2-app-comum-asn-roots.cpp keeps CConversorDadosCandidato's
-# vtable, whose one storer (11448) is not written
+# No roots: the members' callers are all in the link, and so is CConversorDadosCandidato's vtable's one storer, 11448
+# (unit 159's CConversorCandidatura::DoDesconverte): the roots file, whose sink kept that vtable, went with it.
+# cconversordadoscandidato.cpp also holds CConversorDadosCandidato's constructor, out of line for 11448, which holds it
+# inlined by binaryen (a reading: cconversordadoscandidato.h and fragment 159 say what shows it); it has no target
+# index of its own.
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-$(ROOT)/$(APP)/96-uenux2-app-comum-asn-roots.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-roots.o

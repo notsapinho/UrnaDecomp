@@ -1113,6 +1113,12 @@ three and `unresolved` for 5181, which waits for a name:
   as one only when their callees are one too: RHVoice's `vector<shared_ptr<correction>>::__insert_with_size` (2875) and
   11943's `IReportPart` instance differ in calling each instance's own `__throw_length_error`, and binaryen inlined the
   second into its one caller until a stand-in gave it two (unit 325).
+- **A callee with no index that several bodies hold** has no target callers to count: its holders can be clang's
+  copies in its own file and binaryen's copy of its one out-of-line call in another. A holder whose band is another
+  file's, or that calls out of line a function clang inlines when it is compiled in the callee's file (`-Rpass=inline`
+  prints the cost under the threshold), is that other file's code calling the callee: 6737, one of seven holders of
+  `VerificaUrnaDesligando` (record `csincronizavota.cpp` 47:15), is `cestadoaudio.cpp`'s, beside 6743 and 6745 in its
+  band (fragment 116).
 - **A library inline member's body called out of line from several TUs** is a function of the project's that holds it:
   clang inlines the library member at each such call site (`-Rpass=inline` prints its cost under the threshold), so the
   target's out-of-line body is another TU's function. 1922, `std::function<SQtdeAptos()>`'s copy called from six TUs,
@@ -1122,22 +1128,31 @@ three and `unresolved` for 5181, which waits for a name:
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
   [codegen.md](codegen.md) §C4's order, the object's own locals and whether an inlined member is static (§C4 has
-  11172's and 12040's). A leaf that differs so can return a result the source has: binaryen's
+  11172's and 12040's). A differing guard or zero set can be the packing as well: a value in a reused local keeps its
+  zero sets where one in a local of its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result
+  the source has: binaryen's
   dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
   whose result every caller drops (unit 00's fragment).
 
-  Two locals-only remainders no lever above moves. A parameter copied into a local before a loop (`local.get 1;
+  A locals-only remainder no lever above closes. A parameter copied into a local before a loop (`local.get 1;
   local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
-  binaryen's inliner copies each parameter of a body it inlines, so the target may hold the body as a one-caller
-  function its caller forwards to: 2811 written as such a forwarder took the target's frame and head and kept a copy, of
-  another parameter (`95 over 349` against `138 over 354`, unit 388's fragment). Which parameter's copy survives is not
-  known. And 5480 (`api::CIniFile::Carrega`) differs from the target, read as which locals binaryen packs alone (`1173
-  over
-  4214`, every replaced row an operand): ours zeroes a section iterator's local the target leaves, in four source forms
-  that give one object (unit 379's fragment). Record what was tried in the fragment and leave such a body written or
-  unwritten as how-to step 5 says.
+  binaryen's inliner copies every parameter of a body it inlines (one `local.set` each), so the target may hold the body
+  as a one-caller function its caller forwards to. Which copy survives is coalesce-locals' order: it colours the locals
+  heaviest copy weight first, each into the lowest slot it does not interfere with
+  (`CoalesceLocals::pickIndicesFromOrder` in binaryen's source), so a loop's phi local takes the first parameter dead
+  over its range. A frameless forwarder over the whole body has every parameter copied, and parameter 0 goes first: 2811
+  written so took the target's frame and head and kept the result pointer's copy (`95 over 349` against `138 over 354`,
+  unit 388's fragment; `83 over 350` with the forwarder defined first). The order of the body's parameters is no lever
+  (44 orders on a replay of the link's `wasm-opt`, §C4, each the same score); the target's layout came out on the replay
+  only with the result and the two parameters read before the loop reaching that coalesce uncopied (`11 over 342`, every
+  row an import call). Record what was tried in the fragment and leave such a body written or unwritten as how-to step 5
+  says. A zero set of an inlined callee's local that ours keeps and the target drops is no such remainder until §C4's
+  order of the caller and that callee is tried: 5480 (`api::CIniFile::Carrega`) kept its section iterator's zero (`1173
+  over 4214`, every replaced row an operand) in four source forms that give one object, and matched with Carrega defined
+  right above Interpreta, the parse binaryen inlines into it; Carrega first in the file gave `1184` (unit 379's
+  fragment).
 
 **Whose frame a prologue is.** The second prologue is the frame of the function around the code that follows it, which
 need not be the function whose records that code holds. A temporary built for a call's argument sits in the caller's

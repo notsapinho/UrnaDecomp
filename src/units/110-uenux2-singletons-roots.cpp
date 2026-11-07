@@ -14,9 +14,10 @@
 //   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
 //                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
 //                       stand-in reads it (R18)
-//   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, and GetCargo 861 once, for 13550 (its 11 other
-//                       callers are in the link); its calls of CHV::GetHorarioVerao 5745 went: its target callers, 11198
-//                       and 11199, are in the link with the call, and the link without them moved no row
+//   ConsultaTodos       GetCurrent 332 and GetCurrentEleicao 2836; its call of GetCargo 861 went: its last target
+//                       caller not in the link, fn 13550 (fragment 391's), is; its calls of CHV::GetHorarioVerao 5745
+//                       went: its target callers, 11198 and 11199, are in the link with the call, and the link without
+//                       them moved no row
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fn 7787 (6734, fragment 386's, is in the link)
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
@@ -51,7 +52,6 @@ int d379(int) __asm__("_ZN5comum2md8CEleitorD2Ev");
 void w2269(int) __asm__("_ZN5comum7CCargos5ResetEv");
 int w332(int) __asm__("_ZNK5comum7CCargos10GetCurrentEv");
 int w2836(int) __asm__("_ZNK5comum7CCargos17GetCurrentEleicaoEv");
-int w861(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao8GetCargoEh");
 int d2830(int) __asm__("_ZN5comum2md18CProcessoEleitoralD2Ev");
 int d5671(int) __asm__("_ZN5comum2md20CValidadorIdentidadeD1Ev");
 int d5730(int) __asm__("_ZN5comum10CRespostasD1Ev");
@@ -94,9 +94,9 @@ __attribute__((noinline)) void DestroiTodos(int p)
     d5805(p + 48);
 }
 
-__attribute__((noinline)) int ConsultaTodos(int cargos, int configuracao)
+__attribute__((noinline)) int ConsultaTodos(int cargos)
 {
-    return (w332(cargos) ^ w332(cargos + 28) * 3) + (w2836(cargos) ^ w2836(cargos + 28) * 5) + w861(configuracao, 1) * 7;
+    return (w332(cargos) ^ w332(cargos + 28) * 3) + (w2836(cargos) ^ w2836(cargos + 28) * 5);
 }
 
 __attribute__((noinline)) int DestroiDecoradores(int p)

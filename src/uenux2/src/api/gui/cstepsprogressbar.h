@@ -6,6 +6,8 @@
 // Move 10970]. The constructor's parameter types are its record's (cstepsprogressbar.cpp:428:15); the layout is what
 // that constructor, inlined into vota::CPreShowProgressBar's slot 2 (fn 13550), stores and what Draw (fn 5504) and the
 // destructor (fn 3665) read. Every name below (members, parameters, the two structs) is chosen: no evidence gives them.
+// The constructor value-initializes its base: the code clears the base's data at +4 to +24 before the vptr store
+// (docs/reference/facts/codegen.md C9).
 
 #include <string>
 #include <vector>
@@ -77,6 +79,10 @@ public:
     SRect Rect() const override;
 
     void Move(const SPoint& posicao) override;
+
+    // The current step, at most the number of steps; the form refreshes when it changes. The constructor ends with it
+    // (fn 13550 holds both inlined). Its name, its parameter's and its being public are chosen
+    void SetPassoAtual(const uedword passo);
 
 private:
     void Recalcula(IScreen& screen) const;

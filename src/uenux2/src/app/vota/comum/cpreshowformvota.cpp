@@ -8,7 +8,7 @@
 
 namespace vota {
 
-void DesenhaDescricaoModo(api::IScreen& tela, api::SPoint posicao)
+void CPreShowFormVota::DesenhaDescricaoModo(api::IScreen& tela, api::SPoint posicao)
 {
     const std::string modo = api::CApplication::GetDescricaoModo();
     if (!modo.empty()) {

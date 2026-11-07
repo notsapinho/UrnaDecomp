@@ -16,16 +16,6 @@
 // f5622 · 942 B · unmatched · placement: link order · name unknown
 // void f5622(i32, i32) { ... }
 
-// link-order cluster 910 · uses=2
-
-// f6639 · 622 B · unmatched · placement: link order · name unknown
-// void f6639(i32, i32) { ... }
-
-// link-order cluster 917 · uses=2
-
-// f6681 · 476 B · unmatched · placement: link order · name unknown
-// void f6681(i32, i32) { ... }
-
 // link-order cluster 928 · uses=2
 
 // f6958 · 863 B · unmatched · placement: link order · name unknown
@@ -46,17 +36,7 @@
 // f2072 · 16 B · unmatched · placement: link order · name unknown
 // void f2072(i32, i32) { ... }
 
-// link-order cluster 1239 · uses=8
-
-// f1591 · 658 B · unmatched · placement: link order · name unknown
-// void f1591(i32, i32, i32, i32, i32) { ... }
-
 // component comum
-
-// link-order cluster 481 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidatura.cpp
-
-// f11448 · 1570 B · unmatched · placement: link order · name unknown
-// void f11448(i32, i32, i32) { ... }
 
 // link-order cluster 705 · uses=2
 
@@ -85,11 +65,6 @@
 
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
-
-// link-order cluster 821 · uses=2 · neighbours' file uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp
-
-// f5712 · 35 B · unmatched · placement: link order · name unknown
-// ? f5712(i32, i32, i32, i32) { ... }
 
 // link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 

@@ -136,8 +136,9 @@
 #   asserts the vote's state with the codes 3481 and 3482 (api/util/eueasserterror.h, names chosen to the records'
 #   columns) and goes to vota::CInicioZeresima. The assert texts call GetVota() on `appinfo`, which the target calls
 #   const (fn 903), so a const reference. 5947 14 over 86 rows, 11871 23 over 130, 11870 11 over 58, all operand-only.
-#   GetInst's other target caller, vota::CGeraDadosDinamicos::StartState (fn 11865, pending in unit 199), has a stand-in
-#   in the roots: with 5945 alone binaryen inlined GetInst into it (5945 scored 111 over 169 rows, 83 inserted).
+#   GetInst's other target caller, vota::CGeraDadosDinamicos::StartState (fn 11865), is in the link since unit 199
+#   wrote it; the roots' stand-in for it went then: with 5945 alone binaryen inlined GetInst into it (5945 scored 111
+#   over 169 rows, 83 inserted).
 # - CVerificaHorarioZeresima::ProcessInput (fn 11869, slot 7), between ProcessTickNaoDesligamento and FinishState, the
 #   band's order (11871, 11870, 11869, 11868; no pair of the object's matched members inverted in the link): Read() on
 #   the form; on INPUT_CONFIRMA (9) comum::CInformacaoEleicao over CConfiguracaoEleicao's parameters (+88), then
@@ -228,6 +229,12 @@
 # AddStoppedTick overload, the assert codes' and 9377's enumerators, and 5945's local estado; the switch in 5945 with
 # its cases indented, which puts the throw at its record's column 19; `Now() >= m_horario` for the tick's test (another
 # spelling is not measured).
+# No roots: the roots file went with its last stand-in, ChamaVerificaHorarioZeresima, which stood for 11865's call of
+# CVerificaHorarioZeresima::GetInst (5947), once unit 199 wrote 11865. The vtables of CRetomada, CAplicacaoEncerrada,
+# CPreZeresima, CVerificaHorarioZeresima and CEsperaRetestar are stored by code in the link, so none takes a sink:
+# CRetomada's GetInst inlined into 7160 (unit 329), CAplicacaoEncerrada's GetInst (3877), CPreZeresima's inlined into
+# 11914 (unit 199), CVerificaHorarioZeresima's GetInst (5947) and CEsperaRetestar's (5936). 3877's three target callers
+# (12034, 12051, 12055) and 5947's two (5945, 11865) are in the link.
 TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp \
     src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp \
@@ -240,6 +247,3 @@ UENUX2_SRCS += $(TESTETECLADO_SRCS)
 # through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cprezeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-$(ROOT)/$(APP)/138-uenux2-testeteclado-roots.o: $(ROOT)/src/units/138-uenux2-testeteclado-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/138-uenux2-testeteclado-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/138-uenux2-testeteclado-roots.o

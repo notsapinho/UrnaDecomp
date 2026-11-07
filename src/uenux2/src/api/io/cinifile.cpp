@@ -1,6 +1,7 @@
 // Reconstruction's note: api::CIniFile, the INI object (src/uenux2/src/api/io/cinifile.h). No record names this file or
-// any of its functions: the file, its path and the functions' lines and order are chosen
-// (src/units/379-uenux2-cinifile.mk says why the loader is not cinistrings.cpp's).
+// any of its functions: the file, its path and the functions' lines are chosen, and so is their order but for Carrega's
+// place right above Interpreta, which is measured (src/units/379-uenux2-cinifile.mk says why the loader is not
+// cinistrings.cpp's, and what each place of Carrega gives).
 #include "api/io/cinifile.h"
 
 #include <utility>
@@ -45,6 +46,40 @@ void CIniFile::SetKey(const CIniKey& chave)
     }
 }
 
+CIniFile CIniFile::Carrega(const std::string& arquivo)
+{
+    ecourna::api::io::CFile file(arquivo, "rb");
+    std::vector<std::string> linhas;
+    bool fim = false;
+    while (!fim) {
+        std::string linha;
+        bool continua;
+        do {
+            std::string parte;
+            file.ReadLine(parte);
+            if (parte.empty() && file.Eof()) {
+                break;
+            }
+            if (parte.back() == '\n') {
+                parte.resize(parte.size() - 1);
+            }
+            linha += parte;
+            continua = TerminaComBarraInvertida(linha);
+            if (continua) {
+                linha.resize(linha.size() - 1);
+            }
+        } while (continua);
+        linha = RemoveEspacos(RemoveComentario(linha));
+        if (!LinhaUtil(linha)) {
+            fim = file.Eof();
+        } else {
+            linhas.push_back(linha);
+            fim = false;
+        }
+    }
+    return Interpreta(linhas);
+}
+
 CIniFile CIniFile::Interpreta(const std::vector<std::string>& linhas)
 {
     CIniFile ini;
@@ -86,40 +121,6 @@ CIniFile CIniFile::Interpreta(const std::vector<std::string>& linhas)
         }
     }
     return ini;
-}
-
-CIniFile CIniFile::Carrega(const std::string& arquivo)
-{
-    ecourna::api::io::CFile file(arquivo, "rb");
-    std::vector<std::string> linhas;
-    bool fim = false;
-    while (!fim) {
-        std::string linha;
-        bool continua;
-        do {
-            std::string parte;
-            file.ReadLine(parte);
-            if (parte.empty() && file.Eof()) {
-                break;
-            }
-            if (parte.back() == '\n') {
-                parte.resize(parte.size() - 1);
-            }
-            linha += parte;
-            continua = TerminaComBarraInvertida(linha);
-            if (continua) {
-                linha.resize(linha.size() - 1);
-            }
-        } while (continua);
-        linha = RemoveEspacos(RemoveComentario(linha));
-        if (!LinhaUtil(linha)) {
-            fim = file.Eof();
-        } else {
-            linhas.push_back(linha);
-            fim = false;
-        }
-    }
-    return Interpreta(linhas);
 }
 
 } // namespace api

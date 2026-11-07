@@ -624,11 +624,13 @@ the tree it is given, so run it over the head and over the base's archive (`git 
 that removes an `#include` (a trap's `-pending.cpp` that goes with its last member) takes an object out of the head's
 list though the edit changed it. It walks the directory rather than `git ls-files`, which lists nothing in an archive,
 with no error. At e7d03612 it prints 65 for `cconfiguracaoeleicao.h` over the checkout and over an archive of the same
-commit, in under a second. Add §W15's byte search for an `src/asn1` module header, whose users reach it through
-ecourna's include paths too:
+commit, in under a second. It walks the `src/asn1` modules' `.cxx` sources too (`ModuloCandidatos.h` lists
+`asn1/modules/ModuloCandidatos.o`). Add §W15's byte search for an `src/asn1` module header, whose users reach it through
+ecourna's include paths too, run over every link object, not only those make leaves (the module's own object is on the
+header's `-W` list, and a reviewer compiles it from the base as well):
 
     make -s -C src print-LINK_OBJS | tr ' ' '\n' > build/out/workflow-facts/link-objs.txt
-    python3 -I -c "import os,re,sys; r=sys.argv[1]; fs=[os.path.relpath(os.path.join(d,n),r) for d,_,ns in os.walk(os.path.join(r,'src')) for n in ns if n.endswith(('.h','.hpp','.cpp','.c'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(os.path.join(r,f),'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[3:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c'))}; print('\n'.join(sorted(o.replace(os.path.abspath(r)+'/','').replace(os.getcwd()+'/','') for o in open(sys.argv[2]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" . build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
+    python3 -I -c "import os,re,sys; r=sys.argv[1]; fs=[os.path.relpath(os.path.join(d,n),r) for d,_,ns in os.walk(os.path.join(r,'src')) for n in ns if n.endswith(('.h','.hpp','.cpp','.c','.cxx'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(os.path.join(r,f),'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[3:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c','.cxx'))}; print('\n'.join(sorted(o.replace(os.path.abspath(r)+'/','').replace(os.getcwd()+'/','') for o in open(sys.argv[2]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" . build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
 
 Over an archive, pass its directory for `.` and its own object list; the objects come out as `build/out/…` paths of
 that tree.
@@ -1032,7 +1034,11 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    of a library's flags moves them with no new match, and no index names them. Search the fragments and companions of
    the objects the merge recompiled (`LC_ALL=C /usr/bin/grep -n -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' <those
    files>`; 126 lines in 64 fragments at e7d03612) and re-measure, re-run the examples that print the moved code's
-   numbers, or date each with the commit it was taken at.
+   numbers, or date each with the commit it was taken at. A list move (`src/units/README.md` "Names") also changes the
+   pair counts of every other move whose span the moved file enters or leaves, in fragments the merge did not
+   recompile and that name files, not numbers: search them by the moved file's name (`LC_ALL=C git grep -n
+   cqrcodeimagepaper -- src/units` finds unit 95's `csigverifier.cpp` list, which that file's move into unit 196's list
+   took it out of), and recount or date each.
 8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
    the line, and so does one that takes an anchor kind from its pair ([splat.md](splat.md) §S8, the ninth kind); no
    index of the merge sits in the note. Write the name and its evidence kind, not the count, or date

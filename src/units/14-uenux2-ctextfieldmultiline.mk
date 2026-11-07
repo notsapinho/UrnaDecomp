@@ -69,11 +69,9 @@
 # holds), Move's place in the file, and Draw and Rect after GetTextLines, whose line its record fixes. Draw before Rect
 # is the band's order (ledger/ordinals.tsv, uses 1).
 UENUX2_SRCS += src/api/gui/ctextfieldmultiline.cpp
-# two more CUeGuiError throw sites (14-uenux2-ctextfieldmultiline-roots.cpp), so binaryen does not inline the
-# CBaseError<EUeGuiError> ctor thunk; the ctor's two target callers, 2782 (api::CFormBuilder::AddTextFieldMultiLine,
-# unit 31) and 12055 (through vota::AdicionaTextoMultiLinha, ctelasvota.cpp, unit 37), are in the link, so binaryen
-# keeps the ctor and drops its two constant TColor arguments as the target's wasm-opt did; the stand-in that called it
-# for 12055 went
-$(ROOT)/$(APP)/14-uenux2-ctextfieldmultiline-roots.o: $(ROOT)/src/units/14-uenux2-ctextfieldmultiline-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/14-uenux2-ctextfieldmultiline-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/14-uenux2-ctextfieldmultiline-roots.o
+# No roots. The ctor's two target callers, 2782 (api::CFormBuilder::AddTextFieldMultiLine, unit 31) and 12055 (through
+# vota::AdicionaTextoMultiLinha, ctelasvota.cpp, unit 37), are in the link, so binaryen keeps the ctor and drops its
+# two constant TColor arguments as the target's wasm-opt did; the stand-in that called it for 12055 went. The 36
+# target callers of the CBaseError<EUeGuiError> ctor thunk (fn 406) are in the link too since fn 13550 (fragment 391)
+# matched, so the roots file's two CUeGuiError throw sites, which kept binaryen from inlining that thunk into this
+# file's throw, went with it (the link without them moved no row).

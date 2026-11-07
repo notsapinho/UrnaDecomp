@@ -145,9 +145,9 @@
 # and 4 over 184 (5950), all operand-only. Band 2 runs 5954, 5953, 5952, 5951 (GetCargo), 5950 (ledger/ordinals.tsv),
 # and our link gives 5953, 5952, GetCargo and 5950 rising ld_index (names.tsv), so CarregaCandidaturas is defined above
 # GetCargo and its first mention of construct_at puts 5952 between them; GetCargos after LimpaFiltros is a choice. The
-# roots stand in for 5950's other target caller, 5710 (not written), with one call (CandidaturasRelocadas); 5953's,
-# 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through cconfiguracaoeleicao.h now
-# (the include path below).
+# roots stood for 5950's other target caller, 5710, with one call (CandidaturasRelocadas), which went once unit 159
+# wrote 5710; 5953's, 11884 (unit 104's), is in the link, and its stand-in went. The file reaches Boost through
+# cconfiguracaoeleicao.h now (the include path below).
 #
 # cvisualizarcandidatos.cpp also holds CVisualizarCandidatos::GetPartidos, defined after GetCargos (a choice), and the
 # header SetPartido, both for unit 104's 11884, which holds them inlined and matches: GetPartidos is out of line here
@@ -155,10 +155,18 @@
 # GetPartidos has no target function of its own, and this object's other functions compile as before it (compared by
 # function, relocated operands masked).
 #
+# app/vota/eleitor/comum/cpreshowprogressbar.cpp is fragment 391's file (vota::CPreShowProgressBar::PreShow, 13550,
+# matched), listed here for its place: the target's data put its vtable right before ctelascargo.cpp's records, and
+# before ctelascargo.cpp.o is the place of fewest objects out of the data's order among those weighed
+# (docs/reference/facts/codegen.md C4's record-aware count, on 59a65ba6 with fragment 391's match: 236 here, 237 after
+# ctelascargo.cpp.o, 274 after cpoliticaexecucaoeleitor.cpp.o in unit 165's list, 426 at fragment 391's own place). Its
+# order decides no byte measured (fragment 391 has the scores).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \
     src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp \
+    src/app/vota/eleitor/comum/cpreshowprogressbar.cpp \
     src/app/vota/eleitor/comum/ctelascargo.cpp
 UENUX2_SRCS += $(ELEITOR_ESTADOS_SRCS)
 # cvisualizarcandidatos.cpp reaches Boost through cconfiguracaoeleicao.h (its GetCargos reads comum::CConfiguracaoEleicao)

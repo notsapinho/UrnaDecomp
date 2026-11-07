@@ -42,8 +42,8 @@
 # indented four columns and qualified api::. CImprimindoBU's constructor copies CTelasVota's +100, which ctelasvota.h
 # gains the getter GetTelaImprimindoBU for. CLimiteCopiasBUAtingido::StartState's Assert text ("Assert
 # (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)", code 3473) is longer than its record's column
-# (37:56), so the invocation closes on a line of its own: with the code there indented eight columns and qualified
-# api::, the name has 42 characters, chosen to that length. EAVENCERRADA comes with
+# (37:56), so the invocation closes on a later line; with the code alone there, indented eight columns and qualified
+# api:: (a chosen layout), the name has 42 characters, chosen to that length. EAVENCERRADA comes with
 # app/comum/dados/md/estadoaplicacao/cestadogeralvota.h, which this unit takes byte for byte from the unit that writes
 # it. Its constructor copies CTelasVota's +108 (fn 12023, offsets 0x7c and 0x86), through the getter
 # GetTelaLimiteCopiasBUAtingido, and GetInst has the shape of CImprimindoBU's (fn 5986): the vptr 1542836, the base's

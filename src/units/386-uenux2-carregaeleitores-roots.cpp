@@ -20,18 +20,10 @@ __attribute__((noinline)) void TelasVota(int no, int registro)
     w386_5763(no + 16, registro);
 }
 
-// Stands for fn 11865 (vota::CGeraDadosDinamicos::StartState), not in the link: its call of 6734, on
-// CEstadoAudio::GetInst()'s result.
-__attribute__((noinline)) void GeraDadosDinamicos()
-{
-    w386_6734(w386_509());
-}
-
 struct S386Roots {
     S386Roots()
     {
         w386_sink = reinterpret_cast<const void*>(&TelasVota);
-        w386_sink = reinterpret_cast<const void*>(&GeraDadosDinamicos);
     }
 } w386_roots;
 

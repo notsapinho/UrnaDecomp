@@ -455,7 +455,12 @@ A body that holds a chain inlined from several objects can need the order of all
 five functions of four objects of unit 13's list and is unit 197's; the data's order of them all (`awk -F'\t' '$2 ~
 /crdvvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}' ledger/source-locations.tsv | sort -n`:
 `celeitorvotando.cpp`, `crdvvota.cpp`, then `md/rdv/` in name order) took it from `958 over 2759` to `562 over 2719` in
-two steps. A library's objects are the same question: zlib's `crc32` (893) is a 14-byte call of `crc32_z`, and with
+two steps. The two axes are one question when the chain spans a `.cpp` and another object: try each definition order
+with each object order, not each alone. 2772 (`CQRCodeImagePaper`'s constructor, which holds its file's `MontaImagem`
+and `cstringutils.cpp`'s `SetBit` inlined) scored `97 over 696` with `MontaImagem` above it and with its object before
+`cstringutils.cpp.o`, each alone, and `44 over 689`, every row an operand, with both (on a replay, below, then the
+link; unit 296's fragment). A library's objects are the same question: zlib's `crc32` (893) is a 14-byte call of
+`crc32_z`, and with
 zlib's objects ahead of minizip's our link kept `crc32` with `crc32_z` inlined (a block result where the target has `if
 … return`); with minizip's first it keeps `crc32_z` whole, and eleven rows matched ([libraries.md](libraries.md) §B8,
 fragment 06).
@@ -497,23 +502,24 @@ data, not a window, which can flip the answer, and with the objects that have re
 vtables alone, the wrong place can win (a new report file's two places counted 202 and 205 by vtables, 268 and 241 with
 records, fragment 372). This ranks each object of the plain link line by the lowest target address the symbol file
 gives its vtables and typeinfos (`.data.rel.ro._ZT[VI]` in our map) or, with none, by its source's lowest `.cpp` record,
-and counts at each place given, the object `x` moved before or after another (e7d03612):
+and counts at each place given, the object `x` moved before or after another (c3a97777):
 
 ```sh
 python3 -I - /citensmenuvota.cpp.o here after:/ctelasvota.cpp.o <<'END'
 import re, sys
-# usage: python3 -I - <X suffix> <place>... [names]   place: here | before:<suffix> | after:<suffix>
-xs, places = sys.argv[1], [a for a in sys.argv[2:] if a != 'names']
+# usage: python3 -I - <X suffix> <place>... [names] [bss]   place: here | before:<suffix> | after:<suffix>
+xs, places = sys.argv[1], [a for a in sys.argv[2:] if a not in ('names', 'bss')]
 order = list(dict.fromkeys(w for w in open('build/out/wasm/vota_web/link.cmd').read().split() if w.endswith('.o')))
 t = {p[0]: int(p[2].rstrip(';'), 0) for p in (l.split() for l in open('splat/symbol_addrs.txt', encoding='latin-1'))
      if len(p) >= 3 and p[1] == '=' and re.fullmatch(r'0x[0-9a-f]+;', p[2])}
+seg = r'\.bss\.([^)]*)' if 'bss' in sys.argv else r'\.data\.rel\.ro\.(_ZT[VI][^)]*)'
 vt, rec = {}, {}
 for l in open('build/out/wasm-map/vota_web/vota_web_wasm.map', encoding='latin-1'):
-    m = re.search(r'(\S+?):\(\.data\.rel\.ro\.(_ZT[VI][^)]*)\)$', l)
+    m = re.search(r'(\S+?):\(' + seg + r'\)$', l)
     if m and m.group(2) in t: vt[m.group(1)] = min(vt.get(m.group(1), 1 << 40), t[m.group(2)])
 for l in open('ledger/source-locations.tsv', encoding='latin-1'):
     p = l.split('\t'); f = p[1] if len(p) > 1 else ''
-    if not p[0].isdigit() or not f.endswith('.cpp'): continue
+    if 'bss' in sys.argv or not p[0].isdigit() or not f.endswith('.cpp'): continue
     if f.startswith('/home/rubio/tse/uenux2/'): o = 'app/uenux2/' + f[23:] + '.o'
     elif '/src/ecourna/' in f: o = 'app/ecourna/' + f.split('/src/ecourna/', 1)[1].replace('/', '_') + '.o'
     else: continue
@@ -526,35 +532,43 @@ for spec in places:
         how, ys = spec.split(':', 1); Y = [o for o in seq if o.endswith(ys)]; assert len(Y) == 1, Y
         seq.insert(seq.index(Y[0]) + (how == 'after'), X)
     pos = {o: i for i, o in enumerate(seq)}
-    for name, r in (('vtables-only', vt), ('record-aware', both)):
+    for name, r in ((('bss', vt),) if 'bss' in sys.argv else (('vtables-only', vt), ('record-aware', both))):
+        if X not in r: print(spec, name, 'skipped:', X, 'has no rank here'); continue
         out = sorted((pos[o], o) for o in seq if o != X and o in r and (pos[o] < pos[X]) != (r[o] < r[X]))
         print(spec, name, len(out), 'objects out of the data order against', X, 'at', pos[X], hex(r[X]))
-        if 'names' in sys.argv and name == 'record-aware': print('\n'.join(f'  {p} {hex(both[o])} {o}' for p, o in out))
+        if 'names' in sys.argv and name != 'vtables-only': print('\n'.join(f'  {p} {hex(both[o])} {o}' for p, o in out))
 END
 # here vtables-only 57 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
 # here record-aware 121 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
-# after:/ctelasvota.cpp.o vtables-only 82 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
-# after:/ctelasvota.cpp.o record-aware 157 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
+# after:/ctelasvota.cpp.o vtables-only 83 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 85 0x177e34
+# after:/ctelasvota.cpp.o record-aware 158 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 85 0x177e34
 ```
 
 Take the record-aware count. With `names` added, it lists the record-aware objects of each place with their positions
 and target addresses: those listed at one place and not at the other are the pairs the move inverts or restores, and
-for a file at two places they are the objects linked between them. An object with no named data and no record has no
-rank, and the script stops on it. Count on the plain `build/out/wasm/vota_web/link.cmd` of the committed state: a
-home-made count over a link line that holds a variant object under another path drops that object's pairs with no
-message (unit 278's move counted 478 and 31 so, against 515 and 33 over the plain line). The count reads which objects'
-data the symbol file names, so it moves as later landings name data, with no object moving (unit 278's move: 515 agree
-and 33 inverted at b3b6d4bb, 537 and 39 on the merged link at fac8e5ce); `src/units/README.md` "Names" says what a
-fragment states with it and when a landing counts again. Confirm the chosen place with a scratch link of the plain
-`link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). The target's `.rodata` (`_ZTS`
-names, strings) orders apart, so never mix the two segments ([link-order.md](link-order.md) §L7 item 15 reads one
-object's run). A destination neighbour that is itself out of the data's order with the objects crossed makes every
-crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour, inverted more than it
-restored, with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function moved between two files
-that stay in place reorders no object: its code and the linkonce data it emits change object, so read the target's
-neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count over our order. 3675
-(`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316)
-follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
+for a file at two places they are the objects linked between them. A count the moved object has no rank for prints
+`skipped`: one with records and no vtable has the record-aware line alone (`cqrcodeimagepaper.cpp.o` at c3a97777, 341
+in unit 296's list and 332 before `cstringutils.cpp.o`). One whose only named data are `.bss` statics (a singleton's)
+has neither: with `bss` the script ranks every object by its `.bss` names alone, records left out, and counts that
+segment (`cestadoaudio.cpp.o`, 43 at the head of unit 110's list, 45 after `celeitores.cpp.o`); never mix it with the
+other two. A place is a position between two objects: inside a list weighed, count every position (`before:` each of its
+objects, `after:` the last), since the list's head can invert fewer pairs than the place beside a data neighbour (unit
+159's two files: 273 at the head of unit 225's list, 276 beside `cvisitanteeleitor.cpp.o`, at 525b5b8a). Count on the
+plain `build/out/wasm/vota_web/link.cmd` of the committed state: a home-made count over a link line that holds a variant
+object under another path drops that object's pairs with no message (unit 278's move counted 478 and 31 so, against 515
+and 33 over the plain line). The count reads which objects' data the symbol file names, so it moves as later landings
+name data, with no object moving (unit 278's move: 515 agree and 33 inverted at b3b6d4bb, 537 and 39 on the merged link
+at fac8e5ce); `src/units/README.md` "Names" says what a fragment states with it and when a landing counts again. Confirm
+the chosen place with a scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13,
+"One variant object"). The target's `.rodata` (`_ZTS` names, strings) orders apart, so never mix the two segments
+([link-order.md](link-order.md) §L7 item 15 reads one object's run). A destination neighbour that is itself out of the
+data's order with the objects crossed makes every crossed pair an inversion: `citensmenuvota.cpp` moved after
+`ctelasvota.cpp`, its data neighbour, inverted more than it restored, with 6599 at `306 over 2151` either way, so it
+stayed in unit 102's list. A function moved between two files that stay in place reorders no object: its code and the
+linkonce data it emits change object, so read the target's neighbours of that data (§P4) and of the function in its band
+(how-to step 3, rule 5), not a count over our order. 3675 (`api::AddInputMenuField`) emits
+`__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316) follows
+`cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
 `cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's order in our link goes
 between them where they are adjacent; `src/units/README.md` "Names" says which places a new file weighs and what its
 fragment names.
@@ -602,6 +616,15 @@ TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && /emsdk/upstream/bin/w
 cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
 # same
 ```
+
+`-Oz` runs its function passes over every function first, then `--dae-optimizing` and `--inlining-optimizing`, which run
+them again, `precompute-propagate` first, on each function they changed. So a caller's locals can be decided in the
+first round, before any inlining (13550's zero sets: `rse` drops them there from a value in a local of its own and keeps
+them from one in a reused local), and `--skip-pass` takes a pass out of every round. A function extracted with its
+callees and replayed with plain `--inlining` is no replay: two forms of 13550 scored 293 and 345 rows off so, against
+the link's 99 and 297. Replay the whole module. A text written with `-g` after `coalesce-locals` does not assemble
+again: the name section keeps the old local names, two locals print as one, and `wasm-as` stops on `local names must be
+unique`; drop the name section's local names (subsection 2) before `wasm-dis`.
 
 Compare two replays function by function with `pnpm wasm score`, never by their raw code bytes: two modules with other
 function counts renumber every `call` past the difference, and a body with no change of its own differs. 652's eight
@@ -680,7 +703,20 @@ TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict
 So a frame larger than the target's, with every dropped result in a slot of its own, points at calls the target made
 inside a helper clang inlined: 3064 (`CTelasVota::CriaTelaVotoCargoSemCandidato`) and the footers 1102 and 1190 took the
 target's offsets only with their adders in internal helpers, a `void` one for 1102's and 1190's rectangles (unit 378's
-fragment).
+fragment). The argument temporary of a by-value class parameter has no marker either, so it keeps a slot of its own,
+below the slots allocated before the call, where a full-expression temporary of the same type shares one: 6734's map
+moved into its base `CDataMap` takes the target's frame (864, the map at +76) through a setter that takes it by value,
+and 848, every offset above it 16 lower, as `m_registros = Container(std::move(registros));` (fragment 386). The
+probe, as above (c3a97777):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' '#include <map>' 'struct D { std::map<int, int> m; void Set(std::map<int, int> v) { m = std::move(v); } };' 'void ByValue(D& d, std::map<int, int>& r) { d.Set(std::move(r)); }' 'void Temp(D& d, std::map<int, int>& r) { d.m = std::map<int, int>(std::move(r)); }' > $P/byvalue.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/$P/byvalue.cpp -o /work/$P/byvalue.ll && awk '/^define/ {f=$0; sub(/.*@/, "", f); sub(/\(.*/, "", f)} /alloca/ {a[f]++} /llvm.lifetime.start/ {l[f]++} END {for (f in a) print f, "allocas", a[f], "lifetime starts", l[f]+0}' $P/byvalue.ll | sort | /usr/bin/grep -E 'ByValue|Temp' | sed 's/R1DR[^ ]*//'
+# _Z4Temp allocas 4 lifetime starts 2
+# _Z7ByValue allocas 4 lifetime starts 0
+```
+
 Which of the marked slots merge follows the
 colouring's own order, which no probe here has measured: 11891's message function gave other pairs in a slot than the
 target's in eight forms (a result dropped, named, in a block, in an `if`'s init-statement, in a helper) and stays a trap
@@ -1089,3 +1125,25 @@ for f in _Z5Namedv _Z7Literalv; do printf '%s: ' $f; wasm-objdump -d $P/align.o 
 11812's three texts (@475072, @475104, @475152) are named arrays in `ctelasvota.cpp`'s anonymous namespace for that
 reason (`ctelasvota.h`'s comment over the class has the scores). Two equal texts in one TU are one constant, so a probe
 of the two forms needs two texts.
+
+## C17. A 16-bit value passed to an `int`: `extend16_s` only with a second 16-bit use
+
+A 16-bit value (a `TPosition`, `short`) computed from `int`s and passed to an `int` parameter comes out as a shift pair,
+`i32.shl` and `i32.shr_s` by 16 (instcombine turns the narrowing and the extension into shifts and folds the shift into
+a one-use add), and as `i32.extend16_s` only when the 16-bit value has a second use at 16 bits, at c3a97777:
+
+```sh
+P=build/out/codegen-facts; printf '%s\n' 'void UseInt(int); void UseShort(short);' 'void Once(int a, int b) { UseInt(static_cast<short>(a - b + 1)); }' 'void Twice(int a, int b) { const short w = a - b + 1; UseInt(w); UseShort(w); }' > $P/ext16.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -c /work/$P/ext16.cpp -o /work/$P/ext16.o
+for f in _Z4Onceii _Z5Twiceii; do printf '%s: ' $f; wasm-objdump -d $P/ext16.o | awk -v f="<$f>:" '$0 ~ f {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | /usr/bin/grep -oE '^i32\.(extend16_s|shl|shr_s)' | tr '\n' ';'; echo; done
+# _Z4Onceii: i32.shl;i32.shr_s;
+# _Z5Twiceii: i32.extend16_s;
+```
+
+The same shift pair comes from a `TPosition` local, `++` or `+= 1` on one, two `int` uses, `std::abs(a - b) + 1` and
+`std::to_string` of it, at every level from `-O1` to `-Oz`, and the target holds no such pair. A maximum less a minimum
+of one block folds into an absolute difference, `select(a > b, a - b, b - a)`. So the target's
+`extend16_s(sub(max, min) + 1)` in `simulador::CWasmScreen::DrawText` (9104) and `extend16_s(abs(x1 - x2) + 1)` into
+`std::to_string(int)` in `Refresh` (9018) come from neither a value used once as an `int` nor one computed before the
+branch; an external helper with `TPosition` parameters would give them, but clang inlines it (cost 230 against 250),
+and no form has given them (unit 69's `-pending.cpp`).

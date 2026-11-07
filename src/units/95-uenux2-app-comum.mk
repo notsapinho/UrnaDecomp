@@ -173,21 +173,23 @@
 #   - with rbegin, both after cassinador.cpp.o, in the data's order: 26 over 434 and 81 over 1552, all operand-only.
 #   So both files are listed here after cassinador.cpp, in the data's order, and both rows match; units 26 and 33 keep
 #   their notes and rows (src/units/README.md "Names"). Against each object's first record in
-#   ledger/source-locations.tsv (objects with none left out), the move of csigverifier.cpp.o puts 54 of the objects it
-#   passes in the data's order and inverts 40, whose records lie after its 1576892: api/gui's ctextfield,
-#   ctextfielddoubleline, ctextfieldmt, ctextfieldpaper, ctextfieldupdate, ctextfieldblinking, ctextrectfield, ctextbox,
-#   cframedtext, cimagefield, cimagefieldupdate, cdsimagefield, cmoviefield, cledfieldmt, cqrcodeimage,
-#   cqrcodeimagepaper, cprogressbar, cstepsprogressbar, cformbuilder, cinputmenufield and reports/creport, api's
-#   util/csystem, util/isystemdatetime, audio/alsa/cwavfile, uelog/cescritorlog and hwil/iimpressorarelatorios, vota
-#   operador's outrasopcoes/caguardaeleitoresvotarem, cencerramentohorarioinvalido and cescolheopcao,
-#   confirmaidentidade/cnomeeleitor, cdigitalreconhecida, cdigitalnaoreconhecida and cpededigital, and
-#   comum/cinformacaothreadoperador, and comum's comparecimentomesario/estados/cmesarioregistrado and
+#   ledger/source-locations.tsv (objects with none left out), on the plain link.cmd at b5d3f599, the move of
+#   csigverifier.cpp.o (from fragment 26's place) puts 60 of the 102 objects it passes in the data's order and inverts
+#   42, whose records lie after its 1576892: api/gui's ctextfield, ctextfielddoubleline, ctextfieldmt, ctextfieldpaper,
+#   ctextfieldupdate, ctextfieldblinking, ctextrectfield, ctextbox, cframedtext, cimagefield, cimagefieldupdate,
+#   cdsimagefield, cmoviefield, cledfieldmt, cqrcodeimage, cprogressbar, cstepsprogressbar, cformbuilder,
+#   cinputmenufield and reports/creport, api's util/csystem, util/isystemdatetime, audio/alsa/cwavfile,
+#   uelog/cescritorlog and hwil/iimpressorarelatorios, vota operador's outrasopcoes/caguardaeleitoresvotarem,
+#   cencerramentohorarioinvalido and cescolheopcao, confirmaidentidade/cnomeeleitor, cdigitalreconhecida,
+#   cdigitalnaoreconhecida, cpededigital and cregistradigitaloperador, and comum/cinformacaothreadoperador, and comum's
+#   comparecimentomesario/ccontroladorreconhecimetomesario, cregistradormesario, estados/cmesarioregistrado and
 #   ipedetitulomesario, comparecimentomesario/dao/ccomparecimentomesariodao,
 #   reconhecimentobiometrico/ccontrolaarmazenamentodeimagens, gravadores/asn/cassinavotavelbu and cconversorentidadebu;
-#   the move of cgenerictags.cpp.o puts 56 in the data's order and inverts 6 of those (cwavfile, isystemdatetime,
-#   cescritorlog, cinformacaothreadoperador, ipedetitulomesario, ccomparecimentomesariodao). The end of this list is the
-#   place in it that inverts fewest (cassinador.cpp's records lie before both files', csigverifier.cpp's before
-#   cgenerictags.cpp's), and steps 6 to 10 on this list lose no match.
+#   the move of cgenerictags.cpp.o (from fragment 33's) puts 63 of the 69 it passes in the data's order and inverts 6
+#   (cwavfile, isystemdatetime, cescritorlog, cinformacaothreadoperador, ipedetitulomesario, ccomparecimentomesariodao;
+#   cqrcodeimagepaper.cpp.o links in unit 196's list, before both places, and is passed by neither). The end of this
+#   list is the place in it that inverts fewest (cassinador.cpp's records lie before both files', csigverifier.cpp's
+#   before cgenerictags.cpp's), and steps 6 to 10 on this list lose no match.
 # - Measured before, in a scratch link at the tree's flags then and in the units' order (each form kept here): 597 over
 #   1643 rows first; the key compared unsigned (a plain enum compares it signed), 591 over 1639; the invalid marker a
 #   `break` out of the walk where it was a second `return std::string::npos`, 564 over 1624 (read as clang's cleanup

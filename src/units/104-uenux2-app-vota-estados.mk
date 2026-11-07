@@ -466,20 +466,19 @@
 # - vota::CImprimirBUOutrasObrigatorias::StartState (fn 12065, records cimprimirbuoutrasobrigatorias.cpp 50:117, 53:64
 #   and 57:116), matched. It builds its
 #   comum::CInformacaoEleicao first, asserts three conditions whose texts name the locals appInfo and qtdBuObrigatorio
-#   (codes 3470 to 3472; the second invocation closes on a line of its own, its column less than the condition's
-#   length), takes GetNumViasBU (fn 3847) as a uebyte (the target masks it, `& 255`), and while the BU count is below it
-#   prints a copy: the shutdown flag first (vota::CSincronizaVota::s_urnaDesligando, @1832936: when it is set the
-#   function returns, since the target's `br_if 2` leaves the block that holds the m_pNextState store, so it chooses
-#   no next state), CTelasVota::GetInst()'s
-#   static GetTelaDestinoBUs (unit 110's ctelasvota.cpp, inlined) and its slot 2, LogaImprimindoRelatorio with
-#   RELATORIO_BU and the count plus 1, CImprimindoBU::ImprimeBU (fn 2890) with that number and PRINT_WITHOUT_MESSAGE,
-#   IncrementaQtdBU (fn 3701) and CSincronizaVota::SincronizaEstadoGeralVota (fn 491). Then it goes to
-#   vota::CImprimirBJust (unit 315's GetInst, inlined) when AceitaJustificativa (fn 5918) holds, to vota::CImprimindoBim
-#   (fn 5985) when ImprimeBJust (fn 1950) does, else to CRetirarMR. The flag's type does not decide the loop: with the
-#   return a plain bool gives the target's, which tests the flag at the loop's head only, and std::atomic<bool> the same
-#   object; a `break` in its place (the next state chosen after a set flag too) lets clang test the flag on the loop's
-#   guard and back edge as well, which the target does not. vota::CImprimirBJust's statics' exit destructors (fns 12069,
-#   12070) match with it.
+#   (codes 3470 to 3472; the second invocation closes on a later line, its column less than the condition's length,
+#   the code alone there a chosen layout), takes GetNumViasBU (fn 3847) as a uebyte (the target masks it, `& 255`), and
+#   while the BU count is below it prints a copy: the shutdown flag first (vota::CSincronizaVota::s_urnaDesligando,
+#   @1832936: when it is set the function returns, since the target's `br_if 2` leaves the block that holds the
+#   m_pNextState store, so it chooses no next state), CTelasVota::GetInst()'s static GetTelaDestinoBUs (unit 110's
+#   ctelasvota.cpp, inlined) and its slot 2, LogaImprimindoRelatorio with RELATORIO_BU and the count plus 1,
+#   CImprimindoBU::ImprimeBU (fn 2890) with that number and PRINT_WITHOUT_MESSAGE, IncrementaQtdBU (fn 3701) and
+#   CSincronizaVota::SincronizaEstadoGeralVota (fn 491). Then it goes to vota::CImprimirBJust (unit 315's GetInst,
+#   inlined) when AceitaJustificativa (fn 5918) holds, to vota::CImprimindoBim (fn 5985) when ImprimeBJust (fn 1950)
+#   does, else to CRetirarMR. The flag's type does not decide the loop: with the return a plain bool gives the target's,
+#   which tests the flag at the loop's head only, and std::atomic<bool> the same object; a `break` in its place (the
+#   next state chosen after a set flag too) lets clang test the flag on the loop's guard and back edge as well, which
+#   the target does not. vota::CImprimirBJust's statics' exit destructors (fns 12069, 12070) match with it.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
 # app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).

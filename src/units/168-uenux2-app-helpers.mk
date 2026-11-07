@@ -188,8 +188,8 @@
 #   MV, is the reading taken; external and above line 101 is where the data's order puts a function of this file whose
 #   code first needs that vtable (an internal one's data would follow line 135's record), a reading too. In use band 2
 #   the target's 4625 is above this file's 4582 and 4578, as our object has them (ld_index 4816, 4826, 4833); 4620
-#   (vota::DesenhaDescricaoModo, cpreshowformvota.cpp.o in our link, linked ahead of this object) lies between them in
-#   the target's band, an order this unit does not change.
+#   (vota::CPreShowFormVota::DesenhaDescricaoModo, cpreshowformvota.cpp.o in our link, linked ahead of this object) lies
+#   between them in the target's band, an order this unit does not change.
 # - pnpm wasm score against the link before step 8: 125 over 1607 rows, all operand-only; matched, named by
 #   srcloc-anchor. Step 9 renamed two twins to this object's copies, the bodies the target keeps once: 1348 (std::pair's
 #   constructor from two literals, now pair<const std::string, std::string> from char[9] twice) and 1528 (the empty
