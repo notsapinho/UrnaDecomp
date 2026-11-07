@@ -1084,7 +1084,7 @@ _ZN7ecourna3api4util12CStringUtils6ToByteERKNSt3__212basic_stringIcNS3_11char_tr
 _ZN7ecourna3api9exception6CErrorC2EiNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS3_15source_locationE = func:1143; // size:0x6f2 evidence:call
 QRspec_lengthIndicator = func:1147; // size:0x31 evidence:pair-fingerprint
 _ZNSt3__2eqB8ne210108IcNS_11char_traitsIcEENS_9allocatorIcEEEEbRKNS_12basic_stringIT_T0_T1_EESB_ = func:1148; // size:0x4f evidence:pair-fingerprint
-_ZN5comum33CControladorReconhecimentoMesario7GetInstEv = func:1149; // size:0xfc evidence:call by:3614,5382,10316,10451
+_ZN5comum33CControladorReconhecimentoMesario7GetInstEv = func:1149; // size:0xfc evidence:call
 _ZN4vota21CMostraEleitorVotando7GetInstEv = func:1150; // size:0x6e8 evidence:vptr-anchor
 _ZN4vota21AdicionaCampoNumericoERN3api14CMTFormBuilderEmbRKNS0_6SPointE = func:1151; // size:0x14a evidence:vptr-anchor
 _ZN3api18CMTFormBuilderBase12AddTextFieldENS_11CTextSourceERKNS_6SPointERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEENS_14ETextAlignmentE = func:1152; // size:0x1bc evidence:call
@@ -9061,7 +9061,7 @@ _ZN5comum12_GLOBAL__N_119CNomeMesariosUrnaDS4TextERKNSt3__212basic_stringIcNS2_1
 _ZNSt3__26vectorIN3api18SPolySingletonInfoENS_9allocatorIS2_EEE12emplace_backIJRPKcRKSt9type_infoRKNS_10shared_ptrINS1_6ISoundEEEEEERS2_DpOT_ = func:10325; // size:0x10 evidence:table by:5384
 _ZN5comum18CGestorDadoMesario10StartStateEv = func:10327; // size:0x193 evidence:srcloc-anchor
 _ZNSt3__210shared_ptrIN3api6ISoundEEC2B8ne210108IS2_NS_14default_deleteIS2_EETnNS_9enable_ifIXaaaantsr19is_lvalue_referenceIT0_EE5valuesr17__compatible_withIT_S2_EE5valuesr14is_convertibleINS_10unique_ptrIS9_S8_E7pointerEPS2_EE5valueEiE4typeELi0EEEOSB_ = func:10335; // size:0xe evidence:vptr-anchor
-_ZN5comum18IGestorDadoMesario10StartStateEv = func:10337; // size:0x6c5 evidence:vtable
+_ZN5comum18IGestorDadoMesario10StartStateEv = func:10337; // size:0x6c5 evidence:srcloc-anchor
 _ZN5comum18CMesarioRegistrado12ProcessInputEv = func:10338; // size:0x11 evidence:vtable
 _ZN5comum18CMesarioRegistrado10StartStateEv = func:10339; // size:0xfe evidence:vtable
 _ZN5comum26CTituloMesarioJaRegistrado12ProcessInputEv = func:10342; // size:0xe evidence:vtable
@@ -38097,6 +38097,8 @@ _ZN5comum22CTituloMesarioInvalido7s_mutexE = 0x1d2398; // type:data size:0x18 ev
 _ZN5comum22CTituloMesarioInvalido6s_instE = 0x1d23b0; // type:data size:0x4 evidence:vote:8 by:10313
 _ZN5comum26CTituloMesarioJaRegistrado7s_mutexE = 0x1d23b4; // type:data size:0x18 evidence:vote:2 by:10313
 _ZN5comum26CTituloMesarioJaRegistrado6s_instE = 0x1d23cc; // type:data size:0x4 evidence:vote:8 by:10313
+_ZN5comum18CMesarioRegistrado7s_mutexE = 0x1d23d0; // type:data size:0x18 evidence:vote:2 by:10337
+_ZN5comum18CMesarioRegistrado6s_instE = 0x1d23e8; // type:data size:0x4 evidence:vote:8 by:10337
 _ZN5comum25CGestorDadoMesarioInicial7s_mutexE = 0x1d23ec; // type:data size:0x18 evidence:vote:2 by:10327
 _ZN5comum25CGestorDadoMesarioInicial6s_instE = 0x1d2404; // type:data size:0x4 evidence:vote:8 by:10327
 _ZN5comum25CGestorDadoMesarioVotacao7s_mutexE = 0x1d2408; // type:data size:0x18 evidence:vote:2 by:10327
