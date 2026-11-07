@@ -33,26 +33,6 @@
 
 // component comum
 
-// link-order cluster 705 · uses=2
-
-// f4820 · 2432 B · unmatched · placement: link order · name unknown
-// void f4820(i32, i32, i32, i32) { ... }
-
-// f4819 · 198 B · unmatched · placement: link order · name unknown
-// void f4819(i32, i32, i32, i32) { ... }
-
-// f4818 · 151 B · unmatched · placement: link order · name unknown
-// void f4818(i32, i32, i32, i32, i32) { ... }
-
-// f4817 · 287 B · unmatched · placement: link order · name unknown
-// ? f4817(i32, i32) { ... }
-
-// f4812 · 101 B · unmatched · placement: link order · name unknown
-// void f4812(i32, i32, i32, i32) { ... }
-
-// f4811 · 268 B · unmatched · placement: link order · name unknown
-// void f4811(i32, i32, i32) { ... }
-
 // link-order cluster 746 · uses=2 · neighbours' file uenux2/src/api/hash/cmontadorhash.cpp
 
 // f5359 · 47 B · unmatched · placement: link order · name unknown
@@ -106,11 +86,6 @@
 // f3781 · 108 B · unmatched · placement: link order · name unknown
 // void f3781(i32) { ... }
 
-// link-order cluster 1064 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
-
-// f2579 · 79 B · unmatched · placement: link order · name unknown
-// void f2579(i32, i32, i32) { ... }
-
 // link-order cluster 1104 · uses=4 · neighbours' file uenux2/src/app/comum/dados/crespostas.cpp
 
 // f2811 · 678 B · unmatched · placement: link order · name unknown
@@ -120,11 +95,6 @@
 
 // f2839 · 57 B · unmatched · placement: link order · name unknown
 // void f2839(i32, i32) { ... }
-
-// link-order cluster 1224 · uses=8
-
-// f1507 · 53 B · unmatched · placement: link order · name unknown
-// void f1507(i32, i32, i32) { ... }
 
 // no link-order cluster
 
