@@ -12,8 +12,8 @@ namespace comum::md {
 // CDependenciasContratos::GetValor's). The object is the INI file it reads, 24 bytes: GetValor passes its own address
 // to the key map's find and end (fn 6044), and comum::CGeracaoVersoesContratos holds the class at +24 (fns 12098 and
 // 5866). Chosen: that the INI object is a member (a base would give the same layout; not measured), the member's and
-// the parameters' names. The constructor is declared only: its one caller, fn 12098, holds it inlined and
-// is not written (the loader, fn 5480, is: src/units/379-uenux2-cinifile.mk).
+// the parameters' names. The constructor is written in cversoescontratos.cpp, unrooted: its one caller, fn 12098,
+// holds it inlined and is not written (the loader, fn 5480, is: src/units/379-uenux2-cinifile.mk).
 class CVersoesContratos {
 public:
     CVersoesContratos(const std::string& arquivo);

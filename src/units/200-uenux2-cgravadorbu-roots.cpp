@@ -2,7 +2,8 @@
 // flags.
 // - comum::CGravadorBU's vtable (@1554132), whose slots (the destructors, fns 5857 and 11628, and GravaResultado, fn
 //   11629) the target reaches only through it: the constructor that stores it (inlined into
-//   vota::CGravaResultado::StartState, fn 12098) is not written, so its address goes into a sink.
+//   vota::CGravaResultado::StartState, fn 12098, which is not written) is written but unrooted, so its address goes
+//   into a sink, which stands for 12098.
 
 extern "C" {
 extern const char w200_vt_bu[] __asm__("_ZTVN5comum11CGravadorBUE");

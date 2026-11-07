@@ -142,7 +142,22 @@
 #   cgravadorbu.h), the helpers' being free functions of comum and their parameters' types and order beyond the
 #   target's, the four constructors' parameter lists, the place of each function without a record, and the comment
 #   lines of cgravadorbu.cpp's header. The roots file's stand-ins for fn 11629 (of fns 2853, 5859, 3817, 3818, 3819 and
-#   3824) went with it; its vtable sink stays, for the constructor 12098 holds.
+#   3824) went with it; its vtable sink stays, for 12098, which holds the constructor (below).
+# The constructor has no target index: vota::CGravaResultado::StartState (fn 12098) holds it inlined behind a 192-byte
+# frame (line 238 of the folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints, counted from
+# the line after `;; --- folded readout`). It is written in cgravadorbu.cpp ahead of AcrescentaVotoVotavel, unrooted, so
+# wasm-ld drops it and it matches nothing until 12098 is written: a public constructor that delegates to a private one
+# taking the vector, the map and four std::optionals by value, MontaOrdemCargos (file-local) building the map at +284
+# in its initializer (cgravadorbu.cpp's header says what each reading rests on). Measured on cgravadorbu.cpp.o
+# (wasm-objdump -d): the public constructor opens a 192-byte frame and stores, offset for offset, what readout lines 240
+# to 283 store (the vector moved to +180, the map to +168, the optionals built at +120, +108, +96 and +88 and copied to
+# +40, +24, +8 and +0), then calls the private one, which opens no frame and makes the calls of readout lines 284 to
+# 384 in their order (IGravador's constructor, ConverteFase, CDadoCorrespondencia's copy, comum::CCargos's GetInst,
+# RemoveFiltro, GetInst, OrdenaPorImpressao, Reset, IsFim and GetCurrent, the node's allocation,
+# __tree_balance_after_insert, Next and IsFim); binaryen would inline it at its one call (a reading). check_srcloc.py
+# --strict on the object: its 15 records are the target's. Chosen: the parameters' order and form, the private
+# constructor and its constants (the extension 4, the SAVD file 35, 49, "bu.pk1" and true), MontaOrdemCargos's name
+# and linkage, and the loop's spelling (a for over Reset, IsFim and Next; emplace with a pre-incremented byte).
 CGRAVADORBU_SRCS := src/app/comum/gravadores/md/cresultadovotacao.cpp \
   src/app/comum/gravadores/md/cresultadovotacaoporeleicao.cpp src/app/comum/gravadores/md/cvotoscargo.cpp \
   src/app/comum/gravadores/cgravadorbu.cpp
@@ -152,8 +167,8 @@ UENUX2_SRCS += $(CGRAVADORBU_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorbu.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorbu.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 W200_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
-# the constructor that stores the vtable is not written: 200-uenux2-cgravadorbu-roots.cpp stands in for it; it compiles
-# with the tree's flags
+# the constructor that stores the vtable is unrooted and its one caller, 12098, not written:
+# 200-uenux2-cgravadorbu-roots.cpp stands in for 12098; it compiles with the tree's flags
 $(ROOT)/$(APP)/200-uenux2-cgravadorbu-roots.o: $(ROOT)/src/units/200-uenux2-cgravadorbu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/200-uenux2-cgravadorbu.mk $(W200_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/200-uenux2-cgravadorbu-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/200-uenux2-cgravadorbu-roots.o

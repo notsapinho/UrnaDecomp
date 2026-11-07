@@ -20,8 +20,12 @@ class CEleitorIdentidade;
 // RTTI: an si_class of comum::IGravador. vota::CGravaResultado::StartState (fn 12098) builds it as a
 // std::shared_ptr<IGravador>(new CGravadorRCSecao), whose control block's __on_zero_shared is the shared call through the
 // vtable (fn 172), so the class is not final. Recovered: the layout, 60 bytes (12098 allocates it with f137(60)), the
-// virtual members, and the members the records name. The constructor, which 12098 holds inlined, copies the
-// api::CDateTime 12098 builds to +40, stores a phase at +52 and 0 at +56. GravaResultado (fn 11616) passes +52 to
+// virtual members, and the members the records name. The constructor, which 12098 holds inlined with no frame of its own
+// (no target index; written in cgravadorrcsecao.cpp, unrooted), calls IGravador's constructor (fn 1396) with the
+// extension 8 and the SAVD file 39, copies the api::CDateTime 12098 builds to +40, and stores at +52 and +56 what
+// CGravadorUtil::ConverteFaseEcourna and ConverteSituacaoArquivoEcourna return, each behind a 480-byte frame of its own
+// in 12098 (out of line in cgravadorutil.cpp, inlined by binaryen); the second's code is the constant 0 alone there, its
+// argument a constant every caller passed (docs/reference/facts/reading.md R1). GravaResultado (fn 11616) passes +52 to
 // CResultadoUrnaCadastro's constructor as its ecourna::app::dados::CFaseID and +56 as its ESituacaoArquivo; the records
 // cgravadorutil.cpp:113 (CGravadorUtil::ConverteFaseEcourna, which 12098 loads) and :129
 // (ConverteSituacaoArquivoEcourna, which no target function loads) return those two types: the members' types are a
@@ -36,10 +40,14 @@ class CEleitorIdentidade;
 // of an out-of-line function binaryen inlined into its one caller (src/units/122-uenux2-app-comum-gravadores.mk lists
 // the frames).
 // Chosen: every name but the records', that the three members are private, that the others are free functions
-// declared here, every parameter's name and type beyond what the records spell, and the constructor's not being
-// declared.
+// declared here, every parameter's name and type beyond what the records spell, and the constructor's parameters
+// (their order, the char it passes ConverteSituacaoArquivoEcourna, and the extension and SAVD file as constants of the
+// constructor rather than 12098's arguments: one call in 12098 cannot tell them apart).
 class CGravadorRCSecao : public IGravador {
 public:
+    CGravadorRCSecao(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+        TSecaoID secao, char fase, char situacao);
+
     virtual void GravaResultado(api::CFile& arquivo) const override;
 
 private:
