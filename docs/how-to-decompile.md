@@ -154,9 +154,10 @@ address and `size:` cover it before calling it an object only that row reads (11
 `comum::CPath::s_pathFlash` plus 16: `/usr/bin/grep -n ' = 0x1c0df0;' splat/symbol_addrs.txt` gives its `size:0x18`).
 When the readers inline a `GetInst`, that match is often another class's large slot, and the destructor waits for it. A
 hand line may name the object instead when the reader's body, read without either match, ties the address to the class
-(step 9, "Hand edits"): 10340 and 10341, `CMesarioRegistrado`'s `s_mutex` and `s_inst`, landed before their one reader
-10337 (`IGestorDadoMesario::StartState`, which holds `CMesarioRegistrado::GetInst` inlined), which differs
-(`/usr/bin/grep -n 'CMesarioRegistrado6s_instE' splat/symbol_addrs.txt`).
+(step 9, "Hand edits"): 10340 and 10341, `CMesarioRegistrado`'s `s_mutex` and `s_inst`, landed so before their one reader
+10337 (`IGestorDadoMesario::StartState`, which holds `CMesarioRegistrado::GetInst` inlined) matched; once it did, step 8
+named both objects by its votes, the destructors' matches holding the names, and the two hand lines went, idle (unit
+279's fragment).
 
 The third verdict with work left, `unresolved`, is in neither pool: 489 rows at 182dc6c1, 69 of them compiled from a
 TSE tree. Each has a body of ours, and its `detail` names the operand that has no target counterpart:

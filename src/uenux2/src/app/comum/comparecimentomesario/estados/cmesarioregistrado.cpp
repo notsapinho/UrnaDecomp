@@ -1,8 +1,8 @@
 // comum's poll-worker registration, continued: comum::CMesarioRegistrado, the state after a poll worker is registered,
 // with the operator's form it builds. The file is the one the class's record names (line 72, GetControlador, which fns
 // 10338 and 10339 hold inlined); every line here but the record's is a choice. GetInst, the constructor and the form's
-// builder are written from IGestorDadoMesario::StartState (fn 10337, not written), which holds them inlined; nothing
-// in the link calls them yet.
+// builder are written from fn 10337 (IGestorDadoMesario::StartState, unit 135), which holds them inlined. GetInst above
+// the constructor is measured for 10337 (unit 279's fragment); its place right after the destructor is a choice.
 #include "app/comum/comparecimentomesario/estados/cmesarioregistrado.h"
 
 #include "api/gui/cinteractiveform.h"
@@ -20,6 +20,15 @@ namespace comum {
 
 CMesarioRegistrado::~CMesarioRegistrado() = default;
 
+CMesarioRegistrado& CMesarioRegistrado::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CMesarioRegistrado());
+    }
+    return *s_inst;
+}
+
 CMesarioRegistrado::CMesarioRegistrado()
     : CAppState(EVENTO_ENTRADA)
 {
@@ -36,15 +45,6 @@ std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaMesari
     builder.AddTextField("CORRIGE: Encerrar  CONFIRMA: Prosseguir", api::SPoint{1, 4}, api::ALINHAMENTO_ESQUERDA);
     builder.AddInputControl();
     return builder.GetInteractiveForm("", true);
-}
-
-CMesarioRegistrado& CMesarioRegistrado::GetInst()
-{
-    std::lock_guard<std::mutex> trava(s_mutex);
-    if (!s_inst) {
-        s_inst.reset(new CMesarioRegistrado());
-    }
-    return *s_inst;
 }
 
 std::unique_ptr<CMesarioRegistrado> CMesarioRegistrado::s_inst;

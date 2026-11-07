@@ -39,8 +39,9 @@
 # - 1149: CControladorReconhecimentoMesario::GetInst (ccontroladorreconhecimetomesario.h has the evidence). Its
 #   constructor is out of line, as unit 104's singletons' (the frame opens after the new: binaryen inlined it); in the
 #   class it is not tried. 11 over 114 rows before steps 8 and 9, all operand-only (the statics' addresses). No
-#   generated route names 1149 or its statics: it has no record or vptr, the census pairs it with nothing (tier none),
-#   and its one written caller, 10337 (unit 135), is named by vtable, which casts no vote. Its two statics take hand
+#   generated route named 1149 or its statics when it landed: it has no record or vptr, the census pairs it with nothing
+#   (tier none), and its one written caller then, 10337 (unit 135), was named by vtable, which casts no vote (10337
+#   matches since, by srcloc-anchor; step 8 names 1149 by its callers' calls, evidence:call). Its two statics take hand
 #   lines in splat/symbol_addrs.txt, led by their other reader, each one's exit destructor (10306 `f349(p0, 1909960)`,
 #   10305 `f150(1909936)`); with them the content pass matches 1149, 10306 and 10305. Weighed by removal (a copy of the
 #   symbol file without the line, the match list without the rows it may carry, two scan passes beside a control, then

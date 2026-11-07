@@ -14,7 +14,8 @@
 #   ProcessInput 10317;
 # - CGestorDadoMesarioInicial, Votacao and Final, over the new head comum::IGestorDadoMesario: their statics' destructors
 #   10336 and 10334, 10333 and 10332, 10331 and 10330, whose reader is unit 104's CGestorDadoMesario::StartState (10327,
-#   matched with them: it holds the three GetInst inlined);
+#   matched with them: it holds the three GetInst inlined); IGestorDadoMesario::StartState 10337, the three states'
+#   slot 2, whose file unit 279's list compiles (below);
 # - CConfirmaFimRegistroMesarios::GetInst 5389, with its constructor and form builder inlined, and its statics'
 #   destructors 10387 and 10386; the statics' destructors of CTituloMesarioVazio (10355, 10354), CTituloMesarioInvalido
 #   (10351, 10350) and CTituloMesarioJaRegistrado (10346, 10345), whose reader is unit 71's
@@ -96,7 +97,7 @@
 #   its own then. With 5389 in the link it is the tail of 5389's string, one copy as in the target, and 5386 matches
 #   (splat-review passes both ways). Its other target caller, comum::CMesarioRegistrado's
 #   slot 2 (10339), is written in unit 279, and the roots' stand-in for it went. Band: 10360, 10359,
-#   10358 and 10357 run 3727 to 3730 in ld_index. Chosen: TelaLimiteMesariosRegistrados, its being a free function of
+#   10358 and 10357 run 4165 to 4168 in ld_index at 9f0245ef. Chosen: TelaLimiteMesariosRegistrados, its being a free function of
 #   comum declared in the class's header, its parameter, and its place at the file's end; the constructor and GetInst
 #   above the statics.
 #
@@ -130,31 +131,38 @@
 # roots file: both are in the link (unit 221's and unit 214's files), with 10316, 10465, 10474 and 10482.
 # api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
 #
-# Written, not matching:
-# - 10337, IGestorDadoMesario::StartState, in igestordadomesario.cpp (listed before the Gestor states, whose vtables
-#   follow its typeinfo in the target's data): GetControlador's record is line 65 column 12, `return` and instance() as
-#   in the other files. Evidence (pnpm wasm fn): StartState has no frame of its own; it opens with the 96-byte frame of
-#   a member binaryen inlined (RegistraMesario, a chosen name; it calls slot 9 on `this`) and, after that frame closes,
-#   stores CMesarioRegistrado::GetInst()'s result (inlined: unit 279's constructor and form) in m_pNextState.
-#   RegistraMesario: CRegistradorMesario::GetInst (fn 815), CControladorReconhecimentoMesario::GetInst (fn 1149, unit
-#   214), the controller's slot 13 (passed as the constructors' bool, pertence_secao's column), the reads of +0, +8 and
-#   the 8 bytes at +12 of 1149's object, the controller's slot 17 (GetTituloMesario) copied into the by-value string of
-#   md::CEleitorIdentidade's constructor (fn 566, TipoIDInscricaoEleitoral); then, by the optional's flag (+16), fn 2730
-#   with its value or fn 2731 without, each after Slot9() and api::CDateTime::Now() (fn 479) and followed by
-#   CRegistradorMesario::Registra (fn 5378); then CRegistradorMesario::SaveCurrentInternal behind a 16-byte frame of its
-#   own (binaryen inlined it: record cregistradormesario.cpp:85 column 15, written in unit 113's file, its throw code
-#   7754 in euecomumcomparecimentomesarioerror.h, its call the DAO's slot 3 through the servico's new inline Inserir)
-#   and the controller's slot 16. Measured in the whole link (pnpm wasm score, 10337 against ours): 289 over 761 rows
-#   (same 472, replaced 268 [264 operand-only], inserted 11, deleted 10): binaryen's local numbers, the statics'
-#   addresses and the throw's destructor slot. The locals are not renamed one for one (the target's local 0 is ours 1 at
-#   70 rows and 0 at 2, its 1 ours 2, 3 or 1), so the coalescing differs. The estado read before the dedo gives the
-#   target's order of the two loads (+0, then +8); the other order, 298 over 766 (16 inserted, 15 deleted). The same 289
-#   over 761: RegistraMesario above StartState; igestordadomesario.cpp linked after cmesarioregistrado.cpp (a scratch
-#   list). Not explained. Its three slots need it, so it stays written; the statics it reads are named by the hand lines
-#   of units 214 and 279 (src/units/279-uenux2-nomearquivoeleitores-cmesarioregistrado.mk), without which it reads
-#   `unresolved`. Chosen: RegistraMesario's name, its being private and non-const, the locals and their const, the
-#   std::optional<int> copy, `has_value()`, the temporaries passed to Registra, and the lines of igestordadomesario.cpp
-#   but the record's.
+# Measured, by function (10380 alone does not match):
+# - 10337, IGestorDadoMesario::StartState, in igestordadomesario.cpp, which unit 279's list compiles, right after
+#   cmesarioregistrado.cpp (unit 279's fragment, "The orders", has the measurement and the count; this list held it
+#   before the Gestor states, whose vtables follow its typeinfo in the target's data): GetControlador's record is line
+#   65 column 12, `return` and instance() as in the other files. Evidence (pnpm wasm fn): StartState has no frame of its
+#   own; it opens with the 96-byte frame of a member binaryen inlined (RegistraMesario, a chosen name; it calls slot 9
+#   on `this`) and, after that frame closes, stores CMesarioRegistrado::GetInst()'s result (inlined: unit 279's
+#   constructor and form) in m_pNextState. RegistraMesario: CRegistradorMesario::GetInst (fn 815),
+#   CControladorReconhecimentoMesario::GetInst (fn 1149, unit 214), the controller's slot 13 (passed as the
+#   constructors' bool, pertence_secao's column), the reads of +0, +8 and the 8 bytes at +12 of 1149's object, the
+#   controller's slot 17 (GetTituloMesario) copied into the by-value string of md::CEleitorIdentidade's constructor (fn
+#   566, TipoIDInscricaoEleitoral); then, by the optional's flag (+16), fn 2730 with its value or fn 2731 without, each
+#   after Slot9() and api::CDateTime::Now() (fn 479) and followed by CRegistradorMesario::Registra (fn 5378); then
+#   CRegistradorMesario::SaveCurrentInternal behind a 16-byte frame of its own (binaryen inlined it: record
+#   cregistradormesario.cpp:85 column 15, written in unit 113's file, its throw code 7754 in
+#   euecomumcomparecimentomesarioerror.h, its call the DAO's slot 3 through the servico's new inline Inserir) and the
+#   controller's slot 16. It matches (step 9, evidence:srcloc-anchor) with CMesarioRegistrado::GetInst defined above the
+#   class's constructor and this file linked after cmesarioregistrado.cpp, both: in the whole link at 9f0245ef (pnpm
+#   wasm score, 10337 against ours), `69 over 750 rows (same 681, replaced 69 [69 operand-only], inserted 0, deleted 0)`
+#   before step 8, and with either alone `289 over 761 rows (same 472, replaced 268 [264 operand-only], inserted 11,
+#   deleted 10)`, as before both: binaryen's local numbers, not renamed one for one (the target's local 0 was ours 1 at
+#   70 rows and 0 at 2, its 1 ours 2, 3 or 1). Measured on that link, the object swapped on a copy of the plain link.cmd
+#   (docs/reference/facts/workflow.md W13): the estado read before the dedo gives the target's order of the two loads
+#   (+0, then +8), the other order `75 over 752 rows (same 677, replaced 71 [71 operand-only], inserted 2, deleted 2)`
+#   (298 over 766 at the old order); RegistraMesario defined above StartState, and the next-state store through
+#   comum::CAppState::SetNextState, each give the module of the source as written (sha256 4da35798fc27afe9...), so they
+#   are same-bytes forms. The statics it reads, through the inlined GetInst, are CMesarioRegistrado's: step 8 names them
+#   by its votes, and their exit destructors' matches hold the names (unit 279's fragment, whose hand lines for them
+#   went, idle). Chosen: RegistraMesario's name, its being private and non-const, the locals and their const, the
+#   std::optional<int> copy, `has_value()`, the temporaries passed to Registra, the assignment of m_pNextState and the
+#   order of the two definitions (each against its same-bytes form above), and the lines of igestordadomesario.cpp but
+#   the record's.
 # - 10380, CEncerraRegistroMesarios::StartState: the scan says `the locals`. The target stores m_pNextState before its
 #   stack prologue. It is read as a frameless StartState with an out-of-line member binaryen inlined, a reading: how-to
 #   step 3 does not list a store before the only prologue among binaryen's tells. So the switch is in
@@ -231,10 +239,10 @@
 # functions, declared first.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# igestordadomesario.cpp, this unit's, is compiled by unit 279's list, after cmesarioregistrado.cpp (10337, above).
 COMUM_MESARIO_ESTADOS_SRCS := src/app/comum/comparecimentomesario/estados/cconfirmafimregistromesarios.cpp \
     src/app/comum/comparecimentomesario/estados/cdigitalmesarionaoreconhecida.cpp \
     src/app/comum/comparecimentomesario/estados/cencerraregistromesarios.cpp \
-    src/app/comum/comparecimentomesario/estados/igestordadomesario.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesarioinicial.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesariovotacao.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesariofinal.cpp \
