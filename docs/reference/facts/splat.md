@@ -975,24 +975,23 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     no data vote for an operand whose value is the same on both sides (`dataVote` in
     `asmlift-wasm/src/splat-symbols.ts`: "the same value on both sides is an integer (or an address both layouts share):
     it says nothing"), so a link that puts `provider_core.o`'s `provider_store_method` and `core_dispatch_` at the
-    target's 0x199278 and 0x199290 drops their lines (`vote:13` and `vote:1 by:3138`), and 3138, which reads
-    `unresolved self-voted` on `core_dispatch_`'s name, its one voter, re-points the operand by content and matches
-    (`address content-repointed` in its scan row).
-    Unit 159's candidatura converters gave such a link on 76661cb7, with no row that read either name leaving `match`.
-    Merged on top of 11865's object, cgeracaoversoescontratos.cpp.o (11635, 11636) and `main`'s data since 76661cb7,
-    the same converters leave the two 0x300 higher (`/usr/bin/grep -E '\.(provider_store_method|core_dispatch_)\)$'
-    build/out/wasm-map/vota_web/vota_web_wasm.map` printed 199578 and 199590), the two lines stay, and 3138 reads
-    `unresolved self-voted` (`awk -F'\t' '$1==3138 {print $5, $6}' splat/scan.tsv`): how-to step 9's data-layout case,
-    and its match line was withdrawn, no later merge of that batch moving the data back. Found by its content (its 48
-    `OSSL_DISPATCH` ids at 8-byte strides) in each plain link, `core_dispatch_` sat at 0x199140 on c3a97777, moved
-    +0xd0 with 11865's object, +0xe0 with cgeracaoversoescontratos.cpp.o and +0x2a0 with the converters. What refuses
-    3138 is `core_dispatch_`'s line alone: on the merged link a copy of the symbol file without it
-    (`provider_store_method`'s `vote:13` line kept) gives 3138 `match` and the splat build the target's sha256, and the
-    committed file `UNCONFIRMED: self-voted`. A landing whose data puts `core_dispatch_` back at 0x199290 brings 3138
-    back by content (how-to step 9, "A row of another unit can turn `match`"), and so does a match of `core_get_params`
-    (6996, `no-candidate`, ours 24 over 96 rows), the one function among its 48 entries our link does not name: our
-    object's bytes then agree with the target's, and the name holds wherever the data falls
-    ([glossary](../../glossary.md) "self-voted"). Either adds it to the list again.
+    target's 0x199278 and 0x199290 drops their lines (`vote:13` and `vote:1 by:3138`), and 3138, which reads `unresolved
+    self-voted` on `core_dispatch_`'s name, its one voter, re-points the operand by content and matches (`address
+    content-repointed` in its scan row). Unit 159's candidatura converters gave such a link on 76661cb7, with no row
+    that read either name leaving `match`. Merged on top of 11865's object, cgeracaoversoescontratos.cpp.o (11635,
+    11636) and `main`'s data since 76661cb7, the same converters leave the two 0x300 higher (`/usr/bin/grep -E
+    '\.(provider_store_method|core_dispatch_)\)$' build/out/wasm-map/vota_web/vota_web_wasm.map` printed 199578 and
+    199590 at 0c3a9009), the two lines stay, and 3138 reads `unresolved self-voted` (`awk -F'\t' '$1==3138 {print $5,
+    $6}' splat/scan.tsv`): how-to step 9's data-layout case, and its match line was withdrawn, no later merge of that
+    batch moving the data back. Found by its content (its 48 `OSSL_DISPATCH` ids at 8-byte strides) in each plain link,
+    `core_dispatch_` sat at 0x199140 on c3a97777, moved +0xd0 with 11865's object, +0xe0 with
+    cgeracaoversoescontratos.cpp.o and +0x2a0 with the converters. What refuses 3138 is `core_dispatch_`'s line alone:
+    on the merged link a copy of the symbol file without it (`provider_store_method`'s `vote:13` line kept) gives 3138
+    `match` and the splat build the target's sha256, and the committed file `UNCONFIRMED: self-voted`. A landing whose
+    data puts `core_dispatch_` back at 0x199290 brings 3138 back by content (how-to step 9, "A row of another unit can
+    turn `match`"), and so does a match of `core_get_params` (6996, `no-candidate`, ours 24 over 96 rows), the one
+    function among its 48 entries our link does not name: our object's bytes then agree with the target's, and the name
+    holds wherever the data falls ([glossary](../../glossary.md) "self-voted"). Either adds it to the list again.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

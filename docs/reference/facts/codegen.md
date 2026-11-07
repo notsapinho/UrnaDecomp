@@ -548,27 +548,27 @@ Take the record-aware count. With `names` added, it lists the record-aware objec
 and target addresses: those listed at one place and not at the other are the pairs the move inverts or restores, and
 for a file at two places they are the objects linked between them. A count the moved object has no rank for prints
 `skipped`: one with records and no vtable has the record-aware line alone (`cqrcodeimagepaper.cpp.o` at c3a97777, 341
-in unit 296's list and 332 before `cstringutils.cpp.o`). One whose only named data are `.bss` statics (a singleton's) has neither: with `bss` the
-script ranks every object by its `.bss` names alone, records left out, and counts that segment (`cestadoaudio.cpp.o`,
-43 at the head of unit 110's list, 45 after `celeitores.cpp.o`); never mix it with the other two. A place is a
-position between two objects: inside a list weighed, count every position (`before:` each of its objects, `after:` the
-last), since the list's head can invert fewer pairs than the place beside a data neighbour (unit 159's two files: 273
-at the head of unit 225's list, 276 beside `cvisitanteeleitor.cpp.o`, at 525b5b8a). Count on the plain
-`build/out/wasm/vota_web/link.cmd` of the committed state: a
-home-made count over a link line that holds a variant object under another path drops that object's pairs with no
-message (unit 278's move counted 478 and 31 so, against 515 and 33 over the plain line). The count reads which objects'
-data the symbol file names, so it moves as later landings name data, with no object moving (unit 278's move: 515 agree
-and 33 inverted at b3b6d4bb, 537 and 39 on the merged link at fac8e5ce); `src/units/README.md` "Names" says what a
-fragment states with it and when a landing counts again. Confirm the chosen place with a scratch link of the plain
-`link.cmd` with the object moved ([workflow.md](workflow.md) §W13, "One variant object"). The target's `.rodata` (`_ZTS`
-names, strings) orders apart, so never mix the two segments ([link-order.md](link-order.md) §L7 item 15 reads one
-object's run). A destination neighbour that is itself out of the data's order with the objects crossed makes every
-crossed pair an inversion: `citensmenuvota.cpp` moved after `ctelasvota.cpp`, its data neighbour, inverted more than it
-restored, with 6599 at `306 over 2151` either way, so it stayed in unit 102's list. A function moved between two files
-that stay in place reorders no object: its code and the linkonce data it emits change object, so read the target's
-neighbours of that data (§P4) and of the function in its band (how-to step 3, rule 5), not a count over our order. 3675
-(`api::AddInputMenuField`) emits `__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316)
-follows `cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
+in unit 296's list and 332 before `cstringutils.cpp.o`). One whose only named data are `.bss` statics (a singleton's)
+has neither: with `bss` the script ranks every object by its `.bss` names alone, records left out, and counts that
+segment (`cestadoaudio.cpp.o`, 43 at the head of unit 110's list, 45 after `celeitores.cpp.o`); never mix it with the
+other two. A place is a position between two objects: inside a list weighed, count every position (`before:` each of its
+objects, `after:` the last), since the list's head can invert fewer pairs than the place beside a data neighbour (unit
+159's two files: 273 at the head of unit 225's list, 276 beside `cvisitanteeleitor.cpp.o`, at 525b5b8a). Count on the
+plain `build/out/wasm/vota_web/link.cmd` of the committed state: a home-made count over a link line that holds a variant
+object under another path drops that object's pairs with no message (unit 278's move counted 478 and 31 so, against 515
+and 33 over the plain line). The count reads which objects' data the symbol file names, so it moves as later landings
+name data, with no object moving (unit 278's move: 515 agree and 33 inverted at b3b6d4bb, 537 and 39 on the merged link
+at fac8e5ce); `src/units/README.md` "Names" says what a fragment states with it and when a landing counts again. Confirm
+the chosen place with a scratch link of the plain `link.cmd` with the object moved ([workflow.md](workflow.md) §W13,
+"One variant object"). The target's `.rodata` (`_ZTS` names, strings) orders apart, so never mix the two segments
+([link-order.md](link-order.md) §L7 item 15 reads one object's run). A destination neighbour that is itself out of the
+data's order with the objects crossed makes every crossed pair an inversion: `citensmenuvota.cpp` moved after
+`ctelasvota.cpp`, its data neighbour, inverted more than it restored, with 6599 at `306 over 2151` either way, so it
+stayed in unit 102's list. A function moved between two files that stay in place reorders no object: its code and the
+linkonce data it emits change object, so read the target's neighbours of that data (§P4) and of the function in its band
+(how-to step 3, rule 5), not a count over our order. 3675 (`api::AddInputMenuField`) emits
+`__shared_ptr_emplace<api::CInputMenuField>`'s control block, whose vtable (1579316) follows
+`cinteractiveformbuilder.cpp`'s own block (1579276), and its band puts it between `cframedtext.cpp`'s 3676 and
 `cmtformbuilder.cpp`'s 3674. A new file whose data neighbours already sit out of the data's order in our link goes
 between them where they are adjacent; `src/units/README.md` "Names" says which places a new file weighs and what its
 fragment names.
@@ -1142,8 +1142,7 @@ for f in _Z4Onceii _Z5Twiceii; do printf '%s: ' $f; wasm-objdump -d $P/ext16.o |
 
 The same shift pair comes from a `TPosition` local, `++` or `+= 1` on one, two `int` uses, `std::abs(a - b) + 1` and
 `std::to_string` of it, at every level from `-O1` to `-Oz`, and the target holds no such pair. A maximum less a minimum
-of
-one block folds into an absolute difference, `select(a > b, a - b, b - a)`. So the target's
+of one block folds into an absolute difference, `select(a > b, a - b, b - a)`. So the target's
 `extend16_s(sub(max, min) + 1)` in `simulador::CWasmScreen::DrawText` (9104) and `extend16_s(abs(x1 - x2) + 1)` into
 `std::to_string(int)` in `Refresh` (9018) come from neither a value used once as an `int` nor one computed before the
 branch; an external helper with `TPosition` parameters would give them, but clang inlines it (cost 230 against 250),

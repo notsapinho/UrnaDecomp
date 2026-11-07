@@ -13,7 +13,8 @@
 #         link order gives the name), which match those indices
 #   5737  void comum::CRdv::SalvaInterno() const   crdv.cpp, by the content pass
 #   5736  void comum::CRdv::SalvaExterno() const   crdv.cpp, by the content pass
-# and, written and not matched, api::CEncryptedFile's constructor (1692, unit 128's file), named by a hand line (below):
+# and, written and not matched, api::CEncryptedFile's constructor (1692, unit 128's file), named by step 8 from
+# the calls of 6734 and 7174 (below):
 # it scores 5 over 30 rows (pnpm wasm score: 2 replaced, 3 deleted, the target's three zero stores, i32 +16, i64 +8 and
 # i32 +20, against our two i64 stores), and every form measured stores +16 and +20 as one (fragment 128 lists them).
 #
