@@ -6,7 +6,8 @@
 # its const overload (261, 903), GetCodigosCarga (3788), EhTreinamentoEleitor (697), GetIdentificacaoUrna (1942), TemVota
 # (2841, below), IndiceTurno (1553, below), and CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
 # static destructors (11512, 11513, 11502, 11503), the constructors (3756, 3751), the destructors (2818, 2815) and their
-# __tree::destroy (1934, 1932). 376, vector<string>::push_back(&&), comes with GetCodigosCarga.
+# __tree::destroy (1934, 1932), and comum::NumeroPartidoCorrente (11499, below). 376, vector<string>::push_back(&&),
+# comes with GetCodigosCarga.
 # GetGap's non-const overload has no index of its own: vota::IQRCodeBUDS::GeraPartes (inlined into fn 1956, unit 37's)
 # holds it, and with it GetEstado's non-const instance for CEstadoGeralGap (record line 42), inlined by binaryen with
 # GetGap's frame. Its place beside the const overload is a choice.
@@ -43,6 +44,25 @@
 # CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
 # base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
 # members, the form before (both built at the tree's flags, before and after the change).
+# comum::NumeroPartidoCorrente (11499, a chosen name), in cpartidos.cpp after SiglaPartidoCorrente (11501, unit 378's
+# fragment): the current party's number in the format it is given. cpartidos.h has the evidence: table slot 1100, which
+# 7787 alone stores, in a CDataTextFmt<const std::string (*)(const std::string &)> with "{}" (vptr 1538280; 12110's
+# i32.const 1100 is the size it passes to CGeradorBUQRCode::Gera, fn 5604, and the other functions that load 1100,
+# RHVoice's, OpenSSL's, vsyslog and IPower's Slot5, use it as an integer); GetInst's code in its body; band 1's order
+# (11503, 11502, 11501, 11499, a lower index later in the link), which names.tsv's ld_index keeps with the function
+# defined after SiglaPartidoCorrente; argument type 3, an int. The roots take its address for 7787's store.
+# ConstroiPartidos, which stood for it as the constructor's second caller, went (819, 11499 and 11501 call 3751 in the
+# link), and so did unit 113's AvancaUm and AvancaDois, which stood for the callers of the parties' map's GetCurrent
+# (1283) and Next (3697), all in the link with it: a link with those two and one without differ in their bodies and
+# __wasm_call_ctors alone (pnpm wasm fingerprint of both, addr column), and step 9's join moves no row but 11499. Scored
+# 16 over 237 rows before step 8, all operand-only (s_inst's and s_mutex's addresses, the format buffer's table slot,
+# calls and data addresses); no evidence names it while 7787 is unwritten, and step 9's content pass matched it. The
+# same object (cmp of cpartidos.cpp's object compiled with each from one path): the local as const int, int or long; the
+# party read through a const md::CPartido* local, or GetInst() called in the expression with no reference; the
+# statements in a try with a catch (...) that returns the format string (the tree compiles without -fexceptions, and the
+# handler leaves no code). Another object: a short local (i32.load16_s), a ueword or unsigned local (argument type 6),
+# and a catch of const std::format_error& (the same function, std::format_error's typeinfo first in the object's data).
+# GetNumero() passed to std::make_format_args does not compile: it takes lvalues only.
 #
 # Names from evidence: GetGeral, GetVota and GetGap are the literals the three pass to their throws; IndiceTurno and
 # GetEstado<ESTADO> are records (cappinfo.cpp:472, :42, :57); EUeComumAppInfoError and its limits are RTTI; CFotos and
@@ -130,7 +150,8 @@
 #   the rows).
 #
 # Chosen, no evidence names them: every data member's name but those the ASN.1 fields give; every parameter's; GetInst for
-# CLocal, CCandidaturas, CFotos and CPartidos (the records give it to CRespostas and CEleitores); GetCodigosCarga,
+# CLocal, CCandidaturas, CFotos and CPartidos (the records give it to CRespostas and CEleitores); NumeroPartidoCorrente,
+# its being a free function and its local's spelling (cpartidos.h); GetCodigosCarga,
 # EhTreinamentoEleitor and GetIdentificacaoUrna, from their bodies and the literal "Codigo identificacao UE"; the getters GetTurno,
 # GetFase, GetNumeroInternoUrna, GetCodigoCarga, GetTreinamentoEleitor, GetDadoCarga and GetCorrespondencia, from the members
 # they read, which no target string names; cappinfosingleton.cpp, cestadogeralgap.cpp, cpartidos.*, cfotos.h, cappinfo.h,

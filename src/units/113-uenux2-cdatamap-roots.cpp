@@ -1,21 +1,22 @@
-// Roots: api::CDataMap<KeyType, RecordType> (api/io/cdatamap.h), a class template whose users are not reconstructed
-// yet, instantiated as the target's records spell it and reached the way the target reaches it. The bodies are the
-// template's instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's
-// flags, so no match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
-// -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplied, 1283, 3697, 3741 and
-// 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
-// 3697 and 5611 come from the first objects on the link line to instantiate them: 1283 from cpartidos.cpp's (for
-// comum::SiglaPartidoCorrente, 11501), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's 11254 and 11255). 3741 comes
-// from cjustificador.cpp's object, whose Justifica (held by unit 283's 10590) is its first user on the link line. Each
-// function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
+// Roots: api::CDataMap<KeyType, RecordType> (api/io/cdatamap.h), a class template, and the std::map members its users
+// reach, the way the target reaches them. The list below names each function's target callers; the stand-ins over the
+// maps' GetCurrent and Next went as those callers came into the link, and only ContaEleitor is left. This object
+// compiles at the tree's flags, so no match rests on a flag its tree lacks; fragment 113 says what that decides.
+// src/api/'s own objects drop -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object
+// supplied, 1283, 3697, 3741 and 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It
+// supplies none of them now: 1283, 3697 and 5611 come from the first objects on the link line to instantiate them: 1283
+// from cpartidos.cpp's (for comum::SiglaPartidoCorrente, 11501), 3697 and 5611 from cgeradorbu.cpp's (for unit 139's
+// 11254 and 11255). 3741 comes from cjustificador.cpp's object, whose Justifica (held by unit 283's 10590) is its first
+// user on the link line. Each function here has two call sites or more, as each has in the target, so binaryen keeps it
+// out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7, all in the link: 2268, 2838, 5604, 6999, 11254, 11972
-//   and 11973), 1283 (9: 5604, 11181, 11213, 11255, 11260, 11261, 11501 and 11976 are in the link), 3125 (4, all in the
-//   link). All four in the link are what makes binaryen form 2919: the second parameter of that body is the pair's
-//   second member's offset, 32 or 20.
+//   and 11973), 1283 (9, all in the link: 5604, 11181, 11213, 11255, 11260, 11261, 11499, 11501 and 11976), 3125 (4,
+//   all in the link). All four in the link are what makes binaryen form 2919: the second parameter of that body is the
+//   pair's second member's offset, 32 or 20.
 // - Next, three: 3697 (5604, 11213 and 11255, all in the link), 5601 (12105 and 11206, both in the link), 5611 (5604
 //   and 11254, both in the link), which form 3892. The stand-ins over the candidaturas' map went with 5604 (unit 155's
-//   written Gera) in the link, and those over the voters' map with 12105 (fragment 372's); those over the parties' map
-//   stay for 1283's callers.
+//   written Gera) in the link, those over the voters' map with 12105 (fragment 372's), and those over the parties' map
+//   (AvancaUm and AvancaDois) with 11499 (unit 109's comum::NumeroPartidoCorrente), the last of 1283's callers.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741, needs no stand-in: its target callers 5725, 10587 and 10590 are in the link.
 //   Add over this key, 5725 (6734, 10590), and the copy of the pair's second member, 3743 (5725, 6734, 10590): 10590
@@ -40,30 +41,9 @@
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 
-#include "api/io/cdatamap.h"
-#include "app/comum/dados/md/cpartido.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 
-using TMapaPartidos = api::CDataMap<unsigned short, comum::md::CPartido>;
-
 namespace {
-
-// Stands for the callers of GetCurrent and Next listed above.
-template <typename TMapa>
-__attribute__((noinline)) bool AvancaUm(TMapa& mapa)
-{
-    auto* primeiro = mapa.GetCurrent();
-    mapa.Next();
-    return primeiro == mapa.GetCurrent();
-}
-
-template <typename TMapa>
-__attribute__((noinline)) bool AvancaDois(TMapa& mapa)
-{
-    mapa.Next();
-    mapa.Next();
-    return mapa.GetCurrent() != nullptr;
-}
 
 // Stands for 10842 (2225, 2264 and 3614 are in the link), which searches and inserts in another tree of this key.
 __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa,
@@ -81,8 +61,6 @@ const void* volatile w113_sink;
 struct SW113Roots {
     SW113Roots()
     {
-        w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaPartidos>);
-        w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
     }
 } w113_roots;

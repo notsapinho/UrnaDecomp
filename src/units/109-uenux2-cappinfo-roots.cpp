@@ -1,12 +1,13 @@
 // Roots: keep the members of comum::CAppInfo, CFotos and CPartidos in the skeleton link the way the target keeps them. Their
-// users are not reconstructed yet. Fns 185, 291, 261 and 1942 hold table slots (33, 35, 50 and 1567, in the target's elem
-// segment), so each has its own address taken: that is the reference the target has, and a table entry keeps a body out of
-// line whatever its callers. It also keeps a parameter, which is why fn 261 has one although all 86 of its direct calls pass
-// 51. The others have direct callers and no slot (ledger/callgraph.tsv), so a noinline stand-in gives each two call sites,
-// counting the reconstructed ones, and binaryen keeps its body out of line. Each stand-in's comment names the target callers
-// it stands for. Every target caller of GetVota's const overload and of GetCodigosCarga passes TURNO_ATUAL, 51, so the
-// stand-ins do, and binaryen folds it as the target's did (fns 903 and 3788 have no parameter for it). Declared through asm
-// labels with the object's signatures; address-taken from a static constructor.
+// users are not reconstructed yet. Fns 185, 291, 261, 1942 and 11499 hold table slots (33, 35, 50, 1567 and 1100, in
+// the target's elem segment), so each has its own address taken: that is the reference the target has, and a table
+// entry keeps a body out of line whatever its callers. It also keeps a parameter, which is why fn 261 has one although
+// all 86 of its direct calls pass 51. The others have direct callers and no slot (ledger/callgraph.tsv), so a noinline
+// stand-in gives each two call sites, counting the reconstructed ones, and binaryen keeps its body out of line. Each
+// stand-in's comment names the target callers it stands for. Every target caller of GetVota's const overload and of
+// GetCodigosCarga passes TURNO_ATUAL, 51, so the stand-ins do, and binaryen folds it as the target's did (fns 903 and
+// 3788 have no parameter for it). Declared through asm labels with the object's signatures; address-taken from a static
+// constructor.
 extern "C" {
 int w185() __asm__("_ZN5comum8CAppInfo7GetInstEv");
 int w291(int) __asm__("_ZN5comum8CAppInfo8GetGeralEv");
@@ -17,7 +18,8 @@ void w3788(int, int, int) __asm__("_ZNK5comum8CAppInfo15GetCodigosCargaENS_10EUr
 int w2841(int, int) __asm__("_ZNK5comum8CAppInfo7TemVotaENS_10EUrnaTurnoE");
 int w819() __asm__("_ZN5comum9CPartidos7GetInstEv");
 int w2819() __asm__("_ZN5comum6CFotos7GetInstEv");
-int w3751(int) __asm__("_ZN5comum9CPartidosC1Ev");
+void w11499(void*, const void*)
+    __asm__("_ZN5comum21NumeroPartidoCorrenteERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 }
 
 namespace {
@@ -51,10 +53,9 @@ __attribute__((noinline)) int Partidos() { return 7 * w819() + 1; }
 // Stands for fn 2819's caller 7787 (12520, unit 110's, and 12641, unit 378's CDataImage<CCandidaturasDSFoto>::GetData,
 // are in the link): one call, the one that stood for 12641 having gone with it.
 __attribute__((noinline)) int Fotos() { return 1 - 9 * w2819(); }
-// Stands for fn 11499, which holds CPartidos::GetInst inlined: a second caller of the constructor, not written (3755,
-// which holds it too, and 11501, unit 378's comum::SiglaPartidoCorrente, are in the link). The stand-in for CFotos'
-// constructor's caller 12641 went: 12641 is in the link (unit 378), as the one for its two calls of fn 3755 did.
-__attribute__((noinline)) void ConstroiPartidos(int a) { w3751(a + 4); }
+// The stand-in for CPartidos' constructor's caller 11499 went: 11499 (comum::NumeroPartidoCorrente, below) is in the
+// link, beside 819 and 11501, the constructor's other target callers. The stand-in for CFotos' constructor's caller
+// 12641 went: 12641 is in the link (unit 378), as the one for its two calls of fn 3755 did.
 // The stand-in for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) caller 7174 went: it is linked (unit
 // 241), with 491 and 10590 (units 205 and 283).
 
@@ -70,7 +71,9 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&Votos);
         cappinfo_sink = reinterpret_cast<const void*>(&Partidos);
         cappinfo_sink = reinterpret_cast<const void*>(&Fotos);
-        cappinfo_sink = reinterpret_cast<const void*>(&ConstroiPartidos);
+        // comum::NumeroPartidoCorrente (11499, elem[1100]: 7787, which stores the slot in a CDataTextFmt; 12110's
+        // i32.const 1100 is the size it passes to CGeradorBUQRCode::Gera, 5604, not the slot).
+        cappinfo_sink = reinterpret_cast<const void*>(&w11499);
     }
 } cappinfo_roots;
 
