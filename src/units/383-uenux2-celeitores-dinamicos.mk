@@ -60,9 +60,10 @@
 #   (codegen.md C4). The target's data put that file there: records @1558832 celeitordetalhe.cpp, @1558940
 #   celeitordinamicodao.cpp, @1559096 celeitores.cpp. So unit 110's list holds the file between those two now, and unit
 #   91's no longer does. codegen.md C4's count of objects out of the data order against it: 243 at unit 91's place, 150
-#   here (at 9f280681). The move renames four twins' match lines to CEleitorDinamicoDAO's, whose object now links ahead
-#   of cjustificadordao.cpp's: 1704 and 3767 (the DAOs' D2 and D0) and binaryen's 2297 and 3894; 1715 (CBaseError<
-#   api::EUePersistenciaError>'s constructor) and 5760 (construct_at<CEleitorDinamico>) match from its object now.
+#   here (at 9f280681, the vtables-only count C4 had then). The move renames four twins' match lines to
+#   CEleitorDinamicoDAO's, whose object now links ahead of cjustificadordao.cpp's: 1704 and 3767 (the DAOs' D2 and D0)
+#   and binaryen's 2297 and 3894; 1715 (CBaseError< api::EUePersistenciaError>'s constructor) and 5760
+#   (construct_at<CEleitorDinamico>) match from its object now.
 #
 # The sets at +52 of CEleitores and +604 of CConfiguracaoEleicao take md::ETipoAbrangencia (celeitores.h,
 # cconfiguracaoeleicao.h): DynamicCreate compares the first's elements with 0, 1 and 2 against GetAbrangencia's
