@@ -41,11 +41,14 @@
 #   class it is not tried. 11 over 114 rows before steps 8 and 9, all operand-only (the statics' addresses). No
 #   generated route named 1149 or its statics when it landed: it has no record or vptr, the census pairs it with nothing
 #   (tier none), and its one written caller then, 10337 (unit 135), was named by vtable, which casts no vote (10337
-#   matches since, by srcloc-anchor; step 8 names 1149 by its callers' calls, evidence:call). Its two statics take hand
+#   matches since, by srcloc-anchor; step 8 names 1149 by its callers' calls, evidence:call). Its two statics took hand
 #   lines in splat/symbol_addrs.txt, led by their other reader, each one's exit destructor (10306 `f349(p0, 1909960)`,
-#   10305 `f150(1909936)`); with them the content pass matches 1149, 10306 and 10305. Weighed by removal (a copy of the
-#   symbol file without the line, the match list without the rows it may carry, two scan passes beside a control, then
-#   splat-build on the copies): the pointer's line carries 1149 and 10306, the mutex's 1149 and 10305.
+#   10305 `f150(1909936)`), with which the content pass matched 1149, 10306 and 10305. Step 8 names both statics by
+#   1149's votes now (evidence:vote, by:1149), the matches of 10306 and 10305 holding the names (docs/reference/splat.md
+#   "No circular evidence"), and the two lines went, idle. Weighed by removal (copies of the symbol file without each
+#   line and without both, the match list without 1149, 10305 and 10306, two scan passes beside a control, then
+#   splat-build on the copies): every row stays and the build gives the target's sha256; with both names out on both
+#   sides of the marker, 1149 reads unresolved and 10306 and 10305 differ.
 # - Order: inside the use band of 5370, 5373 and 5374 (ledger/ordinals.tsv) and the object, a higher index has the lower
 #   ld_index in build/out/wasm-map/vota_web/names.tsv (5374, 5373, 5370), as docs/how-to-decompile.md step 3 wants. 5385,
 #   in the same band, comes before 5374 in the target, so its source is listed first here, a choice the data allow.
