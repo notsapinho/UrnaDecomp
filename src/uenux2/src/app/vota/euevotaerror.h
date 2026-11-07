@@ -220,6 +220,27 @@ enum EUeVotaError {
     // the screen and the messages: no evidence names them
     EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_CARGO_INVALIDO = 9334,
     EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_SUPLENTES_INCOMPATIVEIS = 9335,
+    // the values are the codes the other screen builders of ctelasvota.cpp's anonymous namespace throw, each with
+    // vota::MensagemErroCargo's text, when the post is not of the screen's kind: adicionaBaseTelaCompletaCandidatoCom1
+    // (target fn 6671, records ctelasvota.cpp:853 and :858) and adicionaBaseTelaCompletaCandidatoCom2 (fn 6660, :890 and
+    // :895) over "não é de candidato" and "com número de suplentes incompatível", adicionaBaseTelaCompletaConsulta (fn
+    // 6652, :942) and adicionaBaseTelaVotoBrancoConsulta (fn 6641, :993) over "não é de consulta", and
+    // adicionaBaseTelaCandidatoInexistente (fn 6605, :1075), adicionaBaseTelaCandidatoInapto (fn 6603, :1101) and
+    // adicionaBaseTelaVotoLegenda (fn 6602, :1126) over "não é de proporcional"; the names are chosen from the screens
+    // and the messages: no evidence names them
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_CARGO_INVALIDO = 9336,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_SUPLENTES_INCOMPATIVEIS = 9337,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_CARGO_INVALIDO = 9338,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_SUPLENTES_INCOMPATIVEIS = 9339,
+    EUE_VOTA_TELA_COMPLETA_CONSULTA_CARGO_INVALIDO = 9340,
+    EUE_VOTA_TELA_VOTO_BRANCO_CONSULTA_CARGO_INVALIDO = 9342,
+    EUE_VOTA_TELA_CANDIDATO_INEXISTENTE_CARGO_INVALIDO = 9345,
+    EUE_VOTA_TELA_CANDIDATO_INAPTO_CARGO_INVALIDO = 9346,
+    EUE_VOTA_TELA_VOTO_LEGENDA_CARGO_INVALIDO = 9347,
+    // the value is the code the text of a candidate who does not run (target fn 13101, record ctelasvota.cpp:294,
+    // reached by table slot 1099 from fn 6603) throws when comum::CCandidaturas' cursor is at the end; the name is
+    // chosen from its message, "Nao foi posicionado no candidato corretamente": no evidence names it
+    EUE_VOTA_CANDIDATO_NAO_POSICIONADO = 9333,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

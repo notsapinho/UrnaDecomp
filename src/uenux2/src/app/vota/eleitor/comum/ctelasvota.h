@@ -235,7 +235,7 @@ public:
     // the vector's words were reloaded after the calls and the first emplace_back kept its fast path). Its other target
     // caller is 7787. The name, from the screen's, its place in ctelasvota.cpp and the bool's name are chosen.
     static CFormInterativoTelaVota CriaTelaAntesHorarioZeresima();
-    // The vote screens CTelasVota's constructor (fn 7787, not written) builds per post, each a CInteractiveFormBuilder
+    // The vote screens CTelasVota's constructor (inlined in fn 7787) builds per post, each a CInteractiveFormBuilder
     // over vota::CPreShowProgressBar (std::make_shared, the block's vptr @1536976 that every one stores). Evidence for
     // the names: the record ctelasvota.cpp:1585 (fn 3064, its signature and its throw) and, for the others, the name
     // each passes as the screen's to vota::MensagemErroCargo's builders ("CriaTelaVotoNuloConsulta", ...) and the
@@ -250,8 +250,8 @@ public:
     // are parameters, and how many, is chosen (6608's own three are its record's, ctelasvota.cpp:1049). The
     // parameters' names are chosen. Written and matched: 1767, 3063, 3064, 3067, 6592, 6601, 6616 and 6626; written
     // and differing: 1591 (frame offsets). CriaTelaCompletaCandidatoCom0 (fn 6639) and
-    // CriaTelaConferenciaCandidatoCom0 (fn 6681) are declared only: their adicionaBaseTelaCompletaCandidatoCom0 (6678)
-    // and its callees are not written.
+    // CriaTelaConferenciaCandidatoCom0 (fn 6681) are written and match too, over adicionaBaseTelaCompletaCandidatoCom0
+    // (6678, matched) and its callees (src/units/378-uenux2-ctelasvota-criatela.mk).
     static CFormInterativoTelaVota CriaTelaVotoCargoSemCandidato(const comum::md::CCargo& cargo, api::TPosition largura);
     static CFormInterativoTelaVota CriaTelaVotoBrancoCandidato(const comum::md::CCargo& cargo);
     static CFormInterativoTelaVota CriaTelaConferenciaVotoBrancoCandidato(const comum::md::CCargo& cargo);
@@ -270,6 +270,30 @@ public:
     static CFormInterativoTelaVota CriaTelaConfirmaImpressaoZeresima(const std::string& texto);
     static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaFim(const std::string& texto, api::TFontSize tamanhoFim,
                                                                  api::TFontSize tamanhoTexto);
+    // Fourteen more vote screens of the posts, each built over one of ctelasvota.cpp's anonymous-namespace builders
+    // (target fns 6602, 6603, 6605, 6641, 6652, 6660 and 6671, two screens each). Evidence: fn 7787 holds each behind a
+    // stack-pointer prologue of its own (one caller each, inlined by binaryen, so out of line in the object), with the
+    // name it passes the builder as the screen's ("CriaTelaVotoLegenda", ...) and the form's name ("telaVotoLegenda",
+    // ...), the builder, then AdicionaInstrucaoTeclas (fn 1102) over "CONFIRMAR este voto" and AddInputControl (fn 901),
+    // or AdicionaRodapeConfira (fn 1190), at the width it shows (389, 639, or the Com1 and Com2 builders' result), and
+    // GetInteractiveForm (fn 554) over a CPreShowProgressBar, its flag 0 for the two vote-by-party screens and 1 for the
+    // others; the vote-by-party and nonexistent-candidate screens add the party vote's gif first (AdicionaGif, fn 1593,
+    // over 1, false or true). That they are static members of CTelasVota is a reading, as for the recorded CriaTela*
+    // statics; the names are the strings', and the parameters' names are chosen.
+    static CFormInterativoTelaVota CriaTelaVotoLegenda(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaVotoLegenda(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaCandidatoInexistente(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaCandidatoInexistente(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaCandidatoInapto(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaCandidatoInapto(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaCompletaCandidatoCom1(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaCandidatoCom1(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaCompletaCandidatoCom2(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaCandidatoCom2(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaCompletaConsulta(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaConsulta(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaVotoBrancoConsulta(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaConferenciaVotoBrancoConsulta(const comum::md::CCargo& cargo);
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
