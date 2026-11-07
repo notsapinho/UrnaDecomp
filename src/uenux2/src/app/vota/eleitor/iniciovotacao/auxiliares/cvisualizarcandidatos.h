@@ -81,6 +81,11 @@ public:
     // CVisualizarCandidatos::GetInst(): std::optional's assignment. The name and its being an inline member are chosen.
     void SetPartido(comum::TPartidoID partido) { m_partido = partido; }
 
+    // 11891's CONFIRMA case stores the candidate's engaged flag (+32) and its number (+28), after
+    // CVisualizarCandidatos::GetInst(), when comum::CCandidaturas::Busca finds the number: std::optional's assignment.
+    // The name and its being an inline member are chosen.
+    void SetCandidato(comum::TCandidatoID candidato) { m_candidato = candidato; }
+
 private:
     // Fn 5953: when m_candidaturas is empty, the posts comum::CCargos::GetMapaCargos (fn 2834) gives and, over
     // comum::CCandidaturas' map, a push_back of each candidature whose post is there with a candidate's detail (CCargo

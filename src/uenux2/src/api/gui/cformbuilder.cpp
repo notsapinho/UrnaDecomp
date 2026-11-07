@@ -10,6 +10,7 @@
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
 //   5546  AddTextRectField         over a CFixedText, after AddTextField 202 (the fragment says why)
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
+//   -     GetFormSemLimpar(nome)   over an api::CPreShowNothing<IScreen>, through 5550: code 11891 holds inlined
 //   5545  AddProgressBar           written, differs: the fragment says what it waits for
 //   -     AddMaskedTextField       a CMaskedTextField<CFramedText> over a CFixedText: 2384's (ctelasvota.cpp)
 //                                  code, which it holds inlined (cformbuilder.h says why), after
@@ -44,6 +45,7 @@
 #include "api/gui/crectfield.h"
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/cpreshowclearscreen.h"
+#include "api/gui/cpreshownothing.h"
 #include "api/gui/cprogressbar.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldblinking.h"
@@ -198,6 +200,11 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
     return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
 }
 
+std::shared_ptr<IForm<IScreen>> CFormBuilder::GetFormSemLimpar(const std::string& nome)
+{
+    return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowNothing<IScreen>()), nome);
+}
+
 std::shared_ptr<CProgressBar> CFormBuilder::AddProgressBar(uedword limite, const SPoint& canto, const SPoint& oposto,
                                                            const SFont& fonte, const std::string& texto)
 {
@@ -219,7 +226,7 @@ CFormBuilder::SharedField CFormBuilder::AddMaskedTextField(const std::string& te
     return campo;
 }
 
-// (original lines 222-289: content not recovered)
+// (original lines 229-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {

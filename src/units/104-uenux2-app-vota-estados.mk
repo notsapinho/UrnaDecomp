@@ -122,8 +122,33 @@
 # list), and unit 373's roots stand in for 2383's other target callers. Measured with pnpm wasm score in the whole link
 # before step 8: 53 over 746 rows, every row a call or a data address. Chosen, as for the class's siblings: the
 # assignment's spelling and the member's name. Its trap left 104-uenux2-app-vota-estados-pending.cpp.
-# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput (fn 11891) is still a trap there: the -pending.cpp header says
-# what its body holds and what it waits for.
+# vota::CMenuFiltrarCandidatosPorNumero::ProcessInput (fn 11891, slot 7, no record), in
+# cmenufiltrarcandidatospornumero.cpp after StartState (a chosen line), matches. CInteractiveForm::Read's code (record
+# cinteractiveform.h:57 @1545432) gives the key. On CONFIRMA: the number in the first input field (GetEntradas().at(0),
+# whose bounds check throws through the vector's out_of_range, fn 234) read by ecourna's CStringUtils::ToInt32 (fn
+# 2200), then the post (CVisualizarCandidatos::GetCargo, fn 5951), then comum::CCandidaturas::Busca (fn 1273, on fn
+# 521's singleton); when it finds the candidature, CVisualizarCandidatos::SetCandidato (new, inline in
+# cvisualizarcandidatos.h: the flag at +32, then the number at +28) and that state as the next one; else the input
+# fields cleared (IInputField's slot 11 in a loop), the first focused (SetFocus, fn 1401) and
+# api::MostraMensagemTemporaria("Candidato não encontrado!", api::CWait(2000)) (unit 171's capplication.cpp, whose
+# header has its evidence), which binaryen inlines behind a 48-byte prologue, holding CFormBuilder::GetFormSemLimpar
+# (unit 31's cformbuilder.cpp) behind a 16-byte one. On CORRIGE, CMenuVisualizarCandidatos (fn 2288); on any other key,
+# this state again. Measured with pnpm wasm score in the whole link, the stand-ins named last still in: the CWait passed
+# by value, which the caller builds in a temporary and copies into the argument (byval: a 64-byte frame, where the
+# target builds it once at +8 and passes its address in a frame of 48), with CORRIGE's case first, which also swaps the
+# br_table's targets, `110 over 470 rows (same 360, replaced 80 [72 operand-only], inserted 23, deleted 7)`; the CWait
+# by rvalue reference and CONFIRMA's case first, `47 over 451 rows (same 404, replaced 42 [42 operand-only], inserted 4,
+# deleted 1)`, our code reloading m_form for SetFocus after the fields' loop, where the target keeps the form in a
+# local; with the form held in a reference for the loop and SetFocus, `31 over 447 rows (same 416, replaced 31 [31
+# operand-only], inserted 0, deleted 0)`, every row a call or a data address, named by vptr-anchor at step 8 and matched
+# at step 9 (the message's frame: unit 171's fragment). Chosen: the locals' names and the reference's spelling, the case
+# spelling and the `break`s, the CWait's passing as an rvalue reference (a const reference gave the same frame in an
+# object probe, but Wait is not const), SetCandidato's name and its being inline. Its trap left
+# 104-uenux2-app-vota-estados-pending.cpp, with that file's include of the class's header; and the stand-ins for its
+# calls went: this unit's roots' call of 2288, units 01's (Wait, 5446) and 02's (CWait's constructor, 5447) roots files,
+# unit 31's FormA and FormB (5550), unit 89's Consultas (1273), unit 102's builder and sink of
+# CPreShowNothing<IScreen>'s control block, and unit 150's VisualizarCandidatos and CargoVisualizado (1279, 5951); each
+# fragment or roots comment says which callers remain. The steps 6 to 9 that matched it moved no other row's verdict.
 #
 # Two slots written since, each measured in the whole link with pnpm wasm score against
 # build/out/wasm-map/vota_web/names.tsv:
@@ -169,21 +194,20 @@
 #   after cfinalizaoperador.cpp's, as csincronismooperador.cpp's does in ours; its stub in src/uenux2/unplaced.cpp went.
 #   10209's trap left 104-uenux2-app-vota-estados-pending.cpp, and with it the stand-ins of units 152's and 161's roots
 #   that stood for its calls of 5393 and 652 (units 71's and 109's stay for their other callers).
-# - vota::CSincronismoOperador::StartState (fn 10210, in csincronismooperador.cpp, after the statics, a chosen line) is
-#   written and differs, in local numbers only. It holds comum::CEleitores::MarcaVotou (records celeitores.cpp:456 and
-#   460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou (celeitordetalhe.cpp's) inlined
-#   the same way (a second stack-pointer prologue each); before them, the test of comum::CAppInfo::EhTreinamentoEleitor
-#   written in place (the target calls GetInst twice and keeps no call of 697, that function's own body), a choice of
-#   spelling; after them, the eleitor's queue's Post(5) (its inline member builds the message), then m_pNextState.
-#   Measured with pnpm wasm score: `40 over 150 rows (same 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`,
-#   the moved row a local number: the target keeps the frame in local 3 and the voter's record (CEleitorDetalhe*), then
-#   the queue, in local 2; ours keeps the frame in 2, the record in 3 and the queue in 1. In scratch links of the same
-#   objects reordered (build/out link command, one object moved), the order celeitordetalhe.cpp.o, celeitores.cpp.o,
-#   csincronismooperador.cpp.o reads `28 over 149 rows`, every row an operand of a call or of the throws' destructor
-#   slot; this object moved after both others with celeitores.cpp.o first, or celeitordetalhe.cpp.o moved right after
-#   this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of unit
-#   110's (celeitordetalhe.cpp.o and celeitores.cpp.o), which only renumbering landed units would change, so the row
-#   waits for that order.
+# - vota::CSincronismoOperador::StartState (fn 10210, in csincronismooperador.cpp, after the statics: use band 1 runs
+#   10213, 10211, 10210 and 10209 at consecutive ld_index in names.tsv) matches. It holds comum::CEleitores::MarcaVotou
+#   (records celeitores.cpp:456 and 460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou
+#   (celeitordetalhe.cpp's) inlined the same way (a second stack-pointer prologue each); before them, the test of
+#   comum::CAppInfo::EhTreinamentoEleitor written in place (the target calls GetInst twice and keeps no call of 697,
+#   that function's own body), a choice of spelling; after them, the eleitor's queue's Post(5) (its inline member builds
+#   the message), then m_pNextState. With the file in this unit's list (ahead of unit 110's celeitordetalhe.cpp.o and
+#   celeitores.cpp.o) it scored `40 over 150 rows (same 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`
+#   (pnpm wasm score, at 0c3a9009), the moved row a local number: the target keeps the frame in local 3 and the voter's
+#   record (CEleitorDetalhe*), then the queue, in local 2; ours kept the frame in 2, the record in 3 and the queue in 1.
+#   With its object after celeitordetalhe.cpp.o it reads `28 over 149 rows`, all operand-only, and matched at step 9
+#   (srcloc-anchor named it at 0c3a9009 already). So csincronismooperador.cpp is compiled from unit 110's list, at its
+#   end: that fragment has the six places measured, C4's count of objects out of the data's order at each, and the pairs
+#   the move puts in order (26, none inverted). It stays this unit's file, with its notes here.
 # - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line), a
 #   match. When vota::RegistraMesarios() (fn 2520) says so the next state is comum::CRegistrarMesarios::GetInst() (fn
 #   3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst, fn 316, +36; the type 7 and the queue
@@ -583,10 +607,12 @@
 # Chosen: the structured binding's names, the case spelling, GetPartidos and SetPartido (names, membership, SetPartido
 # inline), and the lines (StartState below the statics, the record's line fixing the switch's). Unit 84's roots file
 # went (its three stand-ins stood for 11884's calls of 3655, 3675 and 3861), and so did one of this unit's roots' calls
-# of 2288 (the other stands for 11891). cmenufiltrarcandidatosporpartido.cpp is compiled from unit 110's list (above);
+# of 2288 (the other, which stood for 11891, went with it). cmenufiltrarcandidatosporpartido.cpp is compiled from unit
+# 110's list (above);
 # cmenufiltrarcandidatosporcargo.cpp too.
 # cmenufiltrarcandidatospornumero.cpp, this unit's, is compiled from unit 110's list after ctelasvota.cpp (unit 110's
-# fragment has the measurement).
+# fragment has the measurement), and csincronismooperador.cpp, this unit's, from unit 110's list at its end (10210's
+# paragraph above, and unit 110's fragment for the places).
 APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
@@ -615,8 +641,7 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
     src/app/vota/operador/leidentidade/cprocuraeleitor.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesario.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesario.cpp \
-    src/app/vota/operador/cfinalizaoperador.cpp \
-    src/app/vota/operador/csincronismooperador.cpp
+    src/app/vota/operador/cfinalizaoperador.cpp
 UENUX2_SRCS += $(APP_VOTA_ESTADOS_SRCS)
 # creimprimindozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
 # CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)

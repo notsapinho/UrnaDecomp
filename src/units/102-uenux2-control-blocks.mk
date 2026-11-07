@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 24 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 43 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 23 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 44 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no
 # longer instantiate them. Nine of those went from the roots at once, builder and sink, a link without them moving no
 # row: the pointer blocks of CTextFieldPaper (5613, unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and
@@ -18,6 +18,8 @@
 # CDataText<vota::CEscolheOpcao::COpcaoDS>'s (2753, the same object, from which 10684 matches),
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CPreShowClearScreen's
 # (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138 matches),
+# CPreShowNothing<IScreen>'s (11891, unit 104's, which holds CFormBuilder::GetFormSemLimpar inlined, the same object,
+# from which 11137 matches now; the roots' builder and sink went with it),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
 # vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is

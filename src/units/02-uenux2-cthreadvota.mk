@@ -1,6 +1,11 @@
 # uenux2 vota::CThreadVota (uenux2 src/app/vota/cthreadvota.cpp) and api::CTickManager (src/api/util/ctickmanager.cpp).
 # Target fn 700 is CThreadVota::StartTick with CTickManager::StartTick inlined by binaryen (its only caller); 422 is
-# CThreadVota::StopTick and 5451 CTickManager::StopTick, each with a second caller from the roots (their comments say which).
+# CThreadVota::StopTick and 5451 CTickManager::StopTick. No roots: StartTick's 16 target callers and StopTick's 23 are
+# in the link (10798, 7028, 7029, 10220, 11825, 11871, 10468 among the first; 10451 the last of the second), and so are
+# AddStoppedTick's 11 (unit 97's 1785 calls it twice), 5452's two (807, 5947), GetExpiredTicks' (5450: 4349, 10204),
+# 4640's, 3644's and 5451's. api::CWait's constructor (5447, unit 01's) has two target callers in the link: 11931,
+# which drops its `this` result, and 11891 (unit 104's), which reads it, so the result stays; the roots' EsperaUsando,
+# which read it for them, went with 11891, and with it the roots file (a link without it keeps 5447's (i32 i32)->(i32)).
 # CThreadVota::AddTick(size_t) has one caller, unit 119's slot 2 (10800), which holds it inlined.
 # 4640 is CThreadVota::AddTick(const std::chrono::milliseconds &), 807 CThreadVota::AddStoppedTick and 5452
 # CTickManager::AddStoppedTick: thunks over m_ticks (+20) and over AddTick and StopTick. No record names them: their
@@ -75,8 +80,3 @@
 # and 10676 match; 4633 is not measured over it. Nothing in the link needs it while its callers 7709 and 7710 are traps
 # (unit 116's pending file: they wait for 5568), so it is not written (docs/how-to-decompile.md step 5).
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp
-# The roots' headers are named here: $(UENUX2_HDRS) is still empty when the fragments are read.
-CTHREADVOTA_HDRS := $(addprefix $(ROOT)/src/uenux2/src/,api/util/ctickmanager.h api/util/cwait.h api/util/eueutilerror.h api/ipc/cthread.h app/vota/cthreadvota.h)
-$(ROOT)/$(APP)/02-uenux2-cthreadvota-roots.o: $(ROOT)/src/units/02-uenux2-cthreadvota-roots.cpp $(ROOT)/src/Makefile $(CTHREADVOTA_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/02-uenux2-cthreadvota-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/02-uenux2-cthreadvota-roots.o

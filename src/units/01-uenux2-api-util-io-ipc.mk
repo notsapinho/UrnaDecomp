@@ -34,10 +34,10 @@
 # i64.ge_s before the microseconds' i32.ge_s, which `sec > || (sec >= && usec >=)` gives. `!timercmp(&agora, &m_inicio,
 # <)` scored `17 over 55 rows` (8 inserted, 4 deleted, one of them a drop that a stand-in reading usleep's result gave)
 # in the whole link, and in object probes timercmp(>=) and a `sec ==` second test compare otherwise; the form written
-# scores `3 over 47`, operand-only. No caller of Wait or of usleep is reconstructed: 01-uenux2-api-util-io-ipc-roots.cpp gives each a
-# second call site. nanosleep's other target caller, SQLite's unixSleep (12902), is in our link and matches with it.
+# scores `3 over 47`, operand-only. No roots: Wait's two target callers, 11891 and 11982 (the slot 7 of
+# vota::CMenuFiltrarCandidatosPorNumero and of vota::CInformacaoZeresimaTardia, units 104 and 169), are in the link,
+# and the roots' EsperaDuas, which stood for both with two call sites, went with 11891, and with it the roots file;
+# usleep's target callers (Wait, 10204 and 10435, units 116 and 152) are in the link too. nanosleep's other target
+# caller, SQLite's unixSleep (12902), is in our link and matches with it.
 UENUX2_SRCS += src/api/util/cwait.cpp src/api/io/cinikey.cpp src/api/ipc/posix/cposixmutex.cpp src/api/ipc/posix/cposixsemaphore.cpp
 UENUX2_SRCS += wasm/vota_web/posix_sem_shim.cpp
-$(ROOT)/$(APP)/01-uenux2-api-util-io-ipc-roots.o: $(ROOT)/src/units/01-uenux2-api-util-io-ipc-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/01-uenux2-api-util-io-ipc-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/01-uenux2-api-util-io-ipc-roots.o

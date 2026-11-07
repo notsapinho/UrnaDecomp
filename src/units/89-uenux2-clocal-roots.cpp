@@ -29,7 +29,6 @@ int w5677(int, int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1EjRKNS0_
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
-int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
 }
 
@@ -81,15 +80,11 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
-// Stands for the caller of CCandidaturas::Busca that is not in our link, beside units 77's and 139's and unit
-// 155's written Gera (5604): Busca (1273: 11891, beside 5604,
-// 11214, 11255, 11724, 11744, 11683 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
-// body, as one of 11683's two calls does). GetCandidatos (2840) and GetCandidatosPartido (2272) need none: their
-// callers are in the link (4459, 5604 and 11214; 11976, 5604, 11213, 11255 and unit 200's 3819).
-__attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
-{
-    return w1273(c, cargo, candidato);
-}
+// CCandidaturas::Busca (1273) needs none: Consultas, which stood for its caller 11891, went with it (unit 104's), and
+// its other callers are in the link (5604, unit 155's written Gera, 11214, 11255, 11724, 11744, 11683 and 3820, unit
+// 200's, and unit 77's 11212, which calls CRespostas::Busca, the same body, as one of 11683's two calls does). Nor do
+// GetCandidatos (2840) and GetCandidatosPartido (2272): their callers are in the link (4459, 5604 and 11214; 11976,
+// 5604, 11213, 11255 and unit 200's 3819).
 // Stands for fn 5807's caller 6076 (its other, 12649, CDataText<CCandidaturasDSNome>::GetText, matches).
 __attribute__((noinline)) void NomesUrna(int r, int s, int a)
 {
@@ -120,7 +115,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&HorariosComplemento);
         clocal_sink = reinterpret_cast<const void*>(&Suplentes);
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
-        clocal_sink = reinterpret_cast<const void*>(&Consultas);
         clocal_sink = reinterpret_cast<const void*>(&NomesUrna);
     }
 } clocal_roots;
