@@ -12968,3 +12968,12 @@
 426 _ZN3api12CFormBuilder8AddFieldENSt3__210shared_ptrINS_10IFormFieldINS_7IScreenEEEEE
 502 _ZN3api12CFormBuilder15AddStatusHeaderEj
 9137 _ZNK7ecourna3app5dados3asn32CConversorConfiguracaoMunicipios12DoDeconverteERKN28ModuloConfiguracaoMunicipios30EntidadeConfiguracaoMunicipiosE
+10689 _ZN4vota13CEscolheOpcao12ProcessInputEv
+10704 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/outrasopcoes/ccontadoresbiometria.cpp.o
+10705 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/ccontadoresbiometria.cpp.o
+10707 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp.o
+10708 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/ciniciafinalizacao.cpp.o
+10743 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp.o
+10744 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp.o
+10755 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp.o
+10756 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp.o

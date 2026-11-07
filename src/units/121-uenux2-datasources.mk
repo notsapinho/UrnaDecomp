@@ -29,6 +29,8 @@
 #   TextoRegistrarMesarios, TextoExibirContadores)
 #   CEscolheOpcao::s_inst's and s_mutex's static destructors           10697, 10696
 #   vota::AdicionaCampoNumerico                                         1151, from cescolheopcao.cpp.o
+#   vota::CEscolheOpcao::ProcessInput, with ConfirmaOpcao and           10689, from cescolheopcao.cpp.o
+#   api::CInteractiveForm::LimpaEntradas inlined by binaryen
 #   std::__function::__func<std::string (*)(), std::string ()>'s       12043, 12044, 12046, 12047, from cescolheopcao.cpp.o
 #   target_type, target and the two __clone, first instantiated here
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
@@ -42,7 +44,7 @@
 # vota::CEscolheOpcao itself (cescolheopcao.h has the layout and what each part rests on): its destructor is out of line
 # in cescolheopcao.cpp, at line 140, a choice before the records (10691 sits above 10690 and 10689 in their use band, so it
 # links first); it is the class's key function, so the object emits the vtable, whose ProcessInput (10689) is written
-# below the records and not matched (its paragraph, below). Evidence:
+# below the records and matches (its paragraph, below). Evidence:
 # 10691 is `f2752(p0); drop; f136(p0)`, an out-of-line destructor (docs/reference/facts/reading.md R5), and 2752 stores
 # no vptr first, a final class (R4); it releases the std::shared_ptr at +24 and then destroys the std::map at +12 with
 # 3630, which destroys each node's std::function at +40 and nothing else of it. 2752, 10691 and 3630 matched as written;
@@ -119,15 +121,15 @@
 # and api:: written at each call. Before steps 7 to 9 it scored 14 over 96 rows, all operand-only (pnpm wasm score).
 #
 # ProcessInput (10689, slot 7) is written in cescolheopcao.cpp after StartState (its band, 1, has it after 10690; the
-# line is a choice) and does not match: `pnpm wasm score` 173 over 1348 rows (same 1175, replaced 165 [165
-# operand-only], inserted 5, deleted 3) on the whole link; step 9 reads it `unresolved` at the first operand with no
-# target name, CHabilitacaoAudioNaoPermitida::s_inst's address. cescolheopcao.cpp is compiled in unit 277's list now,
-# after ccontadoresbiometria.cpp: with this unit's list ahead of unit 277's, the object linked before the four files
-# whose GetInst 10689 holds, and scored 373 over 1358 rows (15 inserted, 10 deleted, every inlined GetInst's locals off);
-# after them it scores as above. The target's data put it there too: CEscolheOpcao's vtable (@1587996) and the file's
-# records (@1588040 to @1588072) come after the four classes' vtables (unit 277's fragment has the run). The move leaves
-# every match and row of the scan as it was but census re-picks among exit destructors and one 32-byte
-# std::__tree::destroy tie, 2223 (steps 7 to 9 run both ways).
+# line is a choice) and matches, with its CONFIRMA branch's clearing loop in api::CInteractiveForm::LimpaEntradas (the
+# bullets below). Before that, with the loop written in the branch, `pnpm wasm score` read 173 over 1348 rows (same
+# 1175, replaced 165 [165 operand-only], inserted 5, deleted 3) on the whole link. cescolheopcao.cpp is compiled in unit
+# 277's list now, after ccontadoresbiometria.cpp: with this unit's list ahead of unit 277's, the object linked before
+# the four files whose GetInst 10689 holds, and scored 373 over 1358 rows (15 inserted, 10 deleted, every inlined
+# GetInst's locals off); after them it scored as above. The target's data put it there too: CEscolheOpcao's vtable
+# (@1587996) and the file's records (@1588040 to @1588072) come after the four classes' vtables (unit 277's fragment has
+# the run). The move leaves every match and row of the scan as it was but census re-picks among exit destructors and
+# one 32-byte std::__tree::destroy tie, 2223 (steps 7 to 9 run both ways).
 # From the target's body (pnpm wasm fn):
 # - the form's Read() (its source_location record @1588216, cinteractiveform.h:57) and a switch on the result:
 #   api::INPUT_CORRIGE (5) goes to vota::CPedeIdentidade (GetInst, fn 652), api::INPUT_CONFIRMA (9) to the state the
@@ -145,30 +147,58 @@
 #   UrnaBiometrica (fn 820) holds. +485 is CParametrosUrna::GetPermitirHabManualAudio: clang's record layout of the
 #   headers (-fdump-record-layouts-simple) puts the CParametrosUrna at +88 and that bool at +397 of it. The four states'
 #   GetInst are written in their files (unit 277), each with this one call site, which binaryen inlines.
-# - The form is held in a local reference across the clearing loop: the target loads m_form once for the loop and for
-#   SetFocus, and through `m_form->` at each use ours loads it again after the loop (380 over 1365, 22 inserted, 14
-#   deleted, with the object at this unit's place). A member of api::CInteractiveForm that clears and focuses would hold
-#   it as well; not measured.
-# - What is left differs in binaryen's locals: our link keeps a zero-init of the inlined branch's result at the head of
-#   its block and drops the `= 0` the target sets after the text's copy, and the locals around it take other numbers
-#   (the rows inserted and deleted are those and an add's operands in that order, and one inserted pair, `local.get 1;
-#   local.set 3`, in CIniciaFinalizacao's inlined GetInst after its s_mutex's unlock). Measured on whole links, none of
-#   these changes it: ConfirmaOpcao defined before ProcessInput (340 over 1350 after the four files, a scratch link of
-#   the plain link.cmd with that variant's object; 390 over 1354 at this unit's place), and at this unit's place the
-#   empty test after the digit test (373 over 1358) and the digit test as a range-for (376 over 1358). These give an object
-#   whose ConfirmaOpcao is the written one's (wasm-objdump -d compared): one exit through a local, the tests nested,
-#   `int numero` and `codigo` locals, std::ranges::all_of. And on the module before wasm-opt of a link of this source
-#   (build/out/wasm-map/vota_web/r02-stripped.wasm, kept by link-map), the link's own `wasm-opt -Oz` line gives the same
-#   ProcessInput with
-#   ConfirmaOpcao's copy temporaries moved into its result's local (the bytes' local index patched; wasm-objdump -d of
-#   the output compared), and drops the head zero-init when its `rse` pass is skipped: the remainder is binaryen's
-#   choice after inlining, not explained. Unit 277's list in the target's data order leaves it at 173 over 1348, and its
-#   two next-state stores through comum::CAppState::SetNextState gave a byte-identical module (unit 61's fragment).
-# - Chosen: ConfirmaOpcao's name, its being a private member, its result type, the local reference and the switch's
-#   spelling; the file's place in unit 277's list is measured.
-# The four states' statics' exit destructors (10704, 10705, 10707, 10708, 10743, 10744, 10755, 10756) wait for 10689's
-# match: it is their statics' one other reader (step 1's grep of each address over the split's pieces lists 10689 and
-# the destructor).
+# - The form is loaded once for the clearing loop and for SetFocus, as the target does; through `m_form->` at each use
+#   the loop in the branch loaded it again after the loop (380 over 1365, 22 inserted, 14 deleted, with the object at
+#   this unit's place).
+# - The clearing loop and SetFocus(0) are api::CInteractiveForm::LimpaEntradas (cinteractiveform.h, lines 126 to 132),
+#   which clang leaves out of line in this TU and binaryen inlines into its one caller. Evidence, the target's 10689:
+#   the branch's result shares the local of the field and form pointers loaded before the text's copy, with its zero set
+#   after that copy, and the clearing loop's pointer is in that local too. With the loop written in the branch (through
+#   a local reference), clang's object puts the loop's pointer in the wasm local of the text's pointer and of the map
+#   search's node (local 2) and the result in local 3. Measured on -Oz's first round over ConfirmaOpcao alone (wasm-opt
+#   --extract-function on the link's r02-stripped.wasm with the link's options, then the pass list run in prefixes):
+#   before its first coalesce-locals the three loops' values are one local, 13 uses against the result's 11 (ssa-nomerge
+#   splits the values that meet no other, a reading); coalesce-locals gives that local the field pointers' local, and
+#   the result gets a local nothing writes before the text's copy, so rse drops the zero set there and the inlined code
+#   sets the zero at the head of its block instead (the base's rows: that zero, the locals around it renumbered, and a
+#   copy `local.get 1; local.set 3` in CIniciaFinalizacao's inlined GetInst). With the loop's pointer and its end
+#   swapped between locals 2 and 3 in that r02 module's ConfirmaOpcao, the link's -Oz and last wasm-opt replayed
+#   (docs/reference/facts/codegen.md C4's method): 138 over 1343 (same 1205, replaced 138 [138 operand-only], inserted
+#   0, deleted 0), the operand rows calls, data addresses and the eight statics' addresses. That coalesce-locals colours
+#   by rank (uses, then first use) is a reading; the scores are the measurement.
+# - clang keeps the member out of line here: `-Rpass-missed=inline` on the TU's compile line prints `not inlined into
+#   '_ZN4vota13CEscolheOpcao13ConfirmaOpcaoEv' because too costly to inline (cost=60, threshold=45)`, the call site
+#   under IsVotacaoBloqueadaPorHorario's test (other calls of option 1's case read threshold 45 too), and SetFocus
+#   (1401) stays a call inside it (cost 515 against 250). In the whole link 10689 then reads 138 over 1343, every row an
+#   operand (the patch's rows), and steps 7 to 9 match it.
+# - The same module (the wasm's sha256, scratch links of the plain link.cmd with the variant object): the loop as an
+#   external free function of namespace vota in cescolheopcao.cpp over the form, as a private member of CEscolheOpcao
+#   defined there, and as an anonymous-namespace function there (also left out of line: cost 60, threshold 45). Written
+#   as CInteractiveForm's member, a choice: the loop reads that class's fields and calls its SetFocus (how-to step 3, a
+#   function the target holds inlined written as a member of the class it reads). Slot2 and Slot3 clear and focus the
+#   same way; written to call LimpaEntradas, cmtformbuilder.cpp.o and cinteractiveformbuilder.cpp.o, whose Slot2 and
+#   Slot3 copies the link keeps (target fns 11030, 11029, 11077, 11075, by names.tsv's object column), compile cmp-equal
+#   to the tree's objects. They keep their loops as landed, a choice.
+# - Forms measured with the loop in the branch, none the target's: an object cmp-equal to that form's from
+#   ConfirmaOpcao's null result as one variable assigned after the text's copy with one return, from the loop over a
+#   `const auto&` to GetEntradas() and from an iterator loop over a held end; another object with the same choice of
+#   locals (the loop's pointer in local 2) from std::for_each with a lambda, which gives the base's module (the same
+#   sha256, 173 over 1348); std::ranges::for_each with the member pointer, a call of ranges::__for_each in the object,
+#   236 over 1397 (54 rows inserted) on the whole link. Earlier, on whole links: ConfirmaOpcao defined before
+#   ProcessInput (340 over 1350 after the four files, a scratch link of the plain link.cmd with that variant's object;
+#   390 over 1354 at this unit's place), and at this unit's place the empty test after the digit test (373 over 1358)
+#   and the digit test as a range-for (376 over 1358); an object whose ConfirmaOpcao is the written one's (wasm-objdump
+#   -d compared) from one exit through a local, the tests nested, `int numero` and `codigo` locals and
+#   std::ranges::all_of. On that form's r02-stripped.wasm the link's -Oz line gave the same ProcessInput with
+#   ConfirmaOpcao's copy temporaries moved into its result's local (the local index patched: values ssa-nomerge splits
+#   anyway, a reading), and without its rse pass it dropped the head zero. Unit 277's list in the target's data order
+#   left it at 173 over 1348, and its two next-state stores through comum::CAppState::SetNextState gave a byte-identical
+#   module (unit 61's fragment).
+# - Chosen: ConfirmaOpcao's name, its being a private member, its result type and the switch's spelling; LimpaEntradas's
+#   name, its being a member of api::CInteractiveForm and its lines; the file's place in unit 277's list is measured.
+# The four states' statics' exit destructors (10704, 10705, 10707, 10708, 10743, 10744, 10755, 10756) match with it:
+# each static has two target readers, 10689 and its destructor (step 1's grep of each address over the split's pieces),
+# and 10689's votes name the eight (splat/symbol_addrs.txt, `by:10689`; unit 277's fragment has the four files' notes).
 # cescolheopcao.cpp includes comum::CConfiguracaoEleicao's header for +485, which reaches Boost (unit 277's rule).
 #
 # Matched once a literal landed:
