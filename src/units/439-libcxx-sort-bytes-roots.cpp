@@ -1,11 +1,11 @@
 // Roots: a stand-in for fn 7787, the one target caller of libc++'s sort over unsigned char but its own recursion (fn
 // 4820, std::__introsort<_ClassicAlgPolicy, ranges::less, unsigned char*, true>, and the seven functions only it
-// reaches; src/units/439-libcxx-sort-bytes.mk has the evidence). 7787 is not written. A std::sort over unsigned char with the
-// default order calls the extern template __sort<__less<unsigned char>&, unsigned char*> (libc++'s __algorithm/sort.h),
-// which libc++.a's algorithm.o defines and binaryen inlines into its one caller: 7787 in the target, this stand-in
-// here. 7787 calls 4820 once, so the stand-in sorts once; it goes when 7787 is in the link. The file includes only
-// standard headers and declares no TSE function, so no match comes from this object. Address-taken from a static
-// constructor.
+// reaches; src/units/439-libcxx-sort-bytes.mk has the evidence). 7787 is not written. A std::sort over unsigned char
+// with the default order calls the extern template __sort<__less<unsigned char>&, unsigned char*> (libc++'s
+// __algorithm/sort.h), which libc++.a's algorithm.o defines and binaryen inlines into its one caller: 7787 in the
+// target, this stand-in here. 7787 calls 4820 once, so the stand-in sorts once; it goes when 7787 is in the link. The
+// file includes only standard headers and declares no TSE function, so no match comes from this object. Address-taken
+// from a static constructor.
 #include <algorithm>
 #include <vector>
 
