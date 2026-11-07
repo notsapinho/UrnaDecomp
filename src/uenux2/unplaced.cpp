@@ -71,11 +71,6 @@
 // f5728 · 37 B · unmatched · placement: link order · name unknown
 // ? f5728(i32, i32) { ... }
 
-// link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
-
-// f5735 · 1046 B · unmatched · placement: link order · name unknown
-// void f5735(i32) { ... }
-
 // link-order cluster 829 · uses=2 · neighbours' file uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp
 
 // f5788 · 482 B · unmatched · placement: link order · name unknown
@@ -91,9 +86,6 @@
 
 // f5796 · 373 B · unmatched · placement: link order · name unknown
 // void f5796(i32, i32, i32) { ... }
-
-// f5790 · 3572 B · unmatched · placement: link order · name unknown
-// void f5790(i32, i32) { ... }
 
 // link-order cluster 831 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 

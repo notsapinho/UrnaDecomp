@@ -12977,3 +12977,5 @@
 10744 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/cconfirmaaudio.cpp.o
 10755 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp.o
 10756 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.cpp.o
+5735 _ZN5comum16CargosPorEleicaoEv
+5790 _ZNK5comum20CConfiguracaoEleicao14GetTodosCargosEv
