@@ -365,7 +365,8 @@
 # 176's), and the stand-in fragment 246's roots held for 11902 went with it. Chosen: the parameters' names; the lambda's capture spelled `[this]` (`[&]` captures the same by the
 # language's rules, not compiled here); the header line the declaration takes (any line above 51 would do); Show's place
 # last in the file (it is the file's only function with 3 uses in ledger/ordinals.tsv, so no band neighbour orders it).
-CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
+# cmtformbuilder.cpp, this unit's file, is compiled at the head of unit 161's list (that fragment says why).
+CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
 # the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and

@@ -14,8 +14,9 @@
 #   below;
 # - cinformacaoeleitor.cpp: the exit destructors of g_numeroDigitado (13593) and g_votosEleitor (13588), and
 #   AdicionaVoto 4192 with comum::md::CCedula::Adiciona inlined by binaryen;
-# - ccedula.cpp: CCedula's constructor, one body with api::CFormBuilder's (fn 203): this object links ahead of
-#   cformbuilder.cpp's, so 203's match line takes its name;
+# - ccedula.cpp: CCedula's constructor, one body with api::CFormBuilder's and api::CMTFormBuilder's (fn 203):
+#   cmtformbuilder.cpp.o links ahead of this object (unit 161's list compiles it, for 5410), so 203's match line takes
+#   CMTFormBuilder's name (step 9 renamed it from CCedula's when that list took the file);
 # - clogvota.cpp: LogaVotoCargoSemCandidatoPorSuspensao 3272, LogaVotoBrancoPorSuspensao 4546,
 #   LogaVotoCargoSemCandidato 4542, LogaVotoNuloPorSuspensao 4541 and LogaVotoConfirmado 4537, each a thunk of
 #   binaryen's one body for the five, fn 2302, which matches too.
