@@ -64,12 +64,14 @@
 #   every row an operand), and the link with the file compiled in unit 122's list holds every match of the link with
 #   it at the end of this unit's, no row entering or leaving match. Both places give the bytes, so the file is
 #   compiled at the data's, in unit 122's list ahead of cgravadorversoesarquivos.cpp (docs/how-to-decompile.md step
-#   3), with the include paths its CZip needs. Of the 50 objects between the two places the move puts 39 in the data's
-#   order and inverts 8, whose data lie before @1557188 (docs/reference/facts/codegen.md C4):
+#   3), with the include paths its CZip needs. Of the 53 objects between the two places the move puts 39 in the data's
+#   order and inverts 11, whose data lie before @1557188 (docs/reference/facts/codegen.md C4's ranks, at c1ffbbae):
 #   gravadores/cgravadorrcsecao.cpp (records from @1554780), md/cversoesarquivos.cpp (@1553472),
 #   vota/eleitor/celeitorvotando.cpp (@1533188), this unit's md/curna.cpp (@1553732), md/cenvelopegenerico.cpp
-#   (@1553844) and md/centidadehashes.cpp (@1554560), and the simulator's mock/app/simulador/wasm/cwasminit.cpp and
-#   cwasmresource.cpp (their vtables); 3 have no data place. Counted over every app object with records or a strong
+#   (@1553844) and md/centidadehashes.cpp (@1554560), comum/asn/cconversorcodigocargoconsulta.cpp (@1555764),
+#   comum/dados/asn/rdv/cconversorvoto.cpp (@1556272) and comum/dados/crdvvota.cpp (@1556948), and the simulator's
+#   mock/app/simulador/wasm/cwasminit.cpp and cwasmresource.cpp (their vtables); 3 have no data place (pathwsq.cpp,
+#   csuplencia.cpp, cconversorregistrodigitalvoto.cpp). Counted over every app object with records or a strong
 #   vtable, 255 pairs with it are out of the data's order at the data's place and 283 at the end of this unit's list at
 #   c1ffbbae (a record's place: awk -F'\t' '$2 ~ /<file>$/' ledger/source-locations.tsv). Inside the object 11584 links
 #   ahead of 11583, the band's order (ld_index in names.tsv).
