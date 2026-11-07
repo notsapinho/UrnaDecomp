@@ -14,6 +14,7 @@
 #include "api/gui/capplication.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
+#include "api/gui/cdatatextfmt.h"
 #include "api/gui/cfixedimage.h"
 #include "api/gui/cfixedtext.h"
 #include "api/gui/cformbuilder.h"
@@ -37,9 +38,13 @@
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/ccandidaturasds.h"
+#include "app/comum/dados/ccargods.h"
+#include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/cfotos.h"
 #include "app/comum/dados/clocal.h"
+#include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/cqrcodeds.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
@@ -58,7 +63,7 @@
 
 namespace vota {
 
-// (original lines 61-247: content not recovered)
+// (original lines 66-247: content not recovered)
 #line 248
 std::vector<uebyte> ImagemAudioHabilitado()
 {
@@ -164,6 +169,8 @@ struct DS_NomeCargoNeutroComEscolha {
     comum::md::CCargo m_cargo;
 };
 
+} // namespace
+
 template <typename FONTE>
 api::CFormBuilder::SharedField AdicionaTextoDuasLinhas(api::CFormBuilder& builder, FONTE fonte,
                                                       const api::SPoint& linha1, const api::SPoint& linha2,
@@ -186,8 +193,6 @@ api::CFormBuilder::SharedField AdicionaTextoFonte(api::CFormBuilder& builder, FO
     builder.AddField(campo);
     return campo;
 }
-
-} // namespace
 
 template <typename MASCARA>
 api::CFormBuilder::SharedField AdicionaCampoNumero(api::CFormBuilder& builder, size_t tamanho, const api::SPoint& posicao)
@@ -278,8 +283,6 @@ void AdicionaGif(const comum::md::CVoto::ETipo tipo, api::CFormBuilder& builder,
 
 // (original lines 467-469: content not recovered)
 #line 470
-namespace {
-
 template <typename SRCFT>
 api::CFormBuilder::SharedField adicionaImagem(api::CFormBuilder& builder, SRCFT fonte, const api::SPoint& posicao)
 {
@@ -288,6 +291,8 @@ api::CFormBuilder::SharedField adicionaImagem(api::CFormBuilder& builder, SRCFT 
     builder.AddField(campo);
     return campo;
 }
+
+namespace {
 
 template <typename SRCFT>
 api::SRect adicionaFotoEmoldurada(api::CFormBuilder& builder, const api::TPosition x, const api::TPosition y,
@@ -302,8 +307,103 @@ api::SRect adicionaFotoEmoldurada(api::CFormBuilder& builder, const api::TPositi
 
 } // namespace
 
-// (original lines 494-752: content not recovered)
-#line 753
+
+template <typename MASCARA, typename FONTE>
+api::CFormBuilder::SharedField AdicionaCampoNumero(api::CFormBuilder& builder, FONTE fonte, size_t tamanho,
+                                                  const api::SPoint& posicao)
+{
+    const auto texto = std::make_shared<api::CDataText<FONTE>>(fonte);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CMaskedTextField<MASCARA>>(
+        texto, tamanho, posicao, FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+    builder.AddField(campo);
+    return campo;
+}
+
+std::string NomeCargoCandidatoComEscolha()
+{
+    const comum::CCargos& cargos = comum::CCargos::GetInst();
+    const comum::md::CCargo& cargo = cargos.GetCurrent();
+    const comum::CCargoDSNomeSexoCandidato fonte(0, false);
+    const std::string nome = fonte();
+    if (cargos.GetCurrent().GetQtdeEscolhas() == 1) {
+        return nome;
+    }
+    return nome + " - " + cargos.GetCurrent().GetOrdinalEscolha(g_escolhaAtual);
+}
+
+namespace {
+
+void adicionaNumeroCandidato(api::CFormBuilder& builder, const comum::md::CCargo& cargo)
+{
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, comum::CCandidaturasDSNumero(), cargo.GetNumeroDigitos(),
+                                                api::SPoint(10, 115));
+}
+
+} // namespace
+
+void AdicionaDadosCandidato(api::CFormBuilder& builder, const comum::md::CCargo& cargo, const api::TPosition largura)
+{
+    if (cargo.TemFoto()) {
+        builder.AddDoubleLineField(&NomeCargoCandidatoComEscolha, api::SPoint(10, 60), api::SPoint(10, 95), largura + 237,
+                                   FONTE_NOME_CARGO, static_cast<api::TColor>(1));
+    } else {
+        builder.AddTextField(&NomeCargoCandidatoComEscolha, api::SPoint(10, 60), FONTE_NOME_CARGO,
+                             api::ALINHAMENTO_ESQUERDA);
+    }
+    adicionaNumeroCandidato(builder, cargo);
+    AdicionaTextoDuasLinhas(builder, comum::CCandidaturasDSNome(0), api::SPoint(10, 190), api::SPoint(10, 215), largura,
+                            FONTE_AGUARDE, static_cast<api::TColor>(0));
+}
+
+template <typename FONTE>
+api::CFormBuilder::SharedField AdicionaTextoFormatado(api::CFormBuilder& builder, FONTE fonte, const api::SPoint& posicao,
+                                                     const std::string& formato, const api::SFont& font)
+{
+    const auto texto = std::make_shared<api::CDataTextFmt<FONTE>>(fonte, formato);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
+        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+void AdicionaSiglaPartido(api::CFormBuilder& builder)
+{
+    if (comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetApresentarPartido()) {
+        AdicionaTextoFormatado(builder, &comum::SiglaPartidoCorrente, api::SPoint(10, 250), "{}", FONTE_AGUARDE);
+    }
+}
+
+template <typename FONTE>
+api::CFormBuilder::SharedField AdicionaTextoAlinhado(api::CFormBuilder& builder, FONTE fonte, const api::SPoint& posicao,
+                                                    const api::SFont& font, const api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<FONTE>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
+        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+void AdicionaFotoCandidato(api::CFormBuilder& builder, const bool comNomeCargo)
+{
+    if (comNomeCargo) {
+        const api::SRect area = adicionaFotoEmoldurada(builder, 639, 35, 161, 225, comum::CCandidaturasDSFoto(0));
+        const api::TPosition largura = area.right - area.left + 1;
+        if (largura <= 1) {
+            AdicionaTextoAlinhado(builder, comum::CCargoDSNomeSexoCandidato(0, true), api::SPoint(719, 261),
+                                  api::SFont{20, 0}, api::ALINHAMENTO_CENTRO);
+        } else {
+            AdicionaTextoAlinhado(builder, comum::CCargoDSNomeSexoCandidato(0, true),
+                                  api::SPoint(area.left + largura / 2, area.bottom + 1), api::SFont{20, 0},
+                                  api::ALINHAMENTO_CENTRO);
+        }
+    } else {
+        adicionaFotoEmoldurada(builder, 639, 35, 161, 225, comum::CCandidaturasDSFoto(0));
+    }
+}
+
+// (original lines 589-747: content not recovered)
+#line 748
 api::CFormBuilder::SharedField AdicionaImagemAudioHabilitado(api::CFormBuilder& builder, const api::SPoint& posicao)
 {
     const auto imagem = std::make_shared<api::CDataImage<std::vector<uebyte> (*)()>>(&ImagemAudioHabilitado);
@@ -372,13 +472,33 @@ void AdicionaRodapeConfira(api::CFormBuilder& builder, api::TPosition largura)
     AdicionaLinhaRodape(builder, largura);
     builder.AddBlinkingTextField("CONFIRA O SEU VOTO", api::SPoint(largura / 2, 420), FONTE_TITULO, api::ALINHAMENTO_CENTRO);
 }
+namespace {
 
-// <stubs>
-// f6678 · 192 B · unmatched · name unknown
-// void f6678(i32, i32, i32) { ... }
-// </stubs>
+void adicionaBaseTelaCompletaCandidatoCom0(api::CFormBuilder& builder, const std::string& tela,
+                                           const comum::md::CCargo& cargo)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de candidato"));
+    }
 
-// (original lines 827-849: content not recovered)
+    if (cargo.QtdSuplentes() != 0) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_SUPLENTES_INCOMPATIVEIS,
+                           MensagemErroCargo(tela, cargo, "com número de suplentes incompatível"));
+    }
+
+    AdicionaDadosCandidato(builder, cargo, 639);
+    if (cargo.GetID() != 25) {
+        AdicionaSiglaPartido(builder);
+    }
+    if (cargo.TemFoto()) {
+        AdicionaFotoCandidato(builder, false);
+    }
+}
+
+} // namespace
+
+// (original lines 842-849: content not recovered)
 #line 850
 // <stubs>
 // f6671 · 363 B · unmatched · name unknown
@@ -537,8 +657,16 @@ const auto GetKeyboardLayout()
 // void f7787() { ... }
 // </stubs>
 
-// (original lines 1394-1529: content not recovered)
-#line 1530
+// (original lines 1394-1521: content not recovered)
+#line 1522
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom0(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaCandidatoCom0(builder, "CriaTelaConferenciaCandidatoCom0", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom0");
+}
+
 CFormInterativoTelaVota CTelasVota::CriaTelaVotoNuloCandidato(const comum::md::CCargo& cargo, const std::string& confirma,
                                                              const std::string& mensagem, uebyte digitos,
                                                              api::TPosition x, api::TPosition yCampo,
@@ -601,6 +729,15 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVotoCargoSemCandidato(const comum::m
 
 // (original lines 1596-1602: content not recovered)
 #line 1603
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaCandidatoCom0(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaCandidatoCom0(builder, "CriaTelaCompletaCandidatoCom0", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaCandidatoCom0");
+}
+
 CFormInterativoTelaVota CTelasVota::CriaTelaVotoNuloConsulta(const comum::md::CCargo& cargo, const std::string& mensagem)
 {
     api::CInteractiveFormBuilder builder;
@@ -630,7 +767,7 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVotoBrancoCandidato(const comum::md:
     return GetFormularioProgresso(builder, "telaVotoBrancoCandidato");
 }
 
-// (original lines 1632-2949: content not recovered)
+// (original lines 1641-2949: content not recovered)
 #line 2950
 std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaFim(const std::string& texto,
                                                                     const api::TFontSize tamanhoFim,

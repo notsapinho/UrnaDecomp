@@ -36,8 +36,3 @@ void CGrayedFramedText::MaskText(IScreen& screen, const std::string& text) const
 }
 
 } // namespace api
-
-// <stubs>
-// f5535 · 25 B · unmatched · placement: link order · name unknown
-// void f5535(i32, i32, i32) { ... }
-// </stubs>

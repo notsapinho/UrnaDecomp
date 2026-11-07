@@ -18,8 +18,6 @@ int w2841(int, int) __asm__("_ZNK5comum8CAppInfo7TemVotaENS_10EUrnaTurnoE");
 int w819() __asm__("_ZN5comum9CPartidos7GetInstEv");
 int w2819() __asm__("_ZN5comum6CFotos7GetInstEv");
 int w3751(int) __asm__("_ZN5comum9CPartidosC1Ev");
-int w3756(int) __asm__("_ZN5comum6CFotosC1Ev");
-void w3755(void* imagem, const void* id) __asm__("_ZN5comum6CFotos9GetImagemERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 }
 
 namespace {
@@ -50,20 +48,13 @@ __attribute__((noinline)) int Votos(int a, int t) { return 2 * w2841(a + 4, t ^ 
 // 11261, 11683, 11711, 5604, unit 155's written Gera, 2543, unit 98's, and 11629, unit 200's, are in the link):
 // one call, the one that stood for 11976 having gone with it.
 __attribute__((noinline)) int Partidos() { return 7 * w819() + 1; }
-// Stands for fn 2819's callers: 7787 and 12641 (12520, unit 110's, is in the link).
-__attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }
-// Stand for fns 11499 and 11501, which hold CPartidos::GetInst inlined, and 12641, which holds CFotos::GetInst: each is a
-// second caller of the constructor, and none is written (3755, which holds it too, is in the link).
+// Stands for fn 2819's caller 7787 (12520, unit 110's, and 12641, unit 378's CDataImage<CCandidaturasDSFoto>::GetData,
+// are in the link): one call, the one that stood for 12641 having gone with it.
+__attribute__((noinline)) int Fotos() { return 1 - 9 * w2819(); }
+// Stands for fn 11499, which holds CPartidos::GetInst inlined: a second caller of the constructor, not written (3755,
+// which holds it too, and 11501, unit 378's comum::SiglaPartidoCorrente, are in the link). The stand-in for CFotos'
+// constructor's caller 12641 went: 12641 is in the link (unit 378), as the one for its two calls of fn 3755 did.
 __attribute__((noinline)) void ConstroiPartidos(int a) { w3751(a + 4); }
-__attribute__((noinline)) void ConstroiFotos(int a) { w3756(a + 8); }
-// Stands for fn 3755's (CFotos::GetImagem's) caller 12641, CDataImage<CCandidaturasDSFoto>::GetData, not written, which
-// calls it twice (its other caller, 12520, is in the link): the result is a std::vector<uint8_t>, returned through the
-// first argument.
-__attribute__((noinline)) void Imagens(char* imagem, const void* id)
-{
-    w3755(imagem, id);
-    w3755(imagem + 12, id);
-}
 // The stand-in for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) caller 7174 went: it is linked (unit
 // 241), with 491 and 10590 (units 205 and 283).
 
@@ -80,8 +71,6 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&Partidos);
         cappinfo_sink = reinterpret_cast<const void*>(&Fotos);
         cappinfo_sink = reinterpret_cast<const void*>(&ConstroiPartidos);
-        cappinfo_sink = reinterpret_cast<const void*>(&ConstroiFotos);
-        cappinfo_sink = reinterpret_cast<const void*>(&Imagens);
     }
 } cappinfo_roots;
 

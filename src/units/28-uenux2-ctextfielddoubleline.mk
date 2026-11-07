@@ -28,8 +28,7 @@
 # rows are the library callee, and the whole link matches.
 CTEXTFIELDDOUBLELINE_SRCS := src/api/gui/ctextfielddoubleline.cpp
 UENUX2_SRCS += $(CTEXTFIELDDOUBLELINE_SRCS)
-# two callers of the ctor (28-uenux2-ctextfielddoubleline-roots.cpp) so binaryen does not inline it and drops the constant TColor
-# argument as the target's wasm-opt did
-$(ROOT)/$(APP)/28-uenux2-ctextfielddoubleline-roots.o: $(ROOT)/src/units/28-uenux2-ctextfielddoubleline-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/28-uenux2-ctextfielddoubleline-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/28-uenux2-ctextfielddoubleline-roots.o
+# No roots: the ctor's three target callers, 1192, 3068 and 4185 (unit 378's vota::AdicionaDadosCandidato, through
+# AdicionaTextoDuasLinhas, ctelasvota.cpp), are in the link. They pass the text colour 2, which binaryen's dead-argument
+# elimination folds into the ctor as the target's did, and the background colours 1, a parameter and 0, which stay a
+# parameter; the stand-in that stood for 4185 went with its file.

@@ -65,12 +65,6 @@ void CPreShowProgressBar::PreShow(api::IScreen& tela)
 } // namespace vota
 
 // <stubs>
-// f6681 · 476 B · unmatched · placement: link order · name unknown
-// void f6681(i32, i32) { ... }
-
-// f6639 · 622 B · unmatched · placement: link order · name unknown
-// void f6639(i32, i32) { ... }
-
 // f1591 · 658 B · unmatched · placement: link order · name unknown
 // void f1591(i32, i32, i32, i32, i32) { ... }
 // </stubs>

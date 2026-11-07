@@ -37,10 +37,10 @@
 #   "". Its one reference is slot 1087, which 2384 and 7787 pass to fn 1191. Matches: 4 over 34, operand-only, by the
 #   content pass.
 # - Places: 2384 links right before 2383 in use band 5 (target indices 2384 > 2383 > 2380 > 2376 > 2369, all this
-#   object's), so it is defined above AdicionaCampoNumerico (line 792), which a forward declaration above it names; that
+#   object's), so it is defined above AdicionaCampoNumerico (line 787), which a forward declaration above it names; that
 #   2384 is external is a reading of that order (an internal function first mentioned by 7787, far below, would take
 #   7787's place). 6689 lies in band 2 above 6646 (adicionaBaseTelaVotoBrancoCandidato, first mentioned at line 1570),
-#   so before it. They take lines 753 to 775 of the run above AdicionaCampo (6689, the declarations, 2384), lines
+#   so before it. They take lines 748 to 770 of the run above AdicionaCampo (6689, the declarations, 2384), lines
 #   chosen. 13441 and 13424 lie in band 1 between 13527 (the gif map's exit destructor, line 428) and 13176
 #   (NumeroDigitado, line 300): every place in the file inverts one pair or more, and above line 300 the fewest, two
 #   (13527 against each), where after line 428 four (13176 and 13137 against each) would; they take lines 248 to 264 of

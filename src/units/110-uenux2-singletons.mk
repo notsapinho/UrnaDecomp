@@ -339,9 +339,10 @@
 # ctelasvota.h gains four accessors, of the forms at +36, +44, +52 and +124, which fns 3877, 5979, 5959 and 4420 copy
 # after CTelasVota::GetInst() (the header says which); their names are chosen. Chosen too: GetTelaCargo's parameter
 # names, its local, the find form, and its place above the record (lines 3530 to 3538; the constructor's record :3502
-# stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 4184, 6660, 6671, 6678 and the
-# rest of its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn
-# 7787, which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written.
+# stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 6660, 6671 and the rest of
+# its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn 7787,
+# which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written. 6678
+# and 4184 are written (unit 378): 6678's callers 6639 and 6681 are, and 4184 is external, a choice.
 # Not so 6624 (adicionaBaseTelaVotoNuloConsulta), of that namespace too: its target callers are 6626 and 6616,
 # CTelasVota statics, and it is written with them (src/units/378-uenux2-ctelasvota-criatela.mk).
 #
@@ -386,20 +387,17 @@
 # so in that form it would leave the link until a caller here is written; it is written as a function of vota, its
 # callers' namespace (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that
 # lets src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names,
-# its namespace and linkage, and its lines (801 to 804, above line 822, the first record of a caller). Those lines lie
+# its namespace and linkage, and its lines (796 to 799, above line 822, the first record of a caller). Those lines lie
 # inside the file's run of internal records (lines 294 to 1301, all vota::(anonymous namespace)::), between :487 and
 # :822: written external there, the original would close and reopen the anonymous namespace around it, so the place goes
 # with the linkage chosen. Its include line (<string>, which <format>, already included, brings: a choice) took one of
 # the blank lines above line 291. Scored 15 over 340 rows, all operand-only, before step 8; matched at step 9. With its
 # literal ") - " in the link, unit 112's fn 1143 matches too (src/units/112-ecourna-cbasetype.mk).
-# Not written: fn 2028 (502 B; callers 6602, 6605, 6660, 6671, 6678 and 7787; no record, as 690 has none) waits for
-# table slot 1089, which it passes: fn 11501 (573 B, unwritten), which calls CPartidos' constructor and destructor (fns
-# 3751, 2815), its GetInst inlined (a reading); besides 2028 only OpenSSL's ecd_item_verify loads the constant 1089
-# (grep of the split's pieces), so 11501's name waits on 2028 too. Each waiting for a caller in this file: fns 4129 and
-# 6528 (their only callers are 4181 and 4184, adicionaFotoEmoldurada over CCandidaturasDSFoto) build the
-# CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
-# vtables lie between this file's records in the data. Fn 6561, adicionaFotoEmoldurada over the photo reader of
-# CriaTelaVisualizacaoCandidato (record :487), matches: below.
+# Fns 2028 (vota::AdicionaSiglaPartido), which passes table slot 1089, its function 11501 (comum::SiglaPartidoCorrente,
+# cpartidos.cpp: GetInst's code inlined puts it there), 4129 and 6528 (vota::adicionaImagem and AdicionaTextoAlinhado
+# over CCandidaturasDSFoto and CCargoDSNomeSexoCandidato, 4184's callees), whose fields' vtables lie between this
+# file's records in the data, are written and match: src/units/378-uenux2-ctelasvota-criatela.mk. Fn 6561,
+# adicionaFotoEmoldurada over the photo reader of CriaTelaVisualizacaoCandidato (record :487), matches: below.
 #
 # ctelasvota.cpp also holds six screen builders outside CTelasVota, free functions of vota that ctelasvota.h declares
 # (its comment says what places them in this file): AdicionaTelaAguarde (fn 4152), AdicionaCabecalhoTesteTeclado (fn
@@ -756,7 +754,7 @@
 #   caller, 7787, is this file's; the vtables of the two blocks, of CNumberValidation and of CInputField<CFramedText>
 #   (@1538652 to @1539000) lie in this object's data run (records @1538492 and @1539612), so no object linked before
 #   this one emits them: 2383's object is this one or a later one (7787, this file's, builds them too). In this file the
-#   helper and 2383 take lines 777 to 799 of the blank run above MensagemErroCargo, a choice, and the band's order holds
+#   helper and 2383 take lines 772 to 794 of the blank run above MensagemErroCargo, a choice, and the band's order holds
 #   against 2380, 2376 and 2369 (ld_index 2783, 2787, 2805 and 2828 in names.tsv at f9af1d5d). The three includes
 #   they need (api/gui/cframedtext.h, cinputfield.h, cnumbervalidation.h) took three blank lines of the run above line
 #   291.

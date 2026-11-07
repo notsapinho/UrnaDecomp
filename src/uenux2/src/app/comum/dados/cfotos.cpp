@@ -59,4 +59,14 @@ std::vector<uint8_t> CFotos::GetImagem(const std::string& id)
     return GetFotoPara("CFotos::GetImagem(id)", id).GetFoto().GetImagem();
 }
 
+bool CFotos::Posiciona(const std::string& id)
+{
+    CFotos& fotos = GetInst();
+    const auto it = fotos.m_fotos.find(id);
+    if (it != fotos.m_fotos.end()) {
+        fotos.m_atual = it;
+    }
+    return it != fotos.m_fotos.end();
+}
+
 } // namespace comum

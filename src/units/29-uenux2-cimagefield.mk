@@ -18,10 +18,8 @@
 # value, as Update's copy into a temporary shows (trivial-ABI, facts/reading.md R12); its name, its class and its file are
 # chosen: its place in the uses-2 band, between cgrayedframedtext.cpp's fn 5534 and cimagefieldupdate.cpp's 5531, fits this file.
 UENUX2_SRCS += src/api/gui/cimagefield.cpp
-# two callers of the ctor (29-uenux2-cimagefield-roots.cpp, two make_shared<CImageField> as the target's callers do) so
-# binaryen neither inlines it nor folds its anchor argument; the control block they instantiate,
-# __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from ctelasvota.cpp.o, the first object on the
-# link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too)
-$(ROOT)/$(APP)/29-uenux2-cimagefield-roots.o: $(ROOT)/src/units/29-uenux2-cimagefield-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/29-uenux2-cimagefield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/29-uenux2-cimagefield-roots.o
+# No roots: the ctor's five target callers, 502, 4129 (unit 378's vota::adicionaImagem<comum::CCandidaturasDSFoto>,
+# ctelasvota.cpp), 5547, 6561 and 6689, are in the link, and pass the anchors 0 and 1, so binaryen neither inlines it
+# nor folds its anchor argument; the stand-in that built the field the way 4129 does went with its file. The control
+# block they instantiate, __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from ctelasvota.cpp.o, the
+# first object on the link line that instantiates it (6561's make_shared; cformbuilder.cpp.o's 5547 does too)

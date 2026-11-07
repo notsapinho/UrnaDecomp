@@ -35,8 +35,10 @@
 # 2838, picks the holder or the substitute, frees the literal and only then reads the ESexo at +40: the file-static
 # GetCandidatoAtual, which takes the order as its parameter and which clang inlines, gives that order (measured: 5806
 # matches). Its name, its linkage and the form are chosen; a form that picks after the full expression is not tried.
-# 2838's external linkage is chosen too: the roots stand in for its caller 12641 (12742 matches, from unit 102's roots
-# object), and for 5806's 13101.
+# 2838's external linkage is chosen too: the roots stand in for 5806's caller 13101; 2838's caller 12641 is in the link
+# (unit 378's CDataImage<CCandidaturasDSFoto>::GetData, from ctelasvota.cpp.o, as 12742 is), so the roots'
+# CandidaturasAtuais, which stood for it, is idle: its removal is left to a later commit, as another stage held this
+# roots file when 12641 landed.
 # CCandidaturasDSNome's call operator (5807) is 5806's shape with its literal, "CCandidaturasDSNome", and the string at +12 of
 # the candidate, md::CDadosCandidato::GetNomeUrna, for the ESexo: written alike, after GetCandidatoAtual and before 5806's,
 # since the band puts 5807 ahead of 5806 (ld_index 3398 against 3399 in this link). The class gets the byte 5807 reads as
