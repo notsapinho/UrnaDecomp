@@ -1031,9 +1031,12 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    search the docs for each new match's class and member (demangled from `splat/matched.txt`).
 7. **A note or a doc example that quotes our link's numbers** (an `ld_index`, a map address, an object's data segment
    numbers, a slot, an offset, an `ours` index, a count): a change of that object, of one before it on the link line or
-   of a library's flags moves them with no new match, and no index names them. Search the fragments and companions of
-   the objects the merge recompiled (`LC_ALL=C /usr/bin/grep -n -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' <those
-   files>`; 126 lines in 64 fragments at e7d03612) and re-measure, re-run the examples that print the moved code's
+   of a library's flags moves them with no new match, and no index names them. A data change moves every later
+   object's data, so search every fragment and companion, not only the recompiled objects' (`LC_ALL=C /usr/bin/grep -n
+   -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' src/units/*.mk src/units/*.cpp`: 155 lines in 72 files at b3236f02),
+   and read step 8's `git diff <base> -- splat/symbol_addrs.txt` for a line whose evidence kind changed with no match
+   of the merge touching it (11865's `vtable` to `srcloc-anchor` on 2bdc17c3, its record's copy moved by another
+   object's new data, which unit 199's note quoted); then re-measure, re-run the examples that print the moved code's
    numbers, or date each with the commit it was taken at. A list move (`src/units/README.md` "Names") also changes the
    pair counts of every other move whose span the moved file enters or leaves, in fragments the merge did not
    recompile and that name files, not numbers: search them by the moved file's name (`LC_ALL=C git grep -n
@@ -1059,14 +1062,15 @@ they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W
     LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
     awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' build/out/<handle>/new.idx ledger/callgraph.tsv | sort -u > build/out/<handle>/callee.idx
     awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' build/out/<handle>/callee.idx));"
-    LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/callee.idx src/units/*-roots.cpp src/app/roots_*.cpp
+    LC_ALL=C /usr/bin/grep -n -E "\bw?($(paste -sd'|' build/out/<handle>/callee.idx))\b" src/units/*-roots.cpp src/app/roots_*.cpp
     for f in $(git diff --name-only --diff-filter=D $B -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
     git diff $B -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
 
 The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
 from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
 search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing) and the
-companions' lines that name a callee, among them every caller list; the last two list the deleted files' names (at
+companions' lines that name a callee, among them every caller list and the `w<index>` declarations a word search
+misses (139 lines against `-w -F`'s 118 at b3236f02 against 16b8f99f); the last two list the deleted files' names (at
 3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to search
 with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold coordinates
 and counts, no notes. The last two compare the base with the working tree, so they read a lane's uncommitted range, a
@@ -1156,12 +1160,18 @@ object is not newer than it, so make calls the object up to date (182dc6c1, from
       a
 
 A second later the rule runs. The container's clock is not the cause: a file touched inside `build/docker-build.sh`
-gets an mtime 0.09 s behind the host's. Three ways it bites a variant:
+gets an mtime 0.09 s behind the host's. Three ways it bites a variant, and two other ways a variant's run misleads:
 
 - **A loop of variants.** A form written right after the previous form's compile is not compiled, and its "object" is
   the previous form's (`cmp`-equal), which reads as two forms giving one object.
 - **A restore with `cp -p`** keeps the saved file's older mtime, so the last variant's object stays, newer than every
-  prerequisite; a `cat <saved> > <file>` in the same second as the compile does the same.
+  prerequisite; a `cat <saved> > <file>` in the same second as the compile does the same. A restore by `git checkout
+  -- <file>` writes a new file and renames it into place, and a compile right after it can stop on `error reading
+  '<file>': No such file or directory` with the file on the host (Colima's mount had not seen it yet: a reading), which
+  reads like a broken source; restore by rewriting in place, `git show HEAD:<file> > <file>`, as variants are written.
+- **A script's output piped to `head`** dies part-way: a uenux2 compile of a TU that reaches `src/asn1/asn1.h` prints
+  hundreds of deprecation notes, `head` exits, and the script's later writes hit SIGPIPE, its result lines unprinted
+  and no word of it. Send such a script's output to a file and grep the file for its result lines.
 - **A variable on the command line is no prerequisite.** `make -C src link "APP_OBJS=<another order>"` on a current link
   prints `make: Nothing to be done for 'link'.`, and steps 7 to 9 then measure the plain link: "no row moves". The sign
   is the plain link's sha256 and `link.cmd`'s old order. Move the two link outputs aside by name first, or link into a

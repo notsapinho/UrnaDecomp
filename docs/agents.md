@@ -229,6 +229,10 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file dates from its creation
   and a cloned `build/out/` keeps older mtimes (§W15); an object listed that does not come back is one no rule of the
   link makes, a deleted file's or a probe's compiled by hand, and `make -s -C src print-LINK_OBJS` does not name it.
+  A generated source the link compiles is newer too, and an object moved aside alone is rebuilt from it: move
+  `build/out/app/asn1/roots_asn1.cpp`, which any fragment edit regenerates, aside with `asn1/roots_asn1.o`, and the
+  splat build writes it again from the fragments and the asn1 objects (`find build/out/app -newer .git -type f ! -name
+  '*.o' ! -name '*.d'` lists such files).
   Three kinds the list misses, so move them aside by name too: what the `-W` list of an edited fragment names outside
   `build/out/app/` (fragment 06's zlib objects), a library variant directory a change of its build makes (a
   `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which `TMPDIR=/tmp make -C src libs` rebuilds before the splat
@@ -286,9 +290,23 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - Run the Python tools with `python3 -I -B`: `-B` keeps `__pycache__` out of the tree.
 - Comment lines in sources, headers, fragments and companions are at most 120 columns. A rename that pushes one past
   rewraps its paragraph, keeping the paragraph's line count in a compiled file with records below it (or shortening a
-  phrase when the count would grow); a line already past it is rewrapped by whoever edits its paragraph. `git diff -U0
-  <base> -- src | /usr/bin/grep -E '^\+[^+]' | LC_ALL=C awk '{ l = length($0) - 1; if (l > 120) print l }'` lists the
-  added lines past it.
+  phrase when the count would grow); a line already past it is rewrapped by whoever edits its paragraph. This lists the
+  added comment lines past it, each counted in its file's charset (Latin-1 in `src/uenux2` and `src/ecourna`, as
+  `.editorconfig` gives; `awk` under `LC_ALL=C` counts a UTF-8 fragment's bytes, and every added line passes through it,
+  code and README rows too):
+
+  ```sh
+  git diff -U0 <base> -- src ':!src/units/README.md' | python3 -I -c 'import re, sys
+  f = ""
+  for b in sys.stdin.buffer:
+      if b.startswith(b"+++ "): f = b[6:].decode("latin-1").strip(); continue
+      if b.startswith(b"+"):
+          s = b[1:].rstrip(b"\r\n").decode("latin-1" if re.match(r"src/(uenux2|ecourna)/", f) else "utf-8", "replace")
+          if len(s) > 120 and re.match(r"\s*(//|#|/\*|\*)", s): print(f, len(s))'
+  ```
+
+  Over c3a97777..b3236f02 it prints one line, `src/units/22-uenux2-cbmpconversor.mk 121`, where the byte count
+  lists 48.
 - In zsh, pass flag lists as arrays ([facts/tool-traps.md §X3](reference/facts/tool-traps.md)): an unquoted `$list` is
   one word (write `${=list}`), an unquoted glob in an argument is expanded (quote it), `$rev:path` is a modifier (write
   `"${rev}:path"`), and a word that starts with `=` is a command's path. Each ends with no output that reads like a
