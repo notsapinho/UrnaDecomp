@@ -1454,7 +1454,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1588	_ZZN4vota10CTelasVota29CriaTelaVisualizacaoCandidatoERKN5comum2md12CCandidaturaEmmENK3$_3clEsRKNSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEESF_	1589	symbol	match	readings: address same-content	640	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 1589	sqlite3ParseObjectReset	1610	symbol	match	readings: address symbol	891	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 1590	ossl_cipher_generic_set_ctx_params	1625	symbol	match	readings: address string	412	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libcommon-lib-ciphercommon.o
-1591	-	-	-	no-candidate	no symbol and no ledger pair	658	none	vota	0	-
+1591	_ZN4vota10CTelasVota25CriaTelaVotoNuloCandidatoERKN5comum2md6CCargoERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEESE_hsss	6501	symbol	match	readings: address string,address same-content,address symbol	658	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 1592	do_hmac	1621	symbol	match	-	228	addr	openssl	1	openssl/O3/providers/implementations/rands/libdefault-lib-drbg_hmac.o
 1593	_ZN4vota11AdicionaGifEN5comum2md5CVoto5ETipoERN3api12CFormBuilderEb	2375	symbol	match	readings: address string,address symbol,address srcloc	1945	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 1594	_ZNSt3__26__treeIN5comum2md16ETipoAbrangenciaENS_4lessIS3_EENS_9allocatorIS3_EEE7destroyEPNS_11__tree_nodeIS3_PvEE	2092	symbol	match	-	32	addr	unknown	2	app/uenux2/src/app/vota/operador/leidentidade/celeitorencontrado.cpp.o
@@ -5934,7 +5934,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6068	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13StringLiteral9printLeftERNS0_12OutputBufferE	6136	symbol	match	-	98	fingerprint	libc++abi	1	<binaryen>
 6069	byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle14PODSmallVectorIPNS1_IPNS0_4NodeELm8EEELm4EEaSEOS6_	6137	symbol	match	-	288	addr	libc++abi	1	<binaryen>
 6070	byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E4makeINS0_8NameTypeEJRNSt3__217basic_string_viewIcNS8_11char_traitsIcEEEEEEEPNS0_4NodeEDpOT0_	6138	symbol	match	-	66	addr	libc++abi	1	<binaryen>
-6071	byn$mgfn-shared$__cxx_global_array_dtor.129	6128	symbol	match	-	104	addr	unknown	1	<binaryen>
+6071	byn$mgfn-shared$__cxx_global_array_dtor.132	6128	symbol	match	-	104	addr	unknown	1	<binaryen>
 6072	byn$mgfn-shared$_ZNSt3__244__extended_grapheme_custer_property_boundary14__get_propertyB8ne210108EDi	6157	symbol	match	readings: address symbol	138	addr	app	1	<binaryen>
 6073	byn$mgfn-shared$nth_valueFinalizeFunc	6153	symbol	match	-	118	addr	unknown	1	<binaryen>
 6074	byn$mgfn-shared$countFinalize	6154	symbol	match	-	93	addr	unknown	1	<binaryen>
@@ -6471,7 +6471,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6605	-	-	-	no-candidate	no symbol and no ledger pair	557	none	ecourna	0	-
 6606	file_close	7213	symbol	match	readings: address string	163	addr	openssl	1	openssl/O3/providers/implementations/storemgmt/libdefault-lib-file_store.o
 6607	new_file_ctx	7214	symbol	match	readings: address string	148	addr	openssl	1	openssl/O3/providers/implementations/storemgmt/libdefault-lib-file_store.o
-6608	_ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb	6498	symbol	differs	+0x6 target +0x5 i32.const 80 | ours +0x5 i32.const -64	473	none	ecourna	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6608	_ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb	6498	symbol	match	readings: address same-content,address string,address srcloc,address symbol,table slot	473	none	ecourna	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6609	sm2sig_set_mdname	7215	symbol	match	readings: address string	159	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-sm2_sig.o
 6610	sm2sig_set_ctx_params	7217	symbol	match	readings: address string	297	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-sm2_sig.o
 6611	sm2sig_signature_init	7218	symbol	match	readings: address string	94	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-sm2_sig.o
@@ -6487,7 +6487,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6621	clean_tbuf	7226	symbol	match	-	28	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-rsa_sig.o
 6622	setup_tbuf	7227	symbol	match	readings: address string	85	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-rsa_sig.o
 6623	rsa_sign	7228	symbol	match	readings: address string	989	addr	openssl	1	openssl/O3/providers/implementations/signature/libdefault-lib-rsa_sig.o
-6624	_ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_	6461	symbol	differs	+0x6 target +0x5 i32.const 80 | ours +0x5 i32.const -64	729	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+6624	_ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_	6461	symbol	match	readings: address symbol,table slot,address same-content,address string,address srcloc	729	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6625	ossl_digest_rsa_sign_get_md_nid	7054	symbol	match	readings: address symbol	80	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-securitycheck_default.o)
 6626	_ZN4vota10CTelasVota24CriaTelaVotoNuloConsultaERKN5comum2md6CCargoERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE	6463	symbol	match	readings: address string,address symbol	600	none	vota	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 6627	_ZNSt3__211make_sharedB8ne210108IN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEEJRS5_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS9_EEDpOT0_	6515	symbol	differs	+0x1 target the locals | ours the locals	695	none	libc++	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
@@ -12725,7 +12725,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12859	sqlite3RCStrUnref	13867	symbol	match	readings: address symbol	181	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12860	sqlite3_result_text	6942	symbol	match	-	15	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12861	sqlite3_result_subtype	6943	symbol	match	-	28	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12862	__cxx_global_array_dtor.129	13307	symbol	match	readings: address symbol	28	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+12862	__cxx_global_array_dtor.132	13307	symbol	match	readings: address symbol	28	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 12863	sqlite3_result_pointer	6944	symbol	match	readings: table slot,address same-content	99	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12864	sqlite3_result_null	6945	symbol	match	-	32	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12865	sqlite3_result_int64	6946	symbol	match	-	41	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -12738,14 +12738,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12872	sqlite3_value_encoding	13868	symbol	match	-	7	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12873	sqlite3_value_type	6953	symbol	match	readings: address symbol	19	fingerprint	sqlite	1	sqlite/O3pic2/sqlite3.o
 12874	sqlite3_value_text16be	6954	symbol	match	-	9	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12875	__cxx_global_array_dtor.116	13317	symbol	match	readings: address symbol	10	none	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+12875	__cxx_global_array_dtor.119	13317	symbol	match	readings: address symbol	10	none	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 12876	sqlite3_value_pointer	6956	symbol	match	-	59	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12877	sqlite3_value_subtype	6957	symbol	match	-	23	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12878	sqlite3_value_int	6958	symbol	match	-	112	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12879	sqlite3_value_double	6960	symbol	match	-	62	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12880	sqlite3_value_bytes16	6961	symbol	match	-	90	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12881	sqlite3_value_bytes	6962	symbol	match	-	90	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-12882	__cxx_global_array_dtor.114	13323	symbol	match	readings: address symbol	37	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+12882	__cxx_global_array_dtor.117	13323	symbol	match	readings: address symbol	37	addr	sqlite	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 12883	sqlite3_clear_bindings	6964	symbol	match	readings: address symbol	177	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12884	sqlite3_expired	6965	symbol	match	-	23	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
 12885	getPageNormal	13870	symbol	match	readings: address string,address symbol	950	addr	sqlite	1	sqlite/O3pic2/sqlite3.o

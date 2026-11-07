@@ -670,7 +670,7 @@ out2PrereleaseWithClear = func:686; // size:0x1a evidence:pair-addr
 strAccumFinishRealloc = func:687; // size:0xb9 evidence:pair-addr
 sqlite3Realloc = func:688; // size:0x23e evidence:pair-addr
 deleteTable = func:689; // size:0x943 evidence:pair-addr
-_ZN4vota17MensagemErroCargoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKN5comum2md6CCargoES8_ = func:690; // size:0x2df evidence:call by:3064,6646,6678
+_ZN4vota17MensagemErroCargoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKN5comum2md6CCargoES8_ = func:690; // size:0x2df evidence:call
 ossl_prov_import_key = func:691; // size:0xbe evidence:pair-fingerprint
 WPACKET_get_total_written = func:692; // size:0x17 evidence:pair-fingerprint
 ossl_namemap_stored = func:693; // size:0x19c evidence:call
@@ -1125,7 +1125,7 @@ sqlite3BitvecDestroy = func:1187; // size:0xc8 evidence:pair-addr
 sqlite3_errmsg = func:1188; // size:0x1ab evidence:pair-addr
 sqlite3_exec = func:1189; // size:0x8c9 evidence:pair-addr
 _ZN3api12CFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentE = func:1191; // size:0x124 evidence:call by:4185,11804,12065
-_ZN4vota17AdicionaNomeCargoERKN5comum2md6CCargoERN3api12CFormBuilderEss = func:1192; // size:0x403 evidence:call by:3064,6646
+_ZN4vota17AdicionaNomeCargoERKN5comum2md6CCargoERN3api12CFormBuilderEss = func:1192; // size:0x403 evidence:call by:3064,6608,6646
 ossl_DER_w_precompiled = func:1193; // size:0x94 evidence:pair-addr
 ossl_prov_free_key = func:1194; // size:0x3b evidence:pair-fingerprint
 type_specific_keypair_der2rsa_does_selection = func:1195; // size:0xe evidence:pair-fingerprint
@@ -1785,7 +1785,7 @@ _ZN5comum8CRelUtil16GetSeparadorFaseENS_9EUrnaFaseE = func:1919; // size:0x381 e
 _ZNSt3__27__sort4B8ne210108INS_17_ClassicAlgPolicyERZNK5comum14CGeradorBUBaseINS2_8CRdvVotaENS2_10CEleitoresEE15ImprimeConsultaEvEUlRKNS2_2md17CRespostaConsultaESA_E_PS8_TnNS_9enable_ifIXnt21__use_branchless_sortIT0_T1_EEiE4typeELi0EEEvSG_SG_SG_SG_SF_ = func:1920; // size:0x12c evidence:pair-addr
 _ZNK5comum15CEleitoresAptos7FormataEv = func:1921; // size:0x542 evidence:call by:3871,5977,11908
 _ZN5comum15CEleitoresAptosC2ENSt3__28functionIFNS_10SQtdeAptosEvEEE = func:1922; // size:0x53 evidence:pair-fingerprint
-_ZNK5comum2md6CCargo18GetDetalheConsultaEv = func:1923; // size:0x16 evidence:call by:3819,11253
+_ZNK5comum2md6CCargo18GetDetalheConsultaEv = func:1923; // size:0x16 evidence:call by:3074,3819,11253
 _ZN5comum2md20FormataIdentificadorERKNS0_18CEleitorIdentidadeE = func:1924; // size:0x14e evidence:pair-addr
 _ZNSt3__218__allocation_guardINS_9allocatorINS_11__list_nodeINS_4pairINS_12basic_stringIcNS_11char_traitsIcEENS1_IcEEEENS_10shared_ptrIN3api8CWavFileEEEEEPvEEEEE9__destroyB8ne210108Ev = func:1925; // size:0x19 evidence:pair-addr
 _ZN5comum2md20CValidadorIdentidade7GetInstEv = func:1926; // size:0x18 evidence:srcloc-anchor
@@ -2542,7 +2542,7 @@ _ZN3api13CDSImageFieldD2Ev = func:2778; // size:0x170 evidence:pair-addr
 _ZNK3api11CFramedText9DrawFrameEmNS_6TColorERNS_7IScreenE = func:2779; // size:0xa6 evidence:pair-fingerprint
 _ZNK3api11CFramedText8MaskTextERNS_7IScreenERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:2780; // size:0x2fe evidence:srcloc-anchor
 _ZN3api5IFormINS_7IScreenEED2Ev = func:2781; // size:0x163 evidence:call
-_ZN3api12CFormBuilder21AddTextFieldMultiLineERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_5SRectERKNS_5SFontENS_14ETextAlignmentE = func:2782; // size:0x157 evidence:call by:1588,12040
+_ZN3api12CFormBuilder21AddTextFieldMultiLineERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_5SRectERKNS_5SFontENS_14ETextAlignmentE = func:2782; // size:0x157 evidence:call by:1588,3074,12040
 _ZN3api19CTextFieldMultiLine4MoveERKNS_6SPointE = func:2783; // size:0x61 evidence:pair-addr
 _ZN5comum4impl14ConteudoValidoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_6vectorIS7_NS5_IS7_EEEE = func:2784; // size:0x25 evidence:call
 _ZN5comum8CRelUtil20ImprimeSeparadorFaseERN3api17CPaperFormBuilderENS_9EUrnaFaseE = func:2785; // size:0x69 evidence:call by:11908
@@ -2805,7 +2805,7 @@ _ZN4vota29AdicionaCabecalhoTesteTecladoERN3api12CFormBuilderE = func:3054; // si
 sqlite3_hard_heap_limit64 = func:3055; // size:0x85 evidence:pair-addr
 sqlite3_config = func:3056; // size:0x543 evidence:pair-addr
 ossl_cipher_var_keylen_set_ctx_params = func:3057; // size:0x95 evidence:pair-addr
-_ZN4vota19AdicionaCampoNumeroIN3api17CGrayedFramedTextEEENSt3__210shared_ptrINS1_10IFormFieldINS1_7IScreenEEEEERNS1_12CFormBuilderEmRKNS1_6SPointE = func:3060; // size:0x126 evidence:vptr-anchor
+_ZN4vota19AdicionaCampoNumeroIN3api17CGrayedFramedTextEEENSt3__210shared_ptrINS1_10IFormFieldINS1_7IScreenEEEEERNS1_12CFormBuilderEmRKNS1_6SPointE = func:3060; // size:0x126 evidence:call by:6608
 rsa_signverify_init = func:3061; // size:0x245 evidence:pair-addr
 mac_newctx = func:3062; // size:0xbd evidence:pair-addr
 _ZN4vota10CTelasVota29CriaTelaVotoCargoSemCandidatoERKN5comum2md6CCargoEs = func:3064; // size:0x51b evidence:srcloc-anchor
@@ -2815,6 +2815,7 @@ _ZN3api12CFormBuilder18AddDoubleLineFieldEPFNSt3__212basic_stringIcNS1_11char_tr
 mac_gen_set_params = func:3069; // size:0xa7 evidence:pair-addr
 ossl_mac_key_free = func:3070; // size:0x67 evidence:pair-addr
 ecx_get_params = func:3073; // size:0xd3 evidence:pair-addr
+_ZN4vota16AdicionaPerguntaERN3api12CFormBuilderERKN5comum2md6CCargoE = func:3074; // size:0x1ac evidence:call by:6624
 _ZN3api14CPolySingletonINS_9IResourceEE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE = func:3075; // size:0x6ec evidence:srcloc-anchor
 HKDF_Extract = func:3077; // size:0x214 evidence:pair-addr
 _ZNK4vota12CEstadoAudio16Modo1SelecionadoEv = func:3078; // size:0xa evidence:pair-fingerprint
@@ -5267,7 +5268,7 @@ byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle21TemplateParamPackDecl9prin
 byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle13StringLiteral9printLeftERNS0_12OutputBufferE = func:6068; // size:0x62 evidence:pair-fingerprint
 byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle14PODSmallVectorIPNS1_IPNS0_4NodeELm8EEELm4EEaSEOS6_ = func:6069; // size:0x120 evidence:pair-addr
 byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E4makeINS0_8NameTypeEJRNSt3__217basic_string_viewIcNS8_11char_traitsIcEEEEEEEPNS0_4NodeEDpOT0_ = func:6070; // size:0x42 evidence:pair-addr
-byn$mgfn-shared$__cxx_global_array_dtor.129 = func:6071; // size:0x68 evidence:pair-addr
+byn$mgfn-shared$__cxx_global_array_dtor.132 = func:6071; // size:0x68 evidence:pair-addr
 byn$mgfn-shared$_ZNSt3__244__extended_grapheme_custer_property_boundary14__get_propertyB8ne210108EDi = func:6072; // size:0x8a evidence:pair-addr
 byn$mgfn-shared$nth_valueFinalizeFunc = func:6073; // size:0x76 evidence:pair-addr
 byn$mgfn-shared$countFinalize = func:6074; // size:0x5d evidence:pair-addr
@@ -5780,6 +5781,7 @@ kdf_pbkdf1_set_ctx_params = func:6600; // size:0x7d evidence:pair-addr
 des_init = func:6604; // size:0xbb evidence:pair-addr
 file_close = func:6606; // size:0xa3 evidence:pair-addr
 new_file_ctx = func:6607; // size:0x94 evidence:pair-addr
+_ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb = func:6608; // size:0x1d9 evidence:srcloc-anchor
 sm2sig_set_mdname = func:6609; // size:0x9f evidence:pair-addr
 sm2sig_set_ctx_params = func:6610; // size:0x129 evidence:pair-addr
 sm2sig_signature_init = func:6611; // size:0x5e evidence:pair-addr
@@ -5793,6 +5795,7 @@ rsa_verify = func:6620; // size:0x2b0 evidence:pair-addr
 clean_tbuf = func:6621; // size:0x1c evidence:pair-addr
 setup_tbuf = func:6622; // size:0x55 evidence:pair-addr
 rsa_sign = func:6623; // size:0x3dd evidence:pair-addr
+_ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_ = func:6624; // size:0x2d9 evidence:srcloc-anchor
 ossl_digest_rsa_sign_get_md_nid = func:6625; // size:0x50 evidence:pair-addr
 _ZNSt3__211make_sharedB8ne210108IN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEEJRS5_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS9_EEDpOT0_ = func:6627; // size:0x2b7 evidence:call by:1192
 ecdsa_setup_md = func:6628; // size:0x2a9 evidence:pair-addr
@@ -11095,7 +11098,7 @@ sqlite3_result_text16be = func:12858; // size:0x12 evidence:pair-addr
 sqlite3RCStrUnref = func:12859; // size:0xb5 evidence:pair-addr
 sqlite3_result_text = func:12860; // size:0xf evidence:pair-addr
 sqlite3_result_subtype = func:12861; // size:0x1c evidence:pair-addr
-__cxx_global_array_dtor.129 = func:12862; // size:0x1c evidence:pair-addr
+__cxx_global_array_dtor.132 = func:12862; // size:0x1c evidence:pair-addr
 sqlite3_result_pointer = func:12863; // size:0x63 evidence:pair-addr
 sqlite3_result_null = func:12864; // size:0x20 evidence:pair-addr
 sqlite3_result_int64 = func:12865; // size:0x29 evidence:pair-addr
@@ -11113,7 +11116,7 @@ sqlite3_value_int = func:12878; // size:0x70 evidence:pair-addr
 sqlite3_value_double = func:12879; // size:0x3e evidence:pair-addr
 sqlite3_value_bytes16 = func:12880; // size:0x5a evidence:pair-addr
 sqlite3_value_bytes = func:12881; // size:0x5a evidence:pair-addr
-__cxx_global_array_dtor.114 = func:12882; // size:0x25 evidence:pair-addr
+__cxx_global_array_dtor.117 = func:12882; // size:0x25 evidence:pair-addr
 sqlite3_clear_bindings = func:12883; // size:0xb1 evidence:pair-addr
 sqlite3_expired = func:12884; // size:0x17 evidence:pair-fingerprint
 getPageNormal = func:12885; // size:0x3b6 evidence:pair-addr
@@ -11370,7 +11373,7 @@ rsa_digest_verify_init = func:13172; // size:0xf evidence:pair-addr
 rsa_digest_sign_final = func:13173; // size:0x93 evidence:pair-addr
 rsa_digest_signverify_update = func:13174; // size:0x23 evidence:pair-addr
 rsa_digest_sign_init = func:13175; // size:0xf evidence:pair-addr
-_ZN4vota14NumeroDigitadoEv = func:13176; // size:0x7 evidence:table by:3060
+_ZN4vota14NumeroDigitadoEv = func:13176; // size:0x7 evidence:table by:3060,6624
 rsa_verify_recover_init = func:13177; // size:0xe evidence:pair-addr
 rsa_verify_init = func:13178; // size:0xd evidence:pair-addr
 rsa_sign_init = func:13179; // size:0xd evidence:pair-addr
@@ -38726,27 +38729,6 @@ _ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_1
 # remainder is not explained (src/units/378-uenux2-ctelasvota-criatela.mk). Without this line 1192 reads unresolved
 # self-voted on this name.
 _ZNSt3__211make_sharedB8ne210108IN3api9CDataTextIN4vota12_GLOBAL__N_128DS_NomeCargoNeutroComEscolhaEEEJRS5_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS9_EEDpOT0_ = func:6627; // evidence:callers+content
-# 6624: vota::(anonymous namespace)::adicionaBaseTelaVotoNuloConsulta, ctelasvota.cpp's, by its record: its body, read
-# without a match, loads the std::source_location record at 1538076 (ctelasvota.cpp:1014, column 15, that function's
-# signature), which no other target function loads (/usr/bin/grep -rlE 'i32\.const 1538076($|[^0-9])'
-# build/out/splat/pieces/asm prints 6624 alone), and ours loads it from the same throw. Its target callers are 6626 and
-# 6616 (CriaTelaVotoNuloConsulta, CriaTelaConferenciaVotoNuloConsulta), one call each, aligned with ours. Our body differs,
-# 56 over 322 rows at the tree's flags (pnpm wasm score; 52 of the 54 replaced rows operand-only, frame offsets, and 2
-# deleted); the remainder is not explained (src/units/378-uenux2-ctelasvota-criatela.mk), so the record anchors
-# nothing, and neither caller is
-# an anchor: 6626's content anchor, the "CONFIRMAR este voto" array at 474912, has a second holder of its own shape in
-# 3063. Without this line 6626 and 6616 read no-candidate.
-_ZN4vota12_GLOBAL__N_132adicionaBaseTelaVotoNuloConsultaERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_ = func:6624; // evidence:callers+content
-# 6608: vota::(anonymous namespace)::adicionaBaseTelaVotoNuloCandidato, ctelasvota.cpp's, by its record: its body, read
-# without a match, loads the std::source_location record at 1538168 (ctelasvota.cpp:1049, column 15), which no other
-# target function loads (/usr/bin/grep -rlE 'i32\.const 1538168($|[^0-9])' build/out/splat/pieces/asm prints 6608
-# alone), and ours loads it from the same throw. Its target callers are 1591 and 1767 (CriaTelaVotoNuloCandidato,
-# CriaTelaConferenciaVotoNuloCandidato), one call each, aligned with ours; neither has a record or an anchor. Our body
-# differs, 47 over 211 rows at the tree's flags (pnpm wasm score; 43 of the 45 replaced rows operand-only, frame
-# constants and load or store offsets, and 2 deleted); the remainder is not explained
-# (src/units/378-uenux2-ctelasvota-criatela.mk), so the record anchors nothing. Without this line 1767 reads
-# no-candidate.
-_ZN4vota12_GLOBAL__N_133adicionaBaseTelaVotoNuloCandidatoERN3api12CFormBuilderERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKN5comum2md6CCargoESC_hsssRsb = func:6608; // evidence:callers+content
 # 5869: comum::CGeracaoVersoesContratos::ObtemDependencias (src/units/268-uenux2-cgeracaoversoescontratos.mk), the only
 # target function and the only one of ours with its depth-0 fingerprint, addr and shape hashes (pnpm wasm fingerprint
 # <wasm> --depth 0: target [5869], ours [this symbol], fingerprint 08226d4657645ab7 on both sides). At depths 1 and 2

@@ -295,6 +295,18 @@ private:
 //   vota::CGeraRelatorios's and vota::CGeraBU's constructors (inlined into fns 6084 and 6129); the other two each have
 //   one caller, CGeraBU's and vota::CCopiaResultadoParaMR's constructors, which hold them behind a second
 //   stack-pointer prologue (inlined by binaryen, so out of line in the object: docs/how-to-decompile.md step 3).
+// - TelaProgressoEncerramento: the status header (5), "Preparando dados para encerramento" at (320, 90) in the 30-point
+//   font (@474888), "O processo pode levar alguns minutos" at (320, 220) and "Por favor, aguarde..." at (320, 260) in
+//   the 25-point one (@474992), centred, colours 2 over 1, then a progress bar to 30 from (70, 350) to (570, 385) with
+//   the text "%p" (fn 5545, whose font parameter binaryen folded: both target callers pass the SFont {0, 0} @475024,
+//   FONTE_BARRA_PROGRESSO here, its name chosen, a constant of this file as 7787's is a reading), and the form named
+//   "telaProgressoEncerramento" through GetFormulario (fn 886), returned with the bar as a pair: the form moved from
+//   GetFormulario's result and the bar copied from a named local, which the target's stores give (its form's count
+//   left alone and the moved-from pointer released, the bar's count incremented). Its one caller,
+//   vota::CProgressoEncerramento's constructor (inlined into fn 12098 with std::make_shared), holds it behind an
+//   80-byte prologue of its own, inside the constructor's 16-byte frame that holds the pair; so it is out of line in
+//   the object, as the three above. No index of its own. The result's type, a std::pair, is chosen: the bytes show two
+//   std::shared_ptrs in a 16-byte result.
 // - TelaEsperaRepetirTesteTeclado: AdicionaCabecalhoTesteTeclado's fields, an api::CTextFieldUpdate with an interval
 //   of 200 ms over a std::function and the format "Por favor, espere {}s para a", and two lines below it, in a
 //   25-point font, named
@@ -310,6 +322,7 @@ void AdicionaCabecalhoTesteTeclado(api::CFormBuilder& builder);
 std::shared_ptr<api::IForm<api::IScreen>> TelaPreparandoDadosEncerramento();
 std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada();
 std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR();
+std::pair<std::shared_ptr<api::IForm<api::IScreen>>, std::shared_ptr<api::CProgressBar>> TelaProgressoEncerramento();
 std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     std::function<std::string(const std::string&)> fonte);
 // The keyboard test's failure screens, one caller each: the constructors of vota::testeteclado::CTesteFalhou,

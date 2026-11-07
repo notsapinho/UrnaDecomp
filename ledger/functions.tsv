@@ -11756,7 +11756,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11890	12	0	app	-	skeleton	14417	addr	2	__cxx_global_array_dtor_2533
 11891	999	0	app	vota	-	-	none	-	
 11892	1721	0	app	vota	-	-	none	-	
-11893	10	0	app	-	skeleton	13317	addr	2	__cxx_global_array_dtor.116
+11893	10	0	app	-	skeleton	13317	addr	2	__cxx_global_array_dtor.119
 11894	12	0	app	-	skeleton	12404	addr	2	__cxx_global_array_dtor_4826
 11895	14	0	app	asn1-modules	-	-	none	-	
 11896	717	0	app	vota	-	-	none	-	
@@ -12725,7 +12725,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12859	181	0	sqlite	-	skeleton	13867	addr	12	sqlite3RCStrUnref
 12860	15	0	sqlite	-	skeleton	6942	addr	1	sqlite3_result_text
 12861	28	0	sqlite	-	skeleton	6943	addr	1	sqlite3_result_subtype
-12862	28	0	sqlite	-	skeleton	13307	addr	4	__cxx_global_array_dtor.129
+12862	28	0	sqlite	-	skeleton	13307	addr	4	__cxx_global_array_dtor.132
 12863	99	0	sqlite	-	skeleton	6944	addr	5	sqlite3_result_pointer
 12864	32	0	sqlite	-	skeleton	6945	addr	1	sqlite3_result_null
 12865	41	0	sqlite	-	skeleton	6946	addr	1	sqlite3_result_int64
@@ -12745,7 +12745,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 12879	62	0	sqlite	-	skeleton	6960	addr	1	sqlite3_value_double
 12880	90	0	sqlite	-	skeleton	6961	addr	2	sqlite3_value_bytes16
 12881	90	0	sqlite	-	skeleton	6962	addr	2	sqlite3_value_bytes
-12882	37	0	sqlite	-	skeleton	13323	addr	3	__cxx_global_array_dtor.114
+12882	37	0	sqlite	-	skeleton	13323	addr	3	__cxx_global_array_dtor.117
 12883	177	0	sqlite	-	skeleton	6964	addr	4	sqlite3_clear_bindings
 12884	23	0	sqlite	-	skeleton	6965	byte	0	sqlite3_expired
 12885	950	0	sqlite	-	skeleton	13870	addr	21	getPageNormal

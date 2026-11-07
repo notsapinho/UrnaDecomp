@@ -1,6 +1,7 @@
-// Reconstruction's note: comum::md::CVersoesContratos (the file the records name): the constructor, which target fn
-// 12098 holds inlined (no index; unrooted), and GetValor, their throws on their records' lines (29 and 42, column 15);
-// their first lines are a choice (src/units/227-uenux2-contratos-cmontadorhash.mk says what each rests on).
+// Reconstruction's note: comum::md::CVersoesContratos (the file the records name): GetTag (no record; clang inlines it),
+// the constructor, which target fn 12098 holds inlined (no index; unrooted), and GetValor, their throws on their
+// records' lines (29 and 42, column 15); the first lines are a choice (src/units/227-uenux2-contratos-cmontadorhash.mk
+// says what each rests on).
 #include "app/comum/gravadores/md/cversoescontratos.h"
 
 #include <format>
@@ -9,13 +10,19 @@
 
 namespace comum::md {
 
-// (original lines 12-23: content not recovered)
-#line 24
+// (original lines 13-17: content not recovered)
+#line 18
+const std::string CVersoesContratos::GetTag()
+{
+    return GetValor("tag");
+}
+
+
 CVersoesContratos::CVersoesContratos(const std::string& arquivo)
     : m_arquivo(api::CIniFile::Carrega(arquivo))
 {
 
-    if (GetValor("tag") != "20260601173148") {
+    if (GetTag() != "20260601173148") {
         throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8696,
             std::format("Tag do arquivo de versões de contratos inválida: [{}]. Tag atual: [{}]",
                 GetValor("tag"), "20260601173148"));

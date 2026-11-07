@@ -536,10 +536,17 @@ void adicionaBaseTelaVotoBrancoCandidato(api::CFormBuilder& builder, const std::
 // void f6641(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 995-1007: content not recovered)
-#line 1008
+// (original lines 995-996: content not recovered)
+#line 997
 namespace {
 
+void AdicionaTextoVotoNulo(api::CFormBuilder& builder, const api::TPosition x)
+{
+    AdicionaTextoPiscante(builder, "VOTO NULO", FONTE_NUMERO, x, 345);
+}
+
+// (original lines 1004-1009: content not recovered)
+#line 1010
 void adicionaBaseTelaVotoNuloConsulta(api::CFormBuilder& builder, const std::string& tela, const comum::md::CCargo& cargo,
                                       const std::string& texto)
 {
@@ -551,7 +558,7 @@ void adicionaBaseTelaVotoNuloConsulta(api::CFormBuilder& builder, const std::str
     AdicionaCampoNumero<api::CFramedText>(builder, digitos, api::SPoint(100 - 40 * digitos, y));
     builder.AddTextField(texto, api::SPoint(100, y + 3), FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA,
                          static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-    AdicionaTextoPiscante(builder, "VOTO NULO", FONTE_NUMERO, 320, 345);
+    AdicionaTextoVotoNulo(builder, 320);
 }
 
 } // namespace
@@ -574,13 +581,19 @@ void adicionaBaseTelaVotoNuloCandidato(api::CFormBuilder& builder, const std::st
     builder.AddTextField(texto, api::SPoint(x, yTexto), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA,
                          static_cast<api::TColor>(2), static_cast<api::TColor>(1));
     if (piscante) {
-        AdicionaTextoPiscante(builder, "VOTO NULO", FONTE_NUMERO, 195, 345);
+        AdicionaTextoVotoNulo(builder, 195);
     }
+}
+
+void AdicionaCampoDigitos(api::CFormBuilder& builder, const uebyte digitos, const api::TPosition x, const api::TPosition y)
+{
+    AdicionaCampoNumerico(builder, digitos, false, true, true, false, true, api::SPoint(x, y), FONTE_NUMERO,
+                          api::ALINHAMENTO_ESQUERDA);
 }
 
 } // namespace
 
-// (original lines 1064-1071: content not recovered)
+// (original lines 1070-1071: content not recovered)
 #line 1072
 // <stubs>
 // f6605 · 557 B · unmatched · name unknown
@@ -681,11 +694,11 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVotoNuloCandidato(const comum::md::C
     if (digitos == 0) {
         builder.AddInputControl();
     } else {
-        AdicionaCampoNumerico(builder, digitos, false, true, true, false, true, api::SPoint(proximoX, yCampo),
-                              FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+        AdicionaCampoDigitos(builder, digitos, proximoX, yCampo);
     }
     return GetFormularioProgresso(builder, "telaVotoNuloCandidato");
 }
+
 
 CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoNuloCandidato(const comum::md::CCargo& cargo,
                                                                         const std::string& mensagem, api::TPosition x,
@@ -916,8 +929,30 @@ CFormInterativoTelaVota CTelasVota::CriaTelaConfirmaImpressaoZeresima(const std:
     return GetFormularioInterativo(builder, "telaConfirmaImpressaoZeresima");
 }
 
-// (original lines 3130-3188: content not recovered)
-#line 3189
+// (original lines 3130-3166: content not recovered)
+#line 3167
+namespace {
+
+const api::SFont FONTE_BARRA_PROGRESSO{0, 0};
+
+} // namespace
+
+std::pair<std::shared_ptr<api::IForm<api::IScreen>>, std::shared_ptr<api::CProgressBar>> TelaProgressoEncerramento()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Preparando dados para encerramento", api::SPoint(320, 90), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("O processo pode levar alguns minutos", api::SPoint(320, 220), FONTE_AGUARDE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Por favor, aguarde...", api::SPoint(320, 260), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const std::shared_ptr<api::CProgressBar> barra =
+        builder.AddProgressBar(30, api::SPoint(70, 350), api::SPoint(570, 385), FONTE_BARRA_PROGRESSO, "%p");
+    return {GetFormulario(builder, "telaProgressoEncerramento"), barra};
+}
+
+
 namespace {
 
 

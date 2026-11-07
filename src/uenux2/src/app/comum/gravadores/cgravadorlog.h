@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include "app/comum/gravadores/igravador.h"
@@ -37,5 +38,12 @@ private:
     std::string m_arquivoLog;
     std::string m_diretorioTrabalho;
 };
+
+// The directory of the archived logs, CPath::GetPathLog() joined with "arquivados/": fn 12098 holds it inlined behind a
+// 32-byte frame of its own (pnpm wasm fn's folded readout of 12098, lines 2226 to 2265: GetPathLog's code, then the
+// join, into the path 12098 converts to the constructor's first string). No index, record or slot names it: its name,
+// its being a free function of comum and its file (cgravadorlog.cpp, beside the class that takes its result) are
+// chosen; external, so that clang keeps it out of line for binaryen to inline into its one caller.
+std::filesystem::path GetPathLogArquivados();
 
 } // namespace comum

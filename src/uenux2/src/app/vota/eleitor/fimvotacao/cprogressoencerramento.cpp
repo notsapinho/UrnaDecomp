@@ -3,8 +3,16 @@
 #include "api/gui/cprogressbar.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 
 namespace vota {
+
+CProgressoEncerramento::CProgressoEncerramento()
+{
+    const auto tela = TelaProgressoEncerramento();
+    m_form = tela.first;
+    m_barra = tela.second;
+}
 
 CProgressoEncerramento::~CProgressoEncerramento() = default;
 

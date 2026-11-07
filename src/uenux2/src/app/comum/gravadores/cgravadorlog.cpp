@@ -12,6 +12,7 @@
 
 #include "api/util/csystem.h"
 #include "app/comum/carquivosresultado.h"
+#include "app/comum/cpath.h"
 #include "ecourna/api/compression/czip.hpp"
 
 namespace comum {
@@ -21,6 +22,11 @@ CGravadorLog::CGravadorLog(TMunicipioID municipio, TZonaID zona, TLocalID local,
     : IGravador(municipio, zona, local, secao, fase, EXTENSAO_LOG_JEZ, static_cast<ESavdArquivoUE>(60)),
       m_diretorioArquivados(diretorioArquivados), m_arquivoLog(arquivoLog), m_diretorioTrabalho(diretorioTrabalho)
 {
+}
+
+std::filesystem::path GetPathLogArquivados()
+{
+    return CPath::GetPathLog() / "arquivados/";
 }
 
 void CGravadorLog::GravaResultado(api::CFile&) const
