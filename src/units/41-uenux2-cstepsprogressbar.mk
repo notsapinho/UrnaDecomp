@@ -34,7 +34,8 @@
 # strategy passed as a function pointer, 10972 and 10971 are the two strategies (the steps in equal parts on one line;
 # widths in proportion to the texts), and 5506 divides the bar into equal parts for 10972 and for Draw's fallback. They
 # are in cstepsprogressbar.cpp before line 428, in an anonymous namespace (Tenta, CabeEmUmaLinha, CabeProporcional,
-# Divide, and Escolhe, CriaContorno and Fecha, which have no target function: Draw inlines them), with the private
+# Divide; Escolhe, CriaContorno and Fecha, which have no target function: Draw inlines them; and Cabe and
+# CabemNasAreas, which CabeEmUmaLinha holds inlined, below), with the private
 # Recalcula, which Draw calls and inlines. Chosen, and measured against no matching Draw: every name, the structs
 # SDisposicao and SSegmento's names, the lines, and the header's additions for them (SPathCommand's two constructors:
 # with them unit 69's 5113, EscalaCaminho, went from 70 over 264 rows to 38 over 256 with its products in locals, and
@@ -59,27 +60,45 @@
 #     them. Building the area with SRect::Normalized stores it as one 64-bit word; std::min and std::max in
 #     emplace_back's arguments narrow the corner once (no mask), and so do x and l as int or ueword with them (one
 #     mask or none).
-# - CabeEmUmaLinha (10972) 23 over 274 rows (same 251, replaced 12 [9 operand-only], inserted 6, deleted 5), with the
-#   two side terms added into one TPosition, `lados`: in the target's loop the indent is added to seta and 2 * margem
-#   kept apart (`seta + (i != n - 1 ? recuo : 0)`), where the terms subtracted one by one gave `seta + 2 * margem`
-#   hoisted out of the loop and 52 over 280. Its one difference left is where `+ 1` and `- 2 * margem` go: the target
-#   computes `1 - 2 * margem` once, after the first height test, from the 2 * margem that test uses, and the width as
-#   `(1 - 2m + right) - (left + lados)`; ours is `right - (2m + left + lados) + 1`. -mllvm -print-after-all on the TU's
-#   compile line shows ReassociatePass building `(1 - 2m) + right` and LICM hoisting `1 - 2m`, then InstCombine folding
-#   it back into `right + 1`; and the backend alone (the TU's line with -Xclang -disable-llvm-passes, on the IR edited
-#   by hand) gives a sum that adds the 1 last for each shape tried, `(1 - 2m) + right` written in the IR included. So, a
-#   reading, the target's `1 - 2m` is a value InstCombine left as it was, as it leaves one with a second use. No source
-#   form read on the optimized IR keeps it as the target does: `1 - 2 * margem` written as an int local or in place
-#   folds into the sum, and as a TPosition local it stays, but zero-extended and computed before the loop (64 over 289
-#   in the whole link); and margem, alturaUtil or recuo before the loop, 2 * margem as a TPosition of its own, the area
-#   by value or read before the height test, the width as right - left + 1 or with a margin taken off each edge, or the
-#   margins moved to the text's side of the comparison keep no `1 - 2m`. In the whole link, before `lados`: the two side
-#   terms as if statements 81 over 294; a margin taken off each side as two TPosition edges 44 over 283; `right - left +
-#   1 - margem - seta - margem - recuo` builds 1 - 2m first, but from a second 2 * margem as a multiply by 65534 or-ed
-#   with 1, 64 over 288. The remainder is not explained.
+# - CabeEmUmaLinha (10972) matches. Its steps' loop is in a file-local helper clang inlines, CabemNasAreas, which
+#   CabeEmUmaLinha gives the count n, the areas, the font, altura, altura - 2 * margem, seta and 1 - 2 * margem
+#   (ajusteLargura); both of the helper's tests go through a file-local Cabe(TPosition medida, TPosition disponivel),
+#   `medida <= disponivel`. That the original was written so is a reading. What the target shows, and what each part
+#   gives, measured by pnpm wasm score in the whole link (each form's object compared first):
+#   - one `1 - 2 * margem`, computed after the first height test and used by the first step's width and by the loop's,
+#     `(1 - 2m + right) - (left + lados)`. With the loop in CabeEmUmaLinha's own body (the form landed before: 23 over
+#     274, ours `right - (2m + left + lados) + 1`), -mllvm -print-after-all on the TU's compile line shows
+#     ReassociatePass building `(1 - 2m) + right`, LICM hoisting `1 - 2m`, and the next InstCombine folding it back into
+#     `right + 1` while it has one use, before JumpThreading peels the first step; the same value given a second use (a
+#     probe that also stores it to an extern global) stays, computed after the first height test. None of the forms
+#     tried in that body when the unit landed kept it (their scores are of that build): `1 - 2 * margem` as an int local
+#     or in place folds into the sum, and as a TPosition local it stays but zero-extended and computed before the loop
+#     (64 over 289); margem, alturaUtil or recuo before the loop, 2 * margem as a TPosition of its own, the area by
+#     value or read before the height test, the width as right - left + 1 or with a margin taken off each edge, and the
+#     margins moved to the text's side keep no `1 - 2m`; before `lados`, the two side terms as if statements 81 over
+#     294, a margin taken off each side as two TPosition edges 44 over 283, and `right - left + 1 - margem - seta -
+#     margem - recuo` 64 over 288 (it builds 1 - 2m first, from a second 2 * margem as a multiply by 65534 or-ed with
+#     1). The loop in a helper is peeled in the helper's own pipeline, before it is inlined (the dumps show the inlined
+#     body with its first step peeled; docs/reference/facts/codegen.md C12), and the value the helper receives stays (a
+#     reading: it has two uses in CabeEmUmaLinha when its InstCombine runs): 4 over 269 with the tests written in place.
+#   - the indent added to seta and 2 * margem kept apart, `seta + (i != n - 1 ? recuo : 0)`: so the two side terms are
+#     added into one value, `lados` (subtracted one by one they gave `seta + 2 * margem` hoisted out of the loop, 52
+#     over 280 when the unit landed). Seta comes first in that add, and the width's compares have the text's width
+#     first. With the tests in place, two of the 4 rows left are that add with the select first; with the width written
+#     as one int expression the add has seta first but the width's compare has the width first (57 over 284). With both
+#     tests through Cabe's TPosition parameters: 2 over 268, the calls of 5506 and 136 only, and the scan matches it.
+#   The same object (CabeEmUmaLinha's disassembly compared): the height test written in place, not through Cabe; lados
+#   as int, as TPosition or in place; recuo as int; the helper computing margem from tamanho, or given margem, instead
+#   of alturaUtil; the width as `area.right + ajusteLargura - (area.left + lados)` or `area.right - area.left +
+#   ajusteLargura - lados`; the loop inside a try with a catch (...) that returns false (the file builds without
+#   exceptions). Another object: ajusteLargura as TPosition, Cabe over int, Cabe as `disponivel >= medida`, and the
+#   helpers outside the anonymous namespace (CabemNasAreas stays out of line, called), so their internal linkage is
+#   measured and the anonymous namespace, the file's other helpers' form, is a choice over `static`. Measured: the
+#   helper takes n (recomputing passos.size() inside it puts the count's computation after the first GetFontMetrics
+#   call). Chosen: the helpers' names, parameters and their order, ajusteLargura's name, and Cabe for the height test.
 # - CabeProporcional (10971) 558 over 1261 rows (same 703, replaced 216 [155 operand-only], inserted 131, deleted 211),
 #   with two forms that give its frame and its order (that the original was written so is a reading): the text's
-#   width and height declared at the top and set to 0 in the loop, as CabeEmUmaLinha's are (the target's frame holds
+#   width and height declared at the top and set to 0 in the loop, as CabemNasAreas's are (the target's frame holds
 #   them at +14 and +12 and the font at +0, as CabeEmUmaLinha's does; declared in the loop they were at +6 and +4 and
 #   the font at +8, 626 over 1269); and the margin, the height test and the indent computed in the loop after
 #   GetFontMetrics (the target computes them after the first call), which before the loop read 665 over 1295. The target
@@ -100,9 +119,9 @@
 #   << 32 at +80 in the target, an i32.store at +84 and an i32.store16 at +80 in ours; the place of margem's max(1, size
 #   / 4) and of one f64.add; and the text's emptiness, which the target tests in each arm before the merge and ours
 #   after it. They stay written: Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the
-#   table slots of 10972 and 10971 re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's
-#   slot). Its name holds by a `vtable-slot` hand line since 13550, its one direct caller, matched (fragment 391 says
-#   why); the line goes once Draw matches.
+#   table slots of 10972 and 10971 re-point only once those match (with 10972 matched, its scan row is `unresolved` at
+#   +0x383, 10971's slot). Its name holds by a `vtable-slot` hand line since 13550, its one direct caller, matched
+#   (fragment 391 says why); the line goes once Draw matches.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)
