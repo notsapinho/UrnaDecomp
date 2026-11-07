@@ -280,7 +280,12 @@ run has `ctextfieldmt.cpp` before `ctextfielddoubleline.cpp`.
 When unrecorded objects lie between the two recorded sides, the data do not place the boundary: take the adjacent side
 and call it a choice. `vota::CEleitorVotouNaoVotou`'s vtable (1592928) has four unrecorded vtables between it and
 `confirmaidentidade/`'s last record (1592596) and none between it and `aguardaeleitor/`'s first (1593044), so unit
-71 puts it in `aguardaeleitor/` and says so. A form or screen type a class's records or members name can rule a tree
+71 puts it in `aguardaeleitor/` and says so. A function with no record or data of its own whose use band puts it right
+at the boundary of two objects' runs, between functions each object alone defines, has no adjacent side: either file is
+a choice. Name both, with what the body shares with one as a reason, not evidence (a caller's code it sits in, a type
+it returns): 5735 (`comum::CargosPorEleicao`) sits in band 2 between `crdv.cpp`'s 5736 and `crdvvota.cpp`'s 5733
+(`awk -F'\t' '$1>=5733 && $1<=5736 {print $1, $2, $5}' ledger/ordinals.tsv`, 5734 another digit zone's), and is
+written in `crdvvota.cpp` (unit 13's fragment). A form or screen type a class's records or members name can rule a tree
 out: every `CInteractiveForm<IScreen, IInputKbd>` record lies among `app/vota/eleitor/` records, and none of
 `<IScreenMT, IInputMT>` does.
 

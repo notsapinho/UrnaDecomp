@@ -193,14 +193,15 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   another target function loads that content too or the body loads none, its rows as a whole, unique on the
   `fingerprint`, `addr` and `shape` hashes of `pnpm wasm fingerprint <target> --depth 0`, with what its target callers
   do with its result; the comment names the other loaders, if any, and what tells them apart. Its
-  comment gives the score at the tree's flags, says the remainder is not explained, and counts no caller the line
+  comment gives the score in the plain link, at the tree's flags, says the remainder is not explained (no source form
+  found gives the target's code, whatever the fragment says of the pass that places it), and counts no caller the line
   carries; a function it calls that calls it back (an operator and its inverse, 5477 and 5478) is no caller that can
   land until it matches. When the line carries every caller it
   names (each named by its own evidence, a `vtable` slot or an anchor, whose row needs this name), those callers align
   the call site and count for nothing else: the comment leads with the callee's own rows, read without the match, and
-  says the callers fall without the
-  line (3883's). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
-  content to stand on and often no aligned call: its line leads with the target functions other than the match that
+  says the callers fall without the line (3883's). A `.bss` object, or a `.data` or read-only object its bytes cannot
+  place (§3: under 4 bytes, or found at too many places, `bytes occur N+ times`; the comment says which), has no content
+  to stand on and often no aligned call: its line leads with the target functions other than the match that
   read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what it
   does there (a compare with a value above 1, an increment, an index), since those uses also give the member's type
   (how-to step 3, "What a body does not decide"); a read-only object's line also gives its bytes and what they encode
@@ -326,7 +327,11 @@ of ours resolves nowhere, and its row reads `unresolved` with `an address of our
 (12 rows at bbf27ac1, `/usr/bin/grep -c 'in no data object of ours' splat/scan.tsv`): an array base with a constant
 index folded in (`lengthTableBits[mode][version - 1]` is `lengthTableBits - 4 + …`) lies in the padding before the
 array. One that falls inside the object before the array resolves to that object, so its vote names whatever our
-layout puts there ([facts/libraries.md](facts/libraries.md) §B10). Otherwise the object's content places it:
+layout puts there ([facts/libraries.md](facts/libraries.md) §B10); when the target's data show which object precedes
+the array, the same object before it in our link places the address, and that order is evidence for a list move
+(`src/units/README.md` "Names"): `api::CDate`'s switch table, read as `table - 1 + month`, falls in the last byte of
+the typeinfo name `cajustedatahora.cpp` emits right before the tables in the target, and 5477 and 5478 matched once
+that object linked right before `cdate.cpp.o` (unit 125's fragment). Otherwise the object's content places it:
 
 - a C string by its bytes through the NUL; every place the target holds the same string is a copy (up to
   4,096 of them: tail merging leaves a short string such as `"\n"` in hundreds of places). An end pointer, which
@@ -414,7 +419,7 @@ Two rules guard the evidence:
   from siblings of one shape: thunks `f2921(p0, p1, <priority>, <word>)` whose word lies in the data of the object
   whose function calls them, at the distances our link gives that object's data (3593's and 5574's lines, the `Depura`
   wrappers of `cthreadoperador.cpp` and `cvalidamidia.cpp`). That names the function, never the word. A `.bss`
-  object, or a `.data` or read-only one too small for its bytes to place it, that no target function but the match
+  object, or a `.data` or read-only one its bytes cannot place, that no target function but the match
   reads or writes has no second user either, and no hand line names it, since its one use is the match it would
   enable: the reader stays `unresolved self-voted`, or `unresolved` on a `.data` word that has no vote (§2) and whose
   bytes occur many times (5574's word at 1577092, `ff ff ff ff`). A neighbour's distance places no data object but a

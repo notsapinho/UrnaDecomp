@@ -162,14 +162,18 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   one whose order decides nothing, with matches of its own or not, weighs its own fragment's list (the next free number,
   and the extended unit's list too when the file extends a landed unit) and the landed lists that hold objects of its
   run in the target's data, not only the two objects right before and after its data, at every position inside each
-  list (§C4), and takes the lowest of §C4's record-aware counts (fragment 372's two files, in unit 93's list). Files
+  list (§C4), and takes the lowest of §C4's record-aware counts (fragment 372's two files, in unit 93's list). One whose
+  object the link drops (unrooted code, no record) has nothing to rank, no line in the map: it takes its own
+  fragment's list, the place marked chosen with the target's data neighbour named, and the landing that first links
+  its data counts it (unit 48's `cabstracttelaprogresso.cpp`). Files
   that land together move together, each counted with the others at their place. Its fragment gives the count at each
   place weighed, the data-neighbour pairs it leaves inverted, and against the next place the pairs that differ (§C4's
   `names` lists them): named when few, by directory when many (fragment 372). A count moves as landings name data
-  (§C4), so it carries the commit it was taken at, and a landing that merges a fragment stating one recounts it on the
-  merged link. A move also changes the pairs of every other move whose span the moved file enters or leaves, so the
-  landing recounts or dates the other fragments' counts that name it (`docs/reference/facts/workflow.md` §W23 kind 7).
-  The move can rename a twin's match line, which step 9 does. A file in another unit's list
+  (§C4), so it carries the commit it was counted at (not the one that wrote it: §W23 kind 7), and a landing that merges
+  a fragment stating one recounts it on the merged link. A move also changes the pairs of every other move whose span
+  the moved file enters or leaves, so the landing recounts or dates the other fragments' counts that name it
+  (`docs/reference/facts/workflow.md` §W23 kind 7). The move can rename a twin's match line, which step 9 does. A file
+  in another unit's list
   stays its own unit's: its fragment keeps the header comment, the companions and the row, with no source list when
   every source moved, and says which list compiles its files; that list's fragment says why, with the measurement (unit
   188's `simulador.cpp` sits in unit 101's list for 4879, unit 245's three files in unit 96's). A new file whose
@@ -453,7 +457,15 @@ way the target does, because binaryen's inlining and dead-argument removal depen
 `(anonymous namespace)::`, a `static` free function): such a function lands only with a caller written in its own TU, so
 one whose target callers are all unwritten functions of that TU waits for them (seven builders of `ctelasvota.cpp`'s
 anonymous namespace that only 7787 calls: `awk -F'\t' '$6 ~ /(^|,)6602(,|$)/ {print $5}' ledger/source-locations.tsv`
-prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Every other function it reaches so:
+prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). An object a stand-in passes is the one its
+target caller passes, and a roots file's copy of one internal to the callers' file (the constants bullet below) holds
+only while no written caller in the link passes the file's own: beside one that does, binaryen sees two constants and
+keeps the parameter (5545 beside `ctelasvota.cpp`'s progress screen: seven parameters against the target's six, unit
+48's fragment). Such a caller waits for that file's other target callers, or, with the user's leave, the object takes
+external linkage, declared in the file's header and marked chosen, and the stand-ins pass it (5545's font, unit 48's
+fragment): the file's object then changes in its data order and its reads
+([../../docs/reference/facts/reading.md](../../docs/reference/facts/reading.md) §R8), not only in the symbol's binding.
+Every other function it reaches so:
 
 - a function the target reaches through the table has its address taken, whether or not a target function loads its
   slot: the element section alone keeps binaryen from inlining it or changing its signature, and a slot with no reader
@@ -518,7 +530,9 @@ prints `void vota::(anonymous namespace)::adicionaBaseTelaVotoLegenda(…)`). Ev
     caller it stands for is in the link, measured with steps 6 to 10, and the stand-in stays for its other calls, its
     comment saying which callers still wait (unit 31's `TelaMTA` and `TelaMTB` called ten adders; their calls of 728,
     941, 5409 and 5419, whose callers are all in the link, went). So when one of several callers a callee's calls stand
-    for lands, its call goes and one call stays per caller still waiting. A stand-in for one target caller, whatever
+    for lands, its call goes and one call stays per caller still waiting; when the calls pass different arguments, the
+    one that stays passes what that caller passes, since a stand-in's arguments are ones a target caller passes (unit
+    232's `CargosEleicao` kept the `false` 7787 passes when 5735 landed). A stand-in for one target caller, whatever
     units its callees are in, goes whole when that caller lands; each callee's fragment says where its call site is. A
     stand-in that reads the callee's result stands for a reader too (unit 123's `w123_copia` reads 1249's returned
     `this`, as the target's 11395 does, where 5856 and 11197 drop it). The target can keep a result every caller drops,
