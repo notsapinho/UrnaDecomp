@@ -70,13 +70,13 @@
 #   inlined GetInst tests and stores the pointer and unlocks the mutex, and the exit destructor). Since 10337 matches,
 #   step 8 names both objects by its votes (`vote:8 by:10337`, `vote:2 by:10337`), and the matches of 10340 and 10341,
 #   which use them, hold the names (docs/reference/splat.md "No circular evidence"): 10337, 10340 and 10341 land or
-#   leave together. Weighed by removal on copies (the symbol file without a line, the match list without 10337, 10340
-#   and 10341, two scan passes beside a control that keeps every name, then splat-build on the copies): each hand line
-#   out, and both, every row comes back and the build gives the target's sha256 with 12986 matches, so they carry
-#   nothing; both names out on both sides of the marker, 10337 reads unresolved and 10340 and 10341 differ. The
-#   hand lines are docs/how-to-decompile.md step 1's example, so they go in a commit of their own with that text
-#   (step 9, "Hand edits"). Their object adds a second local __cxx_global_array_dtor.5 to the link, so step 9 renamed
-#   10760's match line to the one qualified by its object.
+#   leave together. The hand lines went, idle: weighed by removal on copies (the symbol file without a line, the match
+#   list without 10337, 10340 and 10341, two scan passes beside a control that keeps every name, then splat-build on
+#   the copies), each hand line out, and both, every row came back and the build gave the target's sha256 with 12986
+#   matches; both names out on both sides of the marker, 10337 reads unresolved and 10340 and 10341 differ. They went in
+#   a commit of their own with docs/how-to-decompile.md step 1's example, which cited them (step 9, "Hand edits").
+#   Their object adds a second local __cxx_global_array_dtor.5 to the link, so step 9 renamed 10760's match line to
+#   the one qualified by its object.
 # Chosen: the files' paths and names, the order of the definitions in each but GetInst above the constructor, measured
 # (above; cmesarioregistrado.cpp otherwise as unit 247's cregistrarmesarios.cpp), the class's `final` and its
 # destructor declared first and out of line (as CRegistrarMesarios, over the same slots 0 and 1), the members' names,

@@ -158,8 +158,8 @@
 #   (298 over 766 at the old order); RegistraMesario defined above StartState, and the next-state store through
 #   comum::CAppState::SetNextState, each give the module of the source as written (sha256 4da35798fc27afe9...), so they
 #   are same-bytes forms. The statics it reads, through the inlined GetInst, are CMesarioRegistrado's: step 8 names them
-#   by its votes, and their exit destructors' matches hold the names (unit 279's fragment, which weighs their hand
-#   lines). Chosen: RegistraMesario's name, its being private and non-const, the locals and their const, the
+#   by its votes, and their exit destructors' matches hold the names (unit 279's fragment, whose hand lines for them
+#   went, idle). Chosen: RegistraMesario's name, its being private and non-const, the locals and their const, the
 #   std::optional<int> copy, `has_value()`, the temporaries passed to Registra, the assignment of m_pNextState and the
 #   order of the two definitions (each against its same-bytes form above), and the lines of igestordadomesario.cpp but
 #   the record's.
