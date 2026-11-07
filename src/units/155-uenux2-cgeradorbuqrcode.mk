@@ -77,11 +77,39 @@
 # each part's SHA-512 chained over the earlier parts (CalculaHash), and the last part's hash signed through IPkcs11
 # (RetornaBlocoAssinado, record cgeradorbuqrcode.cpp:405, the instance() call). Each helper is a frame of its own in
 # 5604, so each is a function binaryen inlined into its one caller. The target's body holds 10253 instructions and ours
-# 10252, with the same direct calls and format strings in the same order but for one free (read from `pnpm wasm fn`'s
-# folded readouts of both). pnpm wasm score, with its objects linked after unit 93's list (Slot2's bullet above):
-# 1327 over 10331 rows (77 inserted, 78 deleted), 951 over 10330 at --depth 0; with them ahead of unit 93's objects,
-# as before, 3104 over 10481 (227 inserted, 228 deleted). The rows that still differ are not read at this order: the
-# hunks this note listed before were read at the other one.
+# 10255, with the same 470 direct and indirect calls in the same order (`pnpm wasm fn` of both, the calls paired one
+# for one). Scored with pnpm wasm score on the whole link, this object swapped into a copy of link.cmd
+# (docs/reference/facts/workflow.md W13), each form below added to the ones before it, from 1327 over 10331 rows (77
+# inserted, 78 deleted) as it stood:
+# - DivideEmBlocos holds the text's size in a local, tamanhoTotal, for its loop's bound: the target loads the size once
+#   before the loop and compares it at the latch, while each substr reloads it; and MontaPartes reads blocos.size()
+#   before it declares its vectors: the target loads the vector's bounds before it zeroes them. 1286 over 10314.
+# - GetCamposCandidatosPartido, GetCamposMajoritario and GetCamposConsulta read the post's id (+0) and digit count
+#   (+12) into locals right after GetCurrent(), before anything else, as the target's three loops do: the id declared
+#   first, 1084 over 10302; the count first, 1098 over 10310.
+# - GetCamposMajoritario and GetCamposConsulta hold the candidate's or answer's number in a local before
+#   m_rdv.Candidato and skip a count of zero, as GetCamposCandidatosPartido does: the target tests the count and
+#   branches past the format. 1070 over 10300.
+# - MontaPartes joins the earlier blocks in a statement of its own: the target frees the " " separator right after
+#   api::Join, before blocos.at(). 1031 over 10287.
+# - DivideEmBlocos declares its vector before the size: the target zeroes the vector first. 962 over 10273.
+# - CalculaHash takes std::min(conteudo.size(), posicao + 512): the target selects posicao + 512 when it is below the
+#   size. 959 over 10272.
+# - GetCorpo's post with a candidate detail and no candidates ends its iteration (continue): the target branches from
+#   that arm past the consulta's VERC and the type chain, while the arm after it falls into the consulta's test.
+#   976 over 10271 rows (17 inserted, 15 deleted, 943 of the 944 replaced rows operand-only), the score up but the
+#   structural hunks down: diffed with local indices, callees, data addresses, packed strings and the format buffer's
+#   table slot masked (Python difflib over the two `pnpm wasm fn` disassemblies), 50 hunks at the start and 3 here. An
+#   else around the rest of the iteration gives the same object (cmp); `else if (cargo.IsConsulta())` in place of the
+#   continue, 956 over 10273 with 8 hunks, made the arm before it jump past the consulta's test, as the target's does
+#   not.
+# What is left is local numbers and what they decide. Paired through that masked alignment, 442 of 3870 local
+# operands differ: our local 14 holds both the target's 15 and its 28 (three uses, the capacity pointer of partes'
+# push_back in MontaPartes), which shifts the numbers of the locals ranked after it, and our 3 and 4 trade places in
+# stretches through the body; the three hunks are an operand order of GetCorpo's election compare and a zero set of our
+# local 14 at MontaPartes' start that the target has not. MontaPartes defined above RetornaBlocoAssinado, and
+# CalculaHash above DivideEmBlocos, each scored 976 over 10271 too. Not tried: the colouring of each helper's own
+# object (docs/reference/facts/codegen.md C4, "Local numbers can come from clang's object too").
 #
 # Chosen: the names Slot2, Slot3, GetCamposAptos, GetCamposVotos, Gera and its helpers' (GetCabecalho, GetCorpo,
 # GetCamposEleicao, GetCamposSecao, GetCamposProporcional, GetCamposCandidatosPartido, GetCamposLegenda,

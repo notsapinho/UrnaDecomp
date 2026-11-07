@@ -10,21 +10,23 @@
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
 //   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota stands
-//   for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), GetFaseChar (fn 2253, five callers) and
-//   CCabecalhoQRCodeBuilder's DefineHistoricoCarga and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and
-//   CCabecalhoQRCodeBuilder's constructor (fn 5624, 1956 and 12110: estadoaplicacao_build_qrcode) have none, so one
-//   stand-in that calls each twice. CEstadoGeralVota::IncrementaQtdBU's stand-in (fn 3701) went: its target callers
-//   12065, 12077 and 12081 are in the link (units 104 and 156). So did AdicionaDeltaT's (fn 3702): its target callers
-//   7160, 7306 and 10710 are in the link. CConversorEstadoGeralGap's ConverteUrnaAplicativo and
-//   DesconverteUrnaAplicativo (fns 5689, 5690) have their two call sites each in their one target caller, DoConverte or
-//   DoDesconverte (fns 11394, 11395), which are written.
-//   The same for CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (fns 5621, 5620, 5618, 1956 and
-//   12110 each: estadoaplicacao_use_local, which varies every argument so binaryen folds none). Fn 1956 is in the link
-//   now (unit 37), so these stand-ins and estadoaplicacao_use_historico, estadoaplicacao_use_idcarga and
-//   estadoaplicacao_build_qrcode stand for fn 12110 alone. IsOrigemSA and IsOrigemRED (fns 5617, 5616) have their
-//   target call sites in the link, two each in fn 5604 (unit 155), so they stay out of line, and binaryen merges them
-//   into one shared body, as the target's fn 6028. CDadoCarga's constructor has one real caller now, its converter's
-//   DoDesconverte (11402), and the stand-in stands for 10167.
+//   for 10067). GetFaseChar (fn 2253, target callers 5604, 5636, 12098, 12110 and 12134) is called in the link by
+//   5604's and 5636's bodies, and estadoaplicacao_use_fase's two calls stand for 12098, 12110 and 12134.
+//   CEstadoGeralVota::IncrementaQtdBU's stand-in (fn 3701) went: its target callers 12065, 12077 and 12081 are in the
+//   link (units 104 and 156). So did AdicionaDeltaT's (fn 3702): its target callers 7160, 7306 and 10710 are in the
+//   link. CConversorEstadoGeralGap's ConverteUrnaAplicativo and DesconverteUrnaAplicativo (fns 5689, 5690) have their
+//   two call sites each in their one target caller, DoConverte or DoDesconverte (fns 11394, 11395), which are written.
+//   CDadoCarga's constructor (fn 5633, target callers 10167 and 11402) has one real caller here, its converter's
+//   DoDesconverte (11402), so estadoaplicacao_build_carga calls it once, for 10167. CCabecalhoQRCodeBuilder's
+//   DefineHistoricoCarga, DefineCodigoCarga, DefineIdUrna, DefineSecao and DefineZona and its constructor (fns 5622,
+//   5623, 5621, 5620, 5618 and 5624) are each called once by fns 1956 and 12110; 1956 is in the link (unit 37), so
+//   estadoaplicacao_use_historico, estadoaplicacao_use_idcarga, estadoaplicacao_use_local and
+//   estadoaplicacao_build_qrcode call each once, for 12110. These five stand-ins called each callee twice until the
+//   real callers landed; the second calls went together, measured on the base's link without them (no row entered or
+//   left match: src/units/93-uenux2-estadoaplicacao.mk). DefineHistoricoCarga is declared with the object's result,
+//   the builder's address (ccabecalhoqrcodebuilder.h). IsOrigemSA and IsOrigemRED (fns 5617, 5616) have their target
+//   call sites in the link, two each in fn 5604 (unit 155), so they stay out of line, and binaryen merges them into one
+//   shared body, as the target's fn 6028.
 // - CDadoCorrespondencia's constructor (fn 5630) has one direct caller in the target (11400, written, fragment 172's)
 //   and a table slot (450), so its address. The same for CEstadoGeralGap's constructor (fn 5626: its direct caller is
 //   11395, written, and fn 10123 calls it through table slot 453 with invoke_iiiiiiiiiiii) and for
@@ -39,7 +41,7 @@ void* estadoaplicacao_localidade(void*, int, int, int) __asm__("_ZN5comum2md15es
 void* estadoaplicacao_sa(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao14CEstadoGeralSAC1ENS_9EEstadoSAEbjtt");
 void* estadoaplicacao_carga(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoCargaC1ENS_10EUrnaTurnoENS_9EUrnaTipoES4_NS_11EUrnaModeloENS_9EUrnaFaseE");
 int estadoaplicacao_fase(const void*) __asm__("_ZNK5comum2md15estadoaplicacao10CDadoCarga11GetFaseCharEv");
-void estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder20DefineHistoricoCargaERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
+void* estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder20DefineHistoricoCargaERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder17DefineCodigoCargaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void estadoaplicacao_idurna(void*, unsigned) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder12DefineIdUrnaEj");
 void estadoaplicacao_secao(void*, unsigned short) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder11DefineSecaoEt");
@@ -65,10 +67,9 @@ __attribute__((noinline)) void estadoaplicacao_build_sa(void* dado, int estado, 
     estadoaplicacao_sa(dado, estado, bloqueada, municipio, zona, secao);
 }
 
-__attribute__((noinline)) void estadoaplicacao_build_carga(void* a, void* b, int turno, int t1, int t2, int modelo, int fase)
+__attribute__((noinline)) void estadoaplicacao_build_carga(void* a, int turno, int t1, int t2, int modelo, int fase)
 {
     estadoaplicacao_carga(a, turno, t1, t2, modelo, fase);
-    estadoaplicacao_carga(b, turno, t2, t1, modelo, fase);
 }
 
 __attribute__((noinline)) int estadoaplicacao_use_fase(const void* a, const void* b)
@@ -76,32 +77,26 @@ __attribute__((noinline)) int estadoaplicacao_use_fase(const void* a, const void
     return estadoaplicacao_fase(a) + estadoaplicacao_fase(b);
 }
 
-__attribute__((noinline)) void estadoaplicacao_use_historico(void* a, void* b, const void* cargas)
+__attribute__((noinline)) void estadoaplicacao_use_historico(void* a, const void* cargas)
 {
     estadoaplicacao_historico(a, cargas);
-    estadoaplicacao_historico(b, cargas);
 }
 
-__attribute__((noinline)) void estadoaplicacao_use_idcarga(void* a, void* b, const void* id)
+__attribute__((noinline)) void estadoaplicacao_use_idcarga(void* a, const void* id)
 {
     estadoaplicacao_idcarga(a, id);
-    estadoaplicacao_idcarga(b, id);
 }
 
-__attribute__((noinline)) void estadoaplicacao_use_local(void* a, void* b, unsigned urna, unsigned short secao, unsigned short zona)
+__attribute__((noinline)) void estadoaplicacao_use_local(void* a, unsigned urna, unsigned short secao, unsigned short zona)
 {
     estadoaplicacao_idurna(a, urna);
     estadoaplicacao_secao(a, secao);
     estadoaplicacao_zona(a, zona);
-    estadoaplicacao_idurna(b, urna + 3);
-    estadoaplicacao_secao(b, zona);
-    estadoaplicacao_zona(b, secao);
 }
 
-__attribute__((noinline)) void* estadoaplicacao_build_qrcode(char* a, char* b)
+__attribute__((noinline)) void* estadoaplicacao_build_qrcode(char* a)
 {
-    estadoaplicacao_qrcode(a);
-    return estadoaplicacao_qrcode(b + 8);
+    return estadoaplicacao_qrcode(a);
 }
 
 __attribute__((noinline)) void estadoaplicacao_build_vota(void** dado, void** args, int* v)
