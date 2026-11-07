@@ -531,9 +531,9 @@
 #   GetPleito2, 1267), then the reset,
 #   which destroys the old instance (5598), and the loaded processo's destruction (2830). The constructor, its
 #   parameters and its line are chosen. 2787 scored 23 over 241 rows, all operand-only, once unit 280's roots read
-#   1281's and 5726's results (26 over 241, 3 rows deleted, before), and it matches by a `callers+content` hand line
-#   that names its callee 3771 from the records 3771 alone loads (unit 280's fragment): without the line 2787 is
-#   `unresolved self-voted`, since 3771, written and differing, has no other voter.
+#   1281's and 5726's results (26 over 241, 3 rows deleted, before), and it matched by a `callers+content` hand line
+#   that named its callee 3771 from the records 3771 alone loads, while 3771 differed; 3771 matches now, named by
+#   `srcloc-anchor`, and the line went, idle (unit 280's fragment).
 # - The libc++ copies cpe.cpp.o brings with it: CPleito's implicit copy constructor (1281), the CEleicaoPE vector's
 #   __uninitialized_allocator_copy (1953), the version map's hinted insert (3870) and its __find_equal (3869), all four
 #   matched (7, 4, 2 and 0 rows, all operand-only).

@@ -28,7 +28,7 @@ class IControladorRegistraMesarios;
 // api::CInteractiveForm<IScreenMT, IInputMT>::Read()'s. The record of cmesarioregistrado.cpp (line 72) names
 // GetControlador, a non-static, non-const member returning `const IControladorRegistraMesarios &`. A singleton: the
 // class's GetInst, its constructor and its operator's form are held inlined by IGestorDadoMesario::StartState (fn 10337,
-// not written): the object in a static std::unique_ptr (@1909736) under a static std::mutex (@1909712), the constructor
+// matched): the object in a static std::unique_ptr (@1909736) under a static std::mutex (@1909712), the constructor
 // passing EVENTO_ENTRADA to the base's and assigning the voter's form from TelaRegistroMesarios and the operator's from
 // TelaMesarioRegistrado, behind a frame of its own (binaryen's inlining). The 28-byte object and its two forms are those
 // of the 19 states over the destructors 448 and 765 (src/units/135-uenux2-comum-mesario-estados.mk). Chosen: the

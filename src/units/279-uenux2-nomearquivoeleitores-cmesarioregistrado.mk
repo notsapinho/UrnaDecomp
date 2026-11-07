@@ -1,6 +1,7 @@
 # uenux2 comum: comum::NomeArquivoEleitores and NomeArquivoEleitoresTTE
 # (app/comum/nomearquivo/cnomearquivoeleitores.cpp) and comum::CMesarioRegistrado
-# (app/comum/comparecimentomesario/estados/cmesarioregistrado.{h,cpp}). Paths relative to src/uenux2.
+# (app/comum/comparecimentomesario/estados/cmesarioregistrado.{h,cpp}). Paths relative to src/uenux2. The list also
+# compiles unit 135's igestordadomesario.cpp, last, for 10337 (below, "The orders").
 #
 # Target fns matched: 3745 and 5727 (comum::NomeArquivoEleitores, NomeArquivoEleitoresTTE) and 10338
 # (CMesarioRegistrado::ProcessInput, a thunk into binaryen's 6011, which matches; unit 247's fragment has its evidence).
@@ -39,28 +40,55 @@
 #   StartState (10337, unit 135), which holds them inlined: the 28-byte object, CAppState's constructor with 2
 #   (EVENTO_ENTRADA), the vptr, both forms assigned (fn 1255's at +20, then the builder's at +12, a frame of its own),
 #   the builder's buzz (51, 10), the texts @364807, @335481 and @86376 at {1, 1}, {1, 2} and {1, 4}, AddInputControl
-#   and GetInteractiveForm("", true). 10337 is written and calls GetInst: it differs, mostly in binaryen's local
-#   numbers, not explained (unit 135's fragment has its score: 289 over 761 rows, 25 of them not operand-only), and the
-#   rows of the inlined GetInst, constructor and form are among those.
+#   and GetInteractiveForm("", true). 10337, which calls GetInst, matches with the two orders below (step 9,
+#   evidence:srcloc-anchor); its body is unit 135's.
+# - The orders, measured for 10337 on whole links of the plain link.cmd at 9f0245ef, each a copy with the variant object
+#   swapped in, igestordadomesario.cpp.o moved, or both (docs/reference/facts/workflow.md W13; pnpm wasm score at the
+#   default depth; docs/reference/facts/codegen.md C4): GetInst defined above CMesarioRegistrado's constructor in
+#   cmesarioregistrado.cpp, and igestordadomesario.cpp.o linked after cmesarioregistrado.cpp.o, so this list compiles
+#   it, last. With both, `69 over 750 rows (same 681, replaced 69 [69 operand-only], inserted 0, deleted 0)`, the six
+#   rows that are no call and no data being the thrown error's destructor slot (__cxa_throw's third argument) and the
+#   statics' addresses; then a match at step 9. With either alone, the base's `289 over 761 rows (same 472, replaced 268
+#   [264 operand-only], inserted 11, deleted 10)`: GetInst above the destructor with the object in place gives the
+#   base's module byte for byte. GetInst first in the file or right after the destructor, as written, are two objects
+#   (wasm-objdump -x: GetInst, D2, D0, C2, TelaMesarioRegistrado against D2, D0, GetInst, C2, TelaMesarioRegistrado) and
+#   one module (sha256 4da35798fc27afe9...): GetInst's place among the definitions above the constructor is a choice. In
+#   the target's data cmesarioregistrado.cpp.o's vtable (0x1855f8) is the rank right before igestordadomesario.cpp.o's
+#   typeinfo (0x185660), and the three Gestor states' vtables (unit 135's list) follow it. codegen.md C4's record-aware
+#   count (the section's script, on the plain link.cmd at 9f0245ef): igestordadomesario.cpp.o at its place in unit 135's
+#   list 454 objects out of the data's order; after cmesarioregistrado.cpp.o 280, of which 19 the move inverts (the
+#   three Gestor states, cpededigitalmesario.cpp and ccontroladorreconhecimetomesario.cpp of comparecimentomesario/, six
+#   gravadores/asn converters and gravadores/md/ctipoapuracaosa.cpp, api/hash's three files, api/ipc/cthread.cpp, vota's
+#   iexecucaovota.cpp, operador/caguardainicio.cpp and operador/cthreadoperador.cpp) and 193 it restores; the list's
+#   other places, before cnomearquivoeleitores.cpp.o or before cmesarioregistrado.cpp.o, 281 each, and give the other
+#   order. The other move, cmesarioregistrado.cpp into unit 135's list ahead of igestordadomesario.cpp, counts 281 here
+#   and 453 or 454 at each place there. So igestordadomesario.cpp moves, and unit 135 keeps its note and row
+#   (src/units/README.md "Names").
 # - The statics, @1909736 (s_inst, which 10337 loads and stores) and @1909712 (s_mutex, whose address 10337 passes to
-#   the mutex's call): their exit destructors are 10341 and 10340. 10337 is named by vtable, which casts no vote, so no
-#   generated line names either object; each takes a hand line in splat/symbol_addrs.txt led by its two readers (10337,
-#   whose inlined GetInst tests and stores the pointer and unlocks the mutex, and the exit destructor), and 10341 and
-#   10340 match with them. Weighed by removal (a copy of the symbol file without the line, the match list without the
-#   row, two scan passes beside a control, then splat-build on the copies): each line carries its destructor. Their
-#   object adds a second local
-#   __cxx_global_array_dtor.5 to the link, so step 9 renamed 10760's match line to the one qualified by its object.
-# Chosen: the files' paths and names, the order of the definitions in each (cmesarioregistrado.cpp as unit 247's
-# cregistrarmesarios.cpp), the class's `final` and its destructor declared first and out of line (as
-# CRegistrarMesarios, over the same slots 0 and 1), the members' names, TelaMesarioRegistrado's name, and the
-# controller's slot names (its header's). TelaMesarioRegistrado's external linkage is evidence, not a choice: 10337
-# holds it behind a frame of its own, the sign unit 247's fragment measured for CRegistrarMesarios's form.
+#   the mutex's call): their exit destructors are 10341 and 10340. Until it matched, 10337 was named by vtable, which
+#   casts no vote, and each object took a hand line in splat/symbol_addrs.txt led by its two readers (10337, whose
+#   inlined GetInst tests and stores the pointer and unlocks the mutex, and the exit destructor). Since 10337 matches,
+#   step 8 names both objects by its votes (`vote:8 by:10337` and `vote:2 by:10337` at c1ffbbae), and the matches of
+#   10340 and 10341, which use them, hold the names (docs/reference/splat.md "No circular evidence"): 10337, 10340 and
+#   10341 land or leave together. The hand lines went, idle: weighed by removal on copies (the symbol file without a
+#   line, the match list without 10337, 10340 and 10341, two scan passes beside a control that keeps every name, then
+#   splat-build on the copies), each hand line out, and both, every row came back and the build gave the target's sha256
+#   with 12986 matches; both names out on both sides of the marker, 10337 reads unresolved and 10340 and 10341 differ.
+#   They went in a commit of their own with docs/how-to-decompile.md step 1's example, which cited them (step 9, "Hand
+#   edits"). Their object adds a second local __cxx_global_array_dtor.5 to the link, so step 9 renamed 10760's match
+#   line to the one qualified by its object.
+# Chosen: the files' paths and names, the order of the definitions in each but GetInst above the constructor, measured
+# (above; cmesarioregistrado.cpp otherwise as unit 247's cregistrarmesarios.cpp), the class's `final` and its
+# destructor declared first and out of line (as CRegistrarMesarios, over the same slots 0 and 1), the members' names,
+# TelaMesarioRegistrado's name, and the controller's slot names (its header's). TelaMesarioRegistrado's external
+# linkage is evidence, not a choice: 10337 holds it behind a frame of its own, the sign unit 247's fragment measured for
+# CRegistrarMesarios's form.
 #
-# Not written here: 1937, in celeitordetalhe.cpp (unit 110's list; unit 98's fragment has the measurement), and the
-# rest of the class's file:
-# IGestorDadoMesario::StartState (10337) is unit 135's, written and `differs`.
+# Not written here: 1937, in celeitordetalhe.cpp (unit 110's list; unit 98's fragment has the measurement).
+# IGestorDadoMesario::StartState (10337) is unit 135's, matched; igestordadomesario.cpp is compiled here (above).
 NOMEARQUIVOELEITORES_MESARIOREGISTRADO_SRCS := src/app/comum/nomearquivo/cnomearquivoeleitores.cpp \
-    src/app/comum/comparecimentomesario/estados/cmesarioregistrado.cpp
+    src/app/comum/comparecimentomesario/estados/cmesarioregistrado.cpp \
+    src/app/comum/comparecimentomesario/estados/igestordadomesario.cpp
 UENUX2_SRCS += $(NOMEARQUIVOELEITORES_MESARIOREGISTRADO_SRCS)
 # the unit's callers are not written: 279-uenux2-nomearquivoeleitores-cmesarioregistrado-roots.cpp keeps the vtable's
 # address and the two name builders the way the target does

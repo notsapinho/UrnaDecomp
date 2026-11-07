@@ -101,16 +101,35 @@
 # such code is binaryen's inlining of a call that takes the converter as `this` is a reading; unit 299's
 # CConversorCargo constructor is out of line on a like sign. Defined `= default` or `{}`, it gives the same object (the
 # two objects are cmp-equal). Chosen: the constructor's declaration, its file and its place there.
-# Written and not matched:
-# - 3771: 1126 over 3025 rows (1019 operand-only, 51 inserted, 56 deleted); the rows left are local numbers and the
-#   order of a few operands, the place of the general state's UF above all (ours computes it before the inner frame, the
-#   target where it reads it). Its scan row is `differs` on a local's number (+0x13); it read `unresolved` on its call
-#   of 5778 until 5778 matched. A `callers+content` hand line in splat/symbol_addrs.txt names it from the seven
-#   std::source_location records only it loads (cfileasn.h's ReadFromFile and DecodeObjectFunction for
-#   EntidadeProcessoEleitoral, IConversorASN's Desconverte,
-#   GetPleito2's), which ours loads too: with it CPE::CreateInst (2787, unit 110) matches, without it 2787 is
-#   `unresolved self-voted` on this call.
-# Measured forms (same command, each against the whole link with the other functions as written):
+# 3771 matches with two forms measured in the whole link (pnpm wasm score, before step 8), neither given by a record or
+# the data (LeProcessoEleitoral has no index and no record, nor has 3771): LeProcessoEleitoral defined below
+# CarregaProcessoEleitoral, which declares it above itself (the declaration's place is chosen), and the UF upper-cased
+# by std::transform into a std::back_inserter with ::toupper. With both, 198 over 2974 rows, all operand-only: calls,
+# data addresses, two table slots (ecourna's CError destructor, passed to __cxa_throw, and libc++'s
+# __allocating_buffer<char>::__prepare_write, stored in the std::format buffers) and the packed std::format strings;
+# step 8 then names 3771 by `srcloc-anchor`. The order alone, with the range-for written before (a push_back of each
+# letter's std::toupper): 200 over 2974 (198 operand-only, 2 deleted). std::transform alone, LeProcessoEleitoral above
+# its caller: 1123 over 3025 (51 inserted, 54 deleted). Neither: 1125 over 3025 (51 inserted, 56 deleted), local numbers
+# and the order of a few operands, the general state's UF above all (computed before the inner frame, where the target
+# computes it where it reads it). The two rows the order leaves are the pleito-2 test, `i32.const 1; i32.eq` on the
+# optional's flag in the target and a bare test in the range-for's code. Read in the object (-mllvm -print-after-all on
+# its compile line; a reading of the dumps): in both forms the IR tests a `trunc` of the flag up to instruction
+# selection, which inverts a branch whose true block is the next block in the IR's order, and an inverted bool is
+# selected as `!= 1`, which binaryen turns into the target's `if (x == 1)`; the range-for emits its exit block before
+# its body, SimplifyCFG merges that block with the if's test, and the test's next block is then the loop body, so the
+# branch is selected bare. With std::transform the test follows the loop. The same object as std::transform with
+# ::toupper (cmp-equal): std::transform with a lambda that returns std::toupper of the letter as a char,
+# std::ranges::transform into the std::back_inserter with ::toupper, std::for_each with a lambda that pushes it, and
+# std::ranges::for_each with that lambda. An index `for` and an iterator `for` that declares its iterator in its init
+# give the range-for's bare test (read in the object, not linked). A `callers+content` hand line in
+# splat/symbol_addrs.txt named it from the seven std::source_location records only it loads (cfileasn.h's ReadFromFile
+# and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte, GetPleito2's) while it differed,
+# so that CPE::CreateInst (2787, unit 110) matched. Once 3771 matched it carried nothing (a copy of the symbol file
+# without it, scanned twice beside a control, kept 12986 match rows, as the control did, and splat-build on it gave the
+# target's sha256), and it went, with docs/how-to-decompile.md step 5's example that cited it (how-to step 9, "Hand
+# edits").
+# Measured forms, on the earlier form (the range-for, LeProcessoEleitoral above its caller), each against the whole
+# link with the other functions as written:
 # - 3771 with LeProcessoEleitoral taking the general state in place of the UF and reading its UF where it is first
 #   passed, with fase and idPE still its arguments: 989 over 3020 rows (46 inserted, 52 deleted). The UF's address is
 #   then computed where the first CarregaPleito call passes it, as the target does, but the upper-casing loop reads the
@@ -119,8 +138,8 @@
 #   the top, where the target copies it before the first CarregaPleito call; two locals the target zeroes before
 #   ReadFromFile(const CFile&)'s 528-byte frame (no loop holds it there), ours none; the order of two operands at
 #   ReadFromFile(const std::string&)'s 480-byte epilogue; and the pleito-2 test, an `i32.eq` with 1 on the optional's
-#   flag in the target, a test of the byte in ours (`dto.TemPleito2() == true` gives the same object as ours). Not
-#   explained, so the UF parameter stays.
+#   flag in the target, a test of the byte in ours (`dto.TemPleito2() == true` gives the same object as ours). With the
+#   UF parameter, the order and std::transform above give the target's code, so the UF parameter stays.
 # - 3771 with LeProcessoEleitoral taking the general state alone and reading fase, idPE and the UF itself: 1005 over
 #   3024 (50, 56): fase's and idPE's loads come after its 272-byte prologue, where the target has them before it.
 # - The ".pid" and "cp" names as named strings: with each a temporary of the path's operator/ (moved into the path),

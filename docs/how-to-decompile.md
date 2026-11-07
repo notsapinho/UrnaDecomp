@@ -154,9 +154,10 @@ address and `size:` cover it before calling it an object only that row reads (11
 `comum::CPath::s_pathFlash` plus 16: `/usr/bin/grep -n ' = 0x1c0df0;' splat/symbol_addrs.txt` gives its `size:0x18`).
 When the readers inline a `GetInst`, that match is often another class's large slot, and the destructor waits for it. A
 hand line may name the object instead when the reader's body, read without either match, ties the address to the class
-(step 9, "Hand edits"): 10340 and 10341, `CMesarioRegistrado`'s `s_mutex` and `s_inst`, landed before their one reader
-10337 (`IGestorDadoMesario::StartState`, which holds `CMesarioRegistrado::GetInst` inlined), which differs
-(`/usr/bin/grep -n 'CMesarioRegistrado6s_instE' splat/symbol_addrs.txt`).
+(step 9, "Hand edits"): 10340 and 10341, the exit destructors of `CMesarioRegistrado`'s `s_mutex` and `s_inst`, landed
+so before their one reader 10337 (`IGestorDadoMesario::StartState`, which holds `CMesarioRegistrado::GetInst` inlined)
+matched; once it did, step 8 named both objects by its votes, the destructors' matches holding the names, and the two
+hand lines went, idle (unit 279's fragment).
 
 The third verdict with work left, `unresolved`, is in neither pool: 489 rows at 182dc6c1, 69 of them compiled from a
 TSE tree. Each has a body of ours, and its `detail` names the operand that has no target counterpart:
@@ -1165,8 +1166,9 @@ vote, which 10929's own record anchors (`evidence:call by:10929`). A differing c
 (`srcloc-anchor` pairs equal opcodes only, position by position: a callee whose remainder is local numbers alone still
 anchors, though `pnpm wasm score` counts a swapped pair of `local.get`s as one row inserted and one deleted, 6599's
 `vptr-anchor`), so when no other caller votes, its name takes a `callers+content` hand line resting on records only it
-loads (3771 under 2787; step 9, "Hand edits"), or a `vtable-slot` line when it fills a slot both links name (5504 under
-13550, splat.md §2), or the caller stays `unresolved self-voted`.
+loads (3771 under 2787 had one until 3771 matched and step 8 named it by `srcloc-anchor`; step 9, "Hand edits"), or a
+`vtable-slot` line when it fills a slot both links name (5504 under 13550, splat.md §2), or the caller stays
+`unresolved self-voted`.
 
 A member right by construction (a singleton's `GetInst`) that the target holds inlined in one unwritten caller may be
 written, unrooted, or wait for that caller; the fragment says which. Written, it is compared with nothing
@@ -1710,8 +1712,9 @@ has the command, on 8461).
 matched one (another class's deleting destructor, another instantiation), binaryen keeps the first copy that is still
 a function when it merges twins, usually the first in link order, and if yours comes first, the matched symbol leaves
 our link. A copy binaryen inlined into every caller first is gone, so a later object's twin can survive (2769,
-`vector<unsigned char>::__vallocate`, kept from asn1's `AVNEncoder.o` as `vector<char>`'s although the executable TU's
-copy links first). A build run before `splat-match` says `function 246
+`vector<unsigned char>::__vallocate`, was kept from asn1's `AVNEncoder.o` as `vector<char>`'s at 85558143, although the
+executable TU's copy links first; 86ee7483, which links `roots_coderenv.o` right after the executable TU's object, keeps
+the executable TU's copy, and step 9 renamed the line to it). A build run before `splat-match` says `function 246
 matched to _ZN21ModuloTiposEleitorais4FotoD0Ev: our link has no function _ZN21ModuloTiposEleitorais4FotoD0Ev`. Step
 9's `splat-match` repairs it: when a listed symbol is missing from our link and the scan matches the same index under
 another symbol (the survivor, whose body re-points into the target's bytes), it rewrites that line in place and

@@ -157,7 +157,7 @@
 # comum::servico::CJustificadorServico's Salva and Existe defined above SaveCurrentInternal, are held by fn 10590,
 # binaryen's inlining: unit 283's fragment has their notes and the measurement of that place. 11474, the other data
 # source that holds GetInst's code, matches from cjustificador.cpp (fragment 372's). 5378 and 5379's other callers are
-# 10337 (unit 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal,
+# 10337 (unit 135's IGestorDadoMesario::StartState, matched, which also holds CRegistradorMesario::SaveCurrentInternal,
 # record 85, inlined) and 6734 (fragment 386's CRegistradorMesario::Carrega, held there).
 #
 # comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
