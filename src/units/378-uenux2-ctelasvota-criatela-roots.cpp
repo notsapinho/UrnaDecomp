@@ -6,7 +6,7 @@
 // Each call stands for 7787's calls of that function (pnpm wasm fn ../target/vota_web_wasm.wasm 7787, from
 // asmlift-wasm/, its folded readout): binaryen inlines a function called once, so the stand-in calls each callee twice
 // where 7787 calls it two times or more and no other target caller is in the link, and once where one is: 1593, 1192,
-// 1102 and 1190, whose other target callers are in the link (1591 written, not matched; 6639 and 6681 since they match)
+// 1102 and 1190, whose other target callers are in the link (1591, 6639 and 6681, which match)
 // but 6602, 6603 and 6605 (not written); a link without their second calls moves no row. It passes the constants 7787
 // passes where the target's callee has folded them (docs/how-to-decompile.md step 2) and values of its own where the
 // callee keeps the parameter. It goes when 7787 is in the link.

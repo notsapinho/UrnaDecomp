@@ -13,7 +13,9 @@
 #   cconversortipoapuracaosa.cpp's, so after util.cpp's object (cassinavotavelbu.h has the slots and the records).
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
-#   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346)
+#   std::map<std::string, std::string> (fn 1221) matched from that object, and comes from cgravadorversoesarquivos.cpp.o
+#   since CGravadorVersoesArquivos's constructor (below) copies such a map there, ahead of it in this list (the same
+#   symbol, and it still matches). The hinted __find_equal it calls (fn 1346)
 #   matches under the symbol of std::set<std::string>'s, a twin (the two compare only the key), from the tree root
 #   app/roots_set.o (splat/scan.tsv's object column), since the Boost probe's std::map<std::string, unsigned short>
 #   copy, which matched before it, left the link.
@@ -239,6 +241,33 @@
 # that emits it (the key function's, or the vtable's first user's: docs/reference/facts/placing.md P4) can be
 # iresultado.cpp's. The constructor has no record, and a record-less object between that record and
 # ccabecalhoentidade.cpp's (@1553700) would give the same order; its line there is a choice too.
+# Written for vota::CGravaResultado::StartState (fn 12098), which holds them inlined: they have no target index and
+# match nothing until 12098 is written; unrooted, wasm-ld drops them (docs/how-to-decompile.md step 5). The readout
+# lines below are those of the folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints, counted
+# from the line after `;; --- folded readout`.
+# - CGravadorUtil::ConverteFaseEcourna and ConverteSituacaoArquivoEcourna (records cgravadorutil.cpp:113:19 and
+#   :129:11), each behind a 480-byte frame of its own in 12098 (readout lines 525 and 593), so out of line in this
+#   file. ConverteFaseEcourna: 12098's br_table over the phase less 111 gives 't', 's' and 'o' the CFaseID values 3, 1
+#   and 2 and throws 8698 otherwise with "Fase inválida: {:#x}" (8160) over the char, ConverteFase's message.
+#   ConverteSituacaoArquivoEcourna's code in 12098 is its frame and the constant 0 alone: its argument was one constant
+#   (docs/reference/facts/reading.md R1), so the test and the throw at the record's line are written with the one string
+#   of the data that names a file's situation and that no function loads, "Situação arquivo inválida: {}" (6450; the
+#   one `i32.const 6450` in build/out/splat/pieces/asm, 9389's, is an invoke's table slot). Chosen: the characters 'f'
+#   and 'p' and what they map to (the target shows only that its constant gives 0, ArquivoFinal), the switch with no
+#   default ahead of the throw, the code 8699 (euecomumgravadoreserror.h), and the parameters' names.
+# - CGravadorRCSecao's constructor, in cgravadorrcsecao.cpp ahead of LeChavePublica, frameless in 12098 (readout line
+#   522): IGravador's constructor with the extension 8 and the SAVD file 39, the date-time at +40, ConverteFaseEcourna's
+#   and ConverteSituacaoArquivoEcourna's results at +52 and +56.
+# - CGravadorVersoesArquivos's constructor, in cgravadorversoesarquivos.cpp ahead of GravaResultado, behind a 16-byte
+#   frame in 12098 (readout line 2116; the pair the map copy's hinted insert, 1221, returns sits there): IGravador's
+#   constructor with 19 and 70, then a copy of the md::CVersoesArquivos 12098 builds (5867), its string and its map.
+#   Measured on the objects (wasm-objdump -d): the two converters open 480-byte frames, CGravadorRCSecao's constructor
+#   none and CGravadorVersoesArquivos's 16 bytes, as 12098's prologues do; check_srcloc.py --strict on
+#   cgravadorutil.cpp.o: its 6 records are the target's. Chosen: the constructors' lines, their parameters' order and
+#   form, and the extension and the SAVD file as their own constants rather than 12098's arguments (one call cannot
+#   tell them apart). cgravadorutil.h includes CResultadoUrnaCadastro's header for the second converter's type, so its
+#   includers get Boost's path (the rules below); with the headers of the recorders and of cgravadorutil.h edited, every
+#   object of the link but the nine whose sources gained the 12098 code is cmp-equal to the base's.
 # Chosen: the enumerators' names, the header paths, DeterminaNomeArquivo's name, the two accessors' names, the
 # CVersoesArquivos map alias, the constructors' parameter types beyond what the records spell (CGravadorWSQ's tipo de
 # biometria as cgravadorwsq.h's ETipoBiometria and its last argument as bool, from the unsigned compare and the byte
@@ -307,6 +336,12 @@ $(foreach u,src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravador
 # cgravadorutil.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# cgravadorutil.h declares ConverteSituacaoArquivoEcourna, whose return type is a nested enum of ecourna's
+# CResultadoUrnaCadastro, so it includes that header, which reaches Boost's ptime (ccabecalhoentidade.hpp): its includers
+# iresultado.cpp and unit 160's ccopiadormr.cpp get the path too (as unit 88 gives other units' objects), an include
+# path, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/iresultado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/ccopiadormr.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cgravadorwsq.cpp's CompactaWsq builds an ecourna::api::compression::CZip, whose header includes minizip's zip.h and,
 # through ICompressor, Boost's signals2: include paths, not flags of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib

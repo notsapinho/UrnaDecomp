@@ -3,8 +3,10 @@
 // comum::EUeComumGravadoresError, SErrorLimits{8600, 8800}: the typeinfo of CBaseError<comum::EUeComumGravadoresError, ...>
 // (1552964, which every thrower passes to __cxa_throw) gives the enum's name, namespace and limits; target fn 283 passes
 // its vptr 1552984 to fn 710. The values are every code the target passes to fn 283, with the two the merge thunks 3825
-// and 3826 pass to their shared body 6044 (docs/reference/facts/placing.md P6). No evidence names an enumerator, so each
-// name is chosen and only says its value; the path is chosen too, beside the files whose records throw it.
+// and 3826 pass to their shared body 6044 (docs/reference/facts/placing.md P6), and 8699, which no target code passes:
+// it is chosen for the throw at cgravadorutil.cpp:129, whose record no function loads (the test of an argument binaryen
+// folded), the next code after the 8698 of the record above it. No evidence names an enumerator, so each name is chosen
+// and only says its value; the path is chosen too, beside the files whose records throw it.
 
 #include "ecourna/api/exception/cbaseerror.hpp"
 
@@ -90,6 +92,7 @@ enum EUeComumGravadoresError {
     EUE_COMUM_GRAVADORES_8696 = 8696,
     EUE_COMUM_GRAVADORES_8697 = 8697,
     EUE_COMUM_GRAVADORES_8698 = 8698,
+    EUE_COMUM_GRAVADORES_8699 = 8699,
 };
 
 using CUeComumGravadoresError =

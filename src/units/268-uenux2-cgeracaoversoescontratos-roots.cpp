@@ -86,8 +86,8 @@ __attribute__((noinline)) int w268_tem()
 // own. 5870's body holds the array's address (341442) and its wasm type, (i32 i32)->(), has no parameter for it:
 // dead-argument elimination folded it, the same at both call sites. Both calls here pass one literal of the same bytes,
 // which is no target object, so the fold happens here too. [[clang::noinline]] keeps the two calls: without it clang
-// inlines both into this function and the object defines no make_format_args. This object's copy is the link's, as no
-// object of ours instantiates it.
+// inlines both into this function and the object defines no make_format_args. The link's copy is
+// md/cdependenciascontratos.cpp.o's, whose constructor (unrooted, unit 227's) instantiates it ahead of this object.
 __attribute__((noinline)) void w268_formata(void* destino, const std::string& dependencias, const std::string& versoes)
 {
     using TArgumentos = decltype(std::make_format_args(dependencias, "20260601173148"));

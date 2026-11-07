@@ -99,6 +99,27 @@
 #   target's copy, which unit 227's fragment had read so from 5854's band): ahead of cmontadorhash.cpp.o, which
 #   compiles the same instance with strict aliasing; its helper 5852 and the set's __tree::destroy (633) come from
 #   this object too now, the first on the link line to emit them.
+# - Written for vota::CGravaResultado::StartState (fn 12098), which holds them inlined, so with no target index and no
+#   match until 12098 is written (unrooted: wasm-ld drops them): CGravadorHashes's two constructors in
+#   cgravadorhashes.cpp, one per identification type, and CGravadorLog's in cgravadorlog.cpp, each ahead of
+#   GravaResultado. In the folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints (lines
+#   counted from the one after `;; --- folded readout`), the two Hashes constructors sit in the arms of 12098's test of
+#   the section (vptr stores at lines 842 and 903): each calls IGravador's constructor with the identification's
+#   municipality and zone, its place and section or 0 and 0, the extension 12 and the SAVD file 46, then copies the
+#   date-time, ConverteFase's result, a string, a new copy of the identification behind a std::shared_ptr (+68 or +76)
+#   and a string; the Log constructor follows `new` (line 2266) and copies three strings from temporaries 12098 frees
+#   after it. The 32-byte frame of lines 2226 to 2265, before that `new`, is not the constructor's: it builds the
+#   "arquivados/" directory (GetPathLog's code, then / "arquivados/"), an argument: comum::GetPathLogArquivados,
+#   written after the Log constructor in cgravadorlog.cpp (its name, its being a free function of comum, its file and
+#   its line chosen; external, so that clang keeps it out of line for binaryen to inline: cgravadorlog.h), unrooted. Its
+#   object opens the readout's 32-byte frame, the "dinamico/log/" path at +16, GetPathLog's result at +0, then the
+#   "arquivados/" path at +16. Measured on the objects (wasm-objdump -d): the three constructors open no frame, as 12098
+#   shows none for them. With the Hashes
+#   constructors written, cgravadorhashes.cpp.o instantiates the two pointer blocks' members, and the link keeps its
+#   copies of CIdentificacaoSecao's and CIdentificacaoUrnaContingencia's __get_deleter (11618, 11617; the same symbols,
+#   still matched), which came from unit 102's roots object before. Chosen: the constructors' parameters (order and
+#   form), the extension and the SAVD file as their own constants rather than 12098's arguments, the two overloads
+#   (a reading of the two inlined copies), and their lines.
 #
 # Evidence: the records give each member's file, line, column and signature, the vtables and RTTI each class and slot,
 # and the bodies the layouts (each header says from what), the codes and the messages. The recorders' layouts come from
@@ -186,7 +207,7 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorhashes.cpp.o: $(wildcard
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 136-uenux2-app-comum-gravadores-md-roots.cpp keeps the recorders' vtables, which
-# their constructors store (fn 12098, not written); it compiles with the tree's flags. Its stand-in for 11620's two
+# their constructors store (unrooted; their one caller, fn 12098, is not written); it compiles with the tree's flags. Its stand-in for 11620's two
 # calls of CEntidadeHashes::ValidaCriacao (5855) went: 11620 is in the link.
 $(ROOT)/$(APP)/136-uenux2-app-comum-gravadores-md-roots.o: $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/136-uenux2-app-comum-gravadores-md-roots.cpp -o $(R)
