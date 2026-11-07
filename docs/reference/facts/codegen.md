@@ -469,7 +469,7 @@ its caller ([reading.md](reading.md) §R9). Order reaches a body only through wh
 each case below inlines one): when every call of the body in `wasm-dis` of `r02-stripped.wasm` (below) is still a call
 in the output, no order moves its locals, and the remainder is in the object (below, "Local numbers can come from
 clang's object too"; 11876 kept its 18 calls, and eleven places in the module and five renumberings of its input
-locals each scored `96 over 448` on a replay at 63736ade). Why, binaryen's source in the image does not show; the
+locals each scored `96 over 448` on a replay at ee244e6e). Why, binaryen's source in the image does not show; the
 effect is measured, the caller first in these:
 
 - **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with

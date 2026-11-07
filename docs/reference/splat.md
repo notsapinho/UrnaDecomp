@@ -210,10 +210,11 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does
-  not rescue: one named by other evidence that calls the name at the aligned site, as 8811 does for 543. Without one, or
-  when our body differs because our source is wrong, this is not the case. Only a line under the marker that stands for
-  its name and whose evidence is exactly this word on a `func:` has that effect: a longer word, the word later in a
-  comment, a generated line or a data line does not, and a typo fails loudly, since the callers leave `match`.
+  not rescue: one named by other evidence that calls the name at the aligned site (8811 did for 543, while 543's line
+  stood). Without one, or when our body differs because our source is wrong, this is not the case. Only a line under the
+  marker that stands for its name and whose evidence is exactly this word on a `func:` has that effect: a longer word,
+  the word later in a comment, a generated line or a data line does not, and a typo fails loudly, since the callers
+  leave `match`.
 
 **A name kept by hand when votes disagree.** Our link can merge what the target keeps apart, and no source form fixes
 that ([../how-to-decompile.md](../how-to-decompile.md) step 3). The votes for our one body then disagree, a name with
