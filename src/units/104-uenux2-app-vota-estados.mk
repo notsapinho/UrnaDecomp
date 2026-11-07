@@ -545,8 +545,8 @@
 # holds this class's data (@1545592) after ctelasvota.cpp's (@1539xxx) and before that of 36 objects the move crosses,
 # each a pair it inverts (unit 110's fragment names them). The CONFIRMA case written before CORRIGE gives the
 # target's block order (the
-# other order, 129 over 1094, measured with the file in this unit's list). AddItem (1693), which differs, takes its
-# name from a hand line on its own records (unit 84's fragment): without it 11881 and 12894 are unresolved self-voted.
+# other order, 129 over 1094, measured with the file in this unit's list). AddItem (1693) matches (unit 84's fragment),
+# named by step 8's srcloc-anchor line on its own records (no hand line names it); 11881 and 12894 are `match`.
 #
 # vota::CMenuFiltrarCandidatosPorCargo::StartState (11888, slot 2, record cmenufiltrarcandidatosporcargo.cpp:44:31, the
 # CPolySingleton<IInputKbd>::instance() call in the switch) is written in its class's file and matches, with what it

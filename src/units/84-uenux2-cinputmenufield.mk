@@ -65,33 +65,35 @@
 #   offsets are the measurement). CantoInferiorEsquerdo returns `SPoint(rect.left, rect.bottom)` of a `const SRect&`,
 #   and clang inlines it. Measured by the function's disassembly in compiles of the file at the unit's flags: the same
 #   function with the helper in an anonymous namespace, `static` or external (an external one also stays in the object),
-#   as a lambda called in place, and with the point a named `const SPoint` initialized from the helper and passed to
-#   Move; other frames with the helper taking the SRect by value (the mask's position at +12), with no helper and the
-#   point declared first and set from the rectangle in an inner scope (the corner stored as one 32-bit word), and with
-#   the corner's move and the mask's in a member helper that takes the rectangle from Reposiciona (the mask's position
-#   at +12, in the point's slot). `posicao = SPoint(posicao.x + 7, posicao.y)` gives the 32-bit store, and so do
-#   `SPoint(m_rectInstrucao.right + 7, m_rectInstrucao.top - 1)` and `SPoint{static_cast<TPosition>(posicao.x + 7),
-#   posicao.y}` (the same function); `posicao.x += 7` stores x alone, and the two points as the arms of a conditional
-#   initializer give a select of the two x and two 16-bit stores. In the whole link 2 over 106 rows, both operands (a
-#   constant the scan reads as data and a callee), then `match`. Chosen: the helper, its name, its internal linkage
-#   (an anonymous namespace), its being a free function (it reads no state of the class) and the first of the three
-#   forms of the 7.
+#   as a lambda called in place, as an SRect member returning `SPoint(left, bottom)` called on Adjust's result
+#   (`m_rectItens.Adjust(0, 0, 0, 5).CantoInferiorEsquerdo()`, the member added to a copy of primitives.h), and with the
+#   point a named `const SPoint` initialized from the helper and passed to Move; other frames with the helper taking the
+#   SRect by value (the mask's position at +12), with no helper and the point declared first and set from the rectangle
+#   in an inner scope (the corner stored as one 32-bit word), and with the corner's move and the mask's in a member
+#   helper that takes the rectangle from Reposiciona (the mask's position at +12, in the point's slot). `posicao =
+#   SPoint(posicao.x + 7, posicao.y)` gives the 32-bit store, and so do `SPoint(m_rectInstrucao.right + 7,
+#   m_rectInstrucao.top - 1)` and `SPoint{static_cast<TPosition>(posicao.x + 7), posicao.y}` (the same function);
+#   `posicao.x += 7` stores x alone, and the two points as the arms of a conditional initializer give a select of the
+#   two x and two 16-bit stores. In the whole link 2 over 106 rows, both operands (a constant the scan reads as data and
+#   a callee), then `match`. Chosen: the helper, its name, its internal linkage (an anonymous namespace), its being a
+#   free function (it reads no state of the class) and the first of the three forms of the 7.
 # - AddItem (1693, records 320:15 and 339:15, the two throws, 326:21, the instance() line), with NextItemPosition
 #   (record 298:21) and CMenuItem's constructor, both held in it in the link (NextItemPosition behind a second
 #   stack-pointer prologue), matches with the room left under the menu written as `std::min(alturaTela -
 #   alturaInstrucao, m_posicao.y + m_alturaMaxima - alturaInstrucao)`: the instruction's height a TPosition local used
-#   in both arms, after the screen's height held in a TPosition local (an int there gives the same function), so that
-#   the instruction's rectangle is read after GetHeight's call, as in the target. The target computes the room as
-#   `min + ~(bottom - top)`, and the height written once, before this form, gave `min + top + ~bottom` (the same value):
-#   36 over 628 rows in the plain link, 31 operand-only, the other five (one replaced, two inserted, two deleted) from
-#   that expression. The matched form's final IR holds the height as the 16-bit `(bottom + 1) - top`, zero-extended
-#   into the int subtraction from the minimum (`-mllvm -print-after-all` on the object's compile), so the target's not
-#   is the backend's (a reading). Measured now by NextItemPosition's disassembly in compiles of the file at the unit's
-#   flags: the TPosition height used in both arms but declared before GetHeight's call gives the target's not with the
-#   two loads ahead of the call; an int height used in both arms, an int height used once, or the limit as the bottom
-#   of an SRect built from it give `top + ~bottom` (the last with a select of its own); `bottom - top` in an int used
-#   in both arms with the 1 taken after the minimum, or a TPosition height used once, give `top - bottom` with the 1
-#   and the 5 joined; std::max(height, 0) loads the edges as signed and adds a select. Measured on the way before, in
+#   in both arms, after the screen's height held in a TPosition local (an int there gives the same function, and so does
+#   the limit held in a `const int limite`), so that the instruction's rectangle is read after GetHeight's call, as in
+#   the target. The target computes the room as `min + ~(bottom - top)`, and the height written once, before this form,
+#   gave `min + top + ~bottom` (the same value): 36 over 628 rows in the plain link, 31 operand-only, the other five
+#   (one replaced, two inserted, two deleted) from that expression. The matched form's final IR holds the height as the
+#   16-bit `(bottom + 1) - top`, zero-extended into the int subtraction from the minimum (`-mllvm -print-after-all` on
+#   the object's compile), so the target's not is the backend's (a reading). Measured now by NextItemPosition's
+#   disassembly in compiles of the file at the unit's flags: the TPosition height used in both arms but declared before
+#   GetHeight's call gives the target's not with the two loads ahead of the call; an int height used in both arms, an
+#   int height used once, or the limit as the bottom of an SRect built from it give `top + ~bottom` (the last with a
+#   select of its own); `bottom - top` in an int used in both arms with the 1 taken after the minimum, or a TPosition
+#   height used once, give `top - bottom` with the 1 and the 5 joined; std::max(height, 0) loads the edges as signed and
+#   adds a select. Measured on the way before, in
 #   the plain link:
 #   196 over 656 with the rectangles read as members, a reference kept from emplace_back and a default std::string; 80
 #   over 647 with the last item's and the widest one's rectangles through CMenuItem::GetRect, which returns it by value

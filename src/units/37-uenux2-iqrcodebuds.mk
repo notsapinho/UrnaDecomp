@@ -34,9 +34,9 @@
 # takes a callers+content hand line in splat/symbol_addrs.txt resting on what 1721 alone loads: the record
 # iform.h:142:23 and the literal at 444680. The line carries 5982 alone: a scan run twice and splat-build on copies
 # without it and without 5982's match line leave 5982 `unresolved self-voted` and move no other row (with 1721's name
-# out on both sides of the marker, 1721 reads `no-candidate` too). The seven fields are CTextFields: fn 940, which it
-# calls on them, is api::CTextField::SetCorTexto (unit 27), the body binaryen shares with CTextBox::SetStatus, and whose
-# match line moves to that name (a twin rename).
+# out on both sides of the marker, 1721 reads `no-candidate`, and 5982 plain `unresolved`: its call has no target
+# function). The seven fields are CTextFields: fn 940, which it calls on them, is api::CTextField::SetCorTexto (unit
+# 27), the body binaryen shares with CTextBox::SetStatus, and whose match line moves to that name (a twin rename).
 #
 # Written, not matching:
 # - StartState (fn 12055, record 70, `differs`, named by its vtable slot): the demo-mode test (CAplicacaoEncerrada

@@ -38,7 +38,7 @@
 //   3606 and 2727 (called by 10795 and by 5387 and 10368, the data sources' slot 2, in the link with unit 104's 10388,
 //   and both by 12105), and HasInst, 2221 (11616, 12105): both callers are in the link (unit 122's 11616 calls it
 //   three times, fragment 372's 12105 twice), and the stand-in for 12105 went.
-// A stand-in goes when the target callers it names are in splat/matched.txt.
+// A stand-in goes once our link holds the calls of the target callers it names, matched or not (src/units/README.md).
 #include <map>
 
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
