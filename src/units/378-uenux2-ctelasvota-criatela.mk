@@ -218,15 +218,16 @@
 #   groups as the target's, the rectangle still above), with the text arms swapped or with the width and the text calls
 #   in a second helper that takes the rectangle by value; each helper one clang inlines, its extent deciding which
 #   marked temporaries share a slot (docs/reference/facts/codegen.md C5); adicionaFotoEmoldurada's field result named,
-#   default-constructed first, or its rectangle returned directly. Since, on ba9a4549's object (each variant's 4184
-#   folded by `pnpm wasm fn` on its object, its frame offsets against the target's): the text call in an internal helper
-#   over its point's coordinates, or over the point by reference (both 48-byte frames), alone or with the helper inside
-#   another that holds the whole named arm, the point and the font named in the first (the rectangle then sits under
-#   the text calls' slots, as in the target, but the two results share one slot); each arm's result a named local (48);
-#   the plain arm first, by an early return (64, the tree's layout); one call over a conditional point (one call where
-#   the target has two). In the IR (`-S -emit-llvm`) the results the arms drop carry no lifetime markers, where the
-#   target's two results each share a slot with the plain arm's photo objects, so carry them, and are kept apart from
-#   each other and from the photo's field result, which no form above gives with the 64-byte frame (a reading).
+#   default-constructed first, or its rectangle returned directly. Since, compiled from 32050286's ctelasvota.cpp, whose
+#   4184 is ba9a4549's (each variant's 4184 folded by `pnpm wasm fn` on its object, its frame offsets against the
+#   target's): the text call in an internal helper over its point's coordinates, or over the point by reference (both
+#   48-byte frames), alone or with the helper inside another that holds the whole named arm, the point and the font
+#   named in the first (the rectangle then sits under the text calls' slots, as in the target, but the two results share
+#   one slot); each arm's result a named local (48); the plain arm first, by an early return (64, the tree's layout);
+#   one call over a conditional point (one call where the target has two). In the IR (`-S -emit-llvm`) the results the
+#   arms drop carry no lifetime markers, where the target's two results each share a slot with the plain arm's photo
+#   objects, so carry them, and are kept apart from each other and from the photo's field result, which no form above
+#   gives with the 64-byte frame (a reading).
 # - 4129 vota::adicionaImagem<comum::CCandidaturasDSFoto> (target callers 4181 and 4184, which calls it twice):
 #   adicionaImagem is vota's template now, out of the anonymous namespace: its instance over an external type is
 #   linkonce, which clang keeps out of line as the target has it (in the anonymous namespace clang inlined it into

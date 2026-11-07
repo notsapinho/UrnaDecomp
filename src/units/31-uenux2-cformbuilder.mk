@@ -192,24 +192,25 @@
 #
 # 5545, AddProgressBar: an api::CProgressBar (unit 40's constructor, which binaryen inlines into it) over RectEntre's
 # rectangle, returned as the bar (cformbuilder.h). Its font is a parameter both target callers, 7787 and 12098, pass as
-# one constant, the SFont {0, 0} @475024, which binaryen folded: 5545 reads its size at that address. That constant is
-# vota::FONTE_BARRA_PROGRESSO, the font ctelasvota.cpp's progress screen passes (vota::TelaProgressoEncerramento, which
-# 12098 holds inlined: unit 48's fragment), external by a chosen linkage, the user's decision (ctelasvota.h): the roots'
-# BarraProgresso passes it in both calls. Measured in a link that also reaches the screen (the plain link and an object
-# whose caller of the screen a sink keeps): our AddProgressBar keeps the font as a seventh parameter while the roots
-# pass a constant of their own with those bytes, and has the target's six with this one. Eight zero bytes are found too
-# often in the target for the scan to place them (`... no target symbol; bytes occur 22+ times`, ba9a4549), so the name
-# comes from a `callers+content` hand line for @475024 in splat/symbol_addrs.txt, led by 7787's read of it (7787 tests
-# its size and copies it or the SFont {30, 0} at 474888); weighed by removal, it carries 5545 and nothing else. Matched
-# at step 9. What the bytes fixed, measured: the size is read before the allocation, after the rectangle, so the
-# rectangle and the size are named locals in that order. `fonte.size` given to make_shared is read in the constructor,
-# after the allocation (3 rows inserted and 3 deleted in the link), and a size local declared before the rectangle is
-# read among the rectangle's loads (the object); `static_cast<TFontSize>(fonte.size)` in the call gives the same
-# function as the two locals (the object, the variants compiled beside each other under names of one length). Its place:
-# after GetForm, in the run before AddStatusHeader's first record: band 1 links its block's members (11111, 11110) after
-# AddBlinkingTextField's and before AddStatusHeader's lambda's block (11109, 11108), the data its vtable @1578496
-# between theirs, and band 2 puts 5545 after GetForm (5550) and before GetLabeledKeyPos (5544). Unit 108's stand-in call
-# of SRect::Adjust for it, unit 40's vtable sink and unit 102's builder of its control block went: it is in the link.
+# one constant, the SFont {0, 0} @475024, which binaryen folded: 5545 reads its size at that address. That constant is,
+# by unit 48's reading of 12098's frames (its fragment), the font ctelasvota.cpp's progress screen passes
+# (vota::TelaProgressoEncerramento, which 12098 holds inlined), named vota::FONTE_BARRA_PROGRESSO by choice and external
+# by a chosen linkage, the user's decision (ctelasvota.h): the roots' BarraProgresso passes it in both calls. Measured
+# in a link that also reaches the screen (the plain link and an object whose caller of the screen a sink keeps): our
+# AddProgressBar keeps the font as a seventh parameter while the roots pass a constant of their own with those bytes,
+# and has the target's six with this one. Eight zero bytes are found too often in the target for the scan to place them
+# (`... no target symbol; bytes occur 22+ times`, ba9a4549), so the name comes from a `callers+content` hand line for
+# @475024 in splat/symbol_addrs.txt, led by 7787's read of it (7787 tests its size and copies it or the SFont {30, 0} at
+# 474888); weighed by removal, it carries 5545 and nothing else. Matched at step 9. What the bytes fixed, measured: the
+# size is read before the allocation, after the rectangle, so the rectangle and the size are named locals in that order.
+# `fonte.size` given to make_shared is read in the constructor, after the allocation (3 rows inserted and 3 deleted in
+# the link), and a size local declared before the rectangle is read among the rectangle's loads (the object);
+# `static_cast<TFontSize>(fonte.size)` in the call gives the same function as the two locals (the object, the variants
+# compiled beside each other under names of one length). Its place: after GetForm, in the run before AddStatusHeader's
+# first record: band 1 links its block's members (11111, 11110) after AddBlinkingTextField's and before
+# AddStatusHeader's lambda's block (11109, 11108), the data its vtable @1578496 between theirs, and band 2 puts 5545
+# after GetForm (5550) and before GetLabeledKeyPos (5544). Unit 108's stand-in call of SRect::Adjust for it, unit 40's
+# vtable sink and unit 102's builder of its control block went: it is in the link.
 #
 # What the bytes fix:
 # - In each of the MT and paper adders the text local outlives the field's allocation: the field's `new` follows the text's

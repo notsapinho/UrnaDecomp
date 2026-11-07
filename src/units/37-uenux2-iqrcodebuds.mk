@@ -47,16 +47,17 @@
 #   (CONFIRMA's and Continuar's rows, the help text's bottom); clang folds that into bottom - 47, - 26 and - 114 for
 #   every form of the height compiled (a TPosition, int, unsigned or uint16_t local, the area's copy with its bottom
 #   moved, a size point; objects and scratch TUs at ctelasvota.cpp's flags), and for the height passed by value to an
-#   internal helper that builds each of those points (ba9a4549's object: CONFIRMA's and Continuar's rows at bottom -
-#   47 and - 26 again; clang inlines the helper and folds its subtractions). The other inserted and deleted rows are
-#   where two of the area's fields are kept (a stack value against a local) and the locals' numbers; not explained
-#   apart from the height. Measured on the way, in the whole link: the area read as one local copy (three i16 loads)
-#   732 over 2421; through AreaTela's by-value copy (the target's one i64.load) 756 over 2418; with the layout values
-#   as locals declared ahead of their statements 284 over 2370, and 281 over 2368 with the version's row one too; 279
-#   with the version label's text the target's "Versão: " (in Latin-1: two i64.const rows, the label's characters).
-#   The locals declared before or after the status header give the same link (sha256 compared), and so does the height
-#   as a uint16_t or a TPosition. CQRCodeImage's constructor takes its std::function by value since (cqrcodeimage.h
-#   says why): fn 3662's match line follows the symbol (a rename) and its body is unchanged.
+#   internal helper that builds each of those points (compiled from 32050286's ctelasvota.cpp, whose CriaTelaQRCodeBU is
+#   ba9a4549's: CONFIRMA's and Continuar's rows at bottom - 47 and - 26 again; clang inlines the helper and folds its
+#   subtractions). The other inserted and deleted rows are where two of the area's fields are kept (a stack value
+#   against a local) and the locals' numbers; not explained apart from the height. Measured on the way, in the whole
+#   link: the area read as one local copy (three i16 loads) 732 over 2421; through AreaTela's by-value copy (the
+#   target's one i64.load) 756 over 2418; with the layout values as locals declared ahead of their statements 284 over
+#   2370, and 281 over 2368 with the version's row one too; 279 with the version label's text the target's "Versão: "
+#   (in Latin-1: two i64.const rows, the label's characters). The locals declared before or after the status header give
+#   the same link (sha256 compared), and so does the height as a uint16_t or a TPosition. CQRCodeImage's constructor
+#   takes its std::function by value since (cqrcodeimage.h says why): fn 3662's match line follows the symbol (a rename)
+#   and its body is unchanged.
 # - GetQRDSInst (fn 1956, record 31, `unresolved`): it calls CCabecalhoQRCodeBuilder::DefineHistoricoCarga (fn 5622),
 #   written in unit 93 and `no-candidate` (its body is the target's but for its locals' numbers: 89 over 431 rows, every
 #   replaced row operand-only), and Gera (fn 5604, unit 155's, `no-candidate`). It holds, inlined by binaryen, two

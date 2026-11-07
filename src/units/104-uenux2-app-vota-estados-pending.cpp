@@ -28,17 +28,17 @@ namespace vota {
 // IInterfaceSavd::EnviarLocal, CAssinador's and vota::CAssinadorVota's second constructors (units 34, 95, 111, 165),
 // vota::CProgressoEncerramento's constructor over vota::TelaProgressoEncerramento and the base's out-of-line
 // constructor (unit 48). Its own code is not written, and it waits for that: the body around the 384-byte frame, and
-// three functions it holds behind frames of their own that no unit writes yet (lines of pnpm wasm fn's folded readout,
-// counted from the line after `;; --- folded readout`): a comum::CGeradorResultados constructor that passes fn 5824 an
-// empty second vector (48 bytes, line 2801; 5824's two calls there read as one call split on whether the
-// std::shared_ptr argument has a control block), a member that runs the recorders inside api::CApplication contexts
-// and logs and signs them (352 bytes, line 2824), and a loop that copies the result files (32 bytes, line 3447). Read
-// from that code: what 5824 copies to +76 is the progress screen, the std::shared_ptr of the
-// vota::CProgressoEncerramento 12098 builds, whose slots 2 and 4 (comum::CAbstractTelaProgresso's Inicia and
-// Incrementa) the member calls, where cgeradorresultados.h declares an IGravador there; and record 79's text, "Assert
-// (eleitores.GetNumComparecimentos() == rdv.Comparecimento())", spells the accessor of comum::CEleitores' word at
-// +104 that celeitores.h calls GetComparecimento, a chosen name. Fn 5545's folded font is the screen's
-// vota::FONTE_BARRA_PROGRESSO, which unit 31's roots pass (unit 31's fragment).
+// five functions it holds behind frames of their own that no unit writes yet (lines of pnpm wasm fn's folded readout,
+// from the line after `;; --- folded readout`): comum::CGeracaoVersoesContratos' versions builder (80 bytes, line 1938)
+// and its dependencies loop (16 bytes, line 1942), a comum::CGeradorResultados constructor that passes fn 5824 an empty
+// second vector (48 bytes, line 2801; 5824's two calls there read as one call split on whether the std::shared_ptr
+// argument has a control block), a member that runs the recorders inside api::CApplication contexts and logs and signs
+// them (352 bytes, line 2824), and a loop that copies the result files (32 bytes, line 3447). Read from that code: what
+// 5824 copies to +76 is the progress screen, the shared_ptr of the vota::CProgressoEncerramento 12098 builds, whose
+// slots 2 and 4 (comum::CAbstractTelaProgresso's Inicia and Incrementa) the member calls, where cgeradorresultados.h
+// declares an IGravador; and record 79's text, "Assert (eleitores.GetNumComparecimentos() == rdv.Comparecimento())",
+// spells the accessor of comum::CEleitores' word at +104 that celeitores.h calls GetComparecimento, a chosen name. Fn
+// 5545's folded font is the screen's vota::FONTE_BARRA_PROGRESSO, which unit 31's roots pass.
 void CGravaResultado::StartState()
 {
     __builtin_trap();
