@@ -7,8 +7,8 @@ source's named values, a TU's first emissions and an inlined callee do to a fram
 C1 or D1 call `-fPIC` keeps,
 `-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, what a caller's temporaries say of
 a parameter's form, a throw path's blocks, where its pad lies and what a `try` block is without exceptions, a loop clang
-turns twice, a store in each arm of a branch or case, a condition's test order, what orders a function's blocks, and the
-loads a declaration decides.
+turns twice, a store in each arm of a branch or case, a condition's test order, what orders a function's blocks, the
+loads a declaration decides, and the offsets binaryen folds a local into.
 `docs/how-to-decompile.md` steps 1 to 5 and 9 rely on these; [reading.md](reading.md) holds what a target body says
 about declarations (parameters, destructors, linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC
 -std=c++20 -DNDEBUG -fno-strict-aliasing`, or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since,
@@ -500,11 +500,17 @@ two steps. The two axes are one question when the chain spans a `.cpp` and anoth
 with each object order, not each alone. 2772 (`CQRCodeImagePaper`'s constructor, which holds its file's `MontaImagem`
 and `cstringutils.cpp`'s `SetBit` inlined) scored `97 over 696` with `MontaImagem` above it and with its object before
 `cstringutils.cpp.o`, each alone, and `44 over 689`, every row an operand, with both (on a replay, below, then the
-link; unit 296's fragment). A library's objects are the same question: zlib's `crc32` (893) is a 14-byte call of
+link; unit 296's fragment). The order that counts can be one level down, an inlined callee's against a function it
+inlines in turn, with the object order: 10337 holds `CMesarioRegistrado::GetInst` inlined, which holds the class's
+constructor, and scored `289 over 761` with GetInst defined above the constructor alone and with
+`igestordadomesario.cpp.o` linked after `cmesarioregistrado.cpp.o` alone, and `69 over 750`, every row an operand, with
+both (units 135 and 279). A library's objects are the same question: zlib's `crc32` (893) is a 14-byte call of
 `crc32_z`, and with
 zlib's objects ahead of minizip's our link kept `crc32` with `crc32_z` inlined (a block result where the target has `if
 … return`); with minizip's first it keeps `crc32_z` whole, and eleven rows matched ([libraries.md](libraries.md) §B8,
-fragment 06).
+fragment 06). So are the ASN.1 runtime's: 8811 (`PERDecoder::do_visit(SEQUENCE_OF_Base&)`) holds `asn1.o`'s
+`SEQUENCE_OF_Base::resize` inlined, scored `94 over 382` with `asn1.o` after `PERDecoder.o`, and matches with it first
+(`src/mk/asn1.mk`, unit 86's fragment).
 
 **Only orders a source can give count.** Objects take their list order; inside one `.cpp` a function takes its place at
 the TU's first mention of it (how-to step 3, "The order of two members"), not at its definition; a template instance its
@@ -528,7 +534,8 @@ locals over the stretch where their values live, which names the target's groups
 -print-after=wasm-reg-coloring` shows which register each value, `ARGUMENT_i32 0` among them, was merged into, with
 `-mllvm -print-machine-bfi -mllvm -print-bfi-func-name=<mangled>` the block frequencies the colouring weighs (a reading
 of LLVM's source: registers by summed use frequency, each into the first colour it does not overlap). Judge a form by
-the group a value lands in, not by one local's index. `-fPIC` weighs in: each function then reads `__memory_base` in
+the group a value lands in, not by one local's index, and a load's or store's base by the object, not the final code
+(§C20). `-fPIC` weighs in: each function then reads `__memory_base` in
 its entry block, one more heavy value, so a value can take another local with the flag and without it. 10380's
 `DefineProximoEstado` keeps its slot constants in local 3 at the tree's `-fPIC` and in `this`'s local 0 without it;
 its TU's record lies in `.data.rel.ro`, so the target built it `-fPIC` ([app-flags.md](app-flags.md) §F5) and the
@@ -573,24 +580,25 @@ data, not a window, which can flip the answer, and with the objects that have re
 vtables alone, the wrong place can win (a new report file's two places counted 202 and 205 by vtables, 268 and 241 with
 records, fragment 372). This ranks each object of the plain link line by the lowest target address the symbol file
 gives its vtables and typeinfos (`.data.rel.ro._ZT[VI]` in our map) or, with none, by its source's lowest `.cpp` record,
-and counts at each place given, the object `x` moved before or after another (c3a97777):
+and counts at each place given, the object `x` moved before or after another (912b211d):
 
 ```sh
 python3 -I - /citensmenuvota.cpp.o here after:/ctelasvota.cpp.o <<'END'
 import os, re, sys
-# usage: [LINKCMD=<copy>] python3 -I - <X suffix> <place>... [names] [bss]   place: here | before:<suffix> | after:<suffix>
-xs, places = sys.argv[1], [a for a in sys.argv[2:] if a not in ('names', 'bss')]
+# usage: [LINKCMD=<copy>] python3 -I - <X suffix> <place>... [names] [bss|rodata]   place: here | before:<suffix> | after:<suffix>
+xs, places = sys.argv[1], [a for a in sys.argv[2:] if a not in ('names', 'bss', 'rodata')]
+alone = next((a for a in ('bss', 'rodata') if a in sys.argv), None)
 order = list(dict.fromkeys(w for w in open(os.environ.get('LINKCMD', 'build/out/wasm/vota_web/link.cmd')).read().split() if w.endswith('.o')))
 t = {p[0]: int(p[2].rstrip(';'), 0) for p in (l.split() for l in open('splat/symbol_addrs.txt', encoding='latin-1'))
      if len(p) >= 3 and p[1] == '=' and re.fullmatch(r'0x[0-9a-f]+;', p[2])}
-seg = r'\.bss\.([^)]*)' if 'bss' in sys.argv else r'\.data\.rel\.ro\.(_ZT[VI][^)]*)'
+seg = {'bss': r'\.bss\.([^)]*)', 'rodata': r'\.rodata\.(_ZT[VI][^)]*)'}.get(alone, r'\.data\.rel\.ro\.(_ZT[VI][^)]*)')
 vt, rec = {}, {}
 for l in open('build/out/wasm-map/vota_web/vota_web_wasm.map', encoding='latin-1'):
     m = re.search(r'(\S+?):\(' + seg + r'\)$', l)
     if m and m.group(2) in t: vt[m.group(1)] = min(vt.get(m.group(1), 1 << 40), t[m.group(2)])
 for l in open('ledger/source-locations.tsv', encoding='latin-1'):
     p = l.split('\t'); f = p[1] if len(p) > 1 else ''
-    if 'bss' in sys.argv or not p[0].isdigit() or not f.endswith('.cpp'): continue
+    if alone or not p[0].isdigit() or not f.endswith('.cpp'): continue
     if f.startswith('/home/rubio/tse/uenux2/'): o = 'app/uenux2/' + f[23:] + '.o'
     elif '/src/ecourna/' in f: o = 'app/ecourna/' + f.split('/src/ecourna/', 1)[1].replace('/', '_') + '.o'
     else: continue
@@ -603,16 +611,16 @@ for spec in places:
         how, ys = spec.split(':', 1); Y = [o for o in seq if o.endswith(ys)]; assert len(Y) == 1, Y
         seq.insert(seq.index(Y[0]) + (how == 'after'), X)
     pos = {o: i for i, o in enumerate(seq)}
-    for name, r in ((('bss', vt),) if 'bss' in sys.argv else (('vtables-only', vt), ('record-aware', both))):
+    for name, r in (((alone, vt),) if alone else (('vtables-only', vt), ('record-aware', both))):
         if X not in r: print(spec, name, 'skipped:', X, 'has no rank here'); continue
         out = sorted((pos[o], o) for o in seq if o != X and o in r and (pos[o] < pos[X]) != (r[o] < r[X]))
         print(spec, name, len(out), 'objects out of the data order against', X, 'at', pos[X], hex(r[X]))
         if 'names' in sys.argv and name != 'vtables-only': print('\n'.join(f'  {p} {hex(both[o])} {o}' for p, o in out))
 END
-# here vtables-only 57 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
-# here record-aware 121 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 29 0x177e34
-# after:/ctelasvota.cpp.o vtables-only 83 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 85 0x177e34
-# after:/ctelasvota.cpp.o record-aware 158 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 85 0x177e34
+# here vtables-only 56 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 28 0x177e34
+# here record-aware 120 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 28 0x177e34
+# after:/ctelasvota.cpp.o vtables-only 81 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
+# after:/ctelasvota.cpp.o record-aware 156 objects out of the data order against app/uenux2/src/app/vota/operador/outrasopcoes/citensmenuvota.cpp.o at 83 0x177e34
 ```
 
 Take the record-aware count. With `names` added, it lists the record-aware objects of each place with their positions
@@ -622,8 +630,13 @@ for a file at two places they are the objects linked between them. A count the m
 in unit 296's list and 332 before `cstringutils.cpp.o`). One whose only named data are `.bss` statics (a singleton's)
 has neither: with `bss` the script ranks every object by its `.bss` names alone, records left out, and counts that
 segment (`cestadoaudio.cpp.o`, 43 at the head of unit 110's list, 45 after `celeitores.cpp.o`); never mix it with the
-other two. A place is a position between two objects: inside a list weighed, count every position (`before:` each of its
-objects, `after:` the last), since the list's head can invert fewer pairs than the place beside a data neighbour (unit
+other two. An object built without `-fPIC` (the ASN.1 runtime's, ecourna's, the libraries') emits its vtables and
+typeinfos in `.rodata`, so neither default count ranks it: `rodata` ranks every object by those names alone, records
+left out, in that segment (`/asn1/asn1.o here before:/language.cpp.o before:/asn1/PERDecoder.o rodata` prints 1, 0 and 9
+at 912b211d; unit 86's fragment). A pattern that takes both segments ranks the runtime's `.rodata` (from 0x1183b8)
+against every app vtable in `.data.rel.ro` and counts 539 there. A place is a position between two objects: inside a
+list weighed, count every position (`before:` each of its objects, `after:` the last), since the list's head can invert
+fewer pairs than the place beside a data neighbour (unit
 159's two files: 273 at the head of unit 225's list, 276 beside `cvisitanteeleitor.cpp.o`, at 525b5b8a). Count on the
 plain `build/out/wasm/vota_web/link.cmd` of the committed state: a home-made count over a link line that holds a variant
 object under another path drops that object's pairs with no message (unit 278's move counted 478 and 31 so, against 515
@@ -650,14 +663,17 @@ fragment names.
 **Trying orders on binaryen alone.** A relink costs about 40 s an order, and a chain of several inlined functions has
 many. The link's own `wasm-opt -Oz` step can run alone instead: `link-map` writes it as line 3 of
 `build/out/wasm-map/vota_web/replay.sh`, on `r02-stripped.wasm` beside it, and its last `wasm-opt` as line 7. Run on
-copies, with both outputs and the symbol map moved to scratch (3c1ef19d, 6 s):
+copies, with both outputs and the symbol map moved to scratch (912b211d, 16 s for this block and the round trip
+below). `M` is the map's directory under `build/out/`, which `replay.sh`'s lines name: for a scratch link
+([workflow.md](workflow.md) §W13) mapped with `tools/round/link-map.sh $V/wasm/$n`, `M=${V#build/out/}/wasm-map/$n`;
+the blocks below give `same` on both:
 
 ```sh
-P=build/out/codegen-facts/replay; mkdir -p $P
-sed -n 3p build/out/wasm-map/vota_web/replay.sh | sed 's#wasm-map/vota_web/r05\.#codegen-facts/replay/r05.#g' > $P/oz.sh
-sed -n 7p build/out/wasm-map/vota_web/replay.sh | sed -e 's#--minify-imports-and-exports-and-modules ##' -e 's#wasm-map/vota_web/r10-named\.wasm -o wasm-map/vota_web/r13-named\.wasm#codegen-facts/replay/r05.wasm -o codegen-facts/replay/r13.wasm#' > $P/last.sh
+M=wasm-map/vota_web; P=build/out/codegen-facts/replay; mkdir -p $P
+sed -n 3p build/out/$M/replay.sh | sed "s#$M/r05\.#codegen-facts/replay/r05.#g" > $P/oz.sh
+sed -n 7p build/out/$M/replay.sh | sed -e 's#--minify-imports-and-exports-and-modules ##' -e "s#$M/r10-named\.wasm -o $M/r13-named\.wasm#codegen-facts/replay/r05.wasm -o codegen-facts/replay/r13.wasm#" > $P/last.sh
 TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $P/oz.sh) && $(cat $P/last.sh)"
-cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
+cmp $P/r05.wasm build/out/$M/r05.wasm && echo same
 # same
 ```
 
@@ -688,9 +704,9 @@ right column; without it the map names each function by its new position. The un
 for byte:
 
 ```sh
-sed 's#wasm-map/vota_web/r02-stripped\.wasm#codegen-facts/replay/in.wasm#' $P/oz.sh > $P/oz-in.sh
-TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && /emsdk/upstream/bin/wasm-dis wasm-map/vota_web/r02-stripped.wasm -o codegen-facts/replay/in.wat && /emsdk/upstream/bin/wasm-as --all-features -g codegen-facts/replay/in.wat -o codegen-facts/replay/in.wasm && $(cat $P/oz-in.sh)"
-cmp $P/r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
+sed "s#$M/r02-stripped\.wasm#codegen-facts/replay/in.wasm#" $P/oz.sh > $P/oz-in.sh
+TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && /emsdk/upstream/bin/wasm-dis $M/r02-stripped.wasm -o codegen-facts/replay/in.wat && /emsdk/upstream/bin/wasm-as --all-features -g codegen-facts/replay/in.wat -o codegen-facts/replay/in.wasm && $(cat $P/oz-in.sh)"
+cmp $P/r05.wasm build/out/$M/r05.wasm && echo same
 # same
 ```
 
@@ -1061,6 +1077,18 @@ C1, which stays a call (bbf27ac1):
 So a target caller that moves its arguments out and keeps a call of the complete constructor, whose `this` result no
 caller reads, is the second form: 3682 and 5558 call 5557, `(i32 i32 i32 i32 i32 i32)->()` (`pnpm --silent wasm fn
 ../target/vota_web_wasm.wasm 5557 | head -1`). Whether it is a member is how-to step 3's member rule.
+
+A constructor's dropped result can also show in its inlined stores, where no read after it is left to see, since
+binaryen merges the constructor's `this` and the caller's pointer into one local either way: with the result dropped,
+that local's every use is an address, and §C20 folds it into the stores' offsets on the caller's base. 11908 stores
+`CParteEleitores`'s member through the `make_shared` control block (`ctrl` +16, +20) in the target, where ours, the
+constructor in its class's file and its result kept, stored through the object (+4, +8); with the constructor in its
+caller's TU, the result dropped, it matches (unit 317's fragment). The other way is no rule: the code 11946 holds keeps
+each of its five part constructors' results and stores their members through the control block as the target does, and
+11946 matches (the count of `local.set` right after those calls):
+
+    wasm-objdump -d build/out/app/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorzeresima.cpp.o | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | /usr/bin/grep -A1 -E '^call [0-9]+ <env\._ZN5comum[0-9]+CParte' | /usr/bin/grep -c '^local.set'
+      5
 
 ## C7. `-Oz` turns an add of 0x100000 into a subtract
 
@@ -1488,3 +1516,28 @@ lines) before spending links on inline thresholds (§C3). A spelling that compil
 function: `' ' + s` and `" " + s` give the same body alone (`Char`, `Str`), and 5499
 (`CTextFieldDoubleLine::GetTextLines`) scored `116 over 1447` with the char against `24 over 1437` (unit 28's
 fragment, with the other forms that decide it).
+
+## C20. binaryen folds a local set to `x + C` into the offsets of the loads and stores that use it
+
+The base a final load or store reads need not be the object's. The link's `wasm-opt -Oz` takes `--low-memory-unused`
+(line 3 of `replay.sh`, §C4), which adds `optimize-added-constants-propagate`: a local set once to `x + C` whose every
+use is a load's or store's address is replaced by `x`, the `C` added to each user's offset. A use that is no address
+(here an argument of a call) keeps the local and the offsets. Probe `addconst.wat` (912b211d):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' '(module (import "env" "use" (func $use (param i32))) (memory 1)' '  (func (export "addr") (param $p i32) (result i32) (local $q i32) (local.set $q (i32.add (local.get $p) (i32.const 12))) (i32.store (local.get $q) (i32.const 1)) (i32.store offset=4 (local.get $q) (i32.const 2)) (i32.load offset=8 (local.get $q)))' '  (func (export "kept") (param $p i32) (result i32) (local $q i32) (local.set $q (i32.add (local.get $p) (i32.const 12))) (i32.store (local.get $q) (i32.const 1)) (i32.store offset=4 (local.get $q) (i32.const 2)) (call $use (local.get $q)) (i32.load offset=8 (local.get $q))))' > $P/addconst.wat
+TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/codegen-facts && for m in "" --low-memory-unused; do BINARYEN_PASS_DEBUG=1 /emsdk/upstream/bin/wasm-opt addconst.wat -Oz $m -o addconst.wasm 2> addconst.log; printf "%s (%s runs):" "-Oz $m" $(grep -c "running pass: optimize-added-constants" addconst.log); /emsdk/upstream/bin/wasm-dis addconst.wasm | grep -oE "^ \(func .[0-9]|(store|load)( offset=[0-9]+)?|local.tee" | tr "\n" " "; echo; done'
+# -Oz  (0 runs): (func $0 store local.tee store offset=4 load offset=8  (func $1 store local.tee store offset=4 load offset=8
+# -Oz --low-memory-unused (1 runs): (func $0 store offset=12 store offset=16 load offset=20  (func $1 store local.tee store offset=4 load offset=8
+```
+
+So the final code does not say whether the object loaded through `this` at offset 24 or through a local that holds
+`this + 24` (11876's filters give one module either way on a replay, unit 150's fragment): read a base against the
+object before reading it as the source's. On the link it decides whose base an inlined constructor's stores
+take (§C6): the replay of §C4 with `--skip-pass=optimize-added-constants-propagate` added after `-Oz` in `oz.sh` scores
+11908 (`vota::CImpressaoListaEleitores::StartState`, matched) `366 over 2067 rows (same 1701, replaced 340 [336
+operand-only], inserted 18, deleted 8)` against the replay's `166 over 2049`, every row an operand, with
+`CParteEleitores`'s member stores back on the object (`offset=8` and `offset=4` where the target has 20 and 16;
+912b211d). A local the colouring weighs is clang's, before this fold, so the object's weights can differ from what the
+final code suggests.

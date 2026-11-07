@@ -301,7 +301,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   waits with it (1558 and 3923 on `__format_spec`'s 2-byte field sets). The same remap lists our calls and table slots
   that have no target function (`has no target function`), which the callee bullet, reading the target's call graph,
   does not see: read each against the target's call at that offset (how-to step 1, "The third verdict") before
-  counting the row as ready. A row with no body of ours is read from its target piece:
+  counting the row as ready. The remap reads the symbol file alone, so a callee only `splat/matched.txt` names prints
+  so too and is resolved: look its symbol up in `splat/scan.tsv` first (3771's three calls of 208,
+  `ASN1::trace_invalid`, `match` with no symbol-file line; `docs/reference/facts/workflow.md` §W28). A row with no
+  body of ours is read from its target piece:
   - its `.bss` operands, the constants past the target's last data segment
     (`wasm-objdump -x -j Data target/vota_web_wasm.wasm | /usr/bin/grep -E 'segment\[' | tail -1` ends at 1811674), each
     grepped in the pieces (`/usr/bin/grep -rlE 'i32\.const <addr>($|[^0-9])' build/out/splat/pieces/asm`). An object
@@ -320,9 +323,11 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
     can still read `string tail occurs N times` (2725), which only the written row's scan shows: list it as a risk.
 - **And every row has a keeper.** A row lands only if our link keeps it: a caller, a store of its vtable's vptr, or
   a function that passes its table slot, each matched, written, in the lane, or a roots stand-in (an external
-  function; a vtable through a sink). A template copy, or a helper with internal linkage (its record names `(anonymous
-  namespace)::`, which no roots TU can name), whose callers are all unwritten waits for
-  them, under their lane. A function passed by its slot is kept by the passer: the slot's `i32.const` in the passer's
+  function; a vtable through a sink). A template copy the caller's TU instantiates, or a helper with internal linkage
+  (its record names `(anonymous namespace)::`, which no roots TU can name), whose callers are all unwritten waits for
+  them, under their lane. A library's own instance (libc++'s `extern template` copies) is a library function: a roots
+  stand-in for its unwritten caller brings it (`docs/reference/facts/placing.md` §P1). A function passed by its slot
+  is kept by the passer: the slot's `i32.const` in the passer's
   piece (`/usr/bin/grep -rlE 'i32\.const <slot>($|[^0-9])' build/out/splat/pieces/asm`), checked in the element
   section and used as a slot (an `invoke_*` first argument, a `call_indirect` operand, a stored function pointer the
   code calls), since an integer can equal a slot: 11852 stores `2594` beside `2582` as a value and keeps no 11423, whose

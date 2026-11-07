@@ -46,8 +46,11 @@ libc++'s path parser (2546), and 2578 and 2579 are libc++.a's `algorithm.o`, `st
 `unsigned` and `unsigned char` (1506 and 1507 are the `__sort3` that call them). libc++ declares `extern template` the
 `__sort<__less<T>&, T*>` of every arithmetic `T` and defines them in the library, so a `std::sort` over such a `T*`
 with the default order calls the library's copies, which land with that caller at the library's flags and need no
-source (2578 matched with 11212's sort: `awk '$1==2578' splat/matched.txt`). A sort over another type, or with a
-comparator of its own (`__introsort` over `filesystem::path`), instantiates in the caller's TU and lands with it. And
+source (2578 matched with 11212's sort: `awk '$1==2578' splat/matched.txt`). While that caller is unwritten, a roots
+stand-in for its call brings them now, since it reaches the library's copy the way the caller does
+(`src/units/README.md` "Companion files"): unit 388's stand-in for 7787 brings `libc++.a(operations.o)`'s
+`std::filesystem::__remove` (2135), whose one target caller is 7787, and 2135 matches. A sort over another type, or with
+a comparator of its own (`__introsort` over `filesystem::path`), instantiates in the caller's TU and lands with it. And
 `owner` can read `app` for a library function whose callers are the library's own code:
 
 ```sh

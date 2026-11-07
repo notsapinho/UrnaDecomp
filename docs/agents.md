@@ -248,7 +248,10 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   relative `APP`, at e7d03612), which compares equal and checks no companion. `ROOT` names the fragments `src/Makefile`
   includes, so the base's Makefile run with `ROOT=$PWD` reads the branch's fragments and shows no fragment's change:
   take the base's lines from an archive of the base, `make -n -B -C <dir>/src link` with a relative `APP` under it and
-  no `ROOT` ([facts/workflow.md](reference/facts/workflow.md) §W13, item 3 of the batch). A lane that keeps
+  no `ROOT` ([facts/workflow.md](reference/facts/workflow.md) §W13, items 3 to 5 of the batch). A bare `git archive
+  <base> src tools` lacks `third_party/`: give it an empty file for each `-c third_party/…` path the head's lines
+  compile (item 5), or make stops with exit 2 and its zlib and libqrencode lines read as the range's (868 lines against
+  890 at 912b211d, 890 and equal with the 22 files). A lane that keeps
   `src/Makefile`'s old mtime says so in its result, with that comparison.
 - A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
   moved main", says what to copy, what to add and where.

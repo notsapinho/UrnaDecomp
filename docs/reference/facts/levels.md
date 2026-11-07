@@ -181,10 +181,19 @@ flags.
 A call the target keeps and clang inlines at a low cost (a threshold of 250 or 325), with no flag to explain it, means
 the callee is in another TU ([placing.md](placing.md) §P2), unless it is an out-of-line constructor or destructor: at
 `-fPIC` a call of its C1 or D1 stays a call in its own TU, and no remark prints it ([codegen.md](codegen.md) §C6). A
-library callee is no other TU's: there the level decides (`-O2` inlines `std::string::append` where the target calls it,
-and `-O3` keeps the call, §V3). An unconditional `std::format` (a throw that only throws, a statement that builds a log
-message) with a literal of 37 to 74 bytes keeps a loop at `-O2` where the target has none: the level, not the source
-([reading.md](reading.md) §R13).
+library callee is no other TU's: there the caller's form or the level decides (`-O2` inlines `std::string::append` where
+the target calls it, and `-O3` keeps the call, §V3). The cost counts what inlining saves the caller, and a value the
+callee reaches through no local of the caller saves less: libc++'s `push_back` in `CGeradorResultados::GeraResultados`
+reads `cost=225, threshold=250`, inlined, in a range-for over a member list, and `cost=260`, the target's call, with the
+loop a `std::for_each` over a lambda that captures it (1ae03462's `cgeradorresultados.cpp` from its archive, at the
+tree's line with the remark flags; that SROA's savings are what go is a reading), and the lambda gives the module the
+file gives at `-O2` (unit 104's fragment at 1ae03462). So read a call the remarks show inlined below the threshold
+against the forms that move the cost (a lambda or an algorithm, a reference parameter, a returned object: push_back
+reads `cost=260` on the vector the matched `comum::CCandidaturas::GetCandidatos` returns, at 912b211d) and against a
+cold call site (threshold 45, [reading.md](reading.md) §R10) before a level; a file that still reads as another level
+than its tree's is a question for the user ([app-flags.md](app-flags.md) §F6). An unconditional `std::format` (a throw
+that only throws, a statement that builds a log message) with a literal of 37 to 74 bytes keeps a loop at `-O2` where
+the target has none: the level, not the source ([reading.md](reading.md) §R13).
 
 ## V3. uenux2 builds at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
 

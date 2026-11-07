@@ -475,7 +475,9 @@ bytes (clang keeps the library body out of line where the target has it inlined)
 call, leave the row `differs`, and put both measurements in the fragment (unit 137's `CPrng::GetInt`, 9500). That
 case copies a library function's own code; an ordinary expression for the same value is a source form, written when
 only it gives the bytes and listed with the call's score (10451's conditional, where `std::min` gives `llvm.umin`, unit
-221).
+221). An algorithm and a loop can give the same loop and differ after it: a range-for's exit block comes before its
+body, so a `bool` test right after it reads bare where `std::transform` gives the target's `== 1` (3771,
+[facts/reading.md](reference/facts/reading.md) §R14), so score the code after the loop too.
 
 To measure "the same bytes" for one function of a TU, compare that function's disassembly between the two objects with
 the object-local numbers masked, against a control compiled beside the variants under a name of the same length, not the
@@ -1159,7 +1161,10 @@ it is, when something needs it: a vtable slot whose written body is one remainde
 unit 142, matched once a call of the setter gave its store order; one no measured form comes close to is trapped,
 below), a matched caller, a caller that is written and right but does not match yet (3648 over 5477 and 5478, unit 125,
 until 3648 matched), or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31). The
-fragment says what is measured and that the remainder is not explained. A caller then holds only on evidence for the
+fragment says what is measured and that the remainder is not explained; for a body that differs in locals and holds a
+callee inlined from another object or its own `.cpp`, what is measured includes the orders of the two tried
+([facts/codegen.md](reference/facts/codegen.md) §C4), or the note says none was (5410's note named source forms
+only, and the row matched with its callee's object first, unit 161). A caller then holds only on evidence for the
 callee's name that does not rest on the callee's bytes matching: until unit 28 matched it, 5499
 (`CTextFieldDoubleLine::GetTextLines`) was `differs`, and its callers 10929 and 10931 matched through 10929's `call`
 vote, which 10929's own record anchors (`evidence:call by:10929`). A differing callee's own records anchor nothing
@@ -1306,7 +1311,8 @@ frame offset, an `offset=`, a local's index, the header row), so a score with no
 wrong frame, signature, layout or slot, which no name fixes. Read the operands that are no call and no data address:
 `pnpm --silent wasm score … | /usr/bin/grep '~' | /usr/bin/grep -v -E 'call fn:|data:'` prints nothing for a body that
 waits only for names ([facts/workflow.md](reference/facts/workflow.md) §W28 lists what counts, the rows it prints that
-are no fault, and the slots it drops). A wrong frame costs more once a record anchors the body at step 8: its differing
+are no fault, and the slots it drops; in a large body, where the locals renumber every later row, read its masked
+alignment of the two readouts first). A wrong frame costs more once a record anchors the body at step 8: its differing
 small constants vote as table slots ([facts/splat.md](reference/facts/splat.md) §S8 item 1). A callback passed by table
 slot gets a `table` name only from a caller with a census pair or an anchor, not from one named by `vtable` alone
 ([reference/splat.md](reference/splat.md) §2).
@@ -1508,7 +1514,7 @@ takes along the callees only it reached: when your object's instance of a librar
 object's, the other copy's out-of-line callees can lose their last caller, and their matches go (11616's
 `parse_iso_time` took five `vector<std::string>` helpers so). List the base object's relocations of the displaced copy's
 callees (`wasm-objdump -d -r <the base's object>`), and give the lost rows' target callers a stand-in. And with no
-source at fault, for one link's data layout, in four cases:
+source at fault, for one link's data layout, in five cases:
 
 - **An object at address 0x100000.** `-Oz` writes the add of that address as a subtract, so a body that adds it reads
   `differs` with `i32.const -1048576` on our side ([facts/codegen.md](reference/facts/codegen.md) §C7).
@@ -1534,6 +1540,11 @@ source at fault, for one link's data layout, in four cases:
   executable TU moved an invoke's slot from 3 to 4, and the ten rows that rest on 988's pair (`locale::classic`) left
   `match`. Compare `wasm-objdump -x -j Elem` slots 1 to 5 with the base's link's, and keep the object's first function
   references in their order ([facts/splat.md](reference/facts/splat.md) §S10 item 28 has the check).
+- **A static constructor's vote that rests on our strings.** `__wasm_call_ctors` (14478) has no census pair, and a run
+  of its body votes only through a telling row; a short string's bytes packed into one constant read as an address of
+  our merged strings, so such a row tells only while the tail our link holds at that number happens to fit. A landing
+  that moves our strings can take the vote away: the name's line drops to `vote:1` by its reader, which then reads
+  `unresolved self-voted` (`ESCAPES.2` and 10879; [reference/splat.md](reference/splat.md) §2, `ctors:N`).
 
 Before calling a residue chance, compare the run the object sits in with the target's: the object our link puts right
 before the library's first `.bss`, `.data` and `.rodata` object, against the target's (the symbol file's `type:data`
@@ -1672,9 +1683,14 @@ plain `vota_web_wasm.wasm` with its `vota_web_wasm.js`, `wasm-map/vota_web/` and
 scanned with `--map-dir` and `--kinds` (and `--ledger` with the base's ledger) over copies of the base's symbol file
 and match list. Copy the glue too: the scan names our imports from it, and without it 11658 rows read `match` against
 12979 at ea98137f, a body that calls an import reading `import b is not imported by the target`. A caught-up line is
-not such a case: a range whose match touches it removes it
+not such a case: a range whose match touches it (the match's body loads the line's object or calls its function, which
+[facts/workflow.md](reference/facts/workflow.md) §W23's searches list) removes it
 ([reference/splat.md](reference/splat.md) "Reviewing a match"), unless a doc cites it as an example: then it goes in a
-commit of its own with that doc (9c5ede00). A
+commit of its own with that doc, which a lane makes on its branch after the match commit, with steps 8 to 10 run again
+on it, so a landing can take either (2970a879, then 1dae0b1c; a brief's one commit is the match's); when another stage
+claims the doc, a `queue/` post, and the landing makes it. A caught-up line that only a callee of the match reads is not
+touched: weigh it, and idle on the base's link too it is a cause the range did not bring (above; 1149's two statics'
+lines under 10337 went in c1ffbbae). A
 merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an internal one), is one our link derives: it
 is no evidence of the target, it moves with link order, and step 9 renames a match line to the new one. It earns a hand
 line only when the removal shows rows that fall without it, and a landing that moves the first member rewrites that
@@ -1824,8 +1840,9 @@ take the files and line ranges its result names outside its unit. A gap step 9 w
 commit even where such a branch changes the same lines: name them in the result as conflicts the landing resolves (it
 runs step 9 again after the merge), and put a paragraph you add away from where the branch adds its own.
 
-Commit in one commit: the sources, the fragment and its companion files, the fragment's row in
-`src/units/README.md`, the `ledger/functions.tsv` the census rewrote,
+Commit in one commit (a caught-up hand line a doc cites goes in a second, step 9 "Hand edits"): the sources, the
+fragment and its companion files, the fragment's row in `src/units/README.md`, the `ledger/functions.tsv` the census
+rewrote,
 `splat/symbol_addrs.txt`, `splat/matched.txt`, `splat/scan.tsv`, the status files step 9 wrote (`README.md`,
 `docs/status.md`, `docs/img/progress-*.svg`) and the stub and gap files it rewrote (`git status src/`). A stub-only
 file step 9 removed shows as ` D` there: `git rm` it before the checks below, because `check_encoding.py` reads the
@@ -2027,7 +2044,8 @@ target callers and by who passes its table slot on both sides (`/usr/bin/grep -r
 build/out/splat/pieces/asm`), since such functions are often reached only through `invoke_*`. And libc++ declares
 `extern template` instantiations its library defines (`__sort<__less<T>&, T*>` for every arithmetic `T`, in
 `algorithm.o`): a `std::sort` over an `unsigned*` with the default order brings `algorithm.o`'s copies at the library's
-flags, which match with no source of ours (2578 and 2579, [facts/placing.md](reference/facts/placing.md) §P1).
+flags, which match with no source of ours (2578, `__partially_sorted_swap` over `unsigned`; its `unsigned char` copy,
+2579, comes only with a sort over `unsigned char*`: [facts/placing.md](reference/facts/placing.md) §P1).
 
 To compare the two bodies side by side, read the target with `pnpm wasm fn ../target/vota_web_wasm.wasm <index>`
 and ours with `pnpm wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>` (the scan's `ours` column). A fix
