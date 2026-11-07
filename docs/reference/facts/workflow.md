@@ -359,8 +359,9 @@ valid UTF-8"). Edit a Latin-1 source with a script that reads and writes `latin-
 ISO-8859 or ASCII, and look for `.!` files in `git status --short` before `git add`; remove one by its full name.
 
 Two more give a plausible wrong count with no error. BSD `sed -E` has no `\b`, so a mask written with it replaces
-nothing, and a masked diff counts every callee and local number: use `[[:<:]]` and `[[:>:]]`, or Python's `re`, and
-check that a masked call reads `f(`:
+nothing, and a masked diff counts every callee and local number (322 lines against Python's `re`, 54): use `[[:<:]]`
+and `[[:>:]]`, or Python's `re`, and check that a masked call reads `f(` (`git grep -E` has the same gap:
+[tool-traps.md](tool-traps.md) §X3 item 9):
 
     echo 'x = f136(l3, p0);' | sed -E -e 's/\bf[0-9]+\(/f(/g' -e 's/\b[lp][0-9]+\b/L/g'
       x = f136(l3, p0);
@@ -806,9 +807,15 @@ again in the splat build after step 9 rewrites it.
 
 ## W15. An edit of a header, or a new header, rebuilds every object of its tree
 
-`UENUX2_HDRS` is every header under `src/uenux2/` (`src/Makefile` line 144, a `find`), and every generic uenux2
-object and `roots_uenux2.o` depend on all of it (lines 146 and 148), whether they include a header or not; a
-companion's rule names its own headers. At ee595de, a header that two headers and unit 50 include:
+`UENUX2_HDRS` is every header under `src/uenux2/` and every ecourna header (`ECOURNA_HDRS`, a `find` each in
+`src/Makefile`), and every generic uenux2 object and `roots_uenux2.o` depend on all of it, whether they include a
+header or not; a companion's rule names its own headers. So an ecourna header rebuilds both trees (ea98137f):
+
+    for h in src/ecourna/api/asn/iconversorasn.hpp src/uenux2/src/api/util/cdatetime.h; do make -n -C src link -W $PWD/$h | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- ' -o [^ ]+' | awk -v h=$h '{k = $2 ~ /app\/uenux2\// ? "uenux2" : ($2 ~ /app\/ecourna\// ? "ecourna" : ($2 ~ /-(pending|roots)\.o$/ ? "companion" : "tree-root")); c[k]++} END {printf "%s:", h; n = split("ecourna uenux2 tree-root companion", o, " "); for (i = 1; i <= n; i++) printf " %d %s", c[o[i]], o[i]; print ""}'; done
+      src/ecourna/api/asn/iconversorasn.hpp: 109 ecourna 576 uenux2 5 tree-root 36 companion
+      src/uenux2/src/api/util/cdatetime.h: 0 ecourna 576 uenux2 4 tree-root 36 companion
+
+At ee595de, a header that two headers and unit 50 include:
 
     LC_ALL=C /usr/bin/grep -rl 'api/util/cdatetime.h' src
       src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.h
@@ -865,7 +872,7 @@ uenux2/src/api/util/cstringutils` prints 0 at bbf27ac1). It is on no link line, 
   (`LC_ALL=C /usr/bin/grep -c '#include' src/units/104-uenux2-app-vota-estados-roots.cpp` prints 0 beside 6
   `__asm__` lines), and so does a TU that holds a forward declaration: move such an object aside and rebuild it, and
   `cmp` is the check.
-- **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W
+- **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile`). `make -n -C src link -W
   $PWD/src/asn1/modules/ModuloImpedidos.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | /usr/bin/grep -c cconversorimpedido`
   prints 0, although that TU includes the header. After an edit of `asn1.h` or a module header, list the link's objects
   make will not rebuild that hold the header's mangled name (`4ASN1` for `asn1.h`, `15ModuloImpedidos` for that
@@ -1037,11 +1044,26 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
    and read step 8's `git diff <base> -- splat/symbol_addrs.txt` for a line whose evidence kind changed with no match
    of the merge touching it (11865's `vtable` to `srcloc-anchor` on 2bdc17c3, its record's copy moved by another
    object's new data, which unit 199's note quoted); then re-measure, re-run the examples that print the moved code's
-   numbers, or date each with the commit it was taken at. A list move (`src/units/README.md` "Names") also changes the
-   pair counts of every other move whose span the moved file enters or leaves, in fragments the merge did not
-   recompile and that name files, not numbers: search them by the moved file's name (`LC_ALL=C git grep -n
-   cqrcodeimagepaper -- src/units` finds unit 95's `csigverifier.cpp` list, which that file's move into unit 196's list
-   took it out of), and recount or date each.
+   numbers, or date each. To tell the quotes the merge moved from older ones, copy the base's
+   `build/out/wasm-map/vota_web/names.tsv` aside before the first merge's `link-map` overwrites it: a moved quote is a
+   number that is, in the copy, the `ld_index` of a function its note names, and is not that function's now. A quote
+   already off at the base is not the merge's: leave it, or date it at a commit you measure it on. A list move
+   (`src/units/README.md` "Names") also changes the pair counts of every other move whose span the moved file enters or
+   leaves, in fragments the merge did not recompile and that name files, not numbers: search them by the moved file's
+   name (`LC_ALL=C git grep -n cqrcodeimagepaper -- src/units` finds unit 95's `csigverifier.cpp` list, which that
+   file's move into unit 196's list took it out of), list the §C4 counts of other objects' places, which name neither
+   the moved file nor a number (19 lines in 10 fragments at ea98137f), and recount or date each whose object lies
+   between the moved file's two places on the link line:
+
+       LC_ALL=C /usr/bin/grep -n -E 'objects out of|out of the (target.s )?data.?s? order|record-aware' src/units/*.mk
+
+   **A date names the commit the number was measured at**, not the commit that wrote it: `git log -S` finds the writer,
+   and a count a branch writes can be its base's, or older than the branch's own last edits. To date or check an older
+   number, measure at its commit:
+   `tools/round/build-at.sh <commit> <dir>`, then `make -C <dir>/src link link-map` and the measurement in `<dir>`,
+   whose symbol file and ledger are that commit's (§W5: `<dir>` outside the checkout). A §C4 count from a commit that
+   does not hold 2a61780c (`git merge-base --is-ancestor 2a61780c <commit>` fails) is the count by vtables alone: date
+   it "vtables only".
 8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
    the line, and so does one that takes an anchor kind from its pair ([splat.md](splat.md) §S8, the ninth kind); no
    index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
@@ -1062,24 +1084,26 @@ they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W
     LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
     awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' build/out/<handle>/new.idx ledger/callgraph.tsv | sort -u > build/out/<handle>/callee.idx
     awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' build/out/<handle>/callee.idx));"
-    LC_ALL=C /usr/bin/grep -n -E "\bw?($(paste -sd'|' build/out/<handle>/callee.idx))\b" src/units/*-roots.cpp src/app/roots_*.cpp
+    LC_ALL=C /usr/bin/grep -n -w -E "w?($(paste -sd'|' build/out/<handle>/callee.idx))" src/units/*-roots.cpp src/app/roots_*.cpp
     for f in $(git diff --name-only --diff-filter=D $B -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
     git diff $B -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
 
 The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
 from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
 search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing) and the
-companions' lines that name a callee, among them every caller list and the `w<index>` declarations a word search
-misses (139 lines against `-w -F`'s 118 at b3236f02 against 16b8f99f); the last two list the deleted files' names (at
-3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose identifiers to search
-with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated and hold coordinates
-and counts, no notes. The last two compare the base with the working tree, so they read a lane's uncommitted range, a
-merge's staged result and a commit alike (against `HEAD` they print nothing before the commit). Each hit is to read: an
-index also matches a line number or a size. The third index search reads
-the trees' comments, where a header of any class can list a new match among callees "with no name"; a fix keeps the
-paragraph's line count, so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says
-("When it goes", "Going earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it
-commits, and fixes what it finds, comment lines only, in files it claims (how-to step 10).
+companions' lines that name a callee, among them every caller list and the `w<index>` declarations a fixed-string word
+search misses (109 lines against `-w -F`'s 101 at ea98137f against ba9a4549). It takes `-w`, not `\b`: `git grep -E` on
+macOS reads `\b` as nothing and prints no line ([tool-traps.md](tool-traps.md) §X3 item 9); the form above gives the
+same 109 lines with macOS's and GNU grep and with `git grep -n -w -E` on either system. The last two list the deleted
+files' names (at 3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose
+identifiers to search with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated
+and hold coordinates and counts, no notes. The last two compare the base with the working tree, so they read a lane's
+uncommitted range, a merge's staged result and a commit alike (against `HEAD` they print nothing before the commit).
+Each hit is to read: an index also matches a line number or a size. The third index search reads the trees' comments,
+where a header of any class can list a new match among callees "with no name"; a fix keeps the paragraph's line count,
+so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says ("When it goes", "Going
+earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it commits, and fixes what it
+finds, comment lines only, in files it claims (how-to step 10).
 
 A note's count of a function's callees "with no name" counts against both name files, imports aside (callees below
 136), and says so beside the count: a match line can be a function's only name (2745). For 10425 at 182dc6c1, 5 of 45:
@@ -1255,7 +1279,13 @@ field, a frame slot, a `call_indirect`'s vtable slot), an `align=` hint, an `i32
 ([app-flags.md](app-flags.md)'s opening has the cases), a local's index (`local.get 3 ~ local.get 4`: a permutation of
 the locals moves many rows at once, 18 of 11852's 60, and the scan reads it as `differs` however few the rows), the
 header row (`;; (params)->(results) locals(…)`, so a result the target lacks is one such row), and an error code in the
-data range, `data:<segment>+<n>` on both sides ([tool-traps.md](tool-traps.md) §X5).
+data range, `data:<segment>+<n>` on both sides ([tool-traps.md](tool-traps.md) §X5). A permutation can also align as
+rows inserted and deleted: where a renumbered `local.get` lands at another operand of the same instruction, the score
+keeps that row and inserts and deletes the others around it, which reads like operands in another order. 426
+(`api::CFormBuilder::AddField`) read so before it matched, `inserted 2, deleted 2` at an add whose operands were in
+the same order on both sides, only locals 11, 12 and 13 numbered otherwise (unit 31's fragment: the order of
+`GeraNome` and `AddField` in the `.cpp` decided them, §C4 of [codegen.md](codegen.md)). Before reading an operand
+order, compare the two bodies' instructions by position (`pnpm wasm fn` of each, the disassembly column).
 
 **What the operand filter prints that is no fault.** `pnpm --silent wasm score … | /usr/bin/grep '~' | /usr/bin/grep -v
 -E 'call fn:|data:'` leaves out only the operands the score tags as calls or data, and it tags some addresses so and not

@@ -441,15 +441,18 @@ order of evaluation, a temporary, a delegating constructor. A construct whose on
 scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. An ordinary type
 the function uses only for the code it gives is source only where the target shows the object it stands for: 1695's
 always-engaged `std::optional<CApplicationContext>` is the 56-byte object its frame holds (§C5), a type TSE uses
-elsewhere, marked chosen among the forms that give the same object (unit 171). In a uenux2 TU, built without
-exceptions, a `try` block is a same-bytes form of a bare block scope (§C11): list it beside a scope a match rests on
-(3829, unit 95). When a form stands in for a header that
-is not the original's (an aggregate where the target has a constructor), say so in the fragment's header comment. A
+elsewhere, marked chosen among the forms that give the same object (unit 171). A store's alignment hint shows no such
+object: an `i64.store align=2` into a slot says the slot was reached through another pointer, not what held it (§C5, "A
+slot's alignment"), so a wrapper whose only sign is the hint, the frame's size the same without it, is scaffolding
+(10949). In a uenux2 TU, built without exceptions, a `try` block is a same-bytes form of a bare block scope (§C11): list
+it beside a scope a match rests on (3829, unit 95). When a form stands in for a header that is not the original's (an
+aggregate where the target has a constructor), say so in the fragment's header comment. A
 function the target holds inlined at every use is a form too when only a call there gives the measured code (a predicate
-or a setter over a member): write it as a member of the class it reads, its name and membership chosen, and give the
-in-place forms' scores; a lambda or a helper written only to steer a choice the target's bytes do not show is
-scaffolding (`CEstadoGeralVota::IsFimAquisicaoMarcado` for 10734, unit 93; `CAppState::SetNextState`, unit 61). A
-helper whose existence the frame shows (its locals above the caller's, or dropped results sharing slots,
+or a setter over a member, or a predicate over plain values): write a member as a member of the class it reads, and a
+predicate that reads no class as a file-local function, its name, membership or linkage chosen, and give the in-place
+forms' scores (10972's `Cabe`, unit 41); a lambda or a helper written only to steer a choice the target's bytes do not
+show is scaffolding (`CEstadoGeralVota::IsFimAquisicaoMarcado` for 10734, unit 93; `CAppState::SetNextState`, unit 61).
+A helper whose existence the frame shows (its locals above the caller's, or dropped results sharing slots,
 [facts/codegen.md](reference/facts/codegen.md) §C5) is a reading of the target: write it with its name and linkage
 marked chosen (2383's file-static helper, unit 110). A value the target computes ahead of code of an earlier statement
 (before a copy's branches or a release) was a local declared above it (12055's layout values, unit 37). And a form that
@@ -534,7 +537,9 @@ returns, an `if (result i32) … else 0 end` tested again or carried across the 
 returned `this` held in a second local (5856), or used after its code where a call of the C1 its own TU defines drops
 it, which says the constructor is another TU's (§C6; 2733, 2738, 5702: rule 2 below counts it); a prologue in each arm
 of a branch (two one-caller functions, 5604's ORLC setters); a member's address added once to `this` after the
-prologue, the loads at small offsets from that local (5665's accessor). A test of a constant argument the inlining
+prologue, the loads at small offsets from that local (5665's accessor); a throw path mid-body, before code of the caller
+that follows the throwing call (a release, the next statement), since clang's branch folder moves a block with no
+successor to its own function's end (§C15: 502's push, unit 31). A test of a constant argument the inlining
 folded leaves only the block boundary it made: two store runs with no branch between, or a zero fill trimmed past
 stores (10967, §C1 "Store runs").
 
@@ -592,10 +597,13 @@ loop temporary above its list and converter), or at a call's result temporary ov
 `always_inline` template takes its stack slots from the instances the TU shares, and the copy
 the target keeps can be another TU's; read where the target's record of the copy lies first. A frame larger than what
 its code addresses holds a wrapper whose extra member folded away, objects whose code is gone, or a by-value result
-larger than what the caller reads; a frame short by one object's slot is stack colouring (all §C5).
+larger than what the caller reads; a frame short by one object's slot is stack colouring, and one off by less, or the
+same objects at other offsets, is where an aligned or a merged slot sits (all §C5, which also lists the rows whose
+frames differ).
 [facts/codegen.md](reference/facts/codegen.md) also has what decides a throw path's blocks and where its pad lies
 (§C11), a loop's shape (§C12), a store in each arm of a branch (§C13), a condition's test order (§C14), what orders a
-function's blocks (§C15) and the loads a declaration decides (§C16).
+function's blocks (§C15), the loads a declaration decides (§C16), a loop's member store (§C18) and a string
+concatenation's statements (§C19).
 
 binaryen inlines a function with one call site only (counted after the first duplicate-function-elimination and before
 merge-similar-functions and the second, so two functions identical in the objects are one by then:
@@ -646,7 +654,8 @@ units do, and say why in the fragment's header comment (step 6):
    `EhTreinamento`). A caller, or the one function that passes its table slot, gives only a reason, which decides where
    the neighbours are linkonce copies kept from their first user (10539, which only 1150 passes by slot, sits among a
    lambda's `__func` slots and is written in 1150's file). Where the band's neighbours are other digit zones', the data
-   only its code creates place it (4625, step 1). The fragment names both places.
+   only its code creates place it (4625, step 1). One right at the boundary of two objects' runs in its band is either
+   object's, a choice ([facts/placing.md](reference/facts/placing.md) §P5). The fragment names both places.
 
 Before you create the file rule 4 names, run `git ls-files <path>`: it can be a tracked stub-only file, whose records
 name the class and members you have not read (`git status` showing ` M` on a file you think is new is the sign). Read
@@ -710,7 +719,9 @@ background.
 **What a record's place says.** The record's text shows `static` only for a static member: a file-static free
 function's record reads like an external one's. Its linkage is in the order of its file's records, because clang emits
 an external function where the file defines it and defers internal, `inline` and template functions to the end of the
-TU (`api::truncate` and `api::ExistResource` in `csystem.cpp`, [facts/reading.md](reference/facts/reading.md) §R8). A
+TU (`api::truncate` and `api::ExistResource` in `csystem.cpp`, [facts/reading.md](reference/facts/reading.md) §R8),
+and data follow the same rule, so a constant's linkage moves it among its TU's data and changes how the TU reads it
+(§R8). A
 file-static function stays out of line only once callers in its file keep it there; until then it cannot land. A
 caller in another file in `ledger/callgraph.tsv` is binaryen inlining across TUs, and a function with no record and
 such a caller is read from that caller's body (§R8, with 5449). A function-local static's guard shows linkage as well
@@ -1115,8 +1126,12 @@ file: a callee not written, a flag its tree does not have, a data object or a li
 `differs` or `unresolved`, or `no-candidate` when nothing names it, which is an ordinary state of a TSE object. Show the
 cause with a link or a compile that holds what the body waits for, and say what it waits for, with that measurement, in
 the fragment's header and its README row: for a `no-candidate` row the fragment is the only note. A form measured on the
-body in another unit's fragment is cited in the body's own fragment too, so a pick reads one note (the setter measured
-on 10380 in unit 61's fragment, cited in unit 135's). A body whose only
+body in another unit's fragment is cited in the body's own fragment too, so a pick reads one note, and a route that
+matched a row is named in the note of each row its fragment says differs the same way, as untried there or with its
+score. A lane that matches nothing lands no note: its result names those lines, and the next landing that touches the
+fragment writes them in its comments commit. When two forms measured each come close in another part, the fragment
+lists both with their scores and says which is committed and why (9066 keeps the target's slots at `134 over 870`
+where the target's test and pad come with the slots swapped at `125 over 868`, unit 09's fragment). A body whose only
 remainder is a flag its tree lacks lands so too, a new unit when its file is new (5482, unit 175), so that the flag's
 landing matches it (`api::ITextToSpeech::SetVoice`, 11518, unit 82, gives the target's rows at the executable TU's
 flags: [facts/levels.md](reference/facts/levels.md) §V1). When the flag alone is not enough (the body also needs an
@@ -1225,7 +1240,10 @@ D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7 hav
 - **When the destructors are shared bodies,** or the class has no vtable in the target, they say nothing of a key
   function, and a missing vtable does not either: read where the typeinfo lies. A copy in a user's object, inside a TU
   that only uses the class or no later than its earliest derived class's typeinfo, means no key function, and one well
-  after it, among other objects' records, means one member is out of line; which member is a choice (§R6).
+  after it, among other objects' records, means one member is out of line; which member is a choice (§R6). Nor do
+  they tell an empty destructor written `{}` from one `= default`, but the callers' code does where exceptions are on:
+  a `{}` destructor is a cleanup at every call in a local's scope, a defaulted one none
+  ([facts/codegen.md](reference/facts/codegen.md) §C11, 9137 over ecourna's `IConversorASN`).
 - **A slot that holds `__cxa_pure_virtual`** (12143) is a pure member: declare it `= 0` at its slot even when no evidence
   names it, so the class stays abstract; its D0 is then a trap (slot 1 holds 325, `unreachable`), where without the pure
   members the vtable is shorter and the D0 a real body the target does not have (§R7).
@@ -1505,7 +1523,9 @@ source at fault, for one link's data layout, in four cases:
   other voters, the name goes, and the matches that read that object fall. It shows as one more `dataVoteConflicts` in
   step 8's summary and a data name gone from `git diff splat/symbol_addrs.txt` whose `by:` list holds the lost rows, and
   withdrawing the new pair's line does not help (12936's `staticMutexes - 48` took `sqlite3BuiltinFunctions` from 962
-  and 2352).
+  and 2352). A switch table clang emits in a function's own object, read at `table - 1 + index`, falls the same way in
+  whatever object precedes it; when the target's data show that object, its order is evidence and a list move places
+  the address (5477 and 5478, [reference/splat.md](reference/splat.md) §3).
 - **A table slot below 1024 that another object's edit moves.** Our slots follow the objects' first mentions of
   function addresses ([facts/placing.md](reference/facts/placing.md) §P4), and the census's `addr` tier compares a
   constant below 1024 as a literal, so a seed pair that passed it falls to `shape` and its votes go: an edit of the
@@ -1589,9 +1609,13 @@ nothing: on an unchanged tree `TMPDIR=/tmp make -C src splat-match` ends with `0
 nothing. Neither is drift; commit what the generator writes.
 
 An edit after this step that leaves the plain link byte-identical (a comment; `shasum -a 256
-build/out/wasm/vota_web/vota_web_wasm.wasm` before and after the link) changes nothing steps 7 and 8 read: run
-`splat-match`, which writes back any stubs you stripped, then `splat`. Any other edit goes back to step 6. Step 9 itself
-rewrites the stubs and gaps of your sources, so the next target that needs the link (step 8 again, for a hand line)
+build/out/wasm/vota_web/vota_web_wasm.wasm` before and after the link) and `names.tsv`'s names as they were changes
+nothing steps 7 and 8 read: run `splat-match`, which writes back any stubs you stripped, then `splat`. A new string
+literal, static or function in a TU renumbers its internal symbols (`__cxx_global_array_dtor.N`, `.L.str.N`) with no
+byte of the wasm moving (2484231c renamed 12862's `__cxx_global_array_dtor.129` to `.132`): when `splat-match` prints
+a rename, or `names.tsv` differs from a copy taken before the edit, run steps 7 to 9 again. Any other edit goes back to
+step 6. Step 9 itself rewrites the stubs and gaps of your sources, so the next target that needs the link (step 8 again,
+for a hand line)
 recompiles them and relinks: when `shasum -a 256` of the wasm is the same before and after, the census need not run
 again. When one of them is a header (`git status` lists it), every object of its tree is stale again, and `make -C src
 splat` compiles them one at a time, for most of an hour: count `make -n -C src link | /usr/bin/grep -c -E '(em\+\+|emcc)
@@ -1640,7 +1664,13 @@ awk '/^# ---- hand edits below/ {h=1; next} h && !/^#/ && NF {print $1}' splat/s
 A line found idle for a cause your landing did not
 bring (its symbol gone from our link, a body merged elsewhere) goes in a commit of its own with the docs that cite it,
 after a `queue/` post;
-your commit keeps it. A caught-up line is not such a case: a range whose match touches it removes it
+your commit keeps it. Whether the cause is your range's, the same removal check run on the base's link says: in a
+`tools/round/build-at.sh <base> <dir>` worktree, linked and mapped, or on a copy of a checkout's link at the base, the
+plain `vota_web_wasm.wasm` with its `vota_web_wasm.js`, `wasm-map/vota_web/` and `wasm-kinds/vota_web/kinds.json`,
+scanned with `--map-dir` and `--kinds` (and `--ledger` with the base's ledger) over copies of the base's symbol file
+and match list. Copy the glue too: the scan names our imports from it, and without it 11658 rows read `match` against
+12979 at ea98137f, a body that calls an import reading `import b is not imported by the target`. A caught-up line is
+not such a case: a range whose match touches it removes it
 ([reference/splat.md](reference/splat.md) "Reviewing a match"), unless a doc cites it as an example: then it goes in a
 commit of its own with that doc (9c5ede00). A
 merge body's own name, `byn$mgfn-shared$<first member>` (`@<object>` after an internal one), is one our link derives: it
@@ -1976,7 +2006,7 @@ differs, the code is usually right and something around it is not. The scan's `d
 | `target call X \| ours call Y` | the callee resolves to another target function: a callee without a name, a twin, or an inlining difference | `pnpm wasm splat-remap … --against <index>` prints how every operand resolves |
 | `the locals`, or an instruction that differs in kind | codegen: the compile flags (`-O` level, `-fPIC`, `-DNDEBUG`), the library version, or inlining | the library's flags and their evidence are in `docs/reference/facts/libraries.md` and `tools/libs/<lib>/census.json`; a root that exports or calls a function once changes what binaryen inlines ([facts/tool-traps.md](reference/facts/tool-traps.md) §X1); two bodies that differ in local numbers alone can come from the order of a caller and its callee (step 3, "Code binaryen inlined from another function"), and so can a body whose early return is `if … return` in one link and a block result in the other: the order of the library's objects decides which of a thunk and its callee binaryen keeps (zlib's `crc32`, 893, [facts/codegen.md](reference/facts/codegen.md) §C4), so read the target's use bands before trying flags. The scan stops at the first difference, and the locals come first, so this says nothing of the rest of the body: compare sizes and run `pnpm wasm score` |
 | `an address of ours: string tail occurs N times` | the operand is a string's end pointer, and our link holds as a string of its own what the target holds as the tail of a longer literal, so the end resolves only to the empty tail | the case of a literal that waits for the one it shares a tail with (step 5, 1161's): link a scratch object that holds the longer literal and keeps it |
-| `an address of ours: 0x… is in no data object of ours` | an array base with a constant index folded in (`lengthTableBits[mode][version - 1]` as `lengthTableBits - 4 + …`) lies in the padding before the array, in both links, and the scan places only an address inside an object; one that lands inside the object before the array votes that object's name onto the target's address | the scan cannot place it yet (2218, 2718 and 3595, libqrencode's; [reference/splat.md](reference/splat.md) §3, [facts/libraries.md](reference/facts/libraries.md) §B10): leave the row, and check a `vote:1` `.bss` line its body casts against the target's layout before trusting it |
+| `an address of ours: 0x… is in no data object of ours` | an array base with a constant index folded in (`lengthTableBits[mode][version - 1]` as `lengthTableBits - 4 + …`) lies in the padding before the array, in both links, and the scan places only an address inside an object; one that lands inside the object before the array votes that object's name onto the target's address | the scan cannot place it yet (2218, 2718 and 3595, libqrencode's; [reference/splat.md](reference/splat.md) §3, [facts/libraries.md](reference/facts/libraries.md) §B10): leave the row, and check a `vote:1` `.bss` line its body casts against the target's layout before trusting it; when the target's data name the object before the array, that object's order places it (§3) |
 | `read-only object: bytes not in the target` | our constant data is not the target's: another version or another configuration (`#define`s) | `tools/libs/discriminate.py` lists the target functions that tell two builds apart |
 
 A C function with no TSE record, a data table of a known format and a TSE caller can be a library the manifest does not

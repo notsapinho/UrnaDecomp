@@ -850,6 +850,24 @@ of `ITextToSpeech` after `push<ITextToSpeech>`. Compare an object's `wasm-objdum
 target's run to see which order a form reproduces: that is the measurement, and that the source was in that order is
 the reading, marked as one ([../link-order.md](../link-order.md) §2 says what each order is evidence of).
 
+An external constant is created where its file defines it, as an external function is, so a constant's linkage moves it
+among its TU's data; at `-fPIC` the TU then reads it through a `GOT.mem` import, where an internal one is an offset
+from `__memory_base` (ea98137f):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct F { short a, b; int c; };' 'void use(const F*, const char*);' 'namespace { const F kInterno{1, 2, 3}; }' 'extern const F kExterno; const F kExterno{4, 5, 6};' 'void Tela() { use(nullptr, "um"); use(&kInterno, "dois"); use(&kExterno, "tres"); }' > $P/linkage.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/linkage.cpp -o /work/$P/linkage.o
+wasm-objdump -x -j Data $P/linkage.o | /usr/bin/grep -oE 'segment\[[0-9]+\] [^ ]+' | tr '\n' ';'; echo
+# segment[0] <.rodata.kExterno>;segment[1] <.rodata..L.str>;segment[2] <.rodata._ZN12_GLOBAL__N_18kInternoE>;segment[3] <.rodata..L.str.1>;segment[4] <.rodata..L.str.2>;
+wasm-objdump -x -j Import $P/linkage.o | /usr/bin/grep -oE 'GOT\.mem\.[A-Za-z0-9_]+'
+# GOT.mem.kExterno
+```
+
+So a linkage change that a stand-in needs (5545's font, `src/units/README.md` "Companion files") changes the TU's
+object beyond the symbol's binding: compare its functions masked ([tool-traps.md](tool-traps.md) §X12) and its data
+segments' order, not the objects with `cmp`, and read the change on the link's rows.
+
 ## R9. A member with no record: its place in its use band says whether the `.cpp` defines it
 
 `ledger/ordinals.tsv` column `uses` is the band key binaryen's `reorder-functions` sorted by (direct call sites plus
@@ -1099,6 +1117,13 @@ three and `unresolved` for 5181, which waits for a name:
   another TU, inlined by binaryen after the backend folded addresses. 5665 adds 68 to `p0` and loads at 0, 4 and 11;
   reading the member in place gives `offset=68`, `72`, `79` (`10 over 77`), and `CEleitor::GetDataNascimento()` out of
   line in `celeitor.cpp` matches it (unit 91's fragment).
+- **A throw path mid-body, before code of the caller that follows the throwing call** (a release, the next
+  statement). clang's branch folder moves a block with no successor to its own function's end
+  ([codegen.md](codegen.md) §C15), so a throw block the target holds before such code ended a function binaryen
+  inlined, which starts where the arguments it takes are set. 502 (`api::CFormBuilder::AddStatusHeader`) has its push's
+  two throws between the field's release and the data source's; every in-place form (a block, a `try`, a static helper,
+  a lambda) put them after the return, `89 over 976`, and an external `AddDSImageField` that takes the field and pushes
+  it gave `59 over 964`, every row an operand, then the match (unit 31's fragment).
 - **A zero set ahead of a callee's second prologue** is binaryen's: its inliner zeroes the callee's locals at the
   inline site and keeps the set where a path of the callee reads one before writing it. 10425 opens its key-6 path with
   `p1 = 0;` before `SalvaHabilitacaoEleitor`'s 144-byte prologue, which no line of `ProcessKey` gives; our object's own
@@ -1150,10 +1175,13 @@ three and `unresolved` for 5181, which waits for a name:
   A locals-only remainder no lever above closes. A parameter copied into a local before a loop (`local.get 1;
   local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
   binaryen's inliner copies every parameter of a body it inlines (one `local.set` each), so the target may hold the body
-  as a one-caller function its caller forwards to. Which copy survives is coalesce-locals' order: it colours the locals
-  heaviest copy weight first, each into the lowest slot it does not interfere with
-  (`CoalesceLocals::pickIndicesFromOrder` in binaryen's source), so a loop's phi local takes the first parameter dead
-  over its range. A frameless forwarder over the whole body has every parameter copied, and parameter 0 goes first: 2811
+  as a one-caller function its caller forwards to. Which copy survives is coalesce-locals' order
+  (`CoalesceLocals::pickIndices` in binaryen's source at b9c72894, a reading): it takes the locals in their index
+  order, which `reorder-locals` set before it (most uses first, then first use), moved up by their copies; puts each
+  into the slot it shares the most copies with among those it does not interfere with (the lowest on a tie); then does
+  the same over the reversed order, kept only when it removes more copies, or as many with fewer locals. So a loop's
+  phi local takes the first parameter dead over its range, and with no copies a local's rank alone decides the
+  packing. A frameless forwarder over the whole body has every parameter copied, and parameter 0 goes first: 2811
   written so took the target's frame and head and kept the result pointer's copy (`95 over 349` against `138 over 354`,
   unit 388's fragment; `83 over 350` with the forwarder defined first). The order of the body's parameters is no lever
   (44 orders on a replay of the link's `wasm-opt`, §C4, each the same score); the target's layout came out on the replay
