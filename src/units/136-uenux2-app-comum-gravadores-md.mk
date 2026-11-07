@@ -207,8 +207,8 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorhashes.cpp.o: $(wildcard
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 136-uenux2-app-comum-gravadores-md-roots.cpp keeps the recorders' vtables, which
-# their constructors store (unrooted; their one caller, fn 12098, is not written); it compiles with the tree's flags. Its stand-in for 11620's two
-# calls of CEntidadeHashes::ValidaCriacao (5855) went: 11620 is in the link.
+# their constructors store (unrooted; their one caller, fn 12098, is not written); it compiles with the tree's flags.
+# Its stand-in for 11620's two calls of CEntidadeHashes::ValidaCriacao (5855) went: 11620 is in the link.
 $(ROOT)/$(APP)/136-uenux2-app-comum-gravadores-md-roots.o: $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/136-uenux2-app-comum-gravadores-md-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/136-uenux2-app-comum-gravadores-md-roots.o

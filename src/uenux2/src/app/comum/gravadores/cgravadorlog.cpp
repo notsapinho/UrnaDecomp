@@ -1,7 +1,7 @@
 // comum::CGravadorLog's constructor, which fn 12098 holds inlined (no index; unrooted), and GravaResultado (target fn
 // 11584, slot 7 of the class's vtable, its key function), in app/comum/gravadores/cgravadorlog.cpp: the class's name in
-// lower case beside igravador.h, a path chosen; no record names this file (11584's one record is api::CSystem::Rename's,
-// csystem.cpp:692, which binaryen inlines into it). The reconstruction's notes are in
+// lower case beside igravador.h, a path chosen; no record names this file (11584's one record is
+// api::CSystem::Rename's, csystem.cpp:692, which binaryen inlines into it). The reconstruction's notes are in
 // src/units/136-uenux2-app-comum-gravadores-md.mk.
 
 #include "app/comum/gravadores/cgravadorlog.h"

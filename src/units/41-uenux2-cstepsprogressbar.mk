@@ -81,6 +81,8 @@
 #     1). The loop in a helper is peeled in the helper's own pipeline, before it is inlined (the dumps show the inlined
 #     body with its first step peeled; docs/reference/facts/codegen.md C12), and the value the helper receives stays (a
 #     reading: it has two uses in CabeEmUmaLinha when its InstCombine runs): 4 over 269 with the tests written in place.
+#     Computed in the helper from margem instead, `1 - 2 * margem` folds there as in place (9 over 272 in the whole
+#     link, with Cabe), so it is passed in.
 #   - the indent added to seta and 2 * margem kept apart, `seta + (i != n - 1 ? recuo : 0)`: so the two side terms are
 #     added into one value, `lados` (subtracted one by one they gave `seta + 2 * margem` hoisted out of the loop, 52
 #     over 280 when the unit landed). Seta comes first in that add, and the width's compares have the text's width
@@ -91,11 +93,15 @@
 #   as int, as TPosition or in place; recuo as int; the helper computing margem from tamanho, or given margem, instead
 #   of alturaUtil; the width as `area.right + ajusteLargura - (area.left + lados)` or `area.right - area.left +
 #   ajusteLargura - lados`; the loop inside a try with a catch (...) that returns false (the file builds without
-#   exceptions). Another object: ajusteLargura as TPosition, Cabe over int, Cabe as `disponivel >= medida`, and the
-#   helpers outside the anonymous namespace (CabemNasAreas stays out of line, called), so their internal linkage is
-#   measured and the anonymous namespace, the file's other helpers' form, is a choice over `static`. Measured: the
-#   helper takes n (recomputing passos.size() inside it puts the count's computation after the first GetFontMetrics
-#   call). Chosen: the helpers' names, parameters and their order, ajusteLargura's name, and Cabe for the height test.
+#   exceptions); CabemNasAreas as a capture-less lambda in CabeEmUmaLinha with the same parameters; Cabe as a lambda in
+#   CabemNasAreas; Cabe over `const TPosition&`; the width in a `const TPosition` local passed to Cabe. Another object:
+#   ajusteLargura as TPosition, Cabe over int, Cabe as `disponivel >= medida`, a lambda that reads CabeEmUmaLinha's
+#   locals by reference (`[&]`, with alturaUtil and ajusteLargura its locals), and the helpers outside the anonymous
+#   namespace (CabemNasAreas stays out of line, called), so their internal linkage is measured and the anonymous
+#   namespace, the file's other helpers' form, is a choice over `static`. Measured: the helper takes n (recomputing
+#   passos.size() inside it puts the count's computation after the first GetFontMetrics call). Chosen: the helpers'
+#   names, the order of their parameters, whether the helper is given alturaUtil, margem or neither, ajusteLargura's
+#   name, Cabe for the height test, and free functions over lambdas (as unit 14's UltimoEspaco is a free function).
 # - CabeProporcional (10971) 558 over 1261 rows (same 703, replaced 216 [155 operand-only], inserted 131, deleted 211),
 #   with two forms that give its frame and its order (that the original was written so is a reading): the text's
 #   width and height declared at the top and set to 0 in the loop, as CabemNasAreas's are (the target's frame holds

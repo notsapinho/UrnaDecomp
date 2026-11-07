@@ -43,8 +43,8 @@
 # GetForm(preShow, nome). Its target body is a thunk of binaryen's fn 6117, the body of 11140 and vota::GetFormulario
 # (fn 886, unit 165). Its one target caller is fn 1255, comum::TelaRegistroMesarios, and what keeps it out of line is
 # unit 247's (that fragment has the measurements). Chosen: its being an overload, its name, its line after the first
-# GetForm (11140's ld_index, 6764, is below 11139's, 6777, in band 1, as the target's order wants; names.tsv of the link
-# with AddDSImageField).
+# GetForm (11140's ld_index, 6774, is below 11139's, 6787, in band 1, as the target's order wants; names.tsv at
+# e374b0b3).
 #
 # CFormBuilder::GetFormSemLimpar(nome), no index of its own: the same over a new api::CPreShowNothing<IScreen> (vptr
 # 1577928; its control block's 1578000), which target fn 11891 (unit 104's
@@ -91,29 +91,31 @@
 #   SharedField and pushes it, which binaryen inlines into 502 (it has no index). The evidence is where the push's throw
 #   paths sit (vector's __throw_length_error and __throw_bad_array_new_length, each called from a block with no
 #   successor): the target has them after the field's release and before the data source's. clang's Control Flow
-#   Optimizer moves such a block to the end of its function: in this file's -mllvm -print-before=branch-folder and
-#   -print-after=branch-folder, the two throw blocks of the push written in 502 go from the middle of its blocks (bb.20,
-#   bb.22) to after its return. So the push and the field's release end a function of their own. Written in 502, the
-#   throws came after 502's return (the 89 rows above, with two blocks more at the icon's branch, which this fragment
-#   once read as BatteryIconDataSource's constructor's; they went with the throws, below). With the helper building the
-#   field too (the new-expression, and so CDSImageField's constructor, in it), 69 over 967: the throws placed, but in
-#   the constructor's IObservable::Attach the mutex's address computed before the find, where the target computes it at
-#   the unlock, and two of its locals swapped; of six orders of the three functions on a replay of the link's wasm-opt
-#   (C4), only the constructor's first, then 502's, then the helper's gave the target's rows, an object order the
-#   target's data rule out (cdsimagefield.cpp's records and vtable follow cformbuilder.cpp's). With 502 building the
-#   CDSImageField and the helper taking the pointer, 59 over 964, every row an operand (the callees, the icons' map's
-#   .bss words, the error destructor's table slot), and the scan matches it. The parameter's type is the control
-#   block's: its typeinfo (@1578404) names __shared_ptr_pointer<api::CDSImageField*, ...> of a
-#   shared_ptr<IFormField<IScreen>>, so that shared_ptr is made from a CDSImageField*. Its place: the block's vtable
-#   (@1578376) lies between AddTextRectField's block's (@1578336) and the CTextBox block's and AddBlinkingTextField's
-#   (@1578416, @1578456) in the target's data, and band 1 lists the block's __get_deleter (11116) between
-#   AddTextRectField's block members (11118, 11117) and the CTextBox block's (11115, 11114), so it is defined after
-#   AddTextRectField; there 11116 reads in order against those and against AddBlinkingTextField's and AddProgressBar's
-#   (11113 to 11110), which it did not with the helper right above 502 (names.tsv's ld_index; how-to step 3, "The order
-#   of two members"). As a free function defined right above 502, or at the end of the file (where 502's call is its
-#   first mention), the helper gave 502 the same 59 rows. The same plain link (sha256 a3d23cb516139ca7... each): the
-#   helper a free function of api that takes m_campos by reference, and emplace_back for push_back; the same object: its
-#   SharedField const or not.
+#   Optimizer moves such a block to the end of its function, here in every form of the push measured that clang compiles
+#   into 502 (in place, in a block, in a `try`, a `static` or anonymous-namespace helper, a lambda called in place or
+#   named: clang inlines the last two, and each gives 502 the in-place body, 89 over 976 rows in the link in place and
+#   with the `static` helper): in this file's -mllvm -print-before=branch-folder and -print-after=branch-folder, the two
+#   throw blocks of the push written in 502 go from the middle of its blocks (bb.20, bb.22) to after its return. So the
+#   push and the field's release end a function of their own. Written in 502, the throws came after 502's return (the 89
+#   rows above, with two blocks more at the icon's branch, which this fragment once read as BatteryIconDataSource's
+#   constructor's; they went with the throws, below). With the helper building the field too (the new-expression, and so
+#   CDSImageField's constructor, in it), 69 over 967: the throws placed, but in the constructor's IObservable::Attach
+#   the mutex's address computed before the find, where the target computes it at the unlock, and two of its locals
+#   swapped; of six orders of the three functions on a replay of the link's wasm-opt (C4), only the constructor's first,
+#   then 502's, then the helper's gave the target's rows, an object order the target's data rule out
+#   (cdsimagefield.cpp's records and vtable follow cformbuilder.cpp's). With 502 building the CDSImageField and the
+#   helper taking the pointer, 59 over 964, every row an operand (the callees, the icons' map's .bss words, the error
+#   destructor's table slot), and the scan matches it. The parameter's type is the control block's: its typeinfo
+#   (@1578404) names __shared_ptr_pointer<api::CDSImageField*, ...> of a shared_ptr<IFormField<IScreen>>, so that
+#   shared_ptr is made from a CDSImageField*. Its place: the block's vtable (@1578376) lies between AddTextRectField's
+#   block's (@1578336) and the CTextBox block's and AddBlinkingTextField's (@1578416, @1578456) in the target's data,
+#   and band 1 lists the block's __get_deleter (11116) between AddTextRectField's block members (11118, 11117) and the
+#   CTextBox block's (11115, 11114), so it is defined after AddTextRectField; there 11116 reads in order against those
+#   and against AddBlinkingTextField's and AddProgressBar's (11113 to 11110), which it did not with the helper right
+#   above 502 (names.tsv's ld_index; how-to step 3, "The order of two members"). As a free function defined right above
+#   502, or at the end of the file (where 502's call is its first mention), the helper gave 502 the same 59 rows. The
+#   same plain link (sha256 a3d23cb516139ca7... each): the helper a free function of api that takes m_campos by
+#   reference, and emplace_back for push_back; the same object: its SharedField const or not.
 # What the bytes fixed, each measured in the link:
 # - comIcone: the target computes campos & 4 once, before the charge's field, and reads it there and for the icon; with
 #   the bit tested in both places our link computes it in each branch of the charge's test (106 over 986 rows);
@@ -129,7 +131,7 @@
 # lambda's capture by reference, every line but the records' (and the blank runs between), the font's name FONTE_PADRAO,
 # and SFont{20, 1} for the mode's text, a temporary as the target builds it on the stack; AddDSImageField's name, its
 # being a private member (it writes m_campos; the free function gives the same link), its parameter's and its local's
-# names, and its line after AddTextRectField's.
+# names, and its line (its place after AddTextRectField is the data's and band 1's, above).
 #
 # 3678 and 2243, AddLabeledKey over a key's name and over a key, and 2782, AddTextFieldMultiLine, match; the scan's
 # content pass names each (source `content`), as no vote reaches them. Their target callers are screens, none written
@@ -260,8 +262,10 @@
 #   11105 to 11113 (502 its first mention then), which read in order now, where 11116, above GetForm, reads inverted
 #   against GetForm's blocks and 12317, 12323, 12328 and 12335, as every adder above GetForm does. Two orders come from
 #   elsewhere: AddField above GeraNome, a measured choice (426's locals), and AddDSImageField after AddTextRectField,
-#   read from the data and band 1 (both above). The other bands' pairs in one object agree: 203 above 202, 2245 above
-#   2244, 5419 above 5409.
+#   read from the data and band 1 (both above). Of the other bands, 2245 above 2244 and cmtformbuilder.cpp.o's 5419
+#   above 5409 read in order; band 2 of this object has two inverted pairs, 5546 and 5547 against 5550, which GetForm's
+#   place after the adders, a choice, gives (above); and 203, above 202 in its band, links from another object
+#   (ccedula.cpp.o).
 #
 # The MT builder's input fields: 3674 (AddField), 395 (AddInputControl) and 3673. 395 allocates the field's 64 bytes,
 # builds the CControlValidation and its control block, calls 3673 and releases the validation before the field's vptr
@@ -277,10 +281,10 @@
 #   m_campos.push_back(campo) in AddInputControl, push_back(&&) stays out of it too (cost=270, threshold=250).
 # - AddField is defined before AddInputControl. In use band 3 the target links 3674 before 3673, and an object lists a
 #   linkonce function at its first mention: with AddInputControl calling m_campos.push_back(campo) and no AddField, the
-#   object lists AddInputControl, 3673's constructor, then push_back(&&), the other order; with AddField first, AddField,
-#   AddInputControl and the constructor link in that order (ld_index 4473, 4474, 4475 when measured; with
-#   AddDSImageField, AddField and AddInputControl are 6868 and 6869, and 3673's copy links from cescolheopcao.cpp.o,
-#   6154), and band 3 holds no pair of this object out of order.
+#   object lists AddInputControl, 3673's constructor, then push_back(&&), the other order; with AddField first,
+#   AddField, AddInputControl and the constructor link in that order (ld_index 4473, 4474, 4475 when measured; at
+#   e374b0b3 AddField and AddInputControl are 6878 and 6879, and 3673's copy links from cescolheopcao.cpp.o, 6164), and
+#   band 3 holds no pair of this object out of order.
 # - AddField's body, emplace_back(std::move(campo)) or push_back(std::move(campo)): the two give one plain link
 #   (sha256 7dace76cda976fb7... both, at this unit's landing). With push_back, clang inlines AddField into
 #   AddInputControl and binaryen into its one other caller, the roots' EntradaMT, and the link map names the body

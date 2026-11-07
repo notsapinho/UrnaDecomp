@@ -7,10 +7,10 @@
 // 11587, 11626 and 2725) are in the link too. CCarga's copy constructor (fn 1557), CUrna::ValidaCriacao (fn 5862) and
 // CEnvelopeGenerico::ValidaCriacao (fn 3822) have their callers among those constructors.
 // The recorders comum::CGravadorHashes, CGravadorLog, CGravadorRDV and CGravadorVersoesArquivos: the target reaches
-// their destructors only through their vtables, which their constructors store (inlined into
-// vota::CGravaResultado::StartState, fn 12098, not written yet; the constructors are written, unrooted); so the vtables'
-// addresses go into a sink, which stands for 12098, the reference the target has. CGravadorEnvelopeArquivo's vtable and IGravadorEnvelope's are stored by
-// CGravadorEnvelopeArquivo's constructor (fn 5856, unit 160's) and destructors.
+// their destructors only through their vtables, which their constructors store (inlined into fn 12098,
+// vota::CGravaResultado::StartState, not written; the constructors are written, unrooted); so the vtables' addresses
+// go into a sink, which stands for 12098, the reference the target has. CGravadorEnvelopeArquivo's vtable and
+// IGravadorEnvelope's are stored by CGravadorEnvelopeArquivo's constructor (fn 5856, unit 160's) and destructors.
 extern "C" {
 extern const char w136_vt_hashes[] __asm__("_ZTVN5comum15CGravadorHashesE");
 extern const char w136_vt_log[] __asm__("_ZTVN5comum12CGravadorLogE");

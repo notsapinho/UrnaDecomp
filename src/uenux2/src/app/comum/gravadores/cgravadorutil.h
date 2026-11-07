@@ -23,8 +23,8 @@ enum EExtensaoArquivoResultado : int;
 // builds DeterminaNomeArquivoSemLetra's name with the extension comum::CArquivosResultado gives (IResultado's
 // constructor, fn 1396, stores it as the file name). ConverteFaseEcourna and ConverteSituacaoArquivoEcourna (records
 // :113 and :129, with the types they print) have no target index: fn 12098 holds both inlined in CGravadorRCSecao's
-// constructor, each behind a stack frame of its own (cgravadorutil.cpp says what each body rests on). That the class has
-// no other member is not known.
+// constructor, each behind a stack frame of its own (cgravadorutil.cpp says what each body rests on). That the class
+// has no other member is not known.
 class CGravadorUtil {
 public:
     static std::string DeterminaNomeArquivoSemLetra(TMunicipioID municipio, TZonaID zona, TSecaoID secao, char fase);

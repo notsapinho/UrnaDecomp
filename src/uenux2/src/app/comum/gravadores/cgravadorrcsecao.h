@@ -20,14 +20,14 @@ class CEleitorIdentidade;
 // RTTI: an si_class of comum::IGravador. vota::CGravaResultado::StartState (fn 12098) builds it as a
 // std::shared_ptr<IGravador>(new CGravadorRCSecao), whose control block's __on_zero_shared is the shared call through the
 // vtable (fn 172), so the class is not final. Recovered: the layout, 60 bytes (12098 allocates it with f137(60)), the
-// virtual members, and the members the records name. The constructor, which 12098 holds inlined with no frame of its own
-// (no target index; written in cgravadorrcsecao.cpp, unrooted), calls IGravador's constructor (fn 1396) with the
+// virtual members, and the members the records name. The constructor, which 12098 holds inlined with no frame of its
+// own (no target index; written in cgravadorrcsecao.cpp, unrooted), calls IGravador's constructor (fn 1396) with the
 // extension 8 and the SAVD file 39, copies the api::CDateTime 12098 builds to +40, and stores at +52 and +56 what
 // CGravadorUtil::ConverteFaseEcourna and ConverteSituacaoArquivoEcourna return, each behind a 480-byte frame of its own
-// in 12098 (out of line in cgravadorutil.cpp, inlined by binaryen); the second's code is the constant 0 alone there, its
-// argument a constant every caller passed (docs/reference/facts/reading.md R1). GravaResultado (fn 11616) passes +52 to
-// CResultadoUrnaCadastro's constructor as its ecourna::app::dados::CFaseID and +56 as its ESituacaoArquivo; the records
-// cgravadorutil.cpp:113 (CGravadorUtil::ConverteFaseEcourna, which 12098 loads) and :129
+// in 12098 (out of line in cgravadorutil.cpp, inlined by binaryen); the second's code is the constant 0 alone there,
+// its argument a constant every caller passed (docs/reference/facts/reading.md R1). GravaResultado (fn 11616) passes
+// +52 to CResultadoUrnaCadastro's constructor as its ecourna::app::dados::CFaseID and +56 as its ESituacaoArquivo; the
+// records cgravadorutil.cpp:113 (CGravadorUtil::ConverteFaseEcourna, which 12098 loads) and :129
 // (ConverteSituacaoArquivoEcourna, which no target function loads) return those two types: the members' types are a
 // reading of them. No member's destruction emits code: slot 0 holds IResultado's base-object destructor (fn 12090), and
 // the deleting one (fn 11615, slot 1) holds that body and frees `this`, so the destructor is not declared (implicit).

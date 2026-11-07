@@ -1,5 +1,5 @@
-// Reconstruction's note: comum::md::CVersoesContratos (the file the records name): GetTag (no record; clang inlines it),
-// the constructor, which target fn 12098 holds inlined (no index; unrooted), and GetValor, their throws on their
+// Reconstruction's note: comum::md::CVersoesContratos (the file the records name): GetTag (no record; clang inlines
+// it), the constructor, which target fn 12098 holds inlined (no index; unrooted), and GetValor, their throws on their
 // records' lines (29 and 42, column 15); the first lines are a choice (src/units/227-uenux2-contratos-cmontadorhash.mk
 // says what each rests on).
 #include "app/comum/gravadores/md/cversoescontratos.h"

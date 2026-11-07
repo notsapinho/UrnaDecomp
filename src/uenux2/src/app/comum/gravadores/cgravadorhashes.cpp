@@ -1,8 +1,8 @@
 // comum::CGravadorHashes (/home/rubio/tse/uenux2/src/app/comum/gravadores/cgravadorhashes.cpp, the file its record
 // names): the two constructors fn 12098 holds inlined (no index; unrooted), GravaResultado (target fn 11620, slot 7,
 // the key function), whose throw is a record of the target (line 112, column 15), and CalculaHashesArquivos, which
-// binaryen inlines into it. The other lines are a choice (src/units/136-uenux2-app-comum-gravadores-md.mk says what each
-// rests on).
+// binaryen inlines into it. The other lines are a choice (src/units/136-uenux2-app-comum-gravadores-md.mk says what
+// each rests on).
 #include "app/comum/gravadores/cgravadorhashes.h"
 
 #include <filesystem>

@@ -17,8 +17,8 @@ class CRdv;
 // std::shared_ptr<IGravador>(new CGravadorRDV), whose control block's __on_zero_shared is the shared call through the
 // vtable (fn 172), so the class is not final. Recovered: the layout, 168 bytes (12098 allocates it with f137(168)), and
 // the virtual members. The constructor, which 12098 holds inlined with no frame of its own (no target index; written in
-// cgravadorrdv.cpp, unrooted), calls IGravador's constructor (fn 1396) with the extension 6 and the SAVD file 37, copies
-// the api::CDateTime 12098 builds to +40,
+// cgravadorrdv.cpp, unrooted), calls IGravador's constructor (fn 1396) with the extension 6 and the SAVD file 37,
+// copies the api::CDateTime 12098 builds to +40,
 // stores 49 at +52, copies a md::estadoaplicacao::CDadoCorrespondencia to +56 (its copy constructor, fn 1249), leaves a
 // std::optional of 8 bytes at +152 empty (engaged at +160) and stores a word at +164. GravaResultado (fn 11587, in
 // cgravadorrdv.cpp) calls slot 11 of the object +164 points at (CRdv's Converte, the RDV's bytes), passes +52 to

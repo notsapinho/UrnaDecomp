@@ -36,28 +36,28 @@ class CCargo;
 // vtable (fn 172), so the class is not final. Recovered: the layout, 304 bytes (12098 allocates it with f137(304)), and
 // the virtual members. The constructor has no target index: 12098 holds it inlined (written in cgravadorbu.cpp, whose
 // header comment says what its frame shows: a public constructor that delegates to a private one), after IGravador's
-// constructor (fn 1396, with the extension 4 and the SAVD file 35): it stores this vptr (@1554132 + 8), copies the api::CDateTime it also
-// passes CGravadorEnvelopeArquivo's constructor to +40 and 12 more bytes to +52, stores ConverteFase(fase) at +64 and
-// 49 at +68, copies a md::estadoaplicacao::CDadoCorrespondencia to +72 (fn 1249), moves a vector to +168 and a map to
-// +180, stores a byte at +192, a 16-bit word at +194 and a word at +196, builds the string "bu.pk1" at +200, stores 1
-// at +212, copies three 12-byte objects to +216 (44 bytes), +260 and +272, fills the map at +284 in a loop over
-// comum::CCargos (a node of 16 bytes: the post's byte at +13 and a counter's byte at +14; that the counter is the post's
-// order is a reading) and copies 8 bytes, 2-aligned, to +296. The destructor is not declared (implicit; one defined in
-// the class was not measured): the base-object one (fn 5857, slot 0) stores this vptr, then destroys the map at +284
-// (fn 3814), the string at +200, the map at +180 (fn 1405, the destroy of std::map<md::ETipoAbrangencia, SQtdeAptos>'s
-// tree, the one cgeradorbuqrcode.h's map has), the strings of the vector at +168 and the vector, the correspondencia
-// (fn 857), and holds IResultado's (its vptr, the string at +20); the deleting one (fn 11628, slot 1) frees what that
-// one returns, the shape of a destructor whose base-object body is too large to inline (docs/how-to-decompile.md step
-// 5). GravaResultado (slot 7, fn 11629, records cgravadorbu.cpp:484 and :485) is out of line, so it is the key function
-// (cgravadorbu.cpp). LeChavePublica and MontaEntidadeBU are its two private members, whose records (cgravadorbu.cpp:542
-// to :560 and :636) print them const members of this class; fn 11629 holds both, each behind a frame of its own.
-// AcrescentaVotoVotavel (fn 3820) is in cgravadorbu.cpp: its record (cgravadorbu.cpp:221) prints it static and spells
-// its parameter types, TVetorVotosVotaveis and TQtdEleitor among them. The vector's element is the 24-byte
-// CVotosVotavel its push_back (fn 1944) copies. TQtdEleitor is a 16-bit count the body passes on unmasked to
-// CVotosVotavel's constructors, which take a ueword: as ueword it gives the target's rows, and as ecourna's CBaseType
-// the count is masked where the target's is not (src/units/200-uenux2-cgravadorbu.mk); the spelling ueword is chosen.
-// That the aliases are the class's and the member public (cgravadorbu.cpp's helpers, free functions, call it) is
-// chosen, and so is the forward declaration of md::CCargo.
+// constructor (fn 1396, with the extension 4 and the SAVD file 35): it stores this vptr (@1554132 + 8), copies the
+// api::CDateTime it also passes CGravadorEnvelopeArquivo's constructor to +40 and 12 more bytes to +52, stores
+// ConverteFase(fase) at +64 and 49 at +68, copies a md::estadoaplicacao::CDadoCorrespondencia to +72 (fn 1249), moves a
+// vector to +168 and a map to +180, stores a byte at +192, a 16-bit word at +194 and a word at +196, builds the string
+// "bu.pk1" at +200, stores 1 at +212, copies three 12-byte objects to +216 (44 bytes), +260 and +272, fills the map at
+// +284 in a loop over comum::CCargos (a node of 16 bytes: the post's byte at +13 and a counter's byte at +14; that the
+// counter is the post's order is a reading) and copies 8 bytes, 2-aligned, to +296. The destructor is not declared
+// (implicit; one defined in the class was not measured): the base-object one (fn 5857, slot 0) stores this vptr, then
+// destroys the map at +284 (fn 3814), the string at +200, the map at +180 (fn 1405, the destroy of
+// std::map<md::ETipoAbrangencia, SQtdeAptos>'s tree, the one cgeradorbuqrcode.h's map has), the strings of the vector
+// at +168 and the vector, the correspondencia (fn 857), and holds IResultado's (its vptr, the string at +20); the
+// deleting one (fn 11628, slot 1) frees what that one returns, the shape of a destructor whose base-object body is too
+// large to inline (docs/how-to-decompile.md step 5). GravaResultado (slot 7, fn 11629, records cgravadorbu.cpp:484 and
+// :485) is out of line, so it is the key function (cgravadorbu.cpp). LeChavePublica and MontaEntidadeBU are its two
+// private members, whose records (cgravadorbu.cpp:542 to :560 and :636) print them const members of this class; fn
+// 11629 holds both, each behind a frame of its own. AcrescentaVotoVotavel (fn 3820) is in cgravadorbu.cpp: its record
+// (cgravadorbu.cpp:221) prints it static and spells its parameter types, TVetorVotosVotaveis and TQtdEleitor among
+// them. The vector's element is the 24-byte CVotosVotavel its push_back (fn 1944) copies. TQtdEleitor is a 16-bit count
+// the body passes on unmasked to CVotosVotavel's constructors, which take a ueword: as ueword it gives the target's
+// rows, and as ecourna's CBaseType the count is masked where the target's is not (src/units/200-uenux2-cgravadorbu.mk);
+// the spelling ueword is chosen. That the aliases are the class's and the member public (cgravadorbu.cpp's helpers,
+// free functions, call it) is chosen, and so is the forward declaration of md::CCargo.
 // Evidence for the types, from fn 11629 unless said: +40 is the api::CDateTime of the BU's header (md::CCabecalhoEntidade's
 // constructor, fn 1945, takes its address; fn 12098 passes the same object to CGravadorEnvelopeArquivo's constructor),
 // +52 the entity's 12-byte issue date-time; +64 the envelope's and the entity's EUrnaFase; +68 the ETipoArquivo of

@@ -1,6 +1,6 @@
-// Reconstruction's note: comum::md::CDependenciasContratos (the file the records name): the constructor, which target fn
-// 12098 holds inlined (no index; unrooted), and GetValor, their throws on their records' lines (27 and 59, column 15);
-// their first lines are a choice (src/units/227-uenux2-contratos-cmontadorhash.mk says what each rests on).
+// Reconstruction's note: comum::md::CDependenciasContratos (the file the records name): the constructor, which target
+// fn 12098 holds inlined (no index; unrooted), and GetValor, their throws on their records' lines (27 and 59, column
+// 15); their first lines are a choice (src/units/227-uenux2-contratos-cmontadorhash.mk says what each rests on).
 #include "app/comum/gravadores/md/cdependenciascontratos.h"
 
 #include <format>

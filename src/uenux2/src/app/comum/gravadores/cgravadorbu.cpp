@@ -60,8 +60,8 @@
 //   detail at +296 when +192 is set, else the throw (8641); an empty std::vector<md::CHistoricoVotoImpresso> of its
 //   own (its 32-byte frame holds it) goes into the entity. CEntidadeBU::ValidaCriacao's frame opens once inside its.
 // The locals' names, the order of the statements no call fixes and the names of the helpers are chosen.
-// - The constructor has no target index: fn 12098 holds it inlined behind a 192-byte frame of its own. That frame holds a
-//   second copy of the vector and the map, moved from the ones 12098 passes, and four std::optionals made from the
+// - The constructor has no target index: fn 12098 holds it inlined behind a 192-byte frame of its own. That frame holds
+//   a second copy of the vector and the map, moved from the ones 12098 passes, and four std::optionals made from the
 //   arguments (the vota data and the attendance detail engaged, the SA data empty), copied once more before IGravador's
 //   constructor (fn 1396) runs: so it delegates to a private constructor that takes those six by value (a reading).
 //   The map at +284 is filled in a loop over comum::CCargos ahead of +296's store, so MontaOrdemCargos builds it in its

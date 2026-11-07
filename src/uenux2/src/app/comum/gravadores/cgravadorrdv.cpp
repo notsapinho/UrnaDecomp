@@ -1,7 +1,7 @@
-// comum::CGravadorRDV's constructor, which fn 12098 holds inlined (no index; unrooted: src/units/305-uenux2-cgravadorrdv.mk
-// says what it rests on), and GravaResultado (target fn 11587, slot 7; this file's name and path are the
-// reconstruction's choice: no record names the class's file, app/comum/gravadores/cgravadorrdv.h says what is
-// recovered). Fn 11587 has
+// comum::CGravadorRDV's constructor, which fn 12098 holds inlined (no index; unrooted:
+// src/units/305-uenux2-cgravadorrdv.mk says what it rests on), and GravaResultado (target fn 11587, slot 7; this file's
+// name and path are the reconstruction's choice: no record names the class's file, app/comum/gravadores/cgravadorrdv.h
+// says what is recovered). Fn 11587 has
 // no record of its own: its records are those of the api::CFileASN templates it holds (cfileasn.h:161 and :171,
 // CodeObjectFunction for ModuloRegistroDigitalVoto::EntidadeResultadoRDV, behind the frames of CodeObject and
 // CodeObjectFunction, which binaryen inlined), and what it does is read from its calls. It decodes the RDV's bytes

@@ -20,8 +20,8 @@ namespace vota {
 // other callees have names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's
 // 1164, 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, 227's
 // 3825 and 3826, and 2281, std::set<std::string>'s hinted insert from the tree root roots_set.cpp, among them). Besides
-// its own 384-byte frame it holds 31 stack prologues of functions binaryen inlined (pnpm wasm fn's readout, a reading of
-// each by its strings, records, calls and vptr stores). Written since, unrooted, with no index of their own: the
+// its own 384-byte frame it holds 31 stack prologues of functions binaryen inlined (pnpm wasm fn's readout, a reading
+// of each by its strings, records, calls and vptr stores). Written since, unrooted, with no index of their own: the
 // gravadores' constructors and converters and the md classes' constructors (units 122, 136, 200, 227, 268, 305;
 // md::CVersoesContratos' through its GetTag, unit 227), comum::GetPathLogArquivados (the 32-byte "arquivados/" path,
 // cgravadorlog.cpp, unit 136), CLogComum's seven members, CAssinador::AssinaArquivosResultado, comum::AssinarEcourna,

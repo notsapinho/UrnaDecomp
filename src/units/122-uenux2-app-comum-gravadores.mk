@@ -337,9 +337,9 @@ $(foreach u,src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravador
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cgravadorutil.h declares ConverteSituacaoArquivoEcourna, whose return type is a nested enum of ecourna's
-# CResultadoUrnaCadastro, so it includes that header, which reaches Boost's ptime (ccabecalhoentidade.hpp): its includers
-# iresultado.cpp and unit 160's ccopiadormr.cpp get the path too (as unit 88 gives other units' objects), an include
-# path, not a flag of the code
+# CResultadoUrnaCadastro, so it includes that header, which reaches Boost's ptime (ccabecalhoentidade.hpp): its
+# includers iresultado.cpp and unit 160's ccopiadormr.cpp get the path too (as unit 88 gives other units' objects), an
+# include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/iresultado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/ccopiadormr.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cgravadorwsq.cpp's CompactaWsq builds an ecourna::api::compression::CZip, whose header includes minizip's zip.h and,

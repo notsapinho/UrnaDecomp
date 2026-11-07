@@ -77,41 +77,40 @@
 #
 # The md classes' constructors (records cdependenciascontratos.cpp:27:15 and cversoescontratos.cpp:29:15), which
 # vota::CGravaResultado::StartState (fn 12098) holds inlined, each behind a 528-byte frame (lines 1203 and 1281 of the
-# folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints, counted from the line after
-# `;; --- folded readout`): written, unrooted (wasm-ld drops them), so with no target index and no match until 12098 is
-# written. Each loads its INI file with api::CIniFile::Carrega (fn 5480) into its member, reads "tag" with GetValor,
-# compares it with "20260601173148" (12098 compares 14 bytes) and otherwise throws 8662 or 8696 with "Tag do arquivo
-# de dependências de contratos inválida: [{}]. Tag atual: [{}]" (235617) or "Tag do arquivo de versões de contratos
-# inválida: [{}]. Tag atual: [{}]" (235546) over GetValor("tag") read again and the array (5870 is the
-# make_format_args over a const std::string and a const char[15] both throws call). Measured on the objects
-# (wasm-objdump -d): both open 528-byte frames; check_srcloc.py --strict: each object's 2 records are the target's. In
-# dependencias' code in 12098 the key "tag" is built at +80 and the value returned at +136, then the value is tested,
-# compared and freed and the key freed; its object does the same. In versoes' code the key is at +136 and the value at
-# +80, and the key is freed before the compare and the value before the throw. Versoes' constructor calls GetValor
-# through GetTag, a private member clang inlines (cversoescontratos.h): the key is then the inlined callee's alloca,
-# ahead of the value's in the frame's order (docs/reference/facts/codegen.md C5), and the object holds versoes' layout
-# and frees (the call's value at +80, the key at +136 freed first, the size read at +84, the throw's +52, +40 and +80).
-# Forms on the object with the same test written in the constructor (the call's value and key): the sibling's form, a
-# `const bool` of the compare, `!(a == b)` and `.compare() != 0`: +136 and +80; the value in a named local: +68 and
-# +136 (as in the if's initializer or bound to a const reference, measured before, the value kept past the throw); in a
-# block scope before the throw: +136 and +80; `bool TagValida()` holding a named value: +136 and +80; the literal on the
-# left of the != (measured before): dependencias' layout. GetTag as a free function of the file over the object, in
-# the if or in a named value of a block scope before the throw, or the call in an immediately invoked lambda there, give
-# the constructor the member's instructions (three data offsets of the object's literals apart). The array is the target's one
-# literal (341442, which 12098 also loads to build a std::string, and at which 5870's folded argument points), written
-# in place. With the constructors written, md/cdependenciascontratos.cpp.o instantiates that make_format_args, and the
-# link keeps its copy of 5870 (the same symbol, still matched), which came from unit 268's roots object before.
+# folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints, counted from the line after `;; ---
+# folded readout`): written, unrooted (wasm-ld drops them), so with no target index and no match until 12098 is written.
+# Each loads its INI file with api::CIniFile::Carrega (fn 5480) into its member, reads "tag" with GetValor, compares it
+# with "20260601173148" (12098 compares 14 bytes) and otherwise throws 8662 or 8696 with "Tag do arquivo de dependências
+# de contratos inválida: [{}]. Tag atual: [{}]" (235617) or "Tag do arquivo de versões de contratos inválida: [{}]. Tag
+# atual: [{}]" (235546) over GetValor("tag") read again and the array (5870 is the make_format_args over a const
+# std::string and a const char[15] both throws call). Measured on the objects (wasm-objdump -d): both open 528-byte
+# frames; check_srcloc.py --strict: each object's 2 records are the target's. In dependencias' code in 12098 the key
+# "tag" is built at +80 and the value returned at +136, then the value is tested, compared and freed and the key freed;
+# its object does the same. In versoes' code the key is at +136 and the value at +80, and the key is freed before the
+# compare and the value before the throw. Versoes' constructor calls GetValor through GetTag, a private member clang
+# inlines (cversoescontratos.h): the key is then the inlined callee's alloca, ahead of the value's in the frame's order
+# (docs/reference/facts/codegen.md C5), and the object holds versoes' layout and frees (the call's value at +80, the key
+# at +136 freed first, the size read at +84, the throw's +52, +40 and +80). Forms on the object with the same test
+# written in the constructor (the call's value and key): the sibling's form, a `const bool` of the compare, `!(a == b)`
+# and `.compare() != 0`: +136 and +80; the value in a named local: +68 and +136 (as in the if's initializer or bound to
+# a const reference, measured before, the value kept past the throw); in a block scope before the throw: +136 and +80;
+# `bool TagValida()` holding a named value: +136 and +80; the literal on the left of the != (measured before):
+# dependencias' layout. GetTag as a free function of the file over the object, in the if or in a named value of a block
+# scope before the throw, or the call in an immediately invoked lambda there, give the constructor the member's
+# instructions (three data offsets of the object's literals apart). The array is the target's one literal (341442, which
+# 12098 also loads to build a std::string, and at which 5870's folded argument points), written in place. With the
+# constructors written, md/cdependenciascontratos.cpp.o instantiates that make_format_args, and the link keeps its copy
+# of 5870 (the same symbol, still matched), which came from unit 268's roots object before.
 #
 # Chosen (each header marks its own): the classes' members and parameter names; the md constructors' comparison and
-# throw as written, the literal in place, and their first lines; GetTag's name, its being a member, private, its
-# return type and its lines (18 to 21); that each md class holds its INI object
-# as a member (a base would give the same layout; not measured); ListaHashesArquivos's and ListaHashesDiretorio's names,
-# their being free functions and their header; CMontadorHash's members' access, s_hashGeral's name and its being a
-# static member, the using-declarations that place the records' columns, ITextEncoding's header and slot name
-# (ecourna/api/security/itextencoding.hpp); the lines of the functions with no record. One form of each was measured
-# (of the versoes constructor's comparison, the forms above, three giving GetTag's instructions), none listed as the same
-# otherwise, but for CFile::Write: a free function of ecourna::api::io taking the CFile by reference gives
-# the const member's instructions (cfile.hpp says so).
+# throw as written, the literal in place, and their first lines; GetTag's name, its being a member, private, its return
+# type and its lines (18 to 21); that each md class holds its INI object as a member (a base would give the same layout;
+# not measured); ListaHashesArquivos's and ListaHashesDiretorio's names, their being free functions and their header;
+# CMontadorHash's members' access, s_hashGeral's name and its being a static member, the using-declarations that place
+# the records' columns, ITextEncoding's header and slot name (ecourna/api/security/itextencoding.hpp); the lines of the
+# functions with no record. One form of each was measured (of the versoes constructor's comparison, the forms above,
+# three giving GetTag's instructions), none listed as the same otherwise, but for CFile::Write: a free function of
+# ecourna::api::io taking the CFile by reference gives the const member's instructions (cfile.hpp says so).
 #
 # Roots: 227-uenux2-contratos-cmontadorhash-roots.cpp stands in for the callers not written (12098 for both GetValor;
 # 5869, CDependenciasContratos's other caller, is in the link since unit 268); each stand-in names them. Its stand-ins
