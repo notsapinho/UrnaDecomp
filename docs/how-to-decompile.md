@@ -1634,8 +1634,8 @@ awk '/^# ---- hand edits below/ {h=1; next} h && !/^#/ && NF {print $1}' splat/s
 ```
 
 A line found idle for a cause your landing did not
-bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
-`vector<ASN1::AbstractData*>::push_back`) goes in a commit of its own with the docs that cite it, after a `queue/` post;
+bring (its symbol gone from our link, a body merged elsewhere) goes in a commit of its own with the docs that cite it,
+after a `queue/` post;
 your commit keeps it. A caught-up line is not such a case: a range whose match touches it removes it
 ([reference/splat.md](reference/splat.md) "Reviewing a match"), unless a doc cites it as an example: then it goes in a
 commit of its own with that doc (9c5ede00). A
