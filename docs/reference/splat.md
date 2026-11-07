@@ -115,7 +115,13 @@ parser drops any other line without a word, below the hand-edit marker too, and 
   units, so each object is aligned alone. A *run* of our body starts at the object's first operand and ends at the next
   `.bss` object's or the next stack prologue. A row of it *tells* when the target's body holds its literal, or the place
   its address resolves to by content, in one row only: the bytes of a short string, a capacity and size, a chunk of a
-  literal. A run with a telling row votes when every row through its last telling row or string chunk fits the
+  literal. A short string's bytes packed into an `i32.const` of 1024 or more lie in our data range, and the row reads
+  them as an address first (`tellingRow`): the tail our merged strings hold at that number (`<internal>:(.rodata)` from
+  0x400 in `vota_web_wasm.map`), which tells only when one of the target's places of that tail is a number its body
+  holds once. So a run built from short strings alone votes by chance and moves with our strings: `ESCAPES.2`'s tells by
+  `"\t"`'s word, 29788, only while both links hold a `"t"` tail there (both do at 912b211d), and a landing that moves
+  our strings can take that vote away (how-to step 9's data-layout cases).
+  A run with a telling row votes when every row through its last telling row or string chunk fits the
   target's: the same opcode, with an i64, an offset or a label of the same value; an `i32.const` of the same value, a
   string of the same content, a `.bss` address on both sides or a table slot on both sides, whichever slot; any callee
   of the signature; any local. So a small literal both tables hold fits any other, and it is the telling rows that
@@ -279,8 +285,10 @@ of ours may be an address, a table slot or a plain integer, and the bytes do not
 a second link. `tools/round/link-kinds.sh` (`make -C src link-kinds`) reruns the plain link's own command with
 `-sGLOBAL_BASE=1024+D` and `-sTABLE_BASE=1+T` (emcc passes them to wasm-ld as `--global-base` and `--table-base`),
 with D = 1 MiB and T = 20,000. `splat-kinds` asks only that the two be positive and differ (`linkShifts`), so a moved
-constant says which it is; neither need exceed our data or table, and D does not (our data ends at 0x1889b0, 1.61 MB,
-and our table holds 11,805 slots: `wasm-objdump -x -j Table build/out/wasm/vota_web/vota_web_wasm.wasm`). It names that *shifted link*'s functions the way link-map names the plain one. It refuses to start while
+constant says which it is; neither need exceed our data or table, and D does not (at 912b211d our data ends at
+1800418, 1.80 MB, and our table holds 14,233 slots: `wasm-objdump -x -j Data` and `-j Table` of
+`build/out/wasm/vota_web/vota_web_wasm.wasm`). It names that *shifted link*'s functions the way link-map names the
+plain one. It refuses to start while
 an object or archive on the link line is newer than the plain wasm, and fails unless its map lists the same input
 sections as link-map's map of the plain link, in the same order and of the same sizes. The toolkit's `splat-kinds`
 then aligns the two links by function name, not index, and writes `build/out/wasm-kinds/vota_web/kinds.json`. In a

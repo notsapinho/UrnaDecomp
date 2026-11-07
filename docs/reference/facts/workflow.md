@@ -5,14 +5,14 @@ lone and whole-link tries, cloned build outputs, counting lost matches, committi
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
 table's rows, `-j` on the link, leaving a merge after step 9, the notes a merge makes stale, a merge that fails to
-compile with no conflict, what fails `pnpm test:bench`, make's clock, what a merge joins with no conflict, and reading a
-score and a remap.
+compile with no conflict, what fails `pnpm test:bench`, make's clock, what a merge joins with no conflict, reading a
+score and a remap, and what each search for stale notes reaches.
 `docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
-W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
-and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and
-W2's items 6 and 7 at c1b2630, W24 at the merges it names, W25 and the parts marked bbf27ac1 at bbf27ac1, W26 to W28 and
-the parts marked 182dc6c1 at 182dc6c1, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says
-otherwise.
+W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018 and
+W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and W2's
+items 6 and 7 at c1b2630, W24 and W29 at the merges and commits they name, W25 and the parts marked bbf27ac1 at
+bbf27ac1, W26 to W28 and the parts marked 182dc6c1 at 182dc6c1, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on
+PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
 
@@ -1016,15 +1016,19 @@ This also drops every untracked file it staged, so save what you want first. The
 
 A merge's new matches, and the functions it writes that do not match, make other notes false: a pending header's
 callees "with no name", a fragment's "waits for fn N", a roots comment's callers, a README row, a doc's example. Eight
-kinds go stale, and a search by the new indices finds only the first, so run each:
+kinds go stale, and a search by the new indices finds only the first, so run each kind's search (the block below;
+§W29 has what each line reaches, measured, and what it leaves to reading):
 
 1. **A note that names a new index.** The indices are the new match lines, the indices whose match line or object the
-   merge moved (step 9's renames, a linkonce copy that now comes from another object: "matches from X.cpp.o now"), and,
-   by hand, the functions the merge writes that do not match (each lane's result names them; one with no name reads
-   `no-candidate` with no object, so look it up in `build/out/wasm-map/vota_web/names.tsv`).
+   merge moved (step 9's renames, a linkonce copy that now comes from another object), and, by hand, the functions the
+   merge writes that do not match (each lane's result names them; one with no name reads `no-candidate` with no object,
+   so look it up in `build/out/wasm-map/vota_web/names.tsv`). A note on a moved copy can name the object the copy left
+   instead of the index, so the trees are searched for those objects too.
 2. **A note that names a caller's callee.** A comment that lists or counts a function's callers ("22 are in the
    link") goes stale when a new caller lands, though it never named that caller; a hand line whose function a new match
-   calls is the landing's to weigh (how-to step 9).
+   calls is the landing's to weigh (how-to step 9). A function of ours binaryen inlines into every caller has no index
+   and no `ledger/callgraph.tsv` row: for each one the range's new code calls (`names.tsv` lists none of them), search
+   its name.
 3. **A note that names what the merge removed**, a stand-in, sink, roots file or pending file, by its name: a removal
    adds no index. Search each deleted file's name and each removed identifier.
 4. **A sink whose storers are in the link.** A vtable sink's comment need not name the functions that store its vptr:
@@ -1039,76 +1043,60 @@ kinds go stale, and a search by the new indices finds only the first, so run eac
 7. **A note or a doc example that quotes our link's numbers** (an `ld_index`, a map address, an object's data segment
    numbers, a slot, an offset, an `ours` index, a count): a change of that object, of one before it on the link line or
    of a library's flags moves them with no new match, and no index names them. A data change moves every later
-   object's data, so search every fragment and companion, not only the recompiled objects' (`LC_ALL=C /usr/bin/grep -n
-   -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' src/units/*.mk src/units/*.cpp`: 155 lines in 72 files at b3236f02),
-   and read step 8's `git diff <base> -- splat/symbol_addrs.txt` for a line whose evidence kind changed with no match
-   of the merge touching it (11865's `vtable` to `srcloc-anchor` on 2bdc17c3, its record's copy moved by another
-   object's new data, which unit 199's note quoted); then re-measure, re-run the examples that print the moved code's
-   numbers, or date each. To tell the quotes the merge moved from older ones, copy the base's
-   `build/out/wasm-map/vota_web/names.tsv` aside before the first merge's `link-map` overwrites it: a moved quote is a
-   number that is, in the copy, the `ld_index` of a function its note names, and is not that function's now. A quote
-   already off at the base is not the merge's: leave it, or date it at a commit you measure it on. A list move
-   (`src/units/README.md` "Names") also changes the pair counts of every other move whose span the moved file enters or
-   leaves, in fragments the merge did not recompile and that name files, not numbers: search them by the moved file's
-   name (`LC_ALL=C git grep -n cqrcodeimagepaper -- src/units` finds unit 95's `csigverifier.cpp` list, which that
-   file's move into unit 196's list took it out of), list the §C4 counts of other objects' places, which name neither
-   the moved file nor a number (19 lines in 10 fragments at ea98137f), and recount or date each whose object lies
-   between the moved file's two places on the link line:
-
-       LC_ALL=C /usr/bin/grep -n -E 'objects out of|out of the (target.s )?data.?s? order|record-aware' src/units/*.mk
-
-   **A date names the commit the number was measured at**, not the commit that wrote it: `git log -S` finds the writer,
-   and a count a branch writes can be its base's, or older than the branch's own last edits. To date or check an older
-   number, measure at its commit:
-   `tools/round/build-at.sh <commit> <dir>`, then `make -C <dir>/src link link-map` and the measurement in `<dir>`,
-   whose symbol file and ledger are that commit's (§W5: `<dir>` outside the checkout). A §C4 count from a commit that
-   does not hold 2a61780c (`git merge-base --is-ancestor 2a61780c <commit>` fails) is the count by vtables alone: date
-   it "vtables only".
+   object's data, so search every fragment and companion, not only the recompiled objects', and read step 8's `git diff
+   <base> -- splat/symbol_addrs.txt` for a line whose evidence kind changed with no match of the merge touching it
+   (11865's `vtable` to `srcloc-anchor` on 2bdc17c3, its record's copy moved by another object's new data, which unit
+   199's note quoted); then re-measure, re-run the examples that print the moved code's numbers, or date each with the
+   commit it was measured at (§W29). Copy the base's whole `build/out/wasm-map/vota_web/` aside before the first
+   merge's `link-map` overwrites it: its `names.tsv` tells which `ld_index` quotes the merge moved, its
+   `vota_web_wasm.map` which quotes of our data (§W29 has both searches). A list move (`src/units/README.md` "Names")
+   also changes other moves' §C4 pair counts, which need not name the moved file: recount or date a count when exactly
+   one of the moved file's two places on the link line lies between the count's two places (its object's place and
+   the place it weighs), or, for a count at one place, when that place lies between the moved file's two; and search
+   the moved file's name for the notes that say which list holds it (`LC_ALL=C git grep -n -w <file> -- src/units`).
 8. **A note that quotes a symbol line's evidence** (`vote:N by:<list>`): a later match that votes for the name changes
    the line, and so does one that takes an anchor kind from its pair ([splat.md](splat.md) §S8, the ninth kind); no
    index of the merge sits in the note. Write the name and its evidence kind, not the count, or date
-   it; this lists every quote the symbol file no longer holds (9 at e7d03612):
+   it; this lists every quote the symbol file no longer holds (9 at e7d03612 and at 912b211d):
 
        LC_ALL=C /usr/bin/grep -n -o -E 'vote:[0-9]+ by:[0-9]+(,[0-9]+)*' src/units/*.mk src/units/*.cpp | while IFS=: read f n q; do /usr/bin/grep -q -F "evidence:$q" splat/symbol_addrs.txt || echo "$f:$n: $q"; done
 
 The base is the side whose comments have not been searched against the other's matches: for a lane merged onto
 `main`, `main` (or the merge's first parent); when `main` merges `origin/main`, the first parent already holds every
 match, so take the other parent, and each side's new indices against the other's text. The searches need no link, so
-they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W10):
+they can run from the lanes' lists before steps 6 to 10 (zsh needs the braces, W10; `<name>` is kind 2's callee with
+no index, one line per name):
 
-    B=main
-    comm -13 <(git show "${B}:splat/matched.txt" | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
-    join -t "$(printf '\t')" <(git show "${B}:splat/scan.tsv" | awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' | sort) <(awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' splat/scan.tsv | sort) | awk -F'\t' '$2!=$4 || $3!=$5 {print $1}' >> build/out/<handle>/new.idx
-    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp $(git ls-files docs | /usr/bin/grep -v -E '^docs/(img/|status\.md$)')
-    awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/new.idx
-    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
-    awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' build/out/<handle>/new.idx ledger/callgraph.tsv | sort -u > build/out/<handle>/callee.idx
-    awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' build/out/<handle>/callee.idx));"
-    LC_ALL=C /usr/bin/grep -n -w -E "w?($(paste -sd'|' build/out/<handle>/callee.idx))" src/units/*-roots.cpp src/app/roots_*.cpp
-    for f in $(git diff --name-only --diff-filter=D $B -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
-    git diff $B -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
+```sh
+B=main; H=build/out/<handle>
+# kind 1: the new indices and the rows whose symbol or object moved, then the notes, the hand lines, the trees' comments and the objects moved copies left
+comm -13 <(git show "${B}:splat/matched.txt" | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > $H/new.idx
+join -t "$(printf '\t')" <(git show "${B}:splat/scan.tsv" | awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' | sort) <(awk -F'\t' '$5=="match" {print $1"\t"$2"\t"$11}' splat/scan.tsv | sort) | awk -F'\t' -v h=$H 'BEGIN {printf "" > (h "/left.obj")} $2!=$4 || $3!=$5 {print $1 >> (h "/new.idx")} $3!=$5 {n = split($3, p, "/"); sub(/\.o$/, "", p[n]); print p[n] > (h "/left.obj")}'
+LC_ALL=C /usr/bin/grep -rn -w -F -f $H/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp $(git ls-files docs | /usr/bin/grep -v -E '^docs/(img/|status\.md$)')
+awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -w -F -f $H/new.idx
+LC_ALL=C /usr/bin/grep -rn -A1 -w -F -f $H/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
+LC_ALL=C git grep -n -w -F -f $H/left.obj -- src/uenux2/src src/ecourna
+# kind 2: the new matches' callees in the hand section and the companions; a callee with no index, by its name
+awk -F'\t' 'NR==FNR {n[$1]; next} ($1 in n) && $2>=136 {print $2}' $H/new.idx ledger/callgraph.tsv | sort -u > $H/callee.idx
+awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -E "= func:($(paste -sd'|' $H/callee.idx));"
+LC_ALL=C /usr/bin/grep -n -w -E "w?($(paste -sd'|' $H/callee.idx))" src/units/*-roots.cpp src/app/roots_*.cpp
+LC_ALL=C git grep -n -w <name> -- src/units docs src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -v -E '^src/(uenux2|ecourna)/[^:]*\.cpp:'
+# kind 3: the deleted files' names and the removed lines
+for f in $(git diff --name-only --diff-filter=D $B -- src/units src/app); do LC_ALL=C /usr/bin/grep -rn -F "$(basename $f)" src docs tools; done
+git diff $B -- 'src/units/*-roots.cpp' 'src/app/roots_*.cpp' | LC_ALL=C /usr/bin/grep '^-[^-]'
+# kind 7: our numbers in the notes, the C4 pair counts, and the objects' places on the link line
+LC_ALL=C /usr/bin/grep -n -E 'ld_index|0x[0-9a-f]{5,}|segments? [0-9]+' src/units/*.mk src/units/*.cpp
+LC_ALL=C /usr/bin/grep -n -E 'inverts( [0-9]|$)|[0-9] inverted|objects out of|out of the (target.s )?data.?s? order|record-aware' src/units/*.mk
+tr ' ' '\n' < build/out/wasm/vota_web/link.cmd | /usr/bin/grep '\.o$' | awk '{print NR": "$0}' > $H/places.txt
+```
 
-The first `join` adds the rows `match` on both sides whose symbol or object changed (at 3c1ef19d against 6de39748: 1135
-from `cpe.cpp.o` to `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more). The callee
-search reads the hand lines of the new matches' callees (the second-to-last kind of how-to step 9's weighing) and the
-companions' lines that name a callee, among them every caller list and the `w<index>` declarations a fixed-string word
-search misses (109 lines against `-w -F`'s 101 at ea98137f against ba9a4549). It takes `-w`, not `\b`: `git grep -E` on
-macOS reads `\b` as nothing and prints no line ([tool-traps.md](tool-traps.md) §X3 item 9); the form above gives the
-same 109 lines with macOS's and GNU grep and with `git grep -n -w -E` on either system. The last two list the deleted
-files' names (at 3c1ef19d against 6de39748, ten files and one line that names one) and the removed lines, whose
-identifiers to search with `LC_ALL=C git grep -n -w <name> -- src docs`. `docs/img/` and `docs/status.md` are generated
-and hold coordinates and counts, no notes. The last two compare the base with the working tree, so they read a lane's
-uncommitted range, a merge's staged result and a commit alike (against `HEAD` they print nothing before the commit).
-Each hit is to read: an index also matches a line number or a size. The third index search reads the trees' comments,
-where a header of any class can list a new match among callees "with no name"; a fix keeps the paragraph's line count,
-so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says ("When it goes", "Going
-earlier", "Finding the idle ones"). A lane runs the same searches on its own range before it commits, and fixes what it
-finds, comment lines only, in files it claims (how-to step 10).
-
-A note's count of a function's callees "with no name" counts against both name files, imports aside (callees below
-136), and says so beside the count: a match line can be a function's only name (2745). For 10425 at 182dc6c1, 5 of 45:
-
-    for c in $(awk -F'\t' -v f=10425 '$1==f && $2>=136 {print $2}' ledger/callgraph.tsv | sort -u); do /usr/bin/grep -q -F "= func:$c;" splat/symbol_addrs.txt || awk -v c=$c '$1==c {f=1} END {exit !f}' splat/matched.txt || echo $c; done | wc -l
+Each hit is to read: an index also matches a line number or a size. A fix to a tree's comment keeps the paragraph's
+line count, so no `#line` moves. A stand-in found idle goes as `src/units/README.md` "Companion files" says ("When it
+goes", "Going earlier", "Finding the idle ones"). Kind 3's two lines compare the base with the working tree, so they
+read a lane's uncommitted range, a merge's staged result and a commit alike (against `HEAD` they print nothing before
+the commit). `docs/img/` and `docs/status.md` are generated and hold coordinates and counts, no notes. A lane runs the
+same searches on its own range before it commits, and fixes what it finds, comment lines only, in files it claims
+(how-to step 10).
 
 ## W24. A merge can fail to compile where no line of either side conflicts
 
@@ -1295,6 +1283,40 @@ table slot `__cxa_throw` takes for the error's destructor; a written body can pr
 (`(len << 32) | addr`, [reading.md](reading.md) §R13). Look each up (`splat/symbol_addrs.txt`, `pnpm wasm fn`) before
 reading it as a frame or a layout.
 
+**A large body's rows are mostly locals.** From the first renumbered local on, every `local.get` differs, and the
+inserted and deleted rows mix the renumbering with the changes that are code (5604, `CGeradorBUQRCode::Gera`, 22805
+bytes: `976 over 10271`, 943 of 944 replaced rows operand-only). Align the two `pnpm wasm fn` readouts with local
+indices, callees, data and packed strings masked: each hunk left is a source form or a branch depth it shifts, and a
+constant for a constant (a table slot, an address) is counted apart. From `asmlift-wasm/`, 5604 against our 5482
+(912b211d, 9 s):
+
+```sh
+pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5604 > ../build/out/<handle>/t.txt 2>/dev/null; pnpm --silent wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm 5482 > ../build/out/<handle>/o.txt 2>/dev/null
+python3 -I - ../build/out/<handle>/t.txt ../build/out/<handle>/o.txt <<'END'
+import difflib, re, sys
+def body(p):  # the normalised column of a `pnpm wasm fn` readout's disassembly, local indices, callees and data masked
+    on, out = False, []
+    for l in open(p, encoding='latin-1'):
+        if l.startswith(';; --- '): on = l.startswith(';; --- disassembly'); continue
+        n = l.split('|', 1)[1].strip() if on and '|' in l else ''
+        if n: out.append(re.sub(r'^(local\.(?:get|set|tee)) \d+$|^(call) fn:\S+|data:\S+|^(i64\.const) \d{10,}$', lambda m: (m.group(1) or m.group(2) or m.group(3) or '') + ' *', n))
+    return out
+t, o = body(sys.argv[1]), body(sys.argv[2])
+h = [x for x in difflib.SequenceMatcher(None, t, o, autojunk=False).get_opcodes() if x[0] != 'equal']
+one = lambda s: len(s) == 1 and s[0].startswith('i32.const ')  # a constant for a constant: a slot, an address, a value
+for tag, i1, i2, j1, j2 in h:
+    if not (one(t[i1:i2]) and one(o[j1:j2])): print(f'{tag} target {i1}:{i2} ours {j1}:{j2}:', ' ; '.join(t[i1:i2][:4]), '|', ' ; '.join(o[j1:j2][:4]))
+print('hunks', len(h), 'of them one constant for another', sum(one(t[a:b]) and one(o[c:d]) for _, a, b, c, d in h))
+END
+# insert target 3386:3386 ours 3386:3387:  | local.get *
+# delete target 3389:3390 ours 3390:3390: local.get * |
+# insert target 8428:8428 ours 8428:8430:  | i32.const 0 ; local.set *
+# hunks 36 of them one constant for another 33
+```
+
+The three are an operand order of the election compare and one zero set more (unit 155's fragment); the 33 are the
+format buffer's table slot, 148 against our 91. Read the hunks before the locals.
+
 **What it drops.** A table slot at or above 1024, the first data segment's address, prints as `data:` and leaves with
 the data: 10313 passes three data sources to `AddTextField` by slot, and the score prints them as `i32.const
 data:ba4744780c86a45e+3314 ~ …`, while slot 148, below 1024, prints as a number. A wrong function pointer passes the
@@ -1311,3 +1333,94 @@ variant"), and it applies no self-vote rule, so a body it prints `IDENTICAL` can
 scan: 652 (`CPedeIdentidade::GetInst`) printed `IDENTICAL` once its literal was in the link, and the scan left it on
 `_ZN4vota15CPedeIdentidade6s_instE = 0x1d12b8 (evidence:vote:8 by:652)`, whose one other target reader was no function
 of our link. Read the symbol file's `evidence:vote:N by:<the index>` lines for the data the body reaches.
+
+## W29. What W23's searches reach, and what each leaves to reading
+
+Measured with this machine's git (2.56) and `/usr/bin/grep` (BSD grep 2.6.0) at the commits each item names; the
+block is §W23's.
+
+1. **The trees' comments (kind 1).** A 120-column header puts an index at a line's end and its state on the next:
+   `-A1` prints the line after each hit (`<file>-<line>-`), so the keyword there shows; read it with its index line
+   above it. For 10337 on 911c8d03's blobs (`LC_ALL=C git grep -n -w -F -f <idx> 911c8d03 -- src/uenux2/src
+   src/ecourna` and the block's filter), the line alone prints `cmesarioregistrado.cpp:4`, and with `-A1` also
+   `cmesarioregistrado.h-31-// not written): the object in a static std::unique_ptr …`.
+2. **A moved copy's object (kind 1).** A note on where a copy comes from names the object it left ("matches from unit
+   121's cescolheopcao.cpp object"), and the keyword filter has no word for it. The `join` writes the base names of
+   those objects to `left.obj`: over ea98137f..398bcc4c (`ccedula.cpp`, `cescolheopcao.cpp`, `cformbuilder.cpp`) the
+   trees' search prints 22 lines, `iinputfield.h:55` (3673's copy, which the range moved to `cmtformbuilder.cpp.o`)
+   among them, which no other line of the block lists. The `join` also adds the rows `match` on both sides whose
+   symbol or object changed to `new.idx` (at 3c1ef19d against 6de39748: 1135 from `cpe.cpp.o` to
+   `citensmenuvota.cpp.o`, 11628 from the `-pending.o` to `cgravadorbu.cpp.o`, and 22 more).
+3. **A callee with no index (kind 2).** `comum::CAppState::SetNextState` is inlined into every caller, so no
+   callgraph row holds it: ea98137f..398bcc4c added three callers and left unit 61's "Twenty functions call it",
+   `cappstate.h`'s count above its declaration and README row 61 stale, with every other line of the block silent. The
+   name search keeps the notes and the trees' headers and drops the `.cpp` call sites (43 lines at 912b211d,
+   `cappstate.h:85`'s declaration among them: read the comment above it); count the callers as the note says (unit
+   61's `git grep` of `SetNextState(`).
+4. **The callee search (kind 2).** It reads the hand lines of the new matches' callees (the second-to-last kind of
+   how-to step 9's weighing) and the companions' lines that name a callee, among them every caller list and the
+   `w<index>` declarations a fixed-string word search misses (109 lines against `-w -F`'s 101 at ea98137f against
+   ba9a4549). It takes `-w`, not `\b`: `git grep -E` on macOS reads `\b` as nothing and prints no line
+   ([tool-traps.md](tool-traps.md) §X3 item 9); the form gives the same 109 lines with macOS's and GNU grep and with
+   `git grep -n -w -E` on either. A note's count of a function's callees "with no name" counts against both name
+   files, imports aside (callees below 136), and says so beside the count: a match line can be a function's only name
+   (2745). For 10425 at 182dc6c1, 5 of 45:
+
+       for c in $(awk -F'\t' -v f=10425 '$1==f && $2>=136 {print $2}' ledger/callgraph.tsv | sort -u); do /usr/bin/grep -q -F "= func:$c;" splat/symbol_addrs.txt || awk -v c=$c '$1==c {f=1} END {exit !f}' splat/matched.txt || echo $c; done | wc -l
+
+5. **What a removal leaves (kind 3).** At 3c1ef19d against 6de39748 the first line printed ten deleted files' names
+   and one line that names one; search each removed line's identifiers with `LC_ALL=C git grep -n -w <name> -- src
+   docs`.
+6. **The pair counts a list move changes (kind 7).** A count of an object X's pairs at a place p changes with another
+   file M's move only by the pair X and M, and only when M crosses p; a count of what X's move from q to p inverts
+   changes when M enters or leaves the stretch between q and p, so when exactly one of M's two places lies between them,
+   wherever X itself lies. Units 217's and 221's counts, which name neither file, changed when `cmtformbuilder.cpp.o`
+   moved from 421 to 232 of the plain line; unit 95's count for `csigverifier.cpp.o` (from unit 26's place to 555) and
+   unit 136's for `cgravadorlog.cpp.o` (105 to 159, 284 to 283) changed when `igestordadomesario.cpp.o` moved from 146
+   to 378, though neither object lies between 146 and 378. Their counts say "inverts N" (or "N inverted"), so the counts
+   line takes them: 45 lines in 20 fragments at 912b211d, where without them 25 lines in 13 list none of the three.
+   `places.txt` gives each object's place (`/usr/bin/grep <name> $H/places.txt`).
+7. **`ld_index` quotes (kind 7).** A moved quote is a number that is, in the copied `names.tsv`, the `ld_index` of a
+   function its note names, and is not that function's now. A quote already off at the base is not the merge's: leave
+   it, or date it at a commit you measure it on. The numbers line prints 163 lines in 74 files at 912b211d.
+8. **Quotes of our data (kind 7).** After a list move most of the data moves, and a number that only falls inside a
+   moved symbol is nearly always a target address. A quote of ours is a number that is, in the copied map, the start
+   of one of our data symbols the merge moved, and no target address of `splat/symbol_addrs.txt` or record of
+   `ledger/source-locations.tsv`; this lists them in every tracked note (decimal and hex, a `@` target address and a
+   line dated by an 8-digit commit left out):
+
+   ```sh
+   python3 -I - <copy of the base's vota_web_wasm.map> build/out/wasm-map/vota_web/vota_web_wasm.map <<'END'
+   import re, subprocess, sys
+   def data(p):  # (symbol, object) -> address, for the data symbols of a wasm-ld map
+       d, obj, on = {}, None, False
+       for l in open(p, encoding='latin-1'):
+           if not on: on = l.rstrip().endswith(' DATA'); continue
+           m = re.match(r'\s*([0-9a-f]+)\s+[0-9a-f]+\s+[0-9a-f]+\s+(\S.*)$', l)
+           if m and ':(' in m.group(2): obj = m.group(2).split(':(')[0]
+           elif m and obj and not m.group(2).startswith('.'): d[(m.group(2), obj)] = int(m.group(1), 16)
+       return d
+   b, n = data(sys.argv[1]), data(sys.argv[2])
+   moved = {a: k[0] for k, a in b.items() if k in n and n[k] != a}
+   target = {int(l.split()[2].rstrip(';'), 16) for l in open('splat/symbol_addrs.txt', encoding='latin-1') if re.match(r'\S+ = 0x[0-9a-f]+;', l)}
+   target |= {int(l.split('\t')[0]) for l in open('ledger/source-locations.tsv', encoding='latin-1') if l.split('\t')[0].isdigit()}
+   print(len(b), 'data symbols,', len(moved), 'moved')
+   for f in subprocess.run(['git', 'ls-files', '*.mk', '*.cpp', '*.h', '*.hpp', '*.md'], capture_output=True, text=True).stdout.split():
+       if f.startswith(('docs/img/', 'docs/status.md', 'third_party/')): continue
+       for i, l in enumerate(open(f, encoding='latin-1')):
+           for t in re.findall(r'(?<![\w.@])(0x[0-9a-f]{5,8}|[0-9]{5,7})(?!\w)', l):
+               v = int(t, 16) if t.startswith('0x') else int(t)
+               if v in moved and v not in target and not re.search(r'\b[0-9a-f]{8}\b', l): print(f'{f}:{i + 1}: {t} {moved[v]}')
+   END
+   ```
+
+   With 912b211d's map as the base and a scratch link of its line with `cmtformbuilder.cpp.o` moved back from 231 to 421
+   as the merge, it prints `10583 data symbols, 1821 moved` and 17 lines, each to read (target vptrs and `.bss` words
+   that our layout happens to hold a symbol at, the vptr `cidentidadeinvalida.h:25` quotes among them). The map's keys
+   are a symbol and its object, so a map rebuilt from copies of the objects names other paths: keep the base's own.
+9. **Dating a number (kind 7).** A date names the commit the number was measured at, not the commit that wrote it:
+   `git log -S` finds the writer, and a count a branch writes can be its base's, or older than the branch's own last
+   edits. To date or check an older number, measure at its commit: `tools/round/build-at.sh <commit> <dir>`, then
+   `make -C <dir>/src link link-map` and the measurement in `<dir>`, whose symbol file and ledger are that commit's
+   (§W5: `<dir>` outside the checkout). A §C4 count from a commit that does not hold 2a61780c (`git merge-base
+   --is-ancestor 2a61780c <commit>` fails) is the count by vtables alone: date it "vtables only".

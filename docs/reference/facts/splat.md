@@ -969,6 +969,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     6071's symbol in its `names.tsv`, where the plain link has one. A landing that takes `ESCAPES` or its destructor out
     takes the two out. 10879 itself matches by `ESCAPES.2`'s generated name, which 10879 and 14478 (the static
     constructors, written and no match) vote for; unit 379's fragment has the weighing of the hand line it replaced.
+    14478's vote rests on where our strings fall ([../splat.md](../splat.md) §2, `ctors:N`): a landing that moves them
+    can take it, and 10879 then reads `unresolved self-voted` (how-to step 9's data-layout cases).
 
 31. **3138, OpenSSL's `provider_activate`, by `provider_core.o`'s read-only data at the target's addresses: no match on
     this tree, so not in the check's list.** 3138 loads `core_dispatch_` (`i32.const 1675920`, 0x199290). Step 8 casts
