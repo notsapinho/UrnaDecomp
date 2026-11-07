@@ -253,16 +253,17 @@
 #   cmtformbuilder.cpp.o. Each of the 38 involves 12301-12323, the class members of CDataText<std::function> and of
 #   CDataTextFmt of a function, which can be another object's copies, a reading, and band 2's two pairs against 6404
 #   stay inverted with them (counted while 6404 linked from this object). Counted again with AddDSImageField, over the
-#   34 matched rows of band 1 that link from cformbuilder.cpp.o (names.tsv's object) in that object's function list: 127
-#   of 561, each with one of GetForm's blocks (11127, 11137, 11138), which the getters after the adders put there by
-#   choice, or one of 12317 to 12335; at aa31cc5a it was 129 (that object's function list), 9 of them 11116's against
-#   11105 to 11113 (502 its first mention then), which read in order now, where 11116, above GetForm, reads inverted
-#   against GetForm's blocks and 12317, 12323, 12328 and 12335, as every adder above GetForm does. Two orders come from
-#   elsewhere: AddField above GeraNome, a measured choice (426's locals), and AddDSImageField after AddTextRectField,
-#   read from the data and band 1 (both above). Of the other bands, 2245 above 2244 and cmtformbuilder.cpp.o's 5419
-#   above 5409 read in order; band 2 of this object has two inverted pairs, 5546 and 5547 against 5550, which GetForm's
-#   place after the adders, a choice, gives (above); and 203, above 202 in its band, links from another object
-#   (ccedula.cpp.o).
+#   34 matched rows of band 1 that linked from cformbuilder.cpp.o then (names.tsv's object; 12317, 12323 and 12784 link
+#   from cmtformbuilder.cpp.o since unit 161's list compiles it first) in that object's function list: 127 of 561, each
+#   with one of GetForm's blocks (11127, 11137, 11138), which the getters after the adders put there by choice, or one
+#   of 12317 to 12335; at aa31cc5a it was 129 (that object's function list), 9 of them 11116's against 11105 to 11113
+#   (502 its first mention then), which read in order now, where 11116, above GetForm, reads inverted against GetForm's
+#   blocks and 12317, 12323, 12328 and 12335, as every adder above GetForm does. Two orders come from elsewhere:
+#   AddField above GeraNome, a measured choice (426's locals), and AddDSImageField after AddTextRectField, read from the
+#   data and band 1 (both above). Of the other bands, 2245 above 2244 and cmtformbuilder.cpp.o's 5419 above 5409 read in
+#   order; band 2 of this object has two inverted pairs, 5546 and 5547 against 5550, which GetForm's place after the
+#   adders, a choice, gives (above); and 203, above 202 in its band, links from another object (cmtformbuilder.cpp.o,
+#   which links ahead of ccedula.cpp.o since unit 161's list compiles it).
 #
 # The MT builder's input fields: 3674 (AddField), 395 (AddInputControl) and 3673. 395 allocates the field's 64 bytes,
 # builds the CControlValidation and its control block, calls 3673 and releases the validation before the field's vptr
@@ -302,7 +303,8 @@
 #   object's data, so that code is a member of this file that binaryen inlined, a reading. It is written so:
 #   AddInputControl(int teclas) (name, overload and parameter chosen after api::CInteractiveFormBuilder's), which 5410,
 #   vota::MontaTelaEleitorPodeVotar in unit 161's ccontrolareconhecimento.cpp, calls with 4, the default of
-#   CInputFieldControl's constructor. 5410 differs (unit 161's fragment has the rows); 395, 3674 and 3673 still match.
+#   CInputFieldControl's constructor. 5410 matches with cmtformbuilder.cpp compiled at the head of unit 161's list (that
+#   fragment has the order measured); 395, 3674 and 3673 still match.
 #
 # Chosen, the bytes do not decide:
 # - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and
@@ -365,7 +367,8 @@
 # 176's), and the stand-in fragment 246's roots held for 11902 went with it. Chosen: the parameters' names; the lambda's capture spelled `[this]` (`[&]` captures the same by the
 # language's rules, not compiled here); the header line the declaration takes (any line above 51 would do); Show's place
 # last in the file (it is the file's only function with 3 uses in ledger/ordinals.tsv, so no band neighbour orders it).
-CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
+# cmtformbuilder.cpp, this unit's file, is compiled at the head of unit 161's list (that fragment says why).
+CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
 # the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and

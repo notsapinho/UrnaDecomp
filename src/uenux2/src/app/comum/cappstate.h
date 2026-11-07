@@ -76,8 +76,8 @@ public:
     virtual void ProcessTick(uebyte) {}
 
     // Stores the next state. Out of line in cappstate.cpp, called where the bytes ask for it (a store in each arm, one
-    // kept first, or loads redone after it) or match a replay with a call binaryen inlined (the twenty callers and what
-    // each rests on: src/units/61-uenux2-cexibealertadesligamento.mk); the others assign m_pNextState. binaryen inlines
+    // kept first, or loads redone after it) or match a replay with a call binaryen inlined (each caller and what it
+    // rests on: src/units/61-uenux2-cexibealertadesligamento.mk); the others assign m_pNextState. binaryen inlines
     // it everywhere: no target function. Its name, parameter's name and being a member are chosen; so is its being
     // public, a reading of vota::CMenuVisualizarCandidatos::StartState (fn 11881), which also stores into +4 of two
     // other states it holds as CAppState*, the first of them read back from its own +4 right after storing it (what a

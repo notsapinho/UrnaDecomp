@@ -1,8 +1,8 @@
-// The voters' list report of comum (target fn 11908 holds ImprimeListaEleitores inlined; fns 11233 and 11234 are
-// the text sources it passes by table slot). The reconstruction's note, not TSE's text: the file's one record is
-// SituacaoEleitor's throw (line 100, column 15); every other line, the helpers' names but SituacaoEleitor's and
-// MontaCabecalho's (the lambda's RTTI), the other helpers' internal linkage and their order are chosen.
-// cgeradorrellistaeleitores.h and src/units/317-uenux2-relatorios-aptos.mk say what is evidence and what is chosen.
+// The voters' list report of comum (fn 11908 holds ImprimeListaEleitores inlined; fns 11233 and 11234 are the text
+// sources it passes by table slot) and comum::CParteEleitores's constructor, here by a reading of
+// docs/reference/facts/codegen.md C6. Not TSE's text: the one record is SituacaoEleitor's throw (line 100, column 15);
+// every other line, the helpers' names but SituacaoEleitor's and MontaCabecalho's (the lambda's RTTI), the others'
+// internal linkage, their order and the constructor's place are chosen (src/units/317-uenux2-relatorios-aptos.mk).
 #include "app/comum/relatorios/cgeradorrellistaeleitores.h"
 
 #include <memory>
@@ -156,6 +156,16 @@ std::shared_ptr<api::IReportPart> MontaRodape()
 }
 
 } // namespace
+
+
+
+
+
+
+CParteEleitores::CParteEleitores(std::shared_ptr<api::IForm<api::IPaper>> form)
+    : m_eleitor(std::make_shared<api::CFormPart>(std::move(form)))
+{
+}
 
 void ImprimeListaEleitores(const std::string& titulo, const std::string& via)
 {

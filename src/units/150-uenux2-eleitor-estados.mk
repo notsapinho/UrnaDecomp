@@ -106,6 +106,22 @@
 #   well; the iterator over data pointers, `continue` in the loop, ++ and -- in ifs, a const_iterator, and the screen
 #   named last give 6 or 7, and the last of those, in the whole link, 131 over 458 rows. No form compiled gives the
 #   target's numbering; it stays as first written.
+# - Measured since. Clang's MIR before and after its register colouring (-mllvm -print-before=wasm-reg-coloring and
+#   -print-after, with -print-machine-bfi), each value's weight its operands times their blocks' frequencies
+#   (docs/reference/facts/codegen.md C4's reading of the pass): the keyboard's instance 1662.24, the second loop's
+#   `atual` 252.51, the vector's begin 127.54, `this` 126.67 (its six loads of the filters in the first loop) and the
+#   first loop's iterator 109.78; `this` takes the instance's colour (local 0) and `atual` the iterator's (local 2). On
+#   a replay of the link's binaryen (codegen.md C4), clang's locals 0 and 2 exchanged from the first
+#   CriaTelaVisualizacaoCandidato call on give 27 over 444 rows, every one a call, a data address or the error's
+#   destructor's table slot, and `atual` given a local of its own 56 over 444, all operand-only: an object with `atual`
+#   in `this`'s local gives the target's code, and the colouring gives that only with a first-loop value heavier than
+#   `this` (a reading). On that replay the filters' loads made through a local that holds this + 24 fold back into
+#   `this`-relative loads (the same module), so an object that reads them through such a pointer, where `this` would
+#   weigh less (computed from the colouring weights above, not measured on an object), gives the same loads; no source
+#   form found keeps that pointer. Forms compiled, `atual` in local 2 in each: the filters as a member predicate called
+#   in the loop (clang inlines it, cost 80, threshold 250), the first loop as a member returning the vector (clang
+#   inlines it) and references to the three optionals bound above the loop (StartState's code the control's). 11876
+#   waits for a form whose object holds `atual` in `this`'s local.
 # CTelasVota::CriaTelaVisualizacaoCandidato (fn 6569, in ctelasvota.cpp, unit 110's: a static member, ctelasvota.h says
 # why) builds the screen: a fill in colour 31, "VISUALIZAÇÃO" and the post's name for the holder's sex, then label and
 # value lines (Partido, Número padded to the post's digits, Nome, Gênero), each below the last, the value a multi-line

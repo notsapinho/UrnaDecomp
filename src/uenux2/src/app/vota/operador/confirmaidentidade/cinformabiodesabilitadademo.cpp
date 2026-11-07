@@ -56,10 +56,10 @@ void CInformaBioDesabilitadaDemo::ProcessInput()
 {
     if (m_form->Read() == api::INPUT_CONFIRMA) {
         if (IsAudioAtivado()) {
-            m_pNextState = &CHabilitaAudioEleitor::GetInst();
+            SetNextState(&CHabilitaAudioEleitor::GetInst());
         } else {
             CThreadEleitor::GetInst().GetMensagens().Post(1);
-            m_pNextState = &CMostraEleitorVotando::GetInst();
+            SetNextState(&CMostraEleitorVotando::GetInst());
         }
     }
 }

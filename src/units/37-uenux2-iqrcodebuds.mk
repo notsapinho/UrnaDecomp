@@ -58,14 +58,14 @@
 #   the same link (sha256 compared), and so does the height as a uint16_t or a TPosition. CQRCodeImage's constructor
 #   takes its std::function by value since (cqrcodeimage.h says why): fn 3662's match line follows the symbol (a rename)
 #   and its body is unchanged.
-# - GetQRDSInst (fn 1956, record 31, `unresolved`): it calls CCabecalhoQRCodeBuilder::DefineHistoricoCarga (fn 5622),
-#   written in unit 93 and `no-candidate` (its body is the target's but for its locals' numbers: 89 over 431 rows, every
-#   replaced row operand-only), and Gera (fn 5604, unit 155's, `no-candidate`). It holds, inlined by binaryen, two
-#   functions with frames of their own (IQRCodeBUDS::GeraPartes, 880 bytes, and IQRCodeBUDS::CreateInst, 16), and from
-#   other files CAppInfo::GetGap's non-const overload (record cappinfo.cpp:42) and CPolySingleton's set, push and
-#   instance. It scores 650 over 2482 rows (51 inserted, 57 deleted): the gap's correspondences are read through a local
-#   holding +184 where the target folds 184 into the loads, and GeraPartes's empty-loop and throw blocks sit apart from
-#   the target's. Both are measured, not explained. Its name reaches it by its callers' votes (`call by:5982,12051`).
+# - GetQRDSInst (fn 1956, record 31, `unresolved`): it calls CCabecalhoQRCodeBuilder::DefineHistoricoCarga (fn 5622,
+#   unit 93's, matched since it returns the builder), and Gera (fn 5604, unit 155's, `no-candidate`). It holds, inlined
+#   by binaryen, two functions with frames of their own (IQRCodeBUDS::GeraPartes, 880 bytes, and
+#   IQRCodeBUDS::CreateInst, 16), and from other files CAppInfo::GetGap's non-const overload (record cappinfo.cpp:42)
+#   and CPolySingleton's set, push and instance. It scores 650 over 2482 rows (51 inserted, 57 deleted): the gap's
+#   correspondences are read through a local holding +184 where the target folds 184 into the loads, and GeraPartes's
+#   empty-loop and throw blocks sit apart from the target's. Both are measured, not explained. Its name reaches it by
+#   its callers' votes (`call by:5982,12051`).
 # - FindFieldAs<CTextField> (fn 1721, api/gui/iform.h, record 142, unit 120's header code, which only this file
 #   instantiates), `differs`: 51 over 163 rows, its type-mismatch throw after the function's return where the target
 #   keeps it inside the loop, before the step. The field is copied before the cast, as the target increments the count
