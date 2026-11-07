@@ -190,6 +190,31 @@
 # does ours (ld_index 2593 against 2615 in build/out/wasm-map/vota_web/names.tsv). crdvvota.cpp includes
 # app/comum/dados/cconfiguracaoeleicao.h for it.
 #
+# comum::CargosPorEleicao (target fn 5735, 1046 B), in crdvvota.cpp above GetInst: a std::map from each of the pleito's
+# elections to a copy of its cargos. For each id of CConfiguracaoEleicao::GetIDsEleicoes (5791) on GetInst() (187) it
+# calls GetCargos(id, false) (3775) on GetInst() again and emplaces the id and the copy, the copy freed after (moved into
+# the new node when the id is new). The map is comum::asn::CConversorEleicoesVota's TCargosEleicao: 5735's 32-byte
+# nodes hold the id at +16, compared unsigned, and the vector of 140-byte md::CCargo at +20, and 7787 frees its first
+# result with fn 1160, that map's destroy. Its one target caller is 7787, which calls it twice (`call 5735` counts 2 in
+# its piece), both after its store of CRdvVota's vptr (@1560172), in the construction 7787 holds inlined (a reading:
+# 7787 holds CreateInst's record, :92); fragment 419's roots stand in for 7787. Its file: in use band 2 the target's
+# 5735 lies between crdv.cpp's CRdv::SalvaExterno (5736) and this file's slot 0, GetVotos() (5733), in link order
+# (ledger/ordinals.tsv: ordinals 4458, 4459 and 4460; ~CRdvVota, 5734, is another digit zone's), so it is a function of
+# crdv.cpp's object after SalvaExterno or of this object before slot 0, and it has no record or data of its own to place
+# it (docs/reference/facts/placing.md P5): this file is chosen, for its callers (the CRdvVota construction 7787 holds,
+# a reading) and its type (CRdvVota's converter's map). Measured, the same code: try_emplace for emplace (crdvvota.cpp.o compiled at
+# this file's flags, the function's disassembly with the object-local numbers masked against a control,
+# docs/reference/facts/tool-traps.md X12: 0 of 575 lines differ). Other code: the loop's id by value, loaded once
+# before 3775's call where the target reloads it after (9 lines differ); insert({id, ...}) and
+# insert(std::make_pair(...)) (976 lines against 575); operator[] with an assignment, which assigns when the id is
+# there (149 lines differ); GetInst() called once into a named reference (597 lines differ). `pnpm wasm score` on the
+# whole link before step 8: 21 over 526 rows, all operand-only; the scan matched it by its content. Chosen: the name,
+# its being a free function (it reads no class state), the file, its external linkage (its target caller, 7787, is not
+# written, and its calls lie in code a reading takes for this file's CRdvVota construction: how-to step 3 writes such a
+# function external, so that a roots file gives it its call sites) and its line (no record names it; its band place
+# is any line above slot 0).
+# crdvvota.h declares it.
+#
 # The roots stand in for the callers no unit writes: the CRdvVota vtable's address for CreateInst's vptr store, and the
 # stand-ins the roots file lists by target caller. The two that called md::CVotosEleicoesVota::Compativel for
 # Desconverte and Confere went with them, and so did this unit's -pending.cpp, whose traps were their last members.

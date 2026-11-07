@@ -108,6 +108,12 @@ public:
     // record names it: its name, the parameters' names, its being a member and the comparator's name and linkage are
     // chosen.
     std::vector<md::CCargo> GetCargos(const TEleicaoID eleicao, const bool ordenados) const;
+    // A copy of every cargo of the pleito's elections, election by election: target fn 5790, out of line, whose one
+    // caller, fn 7787, calls it twice on GetInst()'s result (fn 187). It reads m_pleito's elections (+52 and +56 of
+    // the instance), calls CEleicaoPE::GetCargos (fn 2257) on each and pushes each cargo back, CCargo's implicit copy
+    // and the vector's growth inlined. No record names it: its name and its being a member (it reads m_pleito) are
+    // chosen.
+    std::vector<md::CCargo> GetTodosCargos() const;
 
     // +620 to +651: the election's part of a section's file name at +620 (SIdentificacaoArquivo, cnomearquivo.h, whose
     // string is the one at +628 the destructor frees), and the municipality at +644 and the 16-bit zone at +648, which
