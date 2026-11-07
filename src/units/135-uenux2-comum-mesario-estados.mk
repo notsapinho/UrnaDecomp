@@ -95,11 +95,10 @@
 #   are no call and no data address being the statics' addresses and the table slot 148, fn 7324's
 #   (std::__format::__allocating_buffer<char>::__prepare_write, matched), where ours has 43; the literal was a string of
 #   its own then. With 5389 in the link it is the tail of 5389's string, one copy as in the target, and 5386 matches
-#   (splat-review passes both ways). Its other target caller, comum::CMesarioRegistrado's
-#   slot 2 (10339), is written in unit 279, and the roots' stand-in for it went. Band: 10360, 10359,
-#   10358 and 10357 run 4165 to 4168 in ld_index at 9f0245ef. Chosen: TelaLimiteMesariosRegistrados, its being a free function of
-#   comum declared in the class's header, its parameter, and its place at the file's end; the constructor and GetInst
-#   above the statics.
+#   (splat-review passes both ways). Its other target caller, comum::CMesarioRegistrado's slot 2 (10339), is written in
+#   unit 279, and the roots' stand-in for it went. Band: 10360, 10359, 10358 and 10357 run 4165 to 4168 in ld_index at
+#   9f0245ef. Chosen: TelaLimiteMesariosRegistrados, its being a free function of comum declared in the class's header,
+#   its parameter, and its place at the file's end; the constructor and GetInst above the statics.
 #
 # GetInst, the constructors and the forms' builders (5389, and the four 10313 holds inlined). Each GetInst is the project's
 # singleton, CEncerraRegistroMesarios's form. Each constructor of the 28-byte states stores CAppState's vptr and two empty

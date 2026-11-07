@@ -13,10 +13,10 @@
 #   optional's null byte and flag: std::optional<int>'s two constructors. The parameters' order is each wasm
 #   signature's.
 # - Out of line, and 2738 in another TU than 2730 and 2731. The target keeps their calls: 2730 and 2731 from 10401 and
-#   10402 (unit 91's DAO), and 10337 (unit 135, written), 2738 from 2730, 2731, 3614 and 10313. Defined in its class, each is
-#   inlined where the target calls it: compiled alone at the tree's flags, the DAO's TU against a header that defines
-#   all three in their classes calls none of them, and ccomparecimentomesario.cpp against one that defines only the
-#   key's constructor there calls __init_copy_ctor_external twice where the target's 2730 and 2731 call 2738. Out of
+#   10402 (unit 91's DAO), and 10337 (unit 135, matched), 2738 from 2730, 2731, 3614 and 10313. Defined in its class,
+#   each is inlined where the target calls it: compiled alone at the tree's flags, the DAO's TU against a header that
+#   defines all three in their classes calls none of them, and ccomparecimentomesario.cpp against one that defines only
+#   the key's constructor there calls __init_copy_ctor_external twice where the target's 2730 and 2731 call 2738. Out of
 #   line, a call of the complete constructor (C1) stays a call even in the constructor's own TU at -fPIC
 #   (docs/reference/facts/codegen.md C6; a caller compiled in one TU with the key's constructor keeps its call), but
 #   2730 and 2731 call the base's constructor (C2, no alias), which clang inlines in their TU: so 2738's TU is another.

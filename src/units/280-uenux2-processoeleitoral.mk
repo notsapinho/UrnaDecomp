@@ -118,9 +118,10 @@
 # selected as `!= 1`, which binaryen turns into the target's `if (x == 1)`; the range-for emits its exit block before
 # its body, SimplifyCFG merges that block with the if's test, and the test's next block is then the loop body, so the
 # branch is selected bare. With std::transform the test follows the loop. The same object as std::transform with
-# ::toupper (cmp-equal): std::transform with a lambda that returns std::toupper of the letter as a char, and
-# std::for_each with a lambda that pushes it. An index `for` and an iterator `for` that declares its iterator in its
-# init give the range-for's bare test (read in the object, not linked). A `callers+content` hand line in
+# ::toupper (cmp-equal): std::transform with a lambda that returns std::toupper of the letter as a char,
+# std::ranges::transform into the std::back_inserter with ::toupper, std::for_each with a lambda that pushes it, and
+# std::ranges::for_each with that lambda. An index `for` and an iterator `for` that declares its iterator in its init
+# give the range-for's bare test (read in the object, not linked). A `callers+content` hand line in
 # splat/symbol_addrs.txt named it from the seven std::source_location records only it loads (cfileasn.h's ReadFromFile
 # and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte, GetPleito2's) while it differed,
 # so that CPE::CreateInst (2787, unit 110) matched. Once 3771 matched it carried nothing (a copy of the symbol file

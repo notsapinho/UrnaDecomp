@@ -70,9 +70,9 @@
 #   vota/eleitor/celeitorvotando.cpp (@1533188), this unit's md/curna.cpp (@1553732), md/cenvelopegenerico.cpp
 #   (@1553844) and md/centidadehashes.cpp (@1554560), and the simulator's mock/app/simulador/wasm/cwasminit.cpp and
 #   cwasmresource.cpp (their vtables); 3 have no data place. Counted over every app object with records or a strong
-#   vtable, 253 pairs with it are out of the data's order at the data's place and 284 at the end of this unit's list
-#   (a record's place: awk -F'\t' '$2 ~ /<file>$/' ledger/source-locations.tsv). Inside the object 11584 links ahead
-#   of 11583, the band's order (ld_index in names.tsv).
+#   vtable, 255 pairs with it are out of the data's order at the data's place and 283 at the end of this unit's list at
+#   c1ffbbae (a record's place: awk -F'\t' '$2 ~ /<file>$/' ledger/source-locations.tsv). Inside the object 11584 links
+#   ahead of 11583, the band's order (ld_index in names.tsv).
 #   Chosen: the file's path, the member names (cgravadorlog.h), the locals' names and their being const, the explicit
 #   PADRAO argument (a default argument in czip.hpp was not measured), and the second constructor's file, line,
 #   parameters' forms (references) and order. No other form of 11584 or of the constructor was measured to give the
