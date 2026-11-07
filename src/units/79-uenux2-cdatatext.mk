@@ -42,19 +42,20 @@
 # parameter points to, and throws the vector's length error, fn 158), with the value GetData passes, 255. It matches from
 # cqrcodeimage.cpp.o, GetData's object, at the tree's flags; while GetData was a trap it matched from the roots object,
 # whose stand-in for GetData called it twice.
-# CQRCodeImage::GetData (10967, slot 2) is written in cqrcodeimage.cpp and differs in the place of two stores alone. Two
-# functions binaryen inlined into it each keep a second prologue: the static MontaImagem (record 36:15, its std::format
-# throw, EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA 4948), here, which builds an api::CQRCodeGuard (fn 5502, unit 204) on its
-# frame, and api::CBmpConversor::CreateBitmapHeader (record cbmpconversor.cpp 122:15, unit 22). In the whole link
-# (pnpm wasm score at the default depth) it is 52 over 839 rows: 36 operand-only, 8 inserted and 8 deleted, the 8 being
-# CreateBitmapHeader's stores of the file header's type (+0) and size (+2), which the target makes right after the vector
-# is built and ours after the info header; unit 22's fragment has the forms measured for them. It stays written: it is a
-# vtable slot, which a trap would only hide (docs/how-to-decompile.md step 5). The forms the bytes chose, each measured in
-# the whole link: a row's modules painted by two loops in an if/else on the module's bit, and the rows counted from the
-# QR code's width down to 1 with (y - 1) in the index, 67 over 844 before CreateBitmapHeader's final form. With the rows
-# counted from width - 1 down to 0, the row loop's exit test is `>= 2` where the target's is `> 1`, and the if/else gives
-# 280 over 889 (its object tests escala once above the rows, where the target tests it in each arm), a branch inside one
-# loop 222 over 871 and the colour computed before one loop 303 over 877. The size is read before the width at the call
+# CQRCodeImage::GetData (10967, slot 2) is written in cqrcodeimage.cpp and matches. Two functions binaryen inlined into
+# it each keep a second prologue: the static MontaImagem (record 36:15, its std::format throw,
+# EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA 4948), here, which builds an api::CQRCodeGuard (fn 5502, unit 204) on its frame,
+# and api::CBmpConversor::CreateBitmapHeader (record cbmpconversor.cpp 122:15, unit 22). It matched once
+# CreateBitmapHeader tests numColors twice, the second test between the file header's size and the rest (unit 22's
+# fragment has the reading, the forms measured and the choices); before that it was 52 over 839 rows in the whole link
+# (pnpm wasm score at the default depth, at 0c3a9009), 8 inserted and 8 deleted, the file header's type (+0) and size
+# (+2), which the target stores right after the vector is built and that form after the info header. The forms the bytes
+# chose, each measured in the whole link while CreateBitmapHeader still had its earlier forms (the scores are of those
+# links): a row's modules painted by two loops in an if/else on the module's bit, and the rows counted from the QR
+# code's width down to 1 with (y - 1) in the index, 67 over 844. With the rows counted from width - 1 down to 0, the row
+# loop's exit test is `>= 2` where the target's is `> 1`, and the if/else gives 280 over 889 (its object tests escala
+# once above the rows, where the target tests it in each arm), a branch inside one loop 222 over 871 and the colour
+# computed before one loop 303 over 877. The size is read before the width at the call
 # (CreateBitmapHeader's parameter order, unit 22's fragment). The padding of a row to four bytes is a uint16_t: the
 # target zero-extends it before adding the width. Chosen: every name but MontaImagem's, MontaImagem's being in this TU
 # beside GetData (its record names the file), the definitions' order, and the constructor's place after GetData.

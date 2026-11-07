@@ -10830,7 +10830,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10964	_ZN3api12CQRCodeImageD0Ev	11285	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/cqrcodeimage.cpp.o
 10965	_ZN12_GLOBAL__N_19CWasmSavdD0Ev	12583	symbol	match	-	10	addr	vota-web	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 10966	_ZN3api12CQRCodeImageD2Ev	11286	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/cqrcodeimage.cpp.o
-10967	_ZNK3api12CQRCodeImage7GetDataEv	11287	symbol	differs	+0x57d target +0x57d local.get 4 | ours +0x57d i64.const 0	1751	none	api	1	app/uenux2/src/api/gui/cqrcodeimage.cpp.o
+10967	_ZNK3api12CQRCodeImage7GetDataEv	11287	symbol	match	readings: address string,table slot,address srcloc,address symbol	1751	none	api	1	app/uenux2/src/api/gui/cqrcodeimage.cpp.o
 10968	_ZNK3api17CStepsProgressBar4RectEv	11570	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10969	_ZNK3api17CStepsProgressBar11GetTypeNameEv	11571	symbol	match	readings: address string	73	none	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
 10970	_ZN3api17CStepsProgressBar4MoveERKNS_6SPointE	11572	symbol	match	-	214	addr	api	1	app/uenux2/src/api/gui/cstepsprogressbar.cpp.o
