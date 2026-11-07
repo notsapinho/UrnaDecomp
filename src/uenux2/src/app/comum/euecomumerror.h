@@ -75,6 +75,9 @@ enum EUeComumError {
     EUE_COMUM_VALIDAR_ASSINATURA_UE_ARQUIVO = 7324,
     // AssinarUE (inlined into fn 1277, CAssinador::Assina), "Falha ao assinar ({}-UE[{}])"
     EUE_COMUM_ASSINAR_UE = 7336,
+    // AssinarEcourna (inlined into CAssinador::AssinaArquivosResultado, which fn 12098 holds inlined), "Falha ao
+    // assinar ({}-Ecourna[{}])"
+    EUE_COMUM_ASSINAR_ECOURNA = 7338,
     // EnviarAcaoHSM (fn 5889), "Falha ao enviar ação ao HSM. {}"
     EUE_COMUM_ENVIAR_ACAO_HSM = 7340,
 };

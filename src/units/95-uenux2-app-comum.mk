@@ -79,7 +79,7 @@
 #   5905  comum::DescricaoArquivo, a chosen name, in carquivossavd.cpp      no record
 #   2283  std::map<std::string, uebyte>'s __tree::destroy, which CGenericTags's implicit destructor brings into this
 #         object (it calls itself; 3831's call names it)
-#   3829  the second IInterfaceSavd::EnviarRequisicao: written, `differs` (below)
+#   3829  the second IInterfaceSavd::EnviarRequisicao: matched since its response vector got a scope of its own (below)
 # 5890 puts the 62-byte literal at 8090 ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}") in the
 # link, whose tail is the "{}" that 2285 (unit 59), 11470 (unit 66), 11542 and 3766 (unit 91) format with: written
 # there, they match with this unit.
@@ -122,20 +122,49 @@
 #   with the three assigned stores the end pointer before the bytes, as the target does; a braced list stores it after
 #   them (18 over 131 rows, 6 inserted, 6 deleted). The request's two assignments are in 5889's order.
 # - 3829 (named by 5889's call): sends a byte vector and returns the failure's text, empty when the SAVD accepts.
-#   Written, not matching: 78 over 498 rows (28 of the 32 replaced rows operand-only, 13 inserted, 33 deleted), where
-#   the blocks of the early returns and of the response vector's release nest otherwise; the remainder is not explained.
-#   Measured (pnpm wasm score against 3829): with the response's checks returning early and the header built by a
-#   ConverteHeader overload over the vector, which clang keeps a call (cost 250, threshold 250) and binaryen inlines
-#   with the buffer behind a pointer, 224 over 552; that header built in place, 153 over 539; the error and size tests
-#   nested as in 3830, 84 over 500, and with the message's size read once into a local, 78 over 498 (as written); then
-#   an `inline` overload, 337 over 665; `if (!header->erro) return "";` ahead of the nested size test, 90 over 506. It
-#   stays written: 5889 and 5891 call it and match.
+#   The response vector lives in a block scope of its own, from its declaration to the end of the error branch, and
+#   `return "";` follows the block. Evidence: on the accepting path the target frees the vector and then stores the
+#   empty text (`i32.store8[p0] = 0; i32.store8[p0+11] = 0` after the free, in a block of their own: pnpm wasm fn on
+#   3829), where a `return "";` inside the vector's scope stores the text first and shares the release with the other
+#   returns. Measured in the plain link, this object compiled with each form and linked (pnpm wasm score against 3829):
+#   the scope as written, 31 over 485 rows, every one operand-only and each a call or data operand; the scope opened
+#   above the header's two stores instead gives the same module (cmp of the two wasm files). Before it, the body
+#   matched no form: 78 over 498 rows (28 of the 32 replaced rows operand-only, 13 inserted, 33 deleted), where the
+#   blocks of the early returns and of the response vector's release nested otherwise. Measured then: with the
+#   response's checks returning early and the header built by a ConverteHeader overload over the vector, which clang
+#   keeps a call (cost 250, threshold 250) and binaryen inlines with the buffer behind a pointer, 224 over 552; that
+#   header built in place, 153 over 539; the error and size tests nested as in 3830, 84 over 500, and with the
+#   message's size read once into a local, 78 over 498 (both kept); then an `inline` overload, 337 over 665;
+#   `if (!header->erro) return "";` ahead of the nested size test, 90 over 506.
 # - DescricaoArquivo (5905): a switch over the ESavdArquivoUE 25 to 120 returning each file's text, default "Arquivo nao
 #   identificado"; clang makes the table of 96 pointers, which the target holds at 1551420, after carquivossavd.cpp's
 #   records and before cinfomtlcd.cpp's (ledger/source-locations.tsv). The enumerators are not recovered, so the case
 #   labels are the values; its being a free function is a choice. Its line, after operator[], is a choice.
-# Not written here: AssinarEcourna, which binaryen inlined into 12098 (AssinarUE, inlined into 1277, is written: the
-# paragraph on CArquivosSavd below).
+# Added since: the two SAVD requests CAssinador::AssinaArquivosResultado makes (unit 34's paragraph), neither with a
+# target index: fn 12098 (vota::CGravaResultado::StartState) holds that member inlined, and inside it each of these
+# behind a stack frame of its own (496 and 32 bytes, at lines 3183 and 3097 of pnpm wasm fn's folded readout of 12098;
+# binaryen's inlining of a function with one caller), so they match only with 12098:
+#   AssinarEcourna  record iinterfacesavd.cpp 1022:15, code 7338
+#   IInterfaceSavd::EnviarLocal, a chosen name  no record
+# - AssinarEcourna: AssinarUE's form, `if (!savd.AssinarArquivo(aplic, comando, 61, arquivo))` it throws 7338 with
+#   std::format("Falha ao assinar ({}-Ecourna[{}])", savd.GetMensagem(), arquivo) (types string and int, 109), the
+#   record's four parameters; 12098 passes 5891 the ESavdAplic, the command 128 and the file, and 5891's folded
+#   operation is 61 for both its target callers. That AssinaArquivosResultado passes 128 and AssinarEcourna passes 61 is
+#   the choice Assina's 66 and AssinarUE's 61 are. EUE_COMUM_ASSINAR_ECOURNA is a chosen name, in euecomumerror.h.
+# - EnviarLocal: 12098's 32-byte frame refuses an ESavdAplic above 255 ("Argumento inválido para local."), allocates
+#   16 zeroed bytes, then refuses a local whose size is not 15 ("Argumento inválido, tamanho do local.", the bytes
+#   freed), stores 254 and the local's 15 characters (one copy, two overlapping 8-byte loads and stores), the command
+#   0x404 and the ESavdAplic (in 5889's order: the request's application assigned first, as EnviarAcaoHSM does), sends
+#   them with 3829 and keeps the returned text at +4. Two loads of m_mensagem.empty() follow that nothing reads: the
+#   caller drops the bool. A member, as it writes +4 and +16; its name is chosen from its texts, the local's type is
+#   CAssinador's +36 std::string, and its line (959, before IInterfaceSavd::EnviarAcaoHSM) is a choice. The local's
+#   copy is written as std::copy, not measured against the other forms of the same copy.
+# - Each function's code in this object holds the readout's calls, constants and stores in its order (wasm-objdump -d,
+#   read by hand: with no target index, nothing scores them). ESavdCmdHSM's two values, the actions
+#   AssinaArquivosResultado sends 5889, get names in iinterfacesavd.h, chosen from the CLogComum logs beside the calls.
+# - With these and unit 34's, 111's and 165's members written (3829's form as before) and nothing calling them, every
+#   object the headers' edits rebuilt compiled cmp-equal to the base's but the four sources' own, and the plain link was
+#   byte-identical to the base's (sha256 8a9bce39); wasm-ld drops them, as 12098 is not written.
 #
 # Added since: the request over a package and a file, which fns 4625 and 11179 call, and the ValidarUE over a file:
 #   5892  IInterfaceSavd::VerificarArquivo, a chosen name                    no record of its own; matched
@@ -291,6 +320,9 @@
 APP_COMUM_SRCS := src/app/comum/carquivosresultado.cpp src/app/comum/carquivossavd.cpp src/app/comum/cpacotearquivos.cpp src/app/comum/iinterfacesavd.cpp \
     src/app/comum/gravadores/cassinador.cpp src/app/comum/relatorios/csigverifier.cpp src/api/util/cgenerictags.cpp
 UENUX2_SRCS += $(APP_COMUM_SRCS)
+# cassinador.cpp includes app/comum/dados/cconfiguracaoeleicao.h (its second constructor reads the pleito), whose
+# ecourna headers include Boost, as cgravadorutil.cpp does (unit 122): an include path, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cassinador.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # their callers are not reconstructed yet: 95-uenux2-app-comum-roots.cpp gives each two call sites
 $(ROOT)/$(APP)/95-uenux2-app-comum-roots.o: $(ROOT)/src/units/95-uenux2-app-comum-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/95-uenux2-app-comum.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/95-uenux2-app-comum-roots.cpp -o $(R)

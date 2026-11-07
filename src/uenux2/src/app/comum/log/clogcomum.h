@@ -31,12 +31,23 @@ public:
 
     static CLogComum& GetInst();
 
+    // The session members and the three of the signing (records clogcomum.cpp:44, 50, 56, 62, 166, 172 and 178,
+    // column 18) have no target index: fn 12098, vota::CGravaResultado::StartState, holds each behind a 16-byte stack
+    // frame of its own after GetInst's call, whose result it drops (binaryen's inlining of a function with one caller),
+    // the four session members inside comum::CAssinador::AssinaArquivosResultado's code. Each logs one literal.
+    void LogaIniciaSessaoMSD();
+    void LogaFinalizaSessaoMSD();
+    void LogaIniciaSessaoMSE();
+    void LogaFinalizaSessaoMSE();
     void LogaCopiandoArqResParaFI(EExtensaoArquivoResultado extensao);
     void LogaResultadoCopiadoResFE(EExtensaoArquivoResultado extensao);
     void LogaGerandoResultados(EExtensaoArquivoResultado extensao, EStatusOperacaoRelatorio status);
     void LogaNivelBateria(uebyte fonte, uebyte status);
     void LogaSuspensoMonitoramenteRepeticao(uebyte eventos);
     void LogaTipoBateria();
+    void LogaInicioProcedimentoAssinatura();
+    void LogaTerminoProcedimentoAssinatura();
+    void LogaPreparandoAssinaturaArquivosResultado();
     // Its record (clogcomum.cpp:214, column 18) is in fn 5372,
     // comum::CControladorReconhecimentoMesario::ComparaDigitais, which holds it behind a 384-byte frame of its own
     // (binaryen's inlining) after GetInst's call, whose result it drops; it formats the matcher's slot 4 as an int

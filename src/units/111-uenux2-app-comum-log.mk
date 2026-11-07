@@ -18,6 +18,19 @@
 #   line 74 for the header's three lines, so no record moved. LogaScoreReconhecimentoMesario (record 214:18), added
 #   since, has no target index either: binaryen inlined it into its one caller, fn 5372
 #   (comum::CControladorReconhecimentoMesario::ComparaDigitais, unit 214's file); clogcomum.h says what it rests on.
+#   The session members LogaIniciaSessaoMSD, LogaFinalizaSessaoMSD, LogaIniciaSessaoMSE and LogaFinalizaSessaoMSE
+#   (records 44:18, 50:18, 56:18, 62:18) and the signing's LogaInicioProcedimentoAssinatura,
+#   LogaTerminoProcedimentoAssinatura and LogaPreparandoAssinaturaArquivosResultado (166:18, 172:18, 178:18), added
+#   since, have no target index: fn 12098 (vota::CGravaResultado::StartState) holds each behind a 16-byte stack frame
+#   of its own after CLogComum::GetInst's call, whose result it drops (binaryen's inlining of a function with one
+#   caller), at lines 3076, 3267, 3063, 3254, 3026, 3293 and 2971 of pnpm wasm fn's folded readout of 12098, the four
+#   session members inside CAssinador::AssinaArquivosResultado's code (unit 34's). Each logs one literal (12098 loads
+#   331975, 332000, 330585, 330610, 67773, 67708 and 67837) through CPolySingleton<IEventosLog>::instance(), whose
+#   default location is the record, and loga, as LogaCopiandoArqResParaFI does; the names are the records'. Each
+#   definition sits two lines above its record, six lines apart, and the literal is passed as a temporary: choices.
+#   Each one's code in this object holds the readout's frame, record store, allocation and copy of the literal
+#   (wasm-objdump -d, read by hand: with no target index, nothing scores them). Unrooted, wasm-ld drops them; the one
+#   blank line their header comment took above line 74 left every record in place (check_srcloc.py --strict).
 # - comum::CArquivosResultado::GetInst (348, in unit 95's files) and 2900, binaryen's body of the two GetInst, with the
 #   mutex destructors 11659 and 11639 and the pointers' 11660 and 11640, thunks of 349, which the content pass pairs once
 #   the statics have names;
@@ -65,10 +78,10 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - not reconstructed: 12098 and the other CLogComum members (5372, which waited for 2224, 816, 1686 and 1903,
-#   matches now: unit 214's file). The other thunks of 2900 are written elsewhere: 2742 is unit 307's
-#   vota::CConversorWsq::GetInst, and 3603 is comum::asn::CAssinaVotavelBu::GetInst, fragment 321's, in
-#   gravadores/asn/cassinavotavelbu.cpp.
+# - not reconstructed: 12098, which holds the seven CLogComum members written above (5372,
+#   which waited for 2224, 816, 1686 and 1903, matches now: unit 214's file). The other thunks of 2900 are written
+#   elsewhere: 2742 is unit 307's vota::CConversorWsq::GetInst, and 3603 is comum::asn::CAssinaVotavelBu::GetInst,
+#   fragment 321's, in gravadores/asn/cassinavotavelbu.cpp.
 #
 # Inlining, by who did it. clang: EhModoDemonstracao into the seven members (one frame, restored after the member's load)
 # and ConverteStatusBateria into LogaCargaBateria (no prologue, the throw's string in that frame, the length folded into
