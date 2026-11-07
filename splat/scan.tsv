@@ -195,10 +195,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 329	_ZN5boost13re_detail_60019basic_regex_creatorIcNS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE12append_stateENS0_19syntax_element_typeEm	336	symbol	match	-	272	none	boost	1	app/ecourna/api_util_cstringutils.cpp.o
 330	OBJ_NAME_add	333	symbol	match	readings: address symbol,table slot,address string	247	addr	openssl	1	openssl/O3/crypto/objects/libcrypto-lib-o_names.o
 331	_ZN7ecourna3api9exception10CBaseErrorINS0_7pattern13EPatternErrorEXtlNS1_12SErrorLimitsELi1300ELi1325EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	369	symbol	match	readings: address symbol,table slot	21	none	ecourna	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-332	_ZNK5comum7CCargos10GetCurrentEv	341	symbol	match	readings: address string,address srcloc,address symbol,table slot	107	none	ecourna	1	app/uenux2/src/app/comum/dados/ccargos.cpp.o
+332	_ZNK5comum7CCargos10GetCurrentEv	340	symbol	match	readings: address string,address srcloc,address symbol,table slot	107	none	ecourna	1	app/uenux2/src/app/comum/dados/ccargos.cpp.o
 333	fwrite	338	symbol	match	-	37	fingerprint	unknown	1	sysroot:libc.a(fwrite.o)
 334	OPENSSL_die	346	symbol	match	readings: address symbol,address string	79	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-cryptlib.o)
-335	ossl_lib_ctx_get_data	342	symbol	match	readings: address symbol,table slot	335	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-context.o
+335	ossl_lib_ctx_get_data	341	symbol	match	readings: address symbol,table slot	335	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-context.o
 336	_ZN7ecourna3api2io5CFile5CloseEv	431	symbol	match	readings: address symbol,table slot,address string,address srcloc	363	none	ecourna	1	app/ecourna/api_io_cfile.cpp.o
 337	_ZN5comum2md8CEleitoraSEOS1_	345	symbol	match	-	554	addr	libc++	1	app/uenux2/src/app/comum/dados/celeitores.cpp.o
 338	_ZNK12_GLOBAL__N_116itanium_demangle4Node5printERNS0_12OutputBufferE	343	symbol	match	-	48	byte	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
@@ -225,7 +225,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 359	PrivateKeyInfo_der2dh_does_selection	368	symbol	match	-	21	byte	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-decode_der2key.o
 360	ossl_provider_free	374	symbol	match	readings: address symbol,table slot,address string	343	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-provider_core.o
 361	OSSL_PARAM_get_uint32	375	symbol	match	-	518	byte	openssl	1	openssl/O3/crypto/libcrypto-lib-params.o
-362	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE20__throw_out_of_rangeB8ne210108Ev	340	symbol	match	readings: address string	10	none	libc++	1	app/roots_rhvoice.o
+362	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE20__throw_out_of_rangeB8ne210108Ev	342	symbol	match	readings: address string	10	none	libc++	1	app/roots_rhvoice.o
 363	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9consumeIfENSt3__217basic_string_viewIcNS6_11char_traitsIcEEEE	371	symbol	match	-	114	fingerprint	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 364	_ZNSt3__220__throw_format_errorB8ne210108EPKc	428	symbol	match	readings: table slot,address symbol	19	shape	libc++	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 365	_ZN5comum2md17CDetalheCandidatoC2ERKS1_	372	symbol	match	-	369	none	unknown	1	app/uenux2/src/app/comum/dados/cpe.cpp.o
@@ -5362,7 +5362,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5496	_ZNSt3__26vectorIhNS_9allocatorIhEEE18__assign_with_sizeB8ne210108IPKhS6_EEvT_T0_l	5912	symbol	match	-	159	shape	app	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 5497	_ZNK3api19CTextFieldMultiLine12GetTextLinesEv	5897	symbol	match	readings: address symbol,address srcloc	1944	none	libc++	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 5498	_ZN3api19CTextFieldMultiLineC2ERKNS_5SRectERKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_	5898	symbol	match	readings: address symbol,address string,address srcloc,table slot	230	shape	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
-5499	_ZNK3api20CTextFieldDoubleLine12GetTextLinesEv	5704	symbol	differs	+0x0 target the locals | ours the locals	2912	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
+5499	_ZNK3api20CTextFieldDoubleLine12GetTextLinesEv	5704	symbol	match	readings: address symbol,address srcloc,address string	2912	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 5500	_ZNK12_GLOBAL__N_114CVotaWebEngine10EstadoJsonEv	6527	symbol	differs	+0x6 target +0x5 i32.const 384 | ours +0x5 i32.const 368	6871	none	vota	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 5501	_ZN3api10CRectFieldC2ERKNS_5SRectENS_6TColorE	5511	symbol	match	readings: address symbol	58	addr	api	1	app/uenux2/src/api/gui/crectfield.cpp.o
 5502	_ZN3api12CQRCodeGuardC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5772	symbol	match	readings: address symbol,address string,address srcloc,table slot	13815	shape	ecourna	1	app/uenux2/src/api/gui/cqrcodeguard.cpp.o
@@ -10794,7 +10794,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10928	_ZN3api20CTextFieldDoubleLineD2Ev	11855	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 10929	_ZNK3api20CTextFieldDoubleLine4RectEv	11856	symbol	match	readings: address symbol,address srcloc	562	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 10930	_ZN12_GLOBAL__N_19CWasmSavd5Slot4Ev	12548	symbol	match	-	8	byte	vota-web	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-10931	_ZNK3api20CTextFieldDoubleLine4DrawERNS_7IScreenE	11857	symbol	match	readings: address symbol	458	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
+10931	_ZNK3api20CTextFieldDoubleLine4DrawERNS_7IScreenE	11857	symbol	match	readings: address symbol	458	shape	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 10932	_ZN3api12CTextFieldMTD0Ev	11727	symbol	match	readings: address symbol	154	addr	api	1	app/uenux2/src/api/gui/ctextfieldmt.cpp.o
 10933	_ZN3api12CTextFieldMTD2Ev	11728	symbol	match	readings: address symbol	151	addr	api	1	app/uenux2/src/api/gui/ctextfieldmt.cpp.o
 10934	_ZNK3api12CTextFieldMT4DrawERNS_9IScreenMTE	11729	symbol	match	readings: address symbol	666	none	api	1	app/uenux2/src/api/gui/ctextfieldmt.cpp.o

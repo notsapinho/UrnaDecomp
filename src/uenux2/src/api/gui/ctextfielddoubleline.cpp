@@ -56,9 +56,9 @@ std::string CTextFieldDoubleLine::GetTypeName() const
 #line 61
 std::tuple<std::string, std::string> CTextFieldDoubleLine::GetTextLines() const
 {
-    const TPosition x1 = m_linha1.x;
     const TPosition x2 = m_linha2.x;
     const TPosition maxX = m_maxX;
+    const TPosition x1 = m_linha1.x;
     std::string linha1 = m_text->GetText();
     std::string linha2 = "";
     IScreen& tela = CPolySingleton<IScreen>::instance();
@@ -85,20 +85,21 @@ std::tuple<std::string, std::string> CTextFieldDoubleLine::GetTextLines() const
                 separa = true;
             } else {
                 if (separa) {
-                    linha2 = ' ' + linha2;
+                    linha2 = " " + linha2;
+                    linha2 = linha1[linha1.size() - 1] + linha2;
+                } else {
+                    linha2 = linha1[linha1.size() - 1] + linha2;
                 }
-
-                linha2 = linha1.back() + linha2;
                 linha1.erase(linha1.size() - 1);
                 separa = false;
             }
         }
     } else {
-        linha2 = linha1.back();
+        linha2 = linha1[linha1.size() - 1];
         linha1.erase(linha1.size() - 1);
 
         while (tela.GetTextWidth(linha1, m_font) > largura1) {
-            linha2 = linha1.back() + linha2;
+            linha2 = linha1[linha1.size() - 1] + linha2;
             linha1.erase(linha1.size() - 1);
         }
     }
@@ -122,7 +123,6 @@ void CTextFieldDoubleLine::Draw(IScreen& screen) const
         screen.DrawText(m_linha2, CFixedText(linha2, m_text->GetAlignment()), m_font, m_corTexto, m_corFundo);
     }
 }
-
 
 SRect CTextFieldDoubleLine::CalcLineRect(const std::string& linha, SPoint posicao) const
 {
