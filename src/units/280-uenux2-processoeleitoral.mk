@@ -120,12 +120,13 @@
 # branch is selected bare. With std::transform the test follows the loop. The same object as std::transform with
 # ::toupper (cmp-equal): std::transform with a lambda that returns std::toupper of the letter as a char, and
 # std::for_each with a lambda that pushes it. An index `for` and an iterator `for` that declares its iterator in its
-# init give the range-for's bare test (read in the object, not linked). Its `callers+content` hand line in
-# splat/symbol_addrs.txt, which named it from the seven std::source_location records only it loads (cfileasn.h's
-# ReadFromFile and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte, GetPleito2's) while
-# it differed, so that CPE::CreateInst (2787, unit 110) matched, carries nothing now: a copy of the symbol file without
-# it, scanned twice beside a control, keeps 12986 match rows, as the control does, and splat-build on it gives the
-# target's sha256. It goes with docs/how-to-decompile.md step 5's example, which cites it (how-to step 9, "Hand edits").
+# init give the range-for's bare test (read in the object, not linked). A `callers+content` hand line in
+# splat/symbol_addrs.txt named it from the seven std::source_location records only it loads (cfileasn.h's ReadFromFile
+# and DecodeObjectFunction for EntidadeProcessoEleitoral, IConversorASN's Desconverte, GetPleito2's) while it differed,
+# so that CPE::CreateInst (2787, unit 110) matched. Once 3771 matched it carried nothing (a copy of the symbol file
+# without it, scanned twice beside a control, kept 12986 match rows, as the control did, and splat-build on it gave the
+# target's sha256), and it went, with docs/how-to-decompile.md step 5's example that cited it (how-to step 9, "Hand
+# edits").
 # Measured forms, on the earlier form (the range-for, LeProcessoEleitoral above its caller), each against the whole
 # link with the other functions as written:
 # - 3771 with LeProcessoEleitoral taking the general state in place of the UF and reading its UF where it is first

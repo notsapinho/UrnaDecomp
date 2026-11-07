@@ -1165,7 +1165,7 @@ vote, which 10929's own record anchors (`evidence:call by:10929`). A differing c
 (`srcloc-anchor` pairs equal opcodes only, position by position: a callee whose remainder is local numbers alone still
 anchors, though `pnpm wasm score` counts a swapped pair of `local.get`s as one row inserted and one deleted, 6599's
 `vptr-anchor`), so when no other caller votes, its name takes a `callers+content` hand line resting on records only it
-loads (3771 under 2787; step 9, "Hand edits"), or a `vtable-slot` line when it fills a slot both links name (5504 under
+loads (3771 under 2787 had one until 3771 matched and step 8 named it by `srcloc-anchor`; step 9, "Hand edits"), or a `vtable-slot` line when it fills a slot both links name (5504 under
 13550, splat.md §2), or the caller stays `unresolved self-voted`.
 
 A member right by construction (a singleton's `GetInst`) that the target holds inlined in one unwritten caller may be
