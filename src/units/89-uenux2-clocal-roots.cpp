@@ -11,7 +11,6 @@
 extern "C" {
 int w401() __asm__("_ZN5comum6CLocal7GetInstEv");
 int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
-int w2838(int) __asm__("_ZN5comum19GetCandidaturaAtualERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 int w5806(int) __asm__("_ZNK5comum19CCandidaturasDSSexoclEv");
 void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
 int w1003(int) __asm__("_ZNK5comum6CLocal9GetZonaIDEv");
@@ -27,7 +26,6 @@ int w3725(int) __asm__("_ZNK5comum2md14CInfoMunicipio15GetHorarioVeraoEv");
 int w5679(int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1Ej");
 int w5677(int, int, int) __asm__("_ZN5comum2md22CHorarioVeraoMunicipioC1EjRKNS0_13CHorarioVeraoE");
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
-int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
 }
@@ -44,8 +42,8 @@ const void* volatile clocal_sink;
 // CEscolheOpcao::ProcessInput, 10699, 10700 and 10701, unit 277's texts, 11902, unit 176's, 4161, vota::AdicionaLocal
 // in unit 110's ctelasvota.cpp, 12071, unit 104's CImprimindoBim::StartState, and 2725, unit 293's, are in the link).
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
-// 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
-__attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
+// 5806: one call, beside its written caller 2268. GetCandidaturaAtual (2838) needs none: its target callers, 5806,
+// 5807, 12641 and 12742, are in the link.
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
 // Stands for fn 1719's caller 7787 (1709, 2871, 5950, and unit 159's 5710 and 11448, are in the link).
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); }
@@ -74,7 +72,8 @@ __attribute__((noinline)) int VeroesHorario(int a, int b, int c, int d)
     return w5677(a, c, d) >> (w5677(b, c + 2, d + 20) & 3);
 }
 __attribute__((noinline)) int HorariosComplemento(int a, int b) { return w2795(a) > w2795(b); }
-__attribute__((noinline)) int Suplentes(int a, int b) { return w1389(a, b) >= w1389(a, b + 1); }
+// md::CCandidatura::GetSuplente (1389) needs none: its target callers, 5746, 5806, 5807, 12272 and 12641, are in
+// the link.
 __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 {
     w5810(r, a, b);
@@ -97,7 +96,6 @@ struct SCLocalRoots {
     {
         clocal_sink = reinterpret_cast<const void*>(&Instancias);
         clocal_sink = reinterpret_cast<const void*>(&w521);
-        clocal_sink = reinterpret_cast<const void*>(&CandidaturasAtuais);
         clocal_sink = reinterpret_cast<const void*>(&Sexos);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
         clocal_sink = reinterpret_cast<const void*>(&Zonas);
@@ -113,7 +111,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Veroes);
         clocal_sink = reinterpret_cast<const void*>(&VeroesHorario);
         clocal_sink = reinterpret_cast<const void*>(&HorariosComplemento);
-        clocal_sink = reinterpret_cast<const void*>(&Suplentes);
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
         clocal_sink = reinterpret_cast<const void*>(&NomesUrna);
     }

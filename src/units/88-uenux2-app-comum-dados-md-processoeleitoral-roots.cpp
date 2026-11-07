@@ -17,7 +17,8 @@
 //         are written)
 //   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
-//   2258  GetOrdinalEscolha           12811, and 4464, 12587 and 13550 (fragment 391's), which are written
+//   2258  GetOrdinalEscolha: no stand-in, its callers 12811 (unit 378's), 4464, 12587 and 13550 (fragment 391's) are
+//         in the link
 //   5651  CPleito::GetEleicao: no stand-in, its callers 3744 (fragment 388's) and 3775
 //         (CConfiguracaoEleicao::GetCargos) are in the link
 //   5648  CPleito::GetSituacoesEleicoes: no stand-in, its callers 3713 (fragment 388's) and 271
@@ -48,7 +49,6 @@ int w1267(int) __asm__("_ZNK5comum2md18CProcessoEleitoral10GetPleito2Ev");
 int w1388(int) __asm__("_ZNK5comum2md6CCargo19GetDetalheCandidatoEv");
 int w1545(int, int) __asm__("_ZNK5comum2md17CDetalheCandidato11GetSuplenteEh");
 int w2257(int) __asm__("_ZNK5comum2md10CEleicaoPE9GetCargosEv");
-void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
 void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
@@ -89,11 +89,6 @@ __attribute__((noinline)) int XorCargos(int a, int b)
     return w2257(a) ^ w2257(b);
 }
 
-__attribute__((noinline)) void Ordinais(int saida, int cargo, int a)
-{
-    w2258(saida + 48, cargo, a + 2);
-}
-
 __attribute__((noinline)) void IDsDuasEleicoes(int saida, int a, int b)
 {
     w5654(saida, a);
@@ -132,7 +127,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaDetalhes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&DistanciaSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&XorCargos);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);

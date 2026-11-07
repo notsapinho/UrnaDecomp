@@ -91,8 +91,8 @@
 # map's value SIndiceFoto rests on and what is chosen; cleitorasn.h and legravaentidade.h say the same of theirs.
 # - Measured before step 8 (pnpm wasm score, whole link): 174 over 2032 rows, all operand-only; it matched at step 9. In
 #   its first link 3755 had one caller, 12520 (the candidate's screen's CDataImage, unit 110's file), and binaryen
-#   inlined it there: the roots stand in for its other caller, 12641 (CDataImage<CCandidaturasDSFoto>'s, not written),
-#   which calls it twice, and it stays out of line.
+#   inlined it there: its other caller, 12641 (CDataImage<CCandidaturasDSFoto>::GetData, which calls it twice), is in
+#   the link since unit 378 wrote it, and it stays out of line; the roots' stand-in for 12641 went.
 # - Use band 3 runs 3756 then 3755 (names.tsv's ld_index 2609 and 2617), the target's order, so GetImagem follows the
 #   constructor; its line after GetFotoPara is chosen. In band 4, 2858 (std::make_format_args over three strings, which
 #   csystem.cpp's 5455 calls too) links from this object now, after 2819 and 2818 (2613 against 2606 and 2610) where the

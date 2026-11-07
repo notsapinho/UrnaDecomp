@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include "app/comum/dados/ccandidaturasds.h"
+#include "app/comum/dados/cfotos.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum {
@@ -24,7 +25,7 @@ CCandidaturas::CCandidaturas() : CDataMap("CCandidaturas"), m_carregado(true) {}
 
 CCandidaturas::~CCandidaturas() = default;
 
-// (original lines 27-51: content not recovered)
+// (original lines 28-51: content not recovered)
 #line 52
 CCandidaturas::Container::iterator CCandidaturas::Localiza(TCargoID cargo, TCandidatoID candidato)
 {
@@ -146,6 +147,21 @@ md::CSexo::ESexo CCandidaturasDSSexo::operator()() const
 {
     const md::CDadosCandidato& candidato = GetCandidatoAtual("CCandidaturasDSSexo", m_suplente);
     return candidato.GetSexo();
+}
+
+std::vector<uint8_t> CCandidaturasDSFoto::operator()() const
+{
+    const md::CDadosCandidato& candidato = GetCandidatoAtual("CCandidaturasDSFoto", m_suplente);
+    const std::string codigo = candidato.GetCodigo();
+    if (CFotos::GetInst().Posiciona(codigo)) {
+        const std::vector<uint8_t> imagem = CFotos::GetImagem(codigo);
+        if (imagem.at(0) == 0xFF && imagem.at(1) == 0xD8 && imagem.at(imagem.size() - 2) == 0xFF &&
+            imagem.at(imagem.size() - 1) == 0xD9) {
+            return CFotos::GetImagem(codigo);
+        }
+        return {};
+    }
+    return {};
 }
 
 } // namespace comum

@@ -1,6 +1,6 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 23 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 44 come from the objects of units 31, 120, 101, 165,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 19 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 48 come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no
 # longer instantiate them. Nine of those went from the roots at once, builder and sink, a link without them moving no
 # row: the pointer blocks of CTextFieldPaper (5613, unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and
@@ -90,7 +90,9 @@
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
 #   <CCargoDSNomeSexoCandidato> 6528: 12637, 12636. <CRespostasDSNumero> 6652: 12625, 12622.
-#   CDataImage<CCandidaturasDSFoto> 4129: 12643, 12642
+#   CDataImage<CCandidaturasDSFoto> 4129: 12643, 12642. All but <CRespostasDSNumero> from unit 110's
+#   ctelasvota.cpp.o since 4185, 6528 and 4129 are written (unit 378; this unit's builders and sinks went, a link
+#   with them back moving no row)
 # Members a block brought with it:
 # - comum::CItemMenu's D2 (2937, a merge thunk over 1727, whose line now names the fifth item's symbol, one body with
 #   it) and vota::CItemVisualizarCandidatosVota's D0 (12251), in the new citensmenuvota.cpp.

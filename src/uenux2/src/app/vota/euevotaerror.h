@@ -214,6 +214,12 @@ enum EUeVotaError {
     EUE_VOTA_TELA_VOTO_CARGO_SEM_CANDIDATO_CARGO_INVALIDO = 9354,
     EUE_VOTA_TELA_VOTO_BRANCO_CANDIDATO_CARGO_INVALIDO = 9341,
     EUE_VOTA_TELA_VOTO_NULO_CARGO_INVALIDO = 9344,
+    // the values are the codes adicionaBaseTelaCompletaCandidatoCom0 (target fn 6678, records ctelasvota.cpp:822 and
+    // :827) throws, each with vota::MensagemErroCargo's text, when the post has no candidate's detail ("não é de
+    // candidato") and when it has substitutes ("com número de suplentes incompatível"); the names are chosen from
+    // the screen and the messages: no evidence names them
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_CARGO_INVALIDO = 9334,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_SUPLENTES_INCOMPATIVEIS = 9335,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

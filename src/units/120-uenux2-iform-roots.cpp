@@ -2,12 +2,12 @@
 // the other stand-ins; it instantiates none of the unit's templates (the extern template below keeps CFormStack's copy
 // out), so every body it reaches comes from the unit's objects.
 //
-//   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (6639, 6681,
-//                     7787; 576 and unit 110's 1591, 1767, 3063, 3064, 3067, 6616 and 6626 are linked): two call
-//                     sites, or binaryen would inline it, with the name and the bool varied as theirs are
+//   FormInterativoA   the caller of 554, api::CInteractiveFormBuilder::GetInteractiveForm, not reconstructed: 7787
+//                     (576 and unit 110's 1591, 1767, 3063, 3064, 3067, 6616, 6626, 6639 and 6681 are linked), with
+//                     the name and the bool varied as its are; the stand-in for 6639 and 6681, FormInterativoB, went
 //   CampoA, CampoB    the callers of the control fields' adders, none reconstructed but 2376 (ctelasvota.cpp),
 //                     11804 and 11809 (unit 217's, with ctelasvota.cpp's screens they hold) and 12055 (unit 37's,
-//                     written), and 1591, 3063, 3064 and 6626 (unit 110's): of 901, AddInputControl() (1591, 2376,
+//                     written), and 1591, 3063, 3064, 6626 and 6639 (unit 110's): of 901, AddInputControl() (1591, 2376,
 //                     3063, 3064, 6626, 6639, 7787, 11804, 11809)
 //                     and of 5530, AddInputControl(int) (7787 and 12055, which pass the keys 6 and 5). Each adder
 //                     gets two call sites
@@ -43,13 +43,6 @@ __attribute__((noinline)) int FormInterativoA(api::CInteractiveFormBuilder& form
     return form.GetInteractiveForm(preShow, nome, limpa).use_count();
 }
 
-__attribute__((noinline)) int FormInterativoB(api::CInteractiveFormBuilder& form,
-                                              const std::shared_ptr<api::IPreShow<api::IScreen>>& preShow, int vezes)
-{
-    const auto interativo = form.GetInteractiveForm(preShow, std::string(), false);
-    return vezes * interativo.use_count();
-}
-
 __attribute__((noinline)) int CampoA(api::CInteractiveFormBuilder& form)
 {
     const auto controle = form.AddInputControl();
@@ -75,7 +68,6 @@ struct SW120Roots {
     SW120Roots()
     {
         w120_sink = reinterpret_cast<void*>(&FormInterativoA);
-        w120_sink = reinterpret_cast<void*>(&FormInterativoB);
         w120_sink = reinterpret_cast<void*>(&CampoA);
         w120_sink = reinterpret_cast<void*>(&CampoB);
         w120_sink = reinterpret_cast<void*>(&RotulosA);
