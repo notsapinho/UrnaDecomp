@@ -180,12 +180,13 @@
 # on whole links both give 10489 93 over 854 and the splat build the target's sha256 with every match:
 # cinformaanonascimentoerrado.cpp moved into unit 142's list ahead of cpedeanonascimentosembiometria.cpp inverts 31
 # object pairs the base had in the data's order (82553 inverted pairs in the whole link, counted at 7b61f838); this one
-# inverts 10 (82511; the base's link, 82533), each object moving past the same 54 others. Pairs are read from each object's vtable and
-# typeinfo addresses in splat/symbol_addrs.txt, through the link map. The 10: cpedeanonascimentosembiometria.cpp
-# (@1591496 to @1591540) now after aguardaeleitor/'s cmostraeleitorvotando.cpp and cperguntacodigosuspensao.cpp (unit
-# 142's), celeitordemorando.cpp, csuspensaoautomaticaeleitor.cpp, cperguntaeleitorvotando.cpp and
-# cdesabilitaaudioeleitor.cpp (@1592784 to @1593308), and comum/gravadores/asn/'s cconversorversoesarquivos.cpp,
-# cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp (@1596216 to @1599416).
+# inverts 10 (82511; the base's link, 82533), each object moving past the same 54 others. Pairs are read from each
+# object's vtable and typeinfo addresses in splat/symbol_addrs.txt, through the link map. The 10:
+# cpedeanonascimentosembiometria.cpp (@1591496 to @1591540) now after aguardaeleitor/'s cmostraeleitorvotando.cpp and
+# cperguntacodigosuspensao.cpp (unit 142's), celeitordemorando.cpp, csuspensaoautomaticaeleitor.cpp,
+# cperguntaeleitorvotando.cpp and cdesabilitaaudioeleitor.cpp (@1592784 to @1593308), and comum/gravadores/asn/'s
+# cconversorversoesarquivos.cpp, cconversorcorrespresultado.cpp, cconversorurna.cpp and cconversorenvelopegenerico.cpp
+# (@1596216 to @1599416).
 #
 # Written in ccontrolareconhecimento.cpp since, and matched (pnpm wasm score in the whole link, and step 9's rows):
 # - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records),
@@ -201,19 +202,19 @@
 #   antes de" at {1, 2}, "votar" at {1, 3} (the tail of "CONFIRMA: votar", built in place), "CONFIRMA: prosseguir" at
 #   {1, 4} on the right, api::CMTFormBuilder::AddInputControl(4) (unit 31's file, inlined by binaryen behind its own
 #   frame), GetInteractiveForm("", true). Its place before AvancaTentativa follows the uses-2 band (5410 links before
-#   5406). Its second caller, 1256, is in the link, and the roots' stand-in for it went. It matches with cmtformbuilder.cpp,
-#   whose AddInputControl(int) it holds, compiled at the head of this list (below), ahead of ccontrolareconhecimento.cpp
-#   (docs/reference/facts/codegen.md C4, the callee's object first). With cmtformbuilder.cpp in unit 31's list, after
-#   this one: 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted), the target copying the builder's address into
-#   another local before the inlined AddInputControl (`local.get 3; local.set 2`) where ours did not; with the
-#   make_shared in 5410 itself, 276 over 577; with a parameterless AddInputControl over make_shared<...>(), 219 over
-#   563; with AddInputControl(int) returning the builder and GetInteractiveForm called on its result, a byte-identical
-#   module at that order, and 207 over 553 again with this list (so no same-bytes form of the landed one: the two
-#   objects swapped into a copy of the link, beside a control that swaps them unchanged and gives the tree's module).
-#   With the callee's object first (copies of the plain link.cmd with one object moved, docs/reference/facts/
-#   workflow.md W13): cmtformbuilder.cpp.o at the head of this list, or right before ccontrolareconhecimento.cpp.o, or
-#   ccontrolareconhecimento.cpp.o right after cmtformbuilder.cpp.o in unit 31's list, 43 over 548 each, every row a call
-#   or a data operand; with this list, step 9 matches it, and nothing leaves match.
+#   5406). Its second caller, 1256, is in the link, and the roots' stand-in for it went. It matches with
+#   cmtformbuilder.cpp, whose AddInputControl(int) it holds, compiled at the head of this list (below), ahead of
+#   ccontrolareconhecimento.cpp (docs/reference/facts/codegen.md C4, the callee's object first). With cmtformbuilder.cpp
+#   in unit 31's list, after this one: 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted), the target copying
+#   the builder's address into another local before the inlined AddInputControl (`local.get 3; local.set 2`) where ours
+#   did not; with the make_shared in 5410 itself, 276 over 577; with a parameterless AddInputControl over
+#   make_shared<...>(), 219 over 563; with AddInputControl(int) returning the builder and GetInteractiveForm called on
+#   its result, a byte-identical module at that order, and 207 over 553 again with this list (so no same-bytes form of
+#   the landed one: the two objects swapped into a copy of the link, beside a control that swaps them unchanged and
+#   gives the tree's module). With the callee's object first (copies of the plain link.cmd with one object moved,
+#   docs/reference/facts/workflow.md W13): cmtformbuilder.cpp.o at the head of this list, or right before
+#   ccontrolareconhecimento.cpp.o, or ccontrolareconhecimento.cpp.o right after cmtformbuilder.cpp.o in unit 31's list,
+#   43 over 548 each, every row a call or a data operand; with this list, step 9 matches it, and nothing leaves match.
 # - The move (src/units/README.md "Names", two landed files of two units): codegen.md C4's record-aware count on the
 #   plain link.cmd of the commit that moved it (over ea98137f): cmtformbuilder.cpp from 418 objects out of the data's
 #   order in unit 31's list to 250 at the head of this one (251 to 254 before each of the next four files, down to

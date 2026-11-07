@@ -107,9 +107,9 @@
 # cescolheopcao.cpp.o linked ahead of unit 31's cmtformbuilder.cpp.o and gave the copies of what both instantiate:
 # IInputField<IScreenMT>'s constructor (3673), its destructor and Read, and the vector's emplace_back (1400, renamed by
 # step 9 to its IScreenMT twin), each re-pointing as before; since unit 161's list compiles cmtformbuilder.cpp at its
-# head (for 5410), that object links first and gives them, still matched (unit 161's fragment lists the rows). Choices that give the same bytes: none measured. Not
-# measured either: 1151 as the linkonce copy of an inline definition in a header, the other reading unit 31's fragment
-# gave of where the target's copy comes from before 1151 was written.
+# head (for 5410), that object links first and gives them, still matched (unit 161's fragment lists the rows). Choices
+# that give the same bytes: none measured. Not measured either: 1151 as the linkonce copy of an inline definition in a
+# header, the other reading unit 31's fragment gave of where the target's copy comes from before 1151 was written.
 #
 # StartState (10690, slot 2) is written at its records' lines in cescolheopcao.cpp: it sets the next state to itself,
 # shows the form at +24 (its slot 2), logs with musl's syslog(LOG_INFO, "%s:%d> %d", __func__, __LINE__, ...) whether

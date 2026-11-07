@@ -134,11 +134,13 @@
 # s_mutex's; 10506, s_inst's) match through the names 10500's votes give the statics. 10500 needs this file's object
 # ahead of cnomeeleitor.cpp's, so this list compiles unit 239's two files after it (below).
 #
-# 3883's form: SetNextState in both arms of `if (IsAudioAtivado())` in each of the three files, which the bytes decide
-# (the stores' score above). StartState's `m_pNextState = this;` written `SetNextState(this);` in the three files gives
-# a byte-identical module (the three objects swapped into a copy of the whole link, `shasum -a 256` of both wasm files):
-# StartState's store is a choice, kept as it was. CInformaEleitorPodeVotar::GetInst (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the
-# link: before, 5410's name had 5399's own call as its one vote and 5399 read `unresolved self-voted`.
+# 3883's form: SetNextState in both arms of `if (IsAudioAtivado())` in each of the three files, which the bytes ask for
+# over the assignment (the stores' score above); that the call is the setter is unit 61's choice
+# (src/units/61-uenux2-cexibealertadesligamento.mk). StartState's `m_pNextState = this;` written `SetNextState(this);`
+# in the three files gives a byte-identical module (the three objects swapped into a copy of the whole link,
+# `shasum -a 256` of both wasm files): StartState's store is a choice, kept as it was. CInformaEleitorPodeVotar::GetInst
+# (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the link: before, 5410's name had 5399's
+# own call as its one vote and 5399 read `unresolved self-voted`.
 #
 # The StartState of the three not-recognized states, matched (pnpm wasm score before steps 7 to 9, then step 9):
 # - CDigitalNaoReconhecidaPorTempo's (10486): `this` as the next state; "Tentativa {} de {}" formatted into +12's string

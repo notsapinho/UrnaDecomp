@@ -51,11 +51,11 @@
 // api/gui/cinteractiveformbuilder.cpp's, CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901)
 // call it with the length 0 and the flags true and false; its other target callers (3675, 5913, 7787) pass others,
 // 5913 and 3675 in the link (units 59 and 120), and unit 92's roots stand for 7787 so that binaryen folds none of its
-// parameters. 3673,
-// IInputField<IScreenMT>'s, matches from unit 121's cescolheopcao.cpp object, which links first;
-// api::CMTFormBuilder::AddInputControl (395) calls it with the length 0 and the confirm flag true, 1151 is in the link,
-// and unit 31's roots stand for 5410, not written, with a varied length and flag, so that binaryen folds the four flags
-// every target caller passes alike (false, true, false, false) and not those two, as 3673's wasm type has it. Read (fns
+// parameters. 3673, IInputField<IScreenMT>'s, matches from api/gui/cmtformbuilder.cpp's object, which unit 161's list
+// compiles ahead of the others that emit it; api::CMTFormBuilder::AddInputControl (395) calls it with the length 0 and
+// the confirm flag true, and 1151 and 5410 (vota::MontaTelaEleitorPodeVotar, through AddInputControl(int)) are in the
+// link, so that binaryen folds the four flags every target caller passes alike (false, true, false, false) and not
+// those two, as 3673's wasm type has it. Read (fns
 // 6319, 11024) matches for both media.
 
 #include <chrono>

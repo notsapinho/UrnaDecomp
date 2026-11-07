@@ -117,11 +117,11 @@
 #   in `this`'s local gives the target's code, and the colouring gives that only with a first-loop value heavier than
 #   `this` (a reading). On that replay the filters' loads made through a local that holds this + 24 fold back into
 #   `this`-relative loads (the same module), so an object that reads them through such a pointer, where `this` would
-#   weigh less, gives the same loads; no source form found keeps that pointer. Forms
-#   compiled, `atual` in local 2 in each: the filters as a member predicate called in the loop (clang inlines it, cost
-#   80, threshold 250), the first loop as a member returning the vector (clang inlines it) and references to the three
-#   optionals bound above the loop (StartState's code the control's). 11876 waits for a form whose object holds `atual`
-#   in `this`'s local.
+#   weigh less (computed from the colouring weights above, not measured on an object), gives the same loads; no source
+#   form found keeps that pointer. Forms compiled, `atual` in local 2 in each: the filters as a member predicate called
+#   in the loop (clang inlines it, cost 80, threshold 250), the first loop as a member returning the vector (clang
+#   inlines it) and references to the three optionals bound above the loop (StartState's code the control's). 11876
+#   waits for a form whose object holds `atual` in `this`'s local.
 # CTelasVota::CriaTelaVisualizacaoCandidato (fn 6569, in ctelasvota.cpp, unit 110's: a static member, ctelasvota.h says
 # why) builds the screen: a fill in colour 31, "VISUALIZAÇÃO" and the post's name for the holder's sex, then label and
 # value lines (Partido, Número padded to the post's digits, Nome, Gênero), each below the last, the value a multi-line

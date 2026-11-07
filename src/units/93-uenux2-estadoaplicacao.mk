@@ -65,7 +65,7 @@
 # 11402 and 1956 (unit 37) were in the link. Their second calls went together, measured on ea98137f's link with the
 # roots object alone swapped (docs/reference/facts/workflow.md W13) and scanned with the committed symbol file and match
 # list: no row entered or left match (12979 match rows both), and pnpm wasm fingerprint's addr column, joined by
-# symbol, changed in no function outside the roots object.
+# name@object, changed in no function outside the roots object.
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #
@@ -191,7 +191,8 @@
 # eAlterarDataSistema, which 3702's message spells; the files eurna.h and enumeradoasn.h; the data members' names (the
 # ASN.1 fields' where one exists, and in CCabecalhoQRCodeBuilder the labels fn 5604 passes) and the types the bodies only
 # store; DefineHistoricoCarga's result type (the builder by reference; that it returns the object is a reading of 5622's
-# locals, measured above); the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and
+# locals, measured above); the other setters' void, which the bytes leave open (every setter returning the builder gives
+# the same link, measured); the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and
 # DefineZona, and the tests' IsOrigemSA and IsOrigemRED (their order in the .cpp is the target's: in use band 2 the
 # higher target index has the lower ld_index); ConverteCorrespondencias, DesconverteCorrespondencias and
 # MarcaInicioAquisicao, and the getters of CEstadoGeralGap that the gap converter reads (GetCorrespondencias, GetAppId,
