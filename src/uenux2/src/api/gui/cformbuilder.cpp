@@ -3,28 +3,31 @@
 // whose default argument makes the record) and the throw of the static GetLabeledKeyPos at 372 (target fn 5544, column
 // 11).
 //   203   CFormBuilder()
-//   426   AddField                 written, differs at the tree's -O3: src/units/31-uenux2-cformbuilder.mk has the measurement
+//   426   AddField                 above GeraNome, which binaryen inlines into it: the order 426's locals need
 //   202, 1191  AddTextField        over a CFixedText, over a CDataText of a function
 //   3068  AddDoubleLineField
 //   5547  AddImage
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
 //   5546  AddTextRectField         over a CFixedText, after AddTextField 202 (the fragment says why)
+//   -     AddDSImageField          502's battery icon, pushed with no generated name: code 502 holds inlined
+//                                  (cformbuilder.h says why), here by the target's data (the fragment)
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
 //   -     GetFormSemLimpar(nome)   over an api::CPreShowNothing<IScreen>, through 5550: code 11891 holds inlined
 //   5545  AddProgressBar           written, differs: the fragment says what it waits for
 //   -     AddMaskedTextField       a CMaskedTextField<CFramedText> over a CFixedText: 2384's (ctelasvota.cpp)
 //                                  code, which it holds inlined (cformbuilder.h says why), after
 //                                  AddProgressBar, its place a choice
-//   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
-//         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
+//   502   AddStatusHeader          with the members of its lambda's CDataText, 11107 (GetText) and 11109 and
+//         11108 (the control block's D2 and D0), which match from this object too
 //   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
 //   -     AddKeyLabel              2243's code, which only 653 calls and holds inlined (cformbuilder.h says why)
 //   2782  AddTextFieldMultiLine    over a CFixedText. The three come after GetLabeledKeyPos (the fragment says why)
 //   5543  AddMovie                 over a CMovieField, last: band 2 puts it after GetLabeledKeyPos (5544)
 // FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 and 3678 each pass twice, and no other target function
 // reads; its name and its being a constant of this file are chosen. GeraNome has no target function: binaryen inlined it
-// into 426, which shows its second prologue. The order of the definitions above line 290 is read from band 1
-// (src/units/31-uenux2-cformbuilder.mk); their lines are a choice.
+// into 426, which shows its second prologue. The order of the definitions above line 290 is read from band 1 and
+// the target's data, but for AddField above GeraNome, a measured choice that 426's locals decide
+// (src/units/31-uenux2-cformbuilder.mk has both); their lines are a choice.
 
 #include "api/gui/cformbuilder.h"
 
@@ -86,6 +89,12 @@ SRect RectEntre(const SPoint& canto, const SPoint& oposto)
 
 CFormBuilder::CFormBuilder() = default;
 
+void CFormBuilder::AddField(SharedField campo)
+{
+    campo->SetName(GeraNome(*campo));
+    m_campos.push_back(campo);
+}
+
 std::string CFormBuilder::GeraNome(const IFormField<IScreen>& campo) const
 {
     std::string nome;
@@ -99,12 +108,6 @@ std::string CFormBuilder::GeraNome(const IFormField<IScreen>& campo) const
         sufixo += repetido;
     } while (repetido);
     return nome;
-}
-
-void CFormBuilder::AddField(SharedField campo)
-{
-    campo->SetName(GeraNome(*campo));
-    m_campos.push_back(campo);
 }
 
 CFormBuilder::SharedField CFormBuilder::AddDoubleLineField(std::string (*fonte)(), const SPoint& linha1, const SPoint& linha2,
@@ -175,6 +178,12 @@ CFormBuilder::SharedField CFormBuilder::AddTextRectField(const std::string& text
     return campo;
 }
 
+void CFormBuilder::AddDSImageField(CDSImageField* campo)
+{
+    const SharedField compartilhado(campo);
+    m_campos.push_back(compartilhado);
+}
+
 CFormBuilder::SharedField CFormBuilder::AddBlinkingTextField(const std::string& texto, const SPoint& posicao,
                                                              const SFont& fonte, ETextAlignment alinhamento)
 {
@@ -226,7 +235,7 @@ CFormBuilder::SharedField CFormBuilder::AddMaskedTextField(const std::string& te
     return campo;
 }
 
-// (original lines 229-289: content not recovered)
+// (original lines 238-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {
@@ -248,7 +257,7 @@ void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
                 }
                 return std::format("{: >3}%", ipower.BatLevel());
             },
-            SPoint(larguraTela - (comIcone ? 70 : 55), 5), std::chrono::milliseconds(1000), FONTE_PADRAO,
+            SPoint(larguraTela - 55 - (comIcone ? 15 : 0), 5), std::chrono::milliseconds(1000), FONTE_PADRAO,
             ALINHAMENTO_DIREITA);
     }
 
@@ -256,8 +265,7 @@ void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
         const std::shared_ptr<IObservable<SharedIImage>> bateria =
             std::make_shared<BatteryIconDataSource<CPowerInformation::IconOrientation::Horizontal>>();
         const SPoint posicao(larguraTela - 55, 5);
-        const SharedField campo(new CDSImageField(posicao, bateria, ANCHOR_TOP_LEFT));
-        m_campos.push_back(campo);
+        AddDSImageField(new CDSImageField(posicao, bateria, ANCHOR_TOP_LEFT));
     }
 
     if (campos & STATUS_MODO) {
@@ -269,7 +277,7 @@ void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
     }
 }
 
-// (original lines 334-351: content not recovered)
+// (original lines 333-351: content not recovered)
 #line 352
 /**
  * Posição do rótulo de uma tecla desenhada em @p area: junto à borda esquerda,
