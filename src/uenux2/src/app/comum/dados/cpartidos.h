@@ -36,4 +36,14 @@ private:
 // member of CPartidos is the other form, not measured) and this header are chosen.
 const std::string SiglaPartidoCorrente(const std::string& formato);
 
+// The number of the current party in the format it is given: target fn 11499, reached by table slot 1100 only, which
+// vota::CTelasVota's constructor (fn 7787, not written) stores in an api::CDataTextFmt<const std::string (*)(const
+// std::string &)> with the format "{}" (vptr 1538280, the one 2028 stores with 11501's slot 1089): that RTTI gives its
+// type, SiglaPartidoCorrente's. Its body holds GetInst's code, as 11501's does, and band 1 puts it after 11501 in this
+// object (its lower index is later in the link), so it is defined after SiglaPartidoCorrente. std::vformat formats an
+// int there (argument type 3; an unsigned short gives 6), and std::make_format_args takes lvalues only, so the number
+// is read into an int local (a reading of those two facts). Its name, its being a free function and the local's
+// spelling are chosen: unit 109's fragment lists the forms that give the same object.
+const std::string NumeroPartidoCorrente(const std::string& formato);
+
 } // namespace comum
