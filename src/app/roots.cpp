@@ -115,3 +115,13 @@ int urna_roots(int a) {
   r += probe_regex(s, s) + probe_app_signal(a, a, s) + probe_signals(a) + probe_weekday(a) + probe_function(a);
   return r;
 }
+
+// What keeps urna_roots in the link: a static constructor stores its address into a sink, as the fragments' roots keep
+// theirs. A stand-in for votaInit held that pointer until the executable TU's own votaInit (target fn 7840, unit 170)
+// was written.
+namespace {
+int (*volatile urna_roots_sink)(int);
+struct SUrnaRoots {
+  SUrnaRoots() { urna_roots_sink = urna_roots; }
+} urna_roots_keep;
+}  // namespace

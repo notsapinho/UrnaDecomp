@@ -16,6 +16,8 @@ public:
         eAlterarDataSistema,
     };
 
+    // No adjustment: target fn 10268 stores 0 and 0 at +52 and +56 of the builder's state. Read as inline.
+    CAjusteDataHora() : m_tipo(eSemAjusteDataHora), m_deltaT(0) {}
     CAjusteDataHora(ETipoDeltaT tipo, ueint32 deltaT);
 
     ETipoDeltaT GetTipoDeltaT() const { return m_tipo; }

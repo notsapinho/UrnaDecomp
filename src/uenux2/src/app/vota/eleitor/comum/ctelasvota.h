@@ -74,6 +74,9 @@ public:
     ~CTelasVota();
 
     static CTelasVota& GetInst();
+    // Target fn 7787 (record ctelasvota.cpp:3435), the constructor (record :3502) inlined: votaInit (fn 7840) invokes
+    // it through table slot 39. Not written: src/units/440-uenux2-votainit-pending.cpp traps it.
+    static void CreateInst();
 
     CFormInterativoTelaVota GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const;
 

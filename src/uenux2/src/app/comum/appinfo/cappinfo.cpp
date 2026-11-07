@@ -111,7 +111,13 @@ md::estadoaplicacao::CEstadoGeral CAppInfo::LeGeralInterno() const
     return CServicoEstadoGeral(FLASH_INTERNA).Carrega();
 }
 
-// (original lines 149-452: content not recovered)
+void CAppInfo::CarregaGeral()
+{
+    m_turnoCarregado = 0;
+    m_geral = LeGeralInterno();
+}
+
+// (original lines 155-452: content not recovered)
 #line 453
 bool CAppInfo::EhTreinamentoEleitor()
 {
