@@ -199,7 +199,8 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   names (each named by its own evidence, a `vtable` slot or an anchor, whose row needs this name), those callers align
   the call site and count for nothing else: the comment leads with the callee's own rows, read without the match, and
   says the callers fall without the
-  line (3883's). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
+  line (3883's did, while 3883 differed; once 3883 matched, the content pass found its body without the line, and the
+  line went: unit 282's fragment). A `.bss` object, or a `.data` or read-only object too small for its bytes to place it (§3), has no
   content to stand on and often no aligned call: its line leads with the target functions other than the match that
   read or write the address, its static destructor among them (as the `CEstadoAudio` statics' do), each with what it
   does there (a compare with a value above 1, an increment, an index), since those uses also give the member's type

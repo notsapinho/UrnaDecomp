@@ -13,7 +13,10 @@
 #   comum::CAppState::SetNextState (cappstate.h), 10511's form (unit 161; docs/reference/facts/codegen.md C13): with the
 #   stores, 10 over 83 rows against our shared body, all operand-only, the queue's address in local 2 where the target
 #   reuses local 0; with the calls, 8 over 83, every row a call or a data operand (pnpm wasm score on the whole link),
-#   and step 9 matches it. A callers+content hand line in splat/symbol_addrs.txt names 3883;
+#   and step 9 matches it. The callers+content hand line in splat/symbol_addrs.txt that named 3883 while it differed
+#   went once it matched: on copies of the symbol file without it and of the match list without 3883, 10496, 10504 and
+#   10508, scanned twice beside a control that keeps the line, no row moves (the first pass finds 3883 by content and
+#   the three thunks match with it), and splat-build on both copies gives the target's sha256;
 # - CDigitalReconhecida::StartState (10482, record cdigitalreconhecida.cpp:47);
 # - CPedeDigital's destructor and deleting destructor (2739, its match line now the D1 alias, and 10469), FinishState
 #   (10467, records 131 and 132) and ProcessInput (10466), as unit 192 matched them;
