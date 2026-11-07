@@ -1556,7 +1556,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1690	_ZN3apiL13ExistResourceER4statRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	1704	symbol	match	readings: address symbol,address string,table slot,address srcloc	591	none	ecourna	1	app/uenux2/src/api/util/csystem.cpp.o
 1691	_ZN3api14CEncryptedFileD2Ev	1725	symbol	match	-	82	addr	app	1	app/uenux2/src/api/io/cencryptedfile.cpp.o
 1692	_ZN3api14CEncryptedFileC2ERKNSt3__210shared_ptrIN7ecourna3api8security16ISymmetricCipherEEE	1726	symbol	differs	+0x2b target +0x2b i32.const 0 | ours +0x2b i64.const 0	65	none	app	1	app/uenux2/src/api/io/cencryptedfile.cpp.o
-1693	_ZN3api15CInputMenuField7AddItemERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS1_8functionIFvRNS_9CMenuItemEEEE	1700	symbol	differs	+0x91 target +0x8f i32.load16_u align=1 offset=130 | ours +0x8f i32.load16_u align=1 offset=126	1335	none	ecourna	1	app/uenux2/src/api/gui/cinputmenufield.cpp.o
+1693	_ZN3api15CInputMenuField7AddItemERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS1_8functionIFvRNS_9CMenuItemEEEE	1700	symbol	match	readings: address symbol,address srcloc,address string,table slot	1335	none	ecourna	1	app/uenux2/src/api/gui/cinputmenufield.cpp.o
 1694	_ZN3api18CMTFormBuilderBase7GetFormERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	1550	symbol	match	readings: address symbol	423	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 1695	_ZN3api12CApplication11GetContextoEv	5810	symbol	match	readings: address symbol,address string	354	none	vota	1	app/uenux2/src/api/gui/capplication.cpp.o
 1696	_ZN3api4JoinERKNSt3__26vectorINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEENS5_IS7_EEEERKS7_	2290	symbol	match	readings: address symbol	658	none	libc++	1	app/uenux2/src/api/gui/capplication.cpp.o
@@ -2633,7 +2633,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2767	_ZNK3api14CEncryptedFile4SaveERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	2873	symbol	match	readings: address string,address srcloc,address symbol,table slot	902	none	ecourna	1	app/uenux2/src/api/io/cencryptedfile.cpp.o
 2768	_ZNK3api5SRect6AdjustEssss	3169	symbol	match	-	106	byte	app	1	app/uenux2/src/api/gui/primitives.cpp.o
 2769	_ZNSt3__26vectorIhNS_9allocatorIhEEE11__vallocateB8ne210108Em	2298	symbol	match	-	45	none	ASN1	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-2770	_ZN3api15CInputMenuField11ReposicionaEv	2770	symbol	differs	+0x1 target the locals | ours the locals	219	none	app	1	app/uenux2/src/api/gui/cinputmenufield.cpp.o
+2770	_ZN3api15CInputMenuField11ReposicionaEv	2770	symbol	match	-	219	addr	app	1	app/uenux2/src/api/gui/cinputmenufield.cpp.o
 2771	_ZN3api15CTextFieldPaperC2ERKNSt3__210shared_ptrINS_5ITextEEENS_6IPaper6EStyleE	2781	symbol	match	readings: address symbol,address string,address srcloc,table slot	154	shape	api	1	app/uenux2/src/api/gui/ctextfieldpaper.cpp.o
 2772	_ZN3api17CQRCodeImagePaperC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5778	symbol	match	readings: address string,table slot,address srcloc,address symbol	1582	none	ecourna	1	app/uenux2/src/api/gui/cqrcodeimagepaper.cpp.o
 2773	_ZN3api13CarregaIconesEv	2842	symbol	differs	+0x1 target the locals | ours the locals	5642	none	app	1	app/uenux2/src/api/gui/cpowerinformation.cpp.o

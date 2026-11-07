@@ -5,9 +5,9 @@
 //   10900 CMenuValidation::isValid (with the two helpers it holds, records 198 and 210), 10899 isValidChar
 //   5491, 10898 CInputMenuField::~CInputMenuField() (the D2 matches with strict aliasing: see the fragment), 10897 Draw,
 //   10896 Rect() const, 10895 Move (record 278), 10894 Read(IInput&) (record 419), 10893 GetTypeName(), 1693 AddItem
-//   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona, the
-//   constructor, GetInstructionTextRect (251) and SetInstructionText (477), which binaryen inlines into 3675
-//   (api::AddInputMenuField, in cinteractiveformbuilder.cpp), 5489 SelecionaItem(const std::string&), LimpaSelecao()
+//   (records 320, 326, 339) with NextItemPosition (298) and CMenuItem's constructor, 2770 Reposiciona (with the helper
+//   CantoInferiorEsquerdo, inlined), the constructor, GetInstructionTextRect (251) and SetInstructionText (477), which
+//   binaryen inlines into 3675 (api::AddInputMenuField), 5489 SelecionaItem(const std::string&), LimpaSelecao()
 //   (inlined everywhere), and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates; the two
 //   SetFormatString (CMenuItem's, record 156, and CInputMenuField's, 468), which binaryen inlines into 11884. The lines
 //   of the members with no record are a choice, in their use bands' order (src/units/84-uenux2-cinputmenufield.mk).
@@ -208,8 +208,9 @@ SPoint CInputMenuField::NextItemPosition() const
         return m_posicao;
     }
     IScreen& tela = CPolySingleton<IScreen>::instance();
-    const TPosition limite = std::min(static_cast<int>(tela.GetHeight()), m_posicao.y + m_alturaMaxima) -
-                             (m_rectInstrucao.bottom - m_rectInstrucao.top + 1);
+    const TPosition alturaTela = tela.GetHeight();
+    const TPosition alturaInstrucao = m_rectInstrucao.bottom - m_rectInstrucao.top + 1;
+    const TPosition limite = std::min(alturaTela - alturaInstrucao, m_posicao.y + m_alturaMaxima - alturaInstrucao);
     const SRect ultimo = m_itens.back().GetRect();
     const TPosition alturaUltimo = ultimo.bottom - ultimo.top + 1;
     if (alturaUltimo + ultimo.bottom < static_cast<TPosition>(limite - 5)) {
@@ -221,7 +222,7 @@ SPoint CInputMenuField::NextItemPosition() const
     return SPoint(ultimo.left + maior->GetRect().Width() + 20, m_posicao.y);
 }
 
-// (original lines 312-316: content not recovered)
+// (original lines 313-316: content not recovered)
 #line 317
 CMenuItem& CInputMenuField::AddItem(const std::string& texto, TMenuCallback acao)
 {
@@ -257,13 +258,19 @@ CMenuItem& CInputMenuField::AddItem(const std::string& texto, TMenuCallback acao
     return m_itens.back();
 }
 
+namespace {
+SPoint CantoInferiorEsquerdo(const SRect& rect)
+{
+    return SPoint(rect.left, rect.bottom);
+}
+} // namespace
+
 void CInputMenuField::Reposiciona()
 {
-    const SRect itens = m_rectItens.Adjust(0, 0, 0, 5);
-    m_rectInstrucao.Move(SPoint{itens.left, itens.bottom});
+    m_rectInstrucao.Move(CantoInferiorEsquerdo(m_rectItens.Adjust(0, 0, 0, 5)));
     SPoint posicao{m_rectInstrucao.right, static_cast<TPosition>(m_rectInstrucao.top - 1)};
     if (!m_instrucao.empty()) {
-        posicao.x += 7;
+        posicao = SPoint(posicao.x + 7, posicao.y);
     }
     m_mask.Move(posicao);
     Invalidate();
@@ -292,7 +299,7 @@ void CInputMenuField::SelecionaItem(const std::string& busca)
     }
 }
 
-// (original lines 386-401: content not recovered)
+// (original lines 392-401: content not recovered)
 #line 402
 EInputResult CInputMenuField::Read(IInput& input)
 {
