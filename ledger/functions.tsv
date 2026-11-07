@@ -198,7 +198,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 332	107	59	app	ecourna	-	-	none	-	
 333	37	60	-	-	skeleton	338	fingerprint	0	fwrite
 334	79	59	sqlite	openssl	skeleton	346	addr	3	OPENSSL_die
-335	335	59	-	openssl	skeleton	342	addr	10	ossl_lib_ctx_get_data
+335	335	59	-	openssl	skeleton	341	addr	10	ossl_lib_ctx_get_data
 336	363	58	app	ecourna	-	-	none	-	
 337	554	59	app	libc++	skeleton	345	addr	7	comum::md::CEleitor::operator=(comum::md::CEleitor&&)
 338	48	58	libcxx	libc++abi	skeleton	343	byte	0	(anonymous namespace)::itanium_demangle::Node::print((anonymous namespace)::itanium_demangle::OutputBuffer&) const
@@ -10794,7 +10794,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10928	12	0	app	api	skeleton	11859	addr	2	api::CTextFieldDoubleLine::~CTextFieldDoubleLine()
 10929	562	0	app	api	-	-	none	-	
 10930	8	0	app	vota-web	skeleton	12549	byte	0	(anonymous namespace)::CWasmSavd::Slot4()
-10931	458	0	app	api	-	-	none	-	
+10931	458	0	app	api	skeleton	11861	shape	11	api::CTextFieldDoubleLine::Draw(api::IScreen&) const
 10932	154	0	app	api	skeleton	11731	addr	4	api::CTextFieldMT::~CTextFieldMT()_6885
 10933	151	0	app	api	skeleton	11732	addr	3	api::CTextFieldMT::~CTextFieldMT()
 10934	666	0	app	api	-	-	none	-	
