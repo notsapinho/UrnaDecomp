@@ -1,5 +1,7 @@
-// comum::CGravadorRDV::GravaResultado (target fn 11587, slot 7; this file's name and path are the reconstruction's
-// choice: no record names the class's file, app/comum/gravadores/cgravadorrdv.h says what is recovered). Fn 11587 has
+// comum::CGravadorRDV's constructor, which fn 12098 holds inlined (no index; unrooted:
+// src/units/305-uenux2-cgravadorrdv.mk says what it rests on), and GravaResultado (target fn 11587, slot 7; this file's
+// name and path are the reconstruction's choice: no record names the class's file, app/comum/gravadores/cgravadorrdv.h
+// says what is recovered). Fn 11587 has
 // no record of its own: its records are those of the api::CFileASN templates it holds (cfileasn.h:161 and :171,
 // CodeObjectFunction for ModuloRegistroDigitalVoto::EntidadeResultadoRDV, behind the frames of CodeObject and
 // CodeObjectFunction, which binaryen inlined), and what it does is read from its calls. It decodes the RDV's bytes
@@ -25,6 +27,7 @@
 #include "api/util/csystem.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/asn/cconversorcabecalhoentidade.h"
+#include "app/comum/carquivosresultado.h"
 #include "app/comum/cpath.h"
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
@@ -38,6 +41,13 @@
 #include "ecourna/app/dados/asn/midias/cconversorinformacaomidia.hpp"
 
 namespace comum {
+
+CGravadorRDV::CGravadorRDV(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+    TSecaoID secao, char fase, const md::estadoaplicacao::CDadoCorrespondencia& correspondencia, const CRdv* rdv)
+    : IGravador(municipio, zona, local, secao, fase, EXTENSAO_RDV_DAT, static_cast<ESavdArquivoUE>(37)),
+      m_dataHora(dataHora), m_tipoArquivo(TIPO_ARQUIVO_VOTACAO_UE), m_correspondencia(correspondencia), m_rdv(rdv)
+{
+}
 
 void CGravadorRDV::GravaResultado(api::CFile& arquivo) const
 {

@@ -28,6 +28,15 @@
 # (TextoAjuda); fn 12053, the part shown, partes.at(atual) (ConteudoQRCode); fn 12052, "atual + 1/size" with
 # std::to_string (TextoPagina). They call GetQRDSInst, internal to this file, so they are this file's; they match
 # through the content pass (no symbol line names them), and our StartState passes them in the target's slot order.
+# AjustaTela (fn 5982, record 195): its body was right before (44 over 696 rows, every row an operand), and it matches
+# once its callee's name holds. That callee, FindFieldAs<CTextField> (fn 1721, below), differs, so 5982's call vote was
+# the only voter for 1721's name, which was then self-voted, and 5982 read `unresolved self-voted`. 1721's name now
+# takes a callers+content hand line in splat/symbol_addrs.txt resting on what 1721 alone loads: the record
+# iform.h:142:23 and the literal at 444680. The line carries 5982 alone: a scan run twice and splat-build on copies
+# without it and without 5982's match line leave 5982 `unresolved self-voted` and move no other row (with 1721's name
+# out on both sides of the marker, 1721 reads `no-candidate`, and 5982 plain `unresolved`: its call has no target
+# function). The seven fields are CTextFields: fn 940, which it calls on them, is api::CTextField::SetCorTexto (unit
+# 27), the body binaryen shares with CTextBox::SetStatus, and whose match line moves to that name (a twin rename).
 #
 # Written, not matching:
 # - StartState (fn 12055, record 70, `differs`, named by its vtable slot): the demo-mode test (CAplicacaoEncerrada
@@ -54,18 +63,38 @@
 #   instance. It scores 650 over 2482 rows (51 inserted, 57 deleted): the gap's correspondences are read through a local
 #   holding +184 where the target folds 184 into the loads, and GeraPartes's empty-loop and throw blocks sit apart from
 #   the target's. Both are measured, not explained. Its name reaches it by its callers' votes (`call by:5982,12051`).
-# - AjustaTela (fn 5982, record 195, `unresolved self-voted`): 44 over 696 rows, all operand-only, but its callee
-#   FindFieldAs<CTextField> (fn 1721, api/gui/iform.h, record 142) has no voter but 5982, and 1721 `differs`: 51 over
-#   163 rows, its type-mismatch throw placed after the loop where the target keeps it before the loop's step (with the
-#   field copied before the cast, as the target increments the count before dynamic_cast; without the copy, 46 over 142
-#   and the increment after the cast; with std::find_if, 137 over 222). cmostraqrcodebu.cpp compiled at -O2, -Os and at
-#   -O3 with and without strict aliasing places the throw last in 1721's copy; only -Oz places it inside the loop, and
-#   shortens the copy from 162 to 111 lines of wasm-objdump -d (the target's has the -O3 copy's length). A call clang
-#   does not know never returns, inlined by binaryen afterwards, would leave the block in the loop (a reading, not
-#   written: that is a noreturn question). The seven
-#   fields are CTextFields: fn 940, which it calls on them, is api::CTextField::SetCorTexto (unit 27), the body binaryen
-#   shares with CTextBox::SetStatus, and whose match line moves to that name (a twin rename).
-# Each score above is pnpm wasm score in the whole link of the commit that adds StartState.
+# - FindFieldAs<CTextField> (fn 1721, api/gui/iform.h, record 142, unit 120's header code, which only this file
+#   instantiates), `differs`: 51 over 163 rows, its type-mismatch throw after the function's return where the target
+#   keeps it inside the loop, before the step. The field is copied before the cast, as the target increments the count
+#   before dynamic_cast. The throw's place is the whole remainder: the landed body with one statement more in the
+#   success branch, `(void)resultado.get();` before the return (a probe, no form to land: it only steers clang), linked
+#   as one variant object scores 10 over 139, every row an operand. What moves the throw is the machine pass
+#   branch-folder: it puts a block with no successors at the function's end when the block before it branches to the
+#   block after it (the throw is bb.8 before that pass and bb.13, the last, after it; -mllvm -print-before=branch-folder
+#   -mllvm -print-after=branch-folder). In the IR (-mllvm -print-after-all on this TU) clang emits campo's cleanup where
+#   campo's scope ends, after the throw, behind resultado's NRVO cleanup, which the return goes through first (that this
+#   is what keeps it out of the success branch is a reading: with the result declared ahead of the copy, below, the
+#   release lies before the throw); after SROA the success branch holds only a jump, the second SimplifyCFG removes it,
+#   and the success code and campo's release (inlined after it) take the cleanup's place after the throw. A success
+#   branch that still holds an instruction at that SimplifyCFG keeps the cleanup and the release ahead of the throw, as
+#   in the target: the probe shows it. Forms measured on the object, none with the target's order and stores: with the
+#   result NRVO'd and declared after the copy, the throw comes last (the landed form; the throw under `if (!resultado)`
+#   and the return after it; iterator, index and `continue` loops; a const result; `!= nullptr` and `.get()` tests;
+#   `return {}` at the end; the result as the if's condition variable, which also calls ~shared_ptr<CTextField> on the
+#   throw path; a reset() before the throw, a call there too); with the cast written out and `return
+#   std::shared_ptr<T>(campo, tipado)`, or that assigned to a result declared empty, the throw stays in the loop but the
+#   null result is not stored into the return slot before it, which the target does; with the result declared ahead of
+#   the copy and assigned, the first JumpThreading after the inliner copies the cast for the null-control-block path
+#   (two __dynamic_cast calls; read on one form of each kind): assigned from dynamic_pointer_cast (in the loop, or at
+#   function scope with return or break), the throw stays in the loop and the store is there; assigned in the success
+#   branch from the cast written out, there is no store either; `return std::move(resultado)` and a copy in the return
+#   give two casts too; casting std::move(campo) drops the release the target's success path holds. Measured earlier:
+#   without the copy, 46 over 142 and the increment after the cast; with std::find_if, 137 over 222; cmostraqrcodebu.cpp
+#   at -O2, -Os and at -O3 with and without strict aliasing places the throw last in 1721's copy, and only -Oz inside
+#   the loop, where the release stays a call (111 lines of wasm-objdump -d against the -O3 copy's 162, the target's
+#   length). The statement the target's source holds there is not found.
+# Each score above is pnpm wasm score in the whole link of the commit that adds StartState, but AjustaTela's and
+# FindFieldAs's, which are at 16b8f99f (the probe's on its one-variant link).
 #
 # The trap file and the roots file went with StartState: its call of AjustaTela is in the link (5982 has its two call
 # sites), and nothing is pending.

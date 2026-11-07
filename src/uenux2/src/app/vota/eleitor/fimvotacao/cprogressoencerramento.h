@@ -25,9 +25,12 @@ namespace vota {
 // api::CProgressBar (fn 5545 makes it, and slot 4 calls the bar's increment, fn 5508, on it), and a std::mutex at +20
 // that slots 2 to 4 hold while they run. Recovered: the destructor, out of line (the deleting one, fn 12104, calls it)
 // and declared first, so it is the key function and cprogressoencerramento.cpp emits the vtable. It stores no vptr,
-// which clang leaves out of a destructor that destroys members only when the class is final. Not recovered: the
-// constructor, which copies the form and the bar from the pair a screen function returns, not written either (unit 48's
-// fragment). The member names are not in the target.
+// which clang leaves out of a destructor that destroys members only when the class is final. The constructor is out of
+// line too (fn 12098 holds it behind a 16-byte prologue of its own, inlined by binaryen): it takes the pair
+// vota::TelaProgressoEncerramento (ctelasvota.h) returns into that frame and copies the form and the bar from it into
+// +4 and +12 (each count incremented and the old pointer released: assignments from the pair's members, a reading);
+// no index of its own, so it is compared with nothing until fn 12098 matches (unit 48's fragment). The member names
+// are not in the target.
 class CProgressoEncerramento final : public comum::CAbstractTelaProgresso {
 public:
     CProgressoEncerramento();

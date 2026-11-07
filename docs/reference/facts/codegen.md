@@ -6,8 +6,9 @@ forms, a switch over virtual members, when a member's body is inlined, the order
 source's named values, a TU's first emissions and an inlined callee do to a frame and which temporaries share a slot, a
 C1 or D1 call `-fPIC` keeps,
 `-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, what a caller's temporaries say of
-a parameter's form, a throw path's blocks and where its pad lies, a loop clang turns twice, a store in each arm of a
-branch, a condition's test order, what orders a function's blocks, and the loads a declaration decides.
+a parameter's form, a throw path's blocks, where its pad lies and what a `try` block is without exceptions, a loop clang
+turns twice, a store in each arm of a branch or case, a condition's test order, what orders a function's blocks, and the
+loads a declaration decides.
 `docs/how-to-decompile.md` steps 1 to 5 and 9 rely on these; [reading.md](reading.md) holds what a target body says
 about declarations (parameters, destructors, linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC
 -std=c++20 -DNDEBUG -fno-strict-aliasing`, or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since,
@@ -227,6 +228,15 @@ constants alone keep no source order either: 10405 (`CSuspensaoAutomaticaEleitor
 other way round matched (`7 over 78`, operand rows only; unit 152's fragment). Only a whole-link score decides such a
 pair's source order.
 
+**Store runs, and a branch binaryen folds.** Stores into one buffer can keep one order over every source order: 10967's
+`CBmpConversor::CreateBitmapHeader` stored its header highest offset first in each order measured, so the target's two
+descending runs (+2 +0, then +46 down to +6) meant a block boundary in clang's object where the target has no branch.
+A test of an argument every caller passes as one constant makes one: it ends a block in the object and leaves no code
+once binaryen inlines the callee and folds it. Its paths also decide what dead-store elimination trims: a zero fill
+before it is trimmed past later stores only when no path from the fill reads memory first (a throw, a call or a return
+there kept 1072 bytes from +6, the target's 1024 from +54). Measure candidate tests with the callee's object and a
+second TU that passes the constant, linked at the build's link flags, then in the whole link (unit 22's fragment).
+
 A zeroing the size of a `memset` (a `std::string`'s or a `std::vector`'s 12 bytes, an `i64` and an `i32` store) keeps
 no source order either: it follows the constants the function used before it, since the backend reuses a constant
 register for the store of 0. 6035 and 6036 (the external and internal flash's `uenux.db` paths) come from one form,
@@ -295,7 +305,11 @@ to 4. 8605 (`CWasmResource::GetMovie`) holds the 2-byte form, and unit 127's fra
   symbols first (`wasm-objdump -x <object>`), and compare the symbol the edit is in.
 - **A compare's operand order is the link's.** binaryen can swap the operands of a symmetric compare, so an object that
   equals the target's rows says nothing. 995's `tag == makePrimitive(obj.getTag())` differs in the object and matches at
-  link; swapping the source to equal the object gave `36 over 165 rows`. Read operand order in a link only.
+  link; swapping the source to equal the object gave `36 over 165 rows`. Read operand order in a link only. A compare
+  of a load against a `local.get` flips at each `optimize-instructions` run (binaryen's `canonicalize` puts the get on
+  the right, then the higher node id), so the link keeps clang's order when the function's runs are even: read the
+  `icmp`'s operands in clang's IR (`-S -emit-llvm`), where LLVM's complexity rule sets them (a phi before a cast) and
+  the source's order between equals (13550's current post, compared field by field as a pair, unit 391's fragment).
 - **A load can sink.** A load that only moves across a stretch with no store can be one binaryen sinks at link; when a
   form's object differs only there, link both before calling it evidence.
 - **A mask can go at link.** clang writes an `i32.and` with 65535 over a 16-bit result it returns zero-extended, and
@@ -344,12 +358,13 @@ pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11050 | /usr/bin/grep -E 'i32
 #   table[i32.load[i32.add(i32.load[p1], i32.shl(l3, 2))+32]](p1);
 ```
 
-## C3. An in-class member stays out of line in the object; one declared `inline` is inlined there
+## C3. An in-class member stays out of line in the object; one declared `inline` gets a higher threshold
 
 A member function defined in its class is inline but has no inline hint, and clang leaves a larger one out of line in
 each object, a weak function; binaryen then inlines it only where it has one call site in the whole link
-(`docs/reference/facts/tool-traps.md` §X1). The same member defined with the `inline` keyword gets the hint, and clang
-inlines it in each object. The hint is LLVM's `inlinehint` attribute; [reading.md](reading.md) §R5 shows it on a
+(`docs/reference/facts/tool-traps.md` §X1). The same member defined with the `inline` keyword gets the hint, which
+raises the cost up to which clang inlines it in each object (the end of this section). The hint is LLVM's `inlinehint`
+attribute; [reading.md](reading.md) §R5 shows it on a
 destructor, where it decides the deleting destructor's shape. An observer list's detach, in the class and
 `inline`-specified, with one and two callers:
 
@@ -423,13 +438,39 @@ out-of-line form matches 3830 at `81 over 1168`, all operand-only, the `inline` 
 second call site keeps the call at `227 over 1172`. So measure `inline` before writing it, and re-read the form when the
 second caller lands (unit 95's fragment).
 
+The hint is a threshold, not a promise: a member that costs more stays out of line with the keyword or without it.
+`-Rpass=inline -Rpass-missed=inline` on the caller's compile prints each call's cost and threshold:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+c12=$(for i in 1 2 3 4 5 6 7 8 9 10 11 12; do printf 'e(x + %s); ' $i; done); c16="$c12$(for i in 13 14 15 16; do printf 'e(x + %s); ' $i; done)"
+printf '%s\n' 'void e(int);' "struct S { void InClass(int x) { $c12 } inline void Hinted(int x); inline void Large(int x); };" "void S::Hinted(int x) { $c12 }" "void S::Large(int x) { $c16 }" 'void Use(S& s, int x) { s.InClass(x); s.InClass(x + 1); s.Hinted(x); s.Hinted(x + 1); s.Large(x); s.Large(x + 1); }' > $P/hint.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -Rpass=inline -Rpass-missed=inline -c /work/$P/hint.cpp -o /work/$P/hint.o 2>&1 | /usr/bin/grep -oE "'[A-Za-z_0-9]+' (not )?inlined into '[A-Za-z_0-9]+'.*\(cost=[0-9]+, threshold=[0-9]+\)" | sort | uniq -c
+#    2 '_ZN1S5LargeEi' not inlined into '_Z3UseR1Si' because too costly to inline (cost=600, threshold=487)
+#    2 '_ZN1S6HintedEi' inlined into '_Z3UseR1Si' with (cost=440, threshold=487)
+#    2 '_ZN1S7InClassEi' not inlined into '_Z3UseR1Si' because too costly to inline (cost=440, threshold=375)
+```
+
+The thresholds move with the call site; in ecourna's converter of identities the unhinted one is 250, and 9116's
+`CIdentificadorEleitor::Cria` costs 470 there (the remark on `cconversoridentificadoreleitor.cpp`'s compile), above
+the hinted 325: `inline` decides no byte of it. Read the remark before writing the keyword.
+
 ## C4. The order of a caller and its callee decides what binaryen makes of them
 
 When two bodies differ in locals, in what a pointer folds into, or in the blocks binaryen leaves around an inlined
 callee's tail, the order of the caller and the functions binaryen inlines into it can be the cause, with no difference
 in the object. Either order can be the target's, so try the other one, and again after each fix that moves rows other
-than locals: the better order can flip. Quote an order's score with the state of the source it was measured on. Why,
-binaryen's source in the image does not show; the effect is measured, the caller first in these:
+than locals: the better order can flip. Quote an order's score with the state of the source it was measured on. The
+other order is the two swapped with the rest in place: a caller moved to the top of its file passes every function
+between, and each place can give other rows (5480, `api::CIniFile::Carrega`, scored 1184 first in its file and 1096
+above `SetKey`, and matched right above `Interpreta`, the callee binaryen inlines into it: unit 379's fragment), so try
+each place between the two and read the object's function list at each, since a callee that stays a call moves with
+its caller ([reading.md](reading.md) §R9). Order reaches a body only through what binaryen inlines into it (a reading:
+each case below inlines one): when every call of the body in `wasm-dis` of `r02-stripped.wasm` (below) is still a call
+in the output, no order moves its locals, and the remainder is in the object (below, "Local numbers can come from
+clang's object too"; 11876 kept its 18 calls, and eleven places in the module and five renumberings of its input
+locals each scored `96 over 448` on a replay at ee244e6e). Why, binaryen's source in the image does not show; the
+effect is measured, the caller first in these:
 
 - **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with
   `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, `34 over 189`, and matches with the
@@ -479,7 +520,15 @@ root `src/app/roots_iconversorasn.cpp` holds that copy ahead of both (`831 over 
 **Local numbers can come from clang's object too.** Read the object's locals for each form before linking: 11172's
 object already held the target's swap of two loop variables, parameters dead by then that clang's register coloring
 reused (`-mllvm -print-before=wasm-reg-coloring` on the TU's compile line shows their uses), and the application's test
-nested in an outer `if`, not joined by `&&`, gave the target's (unit 179's fragment). And whether a member binaryen
+nested in an outer `if`, not joined by `&&`, gave the target's (unit 179's fragment). Which values clang grouped shows
+in three steps: align the two `pnpm wasm fn` readouts and list, per local, the other side's local at each use (where
+one local of a side meets two of the other, the groups differ); on a replay (below), exchange two of the input's
+locals over the stretch where their values live, which names the target's groups before any source is tried (11876:
+`27 over 444`, every local row the target's); and `-mllvm -print-before=wasm-reg-coloring -mllvm
+-print-after=wasm-reg-coloring` shows which register each value, `ARGUMENT_i32 0` among them, was merged into, with
+`-mllvm -print-machine-bfi -mllvm -print-bfi-func-name=<mangled>` the block frequencies the colouring weighs (a reading
+of LLVM's source: registers by summed use frequency, each into the first colour it does not overlap). Judge a form by
+the group a value lands in, not by one local's index. And whether a member binaryen
 inlines is static moves the caller's locals with the same instructions: 12040 (`CMostraQRCodeCertificado::StartState`)
 scores `204 over 873` with its `CTelasVota` screen builder a `const` member under every order tried, and `47 over 853`,
 every row an operand, with it static and called through the same `GetInst()` (scratch links of `link.cmd` with the
@@ -632,6 +681,27 @@ inlined functions took the target's locals with `GetInst` above the constructor 
 builders, which one source change and one relink confirmed (`144 over 2051`, all operands); patching LLVM's local
 numbers in 10689's callee left the output unchanged, so binaryen, not the object, decides 10689's locals.
 
+A replay shows the end state only. To see in which pass and which round a function's locals form, build binaryen at
+the image's commit (b9c72894, [toolchain.md](../toolchain.md)) with a print added after each function pass, and run it
+in place of the image's `wasm-opt`. The image has cmake, make and g++ (the Mac mini's host has no cmake); the build
+takes about five minutes at `-j4`, and its `-Oz` gives the link's `r05.wasm` byte for byte, which is the check to run
+before reading a trace (b3236f02's link, 10 s):
+
+```sh
+git clone -q --filter=blob:none https://github.com/WebAssembly/binaryen.git build/out/binaryen && git -C build/out/binaryen checkout -q b9c72894
+TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/binaryen && mkdir -p out && cd out && cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DBUILD_FUZZTEST=OFF -DBUILD_STATIC_LIB=ON -DENABLE_WERROR=OFF && make -j4 wasm-opt wasm-as wasm-dis'
+P=build/out/codegen-facts/replay; mkdir -p $P
+sed -n 3p build/out/wasm-map/vota_web/replay.sh | sed -e 's#^/emsdk/upstream/bin/wasm-opt#binaryen/out/bin/wasm-opt#' -e 's#wasm-map/vota_web/r05\.#codegen-facts/replay/native-r05.#g' > $P/oz-native.sh
+TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $P/oz-native.sh)"
+cmp $P/native-r05.wasm build/out/wasm-map/vota_web/r05.wasm && echo same
+# same
+```
+
+The print itself is a patch to binaryen's pass runner (one function, named in the environment, printed after every
+function pass of every nested runner) and to coalesce-locals (its locals, copies, interferences, order and choice);
+it is not in the tree yet. A trace of 13550 showed the round-1 decision of its locals and a compare's flips (§C1)
+that no replay could.
+
 ## C5. A frame's offsets: which values the source names, and what a TU emitted first
 
 The first local or temporary the source creates takes the highest offset, so which value is a named local moves the
@@ -656,6 +726,22 @@ wasm-objdump -d $P/frame.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/
 
 (Each destructor's `this` is the frame offset of its object.) In the whole link 5472 and 5473 match with the named
 local (`src/uenux2/src/api/util/cdatetime.cpp`).
+
+Created means allocated, not evaluated: in `b.Move(Corner(a.Adjust()))` the temporary for `Corner`'s result is created
+before the one for `Adjust`'s, which is evaluated first, so a call's result sits above its argument, where named locals
+follow their declarations (2770, `CInputMenuField`'s, has the rectangle at +4 below the point at +12):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+printf '%s\n' 'struct SPoint { short x, y; SPoint(short a, short b) : x(a), y(b) {} };' 'struct SRect { short l, t, r, b; SRect Adjust() const; void Move(const SPoint&); };' 'static SPoint Corner(const SRect& r) { return SPoint(r.l, r.b); }' 'void Temp(SRect& a, SRect& b) { b.Move(Corner(a.Adjust())); }' 'void Named(SRect& a, SRect& b) { const SRect r = a.Adjust(); b.Move(SPoint(r.l, r.b)); }' > $P/nested.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -c /work/$P/nested.cpp -o /work/$P/nested.o
+wasm-objdump -d $P/nested.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {printf "%s%s", (n++ ? "\n" : ""), $3} /^i32.const/ {c=$2} /call .*Adjust/ {printf " SRect +%s", c} /call .*Move/ {printf " SPoint +%s", c} END {print ""}'
+# <_Z4TempR5SRectS0_>: SRect +4 SPoint +12
+# <_Z5NamedR5SRectS0_>: SRect +8 SPoint +4
+```
+
+So a value above the one it is built from can be such a nested call, with no named local, before it is an inlined
+helper's locals (below).
 
 That order is each function's before clang's inlining: a callee clang inlines brings its locals in above the caller's
 own, though the caller creates its own first. A loop's temporary written in place sits below two locals made before
@@ -1035,6 +1121,19 @@ T(...);`): 9106 (`CConversorComparecimentoMesario::DoDeconverte`) scored `47 ove
 the other way, and matched so (unit 09's fragment), as 9216 did (unit 105's). Read the object's lines after the
 constructor's `call invoke_*` for each form before linking.
 
+A TU built without `-fexceptions` (every uenux2 TU; emcc then compiles with `-fignore-exceptions`,
+[app-flags.md](app-flags.md)) has no pads: a `try` block compiles as a plain block scope and its handlers leave no
+code or data, so a form that rests on where a scope ends has the `try` block as a same-bytes form (3829's response
+vector, unit 95's fragment):
+
+```sh
+P=build/out/codegen-facts; printf '%s\n' '#include <exception>' '#include <string>' '#include <vector>' 'void Send(std::vector<char>&);' 'std::string F() {' '#if TRY' '    try {' '#else' '    {' '#endif' '        std::vector<char> v(8);' '        Send(v);' '#if TRY' '    } catch (const std::exception& e) { return e.what(); }' '#else' '    }' '#endif' '    return "";' '}' > $P/tryblock.cpp
+for x in '' -fexceptions; do for t in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG $x -DTRY=$t -c /work/$P/tryblock.cpp -o /work/$P/tryblock-$t.o; done
+  printf '%s: ' "${x:-no -fexceptions}"; cmp -s $P/tryblock-0.o $P/tryblock-1.o && echo same || echo differ; done
+# no -fexceptions: same
+# -fexceptions: differ
+```
+
 ## C12. A loop clang turns twice: in the caller and in a helper it inlines
 
 A loop the target carries a value through (a loop variable the next pass computes) or whose exits it threads (a `select`
@@ -1065,7 +1164,22 @@ for f in _Z2IfR1Si _Z2SwR1Si; do printf '%s: ' $f; wasm-objdump -d $P/arms2.o | 
 # _Z2SwR1Si: 3
 ```
 
-So read the arms' contents before spending links on the shape. What keeps 10737's two stores apart in the target is
+The switch keeps them apart because each case stores once. With two stores per case (a `std::shared_ptr` result
+written field by field, the empty case's two nulls among them) the SimplifyCFG after TailCallElim sinks them into one
+tail with phis, and one 8-byte copy per case stays apart again, two `i32` stores per case and an `i64.store` of 0 on
+the empty path, the shape the target's 9116 (`CConversorIdentificadorEleitor::DoDeconverte`) holds:
+
+```sh
+P=build/out/codegen-facts; printf '%s\n' 'struct S2 { void* a; void* b; };' 'void* A(); void* B(); void* C();' 'void One(S2& s, int c) { switch (c) { case 1: s.b = A(); break; case 2: s.b = B(); break; default: s.b = C(); } }' 'void Two(S2& s, int c) { switch (c) { case 1: { void* x = A(); s.a = (char*)x + 12; s.b = x; } break; case 2: { void* x = B(); s.a = (char*)x + 12; s.b = x; } break; default: s.a = nullptr; s.b = nullptr; } }' 'void Copy(S2& s, int c) { switch (c) { case 1: { void* x = A(); S2 t{(char*)x + 12, x}; __builtin_memcpy(&s, &t, 8); } break; case 2: { void* x = B(); S2 t{(char*)x + 12, x}; __builtin_memcpy(&s, &t, 8); } break; default: { S2 t{}; __builtin_memcpy(&s, &t, 8); } } }' > $P/cases.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/cases.cpp -o /work/$P/cases.o
+for f in _Z3OneR2S2i _Z3TwoR2S2i _Z4CopyR2S2i; do printf '%s: ' $f; wasm-objdump -d $P/cases.o | awk -v f="<$f>:" '$0 ~ f {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'i(32|64)\.store [0-9] [0-9]+' | tr '\n' ';'; echo; done
+# _Z3OneR2S2i: i32.store 2 4;i32.store 2 4;i32.store 2 4;
+# _Z3TwoR2S2i: i32.store 2 4;i32.store 2 0;
+# _Z4CopyR2S2i: i32.store 2 4;i32.store 2 0;i32.store 2 4;i32.store 2 0;i64.store 2 0;
+```
+
+So count the stores each arm or case takes, and read the arms' contents, before spending links on the shape. What keeps
+10737's two stores apart in the target is
 explained by a call in each arm that binaryen inlines afterwards (a reading: the form that matches; no frame or record
 shows the call): clang does not join two calls of an out-of-line setter, and with `comum::CAppState::SetNextState` (out
 of line in `cappstate.cpp`) called in both arms the row matches. Unit 61's fragment has the measurements, and the replay
@@ -1080,7 +1194,7 @@ chain computed into a `bool` value first, a named `const bool` tested after or a
 kept the source's order (unit 119's fragment has the forms and their objects). Compile both before reading a test order
 as the source's.
 
-## C15. What orders a function's blocks: CFG Sort over the IR's order
+## C15. What orders a function's blocks: the branch folder, then CFG Sort over the IR's order
 
 No block-placement pass runs for wasm32: the backend's pipeline has `WebAssembly CFG Sort` and `CFG Stackify` and no
 `Branch Probability Basic Block Placement` (bbf27ac1's flags, at 3c1ef19d):
@@ -1099,6 +1213,28 @@ encontrada" throw right after the identities' loop with the copy written as a ra
 with `std::transform` after the same emptiness test; inverting the test, or `size() == 0`, changed nothing (unit 310's
 fragment). `-mllvm -print-after-all -mllvm -filter-print-funcs=<mangled>` on the TU's compile line shows the machine
 blocks before and after the sort.
+
+Before CFG Sort, the branch folder (`branch-folder`, "Control Flow Optimizer") moves a block with no successors (a
+throw, a return) to the function's end when its layout predecessor branches to the block after it (`if (!r) throw …;`
+inside a loop: LLVM's `BranchFolder::OptimizeBlock`, read, not measured case by case). So a throw last against inside
+a loop can be the branch folder's with the IR order already the target's; read it before looking for an IR order:
+
+```sh
+P=build/out/codegen-facts; printf '%s\n' '#include <stdexcept>' 'int* Find(int** v, int n, int k) {' '    for (int i = 0; i < n; ++i)' '        if (v[i][0] == k) {' '            if (!v[i][1]) throw std::runtime_error("vazio");' '            return v[i];' '        }' '    return nullptr;' '}' > $P/bfold.cpp
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -mllvm -print-before=branch-folder -mllvm -print-after=branch-folder -mllvm -filter-print-funcs=_Z4FindPPiii -c /work/$P/bfold.cpp -o /work/$P/bfold.o 2> $P/bfold.txt
+awk '/IR Dump/ {print; next} /^bb\./ {b=$1} /__cxa_throw/ {print "  throw in", b} /^# End machine code/ {print "  last block", b}' $P/bfold.txt
+# # *** IR Dump Before Control Flow Optimizer (branch-folder) ***:
+#   throw in bb.5
+#   last block bb.6
+# # *** IR Dump After Control Flow Optimizer (branch-folder) ***:
+#   throw in bb.7
+#   last block bb.7
+```
+
+The throw stays put when the block after it is not its predecessor's branch target: 1721
+(`IForm<IScreen>::FindFieldAs<CTextField>`) keeps its throw inside the loop, as the target does, only when the success
+path's release of the field comes before the throw in the IR (a probe statement in the then-block does it, no form
+found yet: unit 37's fragment).
 
 ## C16. Loads a declaration decides: a struct copy as one wide load, a string's alignment
 

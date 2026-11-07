@@ -70,7 +70,12 @@ Consequences:
 - A COMDAT (inline/template) function belongs to the **first** object on the link line that defines it. In the
   skeleton, the stand-ins `roots_boost.o` and `roots_rhvoice.o` come before the RHVoice objects and own the template
   bodies they instantiate, hundreds each (`grep -c roots_boost.o build/out/wasm-map/vota_web/names.tsv` counts one;
-  the third column is the owning object): those bodies are not in the library objects' runs.
+  the third column is the owning object): those bodies are not in the library objects' runs. wasm-ld picks the copy
+  before it drops dead code, so a function nothing calls still gives its object the copies it instantiates: with
+  12098's gravador constructors written unrooted (62f9d58f, a commit over ee244e6e), four matches came from their
+  objects, `git show <commit>:splat/scan.tsv | awk -F'\t' '$1==1221 || $1==5870 || $1==11617 || $1==11618
+  {print $1, $11}'` giving `md/cversoesarquivos.cpp.o`, unit 268's and unit 102's roots at ee244e6e and
+  `cgravadorversoesarquivos.cpp.o`, `md/cdependenciascontratos.cpp.o` and `cgravadorhashes.cpp.o` at 62f9d58f.
 - The mgfn thunks hold the highest ordinals.
 - wasm-ld's name section is demangled (lld's default `--demangle`); object files carry mangled names. Compare
   through the image's `llvm-cxxfilt`; 353 demangled names are duplicated across objects.

@@ -24,7 +24,7 @@
 # binaryen into Read, its one caller: the blink of the chosen item, two toggles with a 100 ms sleep each), with
 # std::__destroy_at<CMenuItem> (5490), CMenuItem's implicit destructor inlined into libc++'s helper, which the list's
 # clear in the destructor calls. Move (10895, record 278:21, the `IScreen& tela = CPolySingleton<IScreen>::instance()`
-# line) and the private Reposiciona (2770; callers 1693, 3675, 10895) are written and do not match: below. The u=1 band
+# line) and the private Reposiciona (2770; callers 1693, 3675, 10895) match too: below. The u=1 band
 # of ledger/ordinals.tsv runs 10900, 10899, 10898, 10897, 10896, 10895, 10894, 10893 and the u=2 band 5491, 5490, 5489:
 # the definitions follow that order (D0 and Rect before Move's record line, Read's after it, GetTypeName last), and
 # names.tsv's ld_index agrees in the plain link. Names chosen: SelecionaItem, Reposiciona, LimpaSelecao, Desloca, Pisca,
@@ -36,9 +36,9 @@
 #   through a getter that returns a reference keeps a 2-byte alignment. A copy `const SPoint origem = m_posicao` before
 #   the loop gives the same object code as the locals. The arithmetic is CMenuItem::Desloca, which reads its own
 #   m_posicao. The screen's call is slot 5, IScreen::Clear(const SRect&, TColor), as in the target. Score 4 over 117
-#   rows, all operand-only, and Move is `unresolved self-voted`: its call of Reposiciona (2770) has a name only from
-#   Move's own vote, so Move waits for 2770's match or for 1693's or 3675's, 2770's other callers (both written, neither
-#   a match: below).
+#   rows, all operand-only, while its call of Reposiciona (2770) had a name only from Move's own vote (`unresolved
+#   self-voted`). At 16b8f99f Move matches, that name held by the calls of 3675 and Move (`evidence:call
+#   by:3675,10895`); since 2770 matches, by 2770's own pair (`pair-addr`).
 # - Read: the CONFIRMA case with the beep in an `else` after the blink places the beep after SEM_TECLA's SelecionaItem;
 #   the beep first in the `else` with its `break`, and Clear and the return after the `if`, gives the target's order,
 #   with the beep at column 21, and the same object code as the beep after the `if` with no `else` (column 17). The two
@@ -52,28 +52,49 @@
 #   function's disassembly in two compiles of the file, with the flag and without it: only the destructor and libc++'s
 #   std::format helpers differ). With the flag it scored 13 over 76 rows (2 inserted, 2 deleted); src/Makefile
 #   UENUX2_TBAA_DIRS takes it off this directory (docs/reference/facts/app-flags.md F6).
-# - Reposiciona (2770) is written, as below, since its three callers are (docs/how-to-decompile.md step 5), and differs:
-#   18 over 106 rows in the plain link (10 operand-only, 7 deleted), its remainder (the frame) not explained. Before
-#   its callers were written it scored 25 over 107 rows in a scratch link. The target puts the rectangle
-#   Adjust returns at +4 of its frame and the point built from it at +12, stores that point's y before its x, and writes
-#   the mask's position with the 7 added as one 32-bit store of both coordinates. As written, the rectangle was at +8
-#   and the point at +4, in order; the rectangle in an inner scope with its two edges in locals reverses the stores and
-#   lets the mask's position share the rectangle's slot, but keeps the rectangle above the point; `posicao.x += 7` and
-#   an assignment of the whole point both give a 16-bit store of x. The body as written:
-#       const SRect itens = m_rectItens.Adjust(0, 0, 0, 5);
-#       m_rectInstrucao.Move(SPoint{itens.left, itens.bottom});
-#       SPoint posicao{m_rectInstrucao.right, static_cast<TPosition>(m_rectInstrucao.top - 1)};
-#       if (!m_instrucao.empty()) {
-#           posicao.x += 7;
-#       }
-#       m_mask.Move(posicao);
-#       Invalidate();
+# - Reposiciona (2770) matches with the instruction's corner from a helper and the mask's position assigned whole. The
+#   target's 16-byte frame holds the rectangle Adjust returns at +4, the point Move takes at +12, above it (its y stored
+#   before its x), and the mask's position at +4, in the rectangle's slot; when the instruction text is not empty it
+#   stores that position again as one 32-bit word, x + 7 and the y it holds. As written before (`const SRect itens =
+#   m_rectItens.Adjust(0, 0, 0, 5); m_rectInstrucao.Move(SPoint{itens.left, itens.bottom});`, then `posicao.x += 7`)
+#   the rectangle was at +8 above the point at +4, the mask's position in the point's slot and x stored alone as 16
+#   bits: 18 over 106 rows in the plain link (10 operand-only, 7 deleted). The first object a function creates takes
+#   the highest offset (docs/reference/facts/codegen.md C5); in `m_rectInstrucao.Move(CantoInferiorEsquerdo(
+#   m_rectItens.Adjust(0, 0, 0, 5)))` the point, the call's result, is created before the rectangle, its argument, and
+#   both end with the statement, so the mask's position, created after them, takes the rectangle's slot (a reading; the
+#   offsets are the measurement). CantoInferiorEsquerdo returns `SPoint(rect.left, rect.bottom)` of a `const SRect&`,
+#   and clang inlines it. Measured by the function's disassembly in compiles of the file at the unit's flags: the same
+#   function with the helper in an anonymous namespace, `static` or external (an external one also stays in the object),
+#   as a lambda called in place, as an SRect member returning `SPoint(left, bottom)` called on Adjust's result
+#   (`m_rectItens.Adjust(0, 0, 0, 5).CantoInferiorEsquerdo()`, the member added to a copy of primitives.h), and with the
+#   point a named `const SPoint` initialized from the helper and passed to Move; other frames with the helper taking the
+#   SRect by value (the mask's position at +12), with no helper and the point declared first and set from the rectangle
+#   in an inner scope (the corner stored as one 32-bit word), and with the corner's move and the mask's in a member
+#   helper that takes the rectangle from Reposiciona (the mask's position at +12, in the point's slot). `posicao =
+#   SPoint(posicao.x + 7, posicao.y)` gives the 32-bit store, and so do `SPoint(m_rectInstrucao.right + 7,
+#   m_rectInstrucao.top - 1)` and `SPoint{static_cast<TPosition>(posicao.x + 7), posicao.y}` (the same function);
+#   `posicao.x += 7` stores x alone, and the two points as the arms of a conditional initializer give a select of the
+#   two x and two 16-bit stores. In the whole link 2 over 106 rows, both operands (a constant the scan reads as data and
+#   a callee), then `match`. Chosen: the helper, its name, its internal linkage (an anonymous namespace), its being a
+#   free function (it reads no state of the class) and the first of the three forms of the 7.
 # - AddItem (1693, records 320:15 and 339:15, the two throws, 326:21, the instance() line), with NextItemPosition
 #   (record 298:21) and CMenuItem's constructor, both held in it in the link (NextItemPosition behind a second
-#   stack-pointer prologue): 36 over 628 rows in the plain link, 31 operand-only, the other five (one replaced, two
-#   inserted, two deleted) from one expression's form: the room left under the menu, `std::min(GetHeight(), y +
-#   m_alturaMaxima)` less the instruction's height, held in a TPosition and then less 5, which the target computes as
-#   `min + ~(bottom - top)` and ours as `min + top + ~bottom` (the same value). Measured on the way, in the plain link:
+#   stack-pointer prologue), matches with the room left under the menu written as `std::min(alturaTela -
+#   alturaInstrucao, m_posicao.y + m_alturaMaxima - alturaInstrucao)`: the instruction's height a TPosition local used
+#   in both arms, after the screen's height held in a TPosition local (an int there gives the same function, and so does
+#   the limit held in a `const int limite`), so that the instruction's rectangle is read after GetHeight's call, as in
+#   the target. The target computes the room as `min + ~(bottom - top)`, and the height written once, before this form,
+#   gave `min + top + ~bottom` (the same value): 36 over 628 rows in the plain link, 31 operand-only, the other five
+#   (one replaced, two inserted, two deleted) from that expression. The matched form's final IR holds the height as the
+#   16-bit `(bottom + 1) - top`, zero-extended into the int subtraction from the minimum (`-mllvm -print-after-all` on
+#   the object's compile), so the target's not is the backend's (a reading). Measured now by NextItemPosition's
+#   disassembly in compiles of the file at the unit's flags: the TPosition height used in both arms but declared before
+#   GetHeight's call gives the target's not with the two loads ahead of the call; an int height used in both arms, an
+#   int height used once, or the limit as the bottom of an SRect built from it give `top + ~bottom` (the last with a
+#   select of its own); `bottom - top` in an int used in both arms with the 1 taken after the minimum, or a TPosition
+#   height used once, give `top - bottom` with the 1 and the 5 joined; std::max(height, 0) loads the edges as signed and
+#   adds a select. Measured on the way before, in
+#   the plain link:
 #   196 over 656 with the rectangles read as members, a reference kept from emplace_back and a default std::string; 80
 #   over 647 with the last item's and the widest one's rectangles through CMenuItem::GetRect, which returns it by value
 #   (the target loads each as one 64-bit word and shifts, which the by-value copy gives; the members give 16-bit loads),
@@ -87,12 +108,12 @@
 #   height or of the difference, `bottom + 1 - top`, `- 1 - (bottom - top)`, `-(height) + min`, `+ ~(bottom - top)`
 #   written out, std::min<int>, the minimum in a named int, `limite -=` in a second statement: each gives `top + ~bottom`,
 #   `top - bottom` with the constants joined, or the two loads ahead of GetHeight's call, none the target's
-#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name comes from its
-#   callers' calls (step 8's `call by:11881,11884,11888`), each caller named on its own (11881 by its vtable, 11884 and
-#   11888 by their records). The callers+content hand line on the four records only it loads (298, 320, 326, 339),
-#   needed while 11881's vote was the only one, went once 11888 matched: with it out the scan run twice moved no row and
-#   the build verified, and with every line of the name out 11881, 11888, 12893 and 12894 are unresolved
-#   (docs/reference/splat.md "Reviewing a match").
+#   `~(bottom - top)` after it (an InstCombine fold of a one-use subtraction, a reading). AddItem's name came from its
+#   callers' calls (step 8's `call by:11881,11884,11888` at 16b8f99f), each caller named on its own (11881 by its
+#   vtable, 11884 and 11888 by their records), and from its own records' anchor since it matches. The callers+content
+#   hand line on the four records only it loads (298, 320, 326, 339), needed while 11881's vote was the only one, went
+#   once 11888 matched: with it out the scan run twice moved no row and the build verified, and with every line of the
+#   name out 11881, 11888, 12893 and 12894 are unresolved (docs/reference/splat.md "Reviewing a match").
 # - The constructor, CMenuValidation's constructor, GetInstructionTextRect (record 251:21) and SetInstructionText
 #   (record 477:9), which binaryen inlines into AddInputMenuField (3675), defined in api/gui/cinteractiveformbuilder.cpp
 #   (unit 120's fragment has why: with it in this file it scored 162 over 528 rows, CMenuValidation's constructor's
@@ -103,13 +124,21 @@
 #   11662 and 14478 address): cinputmenufield.h has what the target shows of it, its copy the executable TU's (a
 #   reading). Measured in a whole link with it an inline variable of cinputmenufield.h and
 #   src/uenux2/wasm/vota_web/vota_web_wasm.cpp including that header (steps 7 to 9, on this file as landed): 11662
-#   matches from that TU's -Oz copy, 14478 votes the object's name too (vote:11 by:3675,14478), and twelve rows of other
+#   matches from that TU's -Oz copy, 14478 votes the object's name too (with 3675, then), and twelve rows of other
 #   units match (2688, 2689, 3525, 3526, 5143, 5166, 5189, 5190, 8592, 9385, 9394, 9518; why not read), but that TU then
 #   instantiates api::CFormStack<IScreenMT>'s statics too (api/gui/iform.h), and 8177, their target destructor (an -O3
 #   copy, after the executable TU's .bss), leaves `match`. So the variable stays an inline variable of this file (a
 #   choice), and its name comes from a callers+content hand line in splat/symbol_addrs.txt (14478 builds it from the
 #   literal at 444366 and 11662 destroys it); without the line 3675 is unresolved self-voted (the removal check). 11662
-#   waits for the header that brings the variable into the executable TU without CFormStack<IScreenMT>. The four of
+#   waits for the header that brings the variable into the executable TU without CFormStack<IScreenMT>, and for that
+#   TU's first table references: measured at 16b8f99f with 2770 and 1693 matched, the variable defined in that TU
+#   alone for the measurement (at the top of its `namespace api`, above the gap whose #line gives line 280, so no record
+#   moved), 11662 matches from its copy and takes table slot 1, as the target's does, and 8177 stays `match`, but
+#   the TU's next first references then put its own static's destructor at slot 2 (10620's, renamed from `.4` to
+#   `.8`), simulador::PushKey at slot 3 and std::string's constructor at slot 4, which the target holds at slot 3, so
+#   988's addr pair falls (docs/reference/facts/splat.md S10 item 28) and 1227, 1524, 3363, 4760, 5152, 7833, 7850,
+#   8046, 8327, 9405, 8887 and 8890 leave `match` (10175, 9726 and 998 go from differs to unresolved; steps 7 to 9 on
+#   that link). The target's PushKey (9649) is at slot 105. The four of
 #   AddItem's default argument's lambda (`__func`, vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy
 #   assignment (1763), std::__throw_bad_any_cast (3861) and std::bad_any_cast::what (8110, libc++'s any.o) match with
 #   vota::CMenuVisualizarCandidatos::StartState (11881) in the link, which their target callers or holders are: the

@@ -48,6 +48,7 @@
 
 namespace api {
 
+class CDSImageField;
 class CProgressBar;
 
 /**
@@ -195,6 +196,12 @@ protected:
 
 private:
     SharedField AddRect(const SRect& rect);
+
+    // The battery's icon of AddStatusHeader (fn 502) as a field with no generated name, pushed as it is. It has no
+    // target function: binaryen inlined it into 502, whose push's throw paths come after the field's release, as the
+    // end of a function of its own lays them out (src/units/31-uenux2-cformbuilder.mk has the evidence and the
+    // measurements). Its name, its being a private member and its parameter's name are chosen
+    void AddDSImageField(CDSImageField* campo);
 
     std::string GeraNome(const IFormField<IScreen>& campo) const;
 };

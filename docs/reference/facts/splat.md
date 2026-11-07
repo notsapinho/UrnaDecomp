@@ -706,13 +706,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
    binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
-8. **543, 2656 and 5066, by a `push_back` body and a hand edit.** 543's match line named `vector<long>`,
+8. **543, 2656 and 5066, by a `push_back` body.** 543's match line named `vector<long>`,
    `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2 built at `-O2`; at
    the tree's `-O3` both inline that one, and our link held `roots_boost.o`'s body alone, until that root's
    `extern template` line for Boost.Regex's `do_assign` left it none: the line names `crespostas.cpp.o`'s
    `vector<unsigned>::push_back(&&)` now, the same bytes (§A5 of [asn1.md](asn1.md)).
-   2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543. 3473,
-   which calls 543 too, is item 19.
+   2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which our link merges into that body too: no row of
+   `build/out/wasm-map/vota_web/names.tsv` has its name, and both call 543's. 3473, which calls 543 too, is item 19.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
 10. **252 and 3717, by the executable TU's object.** The target's 252, `std::operator+(string&&, string&&)`, is the

@@ -28,10 +28,10 @@
 # (by 6084 and 6129), 4152 (by 6129, 6174 and 6583) and 886; the statics by 6129's, 6174's and 6084's votes alone
 # (`vote:1` and `vote:4`), which hold through the exit destructors, the objects' second users.
 #
-# 502, api::CFormBuilder::AddStatusHeader (unit 31, written, differs), has a name since: 4152's call names it, and
-# 3054's (unit 110's AdicionaCabecalhoTesteTeclado, named by CEsperaRetestar::GetInst's call, unit 138); the symbol file
-# reads `evidence:call by:3054,4152`. 4152 and 3054 each hold the other's use of that name (docs/reference/splat.md
-# section 3, "No circular evidence"): a landing that drops one of them checks the other.
+# 502, api::CFormBuilder::AddStatusHeader (unit 31), matches, and its own records name it (`evidence:srcloc-anchor`).
+# Before it matched, 4152's call named it, and 3054's (unit 110's AdicionaCabecalhoTesteTeclado, named by
+# CEsperaRetestar::GetInst's call, unit 138), each holding the other's use of that name (docs/reference/splat.md section
+# 3, "No circular evidence").
 #
 # Members of CGeraBU::StartState (fn 12110, pending) written ahead of it, each scored with pnpm wasm score against the
 # whole link's names.tsv before steps 7 to 9, all operand-only (calls, data, a .bss address, the format buffer's table

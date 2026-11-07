@@ -248,11 +248,11 @@ it there. At uenux2's `-O3` both inline it, and 543 went on matching from `roots
 then renamed the line to `crespostas.cpp.o`'s `vector<unsigned>::push_back(&&)`, the same bytes
 (`awk -F'\t' '$1==543 {print $5, $11}' splat/scan.tsv` prints `match app/uenux2/src/app/comum/dados/crespostas.cpp.o`).
 
-`vector<AbstractData*>::push_back(&&)` is a `merged-body` hand edit on 543 ([../splat.md](../splat.md) §3): 2656 and 5066
-call it, the target merged that body into 543, and our own body of that name differs from 543 (263 B against 239, 3 `block`s and 3
-`if`s against 1 and 5), so no match can name it. Without the line, a match of 543 under any other name leaves those two calls with
-no target function, and both leave `match`. 8811, named by its vtable and unmatched, calls it too, so the name does not
-rest on those two.
+`vector<AbstractData*>::push_back(&&)`, which 2656 and 5066 call, is that body too, in the target and in our link:
+binaryen merges it into 543's, so no row of `build/out/wasm-map/vota_web/names.tsv` has its name, and both call the
+body 543's line names ([splat.md](splat.md) §S10 item 8). It once differed from 543 in our link (263 B against
+239), and a `merged-body` hand edit ([../splat.md](../splat.md) §3) named it on 543; with the bodies the same that
+line rescued no row, and it went.
 
 More of the same kind, from the same tally of aligned calls:
 

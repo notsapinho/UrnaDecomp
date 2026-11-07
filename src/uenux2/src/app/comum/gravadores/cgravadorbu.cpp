@@ -60,6 +60,14 @@
 //   detail at +296 when +192 is set, else the throw (8641); an empty std::vector<md::CHistoricoVotoImpresso> of its
 //   own (its 32-byte frame holds it) goes into the entity. CEntidadeBU::ValidaCriacao's frame opens once inside its.
 // The locals' names, the order of the statements no call fixes and the names of the helpers are chosen.
+// - The constructor has no target index: fn 12098 holds it inlined behind a 192-byte frame of its own. That frame holds
+//   a second copy of the vector and the map, moved from the ones 12098 passes, and four std::optionals made from the
+//   arguments (the vota data and the attendance detail engaged, the SA data empty), copied once more before IGravador's
+//   constructor (fn 1396) runs: so it delegates to a private constructor that takes those six by value (a reading).
+//   The map at +284 is filled in a loop over comum::CCargos ahead of +296's store, so MontaOrdemCargos builds it in its
+//   initializer (a reading). Chosen: the parameters' order and form, the private constructor's taking the extension 4,
+//   the SAVD file 35, the ETipoArquivo 49, "bu.pk1" and +212's true as its own constants, and MontaOrdemCargos's name
+//   and its being a file-local function.
 
 #include "app/comum/gravadores/cgravadorbu.h"
 
@@ -76,9 +84,11 @@
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/carquivosresultado.h"
 #include "app/comum/cpath.h"
 #include "app/comum/dados/carregaarquivo.h"
 #include "app/comum/dados/ccandidaturas.h"
+#include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/crdv.h"
@@ -87,6 +97,7 @@
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
 #include "app/comum/gravadores/asn/cconversorentidadebu.h"
 #include "app/comum/gravadores/asn/cconversorenvelopegenerico.h"
+#include "app/comum/gravadores/cgravadorutil.h"
 #include "app/comum/gravadores/md/cenvelopegenerico.h"
 #include "app/comum/gravadores/md/chistoricovotoimpresso.h"
 #include "app/comum/gravadores/md/cvotoscargo.h"
@@ -104,7 +115,54 @@
 
 namespace comum {
 
-// (original lines 107-203: content not recovered)
+
+namespace {
+
+std::map<md::TCargoID, uebyte> MontaOrdemCargos()
+{
+    std::map<md::TCargoID, uebyte> ordem;
+    CCargos::GetInst().RemoveFiltro();
+    CCargos& cargos = CCargos::GetInst();
+    cargos.OrdenaPorImpressao();
+    uebyte posicao = 0;
+    for (cargos.Reset(); !cargos.IsFim(); cargos.Next()) {
+        ordem.emplace(cargos.GetCurrent().GetID(), ++posicao);
+    }
+    return ordem;
+}
+
+} // namespace
+
+CGravadorBU::CGravadorBU(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+    TSecaoID secao, char fase, const api::CDateTime& dataHoraEmissao,
+    const md::estadoaplicacao::CDadoCorrespondencia& correspondencia, std::vector<std::string> historicoCodigosCarga,
+    std::map<md::ETipoAbrangencia, SQtdeAptos> qtdAptos, bool temDetalhamento, ueword qtdEleitoresCompareceram,
+    const CRdv* rdv, const md::CDadosBUVota& dadosVota,
+    const ecourna::app::dados::CDetalhamentoComparecimento& detalhamento)
+    : CGravadorBU(dataHora, municipio, zona, local, secao, fase, dataHoraEmissao, correspondencia,
+          std::move(historicoCodigosCarga), std::move(qtdAptos), temDetalhamento, qtdEleitoresCompareceram, rdv,
+          dadosVota, std::nullopt, std::nullopt, detalhamento)
+{
+}
+
+CGravadorBU::CGravadorBU(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+    TSecaoID secao, char fase, const api::CDateTime& dataHoraEmissao,
+    const md::estadoaplicacao::CDadoCorrespondencia& correspondencia, std::vector<std::string> historicoCodigosCarga,
+    std::map<md::ETipoAbrangencia, SQtdeAptos> qtdAptos, bool temDetalhamento, ueword qtdEleitoresCompareceram,
+    const CRdv* rdv, std::optional<md::CDadosBUVota> dadosVota, std::optional<md::CTipoApuracaoSA> tipoApuracao,
+    std::optional<md::CDadosBUSA> dadosSA,
+    std::optional<ecourna::app::dados::CDetalhamentoComparecimento> detalhamento)
+    : IGravador(municipio, zona, local, secao, fase, EXTENSAO_BU_DAT, static_cast<ESavdArquivoUE>(35)),
+      m_dataHora(dataHora), m_dataHoraEmissao(dataHoraEmissao), m_faseUrna(CGravadorUtil::ConverteFase(fase)),
+      m_tipoArquivo(TIPO_ARQUIVO_VOTACAO_UE), m_correspondencia(correspondencia),
+      m_historicoCodigosCarga(std::move(historicoCodigosCarga)), m_qtdAptos(std::move(qtdAptos)),
+      m_temDetalhamento(temDetalhamento), m_qtdEleitoresCompareceram(qtdEleitoresCompareceram), m_rdv(rdv),
+      m_arquivoChave("bu.pk1"), m_criptografa(true), m_dadosVota(dadosVota), m_tipoApuracao(tipoApuracao),
+      m_dadosSA(dadosSA), m_ordemCargos(MontaOrdemCargos()), m_detalhamento(detalhamento)
+{
+}
+
+// (original lines 165-203: content not recovered)
 #line 204
 void CGravadorBU::AcrescentaVotoVotavel(TVetorVotosVotaveis& votos, md::CVoto::ETipo tipo, TCandidatoID candidato,
     TQtdEleitor quantidade, const md::CCargo& cargo)

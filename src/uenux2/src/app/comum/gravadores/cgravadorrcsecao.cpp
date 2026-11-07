@@ -1,8 +1,9 @@
 // comum::CGravadorRCSecao (/home/rubio/tse/uenux2/src/app/comum/gravadores/cgravadorrcsecao.cpp): GravaResultado
 // (target fn 11616, record at line 110) and the functions it holds inlined by binaryen, LeChavePublica (records at lines
-// 65, 75 and 83) among them; CriaIdentidadeEleitor (fn 5845, record 230) and ConverteComparecimentoMesario (fn 5841).
-// src/units/122-uenux2-app-comum-gravadores.mk says what each rests on. This header comment, the includes and the lines
-// of the functions with no record are the reconstruction's.
+// 65, 75 and 83) among them; CriaIdentidadeEleitor (fn 5845, record 230) and ConverteComparecimentoMesario (fn 5841);
+// the constructor, which fn 12098 holds inlined (no index; unrooted). src/units/122-uenux2-app-comum-gravadores.mk
+// says what each rests on. This header comment, the includes and the lines of the functions with no record are the
+// reconstruction's.
 #include "app/comum/gravadores/cgravadorrcsecao.h"
 
 #include <algorithm>
@@ -18,12 +19,14 @@
 #include "api/hwil/ikernelhsm.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
+#include "app/comum/carquivosresultado.h"
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/comum/cpath.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "app/comum/gravadores/asn/cconversorresultadournacadastro.h"
+#include "app/comum/gravadores/cgravadorutil.h"
 #include "app/comum/gravadores/euecomumgravadoreserror.h"
 #include "app/comum/justificativa/cjustificador.h"
 #include "asn1/modules/ModuloEnvelopeChave.h"
@@ -41,7 +44,15 @@ namespace comum {
 
 using namespace ecourna::app::dados;
 
-// (original lines 44-60: content not recovered)
+CGravadorRCSecao::CGravadorRCSecao(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+    TSecaoID secao, char fase, char situacao)
+    : IGravador(municipio, zona, local, secao, fase, EXTENSAO_JUFA_DAT, static_cast<ESavdArquivoUE>(39)),
+      m_dataHora(dataHora), m_faseUrna(CGravadorUtil::ConverteFaseEcourna(fase)),
+      m_situacao(CGravadorUtil::ConverteSituacaoArquivoEcourna(situacao))
+{
+}
+
+// (original lines 55-60: content not recovered)
 #line 61
 std::vector<uebyte> CGravadorRCSecao::LeChavePublica() const
 {

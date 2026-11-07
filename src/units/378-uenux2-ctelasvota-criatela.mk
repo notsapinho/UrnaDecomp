@@ -16,7 +16,8 @@
 # 3076 calls), api::CFormBuilder::AddMovie 5543 (unit 31's file) with CMovieField's timer lambda 11054 to 11058, and
 # api::CMovie::ProximoFrame 5525 (unit 23's). Then 11 more (the same comm against the commit they started from), the
 # candidate's complete screens and what they call, below: 2028, 3060, 4129, 4185, 5535, 6528, 6639, 6681, 11501, 12641,
-# 12811. Written, not matched: 6624, 6627, 6608, 1591, 3076, 4184 and 6678 (below).
+# 12811. Then 3 more (the same comm against the commit they started from): 6608, 6624 and 1591, the VotoNulo screens'
+# frames (below). Written, not matched: 6627, 3076, 4184 and 6678 (below).
 #
 # - 3064: the record ctelasvota.cpp:1585 (column 15) gives the name, the parameters (const comum::md::CCargo &,
 #   api::TPosition) and the throw: code 9354 with MensagemErroCargo(name, post, "não é de candidato") when the post
@@ -70,12 +71,22 @@
 #   -O3 unrolls by four as the target has it), a CTextFieldMultiLine in SRect(10, 50, 629, 255) in {35, 0} centred, and
 #   its Rect's bottom plus 23, read after the field is released (a named SRect: with the expression in the return the
 #   bottom was read first, 2 rows inserted and 2 deleted).
-# - 6624, adicionaBaseTelaVotoNuloConsulta (record :1014, code 9344 over "não é de consulta"), differs, named by
-#   6626's and 6616's calls: 56 over 322 rows, every row a frame offset but two deleted (an add of an offset that is 0
-#   in ours): the target holds the strings' slot above the throw's message, ours below. Written with the body first and
-#   the throw in the else, the frame's size and the strings' place are the target's but the test is `== 1` where the
-#   target tests the byte (48 over 324, 2 inserted); the blinking helper over a const char*, with a named point or with
-#   a copied font gave other offsets (object probes). Not explained. Its masked number field is
+# - 6624, adicionaBaseTelaVotoNuloConsulta (record :1014, code 9344 over "não é de consulta"), matched. Its frame and
+#   6608's are 80 bytes, the target's: 68 bytes of objects rounded up, the strings' slot (shared by the points, "VOTO
+#   NULO" and the throw's literal) at +40 above the throw's message at +28. The message is the by-value std::string
+#   argument of CBaseError's constructor, an alloca with no lifetime markers (the TU's -S -emit-llvm), so it keeps a
+#   slot of its own, and the strings take the slot of the first marked 12-byte alloca: the literal's, below the message,
+#   when "VOTO NULO" is a temporary of the function (frame 64, ours before). With the blinking call in
+#   AdicionaTextoVotoNulo (internal, clang inlines it; its name and linkage chosen, docs/reference/facts/codegen.md C5)
+#   the "VOTO NULO" temporary is an inlined callee's alloca, above the message: frame 80 on the object, and in the link
+#   every frame offset the target's. The same bytes for 6608, 6624 and 1591 (frames 80, 80 and 48): each helper a
+#   file-static function outside the anonymous namespace, or a lambda called in place in its callers; a try block, a
+#   plain block scope and the statement form give 64 for all three. Measured on the object: the body first and the throw
+#   in the else gives 80 but other slots (the field +48, the text field's result +40, the strings +24, the message +12);
+#   `-mllvm -stackcoloring-lifetime-start-on-first-use=false` changes nothing (64); `-mllvm -no-stack-coloring` gives
+#   96. In the link with the helper, before step 8: 25 over 322 rows, operand-only, and 6608 16 over 211; the one row of
+#   each that is neither a call nor data is __cxa_throw's destructor slot (`i32.const 69 ~ 43`), which re-points. The
+#   helper takes the x (6624 passes 320, 6608 195); y 345, the font and the text are its own. Its masked number field is
 #   AdicionaCampoNumero<CFramedText>, a template of vota (not internal): clang keeps it out of line for its one call, as
 #   the target does (binaryen inlines it, behind a second prologue), where an internal one is inlined (-Rpass=inline:
 #   cost -14725 against the threshold 250, with LLVM's last-call-to-static bonus of 15000, so 275 without it); its text
@@ -100,11 +111,17 @@
 #   footer (3067).
 # - 1591, 1767: the gif (NULO), adicionaBaseTelaVotoNuloCandidato (6608, record :1049: its signature gives the
 #   parameters, the field's right edge returned through a TPosition &; code 9344 over "não é de candidato"): the post's
-#   name, a grayed number field of the untyped digits (3060, AdicionaCampoNumero<api::CGrayedFramedText>), the text
-#   in FONTE_AGUARDE and the blinking "VOTO NULO". 1591 adds the keys' footer and the input control or a numeric field
-#   (2383, flags 0 1 1 0 1) at the returned x, 1767 the confira footer. 1767 matches; 1591 differs, 53 over 290 rows
-#   (43 operand-only, 3 inserted, 5 deleted: its frame is 64 bytes, the target's 48); 6608 differs, 47 over 211 (43
-#   operand-only, 2 deleted, every operand row a constant or a load or store offset). Not explained.
+#   name, a grayed number field of the untyped digits (3060, AdicionaCampoNumero<api::CGrayedFramedText>), the text in
+#   FONTE_AGUARDE and the blinking "VOTO NULO" (AdicionaTextoVotoNulo, above at 6624). 1591 adds the keys' footer and
+#   the input control or a numeric field (2383, flags 0 1 1 0 1) at the returned x, 1767 the confira footer. All three
+#   match. 1591's frame is the target's 48 with 2383's call in AdicionaCampoDigitos (internal, clang inlines it; its
+#   name and linkage chosen, codegen.md C5, whose probe gives a dropped result in such a helper lifetime markers): the
+#   call's dropped result then shares the strings' slot (+12), as the target's does, where written as a statement of
+#   1591 it keeps a slot of its own (frame 64, ours before); AddInputControl's dropped result keeps its own slot (+4) in
+#   the target, so it stays a statement of 1591 (a reading of the same section). The helper takes x and y by value: with
+#   the point built in 1591 and passed by const&, 27 over 288 rows (1 inserted, 3 deleted: the target reads the x before
+#   it stores the y), by value 22 over 287, operand-only (the link, before step 8). Both helpers sit in the
+#   anonymous-namespace runs of their callers' bases (lines 999 to 1002 and 1062 to 1066), places chosen.
 # - 3060 (AdicionaCampoNumero<api::CGrayedFramedText>) calls 5535, CGrayedFramedText's constructor, out of line, which
 #   keeps its two target callers (3060 and 4185): it differed, 13 over 131 (4 rows inserted, 5535 inlined), while 4185
 #   was not written, and matches with 4185 in the link (below), as 5535 does.

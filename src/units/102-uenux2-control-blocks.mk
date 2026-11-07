@@ -1,57 +1,57 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 19 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 48 come from the objects of units 31, 120, 101, 165,
-# 91, 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no
-# longer instantiate them. Nine of those went from the roots at once, builder and sink, a link without them moving no
-# row: the pointer blocks of CTextFieldPaper (5613, unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and
-# 12105 store its vptr too), CCutFieldPaper, CNewLineFieldPaper and CQRCodeImageFieldPaper (1264, 198 and 2775, unit
-# 31's cpaperformbuilder.cpp, from which 10994, 10993 and 10992 match), COptionValidation (5913, unit 59's
-# cmenubase.cpp: 11665), CBlockCipher<CAesCipher, CTrng> and the emplace block of CTrng (9489 and 6154, unit 137's
-# csymmetriccipherfactory.cpp: 9479, 9480, 9483, 9482), ecourna's CIdentificacaoJustificativa (11470, unit 66's
-# cjustificadordao.cpp: 11465, 11466) and std::string (10740, unit 277's cconfirmaaudio.cpp; 10749 and 5429 match
-# from chabilitaaudiomanualmente.cpp.o). The others:
-# CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
-# 10683 matches, and 12463 did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was
-# written in unit 110's ctelasvota.cpp, whose object links first and gives it now; 7787, its third builder, is not
-# written, and the block's stand-in went before 2383 was: one builder's vptr store keeps the block's vtable, and a link
-# with the stand-in back moved no row) and
-# CDataText<vota::CEscolheOpcao::COpcaoDS>'s (2753, the same object, from which 10684 matches),
-# IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CPreShowClearScreen's
-# (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138 matches),
-# CPreShowNothing<IScreen>'s (11891, unit 104's, which holds CFormBuilder::GetFormSemLimpar inlined, the same object,
-# from which 11137 matches now; the roots' builder and sink went with it),
-# CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
-# 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
-# vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is
-# in the same file) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
-# celeitordinamicodao.cpp, from which 11536 and 11537 match) and comum::md::CComparecimentoMesario's (10402,
-# CComparecimentoMesarioDAO::RecuperarID, unit 91's ccomparecimentomesariodao.cpp, from which 10395 and 5429, the slot 2
-# it shares with std::string's block, match) and api::CTextFieldBlinking's (1265,
-# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and
-# api::CProgressBar's (5545, CFormBuilder::AddProgressBar, the same object, from which 11111 and 11110 match; the roots'
-# builder and sink went) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's
-# cpowerinformation.cpp, from
-# which 8585 and 8578 match) and the pointer blocks of comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose
-# builders are unit 113's comum::CJustificador constructor (3742) and comum::CRegistradorMesario::GetInst (815): each
-# holds its servico's constructor inlined, whose object instantiates Entregar and with it the block (11463 matches from
-# cjustificadorservico.cpp.o, 10311 from ccomparecimentomesarioservico.cpp.o), and api::CDSImageField's pointer block
-# and BatteryIconDataSource<Horizontal>'s (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which
-# 11116, 11106 and 11105 match) and api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's,
-# which holds vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316
-# and 12314 match from it; the roots' builder and sink that stood for 5936 went) and api::CImageFieldUpdate's (3059,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 17 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 48 come from the objects of units 31, 120, 101, 165, 91,
+# 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no longer
+# instantiate them, and 2 from unit 136's cgravadorhashes.cpp.o (the last of the others below). Nine of the 48 went from
+# the roots at once, builder and sink, a link without them moving no row: the pointer blocks of CTextFieldPaper (5613,
+# unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and 12105 store its vptr too), CCutFieldPaper,
+# CNewLineFieldPaper and CQRCodeImageFieldPaper (1264, 198 and 2775, unit 31's cpaperformbuilder.cpp, from which 10994,
+# 10993 and 10992 match), COptionValidation (5913, unit 59's cmenubase.cpp: 11665), CBlockCipher<CAesCipher, CTrng> and
+# the emplace block of CTrng (9489 and 6154, unit 137's csymmetriccipherfactory.cpp: 9479, 9480, 9483, 9482), ecourna's
+# CIdentificacaoJustificativa (11470, unit 66's cjustificadordao.cpp: 11465, 11466) and std::string (10740, unit 277's
+# cconfirmaaudio.cpp; 10749 and 5429 match from chabilitaaudiomanualmente.cpp.o). The others: CNumberValidation's and
+# CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which 10683 matches, and 12463
+# did until CNumberValidation's builder 2383, the other vota::AdicionaCampoNumerico, was written in unit 110's
+# ctelasvota.cpp, whose object links first and gives it now; 7787, its third builder, is not written, and the block's
+# stand-in went before 2383 was: one builder's vptr store keeps the block's vtable, and a link with the stand-in back
+# moved no row) and CDataText<vota::CEscolheOpcao::COpcaoDS>'s (2753, the same object, from which 10684 matches),
+# IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
+# CPreShowClearScreen's (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138
+# matches), CPreShowNothing<IScreen>'s (11891, unit 104's, which holds CFormBuilder::GetFormSemLimpar inlined, the same
+# object, from which 11137 matches now; the roots' builder and sink went with it), CInteractiveForm<IScreen,
+# IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515, 6024), api::CTimer's
+# (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and vota::CPreShowFormVota's (576,
+# unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is in the same file) and
+# comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's celeitordinamicodao.cpp, from which
+# 11536 and 11537 match) and comum::md::CComparecimentoMesario's (10402, CComparecimentoMesarioDAO::RecuperarID, unit
+# 91's ccomparecimentomesariodao.cpp, from which 10395 and 5429, the slot 2 it shares with std::string's block, match)
+# and api::CTextFieldBlinking's (1265, CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113
+# and 11112 match) and api::CProgressBar's (5545, CFormBuilder::AddProgressBar, the same object, from which 11111 and
+# 11110 match; the roots' builder and sink went) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263,
+# unit 164's cpowerinformation.cpp, from which 8585 and 8578 match) and the pointer blocks of
+# comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose builders are unit 113's comum::CJustificador
+# constructor (3742) and comum::CRegistradorMesario::GetInst (815): each holds its servico's constructor inlined, whose
+# object instantiates Entregar and with it the block (11463 matches from cjustificadorservico.cpp.o, 10311 from
+# ccomparecimentomesarioservico.cpp.o), and api::CDSImageField's pointer block and BatteryIconDataSource<Horizontal>'s
+# (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which 11116, 11106 and 11105 match) and
+# api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's, which holds
+# vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316 and 12314
+# match from it; the roots' builder and sink that stood for 5936 went) and api::CImageFieldUpdate's (3059,
 # vota::AdicionaTelaQRCode, the same object, from which 12541 and 12535 match; the roots' builder and sink went) and
-# IHash's over
-# ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 321's gravadores/asn/cassinavotavelbu.cpp,
-# from which 10277 and 10279 match) and comum::asn::CVisitanteEleitor's pointer block (11523, the lambda of
-# CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp, which holds unit 280's carregaarquivo.cpp's
-# LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o) and the five pointer blocks of
-# comum::CItemMenu over the vota menu items (vota::CMenuMaisInformacoesVota's constructor, which fn 6599 holds, in
-# app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, unit 110's list, from whose object 12209, 12202, 12194, 12183,
-# 12172, 12162 and the four's slot 2, 2932, match) and api::CDataImage<std::__bind<...>>'s over the photo reader of
-# vota::CTelasVota::CriaTelaVisualizacaoCandidato (6561, unit 110's ctelasvota.cpp, from which 12530 and 12529 match,
-# below). Each block below: the
-# T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
-# shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
+# IHash's over ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 321's
+# gravadores/asn/cassinavotavelbu.cpp, from which 10277 and 10279 match) and comum::asn::CVisitanteEleitor's pointer
+# block (11523, the lambda of CEleitores::GetEleitoresEstaticos, unit 110's celeitores.cpp, which holds unit 280's
+# carregaarquivo.cpp's LeEleitores, whose object builds the block: 11435 matches from carregaarquivo.cpp.o) and the five
+# pointer blocks of comum::CItemMenu over the vota menu items (vota::CMenuMaisInformacoesVota's constructor, which fn
+# 6599 holds, in app/vota/eleitor/comum/cmenumaisinformacoesvota.cpp, unit 110's list, from whose object 12209, 12202,
+# 12194, 12183, 12172, 12162 and the four's slot 2, 2932, match) and api::CDataImage<std::__bind<...>>'s over the photo
+# reader of vota::CTelasVota::CriaTelaVisualizacaoCandidato (6561, unit 110's ctelasvota.cpp, from which 12530 and 12529
+# match, below) and comum::md::CIdentificacaoSecao's and CIdentificacaoUrnaContingencia's pointer blocks (12098, which
+# stores both vptrs, holds CGravadorHashes's two constructors inlined; written unrooted in unit 136's
+# cgravadorhashes.cpp, they instantiate both blocks, and that object links ahead of the roots, so 11618 and 11617 match
+# from it; the roots' builder and sink of the two stay for 12098, which is not in the link). Each block below: the T,
+# the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are shared
+# bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
 #   IFormField<IPaper>: CTextFieldPaper 193, 604, 5613, 12105: 11997. CCutFieldPaper 1264: 10994.
 #     CNewLineFieldPaper 198: 10993

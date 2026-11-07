@@ -441,7 +441,9 @@ order of evaluation, a temporary, a delegating constructor. A construct whose on
 scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. An ordinary type
 the function uses only for the code it gives is source only where the target shows the object it stands for: 1695's
 always-engaged `std::optional<CApplicationContext>` is the 56-byte object its frame holds (§C5), a type TSE uses
-elsewhere, marked chosen among the forms that give the same object (unit 171). When a form stands in for a header that
+elsewhere, marked chosen among the forms that give the same object (unit 171). In a uenux2 TU, built without
+exceptions, a `try` block is a same-bytes form of a bare block scope (§C11): list it beside a scope a match rests on
+(3829, unit 95). When a form stands in for a header that
 is not the original's (an aggregate where the target has a constructor), say so in the fragment's header comment. A
 function the target holds inlined at every use is a form too when only a call there gives the measured code (a predicate
 or a setter over a member): write it as a member of the class it reads, its name and membership chosen, and give the
@@ -532,7 +534,9 @@ returns, an `if (result i32) … else 0 end` tested again or carried across the 
 returned `this` held in a second local (5856), or used after its code where a call of the C1 its own TU defines drops
 it, which says the constructor is another TU's (§C6; 2733, 2738, 5702: rule 2 below counts it); a prologue in each arm
 of a branch (two one-caller functions, 5604's ORLC setters); a member's address added once to `this` after the
-prologue, the loads at small offsets from that local (5665's accessor).
+prologue, the loads at small offsets from that local (5665's accessor). A test of a constant argument the inlining
+folded leaves only the block boundary it made: two store runs with no branch between, or a zero fill trimmed past
+stores (10967, §C1 "Store runs").
 
 A frameless callee leaves none of them, but one that returns an object or takes one by reference keeps its loads and
 stores of it through a local that holds the object's frame address; a prologue is the frame of the function around the
@@ -579,8 +583,9 @@ list's fragment is another stage's). Rows that differ in frame offsets alone com
 the first local or temporary it creates takes the highest offset, so a named local against a temporary moves them (5472
 and 5473 match with the `CDateTime` a named local). A callee clang inlines brings its locals in above the caller's own,
 so a temporary above locals the source must create before it points at an inlined helper, algorithm or lambda (11394's
-loop temporary above its list and converter). They can also come from what else the TU instantiates, before the function
-or after it: an inlined `always_inline` template takes its stack slots from the instances the TU shares, and the copy
+loop temporary above its list and converter), or at a call's result temporary over its argument's (`f(g(h()))`:
+§C5). They can also come from what else the TU instantiates, before the function or after it: an inlined
+`always_inline` template takes its stack slots from the instances the TU shares, and the copy
 the target keeps can be another TU's; read where the target's record of the copy lies first. A frame larger than what
 its code addresses holds a wrapper whose extra member folded away, objects whose code is gone, or a by-value result
 larger than what the caller reads; a frame short by one object's slot is stack colouring (all §C5).
@@ -753,8 +758,8 @@ An inverted pair is two definitions swapped only when no earlier function of the
 its place at its first mention, not at its definition (a callee sits between its two constructors in three objects of
 unit 89, and 5693 and 5694 read inverted because `DoDesconverte` mentions 5694 first), in the code clang emits after its
 own inlining ([facts/reading.md](reference/facts/reading.md) §R9 has the case and the object's function list to read
-for each order you try); a function first mentioned above its definition does not carry its own callees there, which
-take their places at its definition (§R9). Such a swap gives the
+for each order you try); a function first mentioned above its definition carries there the callees it still calls,
+and a callee clang inlined into it keeps its own place (§R9). Such a swap gives the
 same bytes, so it is a question of source order, not of a match. A linkonce instance (a control block's member, a
 template's member) counts the same way: it takes its place at its first mention, so a run of consecutive target indices
 in one band gives the order of the definitions that mention them, and a row far from the run may be another TU's copy,
@@ -790,8 +795,13 @@ when it reads private state, helps a singleton class, or reaches the object only
 own `.cpp` its place is (5180, `CFile::Write`, calls `RawWrite` on `this`). A class whose records name static members
 only, more than one, and no data member (`api::CSystem`: `LC_ALL=C awk -F'\t' '$5 ~ /^static .*api::CSystem::/'
 ledger/source-locations.tsv | wc -l` prints 18) permits a static member and does not require one: in its file the form
-of the file's landed functions is the default. Otherwise it is a free function: one binaryen inlined, with no index of
-its own, in the namespace of its caller's class (§R10 has the cases); one with an index in the namespace of the file its
+of the file's landed functions is the default. A function that reads no state takes the object when the target shows
+it passed, a parameter's local that holds later values in the target and stays empty in ours (§R10, 4620 for 13550);
+a member or a free function taking it is then the choice. Otherwise it is a free function: one binaryen inlined, with
+no index of its own, in the namespace of its caller's class (§R10 has the cases), unless a record or its data put it
+in a file of
+another namespace: then that one (11891's message, `api::MostraMensagemTemporaria` in `capplication.cpp` by its
+font's place); one with an index in the namespace of the file its
 place gives (rule 5 above: `api::GetFreeSpace`, whose one caller is `vota::CThreadMonitor::Run`); one of another tree,
 as ecourna's code is to uenux2, in its own directory's namespace. Membership and a namespace no record, slot or RTTI
 shows are choices like a name: mark them, with the reason and the form that gives the same bytes (a free function that
@@ -1136,15 +1146,27 @@ splat/symbol_addrs.txt`). A differing callee's own records anchor nothing (`srcl
 position by position: a callee whose remainder is local numbers alone still anchors, though `pnpm wasm score` counts a
 swapped pair of `local.get`s as one row inserted and one deleted, 6599's `vptr-anchor`), so when no other caller votes,
 its name takes a `callers+content` hand line resting on records only it loads (3771 under 2787; step 9, "Hand edits"),
-or the caller stays `unresolved self-voted`.
+or a `vtable-slot` line when it fills a slot both links name (5504 under 13550, splat.md §2), or the caller stays
+`unresolved self-voted`.
 
 A member right by construction (a singleton's `GetInst`) that the target holds inlined in one unwritten caller may be
 written, unrooted, or wait for that caller; the fragment says which. Written, it is compared with nothing
-([reference/splat.md](reference/splat.md) "Reviewing a match" says how to read it by hand), and its statics' exit
+([reference/splat.md](reference/splat.md) "Reviewing a match" says how to read it by hand; the next paragraph has a
+body that is not right by construction), and its statics' exit
 destructors are not matched until that caller's match names the objects: they read `no-candidate`, or `differs` or
 `unresolved` with source `ledger` on a census pair with another object's destructor of the same shape, which a landing
 can move (`awk -F'\t' 'NR>1 && $4=="ledger" && $5!="match" && $2 ~ /cxx_global_array_dtor/' splat/scan.tsv | wc -l`
 prints 41 at 3c1ef19d).
+
+A body with no index that is not right by construction (12098's signing and log members, written from its readout) is
+checked three ways, and the fragment says which ran: its records with `check_srcloc.py --strict` on its object; its
+code against the holder's readout lines by hand, since nothing scores it (frame, calls in order, stores and constants:
+`wasm-objdump -d <object>` beside `pnpm wasm fn <target> <holder>`); and the plain link, which unrooted code leaves
+alone but for linkonce copies: a template instance or control block it instantiates takes the link's copy when its
+object comes first ([facts/link-order.md](reference/facts/link-order.md) §L2), so compare `names.tsv`'s object column
+with the base's, run steps 7 to 10 and fix the notes that name the old object. Its match is the holder's. It lands with
+any match of its lane and needs no holder in the link; a lane that writes it and matches nothing keeps its branch for
+the holder's lane (the command file's Stage 1).
 
 A trap in a `-pending.cpp` is right only where `src/units/README.md` "Pending members" says (a member that cannot be
 written yet, one that cannot match until other code lands, one whose real body would cost a match; an out-of-line
@@ -1492,7 +1514,9 @@ before the library's first `.bss`, `.data` and `.rodata` object, against the tar
 names by address). Data order is link order, so where the target's data put the library elsewhere on the link line, its
 place there is evidence ([facts/link-order.md](reference/facts/link-order.md) §L3 has SQLite's between OpenSSL's and
 libc's in each segment, and the residue it fixed). Only a residue the two orders agree on is chance. The next landing
-that moves the data clears it. Never add or drop a string to move it, and add no hand line for the lost name: its only
+that moves the data clears it, and for a data name whose object's bytes say nothing (glossary "self-voted") so does a
+match of each function its pointers name that our link does not: the bytes then agree wherever the data fall (3138,
+`facts/splat.md` §S10 item 31). Never add or drop a string to move it, and add no hand line for the lost name: its only
 evidence is the lost row's operand ("Hand edits", below). A lane whose own link loses a match of its base so stops and
 reports it; at a landing, land the next lane first and retry (step 10). A small integer in a data object that equals a
 table slot of ours is not such a case: the operand-kind table reads it as the integer it is
@@ -1577,7 +1601,10 @@ symbol-file hand edit whose only evidence is the match it enables: a name whose 
 proves nothing. A hand edit is allowed when no generated route reaches a name and evidence outside the match gives it: a
 callee whose callers in the link are all named by `vtable` (those cast no votes) and whose other callers are not written
 (3613's line: its one target caller besides itself, 10409, is named by `vtable`), a callee with one caller that can
-land, a merge body's own callee, a `.bss` object, a `.data` or read-only object too small for its bytes to place, or a
+land (one whose match does not rest on the line: the callee's own body or another voter gives it, so a line whose only
+evidence is that caller's call is the self-vote §3 refuses, and 6678 waits written for 4184's match), a slot function
+whose generated `vtable` line a caller's lone `call` vote displaced (a `vtable-slot` line, splat.md §2), a merge body's
+own callee, a `.bss` object, a `.data` or read-only object too small for its bytes to place, or a
 small pointer that no vote reaches, led by the target functions other than the match that read or write it, its static
 destructor among them, a thunk into a shared body too; a data object the match alone touches has no such
 evidence and takes no hand line. [reference/splat.md](reference/splat.md) §2 has the kinds,
@@ -1607,8 +1634,8 @@ awk '/^# ---- hand edits below/ {h=1; next} h && !/^#/ && NF {print $1}' splat/s
 ```
 
 A line found idle for a cause your landing did not
-bring (its symbol gone from our link, a body merged elsewhere: 543's `merged-body` line for
-`vector<ASN1::AbstractData*>::push_back`) goes in a commit of its own with the docs that cite it, after a `queue/` post;
+bring (its symbol gone from our link, a body merged elsewhere) goes in a commit of its own with the docs that cite it,
+after a `queue/` post;
 your commit keeps it. A caught-up line is not such a case: a range whose match touches it removes it
 ([reference/splat.md](reference/splat.md) "Reviewing a match"), unless a doc cites it as an example: then it goes in a
 commit of its own with that doc (9c5ede00). A
@@ -1752,8 +1779,9 @@ the eight kinds and a search for each) and fix them in your commit, comment line
 with two exceptions. A stand-in or sink your unit makes idle goes in your commit, code and comment, call by call; one
 idle since an earlier landing, or in a file another stage holds, goes as `src/units/README.md` "Finding the idle ones"
 says. And a hand line whose function your match now names by a generated line is yours to weigh (the caught-up `awk` of
-"Reviewing a match" first). A file another active stage claims, or a sentence an unlanded branch has changed whatever
-its stage (`git diff <base> <branch> -- <file>`), is left to the landing and named in your result with the indices that
+"Reviewing a match" first). A file another active stage claims, or a sentence an unlanded branch has changed, or that
+lies in or next to a hunk of it, whatever its stage (`git diff <base> <branch> -- <file>`, read with its `@@` ranges),
+is left to the landing and named in your result with the indices that
 make it stale. A lane whose branch has not landed is such a stage, on either machine; when its branch is not on yours,
 take the files and line ranges its result names outside its unit. A gap step 9 writes and a README row are yours to
 commit even where such a branch changes the same lines: name them in the result as conflicts the landing resolves (it
@@ -1904,7 +1932,10 @@ added on both sides). One that joins a side's gap with lines the other side adde
 Some matches rest on the whole link and not on a source, so a merge that touches none of them can drop them: after step
 9 run the check of [facts/splat.md](reference/facts/splat.md) §S10, which lists them, and stop if one left `match`. A
 row lost to one link's data layout, with the cause shown (step 9's four cases), is the one loss a batch may wait out:
-land the next lane first, which moves the data, and retry the merge; stop if the row is still out. Read each roots
+land the next lane first, which moves the data, and retry the merge; stop if the row is still out. A row that is no
+row of `main` (the merged lane's own link matched it by data layout, and its §S10 item is that lane's) and is still out
+at the batch's last merge is withdrawn instead ("Withdrawing a match"), the cause shown in the merge commit: its index
+leaves §S10's check list, and its item says why the row is out and what brings it back (3138, item 31). Read each roots
 file's reasons again too, since a stand-in beside its real caller can pass every check (one that calls what the target
 inlines into that caller unmatches it instead: `src/units/README.md` "Companion files"): a stand-in, or a call of one,
 whose every target caller is now in the link goes in this merge, before these steps, and one whose callers landed in

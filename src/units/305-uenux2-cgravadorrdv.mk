@@ -23,6 +23,15 @@
 #   uebyte vector's, with the second copy a std::vector<uebyte>; that the two copies' paths joined because they called
 #   one function is a reading).
 # No other form was measured.
+#
+# CGravadorRDV's constructor, which vota::CGravaResultado::StartState (fn 12098) holds inlined with no frame of its own
+# (its vptr store at line 454 of the folded readout `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 12098` prints,
+# counted from the line after `;; --- folded readout`), is written in cgravadorrdv.cpp ahead of GravaResultado,
+# unrooted (wasm-ld drops it), so with no target index and no match until 12098 is written: IGravador's constructor with
+# the extension 6 and the SAVD file 37, the date-time at +40, 49 at +52, the correspondence's copy (fn 1249) at +56, the
+# empty optional at +152 and the CRdv at +164 (cgravadorrdv.h). Measured on the object (wasm-objdump -d): it opens no
+# frame and calls IGravador's constructor and the copy, as 12098's code does. Chosen: its line, its parameters' order
+# and form, and the constants as its own rather than 12098's arguments (one call cannot tell them apart).
 CGRAVADORRDV_305_SRCS := src/app/comum/gravadores/cgravadorrdv.cpp
 UENUX2_SRCS += $(CGRAVADORRDV_305_SRCS)
 # ecourna's media information (CInformacaoMidia holds a Boost ptime) and its converter, whose header includes the

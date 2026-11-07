@@ -924,18 +924,23 @@ Three limits to this reading:
 
   `push_back` sits after `Guard`'s constructor, which inlines `Push`, and ahead of `Push`. When a definition's place
   is in question, read the object's function list for each order you try.
-- **A function first mentioned above its definition does not carry its callees.** It sits at the mention, and the
-  functions its own body mentions first sit where that body is compiled, at its definition: `top` calls `a`, defined
-  below `mid`, and `a`'s callee `b` follows `mid` and `mid`'s callee `lo` (e7d03612):
+- **A function first mentioned above its definition carries the callees it still calls.** It sits at the mention, and
+  so do the callees its emitted code calls, in the order it calls them; a callee clang inlined into it is not called and
+  keeps its own place (its definition, or an earlier mention). `top` calls `a`, defined below `mid`: `a`'s callee `b`,
+  inlined, follows `mid` and `mid`'s callee `lo`, and kept a call (`noinline`, a probe only) it follows `a` (b3236f02):
 
       P=build/out/reading-probe; mkdir -p $P
       printf '%s\n' '#include <string>' '#include <vector>' 'void use(const std::string&);' 'void a(const std::string& s);' 'void lo(int);' 'void top() { a("x"); }' 'void mid(const std::string& m) { use(m); lo(1); }' 'void b(int);' 'void a(const std::string& s) { std::vector<std::string> v{s, s}; use(v[1]); b(2); }' 'void b(int n) { use(std::to_string(n)); }' 'void lo(int n) { use(std::to_string(n + 1)); }' > $P/mention3.cpp
-      TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/mention3.cpp -o /work/$P/mention3.o
-      wasm-objdump -d $P/mention3.o | /usr/bin/grep -oE ' func\[[0-9]+\] <[^>]+>' | sed 's/.*<//; s/>$//; s/RKNSt3__2[A-Za-z0-9_]*//' | tr '\n' ' '
-        _Z3topv _Z1a _Z3mid _Z2loi _Z1bi
+      sed 's/^void b(int);/__attribute__((noinline)) void b(int);/' $P/mention3.cpp > $P/mention3n.cpp
+      for f in mention3 mention3n; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/$f.cpp -o /work/$P/$f.o
+        printf '%s: ' $f; wasm-objdump -d $P/$f.o | /usr/bin/grep -oE ' func\[[0-9]+\] <[^>]+>' | sed 's/.*<//; s/>$//; s/RKNSt3__2[A-Za-z0-9_]*//' | tr '\n' ' '; echo; done
+        mention3: _Z3topv _Z1a _Z3mid _Z2loi _Z1bi
+        mention3n: _Z3topv _Z1a _Z1bi _Z3mid _Z2loi
 
-  An object whose callee of a callee sits higher than this reading gives has an earlier mention of it, or a deferred
-  function between: read its list, not the reading.
+  The IR keeps the definitions' order either way, so read the object's function list, not the IR: in `cinifile.cpp`
+  with `Carrega` moved above them, `SetSection` and `SetKey` came after `Interpreta`, which calls them (unit 379's
+  fragment, its `1594` and `1184`). An object whose callee of a callee sits higher than this reading gives has an
+  earlier mention of it, or a deferred function between.
 
 ## R10. Code binaryen inlined from an out-of-line function of the source
 
@@ -1134,7 +1139,12 @@ three and `unresolved` for 5181, which waits for a name:
   dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
-  whose result every caller drops (unit 00's fragment).
+  whose result every caller drops (unit 00's fragment). The same elimination hides an argument: a parameter's local
+  that holds later values in the target and stays empty in ours was live in clang's output, passed to a callee whose
+  unused parameter binaryen removed. 13550's `this` (local 0) goes to 4620, `DesenhaDescricaoModo`, which reads no
+  state: written a free function, 13550 scored `297 over 1028`, every row a local or one the locals decide, and a
+  member of `CPreShowFormVota`, `49 over 1008`, then the match (unit 391's fragment). Such a measurement is the
+  evidence that the object is passed; the member form against a free function taking it is a choice (the same code).
 
   A locals-only remainder no lever above closes. A parameter copied into a local before a loop (`local.get 1;
   local.set 16` in 2811's loop preheader, local 1 then reused as scratch) is no copy clang makes at any level;
