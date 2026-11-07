@@ -9,8 +9,11 @@
 # - CInformaEleitorPodeVotar's statics' exit destructors (10497, 10499);
 # - the three classes' ProcessInput (slot 7: 10508, 10504, 10496), thunks into binaryen's shared body of the three, fn
 #   3883, which our link forms too, as byn$mgfn-shared$_ZN4vota27CInformaBioDesabilitadaDemo12ProcessInputEv (the first
-#   member in link order); a callers+content hand line in splat/symbol_addrs.txt names it, and the three match through
-#   it (without it, step 9 read each `unresolved ... byn$mgfn-shared$... has no target function`);
+#   member in link order), and 3883 itself, matched since each ProcessInput's two next-state stores call
+#   comum::CAppState::SetNextState (cappstate.h), 10511's form (unit 161; docs/reference/facts/codegen.md C13): with the
+#   stores, 10 over 83 rows against our shared body, all operand-only, the queue's address in local 2 where the target
+#   reuses local 0; with the calls, 8 over 83, every row a call or a data operand (pnpm wasm score on the whole link),
+#   and step 9 matches it. A callers+content hand line in splat/symbol_addrs.txt names 3883;
 # - CDigitalReconhecida::StartState (10482, record cdigitalreconhecida.cpp:47);
 # - CPedeDigital's destructor and deleting destructor (2739, its match line now the D1 alias, and 10469), FinishState
 #   (10467, records 131 and 132) and ProcessInput (10466), as unit 192 matched them;
@@ -128,10 +131,10 @@
 # s_mutex's; 10506, s_inst's) match through the names 10500's votes give the statics. 10500 needs this file's object
 # ahead of cnomeeleitor.cpp's, so this list compiles unit 239's two files after it (below).
 #
-# Written and not matched, and what each waits for:
-# - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
-#   numbers (the queue's address in local 2 where the target reuses local 0, the same difference as 10511's, unit 161).
-# CInformaEleitorPodeVotar::GetInst (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the
+# 3883's form: SetNextState in both arms of `if (IsAudioAtivado())` in each of the three files, which the bytes decide
+# (the stores' score above). StartState's `m_pNextState = this;` written `SetNextState(this);` in the three files gives
+# a byte-identical module (the three objects swapped into a copy of the whole link, `shasum -a 256` of both wasm files):
+# StartState's store is a choice, kept as it was. CInformaEleitorPodeVotar::GetInst (5399) matches since unit 161's CControlaReconhecimento::GetInst (1256) is in the
 # link: before, 5410's name had 5399's own call as its one vote and 5399 read `unresolved self-voted`.
 #
 # The StartState of the three not-recognized states, matched (pnpm wasm score before steps 7 to 9, then step 9):

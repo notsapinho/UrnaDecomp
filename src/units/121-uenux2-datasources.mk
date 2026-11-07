@@ -104,9 +104,10 @@
 # stand-in went; the roots stand for 1151's callers but 2753, 652, 2735, 3631 and 5418, which are (12 and false, so that
 # dead-argument elimination keeps the length and the flag); the vtable sinks of CEscolheOpcao and
 # of CDataText<COpcaoDS> went, since 2753 stores both vptrs, and so did the builder of CDataText<COpcaoDS>.
-# cescolheopcao.cpp.o now links ahead of unit 31's cmtformbuilder.cpp.o and gives the copies of what both instantiate:
+# cescolheopcao.cpp.o linked ahead of unit 31's cmtformbuilder.cpp.o and gave the copies of what both instantiate:
 # IInputField<IScreenMT>'s constructor (3673), its destructor and Read, and the vector's emplace_back (1400, renamed by
-# step 9 to its IScreenMT twin), each re-pointing as before. Choices that give the same bytes: none measured. Not
+# step 9 to its IScreenMT twin), each re-pointing as before; since unit 161's list compiles cmtformbuilder.cpp at its
+# head (for 5410), that object links first and gives them, still matched (unit 161's fragment lists the rows). Choices that give the same bytes: none measured. Not
 # measured either: 1151 as the linkonce copy of an inline definition in a header, the other reading unit 31's fragment
 # gave of where the target's copy comes from before 1151 was written.
 #

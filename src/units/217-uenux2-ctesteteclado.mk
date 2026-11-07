@@ -44,10 +44,10 @@
 # @1547132), ahead of ctesteteclado.cpp: with cerrotestetecladofim.cpp in unit 97's list (behind cenviarmanutencao.cpp)
 # 11812 differed in local numbers (190 over 471 rows, 176 operand-only, 7 inserted, 7 deleted), and here it has
 # operand rows only; 11804 and 11809 had operand rows only at once. The move jumps 240 objects of the link. Counted
-# with each object's vtables, typeinfos and records in .data (their target addresses from the symbol file and the
-# records, against the link map), it inverts 29 pairs, objects whose data the target holds after the class's and the
-# link before it: cgerabu, cgerarelatorios, ccopiaresultadoparamr, cfinalizaaquisicao, cimprimindobehb, cimprimirbjust
-# and cmostraqrcodebu (fimvotacao/), cfimvotoeleitor, csincronismovotoeleitor, crelvotautil, cqrcodeds,
+# at 64134702 with each object's vtables, typeinfos and records in .data (their target addresses from the symbol file
+# and the records, against the link map), it inverts 29 pairs, objects whose data the target holds after the class's
+# and the link before it: cgerabu, cgerarelatorios, ccopiaresultadoparamr, cfinalizaaquisicao, cimprimindobehb,
+# cimprimirbjust and cmostraqrcodebu (fimvotacao/), cfimvotoeleitor, csincronismovotoeleitor, crelvotautil, cqrcodeds,
 # cexibealertadesligamento, cvotacaostateaudio, cestadocomdesligamentoautomatico and fifteen of
 # mock/app/simulador/wasm/ (cwasmclp, cwasmtimer, cwasmtimerscheduler, cwasmlogd, cwasmscreen, cwasmbeep,
 # cwasmwebsound, cwasmscreenmt, cwasmnullprinter, cwasmnullpaper, cwasminputkbd, cwasminputmt, cwasmnullsound,
