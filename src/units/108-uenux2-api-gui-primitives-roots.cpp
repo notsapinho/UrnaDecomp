@@ -1,9 +1,9 @@
 // Roots: api::SRect::Union (target fn 1916) has five direct callers in the target (fns 1693, 7787, 10896, 10925,
-// 10929). 10896, 10925 and 10929 are reconstructed, and so is 1693 (unit 84's, not matched); UneRetangulos stands for
+// 10929). 10896, 10925 and 10929 are reconstructed, and so is 1693 (unit 84's); UneRetangulos stands for
 // 7787 with one call (a second stood for 1693 until it was written); its body is no target function's. SRect::Left and
 // Right (fns 5488 and 5487) have two direct callers each in the target, fns 5537 (unit 92's DrawChar) and 10977 (unit
 // 40's api::CProgressBar::Draw), both in the link, so no stand-in calls them (AjustaBordas's calls of them went with
-// 10977). SRect::Adjust (fn 2768) has four, fns 2770, 5545, 7787 and 10977, of which 2770 (unit 84's, not matched),
+// 10977). SRect::Adjust (fn 2768) has four, fns 2770, 5545, 7787 and 10977, of which 2770 (unit 84's),
 // 5545 (api::CFormBuilder::AddProgressBar, unit 31's, which holds CProgressBar's constructor inlined) and 10977 are in
 // the link; AjustaBordas stands for 7787 with one call (its call for 5545 went); its body is no target function's.
 // Compiled with APP_CXXFLAGS, like the other stand-ins.
