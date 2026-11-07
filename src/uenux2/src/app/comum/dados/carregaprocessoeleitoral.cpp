@@ -2,10 +2,14 @@
 // (CarregaProcessoEleitoral of the general state, with LeProcessoEleitoral inlined behind a stack frame of its own) and
 // fn 5778 (CarregaPleito, which 3771 calls once per pleito), over CarregaArquivo's instances (carregaarquivo.h). No
 // record names the file or these functions: every name, the path, the lines and their being free functions are chosen.
-// src/units/280-uenux2-processoeleitoral.mk has the evidence for each form.
+// Two forms are measured, not read from any record: LeProcessoEleitoral defined below CarregaProcessoEleitoral, which
+// declares it, and its upper-casing written with std::transform. src/units/280-uenux2-processoeleitoral.mk has the
+// evidence for each form and the forms that give the same object.
 #include "app/comum/dados/carregaprocessoeleitoral.h"
 
+#include <algorithm>
 #include <cctype>
+#include <iterator>
 #include <utility>
 #include <vector>
 
@@ -45,24 +49,7 @@ md::CPleito CarregaPleito(const EUrnaFase fase, const std::string& uf, const std
 }
 
 md::CProcessoEleitoral LeProcessoEleitoral(const EUrnaFase fase, const uedword idPE, const std::string& uf,
-    const std::filesystem::path& diretorio)
-{
-    const std::string nomeProcesso = NomeArquivoPE(fase, idPE, "cp", "dat");
-    const md::CProcessoEleitoralDTO dto =
-        CarregaArquivo<asn::CConversorProcessoEleitoral>((diretorio / nomeProcesso).string());
-    const md::CPleito pleito1 = CarregaPleito(fase, uf, diretorio, dto.GetPleito1());
-    std::string ufMaiuscula;
-    for (const char letra : uf) {
-        ufMaiuscula.push_back(static_cast<char>(std::toupper(letra)));
-    }
-    if (dto.TemPleito2()) {
-        const md::CPleito pleito2 = CarregaPleito(fase, uf, diretorio, dto.GetPleito2());
-        return md::CProcessoEleitoral(dto.GetID(), ufMaiuscula, dto.GetNome(), dto.GetUtilizaBiometria(),
-            dto.GetOrigem(), pleito1, pleito2, dto.GetIdentificadorPrincipal(), dto.GetIdentificadores());
-    }
-    return md::CProcessoEleitoral(dto.GetID(), ufMaiuscula, dto.GetNome(), dto.GetUtilizaBiometria(), dto.GetOrigem(),
-        pleito1, dto.GetIdentificadorPrincipal(), dto.GetIdentificadores());
-}
+    const std::filesystem::path& diretorio);
 
 md::CProcessoEleitoral CarregaProcessoEleitoral(const md::estadoaplicacao::CEstadoGeral& estadoGeral,
     const EFlashOrigem origem)
@@ -70,6 +57,24 @@ md::CProcessoEleitoral CarregaProcessoEleitoral(const md::estadoaplicacao::CEsta
     const std::filesystem::path diretorio = CPath::GetPathEstatico(origem);
     return LeProcessoEleitoral(estadoGeral.GetDadoCarga().GetFase(), estadoGeral.GetIdPE(),
         estadoGeral.GetDadoLocal().GetUF(), diretorio);
+}
+
+md::CProcessoEleitoral LeProcessoEleitoral(const EUrnaFase fase, const uedword idPE, const std::string& uf,
+    const std::filesystem::path& diretorio)
+{
+    const std::string nomeProcesso = NomeArquivoPE(fase, idPE, "cp", "dat");
+    const md::CProcessoEleitoralDTO dto =
+        CarregaArquivo<asn::CConversorProcessoEleitoral>((diretorio / nomeProcesso).string());
+    const md::CPleito pleito1 = CarregaPleito(fase, uf, diretorio, dto.GetPleito1());
+    std::string ufMaiuscula;
+    std::transform(uf.begin(), uf.end(), std::back_inserter(ufMaiuscula), ::toupper);
+    if (dto.TemPleito2()) {
+        const md::CPleito pleito2 = CarregaPleito(fase, uf, diretorio, dto.GetPleito2());
+        return md::CProcessoEleitoral(dto.GetID(), ufMaiuscula, dto.GetNome(), dto.GetUtilizaBiometria(),
+            dto.GetOrigem(), pleito1, pleito2, dto.GetIdentificadorPrincipal(), dto.GetIdentificadores());
+    }
+    return md::CProcessoEleitoral(dto.GetID(), ufMaiuscula, dto.GetNome(), dto.GetUtilizaBiometria(), dto.GetOrigem(),
+        pleito1, dto.GetIdentificadorPrincipal(), dto.GetIdentificadores());
 }
 
 } // namespace comum
