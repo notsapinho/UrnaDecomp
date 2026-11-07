@@ -49,7 +49,7 @@ enum EEstadoEncerramento : int {
     EAEFIMDOSTRABALHOS,
     EAEULTIMOID,
 };
-
+namespace teste { class CAppInfoBuilder; }
 } // namespace comum
 
 // The converter's throws pass each enum as a handle on fn 536 (table slots 967 and 966), formatter<unsigned int>'s body,
@@ -161,8 +161,8 @@ public:
     // others). Out of line in cestadogeralvota.cpp, measured: with SetEstadoVota alone in the class, 11920 and 12034
     // leave `match` (9 over 76 rows become 11, local numbers), while 12077 matches either way; with both in the class,
     // clang merges 12077's and 12134's two i32.store (64 at +0, a closing state at +4) into one i64.store (12077: 44
-    // over 243 rows, 3 deleted, at the stores). binaryen inlines each one-instruction body into every caller, so
-    // neither has a target index. No record or text names them: the names and their being setters are chosen.
+    // over 243 rows, 3 deleted, at the stores). binaryen inlines each one-instruction body into every direct caller;
+    // SetEstadoVota keeps a body, target fn 11266, for votaInit's table slot 51 (fn 7840). No record or text names them: the names and their being setters are chosen.
     void SetEstadoVota(EEstadoVota estadoVota);
     void SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento);
     // vota::testeteclado::CRetomada's slot 11 (target fn 11830) reads the byte at +96 and stores 1 there before
@@ -173,8 +173,19 @@ public:
     // +12, m_urnaIdGerouZeresima's flag and value, before fn 491. No record or text names a setter: its being a setter,
     // its name and its being defined in the class are chosen.
     void SetUrnaIdGerouZeresima(uedword urnaId) { m_urnaIdGerouZeresima = urnaId; }
+    // The default, which target fn 10268 (comum::teste::CAppInfoBuilder's constructor) stores into both of the
+    // builder's vota states (+300, +400) with no call: EAVINICIAL and EAEINICIAL, every count and flag 0 and every
+    // optional empty. Read as inline.
+    CEstadoGeralVota()
+        : m_estadoVota(EAVINICIAL), m_estadoEncerramento(EAEINICIAL), m_qtdBU(0), m_comparecimento(0),
+          m_qtdJustificativa(0), m_treinamentoEleitor(false), m_tecladoTestadoPosConversao(false)
+    {
+    }
 
 private:
+    // The builder writes the state and the training flag directly (votaInit, target fn 7840): chosen.
+    friend class teste::CAppInfoBuilder;
+
     EEstadoVota m_estadoVota;
     EEstadoEncerramento m_estadoEncerramento;
     uebyte m_qtdBU;

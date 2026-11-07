@@ -2,8 +2,10 @@
 # part: (anonymous namespace)::CVotaWebEngine's layout, SetAudioEnabled (record 592:9) and a key-press member, the
 # engine's getter, the exports votaPressKey (target fn 10703), votaSetAudioEnabled (10240), votaGetStateJson (10171) and
 # votaTick (10619, written, not matched), the state's JSON (5500, written, not matched) and the helpers and posts they
-# call (the section "votaTick and votaGetStateJson" below), main, and api::g_polySingletonsInfo with
-# api::polySingletonsInfoPadrao (11265), which unit 100 kept in a file of its own while this TU could not be compiled.
+# call (the section "votaTick and votaGetStateJson" below), main, api::g_polySingletonsInfo with
+# api::polySingletonsInfoPadrao (11265), which unit 100 kept in a file of its own while this TU could not be compiled,
+# and votaInit (7840, CVotaWebEngine::Init inlined, record 515:13, written, not matched) with the helpers it calls (the
+# section "votaInit" at the end).
 # The fragment is this comment: the TU's object, its rule and flags and its place first on the link line are
 # src/Makefile's (VOTA_WEB_CXXFLAGS, VOTA_WEB_OBJS; docs/reference/facts/levels.md V1 measures each flag on the whole
 # link), and the benchmark's setup `vota-web` names that object.
@@ -51,7 +53,8 @@
 #   come from the target's bodies: +2 the byte SetAudioEnabled stores (10240), +24 a std::string the getter builds from
 #   "{}" (literal 8150) and votaGetStateJson (10171) returns the characters of; +0, +1, +3, +4 and +5 bytes, +8 an int,
 #   +16 a double, read and written by votaTick (10619, a byte compare of +0 with 1, a 16-bit store over +4 and +5, a
-#   double add to +16; written, below) and votaInit (7840, a byte store to +3; not written). Every field name and the
+#   double add to +16; written, below) and votaInit (7840, byte stores to +3 and +2 and a 16-bit store over +0 and +1;
+#   written, below). Every field name and the
 #   bool types are chosen; the widths are the bodies'.
 # - The default initializers are measured, the TU compiled at VOTA_WEB_CXXFLAGS with Engine()'s disassembly compared
 #   numbers masked (how-to step 3): without those of the five false bools, the +8 store of 0 after the memset is gone;
@@ -66,11 +69,10 @@
 #   whose default argument makes it, in a member body defined in the class.
 # - votaPressKey calls the getter and drops its result, then tests the pointer and builds the string simulador::PushKey
 #   (9649) takes: PressKey as a member, the getter's name (Engine), g_engine and every parameter name are chosen.
-# - Lines: 361 and 592 are the records' (CPoliticaExecucaoEleitorWeb::LimpaBufferInput, 10835, in its class at
-#   namespace level, and SetAudioEnabled); 515, the record of CVotaWebEngine::Init (7840, not written), stays blank
-#   inside the class, which starts after 361, and the members written beside it go after it (src/README.md "Gaps"):
-#   Tick and GetStateJson from 517, EstadoJson after PressKey, below 592. Every other line, and the order of the
-#   definitions, is a choice. The engine's members are inline: EstadoJson at 425 to 512, above Init's record, or after
+# - Lines: 361, 515 and 592 are the records' (CPoliticaExecucaoEleitorWeb::LimpaBufferInput, 10835, in its class at
+#   namespace level, CVotaWebEngine::Init's instance<ISound>() call, and SetAudioEnabled). Init takes the lines before
+#   SetAudioEnabled, so the members written beside it go below 592 (src/README.md "Gaps"): EstadoJson after PressKey,
+#   then Tick and GetStateJson. Every other line, and the order of the definitions, is a choice. The engine's members are inline: EstadoJson at 425 to 512, above Init's record, or after
 #   PressKey gives a cmp-identical object (measured; that clang emits them in the order of their first use is a
 #   reading).
 # - The default arguments' records of instance() name this file only at 592: the TU's other calls of instance() are in
@@ -88,18 +90,13 @@
 #   that 388 returns. main (below) is written now; the row read `unresolved +0xb30 call 509: ~shared_ptr<void> has no
 #   target function`, the same 388 as main's push bodies (below), until unit 237 matched 388; it reads `differs +0x0`
 #   on the locals now, with 1091 inlined into it as above. None of the scratch helps landed: no row matched with them.
-# - 7840, votaInit (CVotaWebEngine::Init inlined, 6669 B, 109 invoke_* call sites): src/app/vota_init.cpp stands in. It
-#   invokes about 50 functions, most with no name and no stub: 14477, 11571 and 11546, which take votaInit's argument
-#   and a key string ("audioEleitorHabilitado", "municipio", ...), read as readers of its options, comum::CPath's
-#   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,
-#   11572, 11641, 11642, 7787 and more.
+# - 7840, votaInit: written (the section "votaInit" below).
 # - 10619 (votaTick) and 10171 (votaGetStateJson) are written, and 10171 matches: the section "votaTick and
 #   votaGetStateJson" below.
-# - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
-#   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
-#   there; since unit 253 the link's 306, 5294, 5532 and 9873 are mock/app/comum/cappinfobuilder.cpp's, at this TU's
-#   rule, and 520 and 4967 this TU's own twins, std::vector<unsigned int>'s, below), and units 100's and 94's rows that
-#   wait for the TU (their fragments). 3552, 518 and 2650, listed here before, match since unit 229 (asn1.md A10): 3552
+# - The copies the docs name for this TU: 306, 520, 4967, 1698, 2247, 2249, 2255 and 1843 come from this object now
+#   (votaInit's code instantiates them; src/app/roots_vector.cpp's instances of the last four went with it), 5294,
+#   5532 and 9873 from mock/app/comum/cappinfobuilder.cpp's (unit 253, at this TU's rule), and units 100's and 94's rows
+#   that wait for the TU (their fragments). 3552, 518 and 2650, listed here before, match since unit 229 (asn1.md A10): 3552
 #   and 518 from src/app/roots_coderenv.cpp at this TU's rule, and 2650's call reaches 388's body. 11489 and 11518 (unit
 #   82) match since unit 237, from its tree root src/app/roots_texttospeech.cpp at this TU's rule.
 #
@@ -145,11 +142,11 @@
 # main's last callee name, fn 8302's, is a hand line (splat/symbol_addrs.txt, unit 188's): main's table vote is its only
 # voter, and the scan refused main as `unresolved self-voted` without it.
 #
-# Not matched yet, each written:
-# - The push bodies 10090, 5384, 8758, 8911, 8986, 9233, 3882 (under 5395, 5398, 5407), 8834, 9039 and 9135 differ in
-#   one frame slot: depura's std::format_string ("sz[{}] ptr[{}]") is at +280 in the target, below the format buffer
-#   at +288, and at +584 in ours, above it, every slot between moved 8 (10090: 156 over 885 rows, all operand-only). None
-#   of the forms of push tried gives it. Measured on the TU's object (wasm-objdump -d, the slot of that string's store in each push):
+# The push bodies 10090, 5384, 8758, 8911, 8986, 9233, 3882 (under 5395, 5398, 5407), 8834, 9039 and 9135 match since
+# votaInit is written (its section below); what was measured while they differed:
+# - They differed in one frame slot: depura's std::format_string ("sz[{}] ptr[{}]") is at +280 in the target, below the
+#   format buffer at +288, and at +584 in ours, above it, every slot between moved 8 (10090: 156 over 885 rows, all
+#   operand-only). None of the forms of push tried gives it. Measured on the TU's object (wasm-objdump -d, the slot of that string's store in each push):
 #   a scratch explicit instantiation of push<comum::IInterfaceSavd> above the TU's code, a line that only steers the
 #   compiler and does not land, gives every push of the TU +280; a strong function with a std::format call there, an
 #   explicit instantiation of CPolySingleton<api::ISound> or of CPolySingletonList::instance<api::ISound>, or the two
@@ -159,7 +156,10 @@
 #   slot follows whether a push's format calls are emitted before any other format body of the TU. Ours emits
 #   instance<ISound>'s first (SetAudioEnabled);
 #   the target's records of this TU run CVotaWebEngine::Init's (515:13), then 7667's push (set<ITextToSpeech>), then
-#   instance<ISound>'s, so they wait for Init (votaInit, 7840). 7667's copy is src/app/roots_texttospeech.cpp's (at
+#   instance<ISound>'s, so they waited for Init (votaInit, 7840), which calls set<ITextToSpeech> before
+#   instance<ISound>: with it first among the exports every push of the TU stores the string at +280 (wasm-objdump -d
+#   of the object, the store of that string's view in each push: +128 then +280, as the target's 10090, where the base
+#   object gave +128 then +584). 7667's copy is src/app/roots_texttospeech.cpp's (at
 #   this TU's rule, unit 237's), which emits that set code before its builder's, in this TU's order: these records do
 #   not place the builder, whose code has none. The evidence is the data between them: ITextToSpeech's vtable (1526520)
 #   lies after push's record (1526348) and std::format_error's typeinfo and vtable (1526388, 1526400; that root's
@@ -167,6 +167,8 @@
 #   TU's typeinfos and vtables lie in the order its code first refers to them, and the builder's constructor is what
 #   refers to that vtable first. With the set code first 7667 has +280 and matches; with the builder first it had +584
 #   too (unit 237's fragment).
+#
+# Not matched yet, each written:
 # - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours reads 22
 #   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
 #   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store
@@ -235,9 +237,9 @@
 #   our link's table gives push as slot 71; that link, measured with unit 97's last stand-in gone too, and one with
 #   the three above main (between the exports and main) and the stand-in kept give the same match rows through steps
 #   7 to 9, no verdict moved, the symbol file and the match list byte-identical, slot 3 std::string's constructor in
-#   both. votaInit's two have no caller in our TU: 170-uenux2-wasm-vota-web-roots.cpp stands for 7840's
-#   invokes. Without them binaryen merges nothing and inlines 7708 into SinalizaSincronismo (`pnpm wasm score` against
-#   10376 read 20 over 23 rows, 18 inserted). Since they are written, this TU instantiates Insert first on the link
+#   both. votaInit invokes the other two (slots 55 and 57); without them binaryen merges nothing and inlines 7708 into
+#   SinalizaSincronismo (`pnpm wasm score` against 10376 read 20 over 23 rows, 18 inserted), and a sink in
+#   170-uenux2-wasm-vota-web-roots.cpp stood for votaInit's two slots until it was written. Since they are written, this TU instantiates Insert first on the link
 #   line, so the tree root src/app/roots_messagequeue.cpp, which gave 501 at this TU's rule (unit 269), went.
 # - 2369 (vota::CTelasVota::IncrementaBarraSincronismo, in ctelasvota.cpp, unit 110's source, an add-only hunk):
 #   `m_barraSincronismo->Incrementa()`, the shared_ptr at +180 (5508, matched); out of line, since 7174 (uenux2, -O3,
@@ -268,8 +270,8 @@
 #   operand-only], inserted 104, deleted 247). It loads the same 48 strings as the target's body (the keys and values of
 #   the JSON, and the class names it searches the state's names for, which are tails of longer literals: "Branco" at
 #   140708 ends the text at 140680), and our object takes the functions it invokes by table slot in the order the
-#   target's table gives them (its slots 83 to 103), with ostream's << of a std::string (11267) among them, which the
-#   target's votaInit takes first (slot 73). One part of the remainder is measured: the target calls 977 directly at
+#   target's table gives them (its slots 83 to 103), with ostream's << of a std::string (11267) among them, which
+#   votaInit's file writer takes first (slot 73). One part of the remainder is measured: the target calls 977 directly at
 #   eleven of its twelve find sites and 2737 at the first (CInstrucaoVotacaoAcessibilidade); ours calls 2737 at all
 #   twelve, too costly to inline at each (-Rpass-missed=inline: cost 75, threshold 5). string_view's find, the contains
 #   of std::string and of string_view, find with a string_view or an explicit length, and the hot and cold attributes
@@ -281,11 +283,12 @@
 # - Order in use band 1 (how-to step 3): this object's new members read inverted against their target indices (11100,
 #   11026, 10857 and 11267 link after 10376, ld_index 22, 25, 16, 63 against 12). The target's table shows why: its
 #   votaInit, first in the TU, mentions 11100, 11026, 5500, 10857 and 11267 first (slots 55, 57, 58, 60, 73), before
-#   votaTick mentions 10376 (110); ours has no votaInit, so each takes its place at a later mention.
+#   votaTick mentions 10376 (110); with votaInit written the first mentions are the target's (the section below).
 # - The table: our link's table follows the order in which the objects' code first takes each function's address
 #   (measured: the TU's object's table relocations and GOT.func references in code order, first mentions only, give our
-#   link's first 16 slots), so our TU's first three references give slots 1 to 3, the third std::string's constructor,
-#   as the target's slot 3. A census pair reads a slot below 1024 as a literal (the addr tier), so 988 (locale::classic)
+#   link's first 16 slots), so this TU's first references give slots 1 to 3, the third std::string's constructor, as
+#   the target's slot 3 (since votaInit: INSTRUCAO_PADRAO_MENU's exit destructor 11662, this TU's static's 10620, then
+#   votaInit's first invoke). A census pair reads a slot below 1024 as a literal (the addr tier), so 988 (locale::classic)
 #   pairs at addr only while ours passes 3 too: a form with SinalizaSincronismo defined above the engine class, first,
 #   moved Insert's first mention ahead of votaPressKey's and the constructor to slot 4, and 988 fell to `shape`, taking
 #   the `table` names of the locale::__imp::install members it held and 1227, 1524, 3363, 4760, 5152, 7833, 7850, 8046,
@@ -311,8 +314,69 @@
 # `differs` on that constant (`git show 36dda756:splat/scan.tsv`).
 # And 5496, vector<unsigned char>'s __assign_with_size, this TU's -Oz copy: RecebeMensagem (10949) calls it through
 # assign, and so does its other target caller, 5702 (fragment 335's comum::asn::DesconverteMinucias), so binaryen keeps
-# it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls has<T> and __str_find, and
-# takes the addresses of votaInit's two posts, through asm labels.
+# it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls has<T> and __str_find
+# through asm labels.
+#
+# votaInit (target fn 7840), CVotaWebEngine::Init inlined (record 515:13), added after the rest. Not matched: its calls
+# of 7787 (CTelasVota::CreateInst) and 10842 (RHVoice's text-to-speech constructor) reach traps
+# (src/units/440-uenux2-votainit.mk), whose target names only votaInit's own table votes would give; pnpm wasm score
+# against 7840 reads 1262 over 2937 rows (same 1675, replaced 625 [596 operand-only], inserted 283, deleted 354), its
+# landing pads' block order the rest, not explained. What the target's body gives (pnpm wasm fn and lift of 7840):
+# Engine(); in one try, the options "audioEleitorHabilitado" (default false) and "reproduzirAudio" (true) into +3 and
+# +2; ITextToSpeech set to a new simulador::CWasmNullTextToSpeech (96 bytes zeroed, then its constructor, fn 13877,
+# through invoke_ii); ISound's slot 6 (Mute) with !+2 on the instance() whose record is 515:13; on both flashes the
+# static and dynamic directories, the dynamic's "tmp" and both turns' work directories created, and "serialv.dat"
+# ("ABCDDCBA") under the root written when absent; the stand-in signatures (fn 11733) after that, after the state files,
+# after the dynamic data and after the synchronization; when the internal flash's dynamic "eg.bin" is absent, a
+# comum::teste::CAppInfoBuilder of the options pe, municipio, zona, secao and turno (each 1 when missing), fase ("te";
+# "oficial" or "o" 1, "simulado" or "s" 2, else 3) and uf ("ee", in upper case) saved to both flashes; CAppInfo's
+# general state read again; the start-up logs on its turn; CTelasVota::CreateInst; CEstadoAudio's dynamic data; with +3
+# set, RHVoice's text-to-speech over "/" when "/etc/RHVoice" and "/share/RHVoice" exist, else std::runtime_error with
+# the literal 82503, and without +3 a CWasmNullTextToSpeech again; the vota state EAVVOTAR (56) and the acquisition's
+# start; the general state synchronized; IExecucaoVota's slot 3; the voter's audio enabled (11100) or CEstadoAudio
+# deactivated; the voter freed (11026); +0 and +1 set to 1 and 0; the JSON (5500) moved into +24 and emitted as
+# "vota:state"; 1, or 0 after either handler, which report std::exception's what() or "erro desconhecido em votaInit"
+# through ReportaErro (10857).
+# Forms measured (the TU compiled at its rule, the object's table relocations in code order, or this link):
+# - votaInit first among the exports: the export section is then the target's (__wasm_call_ctors, votaInit, the table,
+#   votaPressKey, votaTick, votaSetAudioEnabled, votaGetStateJson, main; wasm-objdump -x -j Export of both), and the
+#   table's slots 1 to 136 are the target's functions (each slot's function against splat/scan.tsv's ours column).
+# - The directory loop in a function of its own (CriaDiretorios, inlined by clang): in place, clang lays out the code
+#   after the loop inside the loop's exit test and slots 9 to 18 come in another order; out of line, the target's.
+# - api::INSTRUCAO_PADRAO_MENU moved into api/gui/instrucaomenu.h (unit 440's notes), which this TU includes: its exit
+#   destructor is then slot 1 (fn 11662 matches from this object), this TU's static's slot 2, std::string's constructor
+#   slot 3. One link without it and with the loop in place, whose slots from 2 on were one lower, lost 150 rows
+#   (1227, 3363, 4760, 7850, 8046, 8327 and 9405, which rest on 988's addr pair, among them).
+# - ITextToSpeech() user-provided (api/audio/itexttospeech.h): the target invokes 13877 (slot 6), a call a noexcept
+#   constructor makes plain, which moved every later slot.
+# Stand-ins this ends, measured together (a link without them against one with them: no scan row moves, the symbol file
+# and the match list byte-identical): src/app/vota_init.cpp (votaInit's stand-in) with its APP_OBJS entry,
+# src/app/roots_texttospeech.cpp (its sink for votaInit's slots 7 and 46, and its builder, whose ITextToSpeech copies
+# this TU emits first now) with its rule and entry, the posts' sink in 170-uenux2-wasm-vota-web-roots.cpp, and
+# src/app/roots_vector.cpp's instances of 1843, 2247, 2249 and 2255 and one of its two ~vector<std::string> calls.
+# urna_roots (src/app/roots.cpp), which only vota_init.cpp's pointer kept in the link, has a sink of its own there now.
+# Matches with it (89, against 912b211d by index): 1697 2548 2688 2689 2720 2793 2898 3355 3494 3495 3525 3526 3706 3882
+# 4747 5116 5117 5125 5143 5166 5189 5190 5310 5344 5384 5538 5542 5641 5644 5836 5924 6005 7734 7741 7996 7997 8758
+# 8834 8911 8986 9039 9135 9233 9292 9294 9304 9338 9380 9385 9394 9518 9577 9896 9905 9912 9935 9942 9952 9963 9974
+# 10078 10090 10134 10176 10181 10188 10197 10221 10258 10261 10278 10286 10304 11129 11154 11177 11185 11211 11264
+# 11266 11426 11637 11642 11661 11662 11818 11895 12045 12121. They are this object's code and copies (33), the
+# builder's object's (23, unit 440's notes), clogvota.cpp.o's 11642 and cestadogeralvota.cpp.o's 11266, libc++'s 2548
+# 7734 7741 4747 7996 7997, binaryen's 2898 3882 6005, and 24 rows of ecourna objects, regex and boost code (2688 2689
+# 3494 3495 3525 3526 5116 5117 5125 5143 5166 5189 5190 9292 9294 9304 9338 9380 9385 9394 9518 9577): eleven of them
+# are the rows unit 84's fragment saw match with INSTRUCAO_PADRAO_MENU in this TU; why each moves is not traced.
+# Lost against 912b211d, so this state does not land without a decision: 599 and 10568
+# (vota::impl::IInformacaoThreadOperador::GetInst and CInformacaoThreadOperador::AgendaInspecao) and 10879. 599 is named
+# by a call vote before its srcloc-anchor now (its caller 10586 gets a table name first), and a pair named so votes for
+# its callees only when its addr fingerprint is the target's, which its table slot 148 (ours 147) breaks: our table is
+# one slot short from 137 on, where the target's has this TU's copies of api::CFormStack<api::IScreen>'s two statics'
+# destructors (8641, 8592; .bss 1832604 and 1832632, inside this TU's .bss), which no code of this TU instantiates yet.
+# So 599's callee 5412 has no name and 599 and 10568 read `unresolved`. 10879 is the string-tail vote of
+# __wasm_call_ctors' ESCAPES run that our merged strings' new place breaks (no source form brings it back).
+# Chosen: the helpers' names (LeBool, LeInt, LeTexto, CodigoFase, CriaDiretorios, GravaSeAusente, AssinaArquivos,
+# PathEstadoGeral) and linkage (internal, deferred after votaInit; PathEstadoGeral inline, since target slot 19 lies
+# between 18 and 20 and an internal function with one call is inlined by clang), the parameter and local names, the
+# conditions' spelling, the builder's and the logs' member names (unit 440's notes), and Init's and Tick's places in the
+# class.
 $(ROOT)/$(APP)/170-uenux2-wasm-vota-web-roots.o: $(ROOT)/src/units/170-uenux2-wasm-vota-web-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/170-uenux2-wasm-vota-web.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/170-uenux2-wasm-vota-web-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/170-uenux2-wasm-vota-web-roots.o

@@ -98,3 +98,10 @@
 # EMidia's formatter (the int base is evidence, 5924); the converters' and the writer's names, parameters and place;
 # Salva's name; the data members' names and that they are arrays; the header's path and includes; and every line of the
 # source but the three records', whose statements are written to their columns (the column fixes the length only).
+
+#
+# Since the executable TU's votaInit (unit 170) is written, it constructs the builder and calls the members unit 440's
+# notes list (written in this file and its header): 23 rows of this object match with them, among them the
+# setters 10176, 10181, 10188 and 10197, TodosApps 10286, the destructor 5644 and the default constructors of the
+# states (10261, 10278, 9952, 9963); the constructor 10268, SalvaTudo 10256 and the per-turn saves (10242, 10239
+# over 6004) are written and not matched. SalvaGeral and SalvaApps are in the link now, through those saves.

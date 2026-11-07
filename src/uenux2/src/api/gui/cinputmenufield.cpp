@@ -13,12 +13,12 @@
 //   of the members with no record are a choice, in their use bands' order (src/units/84-uenux2-cinputmenufield.mk).
 
 #include "api/gui/cinputmenufield.h"
-
 #include <algorithm>
 #include <regex>
 
 #include "api/gui/cfixedtext.h"
 #include "api/gui/eueguierror.h"
+#include "api/gui/instrucaomenu.h"
 #include "api/hwil/ibeep.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
@@ -370,7 +370,7 @@ void CInputMenuField::SetInstructionText(const std::string& texto)
 }
 
 
-inline const std::string INSTRUCAO_PADRAO_MENU = "Digite a sua opção: ";
+
 
 CMenuValidation::CMenuValidation(CInputMenuField* menu)
     : IInputValidation("1234567890"),

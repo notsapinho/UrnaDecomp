@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,7 +28,10 @@ namespace api {
 // DoSynthesize is not reconstructed: src/units/158-uenux2-api-pending.cpp traps it. The constructor is not written.
 class CRHVoiceTextToSpeech final : public ITextToSpeech {
 public:
-    explicit CRHVoiceTextToSpeech(const std::string& voz);
+    // fn 10842: votaInit (fn 7840) passes a std::filesystem::path built from "/" (fn 11154, one of
+    // path(const char (&)[N])'s thunks into fn 1085), so the parameter is a path; the reference and its name are
+    // chosen. Not written: src/units/440-uenux2-votainit-pending.cpp traps it.
+    explicit CRHVoiceTextToSpeech(const std::filesystem::path& dados);
 
     std::shared_ptr<CWavFile> DoSynthesize(const std::string& text, const SOptions& options) override;
 
