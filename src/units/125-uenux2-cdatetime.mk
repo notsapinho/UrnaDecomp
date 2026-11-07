@@ -59,36 +59,35 @@
 #                the loop.
 #                That the target's source had this order is a reading of that measurement. += also writes `m_ano++`
 #                before `resto -= diasNoAno`, a choice: the other order gives the same plain wasm (shasum -a 256).
-#              - The day count of a month comes from clang's switch tables in the non-leap copies of the loops: 12
-#                bytes read as the table's address less 1 plus the month (531859 in the target), and 48 bytes read at
-#                the month less 1 (531872). The scan places the first address through the object it falls in, the last
-#                byte of whatever precedes the table (docs/reference/splat.md 3). In the target that is
-#                cajustedatahora.cpp's typeinfo name of std::default_delete<api::IAjusteDataHora> (0x81d62, size 0x32;
-#                the tables follow it at 0x81d94 and 0x81da0), whose line step 8 writes by content (evidence:content
-#                at bed17f80, now voted by 5477 and 5478 as well). With cdate.cpp.o after
-#                app/comum/dados/asn/candidatura/cindexadorfotos.cpp.o (the order at bed17f80) the address fell in
-#                that object's typeinfo name, and splat-remap stopped there (+0x82, i32.const 531859). So
-#                api/util/cajustedatahora.cpp, unit 101's file, is compiled from this unit's list, right before
-#                cdate.cpp: the target's data have that order in .rodata (those tables) and in .data (cajustedatahora's
-#                control block vtable and typeinfo at 0x182c58 and 0x182c74, then g_seculo at 0x182c80). Either move
-#                that puts cajustedatahora.cpp.o right before cdate.cpp.o gives IDENTICAL for both (splat-remap
-#                --no-kinds), measured: cdate.cpp into unit 101's list after cajustedatahora.cpp, and
+#              - The day count of a month comes from clang's switch tables in the non-leap copies of the loops: 12 bytes
+#                read as the table's address less 1 plus the month (531859 in the target), and 48 bytes read at the
+#                month less 1 (531872). The scan places the first address through the object it falls in, the last byte
+#                of whatever precedes the table (docs/reference/splat.md 3). In the target that is cajustedatahora.cpp's
+#                typeinfo name of std::default_delete<api::IAjusteDataHora> (0x81d62, size 0x32; the tables follow it at
+#                0x81d94 and 0x81da0), whose line step 8 writes by content (evidence:content at bed17f80, now voted by
+#                5477 and 5478 as well). With cdate.cpp.o after app/comum/dados/asn/candidatura/cindexadorfotos.cpp.o
+#                (the order at bed17f80) the address fell in that object's typeinfo name, and splat-remap stopped there
+#                (+0x82, i32.const 531859). So api/util/cajustedatahora.cpp, unit 101's file, is compiled from this
+#                unit's list, right before cdate.cpp: the target's data have that order in .rodata (those tables) and in
+#                .data (cajustedatahora's control block vtable and typeinfo at 0x182c58 and 0x182c74, then g_seculo at
+#                0x182c80). Either move that puts cajustedatahora.cpp.o right before cdate.cpp.o gives IDENTICAL for
+#                both (splat-remap --no-kinds), measured: cdate.cpp into unit 101's list after cajustedatahora.cpp, and
 #                cajustedatahora.cpp into this list before cdate.cpp. src/units/README.md "Names" takes the move whose
-#                count falls (docs/reference/facts/codegen.md C4's record-aware count over bed17f80's link line):
-#                cajustedatahora.cpp.o 452 objects out of the data order in unit 101's list, 399 before cdate.cpp.o
-#                (400 after it and 401 after cdatetime.cpp.o, not linked: neither puts it before cdate.cpp.o); the
-#                other move, cdate.cpp.o, 399 here and 450 to 453 at the four places of unit 101's list (452 after
-#                cajustedatahora.cpp.o). The move restores 72 pairs (23 of app/vota/eleitor, 21 of app/comum/dados, 8
-#                of app/comum/gravadores, 20 elsewhere) and inverts 19: ten of app/vota/operador (eight of
-#                leidentidade, cfinalizaoperador, csincronismooperador), outrasopcoes/cfimaquisicaovotos, two of
-#                app/vota/eleitor/fimvotacao, vota/monitor/cthreadmonitor, two of
-#                app/comum/comparecimentomesario/estados, comum/gravadores/asn/util, comum/util/cmonitoraalimentacao
-#                and api/uelog/cloga. It moved no row but
-#                5477 and 5478 into `match`; three twins' match lines took the name of a copy that now links first
-#                (631 and 4739 simulador.cpp.o's, 2924's merge body ITimerScheduler's) and has<IAjusteDataHora> (2469)
-#                is ciniciodeciclo.cpp.o's copy now.
+#                count falls (docs/reference/facts/codegen.md C4's record-aware count over bed17f80's link line, and the
+#                same on 81333bd6's): cajustedatahora.cpp.o 452 objects out of the data order in unit 101's list, 399
+#                before cdate.cpp.o (400 after it and 401 after cdatetime.cpp.o, counted only, neither linked nor
+#                measured: neither puts it before cdate.cpp.o); the other move, cdate.cpp.o, 399 here and 450 to 453 at
+#                the four places of unit 101's list (452 after cajustedatahora.cpp.o). The move restores 72 pairs (23 of
+#                app/vota/eleitor, 21 of app/comum/dados, 8 of app/comum/gravadores, 20 elsewhere) and inverts 19:
+#                eleven of app/vota/operador (eight of leidentidade, cfinalizaoperador, csincronismooperador and
+#                outrasopcoes/cfimaquisicaovotos), two of app/vota/eleitor/fimvotacao, vota/monitor/cthreadmonitor, two
+#                of app/comum/comparecimentomesario/estados, comum/gravadores/asn/util, comum/util/cmonitoraalimentacao
+#                and api/uelog/cloga. It moved no row but 5477 and 5478 into `match`; three twins' match lines took the
+#                name of a copy that now links first (631 and 4739 simulador.cpp.o's, 2924's merge body
+#                ITimerScheduler's) and has<IAjusteDataHora> (2469) is ciniciodeciclo.cpp.o's copy now.
 #              They were hand-named in splat/symbol_addrs.txt by their bodies (callers+content) while they differed;
-#              without those two lines a scan and splat-build keep every row (12961, the target's sha256), so they went.
+#              without those two lines a scan and splat-build keep every row (12961 at 2bd38333, the target's sha256),
+#              so they went.
 #              3648 CDate::operator- matches (operand-only, 1 over 9 rows, and `no-candidate` until 5477 had a name);
 #              654 (CTradutorFrase::Traduz, unit 98) calls it on the "-" sign.
 #              CDate::operator+(int) const, operator-'s counterpart (a copy, then operator+=), has no target function: 654

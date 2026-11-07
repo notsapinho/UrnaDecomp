@@ -879,9 +879,9 @@
 # codegen.md C4's count against each of the four files is one less: 188 at 543ca8b7, 189 on that link line with this
 # object put back after cfinalizaoperador.cpp.o.
 # The other move, celeitordetalhe.cpp into unit 104's list ahead of csincronismooperador.cpp, was counted only (277
-# objects out of order against it where it is, 273 there) and not linked. StartState's place in its .cpp is not free:
-# use band 1 runs 10213, 10211, 10210, 10209 (the statics' exit destructors, StartState, ProcessKey) at consecutive
-# ld_index in names.tsv.
+# objects out of order against it where it is, 273 there, at 836481cb) and not linked. StartState's place in its .cpp is
+# not free: use band 1 runs 10213, 10211, 10210, 10209 (the statics' exit destructors, StartState, ProcessKey) at
+# consecutive ld_index in names.tsv.
 SINGLETONS_SRCS := src/app/vota/eleitor/cestadoaudio.cpp \
   src/app/comum/dados/celeitordetalhe.cpp src/app/comum/dados/dao/celeitordinamicodao.cpp \
   src/app/comum/dados/celeitores.cpp \

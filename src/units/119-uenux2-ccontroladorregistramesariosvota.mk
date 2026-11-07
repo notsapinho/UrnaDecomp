@@ -228,13 +228,14 @@
 # move it.
 #
 # CLogVota::LogaOperadorSelecionou and LogaMesarioHabilitouEleitor (2502 and 3258; clogvota.h says where each sits in
-# clogvota.cpp and why): each formats its string argument into its message and logs it through loga (fn 233). The
-# target holds each as a thunk of one body binaryen merged, fn 6113 (446 B), which takes the message's end and begin:
-# 2502 passes "Operador selecionou: {}", 3258 "Mesário {} habilitou o eleitor". With both in our link it forms the same
+# clogvota.cpp and why): each formats its string argument into its message and logs it through loga (fn 233). The target
+# holds each as a thunk of one body binaryen merged, fn 6113 (446 B), which takes the message's end and begin: 2502
+# passes "Operador selecionou: {}", 3258 "Mesário {} habilitou o eleitor". With both in our link it forms the same
 # merge, and 6113 (the byn$mgfn-shared$ body named after LogaOperadorSelecionou), 2502 and 3258 match by the content
-# pass. 2502's one target caller, vota::CEscolheOpcao::ProcessInput (10689, unit 121's, written), is in the link and calls
-# it four times; 3258's, vota::CRegistraDigitalOperador::ProcessTick (10451), is in the link (unit 221's) and calls it
-# three times, so the roots' LogaHabilitacoes, which stood for it, went. Their names are chosen from their messages.
+# pass. 2502's one target caller, vota::CEscolheOpcao::ProcessInput (10689, unit 121's, matched), is in the link and
+# calls it four times; 3258's, vota::CRegistraDigitalOperador::ProcessTick (10451), is in the link (unit 221's) and
+# calls it three times, so the roots' LogaHabilitacoes, which stood for it, went. Their names are chosen from their
+# messages.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost

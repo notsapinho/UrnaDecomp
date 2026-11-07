@@ -1132,10 +1132,11 @@ three and `unresolved` for 5181, which waits for a name:
 - **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
-  [codegen.md](codegen.md) §C4's order, the object's own locals and whether an inlined member is static (§C4 has
-  11172's and 12040's). A differing guard or zero set can be the packing as well: a value in a reused local keeps its
-  zero sets where one in a local of its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result
-  the source has: binaryen's
+  [codegen.md](codegen.md) §C4's order, the object's own locals (including which loops share one local of clang's:
+  compare each local's uses before the first `coalesce-locals` of the callee's first round, its `--extract-function`
+  replay, with the target's grouping) and whether an inlined member is static (§C4 has 11172's and 12040's). A differing
+  guard or zero set can be the packing as well: a value in a reused local keeps its zero sets where one in a local of
+  its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result the source has: binaryen's
   dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
   (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
@@ -1167,8 +1168,12 @@ three and `unresolved` for 5181, which waits for a name:
 **Whose frame a prologue is.** The second prologue is the frame of the function around the code that follows it, which
 need not be the function whose records that code holds. A temporary built for a call's argument sits in the caller's
 frame, so a frame that holds the arguments of a callee's code belongs to a function around that code. And a function of
-internal linkage with one call site in its TU is always inlined by clang, whatever its size: it gets LLVM's last-call
-bonus. Probe `onecall.cpp` (182dc6c1), an anonymous-namespace `Big` of three strings and a loop, called once:
+internal linkage with one call site in its TU is always inlined by clang, whatever its size, at a call site clang reads
+as hot or neutral (the probe's `threshold=250`): it gets LLVM's last-call bonus. At a cold one (`threshold=45`, under a
+branch clang weighs as unlikely) the remark can read `not inlined ... (cost=60, threshold=45)` for an internal function
+called once, which then stays out of line as an external one would (10689's `LimpaEntradas`, unit 121): read the
+remark before calling a frame or an out-of-line body an external function's. Probe `onecall.cpp` (182dc6c1), an
+anonymous-namespace `Big` of three strings and a loop, called once:
 
     #include <string>
     void use(const std::string&);
@@ -1184,17 +1189,18 @@ elections' bounds before the ids set's stores, as the target does, only with the
 anonymous namespace and a lambda alike), and after them with it external or a member (unit 88's fragment). Compile
 both before choosing, and write external only when they give one object.
 
-So such a function's code behind a frame of its own means either an external function around it, which binaryen
-inlined (1937's 576-byte frame holds `"LeBiometriaEleitor(" + identifier + ")"`'s temporaries around
-`legravaentidade.h`'s anonymous-namespace `LeEntidadeBiometria`: written as `comum::CLeitorASN::LeBiometriaEleitor` in a
-TU of its own, it matches, unit 280), or a second caller in its TU that the link dropped: 5455 (`CSystem::ReplaceFile`)
-holds `PrepareReplace` and `ReplaceResource`, whose records put them in `csystem.cpp`'s anonymous namespace, behind
-frames of their own; written with ReplaceFile as their one caller, clang inlined both into one frame (`785 over 1982`),
-and with `CSystem::ReplaceDir` calling them too (the link drops it), clang kept them out of line and binaryen inlined
-them as the target has them (`155 over 1836` after two more source fixes). Write such a caller when the evidence shows
-what it calls, marked as a reading with the score without it (unit 32). Which TU defined such a function, its records'
-place in the data says; where in that TU, the object's data order, which is a reading the comment marks
-([placing.md](placing.md) §P4, "What each order shows"; [../link-order.md](../link-order.md) §2).
+So such a function's code behind a frame of its own, at a call site that is not cold (above), means either an external
+function around it, which binaryen inlined (1937's 576-byte frame holds `"LeBiometriaEleitor(" + identifier + ")"`'s
+temporaries around `legravaentidade.h`'s anonymous-namespace `LeEntidadeBiometria`: written as
+`comum::CLeitorASN::LeBiometriaEleitor` in a TU of its own, it matches, unit 280), or a second caller in its TU that the
+link dropped: 5455 (`CSystem::ReplaceFile`) holds `PrepareReplace` and `ReplaceResource`, whose records put them in
+`csystem.cpp`'s anonymous namespace, behind frames of their own; written with ReplaceFile as their one caller, clang
+inlined both into one frame (`785 over 1982`), and with `CSystem::ReplaceDir` calling them too (the link drops it),
+clang kept them out of line and binaryen inlined them as the target has them (`155 over 1836` after two more source
+fixes). Write such a caller when the evidence shows what it calls, marked as a reading with the score without it (unit
+32). Which TU defined such a function, its records' place in the data says; where in that TU, the object's data order,
+which is a reading the comment marks ([placing.md](placing.md) §P4, "What each order shows";
+[../link-order.md](../link-order.md) §2).
 
 Whether such a function is a member is how-to step 3's member rule ("Names no evidence gives"); these are its cases. One
 that reads or writes its class's state is a member, in the class's `.cpp` unless clang would inline it there where the

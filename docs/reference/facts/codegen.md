@@ -643,7 +643,8 @@ glue (`pnpm wasm score` reads a minified name from a `.js` beside the module, an
 import call as a differing row). Find the function through the symbol map, whose lines are `<index>:<input index>`: the
 left counts the imports, as `pnpm wasm` does, and the right is the input's defined-function index, `names.tsv`'s
 `ld_index` (its `post_oz_index` counts no imports). From `asmlift-wasm/`, 10689 against our
-`CEscolheOpcao::ProcessInput` (`ld_index` 5765):
+`CEscolheOpcao::ProcessInput` (`ld_index` 5765), measured before 10689 matched, at bed17f80 (unit 121's fragment keeps
+the score):
 
 ```sh
 pnpm --silent wasm score ../target/vota_web_wasm.wasm 10689 ../build/out/codegen-facts/replay/r13.wasm $(awk -F: '$2==5765 {print $1}' ../build/out/codegen-facts/replay/r05.symbols) | /usr/bin/grep '^score'
@@ -679,7 +680,10 @@ Compare two replays function by function with `pnpm wasm score`, never by their 
 function counts renumber every `call` past the difference, and a body with no change of its own differs. 652's eight
 inlined functions took the target's locals with `GetInst` above the constructor and the dispatcher above both screen
 builders, which one source change and one relink confirmed (`144 over 2051`, all operands); patching LLVM's local
-numbers in 10689's callee left the output unchanged, so binaryen, not the object, decides 10689's locals.
+numbers in 10689's callee left the output unchanged: a renumbering changes nothing, but which values clang puts in one
+local does, since `ssa-nomerge` keeps the values that meet at a loop's head in clang's local. 10689 took the target's
+locals once its callee's clearing loop, whose pointer clang had put in the local of two other loops' pointers, was a
+function of its own that binaryen inlines (unit 121's fragment).
 
 A replay shows the end state only. To see in which pass and which round a function's locals form, build binaryen at
 the image's commit (b9c72894, [toolchain.md](../toolchain.md)) with a print added after each function pass, and run it

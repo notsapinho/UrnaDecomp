@@ -551,8 +551,12 @@ out of line and leave it unrooted, so that it has one caller in our link too, an
 clang would inline it or read its attributes there (8533's tone sequences); "Names no evidence gives" below says which
 class and namespace it takes, §R10's last paragraph which tree, and §C4 how a measured order picks its file when no
 record or data names one. Linkage decides clang's inlining in the same TU: an internal function with one call there is
-always inlined, so code behind a frame of its own is an external function's, another TU's, or an internal one's with a
-second caller the link dropped (§R10 has unit 135's builders, 5455's `ReplaceDir` and unit 71's `MontaTela`). A template
+always inlined at a call site clang reads as hot or neutral (the probe's `threshold=250`); at a cold one
+(`threshold=45`, under a branch clang weighs as unlikely) the remark can read `not inlined ... (cost=60, threshold=45)`
+for an internal function called once, which then stays out of line as an external one would (10689's `LimpaEntradas`,
+unit 121): read the remark before calling a frame or an out-of-line body an external function's. Otherwise code behind
+a frame of its own is an external function's, another TU's, or an internal one's with a second caller the link dropped
+(§R10 has unit 135's builders, 5455's `ReplaceDir` and unit 71's `MontaTela`). A template
 instance takes internal linkage from an argument that has it (a lambda of a function that is not inline, a type in an
 anonymous namespace), so the rule reaches its one-call helpers: a `std::sort` with a lambda holds its helpers in one
 frame (four parameters), one with `std::less<>`, an `operator<` or a function pointer in frames of their own (five;
@@ -1138,17 +1142,16 @@ $9}' splat/scan.tsv` prints `no-candidate libc++`), and the fragment is then its
 it is, when something needs it: a vtable slot whose written body is one remainder off (a trap would only hide it: 10490,
 unit 142, matched once a call of the setter gave its store order; one no measured form comes close to is trapped,
 below), a matched caller, a caller that is written and right but does not match yet (3648 over 5477 and 5478, unit 125,
-until the three matched), or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31).
-The fragment says what is
-measured and that the remainder is not explained. A caller then holds only on evidence for the callee's name that does
-not rest on the callee's bytes matching: 5499, `CTextFieldDoubleLine::GetTextLines`, is `differs`, and its callers 10929
-and 10931 match through 10929's `call` vote, which 10929's own record anchors (`/usr/bin/grep -F '= func:5499;'
-splat/symbol_addrs.txt`). A differing callee's own records anchor nothing (`srcloc-anchor` pairs equal opcodes only,
-position by position: a callee whose remainder is local numbers alone still anchors, though `pnpm wasm score` counts a
-swapped pair of `local.get`s as one row inserted and one deleted, 6599's `vptr-anchor`), so when no other caller votes,
-its name takes a `callers+content` hand line resting on records only it loads (3771 under 2787; step 9, "Hand edits"),
-or a `vtable-slot` line when it fills a slot both links name (5504 under 13550, splat.md §2), or the caller stays
-`unresolved self-voted`.
+until 3648 matched), or a match that only it brings into the link (502's lambda members 11107 to 11109, unit 31). The
+fragment says what is measured and that the remainder is not explained. A caller then holds only on evidence for the
+callee's name that does not rest on the callee's bytes matching: 5499, `CTextFieldDoubleLine::GetTextLines`, is
+`differs`, and its callers 10929 and 10931 match through 10929's `call` vote, which 10929's own record anchors
+(`/usr/bin/grep -F '= func:5499;' splat/symbol_addrs.txt`). A differing callee's own records anchor nothing
+(`srcloc-anchor` pairs equal opcodes only, position by position: a callee whose remainder is local numbers alone still
+anchors, though `pnpm wasm score` counts a swapped pair of `local.get`s as one row inserted and one deleted, 6599's
+`vptr-anchor`), so when no other caller votes, its name takes a `callers+content` hand line resting on records only it
+loads (3771 under 2787; step 9, "Hand edits"), or a `vtable-slot` line when it fills a slot both links name (5504 under
+13550, splat.md §2), or the caller stays `unresolved self-voted`.
 
 A member right by construction (a singleton's `GetInst`) that the target holds inlined in one unwritten caller may be
 written, unrooted, or wait for that caller; the fragment says which. Written, it is compared with nothing

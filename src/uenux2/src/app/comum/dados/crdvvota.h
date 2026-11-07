@@ -64,8 +64,8 @@ private:
 // (@1560172) in the construction it holds inlined (a reading: 7787 holds crdvvota.cpp:92's record, CreateInst's). The
 // map is CConversorEleicoesVota's TCargosEleicao: 5735's 32-byte nodes hold the key at +16, compared unsigned, and the
 // vector of 140-byte cargos at +20, and 7787 destroys the first result with fn 1160, that map's destroy. No record
-// names it: its name, its being a free function, its file and its external linkage are chosen
-// (src/units/13-uenux2-crdvvota.mk says what places it).
+// names it: its name, its being a free function, its file, its external linkage and this spelling of the map's type
+// (TCargosEleicao is the same type) are chosen (src/units/13-uenux2-crdvvota.mk says what places it).
 std::map<md::TEleicaoID, std::vector<md::CCargo>> CargosPorEleicao();
 
 } // namespace comum

@@ -13,8 +13,8 @@
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
 //   1547  GetNomeNeutro: no stand-in, its callers 13550 (fragment 391's), 2796, 2302, 4464, 6999 and 12587 are
 //         written
-//   2257  CEleicaoPE::GetCargos       7787 (861, 3774, 3775 and 5790, CConfiguracaoEleicao's GetCargo, GetCargosEleicoes,
-//         GetCargos and GetTodosCargos, are in the link)
+//   2257  CEleicaoPE::GetCargos       7787 (861, 3774, 3775 and 5790, CConfiguracaoEleicao's GetCargo,
+//         GetCargosEleicoes, GetCargos and GetTodosCargos, are in the link)
 //   2796  GetNome: no stand-in, its callers 5803, 6569 (unit 110's) and 11892 (unit 104's) are in the link
 //   3715  GetNomeSuplente: no stand-in, its callers 5803 and 12272 (unit 110's) are in the link
 //   2258  GetOrdinalEscolha: no stand-in, its callers 12811 (unit 378's), 4464, 12587 and 13550 (fragment 391's) are

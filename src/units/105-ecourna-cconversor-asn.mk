@@ -113,6 +113,9 @@
 #   DeconverteSequencia at a plain call, not an invoke, and its own resume stays among the loop's blocks, where the
 #   resume blocks merge, so the backend's tail duplication gives ParaMapa's path the copy; with `{}` the invoke's unwind
 #   edge sent the callee's resume to the caller's, at the function's end, and the copy went to the loop's path.
+# - The vtables do not tell `{}` from `= default`: both give the destructor slots every converter's vtable holds, 174
+#   (`return this`) and 144 (`free(this)`) in slots 0 and 1, so the callers' code decides (9137 here, and 9066's
+#   Deconverte, called directly and inlined, in unit 09).
 # - The header reaches 49 link objects (docs/reference/facts/workflow.md W13's includer script). After the edit two
 #   differ (cmp before and after): this file's and unit 09's cconversorhabilitacaobiometrica.cpp, in each only
 #   DoDeconverte's code (per function, object-local numbers masked; unit 09's fragment has 9066). The tree rebuilt
