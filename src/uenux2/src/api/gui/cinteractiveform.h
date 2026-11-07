@@ -24,6 +24,8 @@
 //   result and its lines (original 116-119) are chosen.
 // - GetEntradaAtual: vota::CPedeIdentidade::ProcessTick (fn 10676) reads the text of the field with the focus,
 //   std::vector::at with the index at +84. Its name, its pointer result and its lines (original 121-124) are chosen.
+// - LimpaEntradas clears the input fields and focuses the first; fn 10689 holds it inlined by binaryen. Its name, its
+//   being a member, its lines (126-132) and Slot2's and Slot3's loops kept in place are chosen (unit 121's fragment).
 
 #include <algorithm>
 #include <cstddef>
@@ -50,8 +52,6 @@ public:
             }
         }
     }
-
-
     EInputResult Read()
     {
         auto& teclado = CPolySingleton<INPUT>::instance();
@@ -123,7 +123,15 @@ public:
         return m_entradas.at(m_atual);
     }
 
-    // (original lines 126-144: content not recovered)
+    void LimpaEntradas()
+    {
+        for (auto* entrada : m_entradas) {
+            entrada->Clear();
+        }
+        SetFocus(0);
+    }
+
+    // (original lines 134-144: content not recovered)
 #line 145
     void ClearKeyboardInput()
     {

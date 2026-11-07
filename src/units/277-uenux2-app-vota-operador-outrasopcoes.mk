@@ -30,6 +30,9 @@
 #   and destructors' lines, scanned twice beside a control over the same match copy, the copy and the control hold the
 #   same match rows (eight lines: 12362 and 12362; the last two, once 10706 matched: 12363 and 12363) and splat-build
 #   gives the target's sha256 on both pairs.
+# - the exit destructors of the statics of the four classes whose GetInst unit 121's 10689 (CEscolheOpcao::ProcessInput)
+#   holds inlined: CIniciaFinalizacao (10707, 10708), CConfirmaAudio (10743, 10744), CHabilitacaoAudioNaoPermitida
+#   (10755, 10756) and CContadoresBiometria (10704, 10705), named by 10689's votes (`vote:N by:10689`) since it matches.
 # This unit's members in other units' files, each noted in that unit's fragment: CPerguntaFilaEleitorVazia's GetInst
 # (5426) with its statics' destructors (10716, 10717), its ProcessInput (10713) and CHorarioVotacaoTerminou's (10757)
 # (unit 152; cperguntafilaeleitorvazia.cpp itself is in this unit's list, for its link order);
@@ -98,8 +101,8 @@
 #   key too, and 2295 matches under that merge's name
 #   (`byn$mgfn-shared$_ZN4vota23CHorarioVotacaoTerminou12ProcessInputEv`, the first member in link order).
 #
-# For vota::CEscolheOpcao::ProcessInput (10689, unit 121's, written and not matched: that fragment has the
-# measurement), which holds them inlined: the GetInst, constructor, form and statics of CIniciaFinalizacao,
+# For vota::CEscolheOpcao::ProcessInput (10689, unit 121's, matched: that fragment has what the match rests on),
+# which holds them inlined: the GetInst, constructor, form and statics of CIniciaFinalizacao,
 # CConfirmaAudio, CHabilitacaoAudioNaoPermitida and CContadoresBiometria, written in their files as the matched
 # CConfirmaEncerramento's are (no target function of their own; in 10689 the last three constructors open frames of
 # 64, 48 and 64 bytes that hold their form's builder too: MontaTela in the anonymous namespace, one frame for both, as
@@ -116,8 +119,8 @@
 # 10689's constructors store the four vptrs. Their names, the texts' being free functions, the texts' form (a local
 # set to "n.a." and overwritten when UrnaBiometrica holds; no other form was measured) and the GetInst's form are
 # chosen.
-# The four states' statics' exit destructors (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) wait for 10689's
-# match.
+# The four states' statics' exit destructors (10707, 10708; 10743, 10744; 10755, 10756; 10704, 10705) match with
+# 10689, whose votes name their statics (`by:10689`), each read by 10689 and by its exit destructor alone.
 #
 # CIniciodeCiclo::StartState (7306) is written since, in ciniciodeciclo.cpp (unit 104's fragment).
 #
