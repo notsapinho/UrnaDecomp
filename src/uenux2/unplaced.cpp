@@ -11,11 +11,6 @@
 // f4633 · 675 B · unmatched · placement: link order · name unknown
 // void f4633() { ... }
 
-// link-order cluster 802 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
-
-// f5622 · 942 B · unmatched · placement: link order · name unknown
-// void f5622(i32, i32) { ... }
-
 // link-order cluster 928 · uses=2
 
 // f6958 · 863 B · unmatched · placement: link order · name unknown

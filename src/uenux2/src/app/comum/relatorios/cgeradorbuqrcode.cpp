@@ -120,11 +120,13 @@ std::string CGeradorBUQRCode::GetCamposSecao() const
 std::string CGeradorBUQRCode::GetCamposCandidatosPartido(const std::vector<TCandidatoID>& candidatos) const
 {
     const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
+    const md::TCargoID idCargo = cargo.GetID();
+    const uebyte numeroDigitos = cargo.GetNumeroDigitos();
     CCandidaturas& candidaturas = CCandidaturas::GetInst();
     std::string campos;
     for (const TCandidatoID numero : candidatos) {
-        const md::CCandidatura* candidatura = candidaturas.Busca(cargo.GetID(), numero);
-        const md::TQtdVoto votos = m_rdv.Candidato(cargo.GetID(), candidatura->GetCandidatoID(), cargo.GetNumeroDigitos());
+        const md::CCandidatura* candidatura = candidaturas.Busca(idCargo, numero);
+        const md::TQtdVoto votos = m_rdv.Candidato(idCargo, candidatura->GetCandidatoID(), numeroDigitos);
         if (votos != 0) {
             campos += std::format("{}:{} ", candidatura->GetCandidatoID(), votos);
         }
@@ -181,13 +183,18 @@ std::string CGeradorBUQRCode::GetCamposProporcional() const
 std::string CGeradorBUQRCode::GetCamposMajoritario() const
 {
     const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
+    const md::TCargoID idCargo = cargo.GetID();
+    const uebyte numeroDigitos = cargo.GetNumeroDigitos();
     CCandidaturas& candidaturas = CCandidaturas::GetInst();
     std::string campos;
     for (candidaturas.Reset(); !candidaturas.IsFim(); candidaturas.Next()) {
         const md::CCandidatura* candidatura = candidaturas.GetCurrent();
-        if (candidatura->GetCargoID() == cargo.GetID()) {
-            const md::TQtdVoto votos = m_rdv.Candidato(cargo.GetID(), candidatura->GetCandidatoID(), cargo.GetNumeroDigitos());
-            campos += std::format("{}:{} ", candidatura->GetCandidatoID(), votos);
+        if (candidatura->GetCargoID() == idCargo) {
+            const TCandidatoID numero = candidatura->GetCandidatoID();
+            const md::TQtdVoto votos = m_rdv.Candidato(idCargo, numero, numeroDigitos);
+            if (votos != 0) {
+                campos += std::format("{}:{} ", numero, votos);
+            }
         }
     }
     return campos + GetCamposVotos();
@@ -196,14 +203,19 @@ std::string CGeradorBUQRCode::GetCamposMajoritario() const
 std::string CGeradorBUQRCode::GetCamposConsulta() const
 {
     const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
+    const md::TCargoID idCargo = cargo.GetID();
+    const uebyte numeroDigitos = cargo.GetNumeroDigitos();
     md::TVectorRespostaConsulta respostas = cargo.GetDetalheConsulta().GetRespostas();
     std::sort(respostas.begin(), respostas.end(), [](const md::CRespostaConsulta& a, const md::CRespostaConsulta& b) {
         return a.GetNumero() < b.GetNumero();
     });
     std::string campos;
     for (const md::CRespostaConsulta& resposta : respostas) {
-        const md::TQtdVoto votos = m_rdv.Candidato(cargo.GetID(), resposta.GetNumero(), cargo.GetNumeroDigitos());
-        campos += std::format("{}:{} ", resposta.GetNumero(), votos);
+        const auto numero = resposta.GetNumero();
+        const md::TQtdVoto votos = m_rdv.Candidato(idCargo, numero, numeroDigitos);
+        if (votos != 0) {
+            campos += std::format("{}:{} ", numero, votos);
+        }
     }
     return campos + GetCamposVotos();
 }
@@ -229,7 +241,9 @@ std::string CGeradorBUQRCode::GetCorpo() const
             const std::string versao = candidaturas.RecuperaVersaoPacote(cargo.GetID());
             corpo += std::format("VERC:{} ", versao);
             corpo += GetCamposSecao();
-        } else if (cargo.HasDetalheCandidato()) {
+            continue;
+        }
+        if (cargo.HasDetalheCandidato()) {
             const std::string versao = candidaturas.RecuperaVersaoPacote(cargo.GetID());
             corpo += std::format("VERC:{} ", versao);
         }
@@ -252,7 +266,8 @@ std::vector<std::string> DivideEmBlocos(const std::string& conteudo, std::size_t
 {
     const std::size_t tamanhoBloco = tamanhoMaximo - 277;
     std::vector<std::string> blocos;
-    for (std::size_t posicao = 0; posicao != conteudo.size();) {
+    const std::size_t tamanhoTotal = conteudo.size();
+    for (std::size_t posicao = 0; posicao != tamanhoTotal;) {
         std::string bloco = conteudo.substr(posicao, tamanhoBloco);
         std::size_t tamanho = bloco.size();
         if (tamanho >= tamanhoBloco && bloco.back() != ' ') {
@@ -271,12 +286,12 @@ std::string CalculaHash(const std::string& conteudo)
     sha.Reset();
     for (std::size_t posicao = 0; posicao < conteudo.size(); posicao += 512) {
         sha.Update(std::vector<uebyte>(conteudo.begin() + posicao,
-                                       conteudo.begin() + std::min(posicao + 512, conteudo.size())));
+                                       conteudo.begin() + std::min(conteudo.size(), posicao + 512)));
     }
     return ecourna::api::util::CStringUtils::BytesToHexString(sha.Finish());
 }
 
-// (original lines 309-401: content not recovered)
+// (original lines 324-401: content not recovered)
 #line 402
 std::string CGeradorBUQRCode::RetornaBlocoAssinado(const std::string& hash) const
 {
@@ -291,14 +306,15 @@ std::string CGeradorBUQRCode::RetornaBlocoAssinado(const std::string& hash) cons
 std::pair<std::vector<std::string>, std::string> CGeradorBUQRCode::MontaPartes(const std::vector<std::string>& blocos) const
 {
     using namespace std::string_view_literals;
+    const std::size_t total = blocos.size();
     std::vector<std::string> partes;
     std::vector<std::string> blocosComHash;
     std::string assinatura;
-    const std::size_t total = blocos.size();
     for (std::size_t indice = 0; indice < total; ++indice) {
         std::string conteudo;
         if (indice > 0) {
-            conteudo = std::format("{} {}", api::Join(blocosComHash, " "), blocos.at(indice));
+            const std::string anteriores = api::Join(blocosComHash, " ");
+            conteudo = std::format("{} {}", anteriores, blocos.at(indice));
         } else {
             conteudo = blocos.at(indice);
         }

@@ -37,7 +37,12 @@ public:
     CCabecalhoQRCodeBuilder();
 
     void DefineCodigoCarga(const std::string& codigoCarga);
-    void DefineHistoricoCarga(const std::vector<std::string>& cargas);
+    // Returns the builder, a reading measured on fn 5622's locals: the target's type is (i32 i32)->(), and a result
+    // its callers (fns 1956 and 12110) do not read is one binaryen's dead-argument elimination removes after the
+    // body's locals were laid out (docs/reference/facts/reading.md R10, "Locals alone"). Declared void, clang puts the
+    // loop's iterator in this's local, where the target's body keeps it apart; src/units/93-uenux2-estadoaplicacao.mk
+    // has the scores. The type is chosen: a pointer or a const reference to the builder gives the same object.
+    CCabecalhoQRCodeBuilder& DefineHistoricoCarga(const std::vector<std::string>& cargas);
     void DefineIdUrna(uedword idUrna);
     void DefineSecao(ueword secao);
     void DefineZona(ueword zona);

@@ -40,15 +40,32 @@
 # of the setters, of build() and preBuild()'s local, and their lines, are chosen, and so is preBuild()'s const (its
 # record prints the name of a const member the same way).
 #
-# Written and not matched:
-# - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`; its caller in the link, fn 1956 (unit 37), is
-#   `unresolved`. At -O2 clang inlines std::string::append(const char*, size_t) into the loop and the target has `call
-#   160`, so ours was 1108 B against 942. With this one object at -O3 in a private link
-#   (docs/reference/facts/workflow.md "One variant object in the whole link") ours was 942 B with the call, and differed
-#   from the target only in 5 rows inserted and 5 deleted, all `local.get`. At the tree's -O3 it scores 89 over 431 rows
-#   (5 inserted, 5 deleted), so the row stays: the same instructions, its locals numbered otherwise. Linked alone
-#   (try-tu.sh --single) the written form scores 94 over 431, and three others 94 over 431 (a size_t index stepped
-#   before the format), 102 over 443 (an indexed loop) and 346 over 598 (a local string assigned at the end).
+# CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622) returns the builder (ccabecalhoqrcodebuilder.h has the reading
+# and the choice). Declared void it scored 89 over 431 rows (5 inserted, 5 deleted, every differing row that is no call,
+# data address or table slot a local number; pnpm wasm score on the plain link at ea98137f): the same instructions, its
+# locals grouped otherwise. binaryen inlines nothing into 5622 (each of its twelve calls in the link's wasm-opt input,
+# r02-stripped.wasm, is a call in the output too), so the groups are the object's (docs/reference/facts/codegen.md C4),
+# and clang's colouring (-print-after=wasm-reg-coloring) put the loop's iterator in this's local, which this left free
+# before the loop. On a replay of the link's wasm-opt (codegen.md C4), the input's iterator moved to a local of its own
+# scored 55 over 429, and with the loop's index exchanged with the loop's string pointers between the input's locals 7
+# and 4 as well, 17 over 426, every row a call, a data address or the format buffer's table slot (148 against our 91).
+# Returning the builder keeps this live to the end of clang's code, and binaryen's dead-argument elimination removes the
+# result no caller reads (docs/reference/facts/reading.md R10, "Locals alone"): 17 over 426 in the link, the same rows.
+# Measured on the object (cmp): a pointer or a const reference to the builder gives the same object; returning
+# m_historicoCarga, the counter or the vector's size keeps the iterator in local 0, as void does. Measured on the void
+# form's object, each giving it (cmp): the increment a statement before the format, or after it with indice + 1 in the
+# format; explicit iterators with the end cached; the counter declared before the first statement; the formatted piece a
+# named local; .append() for += (with const auto& for the element); std::size_t for the index. History of the void form:
+# at -O2 clang inlines std::string::append(const char*, size_t) into the loop where the target has `call 160` (1108 B
+# against 942), and linked alone (try-tu.sh --single) it scored 94 over 431, a size_t index stepped before the format
+# 94, an indexed loop 102 over 443 and a local string assigned at the end 346 over 598.
+# The roots' stand-ins call each callee once per target caller they stand for: estadoaplicacao_build_carga (fn 5633,
+# for 10167), estadoaplicacao_use_historico, estadoaplicacao_use_idcarga, estadoaplicacao_use_local and
+# estadoaplicacao_build_qrcode (fns 5622, 5623, 5621, 5620, 5618, 5624, for 12110) called theirs twice, idle since
+# 11402 and 1956 (unit 37) were in the link. Their second calls went together, measured on ea98137f's link with the
+# roots object alone swapped (docs/reference/facts/workflow.md W13) and scanned with the committed symbol file and match
+# list: no row entered or left match (12979 match rows both), and pnpm wasm fingerprint's addr column, joined by
+# symbol, changed in no function outside the roots object.
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #
@@ -163,27 +180,29 @@
 # switch (tipo.asInt()) for switch (tipo) in DesconverteTipoAjusteDataHora; (int)tipo, and return X(X::vota) for return
 # X::vota, in ConverteTipoUrna; ref_dadosSecao() for set_dadosSecao() in 11392; get_dadosSecao() per field for the local
 # in 11393; uebyte for bool in CEstadoGeralSA's constructor alone; const& for the by-value parameters tried in the
-# constructors alone (5628's dhIniAquisicao, 5630's secaoCarga and dataHoraCarga); size_t for the index and .append() for
-# += in 5622; a template constrained on std::is_enum_v for the explicit std::formatter specializations of the enums
-# (EUrnaModelo and EUrnaFase), and an explicit specialization for the template over generated ENUMERATEDs
-# (TipoUrnaOperacao); `: int` or `: unsigned int` for EUrnaFase's plain declaration (the whole object, with the explicit
-# specialization, which is what picks fn 536); DoConverte above DoDesconverte, the other order of the item above.
+# constructors alone (5628's dhIniAquisicao, 5630's secaoCarga and dataHoraCarga); the loop forms listed above for 5622,
+# and its result as a pointer or a const reference; a template constrained on std::is_enum_v for the explicit
+# std::formatter specializations of the enums (EUrnaModelo and EUrnaFase), and an explicit specialization for the
+# template over generated ENUMERATEDs (TipoUrnaOperacao); `: int` or `: unsigned int` for EUrnaFase's plain declaration
+# (the whole object, with the explicit specialization, which is what picks fn 536); DoConverte above DoDesconverte, the
+# other order of the item above.
 #
 # Chosen, no evidence names them: the scope comum of the record's unqualified enums; every enumerator but
 # eAlterarDataSistema, which 3702's message spells; the files eurna.h and enumeradoasn.h; the data members' names (the
 # ASN.1 fields' where one exists, and in CCabecalhoQRCodeBuilder the labels fn 5604 passes) and the types the bodies only
-# store; the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and DefineZona, and the
-# tests' IsOrigemSA and IsOrigemRED (their order in the .cpp is the target's: in use band 2 the higher target index has
-# the lower ld_index); ConverteCorrespondencias, DesconverteCorrespondencias and MarcaInicioAquisicao, and the getters of
-# CEstadoGeralGap that the gap converter reads (GetCorrespondencias, GetAppId, ...), after the members; the
-# constructors' and helpers' lines; CCabecalhoQRCodeBuilder's constructor written `{}` (`= default` in the .cpp was not
-# measured); the inline getters' names (GetTipoDeltaT, GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada,
-# GetMunicipio, GetZona, GetSecao), which no record names. No
-# record names cconversorlocalidadeeleitoral.*, cestadogeralsa.* or cdadocorrespondencia.*: each name is the
-# class's, whose RTTI is the converter's base, and the directory the family's. The constructors' lines are chosen. The
-# rename of TipoUrnaT1 is not a choice: ledger/classes.json and the record of 5693 spell TipoUrnaOperacao. Nor is
-# CCabecalhoQRCodeBuilder: fn 5604 passes the fields 5622 and 5623 write (+168, +156) to fn 2791, whose record is that
-# class's preBuild() in app/comum/relatorios/ccabecalhoqrcodebuilder.cpp; its header says the rest.
+# store; DefineHistoricoCarga's result type (the builder by reference; that it returns the object is a reading of 5622's
+# locals, measured above); the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and
+# DefineZona, and the tests' IsOrigemSA and IsOrigemRED (their order in the .cpp is the target's: in use band 2 the
+# higher target index has the lower ld_index); ConverteCorrespondencias, DesconverteCorrespondencias and
+# MarcaInicioAquisicao, and the getters of CEstadoGeralGap that the gap converter reads (GetCorrespondencias, GetAppId,
+# ...), after the members; the constructors' and helpers' lines; CCabecalhoQRCodeBuilder's constructor written `{}`
+# (`= default` in the .cpp was not measured); the inline getters' names (GetTipoDeltaT, GetDeltaT, GetEstadoSA,
+# GetAtualizacaoBloqueada, GetMunicipio, GetZona, GetSecao), which no record names. No record names
+# cconversorlocalidadeeleitoral.*, cestadogeralsa.* or cdadocorrespondencia.*: each name is the class's, whose RTTI is
+# the converter's base, and the directory the family's. The constructors' lines are chosen. The rename of TipoUrnaT1 is
+# not a choice: ledger/classes.json and the record of 5693 spell TipoUrnaOperacao. Nor is CCabecalhoQRCodeBuilder: fn
+# 5604 passes the fields 5622 and 5623 write (+168, +156) to fn 2791, whose record is that class's preBuild() in
+# app/comum/relatorios/ccabecalhoqrcodebuilder.cpp; its header says the rest.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 ESTADOAPLICACAO_SRCS := src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralgap.cpp \
