@@ -251,7 +251,7 @@
 # stand-ins for 4185 and 4129), unit 79's three CDataText stand-ins for 4185 and 6528 and its CDataTextFmt one for 2028,
 # unit 88's Ordinais (2258 for 12811), unit 109's Imagens and ConstroiFotos and one call of Fotos (12641), unit 120's
 # FormInterativoB (554 for 6639 and 6681); units 92's, 129's and 212's comments name the callers now in the link.
-# Idle too, and removed when the screens were merged onto the stage that held their files: unit 102's roots' builders
+# Idle too, and removed once these screens were in the link (their files held them): unit 102's roots' builders
 # and sinks for CDataText over CCandidaturasDSNumero, CCandidaturasDSNome and CCargoDSNomeSexoCandidato and CDataImage
 # over CCandidaturasDSFoto (4185, 6528 and 4129 store the vptrs), and unit 89's roots' CandidaturasAtuais (2838 for
 # 12641); a link with each file's back moved no row.

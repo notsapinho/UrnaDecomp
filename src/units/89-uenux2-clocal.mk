@@ -38,7 +38,9 @@
 # 2838's external linkage is chosen too. Its target callers are all in the link: 5806, 5807, and 12641 and 12742 from
 # ctelasvota.cpp.o (unit 378's CDataImage<CCandidaturasDSFoto>::GetData, unit 110's
 # CDataText<CCandidaturasDSNumero>::GetText), so the roots' CandidaturasAtuais, which stood for 12641, went (a link
-# with it back moved no row); the roots stand in for 5806's caller 13101.
+# with it back moved no row); so did Suplentes, which called md::CCandidatura::GetSuplente (1389) for 12641, the last
+# of its five target callers (5746, 5806, 5807, 12272, 12641) to be in the link (a link with it back moved no row);
+# the roots stand in for 5806's caller 13101.
 # CCandidaturasDSNome's call operator (5807) is 5806's shape with its literal, "CCandidaturasDSNome", and the string at +12 of
 # the candidate, md::CDadosCandidato::GetNomeUrna, for the ESexo: written alike, after GetCandidatoAtual and before 5806's,
 # since the band puts 5807 ahead of 5806 (ld_index 3398 against 3399 in this link). The class gets the byte 5807 reads as
