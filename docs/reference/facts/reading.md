@@ -1161,11 +1161,21 @@ three and `unresolved` for 5181, which waits for a name:
   compare each local's uses before the first `coalesce-locals` of the callee's first round, its `--extract-function`
   replay, with the target's grouping) and whether an inlined member is static (§C4 has 11172's and 12040's). A differing
   guard or zero set can be the packing as well: a value in a reused local keeps its zero sets where one in a local of
-  its own loses them to `rse` (§C4, 13550). A leaf that differs so can return a result the source has: binaryen's
-  dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
-  (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
+  its own loses them to `rse` (§C4, 13550). A function that differs so, a leaf or not, can return a result the source
+  has: binaryen's dead-argument elimination drops a result no caller reads after the function's locals were laid out
+  for it. 3510 (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and
+  matches as
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
-  whose result every caller drops (unit 00's fragment). The same elimination hides an argument: a parameter's local
+  whose result every caller drops (unit 00's fragment). Its sign can be a parameter's local that ours reuses for a later
+  value where the target keeps that value apart: the parameter lived to the end in the target's clang output, returned.
+  5622 (`CCabecalhoQRCodeBuilder::DefineHistoricoCarga`, 942 bytes, twelve calls and a loop) written `void` put its
+  loop's iterator in `this`'s local 0, which `this` left free before the loop (`-mllvm -print-after=wasm-reg-coloring`
+  shows `ARGUMENT_i32 0` joined to the iterator's register), `89 over 431`; returning `*this` keeps the two apart, and
+  it matches (unit 93's fragment: a member, the counter or the size returned keeps the iterator in local 0). Where the
+  locals do not need it, a dropped result leaves no trace, so one member's result read off its locals says nothing of
+  its siblings': the builder's other setters, all returning `*this`, give the same module byte for byte, and the
+  fragment marks their `void` chosen. Measure the siblings with the same result and list the form, or mark theirs
+  chosen. The same elimination hides an argument: a parameter's local
   that holds later values in the target and stays empty in ours was live in clang's output, passed to a callee whose
   unused parameter binaryen removed. 13550's `this` (local 0) goes to 4620, `DesenhaDescricaoModo`, which reads no
   state: written a free function, 13550 scored `297 over 1028`, every row a local or one the locals decide, and a
@@ -1489,6 +1499,26 @@ Only the `bool` compares at the entry and tests bare on the back edge. The byte 
       17:      if (i32.load8_u[1584624]) br 0;
 
 so it is a `bool`; a reader with one test, such as fn 8461, cannot say.
+
+Which of the two shapes a test takes is decided at instruction selection: a branch whose true block is the next block
+in the IR's order is inverted there, and an inverted `bool` is selected as `!= 1`, which binaryen turns into `if (x ==
+1)`; one whose true block is not next is selected bare (`eqz` once inverted later). So the code before the test can
+move it: a range-for, or a `for` whose init declares a variable, emits its exit block before its body, SimplifyCFG
+merges that block with the next `if`'s test, and the test, followed by the loop body, reads bare; `std::transform` or
+`std::for_each` (and their `std::ranges::` forms) put the test after the loop. Probe `looptest.cpp` (912b211d, the
+tree's flags):
+
+    P=build/out/reading-probe; mkdir -p $P
+    printf '%s\n' '#include <algorithm>' '#include <cctype>' '#include <iterator>' '#include <string>' 'struct D { std::string uf; bool p2; };' 'void Um(const std::string&); void Dois();' 'void Le(const D& d) {' '  std::string m;' '#if ALG' '  std::transform(d.uf.begin(), d.uf.end(), std::back_inserter(m), ::toupper);' '#else' '  for (char c : d.uf) m.push_back(static_cast<char>(std::toupper(c)));' '#endif' '  if (d.p2) Dois();' '  Um(m);' '}' > $P/looptest.cpp
+    for a in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -DALG=$a -c /work/$P/looptest.cpp -o /work/$P/looptest-$a.o; printf 'ALG=%s: ' $a; wasm-objdump -d $P/looptest-$a.o | awk '/<_Z2LeRK1D>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | sed -n '/^i32.load8_u 0 12$/,/^br_if/p' | tr '\n' ';'; echo; done
+      ALG=0: i32.load8_u 0 12;i32.eqz;br_if 0;
+      ALG=1: i32.load8_u 0 12;i32.const 1;i32.ne;br_if 0;
+
+3771's pleito-2 test took the target's `== 1` so, with the UF upper-cased by `std::transform` (unit 280's fragment
+lists the forms that give the same object). CFG Sort lays the blocks out alike either way ([codegen.md](codegen.md)
+§C15), so the layout shows nothing; `-mllvm -print-after=wasm-isel -mllvm -filter-print-funcs=<mangled>` shows the
+selected branches (`-print-before=wasm-isel` prints an empty machine function, and the IR selection reads is the last
+dump of `-print-after-all`). That LLVM's `SelectionDAGBuilder::visitBr` makes the inversion is a reading of its source.
 
 Read every function that loads or stores the byte, written or not (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
 build/out/splat/pieces/asm` lists a static's), before calling its type a width only: a compare with a value above 1, an

@@ -150,8 +150,8 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   §C4 measures both moves). When a landed function needs two landed files of two units in another order, either file
   may move into the other's unit's list: count both moves, each against the file that moves, take the one whose count
   falls more, and give the other's count in the fragment (2772, on 76661cb7's link line: `cqrcodeimagepaper.cpp` into
-  unit 196's list, 341 to 332, against `cstringutils.cpp` into unit 296's, 341 to 340). When that list's fragment is
-  another active stage's (its claim, or a change on an unlanded
+  unit 196's list, 341 to 332, against `cstringutils.cpp` into unit 296's, 341 to 340). When either list's fragment,
+  the one the file leaves or the one it enters, is another active stage's (its claim, or a change on an unlanded
   branch), the move is the list lines alone, a hunk apart from that stage's, with a `queue/` post, and the landing keeps
   both and the measured order. A move lands only when a measured form needs it: a body that matches, or a row that
   holds, only at the new place. One that gains nothing stays out, however the data's order reads. The fragment names the
@@ -171,9 +171,9 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   `names` lists them): named when few, by directory when many (fragment 372). A count moves as landings name data
   (§C4), so it carries the commit it was counted at (not the one that wrote it: §W23 kind 7), and a landing that merges
   a fragment stating one recounts it on the merged link. A move also changes the pairs of every other move whose span
-  the moved file enters or leaves, so the landing recounts or dates the other fragments' counts that name it
-  (`docs/reference/facts/workflow.md` §W23 kind 7). The move can rename a twin's match line, which step 9 does. A file
-  in another unit's list
+  the moved file enters or leaves, so the landing recounts or dates those counts, which need not name the moved file
+  (`docs/reference/facts/workflow.md` §W23 kind 7 has the test). The move can rename a twin's match line, which step 9
+  does. A file in another unit's list
   stays its own unit's: its fragment keeps the header comment, the companions and the row, with no source list when
   every source moved, and says which list compiles its files; that list's fragment says why, with the measurement (unit
   188's `simulador.cpp` sits in unit 101's list for 4879, unit 245's three files in unit 96's). A new file whose
@@ -447,6 +447,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `388-uenux2-nomesarquivos` | no source of its own: the package-name and pleito helpers fn 7787 calls, written into three landed units' files, with their notes and their callers' stand-ins: `comum::NomesArquivosEleicao` (3744, a chosen name, in unit 279's `cnomearquivoeleitores.cpp` by its band and table slot) over `CNomeArquivo::NomeArquivoAbrangencia` and `ajustaAbrangenciaUFMunicipio` (record :208) in unit 131's `cnomearquivo.cpp`; `CPleito::GetEleicoesMunicipio` and `FiltraMunicipio` (5649, 3713, chosen names) with `GetSituacoesMunicipio` in unit 88's `cpleito.cpp` and the inline `CEleicaoPE::PossuiMunicipio`; all four match, with libc++.a's `std::filesystem::__remove` (2135), which the roots' stand-in for 7787 brings, its address taken as the target's table has it; 2811 not written (local numbers only, not explained: the fragment has the measurements), so 2839, the map's tree destroy, waits for it; the roots stand in for 7787's and 2811's calls |
 | `391-uenux2-cpreshowprogressbar` | `vota::CPreShowProgressBar::PreShow` (13550, its class's key function) in `app/vota/eleitor/comum/cpreshowprogressbar.cpp`, a new file unit 150's list compiles (before `ctelascargo.cpp`, the place of fewest inversions), with `api::CStepsProgressBar`'s constructor (unit 41's file), which 13550 holds inlined by binaryen; matched, with `vota::DesenhaDescricaoModo` made a member of `CPreShowFormVota` (unit 165's; the member a choice among the forms that pass the object, so PreShow passes `this`, whose local then takes the steps vector's end as in the target: binaryen's first coalesce-locals otherwise gives the end a local of its own and `rse` drops its zero sets) and the current post held as a `CCargos::TCargoEleicao` compared field by field (its cargo compared in i8, in the source's order); `api::CStepsProgressBar::Draw` (5504) named by a `vtable-slot` hand line, since 13550's own call vote takes its `vtable` name (the fragment has the forms measured and the replay of the link's -Oz that shows the mechanism); no roots; the stand-ins for 13550 in units 41, 88 and 165 went, and unit 378's pending file |
 | `419-uenux2-cargos-callers` | no source of its own: the stand-ins for 7787, the one unwritten target caller of the members it adds to units 13 (`comum::CargosPorEleicao`, 5735, in `crdvvota.cpp`) and 88 (`comum::CConfiguracaoEleicao::GetTodosCargos`, 5790, in `cconfiguracaoeleicao.cpp`), two calls of each (their rows) |
+| `439-libcxx-sort-bytes` | no source of its own: a stand-in for fn 7787's `std::sort` over a byte vector, its one call of libc++.a(`algorithm.o`)'s sort over `unsigned char`, which brings that family into the link (4820, 4817, 4818, 4819, 4811, 4812, 1507, 2579; matched from the library with no source of ours) |
 
 ## Companion files
 
@@ -545,13 +546,21 @@ Every other function it reaches so:
     initializer after it, `docs/reference/facts/codegen.md` §C1), compile it at the head's line for that object (`make
     -n -B -C src <object>`, source and `-o` re-pointed), with the base's own objects of the files that survive as the
     control (each `cmp`-equal), swap them into a copy of `link.cmd`, a deleted file's at its place on the base's
-    `print-LINK_OBJS` line, and scan and build it as `docs/reference/facts/workflow.md` §W13 says. Compare `match` rows
-    only (index and verdict): every other row's `ours` index comes from the plain link, which the stand-ins shift.
+    `print-LINK_OBJS` line, and scan and build it as `docs/reference/facts/workflow.md` §W13 says. Keep the head's
+    `__asm__` declaration of a callee whose signature the range changed (a `void` result that became a reference): the
+    base's routes its calls to a trap stub (the labels bullet below), and `/usr/bin/grep -c 'signature_mismatch:'` over
+    the variant's `names.tsv` must print 0, as over the head's. Compare `match` rows only (index and verdict): every
+    other row's `ours` index comes from the plain link, which the stand-ins shift.
   - **Going earlier.** A stand-in may go before its callers are in the link only with a link without it that moves no
     row (`docs/reference/facts/workflow.md` §W13, "One variant object in the whole link"), measured and said in the
     fragment: no row enters or leaves `match`. A stand-in that is a function shifts our later indices, so unmatched
     rows trade `differs` and `unresolved` between the two links (§W13), and `pnpm wasm fingerprint` of both links,
-    compared on its `addr` column, shows that no body but the stand-in and `__wasm_call_ctors` changed. Scanned with
+    compared on its `addr` column, shows that no body but the stand-in and `__wasm_call_ctors` changed. Key each row by
+    `name@object` from its own link's `names.tsv`, a swapped object's scratch path rewritten to its tree path, never by
+    index, which pairs other bodies once a removal reorders binaryen's functions (a link with one object moved, at
+    912b211d: 1071 rows differ by index, 9 by `name@object`), then `join` the two keyed files:
+    `awk -F'\t' 'NR==FNR {if (FNR>1) n[$1]=$2 "@" $3; next} ($1 in n) {print n[$1] "\t" $4}' <names.tsv> <fp.tsv>`,
+    sorted. Scanned with
     the committed symbol file, such a link counts the rows under the names they have now; for the set a fragment
     quotes, run steps 7 to 9 on the variant link with private paths (`docs/reference/facts/app-flags.md` §F9 item 6
     gives the options). Removals that go for one reason (their callers all in the link) may share one variant link

@@ -165,6 +165,15 @@ blank ones belong (`LC_ALL=C git grep -c -E '^[[:space:]]*//[[:space:]]*$' -- 's
 counts them per file; `stubs.py --check` passes them, since a run of comments is no blank run); they are not the form
 to copy, and a unit that writes such a file's function turns those lines blank, the line count kept.
 
+The header rule holds below the file's last record too: no `//` note goes above a function anywhere in a TSE file, its
+place and evidence included; the fragment holds them, and the header points there. `stubs.py --check` passes such a
+note, so search for one: this lists the `//` lines right above a definition line (20 at 912b211d, `ctextfield.cpp`'s
+line 78 among them, none the form to copy):
+
+```sh
+LC_ALL=C git grep -n -B1 -E '^[A-Za-z].*\)$' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp' | LC_ALL=C /usr/bin/grep -E '\.cpp-[0-9]+-//'
+```
+
 The comment is ASCII (a `-` between the numbers: Latin-1 has no dash), indented like the line under it, and sits on
 the first line it names; the `#line` names the line after the last. A `#line` without a file name keeps the file
 name, so every object compiles byte-identical, and the compiler numbers the lines as TSE's file did: an error or a
