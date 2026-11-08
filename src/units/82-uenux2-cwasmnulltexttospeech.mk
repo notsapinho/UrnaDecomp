@@ -5,8 +5,9 @@
 # - ITextToSpeech's inline members in slots 2 to 8, which that vtable names, so the same object emits them: SetPitch
 #   11511, SetVolume 11507, SetSpeed 11505, GetSpeed 11504, IncreaseSpeed 11500, DecreaseSpeed 11494 and SetTag 11491.
 #   Their target copies are the executable TU's (the class has no key function); they are the same code at the uenux2
-#   flags, and matched from this object until unit 237's tree root, src/app/roots_texttospeech.cpp, which links ahead
-#   of it at that TU's rule, gave them (the census pairs them with that object at tier `byte`).
+#   flags, and matched from this object until unit 237's tree root, src/app/roots_texttospeech.cpp, which linked ahead
+#   of it at that TU's rule, gave them (the census paired them with that object at tier `byte`); the executable TU's
+#   object gives them since its votaInit.
 # Evidence of form: IncreaseSpeed tests equality with 4 and DecreaseSpeed compares with 0. On the target's rows `m_speed
 # < 4`, signed or unsigned, and std::min differ, and so do signed `m_speed > 0` and std::max. Both store m_speed
 # unconditionally, which rules out `if (m_speed != 4) ++m_speed;` (the store goes inside the branch). A bare virtual

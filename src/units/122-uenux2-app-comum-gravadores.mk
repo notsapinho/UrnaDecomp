@@ -120,7 +120,9 @@
 #   __throw_length_error) and binaryen merged them (`matched.txt only: [9531]`). The target's vector<std::string> copy is
 #   fn 5585, an -Oz -fexceptions body (__vallocate and __construct_at_end out of line, slots 232 and 233); src/app/
 #   roots_coderenv.cpp's instantiation of it gives our link that copy first, 5585 against it reads 8 over 69 rows,
-#   operand-only (5585 stays unresolved: its callees 11180 and 11177 have no name), and 9531's line now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
+#   operand-only (5585 was unresolved while its callees 11180 and 11177 had no name; both match since the executable
+#   TU's votaInit, and 5585 reads no-candidate there, with no name and no census pair, not traced), and 9531's line
+#   now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
 #   step 10, "A symbol that stays while its body moves").
 # - The directories' other target callers are in the link (5382, unit 135's, 10425, unit 142's, and 10451 and 3614,
 #   unit 221's), so the roots' stand-ins for 10425, for 10451 (3793's) and for 3614 (5815's) went.

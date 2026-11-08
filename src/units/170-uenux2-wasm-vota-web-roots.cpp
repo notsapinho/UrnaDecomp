@@ -10,12 +10,12 @@ extern "C" int w170_has_rwsync(int) __asm__("_ZN3api18CPolySingletonList3hasINS_
 extern "C" int w170_has_finger(int) __asm__("_ZN3api18CPolySingletonList3hasINS_14IFingerPrepareEEEbRKNS_19TPolySingletonsInfoE");
 extern "C" int w170_has_cifra(int) __asm__("_ZN3api18CPolySingletonList3hasIN7ecourna3api8security23ISymmetricCipherFactoryEEEbRKNS_19TPolySingletonsInfoE");
 // - std::__str_find<char, unsigned long, std::char_traits<char>, npos> (target fn 977), the TU's -Oz copy, which
-//   std::string::find(const char*) (2737, the TU's copy) and std::string::find(const std::string&) (3355, the TU's copy,
-//   which votaInit's option readers 11546, 11571 and 14477 call) call. Its other target caller is not in our link as
-//   the target has it: 5500, written, whose eleven calls of 977 our form does not give (it calls 2737's copy at every
-//   site: src/units/170-uenux2-wasm-vota-web.mk). w170_procura stands for it with one call: two strings' characters
-//   and sizes, and the position 0 every target caller passes (977's wasm type has no position). Its body is no target
-//   function's.
+//   std::string::find(const char*) (2737, the TU's copy) and std::string::find(const std::string&) (3355, the TU's
+//   copy, which votaInit's option readers 11546, 11571 and 14477 call) call. Its other target caller is not in our link
+//   as the target has it: 5500, written, whose eleven calls of 977 our form does not give (it calls 2737's copy at
+//   every site: src/units/170-uenux2-wasm-vota-web.mk). w170_procura stands for it with one call: two strings'
+//   characters and sizes, and the position 0 every target caller passes (977's wasm type has no position). Its body is
+//   no target function's.
 extern "C" int w170_str_find(int, int, int, int, int) __asm__("_ZNSt3__210__str_findB8ne210108IcmNS_11char_traitsIcEETnT0_Lm4294967295EEES3_PKT_S3_S6_S3_S3_");
 
 namespace {

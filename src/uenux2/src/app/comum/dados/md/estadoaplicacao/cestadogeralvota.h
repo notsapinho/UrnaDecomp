@@ -162,7 +162,8 @@ public:
     // leave `match` (9 over 76 rows become 11, local numbers), while 12077 matches either way; with both in the class,
     // clang merges 12077's and 12134's two i32.store (64 at +0, a closing state at +4) into one i64.store (12077: 44
     // over 243 rows, 3 deleted, at the stores). binaryen inlines each one-instruction body into every direct caller;
-    // SetEstadoVota keeps a body, target fn 11266, for votaInit's table slot 51 (fn 7840). No record or text names them: the names and their being setters are chosen.
+    // SetEstadoVota keeps a body, target fn 11266, for votaInit's table slot 51 (fn 7840). No record or text names
+    // them: the names and their being setters are chosen.
     void SetEstadoVota(EEstadoVota estadoVota);
     void SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento);
     // vota::testeteclado::CRetomada's slot 11 (target fn 11830) reads the byte at +96 and stores 1 there before

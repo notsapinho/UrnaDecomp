@@ -78,8 +78,8 @@ defines the other exports too: `votaSetAudioEnabled` (`Ib`, fn 10240) holds the 
 namespace)::CVotaWebEngine::SetAudioEnabled(bool)` at `vota_web_wasm.cpp:592`, a class only that file can hold, and
 `main`'s `std::__function::__func<main::$_0, void ()>` has its typeinfo and vtable in that TU's data. So the target's
 export section gives that TU's order of definition: `votaInit`, `votaPressKey`, `votaTick`, `votaSetAudioEnabled`,
-`votaGetStateJson`, `main`. Our executable TU (unit 170) defines all but `votaInit`, whose stand-in,
-`src/app/vota_init.cpp`, links after it, so at e7d03612 our exports run `votaPressKey`, `votaTick`, the table,
+`votaGetStateJson`, `main`. Our executable TU (unit 170) defined all but `votaInit`, whose stand-in,
+`src/app/vota_init.cpp`, linked after it, so at e7d03612 our exports ran `votaPressKey`, `votaTick`, the table,
 `votaSetAudioEnabled`, `votaGetStateJson`, `main` and `votaInit`, the table after `votaTick`, the TU's first function
 that refers to it (`wasm-objdump -x -j Export build/out/wasm/vota_web/vota_web_wasm.wasm`, named through the glue:
 `LC_ALL=C /usr/bin/grep -o -E '_(vota[A-Za-z]+|main)=Module\["_(vota[A-Za-z]+|main)"\]=wasmExports\["[^"]+"\]'

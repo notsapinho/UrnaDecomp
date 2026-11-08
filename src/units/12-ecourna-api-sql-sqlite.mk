@@ -89,11 +89,12 @@
 # bytes) and sit right after the constructors, a place no record gives; GetBlob's `return std::vector<uebyte>();`
 # (`return {};` gives the same bytes; `if (tamanho > 0)` around the copy does not).
 #
-# Not matched, each with what blocks it:
-# - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
-#   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
-#   The rest of the body is the target's up to operands (64 rows, all operand-only).
 # Matched later, with what held each:
+# - CSqlResultSet::StepStatement (5166): no evidence named std::piecewise_construct, a one-byte object the map's
+#   operator[] passes (target 463337): content cannot place one byte, and the census paired no function that loads
+#   it. The rest of the body was the target's up to operands (64 rows, all operand-only). Since the executable TU's
+#   votaInit 9384's vote names it (`vote:1 by:9384`), and 5166 matches (docs/reference/facts/splat.md S10 item 33's
+#   rows are its neighbours; why the vote formed is not traced).
 # - CSqlResultSet::GetDateTime (5162) waited for its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B),
 #   which it reaches through an invoke_ table slot: that was the copy of app/dados/asn/datahoraasn.cpp in our link, a
 #   different body (fn 6004, whose folded readout is 290 lines against the target's 1568), then uenux2's

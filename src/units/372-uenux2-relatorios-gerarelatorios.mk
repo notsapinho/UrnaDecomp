@@ -35,13 +35,15 @@
 #   GetPathTrab (clang's object already reloads it), and the rest's local numbering.
 # - 3695 (the std::map of sections' __tree::destroy, 3 over 67): recursive, so its own call waits for a name, and its
 #   one caller is 12105 (docs/how-to-decompile.md step 1, the `unresolved` rows).
-# - 4027 (std::__visit_format_arg over __handle_replacement_field's lambda, 393 over 3752, 111 inserted, 8 deleted):
-#   12105 holds a std::format("{:04}", ...) whose __vformat_to clang inlines and whose visitor it calls; with that
-#   second caller our link keeps the executable TU's copy out of line, as the target does (146, that TU's __vformat_to,
-#   a match now; unit 170's fragment has what moved it, not traced). The rows differ where the visitor calls fn 5924 (a
-#   char formatter over an integer), which our link inlines: 5924's other target caller, 9935 (the format function of a
-#   handle argument, table slot 468), is passed by 5344, which is not written. 3838 and 5822 (two parse members 4027
-#   calls) stay unresolved on their 2-byte field sets.
+# - 4027 (std::__visit_format_arg over __handle_replacement_field's lambda, 393 over 3752, 111 inserted, 8 deleted, as
+#   first written): 12105 holds a std::format("{:04}", ...) whose __vformat_to clang inlines and whose visitor it calls;
+#   with that second caller our link keeps the executable TU's copy out of line, as the target does (146, that TU's
+#   __vformat_to, a match now; unit 170's fragment has what moved it, not traced). The rows differed where the visitor
+#   calls fn 5924 (a char formatter over an integer), which our link inlined while 5924's other target caller, 9935 (the
+#   format function of a handle argument, table slot 468, which 5344 passes), was not in the link. Since the executable
+#   TU's votaInit 5344, 9935 and 5924 match (unit 253's builder brings them), and 4027 scores 255 over 3641 rows, every
+#   one an operand, `unresolved` on its call of __formatter_floating_point<char>::parse (3855), which has no name. 3838
+#   and 5822 (two parse members 4027 calls) stay unresolved on their 2-byte field sets.
 #
 # What the bytes decide, measured with `pnpm wasm score` of 12105 against the plain link:
 # - The record order: cimprimiridentificacaomesariosfinal.cpp's records lie as GetNomeMesario's (1594496), the inline

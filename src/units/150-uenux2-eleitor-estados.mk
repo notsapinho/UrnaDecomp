@@ -72,7 +72,7 @@
 # the target links 7441, 7428 and 7425 in that order, as our link does (names.tsv's ld_index 4014, 4015, 4016), and the
 # rest of the lines are a choice. The locals' names, whose lengths put the calls at :59, :60, :129 and :131's column 18,
 # are chosen. TemFala, in the roots, stands for has<api::ITextToSpeech>'s caller 14478 (unit 97 has its copy; its caller
-# 7667 is in the link from src/app/roots_texttospeech.cpp); TelaSemCandidato went with 7428, the caller it stood for.
+# 7667 is in the link from the executable TU's object); TelaSemCandidato went with 7428, the caller it stood for.
 #
 # Measured. GetKeyboardPosition: the instance of api::CPolySingleton<api::IUrna> bound to a reference before Modelo() is
 # called gives the target's frame, its std::source_location temporary in the slot of the string GetMensagem keeps

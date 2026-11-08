@@ -1,9 +1,9 @@
 # uenux2: api::ITextToSpeech's Synthesize (target fn 11530, slot 0) and what it calls: the options, the key, the lookup
 # and the store of the recent-audio cache and the kept map, written inline in src/uenux2/src/api/audio/itexttospeech.h
 # (unit 82's header, whose comment has the evidence of each member), and Cache (fn 921, below), which keeps a text's
-# audio in the kept map. No source of its own: the target's copies of the first are the executable TU's, and the tree
-# root src/app/roots_texttospeech.cpp emits them at that TU's rule, VOTA_WEB_CXXFLAGS (its rule and its APP_OBJS entry
-# are src/Makefile's; its comment says whose copies and why there); Cache's copy is read as a vota TU's, which
+# audio in the kept map. No source of its own: the target's copies of the first are the executable TU's, which emits
+# them since its votaInit (below; the tree root src/app/roots_texttospeech.cpp emitted them at that TU's rule,
+# VOTA_WEB_CXXFLAGS, before); Cache's copy is read as a vota TU's, which
 # 237-uenux2-itexttospeech-roots.cpp emits at that TU's flags. This file holds the evidence, the measurements and the
 # rule of 237-uenux2-itexttospeech-roots.cpp, the stand-ins.
 #

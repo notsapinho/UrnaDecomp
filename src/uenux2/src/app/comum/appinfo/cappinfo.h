@@ -21,9 +21,9 @@ namespace comum {
 // TemVota (fn 2841) passes "TemVota" to IndiceTurno, and its name is read from that literal, a reading. GetInst
 // is evidence too: the target holds the text of `Assert (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)`
 // (ledger/strings.tsv, 401161). That text and nine like it call GetVota() with no argument, and all 86 direct calls of fn 261
-// pass 51, TURNO_ATUAL, so GetVota's parameter defaults to it; that the const overload does too is read from its callers'
-// folded 51 (fn 903). The data members' names are not in the target. The word at +528 is -1 until CarregaGeral (fn 11572)
-// sets it to 0, so its name and type are chosen; the rest of the class is not reconstructed.
+// pass 51, TURNO_ATUAL, so GetVota's parameter defaults to it; that the const overload does too is read from its
+// callers' folded 51 (fn 903). The data members' names are not in the target. The word at +528 is -1 until CarregaGeral
+// (fn 11572) sets it to 0, so its name and type are chosen; the rest of the class is not reconstructed.
 class CAppInfo {
 public:
     static CAppInfo& GetInst();

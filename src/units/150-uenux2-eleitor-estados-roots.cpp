@@ -19,7 +19,7 @@
 // api::CPolySingletonList::has<api::ITextToSpeech> (fn 3281, an 11-byte thunk into binaryen's merge, fn 1166) has three
 // direct callers in the target: fn 2079 (api::CPolySingleton<api::ITextToSpeech>::instance, whose copy the target keeps
 // from cinstrucaovotacaoacessibilidade.cpp, its record 1533836 among that file's) and fn 7667 (the executable TU's
-// set<api::ITextToSpeech>, whose copy src/app/roots_texttospeech.cpp holds), in the link; fn 14478 (__wasm_call_ctors,
+// set<api::ITextToSpeech>, whose copy the executable TU's object holds), in the link; fn 14478 (__wasm_call_ctors,
 // a static initializer that calls it and drops the result), not written. TemFala stands for 14478 with one call, and
 // stood for 7667 too until that copy was in the link. simulador::Inicializa (fn 8302, unit 188) was one more caller in
 // our link while it held set<api::ITextToSpeech> inlined; it calls fn 4162 now, as the target's does, a wrapper that

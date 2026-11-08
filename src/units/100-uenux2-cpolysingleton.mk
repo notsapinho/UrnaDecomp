@@ -101,7 +101,8 @@
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
 #   the push thunks 5395, 5398 and 5407; 1091 matches from it since unit 97's callers keep it out of line, and 3281
-#   and the push body 7667 from src/app/roots_texttospeech.cpp's instances at that TU's rule (unit 237's fragment); the
+#   and the push body 7667 from the executable TU's object since its votaInit (from src/app/roots_texttospeech.cpp's
+#   instances at that TU's rule before: unit 237's fragment); the
 #   rest wait for the TU's code that instantiates them (unit 170's fragment).
 #   5417, 5425 and 5427 match since unit 170's roots give them the second call site the target gives them, and the
 #   set<T> bodies that call them are named; 640 (remove by name) and 13621 (unlock_shared_and_lock) match since the

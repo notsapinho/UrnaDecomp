@@ -88,8 +88,8 @@ class CWavFile;
 class ITextToSpeech {
 public:
     // User-provided, so not noexcept: votaInit (fn 7840) calls CWasmNullTextToSpeech's implicit constructor (fn 13877)
-    // through invoke_ii, where a noexcept one is a plain call (the TU compiled at its rule, both forms). That it is this
-    // class's and not the recent-audio cache's, and its empty body, are chosen.
+    // through invoke_ii, where a noexcept one is a plain call (the TU compiled at its rule, both forms). That it is
+    // this class's and not the recent-audio cache's, and its empty body, are chosen.
     ITextToSpeech() {}
 
     struct SOptions {
