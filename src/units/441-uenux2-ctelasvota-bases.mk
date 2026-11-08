@@ -109,8 +109,8 @@
 # It goes when 7787 is in the link. Stand-ins these members made idle went, call by call: unit 378's for 6602, 6603
 # and 6605 (CamposCinza), 6660 and 6671 (BasesCompletaCandidato) and 4181 (FotoSuplente), and its TelasVotaConstrutor's
 # calls of 1593, 1102 and 1190 (7787's calls of them come with the screens); unit 129's NomesSexo (2268's callers 6075
-# and 6076); unit 212's calls of TemFoto and its second calls of QtdSuplentes and MensagemErroCargo (one each stays, for
-# 7787); unit 92's NovaMoldura (CFramedText's constructor, for 6652); unit 121's builder and sink of
+# and 6076); unit 212's calls of TemFoto and its second calls of QtdSuplentes and MensagemErroCargo (one each stayed,
+# for 7787, until unit 443); unit 92's NovaMoldura (CFramedText's constructor, for 6652); unit 121's builder and sink of
 # CDataText<comum::CRespostasDSNumero>, whose vptr 6652 stores. The link without them moved no row (steps 7 to 9: 0
 # matches added, 0 renamed, no verdict changed). The same kind of stand-in in units 89's, 154's, 88's, 102's and 110's
 # roots is idle too (13101's and 6076's calls of 5806 and 5807, 6652's of 5729, 6660's and 6671's of 1388 and 1545,
