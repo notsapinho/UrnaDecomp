@@ -19,15 +19,16 @@
 // (AdicionaCampoNumero<CGrayedFramedText>, ctelasvota.cpp's, unit 378's), which builds
 // __shared_ptr_emplace<CMaskedTextField<CGrayedFramedText>> and stores both its vtable and the field's (the builder,
 // the destructor emitter and the two sinks that stood for 4185 went), and so is fn 4185 (AdicionaDadosCandidato, unit
-// 378's), whose AdicionaCampoNumero<CGrayedFramedText, comum::CCandidaturasDSNumero> builds the same block. The other
-// users are not reconstructed: fn 7787 (5913, unit 59's, and 3675, unit 120's, are in the link). So:
-// - The optnone functions below are not rooted, and wasm-ld drops them with the constructors. They exist to make clang
-//   emit what the target's builders emit (src/units/README.md "A class with no key function", "A control block"):
-//   w92_emite_mascara calls the destructor by its qualified name; w92_emite_bloco_mascara instantiates the control
-//   block as its builder does: std::shared_ptr<U>(T*) for __shared_ptr_pointer<CMaskedTextField<CFramedText>*> (fn
-//   7787).
-// - The static constructor takes the address of each vtable the target's unwritten builders store, which keeps every
-//   slot. The target reaches Show, Hide, Read, Clear, SetLength, Rect, GetTypeName, Move and the D0s only through these
+// 378's), whose AdicionaCampoNumero<CGrayedFramedText, comum::CCandidaturasDSNumero> builds the same block. So is fn
+// 7787's CreateInst (unit 443's, through unit 441's roots), whose vota::AdicionaNumeroPartido builds
+// __shared_ptr_pointer<CMaskedTextField<CFramedText>*> as std::shared_ptr<U>(T*) and stores both vtables, and whose
+// screens call CFramedText's constructor twice and IInputField<IScreen>'s once: the block's builder and vtable sink and
+// the stand-ins MolduraEm and CampoNumeroA, which stood for those, went (5913, unit 59's, and 3675, unit 120's, are in
+// the link too). So:
+// - The optnone function below is not rooted, and wasm-ld drops it. It exists to make clang emit what the target's
+//   builders emit (src/units/README.md "A class with no key function"): w92_emite_mascara calls the destructor by its
+//   qualified name.
+// - The target reaches Show, Hide, Read, Clear, SetLength, Rect, GetTypeName, Move and the D0s only through the
 //   vtables, and the D2s also from the D0s.
 // - CFramedText's Rect and Move have their two direct callers in the fields (one target function each for the two masks,
 //   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are fn 5534 (twice), the Draw 12438 and
@@ -41,57 +42,7 @@
 #include "api/gui/cmaskedtextfield.h"
 #include "api/gui/iscreen.h"
 
-extern "C" {
-extern const char w92_pointer_masked_vt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api16CMaskedTextFieldINS1_11CFramedTextEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
-}
-
-__attribute__((optnone, noinline)) std::shared_ptr<api::CMaskedTextField<api::CFramedText>> w92_emite_bloco_mascara(
-    api::CMaskedTextField<api::CFramedText>* campo)
-{
-    return std::shared_ptr<api::CMaskedTextField<api::CFramedText>>(campo);
-}
-
 __attribute__((optnone, noinline)) void w92_emite_mascara(api::CMaskedTextField<api::CFramedText>& campo)
 {
     campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField();
 }
-
-namespace {
-
-// fn 2024, IInputField<IScreen>'s constructor, has six direct callers in the target (fns 901, 2383, 3675, 5565, 5913
-// and 7787). 901 and 5565 are in the link and pass the length 0, true and false, and 5913 (unit 59) is too; the others
-// pass other lengths and flags, and 2024's wasm type keeps every parameter. CampoNumeroA stands for 7787, building a
-// CInputField<CFramedText> with the flags 7787 passes (true, false, true, false, false), its length and the rest
-// varied from 901's and 5565's, or dead-argument elimination would fold those two's; 3675 (unit 120's) and 2383 (unit
-// 110's, which passes its own parameters on) are in the link, and the stand-in for 2383 went.
-//
-// fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
-// 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 called by 3060 and
-// 4185), 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) and 6652 (unit 441's) in the
-// link. MolduraEm stands for the other, 7787: the target's callers pass different lengths, points, fonts and alignments,
-// so it does too, and its body is no target function's. Of the two that stood for 6652 and 7787, NovaMoldura went, which
-// passed ALINHAMENTO_CENTRO: MolduraEm passes the alignment it is given, as one of 7787's two calls does.
-__attribute__((noinline)) void MolduraEm(void* destino, size_t n, const api::SPoint& p, const api::SFont& f,
-                                         api::ETextAlignment alinhamento)
-{
-    new (destino) api::CFramedText(n + 2, p, f, alinhamento);
-}
-
-__attribute__((noinline)) api::IInputField<api::IScreen>* CampoNumeroA(const std::shared_ptr<api::IInputValidation>& v,
-                                                                       size_t n, const api::SPoint& p, const api::SFont& f)
-{
-    return new api::CInputField<api::CFramedText>(v, n, true, false, true, false, false, p, f, api::ALINHAMENTO_ESQUERDA);
-}
-
-const void* volatile w92_sink;
-
-struct SW92Roots {
-    SW92Roots()
-    {
-        w92_sink = reinterpret_cast<const void*>(&MolduraEm);
-        w92_sink = reinterpret_cast<const void*>(&CampoNumeroA);
-        w92_sink = w92_pointer_masked_vt;
-    }
-} w92_roots;
-
-} // namespace
