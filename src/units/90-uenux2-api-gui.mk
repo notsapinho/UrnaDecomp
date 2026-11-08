@@ -41,6 +41,7 @@
 # CTextField::Draw (27-uenux2-ctextfield.mk).
 API_GUI_SRCS := src/api/gui/cfillfield.cpp src/api/gui/crectfield.cpp src/api/gui/ctextrectfield.cpp
 UENUX2_SRCS += $(API_GUI_SRCS)
-$(ROOT)/$(APP)/90-uenux2-api-gui-roots.o: $(ROOT)/src/units/90-uenux2-api-gui-roots.cpp $(ROOT)/src/units/90-uenux2-api-gui.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/90-uenux2-api-gui-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/90-uenux2-api-gui-roots.o
+# No roots: 90-uenux2-api-gui-roots.cpp's CampoRetangulo stood for fn 7787's std::make_shared of a CRectField (colour
+# 2), which unit 443's constructor makes since (CriaTelaZeresimaTardia through api::CFormBuilder::AddRect over a
+# rectangle, inlined there as in 7787), so 5501 keeps its two callers; the file went, and the link without it moved no
+# row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed).
