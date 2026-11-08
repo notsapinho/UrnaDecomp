@@ -1,7 +1,7 @@
 # Unit 387: no source of its own. It adds members to landed units' files (src/units/README.md "Landing a unit" item 2):
 # unit 110's app/vota/eleitor/comum/ctelasvota.cpp (and ctelasvota.h), unit 31's api/gui/cformbuilder.{h,cpp}, unit
 # 156's app/vota/eleitor/fimvotacao/cmostraqrcodecertificado.cpp (whose -pending.cpp goes with its last trap) and the
-# header api/gui/cmaskedtextfield.h; its roots stand for vota::CTelasVota's constructor (target fn 7787, not written).
+# header api/gui/cmaskedtextfield.h; vota::CTelasVota's constructor (unit 443's, which target fn 7787 holds) calls them.
 # Scores are `pnpm wasm score` against the plain link (ours from build/out/wasm-map/vota_web/names.tsv), whole link at
 # the trees' flags; "operand-only" means rows that differ in calls and data addresses alone.
 #
@@ -51,7 +51,7 @@
 #   33 at 8f35addb and 35 here, the two new 13441 and 13424 before 13527; pairs with a linkonce copy on one side 320 and
 #   386, three of the new ones these four's (CFixedImage's D2 8563 before 13424, GetData 4975 and the gif map's 6643
 #   before 6689).
-# - Chosen: the four names, their being free functions of vota with external linkage (6689 a roots target; 13441 and
+# - Chosen: the four names, their being free functions of vota with external linkage (6689 was a roots target; 13441 and
 #   13424 as NumeroDigitado), the parameters' names and types (size_t for the lengths, as 2383 takes them), 2384's field
 #   a named local, and the lines.
 #
@@ -103,13 +103,11 @@
 # in this link (278 operand-only, 14 inserted, 14 deleted; the rows beyond operands are loads at +76 and +12 through
 # locals numbered and ordered otherwise), not explained.
 #
-# Roots: 387-uenux2-ctelasvota-audio-certificado-roots.cpp stands for 7787 (2384 twice, 6689 once). Stand-ins this unit
-# made idle went, call by call: units 29 (CampoImagemA, for 6689), 31 (TextoMultiLinha's call for 12040), 79
-# (ImagemDaFonte for 6689, ImagemQRCodeCompartilhada for 12040), 120 (RotulosB, for 12040), 158 (ImagemFixaEm, for
-# 13441), 165 (FormulariosVota: 576's callers in the link but 7787, for which FormularioVota stays), 220
-# (ChamaCertificado, for 12039) and 373 (the call for 2384), each a call whose target callers are all in the link now;
-# unit 156's -pending.cpp went with its trap. In the same link no row left match: how-to step 9's join against 8f35addb
-# prints this unit's six rows and 5634's (no-candidate to differs, named now).
-$(ROOT)/$(APP)/387-uenux2-ctelasvota-audio-certificado-roots.o: $(ROOT)/src/units/387-uenux2-ctelasvota-audio-certificado-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/387-uenux2-ctelasvota-audio-certificado.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/387-uenux2-ctelasvota-audio-certificado-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/387-uenux2-ctelasvota-audio-certificado-roots.o
+# Roots: none. 387-uenux2-ctelasvota-audio-certificado-roots.cpp stood for 7787 (2384 twice, 6689 once) and went once
+# unit 443's constructor made those calls: the link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed,
+# no verdict changed). Stand-ins this unit made idle went, call by call: units 29 (CampoImagemA, for 6689), 31
+# (TextoMultiLinha's call for 12040), 79 (ImagemDaFonte for 6689, ImagemQRCodeCompartilhada for 12040), 120 (RotulosB,
+# for 12040), 158 (ImagemFixaEm, for 13441), 165 (FormulariosVota: 576's callers in the link but 7787, for which
+# FormularioVota stays), 220 (ChamaCertificado, for 12039) and 373 (the call for 2384), each a call whose target callers
+# are all in the link now; unit 156's -pending.cpp went with its trap. In the same link no row left match: how-to step
+# 9's join against 8f35addb prints this unit's six rows and 5634's (no-candidate to differs, named now).
