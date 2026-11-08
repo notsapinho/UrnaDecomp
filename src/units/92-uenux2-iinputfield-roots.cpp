@@ -67,14 +67,10 @@ namespace {
 //
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
 // 6652 and 7787), 5913 (unit 59), 3675 (unit 120), 2383, 6624 and 5535 (unit 110's and 173's; 5535 called by 3060 and
-// 4185) and 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) in the link. These two
-// stand in for the others, 6652 and 7787: the target's callers pass different lengths, points, fonts and alignments, so
-// these do too, and each has a body no target function has.
-__attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
-{
-    return new api::CFramedText(n, p, f, api::ALINHAMENTO_CENTRO);
-}
-
+// 4185), 2384 (unit 387's, through api::CFormBuilder::AddMaskedTextField, inlined into it) and 6652 (unit 441's) in the
+// link. MolduraEm stands for the other, 7787: the target's callers pass different lengths, points, fonts and alignments,
+// so it does too, and its body is no target function's. Of the two that stood for 6652 and 7787, NovaMoldura went, which
+// passed ALINHAMENTO_CENTRO: MolduraEm passes the alignment it is given, as one of 7787's two calls does.
 __attribute__((noinline)) void MolduraEm(void* destino, size_t n, const api::SPoint& p, const api::SFont& f,
                                          api::ETextAlignment alinhamento)
 {
@@ -92,7 +88,6 @@ const void* volatile w92_sink;
 struct SW92Roots {
     SW92Roots()
     {
-        w92_sink = reinterpret_cast<const void*>(&NovaMoldura);
         w92_sink = reinterpret_cast<const void*>(&MolduraEm);
         w92_sink = reinterpret_cast<const void*>(&CampoNumeroA);
         w92_sink = w92_pointer_masked_vt;

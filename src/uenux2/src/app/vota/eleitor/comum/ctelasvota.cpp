@@ -38,6 +38,7 @@
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/ccargos.h"
@@ -46,6 +47,7 @@
 #include "app/comum/dados/clocal.h"
 #include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/cqrcodeds.h"
+#include "app/comum/dados/crespostasds.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
@@ -63,7 +65,7 @@
 
 namespace vota {
 
-// (original lines 66-247: content not recovered)
+// (original lines 68-247: content not recovered)
 #line 248
 std::vector<uebyte> ImagemAudioHabilitado()
 {
@@ -105,15 +107,20 @@ void AdicionaGifCargo(const comum::md::CCargo& cargo, api::CFormBuilder& builder
     }
 }
 
-// (original lines 288-290: content not recovered)
-#line 291
-// <stubs>
-// f13101 · 217 B · unmatched · name unknown
-// void f13101(i32) { ... }
-// </stubs>
+namespace {
 
-// (original lines 296-299: content not recovered)
-#line 300
+std::string DS_CandidatoNaoConcorre()
+{
+    const comum::CCandidaturas& candidaturas = comum::CCandidaturas::GetInst();
+    if (candidaturas.IsFim()) {
+        throw CUeVotaError(EUE_VOTA_CANDIDATO_NAO_POSICIONADO, "Nao foi posicionado no candidato corretamente");
+    }
+    if (comum::CCandidaturasDSSexo(0)() == comum::md::CSexo::SEXO_FEMININO) {
+        return "CANDIDATA NÃO CONCORRE";
+    }
+    return "CANDIDATO NÃO CONCORRE";
+}
+} // namespace
 const std::string& NumeroDigitado()
 {
     return g_numeroDigitado;
@@ -129,9 +136,10 @@ const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
 const api::SFont FONTE_NOME_CARGO{30, 1};
 const api::SFont FONTE_AGUARDE{25, 0};
 
-CFormInterativoTelaVota GetFormularioProgresso(api::CInteractiveFormBuilder& builder, const std::string& nome)
+CFormInterativoTelaVota GetFormularioProgresso(api::CInteractiveFormBuilder& builder, const std::string& nome,
+                                               const bool limpaTeclado = true)
 {
-    return builder.GetInteractiveForm(std::make_shared<CPreShowProgressBar>(), nome, true);
+    return builder.GetInteractiveForm(std::make_shared<CPreShowProgressBar>(), nome, limpaTeclado);
 }
 
 void AdicionaLinhaRodape(api::CFormBuilder& builder, const api::TPosition largura)
@@ -239,7 +247,6 @@ api::TPosition AdicionaPergunta(api::CFormBuilder& builder, const comum::md::CCa
     return area.bottom + 23;
 }
 
-
 namespace {
 
 std::map<std::pair<std::string, bool>, std::shared_ptr<api::CMovie>> s_gifs;
@@ -281,8 +288,7 @@ void AdicionaGif(const comum::md::CVoto::ETipo tipo, api::CFormBuilder& builder,
     builder.AddMovie(api::SPoint(640, 480), filme);
 }
 
-// (original lines 467-469: content not recovered)
-#line 470
+
 template <typename SRCFT>
 api::CFormBuilder::SharedField adicionaImagem(api::CFormBuilder& builder, SRCFT fonte, const api::SPoint& posicao)
 {
@@ -402,7 +408,37 @@ void AdicionaFotoCandidato(api::CFormBuilder& builder, const bool comNomeCargo)
     }
 }
 
-// (original lines 589-747: content not recovered)
+api::SRect AdicionaFotoSuplente(api::CFormBuilder& builder, std::string (*nome)(), const api::TPosition x,
+                                const uebyte suplente)
+{
+    const api::SRect area = adicionaFotoEmoldurada(builder, x, 287, 111, 155, comum::CCandidaturasDSFoto(suplente));
+    const api::TPosition largura = area.right - area.left + 1;
+    if (largura <= 1) {
+        builder.AddTextField(nome, api::SPoint(x + 55, 443), api::SFont{13, 0}, api::ALINHAMENTO_CENTRO);
+    } else {
+        builder.AddTextField(nome, api::SPoint(area.left + largura / 2, area.bottom + 1), api::SFont{13, 0},
+                             api::ALINHAMENTO_CENTRO);
+    }
+    return area;
+}
+
+namespace {
+
+std::string NomeCargoSuplente(const uebyte suplente)
+{
+    return comum::CCargoDSNomeSexoCandidato(suplente, true)();
+}
+
+void AdicionaLinhaSuplente(api::CFormBuilder& builder, std::string (*fonte)(), const api::TPosition y,
+                           const api::TPosition largura)
+{
+    builder.AddDoubleLineField(fonte, api::SPoint(10, y), api::SPoint(10, y + 20), largura,
+                               FONTE_INSTRUCAO_TESTE_TECLADO, static_cast<api::TColor>(0));
+}
+
+} // namespace
+
+// (original lines 619-747: content not recovered)
 #line 748
 api::CFormBuilder::SharedField AdicionaImagemAudioHabilitado(api::CFormBuilder& builder, const api::SPoint& posicao)
 {
@@ -498,21 +534,108 @@ void adicionaBaseTelaCompletaCandidatoCom0(api::CFormBuilder& builder, const std
 
 } // namespace
 
-// (original lines 842-849: content not recovered)
-#line 850
-// <stubs>
-// f6671 · 363 B · unmatched · name unknown
-// void f6671(i32, i32, i32, i32) { ... }
-// </stubs>
+namespace {
 
-// (original lines 855-886: content not recovered)
-#line 887
-// <stubs>
-// f6660 · 514 B · unmatched · name unknown
-// void f6660(i32, i32, i32, i32) { ... }
-// </stubs>
+// (original lines 844-848: content not recovered)
+#line 849
+void adicionaBaseTelaCompletaCandidatoCom1(api::CFormBuilder& builder, const std::string& tela,
+                                           const comum::md::CCargo& cargo, api::TPosition& largura)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de candidato"));
+    }
 
-// (original lines 892-957: content not recovered)
+    if (cargo.QtdSuplentes() != 1) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_SUPLENTES_INCOMPATIVEIS,
+                           MensagemErroCargo(tela, cargo, "com número de suplentes incompatível"));
+    }
+
+    largura = cargo.GetDetalheCandidato().GetSuplente(1).TemFoto() ? 520 : 639;
+    AdicionaDadosCandidato(builder, cargo, cargo.TemFoto() ? 470 : 639);
+    AdicionaSiglaPartido(builder);
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(1);
+            return NomeCargoSuplente(1) + ": " + nome();
+        },
+        320, largura);
+    if (cargo.TemFoto()) {
+        AdicionaFotoCandidato(builder, true);
+    }
+    if (cargo.GetDetalheCandidato().GetSuplente(1).TemFoto()) {
+        AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(1); }, 639, 1);
+    }
+}
+
+// (original lines 880-885: content not recovered)
+#line 886
+void adicionaBaseTelaCompletaCandidatoCom2(api::CFormBuilder& builder, const std::string& tela,
+                                           const comum::md::CCargo& cargo, api::TPosition& largura)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de candidato"));
+    }
+
+    if (cargo.QtdSuplentes() < 2) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_SUPLENTES_INCOMPATIVEIS,
+                           MensagemErroCargo(tela, cargo, "com número de suplentes incompatível"));
+    }
+
+    const bool temFoto = cargo.TemFoto();
+    const bool temFotoSuplente1 = cargo.GetDetalheCandidato().GetSuplente(1).TemFoto();
+    const bool temFotoSuplente2 = cargo.GetDetalheCandidato().GetSuplente(2).TemFoto();
+    AdicionaDadosCandidato(builder, cargo, temFoto ? 470 : 639);
+    AdicionaSiglaPartido(builder);
+    const api::TPosition maxX = temFotoSuplente1 ? 403 : 639;
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(1);
+            return NomeCargoSuplente(1) + ": " + nome();
+        },
+        310, maxX);
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(2);
+            return NomeCargoSuplente(2) + ": " + nome();
+        },
+        355, maxX);
+    if (cargo.TemFoto()) {
+        AdicionaFotoCandidato(builder, true);
+    }
+    api::TPosition direita = 639;
+    if (temFotoSuplente2) {
+        direita = AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(2); }, direita, 2).left - 5;
+    }
+    if (temFotoSuplente1) {
+        direita = AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(1); }, direita, 1).left;
+    }
+    largura = direita - 5;
+}
+
+// (original lines 932-937: content not recovered)
+#line 938
+void adicionaBaseTelaCompletaConsulta(api::CFormBuilder& builder, const std::string& tela,
+                                      const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsConsulta()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CONSULTA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de consulta"));
+    }
+    const api::TPosition y = AdicionaPergunta(builder, cargo);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaCampoNumero<api::CFramedText>(builder, comum::CRespostasDSNumero(digitos), digitos,
+                                          api::SPoint(100 - 40 * digitos, y));
+    builder.AddTextField(&comum::RespostaCorrente, api::SPoint(100, y + 3), FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+}
+
+} // namespace
+
+// (original lines 954-957: content not recovered)
 #line 958
 namespace {
 
@@ -529,23 +652,27 @@ void adicionaBaseTelaVotoBrancoCandidato(api::CFormBuilder& builder, const std::
 
 } // namespace
 
-// (original lines 973-989: content not recovered)
-#line 990
-// <stubs>
-// f6641 · 272 B · unmatched · name unknown
-// void f6641(i32, i32, i32) { ... }
-// </stubs>
-
-// (original lines 995-996: content not recovered)
-#line 997
+// (original lines 973-986: content not recovered)
+#line 987
 namespace {
+
+void adicionaBaseTelaVotoBrancoConsulta(api::CFormBuilder& builder, const std::string& tela,
+                                        const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsConsulta()) {
+        throw CUeVotaError(EUE_VOTA_TELA_VOTO_BRANCO_CONSULTA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de consulta"));
+    }
+    const api::TPosition y = AdicionaPergunta(builder, cargo);
+    AdicionaTextoPiscante(builder, "VOTO EM BRANCO", FONTE_NUMERO, 320, y);
+}
 
 void AdicionaTextoVotoNulo(api::CFormBuilder& builder, const api::TPosition x)
 {
     AdicionaTextoPiscante(builder, "VOTO NULO", FONTE_NUMERO, x, 345);
 }
 
-// (original lines 1004-1009: content not recovered)
+// (original lines 1005-1009: content not recovered)
 #line 1010
 void adicionaBaseTelaVotoNuloConsulta(api::CFormBuilder& builder, const std::string& tela, const comum::md::CCargo& cargo,
                                       const std::string& texto)
@@ -592,29 +719,55 @@ void AdicionaCampoDigitos(api::CFormBuilder& builder, const uebyte digitos, cons
 }
 
 } // namespace
+namespace {
 
-// (original lines 1070-1071: content not recovered)
-#line 1072
-// <stubs>
-// f6605 · 557 B · unmatched · name unknown
-// void f6605(i32, i32, i32) { ... }
-// </stubs>
+void adicionaBaseTelaCandidatoInexistente(api::CFormBuilder& builder, const std::string& tela,
+                                          const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_CANDIDATO_INEXISTENTE_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    builder.AddTextField("CANDIDATO INEXISTENTE", api::SPoint(10, 190), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaSiglaPartido(builder);
+    AdicionaTextoPiscante(builder, "VOTO DE LEGENDA", FONTE_NUMERO, 195, 345);
+}
 
-// (original lines 1077-1097: content not recovered)
-#line 1098
-// <stubs>
-// f6603 · 436 B · unmatched · name unknown
-// void f6603(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 1086-1096: content not recovered)
+#line 1097
+void adicionaBaseTelaCandidatoInapto(api::CFormBuilder& builder, const std::string& tela,
+                                     const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_CANDIDATO_INAPTO_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    builder.AddTextField(&DS_CandidatoNaoConcorre, api::SPoint(10, 190), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA);
+    AdicionaTextoVotoNulo(builder, 320);
+}
 
-// (original lines 1103-1122: content not recovered)
+// (original lines 1110-1122: content not recovered)
 #line 1123
-// <stubs>
-// f6602 · 374 B · unmatched · name unknown
-// void f6602(i32, i32, i32) { ... }
-// </stubs>
+void adicionaBaseTelaVotoLegenda(api::CFormBuilder& builder, const std::string& tela, const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_VOTO_LEGENDA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    AdicionaSiglaPartido(builder);
+    AdicionaTextoPiscante(builder, "VOTO DE LEGENDA", FONTE_NUMERO, 195, 345);
+}
 
-// (original lines 1128-1289: content not recovered)
+} // namespace
+
+// (original lines 1137-1289: content not recovered)
 #line 1290
 namespace {
 
@@ -670,8 +823,8 @@ const auto GetKeyboardLayout()
 // void f7787() { ... }
 // </stubs>
 
-// (original lines 1394-1521: content not recovered)
-#line 1522
+// (original lines 1394-1460: content not recovered)
+#line 1461
 CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom0(const comum::md::CCargo& cargo)
 {
     api::CInteractiveFormBuilder builder;
@@ -680,6 +833,63 @@ CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom0(const comum
     return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom0");
 }
 
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaCandidatoCom1(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom1(builder, "CriaTelaCompletaCandidatoCom1", cargo, largura);
+    AdicionaInstrucaoConfirmarVoto(builder, largura);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaCandidatoCom1");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom1(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom1(builder, "CriaTelaConferenciaCandidatoCom1", cargo, largura);
+    AdicionaRodapeConfira(builder, largura);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom1");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaCandidatoCom2(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom2(builder, "CriaTelaCompletaCandidatoCom2", cargo, largura);
+    AdicionaInstrucaoConfirmarVoto(builder, largura);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaCandidatoCom2");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom2(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom2(builder, "CriaTelaConferenciaCandidatoCom2", cargo, largura);
+    AdicionaRodapeConfira(builder, largura);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom2");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaConsulta(builder, "CriaTelaCompletaConsulta", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaConsulta(builder, "CriaTelaConferenciaConsulta", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaConsulta");
+}
+
+// (original lines 1524-1529: content not recovered)
+#line 1530
 CFormInterativoTelaVota CTelasVota::CriaTelaVotoNuloCandidato(const comum::md::CCargo& cargo, const std::string& confirma,
                                                              const std::string& mensagem, uebyte digitos,
                                                              api::TPosition x, api::TPosition yCampo,
@@ -780,7 +990,79 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVotoBrancoCandidato(const comum::md:
     return GetFormularioProgresso(builder, "telaVotoBrancoCandidato");
 }
 
-// (original lines 1641-2949: content not recovered)
+CFormInterativoTelaVota CTelasVota::CriaTelaVotoBrancoConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaVotoBrancoConsulta(builder, "CriaTelaVotoBrancoConsulta", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaVotoBrancoConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoBrancoConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaVotoBrancoConsulta(builder, "CriaTelaConferenciaVotoBrancoConsulta", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaVotoBrancoConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCandidatoInexistente(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, false);
+    adicionaBaseTelaCandidatoInexistente(builder, "CriaTelaCandidatoInexistente", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 389);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCandidatoInexistente");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoInexistente(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, true);
+    adicionaBaseTelaCandidatoInexistente(builder, "CriaTelaConferenciaCandidatoInexistente", cargo);
+    AdicionaRodapeConfira(builder, 389);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoInexistente");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCandidatoInapto(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCandidatoInapto(builder, "CriaTelaCandidatoInapto", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCandidatoInapto");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoInapto(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCandidatoInapto(builder, "CriaTelaConferenciaCandidatoInapto", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoInapto");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaVotoLegenda(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, false);
+    adicionaBaseTelaVotoLegenda(builder, "CriaTelaVotoLegenda", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 389);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaVotoLegenda", false);
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoLegenda(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, true);
+    adicionaBaseTelaVotoLegenda(builder, "CriaTelaConferenciaVotoLegenda", cargo);
+    AdicionaRodapeConfira(builder, 389);
+    return GetFormularioProgresso(builder, "telaConferenciaVotoLegenda", false);
+}
+
+// (original lines 1713-2949: content not recovered)
 #line 2950
 std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaFim(const std::string& texto,
                                                                     const api::TFontSize tamanhoFim,
