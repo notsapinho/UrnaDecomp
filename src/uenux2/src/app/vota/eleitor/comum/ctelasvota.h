@@ -50,30 +50,36 @@ namespace vota {
 // from +12 to +251, released last to first. Record 1536832, CFormInterativoTelaVota
 // vota::CTelasVota::GetTelaCargo(const comum::TCargoID, const ETelaVotacao), held by fn 4135, gives the map's types:
 // 4135 walks the map at +0 comparing a one-byte key at node+16 with its first argument, and it holds record 1536624
-// too, CTelasCargo::GetTela, with its `this` at node+20, so that is the element. The members' names are chosen, and so
-// is the type of 29 of the 30 (+180's is evidence, below): only their destruction shows, which any std::shared_ptr
-// gives. Five constructors copy one member each, through a getter: vota::CImprimindoBU's (inlined into fn 5986) the one
-// at +100, vota::CReinicioVotacao's (inlined into fn 5938) the one at +148, and the zeresima states' (fns 5965, 11945
-// and 5957) those at +212, +220 and +228. Four GetInst copy one more each, right after CTelasVota::GetInst() (fn 407):
-// vota::CAplicacaoEncerrada's (fn 3877) the one at +36, vota::CExibeAlertaDesligamento's (fn 5979) +44,
-// vota::CConfirmaImpressaoZeresima's (fn 5959) +52 and vota::CInstrucaoVotacaoAcessibilidade's (fn 4420) +124.
-// vota::CLimiteCopiasBUAtingido's constructor (its GetInst inlined into fn 12023) copies the one at +108. The getters'
-// names, and that they are getters, are chosen. GetTelaCargo is the record's (1536832, ctelasvota.cpp:3534), defined in
-// ctelasvota.cpp. Seven more members are read the same way: the constructors of vota::CVerificaHorarioZeresima (inlined
-// into fn 5947) +20, vota::CInicioVotacao (fn 2880) +116, vota::CQuerImprimirBU (inlined into fn 12062) +236 and
-// vota::CQuerReimprimirZeresima (fn 5940) +244 copy one each; vota::CVerificaEleicaoPassou::StartState (fn 11914)
-// copies +76 into a temporary and calls its slot 2 before the temporary is released: GetTelaEleicaoPassou returns the
-// std::shared_ptr by value, a choice, which gives that copy (fn 11914 matches with it; a copy the caller makes is not
-// measured); and vota::CSincronismoEleitor::StartState (fn 7178) calls slot 2 of +172 and api::CProgressBar::SetValor
-// (fn 3667) on +180 with that bar's +28, with no copy of either. So +180's pointee is an api::CProgressBar, and its
-// member's type says so; the other 29 stay the forms' type (ctelasvota.cpp.o compiles to the same object either way,
-// cmp). vota::CEmitirMaisBU::StartState (fn 12082) copies +196 into a temporary and calls its slot 2 before the
-// temporary is released, as fn 11914 does with +76: GetTelaEmitirMaisBU returns it by value, the same choice.
+// too, CTelasCargo::GetTela, with its `this` at node+20, so that is the element. The members' names are chosen; their
+// types are the forms the constructor (below) stores in them, but for +12's and +188's, which it leaves null, chosen
+// (+180's is evidence, below). Five constructors copy one member each, through a getter: vota::CImprimindoBU's (inlined
+// into fn 5986) the one at +100, vota::CReinicioVotacao's (inlined into fn 5938) the one at +148, and the zeresima
+// states' (fns 5965, 11945 and 5957) those at +212, +220 and +228. Four GetInst copy one more each, right after
+// CTelasVota::GetInst() (fn 407): vota::CAplicacaoEncerrada's (fn 3877) the one at +36,
+// vota::CExibeAlertaDesligamento's (fn 5979) +44, vota::CConfirmaImpressaoZeresima's (fn 5959) +52 and
+// vota::CInstrucaoVotacaoAcessibilidade's (fn 4420) +124. vota::CLimiteCopiasBUAtingido's constructor (its GetInst
+// inlined into fn 12023) copies the one at +108. The getters' names, and that they are getters, are chosen.
+// GetTelaCargo is the record's (1536832, ctelasvota.cpp:3534), defined in ctelasvota.cpp. Seven more members are read
+// the same way: the constructors of vota::CVerificaHorarioZeresima (inlined into fn 5947) +20, vota::CInicioVotacao (fn
+// 2880) +116, vota::CQuerImprimirBU (inlined into fn 12062) +236 and vota::CQuerReimprimirZeresima (fn 5940) +244 copy
+// one each; vota::CVerificaEleicaoPassou::StartState (fn 11914) copies +76 into a temporary and calls its slot 2 before
+// the temporary is released: GetTelaEleicaoPassou returns the std::shared_ptr by value, a choice, which gives that copy
+// (fn 11914 matches with it; a copy the caller makes is not measured); and vota::CSincronismoEleitor::StartState (fn
+// 7178) calls slot 2 of +172 and api::CProgressBar::SetValor (fn 3667) on +180 with that bar's +28, with no copy of
+// either. So +180's pointee is an api::CProgressBar, and its member's type says so. vota::CEmitirMaisBU::StartState (fn
+// 12082) copies +196 into a temporary and calls its slot 2 before the temporary is released, as fn 11914 does with +76:
+// GetTelaEmitirMaisBU returns it by value, the same choice.
 class CTelasVota {
 public:
     ~CTelasVota();
 
     static CTelasVota& GetInst();
+    // Record ctelasvota.cpp:3435 (static void vota::CTelasVota::CreateInst()), the "CTelasVota - instancia ja criada"
+    // throw (pattern code 1304) of a member the target holds inlined in fn 7787 behind a 16-byte prologue of its own:
+    // under GetInst's mutex (@1833372, the unlock fn 150), `new` of 252 bytes, this class's constructor, and the old
+    // pointer's destructor (fn 6548) and free, which std::unique_ptr::reset gives. The record's column, 45 on the line
+    // after GetInst's, is a macro's closing `)` (src/units/443-uenux2-ctelasvota-construtor.mk).
+    static void CreateInst();
 
     CFormInterativoTelaVota GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const;
 
@@ -138,14 +144,14 @@ public:
     const CFormInterativoTelaVota& GetTelaImprimindoBU() const { return m_tela12; }
     const CFormInterativoTelaVota& GetTelaInstrucaoVotacaoAcessibilidade() const { return m_tela15; }
     const CFormInterativoTelaVota& GetTelaReinicioVotacao() const { return m_tela18; }
-    const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
-    const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaGeraZeresima() const { return m_tela26; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaGeraResumoZeresima() const { return m_tela27; }
     const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
     const CFormInterativoTelaVota& GetTelaLimiteCopiasBUAtingido() const { return m_tela13; }
     const CFormInterativoTelaVota& GetTelaVerificaHorarioZeresima() const { return m_tela2; }
-    CFormInterativoTelaVota GetTelaEleicaoPassou() const { return m_tela9; }
-    const CFormInterativoTelaVota& GetTelaInicioVotacao() const { return m_tela14; }
-    const CFormInterativoTelaVota& GetTelaSincronismo() const { return m_tela21; }
+    std::shared_ptr<api::IForm<api::IScreen>> GetTelaEleicaoPassou() const { return m_tela9; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaInicioVotacao() const { return m_tela14; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaSincronismo() const { return m_tela21; }
     const std::shared_ptr<api::CProgressBar>& GetBarraSincronismo() const { return m_barraSincronismo; }
     void IncrementaBarraSincronismo();
     const CFormInterativoTelaVota& GetTelaQuerImprimirBU() const { return m_tela29; }
@@ -156,10 +162,10 @@ public:
     CFormInterativoTelaVota GetTelaEmitirMaisBU() const { return m_tela24; }
     // +156, whose slot 2 vota::CFimVotoEleitor::StartState (fn 7198) calls with no copy; the getter's name, and that it
     // is one, are chosen, as for the others
-    const CFormInterativoTelaVota& GetTelaFimVoto() const { return m_tela19; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaFimVoto() const { return m_tela19; }
     // +164, whose slot 2 vota::CEleitorVotando::DescartaVotos (fn 4449) calls with no copy; the getter's name, and that
     // it is one, are chosen, as for the others
-    const CFormInterativoTelaVota& GetTelaDescartaVotos() const { return m_tela20; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaDescartaVotos() const { return m_tela20; }
     // +60 and +68, which the constructors of vota::CImpressaoZeresimaTardia and vota::CInformacaoZeresimaTardia copy
     // (inlined with their GetInst into fns 11927 and 11931); the getters' names, and that they are getters, are chosen,
     // as for the others
@@ -167,11 +173,11 @@ public:
     const CFormInterativoTelaVota& GetTelaInformacaoZeresimaTardia() const { return m_tela8; }
     // +204, which vota::CEmitirMaisBU::ProcessInput (fn 12081) copies into a temporary and calls slot 2 of before the
     // temporary is released, as fn 11914 does with +76: returned by value, the same choice; the name chosen
-    CFormInterativoTelaVota GetTelaLimiteViasAdicionais() const { return m_tela25; }
+    std::shared_ptr<api::IForm<api::IScreen>> GetTelaLimiteViasAdicionais() const { return m_tela25; }
     // +132 and +140, whose slot 2 fn 5972 (the function both of vota::CInicioVotacao's slots call) calls with no copy,
     // the first when no voter has voted yet, the second otherwise; the names chosen, as for the others
-    const CFormInterativoTelaVota& GetTelaAguardaEleitor() const { return m_tela16; }
-    const CFormInterativoTelaVota& GetTelaAguardaProximoEleitor() const { return m_tela17; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaAguardaEleitor() const { return m_tela16; }
+    const std::shared_ptr<api::IForm<api::IScreen>>& GetTelaAguardaProximoEleitor() const { return m_tela17; }
     // fns 6580 and 6581: the keyboard test's screens that vota::testeteclado::CRetomada's and CPreZeresima's GetTela (fns
     // 11831, 11862) show, built on each call by TelaTextoConfirmaCorrige (below) over "Por favor, teste o teclado" and
     // the key CONFIRMA alone, and over "Quer testar o teclado?" with CORRIGE too. Their callers call GetInst and drop
@@ -296,15 +302,84 @@ public:
     static CFormInterativoTelaVota CriaTelaConferenciaVotoBrancoConsulta(const comum::md::CCargo& cargo);
 
 private:
+    // The constructor: record ctelasvota.cpp:3502, its throw "Tipo de cargo nao identificado" (code 9357), which fn
+    // 7787 holds inlined in CreateInst behind a 96-byte prologue (+0x1676d). Evidence, its code: the members'
+    // initializers in declaration order, each form built straight into its member (+12, +172, +180 and +188 left null),
+    // then, for each post of comum::CConfiguracaoEleicao::GetTodosCargos (fn 5790; the vector outlives the loop, a
+    // named local), the post's screens by its kind (proportional, majoritarian with 0, 1 or 2 substitutes, consult; any
+    // other kind throws), inserted into m_mapaTelas under the post's id through a std::pair (the key looked up before
+    // the node is built: insert of a pair, not emplace of the two values), and last the vote-recording screen
+    // ("Gravando" over a progress bar of 4) into +172 and its bar into +180, both assigned. Private is chosen
+    // (CreateInst is its caller).
+    CTelasVota();
+
+    // The constructor's screens, each behind a stack-pointer prologue of its own in fn 7787 (one caller each, inlined
+    // by binaryen, so out of line in the object). Recorded: the CriaTelaInputVazio* screens (records :1392 to :1460),
+    // CriaTelaPartido (:1741) and CriaTelaZeresimaTardia (:2382). The others have no record: their names are their
+    // forms' ("telaFimDosTrabalhos", ...), or the text's for the two over TelaTextoConfirmaCorrige, chosen, and so is
+    // their being static members of CTelasVota (an external free function of vota is the same code; the records name
+    // the recorded ones members). The CriaTelasCargo* functions, one per kind of post, each hold the post's std::map
+    // behind a 48-byte prologue of their own and return the CTelasCargo the constructor inserts: their names, their
+    // being members and the CTelasCargo result are chosen (the target builds it in the constructor's frame, which a
+    // by-value result gives). The results' types are the forms' own: GetFormulario's, TelaNeutra's and CriaTelaFim's
+    // std::shared_ptr<api::IForm<api::IScreen>> where the target stores those, and CriaTelaAguardandoHorarioVotacao
+    // converts GetFormularioInterativo's on return, in its own frame.
+    static CFormInterativoTelaVota CriaTelaInputVazioProporcional(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaInputVazioMajoritarioCom0(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaInputVazioMajoritarioCom1(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaInputVazioMajoritarioCom2(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaInputVazioConsulta(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaPartido(const comum::md::CCargo& cargo);
+    static CTelasCargo CriaTelasCargoProporcional(const comum::md::CCargo& cargo);
+    static CTelasCargo CriaTelasCargoMajoritarioCom0(const comum::md::CCargo& cargo);
+    static CTelasCargo CriaTelasCargoMajoritarioCom1(const comum::md::CCargo& cargo);
+    static CTelasCargo CriaTelasCargoMajoritarioCom2(const comum::md::CCargo& cargo);
+    static CTelasCargo CriaTelasCargoConsulta(const comum::md::CCargo& cargo);
+    static CFormInterativoTelaVota CriaTelaFimDosTrabalhos();
+    static CFormInterativoTelaVota CriaTelaExibeAlertaDesligamento();
+    static CFormInterativoTelaVota CriaTelaZeresimaTardia();
+    static CFormInterativoTelaVota CriaTelaInformacaoZeresimaTardia();
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaEleicaoPassou();
+    static CFormInterativoTelaVota CriaTelaReimpressaoBU();
+    static CFormInterativoTelaVota CriaTelaVerificaQualidadeBU();
+    static CFormInterativoTelaVota CriaTelaLimiteCopiasBUAtingido();
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaAguardandoHorarioVotacao();
+    static CFormInterativoTelaVota CriaTelaInstrucoesAcessibilidade();
+    static CFormInterativoTelaVota CriaTelaReinicioVotacaoCodigo();
+    static CFormInterativoTelaVota CriaTelaEmitirMaisBU();
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaNumeroCopiasErrado();
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaGerandoZeresima();
+    static std::shared_ptr<api::IForm<api::IScreen>> CriaTelaGerandoResumoZeresima();
+    static CFormInterativoTelaVota CriaTelaQuerImprimirZeresima();
+    static CFormInterativoTelaVota CriaTelaQuerImprimirBU();
+    static CFormInterativoTelaVota CriaTelaQuerReimprimirZeresima();
+
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
-    CFormInterativoTelaVota m_tela1, m_tela2, m_tela3, m_tela4, m_tela5, m_tela6, m_tela7, m_tela8, m_tela9, m_tela10;
-    CFormInterativoTelaVota m_tela11, m_tela12, m_tela13, m_tela14, m_tela15, m_tela16, m_tela17, m_tela18, m_tela19, m_tela20;
-    CFormInterativoTelaVota m_tela21;
+    CFormInterativoTelaVota m_tela1, m_tela2, m_tela3, m_tela4, m_tela5, m_tela6, m_tela7, m_tela8;
+    std::shared_ptr<api::IForm<api::IScreen>> m_tela9;
+    CFormInterativoTelaVota m_tela10, m_tela11, m_tela12, m_tela13;
+    std::shared_ptr<api::IForm<api::IScreen>> m_tela14;
+    CFormInterativoTelaVota m_tela15;
+    std::shared_ptr<api::IForm<api::IScreen>> m_tela16, m_tela17;
+    CFormInterativoTelaVota m_tela18;
+    std::shared_ptr<api::IForm<api::IScreen>> m_tela19, m_tela20, m_tela21;
     std::shared_ptr<api::CProgressBar> m_barraSincronismo;
-    CFormInterativoTelaVota m_tela23, m_tela24, m_tela25, m_tela26, m_tela27, m_tela28, m_tela29, m_tela30;
+    CFormInterativoTelaVota m_tela23, m_tela24;
+    std::shared_ptr<api::IForm<api::IScreen>> m_tela25, m_tela26, m_tela27;
+    CFormInterativoTelaVota m_tela28, m_tela29, m_tela30;
 
     static std::mutex s_mutex;
     static std::unique_ptr<CTelasVota> s_instancia;
+};
+
+// Record ctelasvota.cpp:3618, static api::TPosition vota::CInfoEleitorAudioHabilitado::LarguraMaxima(): the
+// default-argument record of api::CPolySingleton<api::IScreen>::instance() in a member that
+// CTelasVota::CriaTelaInstrucoesAcessibilidade holds inlined by clang (no prologue of its own), the screen's slot 32
+// (GetTextWidth) of "Áudio ativado" in the 25-point font. Recovered: the class's name and the member, from the record;
+// nothing else of the class is known. This head, its place in this header and the member's access are chosen.
+class CInfoEleitorAudioHabilitado {
+public:
+    static api::TPosition LarguraMaxima();
 };
 
 // The screens of the end of the vote and of the keyboard test built outside CTelasVota, in ctelasvota.cpp. No record

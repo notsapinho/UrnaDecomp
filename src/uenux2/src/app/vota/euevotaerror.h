@@ -241,6 +241,24 @@ enum EUeVotaError {
     // reached by table slot 1099 from fn 6603) throws when comum::CCandidaturas' cursor is at the end; the name is
     // chosen from its message, "Nao foi posicionado no candidato corretamente": no evidence names it
     EUE_VOTA_CANDIDATO_NAO_POSICIONADO = 9333,
+    // the values are the codes vota::CTelasVota's recorded screens of the constructor throw, each with
+    // vota::MensagemErroCargo's text, when the post is not of the screen's kind: CriaTelaInputVazioProporcional
+    // (records ctelasvota.cpp:1392 and :1397) over "não é de candidato" and "número de dígitos inválido" (fewer than
+    // two digits), CriaTelaInputVazioMajoritarioCom0, Com1 and Com2 (:1413, :1428, :1444) over "não é de candidato",
+    // CriaTelaInputVazioConsulta (:1460) over "não é de consulta" and CriaTelaPartido (:1741) over "não é de
+    // proporcional", all held inlined in target fn 7787; the names are chosen from the screens and the messages: no
+    // evidence names them
+    EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_CARGO_INVALIDO = 9348,
+    EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_DIGITOS_INVALIDOS = 9349,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM0_CARGO_INVALIDO = 9350,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM1_CARGO_INVALIDO = 9351,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM2_CARGO_INVALIDO = 9352,
+    EUE_VOTA_TELA_INPUT_VAZIO_CONSULTA_CARGO_INVALIDO = 9353,
+    EUE_VOTA_TELA_PARTIDO_CARGO_INVALIDO = 9355,
+    // the value is the code vota::CTelasVota's constructor (record ctelasvota.cpp:3502, inlined into target fn 7787)
+    // throws with "Tipo de cargo nao identificado" for a post of no known kind; the name is chosen from the message and
+    // the class (EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO, 9310, is another thrower's code)
+    EUE_VOTA_TELAS_TIPO_CARGO_NAO_IDENTIFICADO = 9357,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

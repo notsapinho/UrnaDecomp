@@ -103,9 +103,10 @@
 # give 575 objects cmp-equal to the link's; the 576th, ctelasvota.cpp.o, needs the new declarations and does not compile
 # so (workflow.md W13's method, the same compile lines over a copy of the tree).
 #
-# Roots: 441-uenux2-ctelasvota-bases-roots.cpp stands for 7787's calls of the fourteen screens, one call each, so that
-# binaryen inlines each into it as into 7787 and the builders keep their two call sites. It goes when 7787, or the
-# constructor 7787 holds, is in the link. Stand-ins these members made idle went, call by call: unit 378's for 6602, 6603
+# Roots: 441-uenux2-ctelasvota-bases-roots.cpp stands for 7787's one call of CTelasVota::CreateInst (unit 443's), which
+# binaryen inlines into it with the constructor and every screen the constructor builds, the fourteen among them, so
+# the builders keep their two call sites (until the constructor was written it called the fourteen, one call each).
+# It goes when 7787 is in the link. Stand-ins these members made idle went, call by call: unit 378's for 6602, 6603
 # and 6605 (CamposCinza), 6660 and 6671 (BasesCompletaCandidato) and 4181 (FotoSuplente), and its TelasVotaConstrutor's
 # calls of 1593, 1102 and 1190 (7787's calls of them come with the screens); unit 129's NomesSexo (2268's callers 6075
 # and 6076); unit 212's calls of TemFoto and its second calls of QtdSuplentes and MensagemErroCargo (one each stays, for
