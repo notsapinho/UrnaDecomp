@@ -26,7 +26,7 @@
 # copies a TMapa: not shown), is a reading. Chosen: std::find_if with a lambda (other forms of the search not measured),
 # the prefix's name, the enumerators' names, every line but the records' (<algorithm> took a blank line of the run above
 # NomeTela). NomesTela, the roots' stand-in for 2386's calls of NomeTela, and unit 197's Procura, for its call of 3251,
-# went; TelasCargo stands for 7787's five calls with two.
+# went; so did TelasCargo, which stood for 7787's five calls with two, once unit 443's constructor made them.
 #
 # Written since. CConfirmaVotoSemCandidato's GetInst, its constructor and its two statics: the target holds GetInst,
 # the constructor inlined, in fn 4459 (vota::CEleitorVotando::ChamaEstadoProximoCargo, src/units/197-uenux2-celeitorvotando.mk),

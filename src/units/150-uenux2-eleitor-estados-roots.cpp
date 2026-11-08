@@ -12,9 +12,9 @@
 // CTelasVota::GetTelaCargo (fn 4135), which holds CTelasCargo::GetTela inlined. Both are in the link, so NomesTela,
 // which stood for 2386, went.
 //
-// vota::CTelasCargo's constructor (fn 2386) has one direct caller in the target, fn 7787 (CTelasVota's constructor),
-// not reconstructed, which calls it five times: TelasCargo stands for it with two calls, the cargo's id varied as
-// 7787's calls vary it.
+// vota::CTelasCargo's constructor (fn 2386) has one direct caller in the target, fn 7787, which calls it five times
+// through CTelasVota's constructor (unit 443's, linked through unit 441's roots): TelasCargo, which stood for those
+// calls, went.
 //
 // api::CPolySingletonList::has<api::ITextToSpeech> (fn 3281, an 11-byte thunk into binaryen's merge, fn 1166) has three
 // direct callers in the target: fn 2079 (api::CPolySingleton<api::ITextToSpeech>::instance, whose copy the target keeps
@@ -42,9 +42,6 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 int w150_instrucao() __asm__("_ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv");
-int w150_telas_cargo(void* telas, int id, const void* mapa) __asm__(
-    "_ZN4vota11CTelasCargoC1EhRKNSt3__23mapINS_12ETelaVotacaoENS1_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_"
-    "9IInputKbdEEEEENS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_SA_EEEEEE");
 extern void* (*w150_info)() __asm__("_ZN3api20g_polySingletonsInfoE");
 int w150_tem_fala(const void* info) __asm__("_ZN3api18CPolySingletonList3hasINS_13ITextToSpeechEEEbRKNS_19TPolySingletonsInfoE");
 }
@@ -59,14 +56,6 @@ __attribute__((noinline)) int InstrucaoAcessibilidade(int vezes)
     return w150_instrucao() + (vezes > 2 ? w150_instrucao() : 5);
 }
 
-// stands for fn 7787; the objects are left as they are, as nothing calls this
-__attribute__((noinline)) int TelasCargo(char* telas, const void* mapa, int id)
-{
-    w150_telas_cargo(telas, id, mapa);
-    w150_telas_cargo(telas + 16, id + 1, mapa);
-    return id + 2;
-}
-
 // stands for fn 14478
 __attribute__((noinline)) int TemFala()
 {
@@ -77,7 +66,6 @@ struct SEleitorEstadosRoots {
     SEleitorEstadosRoots()
     {
         eleitor_estados_sink = reinterpret_cast<const void*>(&InstrucaoAcessibilidade);
-        eleitor_estados_sink = reinterpret_cast<const void*>(&TelasCargo);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TemFala);
     }
 } eleitor_estados_roots;
