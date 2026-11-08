@@ -34,9 +34,10 @@
 # object defines the same functions with the same code before and after the constructors (the same comparison).
 #
 # SetKey's calls of the map's find and hinted __find_equal score as the target's 163 and 1346, the bodies matched as
-# twins (they compare only the key): std::map<std::string, std::string>'s find (roots_boost.o) and, since the Boost
-# probe's std::map<std::string, unsigned short> copy left the link, std::set<std::string>'s hinted __find_equal
-# (roots_set.o). Step 9 renamed no match line when this unit landed.
+# twins (they compare only the key): std::map<std::string, std::string>'s find (roots_boost.o) and
+# std::map<std::string, std::pair<char, std::shared_ptr<api::CTextBox>>>'s hinted __find_equal (ctelasvota.cpp.o;
+# std::set<std::string>'s from roots_set.o before, since the Boost probe's std::map<std::string, unsigned short> copy
+# left the link, until that root's set instance went). Step 9 renamed no match line when this unit landed.
 #
 # No roots: the stand-in for SetKey's two target call sites in 5480 (two calls of SetKey) went when 5480, the INI
 # loader, came into the link (fragment 379, api::CIniFile::Carrega, which holds both calls).

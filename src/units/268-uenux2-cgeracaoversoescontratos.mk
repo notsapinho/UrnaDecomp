@@ -113,7 +113,9 @@
 # (steps 6 to 10); in a tree root linked after roots_boost.o 152 stays roots_rhvoice.o's, and 1163, 2281, 5309 and 5868
 # match with no match lost (steps 6 to 9 on a private link, with APP_OBJS on the make line, and splat-build). That root
 # is src/app/roots_set.cpp, last in APP_OBJS, whose comment says what it stands for and when it goes; built in place,
-# steps 6 to 10 with it and the flag turn 1163 and 5868 match and lose none, 11542 to 11544 matches.
+# steps 6 to 10 with it and the flag turn 1163 and 5868 match and lose none, 11542 to 11544 matches. That instance went
+# once cpath.cpp's object (unit 190's, without strict aliasing), whose set's inserts call 2281's body out of line, gave
+# the copy: 2281 matches from it, and a link without the root's instance keeps every row.
 #
 # Choices. The class's members, their names and access, ObtemDependencias's name and its parameters' names are chosen;
 # its being a member is a reading (it reads the object's +0, and 12098 passes it the singleton). Its line and the
@@ -121,7 +123,8 @@
 # object) and its declaration first in the class. The value is a named const local and the second insert repeats
 # `insert`; one form of each was measured. GetInst's and the constructor's choices are above (GetInst). The stand-in
 # for 1163's callers (two calls through its label),
-# roots_set.cpp's body (an uncalled insert at the end hint) and its name are choices; one form of each was measured.
+# roots_set.cpp's set instance (an uncalled insert at the end hint) and its name were choices; one form of each was
+# measured.
 # The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152 differs and 447 reads unresolved
 # (above), so it links after it; that it is last, after roots_boost.o too, is the choice.
 #

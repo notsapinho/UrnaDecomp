@@ -213,8 +213,8 @@ $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(
 # (src/app/roots_vector.cpp)
 $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
-# a uenux2 object's copy of std::set<std::string>'s hinted insert (fn 2281), without strict aliasing, whose object is
-# not identified yet: last in APP_OBJS, after roots_rhvoice.o and roots_boost.o (src/app/roots_set.cpp)
+# a uenux2 object's copy of std::map<unsigned char, std::string>'s hinted insert (fn 3266), without strict aliasing,
+# whose object is not identified yet: last in APP_OBJS, after roots_rhvoice.o and roots_boost.o (src/app/roots_set.cpp)
 $(ROOT)/$(APP)/roots_set.o: $(ROOT)/src/app/roots_set.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_set.cpp -o $(R)
 

@@ -91,14 +91,14 @@ scan's `object` column):
 <!-- status:unattributed-origin -->
 | our candidate is compiled from | `unknown` matched / total | `app` matched / total |
 | --- | ---: | ---: |
-| our uenux2 units | 218 / 228 | 827 / 845 |
+| our uenux2 units | 220 / 230 | 827 / 845 |
 | OpenSSL | 668 / 673 | 157 / 157 |
 | SQLite | 240 / 242 | 37 / 38 |
 | our ecourna units | 105 / 106 | 103 / 104 |
 | emscripten sysroot: libc (musl) | 63 / 64 | 11 / 11 |
 | emscripten sysroot: libc++ | 68 / 70 | 5 / 5 |
 | binaryen (functions the optimizer creates) | 26 / 28 | 40 / 41 |
-| our stand-ins (src/app, src/web) | 22 / 23 | 11 / 13 |
+| our stand-ins (src/app, src/web) | 20 / 21 | 11 / 13 |
 | 7-Zip | 12 / 15 | 0 / 0 |
 | our ASN.1 runtime and modules | 10 / 11 | 4 / 4 |
 | zlib | 0 / 0 | 14 / 14 |
@@ -121,8 +121,8 @@ candidate are not placed by anything yet.
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
 | `match` | 13,088 | 4,408,497 | matched |
-| `differs` | 229 | 232,284 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 459 | 534,382 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `differs` | 228 | 232,267 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 460 | 534,399 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 567 | 708,740 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -181,7 +181,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `byte` | 1,365 | 1,365 | 0 | 0 | 0 |
 | `fingerprint` | 654 | 654 | 0 | 0 | 0 |
-| `addr` | 8,406 | 8,245 | 41 | 119 | 1 |
+| `addr` | 8,406 | 8,245 | 40 | 120 | 1 |
 | `shape` | 958 | 940 | 13 | 5 | 0 |
 | `none` | 2,960 | 1,884 | 175 | 335 | 566 |
 <!-- /status:tiers -->

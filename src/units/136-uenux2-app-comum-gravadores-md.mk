@@ -152,8 +152,8 @@
 #   libc++'s __emplace_hint_unique_extract_key and calls __emplace_hint_unique_key_args (fn 2281's body) with an 8-byte
 #   result in the frame, where the target calls __emplace_hint_unique_extract_key (fn 1163) eight times, the emplace
 #   inlined into it, the shape a TU built with strict aliasing gives (cpath.cpp compiled both ways with -Rpass=inline:
-#   the emplace costs 250 against a threshold of 250 without it, 245 with it; src/app/roots_set.cpp and unit 268's
-#   fragment read 1163's shape so). With cpath.cpp.o compiled with strict aliasing in the same link, 11620 scores 182
+#   the emplace costs 250 against a threshold of 250 without it, 245 with it; unit 268's fragment reads 1163's shape
+#   so). With cpath.cpp.o compiled with strict aliasing in the same link, 11620 scores 182
 #   over 2053, every row an operand: calls, data addresses, CPath's statics (.bss, named) and the exception's destructor
 #   slot; the 15 of unit 190's matches scored (all but the statics' exit destructors) score the same both ways. The flag
 #   is the user's decision (docs/reference/facts/app-flags.md F6), and it alone matches nothing yet: the scan stops at
