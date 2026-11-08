@@ -699,4 +699,32 @@ void CLogVota::LogaVotoComputado()
     loga("O voto do eleitor foi computado");
 }
 
+static std::string NomeTurno(comum::EUrnaTurno turno)
+{
+    switch (turno) {
+        case comum::SEM_TURNO:
+            return "Sem turno";
+        case comum::TURNO_1:
+            return "1º turno";
+        case comum::TURNO_2:
+            return "2º turno";
+        case comum::TURNO_ATUAL:
+            return "Padrão";
+        default:
+            return "Inválido";
+    }
+}
+
+void CLogVota::LogaInicioAplicacao(comum::EUrnaTurno turno)
+{
+    const std::string mensagem = std::format("Iniciando aplicação - {}", NomeTurno(turno));
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaVersaoAplicacao()
+{
+    const std::string mensagem = std::format("Versão da aplicação: {}", "10.23.0.1 - DESENVOLVIMENTO");
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
 } // namespace vota

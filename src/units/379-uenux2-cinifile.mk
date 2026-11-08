@@ -137,6 +137,10 @@
 # ctelasvota.cpp.o's), 6071, as the target's 10879 and 12862 are: 6071 and 12862 match, and a link with a
 # cinistrings.cpp.o without ESCAPES holds no merged body and 12862's destructor whole (docs/reference/facts/splat.md S10
 # item 30).
+# 10879 is out since the executable TU's votaInit was written (unit 170): 14478's vote for the word rested on a
+# packed "\t" literal that landed on a "t" string tail at the same address in both links, which our merged strings'
+# new place broke (docs/reference/splat.md S2, ctors:N), so 10879 was a coincidental match; the user allows a landing
+# to lose it for that cause, and it comes back only if a landing's strings put such a tail there again.
 #
 # Choices besides those above: the helpers' names, their being free functions of api with external linkage (they read no
 # class state; the loader is another TU's, so they cannot be internal) and cinistrings.cpp's lines but 183 and 187;

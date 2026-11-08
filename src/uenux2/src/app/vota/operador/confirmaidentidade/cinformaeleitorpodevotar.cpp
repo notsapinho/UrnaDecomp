@@ -3,6 +3,7 @@
 #include "app/vota/operador/confirmaidentidade/cinformaeleitorpodevotar.h"
 
 #include "api/gui/cinteractiveform.h"
+#include "api/gui/iscreenmt.h"
 #include "api/ipc/cmessagequeue.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"

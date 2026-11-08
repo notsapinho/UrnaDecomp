@@ -11,6 +11,11 @@
 // f4633 · 675 B · unmatched · placement: link order · name unknown
 // void f4633() { ... }
 
+// link-order cluster 757 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
+
+// f5412 · 766 B · unmatched · placement: link order · name unknown
+// void f5412(i32) { ... }
+
 // link-order cluster 928 · uses=2
 
 // f6958 · 863 B · unmatched · placement: link order · name unknown
@@ -164,11 +169,4 @@
 
 // f1896 · 294 B · unmatched · placement: link order · name unknown
 // ? f1896(i32, i32) { ... }
-
-// component simulador
-
-// link-order cluster 1063 · uses=4
-
-// f2548 · 778 B · unmatched · placement: link order · name unknown
-// ? f2548(i32, i32) { ... }
 // </stubs>

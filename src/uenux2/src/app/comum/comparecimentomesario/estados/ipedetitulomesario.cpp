@@ -6,7 +6,7 @@
 
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cinteractiveform.h"
-#include "api/gui/iform.h"
+#include "api/gui/iscreenmt.h"
 #include "api/gui/itext.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/comparecimentomesario/cregistradormesario.h"

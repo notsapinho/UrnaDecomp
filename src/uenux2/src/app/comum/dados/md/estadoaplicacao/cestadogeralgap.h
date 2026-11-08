@@ -21,6 +21,15 @@ public:
     // Target fn 5626, out of line: comum::asn::CConversorEstadoGeralGap::DoDesconverte (fn 11395) calls it, and table
     // slot 453 holds it. Its last statement sets m_data2T again, from m_dataSegundoTurno against today's date. The
     // by-value parameters are the copies fn 11395 makes; no record names the constructor.
+    // The default, target fn 10278, which comum::teste::CAppInfoBuilder's constructor (fn 10268) calls for both of
+    // its gap states: no correspondence, eApSemAplicativo in both ids, every flag and count 0, the second turn's date
+    // 31/12/2080 (literal 357065). It has landing pads, so it is code at the executable TU's rule, the builder's:
+    // read as inline here.
+    CEstadoGeralGap()
+        : m_appId(eApSemAplicativo), m_appAnteriorId(eApSemAplicativo), m_executadoRED(false), m_identificadoATUE(false),
+          m_audio(false), m_data2T(false), m_dataSegundoTurno(api::CDate("31122080"))
+    {
+    }
     CEstadoGeralGap(std::vector<CDadoCorrespondencia> correspondencias, EUrnaAplicativo appId,
                     EUrnaAplicativo appAnteriorId, bool executadoRED, bool identificadoATUE, bool audio, bool data2T,
                     CNumViasImpressasRelatorios numViasImpressasRelatorios1T,

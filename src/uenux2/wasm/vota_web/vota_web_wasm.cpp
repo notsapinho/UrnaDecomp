@@ -6,6 +6,8 @@
 #include <cxxabi.h>
 #include <emscripten/emscripten.h>
 #include <exception>
+#include <filesystem>
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <sstream>
@@ -15,8 +17,11 @@
 #include <typeinfo>
 #include <vector>
 
+#include "api/audio/crhvoicetexttospeech.h"
 #include "api/audio/isound.h"
 #include "api/gui/capplication.h"
+#include "api/gui/iform.h"
+#include "api/gui/instrucaomenu.h"
 #include "api/hwil/ifingerprepare.h"
 #include "api/hwil/iinput.h"
 #include "api/ipc/posix/cposixmutex.h"
@@ -25,23 +30,30 @@
 #include "api/pattern/cpolysingleton.h"
 #include "api/pattern/igenericfactory.h"
 #include "api/util/cajustedatahora.h"
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cpath.h"
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/crespostas.h"
 #include "app/comum/iinterfacesavd.h"
 #include "app/vota/cexecucaovotacooperativa.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/celeitorvotando.h"
+#include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/comum/cinformacaoeleitor.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/isincronismovotoeleitor.h"
 #include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
 #include "app/vota/iexecucaovota.h"
+#include "app/vota/log/clogvota.h"
 #include "ecourna/api/security/cprng.hpp"
 #include "ecourna/api/security/csymmetriccipherfactory.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
+#include "uenux2/mock/app/comum/cappinfobuilder.h"
 #include "uenux2/mock/app/simulador/wasm/cfingerpreparesimulador.h"
+#include "uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.h"
 #include "uenux2/mock/app/simulador/wasm/cwasmthread.h"
 #include "uenux2/mock/app/simulador/wasm/cwasmwebsound.h"
 #include "uenux2/mock/app/simulador/wasm/simulador.h"
@@ -52,6 +64,12 @@ extern "C" {
 void js_use_external_keyboard(void);
 int js_ler_dimensao_tela(int dimensao, int padrao);
 }
+
+namespace vota {
+// Target fn 7787, which votaInit invokes through table slot 39: the vote's data load, with CTelasVota::CreateInst,
+// CInfoMTLCD::CreateInst and CacheInstructionAudio inlined after it. No record names it: name and declaration chosen.
+void CarregaVotacao();
+} // namespace vota
 
 namespace api {
 
@@ -68,7 +86,147 @@ TPolySingletonsInfo& (*g_polySingletonsInfo)() = polySingletonsInfoPadrao;
 
 namespace {
 
-// (original lines 71-279: content not recovered)
+// The options votaInit reads from its argument, a JSON text: the value after the quoted key and its colon, past
+// blanks (target fns 14477, 11571 and 11546, which votaInit invokes through table slots 4, 22 and 23; each builds
+// its own copy of the text). LeInt returns 1 when the key or a number is missing: it is in the table, so binaryen
+// folds none of its arguments, and its wasm type has two. Names and parameter names are chosen, and so is the
+// anonymous namespace (an inline function gives the same place: deferred, after votaInit, slots 62 to 64 theirs).
+bool LeBool(const char* opcoes, const std::string& chave, bool padrao)
+{
+    if (opcoes != nullptr) {
+        const std::string texto(opcoes);
+        size_t posicao = texto.find("\"" + chave + "\"");
+        if (posicao != std::string::npos) {
+            posicao = texto.find(':', posicao);
+            if (posicao != std::string::npos) {
+                posicao = texto.find_first_not_of(" \t\r\n", posicao + 1);
+                if (posicao != std::string::npos) {
+                    if (texto.compare(posicao, 4, "true") == 0) {
+                        padrao = true;
+                    } else if (texto.compare(posicao, 5, "false") == 0) {
+                        padrao = false;
+                    }
+                }
+            }
+        }
+    }
+    return padrao;
+}
+
+int LeInt(const char* opcoes, const std::string& chave)
+{
+    if (opcoes == nullptr) {
+        return 1;
+    }
+    const std::string texto(opcoes);
+    size_t posicao = texto.find("\"" + chave + "\"");
+    if (posicao != std::string::npos) {
+        posicao = texto.find(':', posicao);
+        if (posicao != std::string::npos) {
+            posicao = texto.find_first_not_of(" \t\r\n", posicao + 1);
+            if (posicao != std::string::npos) {
+                char* fim = nullptr;
+                const long valor = std::strtol(texto.c_str() + posicao, &fim, 10);
+                if (fim != texto.c_str() + posicao) {
+                    return valor;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
+std::string LeTexto(const char* opcoes, const std::string& chave, const std::string& padrao)
+{
+    if (opcoes == nullptr) {
+        return padrao;
+    }
+    const std::string texto(opcoes);
+    size_t posicao = texto.find("\"" + chave + "\"");
+    if (posicao == std::string::npos) {
+        return padrao;
+    }
+    posicao = texto.find(':', posicao);
+    if (posicao == std::string::npos) {
+        return padrao;
+    }
+    posicao = texto.find_first_not_of(" \t\r\n", posicao + 1);
+    if (posicao == std::string::npos || texto[posicao] != '"') {
+        return padrao;
+    }
+    std::string valor;
+    bool escapado = false;
+    for (size_t i = posicao + 1; i < texto.size(); ++i) {
+        const char c = texto[i];
+        if (!escapado) {
+            if (c == '\\') {
+                escapado = true;
+                continue;
+            }
+            if (c == '"') {
+                return valor;
+            }
+        }
+        escapado = false;
+        valor.push_back(c);
+    }
+    return padrao;
+}
+
+comum::EUrnaFase CodigoFase(const std::string& fase)
+{
+    if (fase == "oficial" || fase == "o") {
+        return comum::FASE_OFICIAL;
+    }
+    if (fase == "simulado" || fase == "s") {
+        return comum::FASE_SIMULADO;
+    }
+    return comum::FASE_TREINAMENTO;
+}
+
+// Target fns 11818 and 11733: a file written when absent, its directories first (std::ofstream's default mode), and
+// the stand-in signatures written into each flash's files with it. Names chosen.
+void GravaSeAusente(const std::filesystem::path& arquivo, const std::string& conteudo)
+{
+    if (!std::filesystem::exists(arquivo)) {
+        std::filesystem::create_directories(arquivo.parent_path());
+        std::ofstream saida(arquivo);
+        saida << conteudo;
+    }
+}
+
+// The directories votaInit creates on both flashes, and the serial number file. A function of its own, inlined:
+// with the loop in place, clang lays out the code after it inside the loop's exit test, and the table's slots 9 to
+// 18 come in another order than the target's (the TU compiled at its rule, both forms). Its name and linkage are
+// chosen.
+void CriaDiretorios()
+{
+    for (const comum::EFlashOrigem origem : {comum::FLASH_INTERNA, comum::FLASH_EXTERNA}) {
+        std::filesystem::create_directories(comum::CPath::GetPathEstatico(origem));
+        std::filesystem::create_directories(comum::CPath::GetPathDinamico(origem));
+        std::filesystem::create_directories(comum::CPath::GetPathDinamico(origem) / "tmp");
+        std::filesystem::create_directories(comum::CPath::GetPathTrab(origem, comum::TURNO_1));
+        std::filesystem::create_directories(comum::CPath::GetPathTrab(origem, comum::TURNO_2));
+        GravaSeAusente(comum::CPath::GetPathRootSemSA(origem) / "serialv.dat", "ABCDDCBA");
+    }
+}
+
+void AssinaArquivos()
+{
+    const std::string assinatura = "assinatura simulada para vota_web_wasm";
+    const std::vector<std::string> arquivos = {"eg.vsu", "gap.vsu", "sa.vsu", "vota.vsu", "rdv.vsu", "uenux.vsu"};
+    for (const comum::EFlashOrigem origem : {comum::FLASH_INTERNA, comum::FLASH_EXTERNA}) {
+        GravaSeAusente(comum::CPath::GetPathDinamico(origem) / "eg.vsu", assinatura);
+        for (const comum::EUrnaTurno turno : {comum::TURNO_1, comum::TURNO_2}) {
+            const std::filesystem::path trab = comum::CPath::GetPathTrab(origem, turno);
+            for (const std::string& arquivo : arquivos) {
+                GravaSeAusente(trab / arquivo, assinatura);
+            }
+        }
+    }
+}
+
+// (original lines 229-279: content not recovered)
 #line 280
 std::string Desmangle(const char* nome)
 {
@@ -138,10 +296,14 @@ void ReportaErro(const std::string& mensagem)
 
 } // namespace
 
-void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
 
-// (original lines 350-355: content not recovered)
-#line 356
+inline std::filesystem::path PathEstadoGeral()
+{
+    return comum::CPath::GetPathDinamico(comum::FLASH_INTERNA);
+}
 namespace {
 
 class CPoliticaExecucaoEleitorWeb : public vota::impl::IPoliticaExecucaoEleitor {
@@ -154,67 +316,77 @@ public:
 class CVotaWebEngine {
 public:
 
-    // (original lines 368-516: content not recovered)
-#line 517
-    int Tick()
+    // (original lines 368-508: content not recovered)
+#line 509
+    int Init(const char* opcoes)
     {
-        if (!m_inicializado || m_encerrado) {
-            return 0;
-        }
         try {
-            const std::string antes = NomeEstadoEleitor();
-            vota::IExecucaoVota::GetInst().ProcessaEntradaEleitor();
-            const std::string depois = NomeEstadoEleitor();
-            if (depois.find("CSincronismoEleitor") != std::string::npos) {
-                const double agora = emscripten_get_now();
-                if (!m_aguardando) {
-                    m_aguardando = true;
-                    m_avisado = false;
-                    m_avisos = 0;
-                    m_proximoAviso = agora + 120;
-                } else if (!m_avisado && !(agora < m_proximoAviso)) {
-                    if (m_avisos < 4) {
-                        vota::CTelasVota::GetInst().IncrementaBarraSincronismo();
-                        m_proximoAviso = agora + 160;
-                        ++m_avisos;
-                    } else {
-                        SinalizaSincronismo(vota::IExecucaoVota::GetInst().GetFilaEleitor());
-                        m_avisado = true;
-                    }
+            m_audioEleitorHabilitado = LeBool(opcoes, "audioEleitorHabilitado", false);
+            m_audioHabilitado = LeBool(opcoes, "reproduzirAudio", true);
+            api::CPolySingleton<api::ITextToSpeech>::set(new simulador::CWasmNullTextToSpeech());
+            api::CPolySingleton<api::ISound>::instance().Mute(!m_audioHabilitado);
+            CriaDiretorios();
+            AssinaArquivos();
+            if (!std::filesystem::exists(PathEstadoGeral() / "eg.bin")) {
+                const int pe = LeInt(opcoes, "pe");
+                const int municipio = LeInt(opcoes, "municipio");
+                const int zona = LeInt(opcoes, "zona");
+                const int secao = LeInt(opcoes, "secao");
+                const int turno = LeInt(opcoes, "turno");
+                const comum::EUrnaFase fase = CodigoFase(LeTexto(opcoes, "fase", "te"));
+                const std::string uf = LeTexto(opcoes, "uf", "ee");
+                comum::teste::CAppInfoBuilder builder(pe);
+                builder.SetFase(fase)
+                    .SetTurno(turno == 2 ? comum::TURNO_2 : comum::TURNO_1)
+                    .SetTipoUrna(comum::eUrnaVota)
+                    .SetLocalidade(municipio, zona, secao);
+                builder.SetUF(ecourna::api::util::CStringUtils::ToUpper(uf));
+                builder.PreparaVotacao(true);
+                builder.SalvaTudo(false, {comum::teste::EMidia::INTERNA, comum::teste::EMidia::EXTERNA});
+                AssinaArquivos();
+            }
+            comum::CAppInfo::GetInst().CarregaGeral();
+            const comum::md::estadoaplicacao::CEstadoGeral& geral = comum::CAppInfo::GetInst().GetGeral();
+            vota::CLogVota& log = vota::CLogVota::GetInst();
+            log.LogaInicioAplicacao(geral.GetDadoCarga().GetTurno());
+            log.LogaVersaoAplicacao();
+            vota::CarregaVotacao();
+            vota::CEstadoAudio::GetInst().GeraDadosDinamicos();
+            AssinaArquivos();
+            if (m_audioEleitorHabilitado) {
+                if (!std::filesystem::exists("/etc/RHVoice") || !std::filesystem::exists("/share/RHVoice")) {
+                    throw std::runtime_error("dados do RHVoice nao foram carregados para habilitar o audio do eleitor");
                 }
+                api::CPolySingleton<api::ITextToSpeech>::set(new api::CRHVoiceTextToSpeech("/"));
             } else {
-                m_aguardando = false;
-                m_avisado = false;
-                m_avisos = 0;
-                m_proximoAviso = 0;
+                api::CPolySingleton<api::ITextToSpeech>::set(new simulador::CWasmNullTextToSpeech());
             }
-            if (depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
-                m_encerrado = true;
+            comum::CAppInfo::GetInst().GetVota().SetEstadoVota(comum::EAVVOTAR);
+            comum::CAppInfo::GetInst().GetVota().MarcaInicioAquisicao();
+            vota::CSincronizaVota::SincronizaEstadoGeralVota();
+            AssinaArquivos();
+            vota::IExecucaoVota& execucao = vota::IExecucaoVota::GetInst();
+            execucao.IniciaThreads();
+            if (m_audioEleitorHabilitado) {
+                HabilitaAudioEleitor(execucao.GetFilaEleitor());
+            } else {
+                vota::CEstadoAudio::GetInst().Desativa();
             }
-            const std::string estado = EstadoJson();
-            if (depois != antes || estado != m_estado) {
-                m_estado = estado;
-                simulador::EmitEvent("vota:state", m_estado);
-            }
-            if (m_encerrado && depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
-                simulador::EmitEvent("vota:done", EstadoJson());
-            }
+            LiberaEleitor(execucao.GetFilaEleitor());
+            m_inicializado = true;
+            m_encerrado = false;
+            m_estado = EstadoJson();
+            simulador::EmitEvent("vota:state", m_estado);
             return 1;
         } catch (const std::exception& erro) {
             ReportaErro(erro.what());
         } catch (...) {
-            ReportaErro("erro desconhecido em votaTick");
+            ReportaErro("erro desconhecido em votaInit");
         }
         return 0;
     }
 
-    const char* GetStateJson()
-    {
-        m_estado = EstadoJson();
-        return m_estado.c_str();
-    }
-
-    // (original lines 575-588: content not recovered)
+    // (original lines 577-588: content not recovered)
 #line 589
     void SetAudioEnabled(bool habilitado)
     {
@@ -318,6 +490,64 @@ public:
         return json.str();
     }
 
+    int Tick()
+    {
+        if (!m_inicializado || m_encerrado) {
+            return 0;
+        }
+        try {
+            const std::string antes = NomeEstadoEleitor();
+            vota::IExecucaoVota::GetInst().ProcessaEntradaEleitor();
+            const std::string depois = NomeEstadoEleitor();
+            if (depois.find("CSincronismoEleitor") != std::string::npos) {
+                const double agora = emscripten_get_now();
+                if (!m_aguardando) {
+                    m_aguardando = true;
+                    m_avisado = false;
+                    m_avisos = 0;
+                    m_proximoAviso = agora + 120;
+                } else if (!m_avisado && !(agora < m_proximoAviso)) {
+                    if (m_avisos < 4) {
+                        vota::CTelasVota::GetInst().IncrementaBarraSincronismo();
+                        m_proximoAviso = agora + 160;
+                        ++m_avisos;
+                    } else {
+                        SinalizaSincronismo(vota::IExecucaoVota::GetInst().GetFilaEleitor());
+                        m_avisado = true;
+                    }
+                }
+            } else {
+                m_aguardando = false;
+                m_avisado = false;
+                m_avisos = 0;
+                m_proximoAviso = 0;
+            }
+            if (depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
+                m_encerrado = true;
+            }
+            const std::string estado = EstadoJson();
+            if (depois != antes || estado != m_estado) {
+                m_estado = estado;
+                simulador::EmitEvent("vota:state", m_estado);
+            }
+            if (m_encerrado && depois.find("CAguardaMensagem") != std::string::npos && antes != depois) {
+                simulador::EmitEvent("vota:done", EstadoJson());
+            }
+            return 1;
+        } catch (const std::exception& erro) {
+            ReportaErro(erro.what());
+        } catch (...) {
+            ReportaErro("erro desconhecido em votaTick");
+        }
+        return 0;
+    }
+
+    const char* GetStateJson()
+    {
+        m_estado = EstadoJson();
+        return m_estado.c_str();
+    }
+
 private:
     bool m_inicializado = false;
     bool m_encerrado = false;
@@ -370,6 +600,11 @@ public:
 
 } // namespace
 
+extern "C" int votaInit(const char* opcoes)
+{
+    return Engine().Init(opcoes);
+}
+
 extern "C" void votaPressKey(const char* tecla)
 {
     Engine().PressKey(tecla);
@@ -420,7 +655,7 @@ int main()
     return 0;
 }
 
-void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 9;
@@ -428,7 +663,7 @@ void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
     fila.Insert(mensagem);
 }
 
-void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 1;
@@ -436,7 +671,7 @@ void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
     fila.Insert(mensagem);
 }
 
-void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 5;

@@ -3,6 +3,10 @@
 #include "app/comum/dados/md/estadoaplicacao/eurna.h"
 #include "app/comum/eurnaturno.h"
 
+namespace comum::teste {
+class CAppInfoBuilder;
+}
+
 namespace comum::md::estadoaplicacao {
 
 // The load the urna runs: the fields of ModuloEstadoGeralUrna::DadoCarga, in order, at +0 to +16 (target fn 5633). The
@@ -10,6 +14,13 @@ namespace comum::md::estadoaplicacao {
 // names the turn's type EUrnaTurno.
 class CDadoCarga {
 public:
+    // The default load, which target fn 10268 stores at +32 to +48 of the builder's state with no call: turn 1, a
+    // voting urna in both turns, model 2015, the simulated phase. Read as inline.
+    CDadoCarga()
+        : m_turno(TURNO_1), m_tipoUrnaT1(eUrnaVota), m_tipoUrnaT2(eUrnaVota), m_modelo(eModeloUE2015),
+          m_fase(FASE_SIMULADO)
+    {
+    }
     CDadoCarga(EUrnaTurno turno, EUrnaTipo tipoUrnaT1, EUrnaTipo tipoUrnaT2, EUrnaModelo modelo, EUrnaFase fase);
 
     EUrnaTurno GetTurno() const { return m_turno; }
@@ -23,6 +34,9 @@ public:
     EUrnaTipo GetTipoUrna() const { return m_turno == TURNO_1 ? m_tipoUrnaT1 : m_tipoUrnaT2; }
 
 private:
+    // The builder writes the turn, the urna types and the phase directly (target fns 10188, 10181, 10197): chosen.
+    friend class teste::CAppInfoBuilder;
+
     void ValidaModelo(const EUrnaModelo modelo);
 
     EUrnaTurno m_turno;

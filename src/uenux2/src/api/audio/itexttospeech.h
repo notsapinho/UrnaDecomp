@@ -21,8 +21,9 @@ class CWavFile;
 // in that function's own TU. So every virtual member is inline or pure.
 // That TU is compiled with exceptions: the copies of slot 0 (fn 11530, which calls through invoke_*) and of the
 // destructor (fn 11489, which calls fn 149 for the string where fns 9427 and 5441 inline it) are its code.
-// The layout comes from the implicit constructor (fn 13877, in the table for the invoke_ii of std::make_unique in fn
-// 7840, which zeroes 96 bytes first; inlined into fn 8302 after operator new(96)) and from the destructor:
+// The layout comes from the constructor (fn 13877, CWasmNullTextToSpeech's implicit one with this class's inlined,
+// which fn 7840's `new` reaches through invoke_ii's table slot 6 after zeroing 96 bytes; inlined into fn 8302 after
+// operator new(96)) and from the destructor:
 // - +4 is an object of 36 bytes with its own destructor (fn 3764, called with this + 4), the recent-audio cache below:
 //   the int 256 at its +0, a std::list at its +4 (fn 5754 reads a node's std::shared_ptr at +20) and a std::unordered_map
 //   from string to list node at its +16;
@@ -45,8 +46,8 @@ class CWavFile;
 // records); volume is the third of RHVoice's three, by elimination; SetTag is named for what the body does with the value,
 // since slot 8 has no caller in the target (no call_indirect of its type (i32, i64)->() goes through +32). 4 and 0, the
 // limits of slots 6 and 7, have no name.
-// Synthesize (slot 0) and its helpers, from the executable TU's copies (src/app/roots_texttospeech.cpp gives them at
-// that TU's rule; src/units/237-uenux2-itexttospeech.mk has the measurements):
+// Synthesize (slot 0) and its helpers, from the executable TU's copies (that TU emits them since its votaInit builds
+// the implementer; src/units/237-uenux2-itexttospeech.mk has the measurements):
 // - Synthesize: fn 11530 builds the options, makes the key through table slot 207 (fn 5758), looks it up through slot
 //   208 (fn 5754) into its result and returns when the pointer is not null. Otherwise it destroys that empty result
 //   (fn 388) and calls slot 11 into the same address, then stores a copy through slot 209 (fn 5750) with 0 as the last
@@ -86,6 +87,11 @@ class CWavFile;
 // forms measured.
 class ITextToSpeech {
 public:
+    // User-provided, so not noexcept: votaInit (fn 7840) calls CWasmNullTextToSpeech's implicit constructor (fn 13877)
+    // through invoke_ii, where a noexcept one is a plain call (the TU compiled at its rule, both forms). That it is this
+    // class's and not the recent-audio cache's, and its empty body, are chosen.
+    ITextToSpeech() {}
+
     struct SOptions {
         std::string voice;
         unsigned rate;

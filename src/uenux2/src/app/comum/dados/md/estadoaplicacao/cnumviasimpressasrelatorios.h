@@ -9,6 +9,11 @@ namespace comum::md::estadoaplicacao {
 // fields; the member names follow those fields.
 class CNumViasImpressasRelatorios {
 public:
+    // No copy printed: the default target fns 10268 and 10278 store as one zero word. Read as inline.
+    CNumViasImpressasRelatorios()
+        : m_numViasEstadoUrna(0), m_numViasEleitores(0), m_numViasVersoesDados(0), m_numViasPU(0)
+    {
+    }
     CNumViasImpressasRelatorios(uebyte numViasEstadoUrna, uebyte numViasEleitores, uebyte numViasVersoesDados,
                                 uebyte numViasPU);
 

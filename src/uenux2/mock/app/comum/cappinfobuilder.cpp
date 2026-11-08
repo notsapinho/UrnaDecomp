@@ -52,7 +52,24 @@ void GravaArquivo(const std::string& arquivo, const std::string& conteudo)
     saida << conteudo;
 }
 
-// (original lines 55-108: content not recovered)
+std::vector<EApp> TodosApps()
+{
+    return {EApp::GAP, EApp::SA, EApp::VOTA};
+}
+
+CAppInfoBuilder::CAppInfoBuilder(uedword idPE)
+{
+    m_geral.m_idPE = idPE;
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SalvaTudo(bool assina, std::vector<EMidia> midias)
+{
+    return SalvaGeral(assina, midias)
+        .SalvaAppsTurno1(assina, midias, TodosApps())
+        .SalvaAppsTurno2(assina, midias, TodosApps());
+}
+
+// (original lines 72-108: content not recovered)
 #line 109
 CAppInfoBuilder& CAppInfoBuilder::SalvaGeral(bool assina, std::vector<EMidia> midias)
 {
@@ -66,7 +83,17 @@ CAppInfoBuilder& CAppInfoBuilder::SalvaGeral(bool assina, std::vector<EMidia> mi
     return *this;
 }
 
-// (original lines 121-272: content not recovered)
+CAppInfoBuilder& CAppInfoBuilder::SalvaAppsTurno1(bool assina, std::vector<EMidia> midias, std::vector<EApp> apps)
+{
+    return SalvaApps(assina, midias, TURNO_1, apps);
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SalvaAppsTurno2(bool assina, std::vector<EMidia> midias, std::vector<EApp> apps)
+{
+    return SalvaApps(assina, midias, TURNO_2, apps);
+}
+
+// (original lines 131-272: content not recovered)
 #line 273
 CAppInfoBuilder& CAppInfoBuilder::SalvaApps(bool assina, std::vector<EMidia> midias, EUrnaTurno turno,
                                              std::vector<EApp> apps)
@@ -104,6 +131,33 @@ CAppInfoBuilder& CAppInfoBuilder::SalvaApp(bool assina, EFlashOrigem origem, EUr
         CServicoEstadoGeralVota(origem, turno).Salva(md::estadoaplicacao::CEstadoGeralVota(m_vota[idx]));
         break;
     }
+    return *this;
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SetFase(EUrnaFase fase)
+{
+    m_geral.m_dadoCarga.m_fase = fase;
+    return *this;
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SetTurno(EUrnaTurno turno)
+{
+    m_geral.m_dadoCarga.m_turno = turno;
+    return *this;
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SetTipoUrna(EUrnaTipo tipo)
+{
+    m_geral.m_dadoCarga.m_tipoUrnaT1 = tipo;
+    m_geral.m_dadoCarga.m_tipoUrnaT2 = tipo;
+    return *this;
+}
+
+CAppInfoBuilder& CAppInfoBuilder::SetLocalidade(uedword municipio, ueword zona, ueword secao)
+{
+    m_geral.m_dadoLocal.m_secaoCarga.m_municipio = municipio;
+    m_geral.m_dadoLocal.m_secaoCarga.m_zona = zona;
+    m_geral.m_dadoLocal.m_secaoCarga.m_secao = secao;
     return *this;
 }
 

@@ -11,6 +11,10 @@
 #include "app/comum/dados/md/estadoaplicacao/eurna.h"
 #include "ecourna/api/uetypes.hpp"
 
+namespace comum::teste {
+class CAppInfoBuilder;
+}
+
 namespace comum::md::estadoaplicacao {
 
 // The urna's state: the fields of ModuloEstadoGeralUrna::EstadoGeralUrna. The offsets come from the constructor (target
@@ -28,6 +32,14 @@ public:
     // strings (the locality's and the version) and the hash, and copies the correspondence with CDadoCorrespondencia's
     // copy constructor (fn 1249). The by-value and reference forms are read from those copies and moves; `&&`
     // parameters with the copies spelled at the call were not measured. The parameter names are chosen.
+    // The default state, a test urna's: target fn 10268 (comum::teste::CAppInfoBuilder's constructor, at the
+    // executable TU's rule) stores eEstadoUrnaTestada and 15 at +0 and +4, the members' defaults, the version text
+    // (literal 354064) and 64 bytes of 10 (fn 10258, vector(n, value)), with no call of a constructor of this class:
+    // read as this constructor inline there. The values are the target's; the form is the reading.
+    CEstadoGeral()
+        : m_estadoUrna(eEstadoUrnaTestada), m_idPE(15), m_versao("7.2.1.3 - TESTE EG ASN1"), m_hashVersoesPacotes(64, 10)
+    {
+    }
     CEstadoGeral(EEstadoUrna estadoUrna, uedword idPE, CDadoLocal dadoLocal, CDadoCarga dadoCarga,
                  CAjusteDataHora ajusteDataHora, const CDadoCorrespondencia& correspondencia, std::string versao,
                  std::vector<uebyte> hashVersoesPacotes);
@@ -80,6 +92,9 @@ public:
     std::string GetResumoHashVersoesPacotes() const;
 
 private:
+    // The builder writes the PE, the load and the locality directly (target fns 10268, 10176 to 10197): chosen.
+    friend class teste::CAppInfoBuilder;
+
     static std::vector<uebyte> s_certificado;
 
     EEstadoUrna m_estadoUrna;

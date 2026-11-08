@@ -38,9 +38,9 @@
 # - 4027 (std::__visit_format_arg over __handle_replacement_field's lambda, 393 over 3752, 111 inserted, 8 deleted):
 #   12105 holds a std::format("{:04}", ...) whose __vformat_to clang inlines and whose visitor it calls; with that
 #   second caller our link keeps the executable TU's copy out of line, as the target does (146, that TU's __vformat_to,
-#   now 12 over 212, all operand rows, `unresolved self-voted` on it). The rows differ where the visitor calls fn 5924
-#   (a char formatter over an integer), which our link inlines: 5924's other target caller, 9935 (the format function of
-#   a handle argument, table slot 468), is passed by 5344, which is not written. 3838 and 5822 (two parse members 4027
+#   a match now; unit 170's fragment has what moved it, not traced). The rows differ where the visitor calls fn 5924 (a
+#   char formatter over an integer), which our link inlines: 5924's other target caller, 9935 (the format function of a
+#   handle argument, table slot 468), is passed by 5344, which is not written. 3838 and 5822 (two parse members 4027
 #   calls) stay unresolved on their 2-byte field sets.
 #
 # What the bytes decide, measured with `pnpm wasm score` of 12105 against the plain link:

@@ -10,17 +10,19 @@
 // - The file compiles at UENUX2_CXXFLAGS, not the roots' APP_CXXFLAGS: 4967 loads __vec_ and __begin_ again after its
 //   store to __end_, which -fno-strict-aliasing gives and strict aliasing does not (docs/reference/facts/levels.md V1).
 // Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. The link's
-// copies of the three are mock/app/comum/cappinfobuilder.cpp's now (unit 253), the same code at the executable TU's rule,
-// whose object links ahead of this one and of src/app/roots_coderenv.cpp (whose vector<char> twins of 520 and 4967
-// named the two match lines before), so the lines carry vector<unsigned char>'s names.
+// copies of the three are the executable TU's now (unit 170), the same code at that TU's rule and first on the link
+// line, ahead of mock/app/comum/cappinfobuilder.cpp's (unit 253) and src/app/roots_coderenv.cpp's (whose vector<char>
+// twins of 520 and 4967 named two match lines before), so the lines carry that TU's names:
+// vector<comum::teste::EMidia>'s guard and ~vector, and vector<api::IForm<api::IScreen>*>'s __destroy_vector.
 #include <memory>
 #include <vector>
 
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target that are not in our link (2793 6004 7840 8592 10155 10205 10256 10261;
-// 2891, unit 206's writer, and 5500, unit 170's, are): two call sites, since binaryen inlines a function called once
+// Stands in for 520's callers in the target that are not in our link (10155 10205; 2891, unit 206's writer, 5500 and
+// 7840, unit 170's, 2793, 6004, 10256 and 10261, which votaInit brings, and 8592, the executable TU's exit
+// destructor of CFormStack<IScreen>'s s_forms, are): two call sites, since binaryen inlines a function called once
 // (docs/reference/facts/tool-traps.md X1). 857, 1249, 1532, 2927 and 9770, the others, call it now: 857 and 1249
 // from mock/app/comum/cappinfobuilder.cpp's object (unit 253), 1532, 2927 and 9770 from src/app/roots_coderenv.cpp. The
 // instantiation above keeps clang from inlining ~vector here.
@@ -81,20 +83,14 @@ int urna_roots_vector_dado(int a)
     return reinterpret_cast<int>(&urna_desfaz_dado);
 }
 
-// The -Oz copy of std::vector<std::string>::~vector() read as the executable TU's (target fn 2255): it passes the vector to
-// __destroy_vector::operator() (2249, below) through a frame slot, as 1698 does. Its target callers are ecourna's
-// CStringUtils::Split (1880, on its landing pad), 9586 and 11733; urna_roots_vector_cadeias stands for the two that are
-// not in our link. Instantiated ahead of the block below, it takes its place in this object before 2249 and 2247, the
-// order of the three target indices. src/app/roots_coderenv.cpp, which links first, builds its std::vector<std::string>
-// in place, so it emits no copy of this destructor to take 2255.
+// std::vector<std::string>::~vector() (target fn 2255), the executable TU's -Oz copy, which that TU's AssinaArquivos
+// (11733) instantiates now. Its other target callers are ecourna's CStringUtils::Split (1880, in our link) and 9586,
+// not written: urna_roots_vector_cadeias stands for 9586 with one call.
 #include <string>
-
-template __attribute__((minsize)) std::vector<std::string>::~vector();
 
 int urna_roots_vector_cadeias(int a)
 {
     auto* v = reinterpret_cast<std::vector<std::string>*>(a);
-    std::destroy_at(v);
     std::destroy_at(v + 3);
     return a;
 }
@@ -118,30 +114,3 @@ int urna_roots_vector_cadeias(int a)
 // cconversorseguranca.cpp.o's callers the second: both stay out of line, and both match.
 template __attribute__((minsize)) void std::vector<unsigned char>::__assign_with_size<unsigned char*, unsigned char*>(unsigned char*, unsigned char*, std::ptrdiff_t);
 template void std::vector<unsigned char>::__assign_with_size<std::__wrap_iter<const unsigned char*>, std::__wrap_iter<const unsigned char*>>(std::__wrap_iter<const unsigned char*>, std::__wrap_iter<const unsigned char*>, std::ptrdiff_t);
-
-// Three more -Oz copies read as the executable TU's: std::vector<std::string>'s __base_destruct_at_end (target fn 2247,
-// target callers 2249 8825 8826 8874) and __destroy_vector::operator() (2249, callers 679 2183 2255 5573 8873), and
-// std::string::find_first_not_of(const char*, size_type) (1843, callers 1519 2185 11546 11571 14477).
-// docs/reference/facts/asn1.md A5 matched 2247 and 2249 with a probe object at the executable TU's -Oz -fexceptions, and
-// A10 reads 1843's loop as -Oz's; their copies had come from the ASN.1 runtime's -Os objects and differed. The executable
-// TU's code that would instantiate them is not written (votaInit, 7840, invokes 11546, 11571 and 14477, which call 1843),
-// so they come from here until it is, and go then, as 252 did (src/units/README.md "Companion files").
-// - Measured: these lines compiled at UENUX2_CXXFLAGS give, for each of the three, the object code (calls and relocated
-//   constants masked) the same instantiations without minsize give at VOTA_WEB_CXXFLAGS, the TU's rule.
-// - 2247 calls ~basic_string (149) only with allocator_traits::destroy and __destroy_at instantiated with minsize too, 2249
-//   calls 2247 only with clear() so, and 1843's loop is not rotated only with __str_find_first_not_of so (each measured on
-//   a probe link), read as each callee's own -O3 copy inlining or rotating first (src/units/README.md "Companion files"
-//   names 2247's two).
-// - Measured on a probe link (docs/reference/facts/levels.md V4, the object first on the link line, scanned with the
-//   committed symbol file): the three match and no other row enters or leaves match against an empty probe object; in
-//   this link they match under these symbols, which census pairs name (pair-addr for 2247 and 2249, pair-fingerprint for
-//   1843), and no match is lost.
-#include <string>
-
-template __attribute__((minsize)) void std::vector<std::string>::__base_destruct_at_end(std::string*);
-template __attribute__((minsize)) void std::vector<std::string>::__destroy_vector::operator()();
-template __attribute__((minsize)) void std::vector<std::string>::clear();
-template __attribute__((minsize)) void std::allocator_traits<std::allocator<std::string>>::destroy<std::string, 0>(std::allocator<std::string>&, std::string*);
-template __attribute__((minsize)) void std::__destroy_at<std::string, 0>(std::string*);
-template __attribute__((minsize)) std::string::size_type std::string::find_first_not_of(const char*, std::string::size_type) const;
-template __attribute__((minsize)) unsigned long std::__str_find_first_not_of<char, unsigned long, std::char_traits<char>, 4294967295ul>(const char*, unsigned long, const char*, unsigned long, unsigned long);
