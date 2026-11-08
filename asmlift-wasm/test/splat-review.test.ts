@@ -147,8 +147,11 @@ describe('reviewMatch', { timeout: 300_000 }, () => {
     for (const n of r.needed) {
       expect(n.reading).not.toBe(n.preferred);
     }
-    // the target body read an integer as a table slot, or an address as an integer: it picked the kinds
-    expect(r.needed.some((n) => n.preferred === 'literal' && n.reading.startsWith('table slot'))).toBe(true);
+    // the target body read an integer as a table slot, or an address as an integer, or a slot where our first reading is
+    // an address: it picked the kinds. Which kinds depends on which of our numbers fall in our data or our table (a
+    // literal first on 51122f5's link, an address string for both operands since the executable TU's votaInit)
+    const kind = (reading: string): string => reading.split(' ')[0];
+    expect(r.needed.some((n) => kind(n.preferred) !== kind(n.reading))).toBe(true);
   });
 
   it.skipIf(!real)("12829: the preferred readings fail legitimately, on the table slot copy the target body picked", () => {

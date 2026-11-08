@@ -260,6 +260,9 @@ const ourString = (l: Loaded): number => ourStringOf(l, 124328);
 const ourDtorSlot = (l: Loaded): number => ourSlotOf(l, 69);
 /** The slot of ours whose function the target keeps in slot 7010, the value of NextEntry's enum at +0x1b. */
 const ourSlot7010 = (l: Loaded): number => ourSlotOf(l, 7010);
+/** Our offset in NextEntry of its call of readdir, which the target (1260) holds at +0x42: the destructor's slot at
+ *  +0x37 ahead of it takes one LEB byte or two by its value (our slot 69 takes two, as the target's does). */
+const ourCall = (l: Loaded): number => ourAt(l, NEXT_ENTRY, 1260, 0x42);
 /** DO_CONVERTE +0xc: its vtable's address point, past the offset-to-top and typeinfo words. */
 const ourVtable = (l: Loaded): number => dataAddressOf(l, VTABLE) + 8;
 
@@ -581,11 +584,14 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
   it.skipIf(!real)('leaves a function kind-unverified when the relink has another shape', () => {
     const { shifted } = load();
     const s = indexOf(shifted, NEXT_ENTRY);
-    // another callee of the same signature
-    const at = shiftedAt(indexOf(load().plain, NEXT_ENTRY), s, 0x41);
+    // another callee of the same signature, at our offset of the call the target holds at +0x42 (readdir)
+    const call = ourCall(load());
+    const at = shiftedAt(indexOf(load().plain, NEXT_ENTRY), s, call);
     const k = kindsOf(NEXT_ENTRY, undefined, patched(shifted.module, s, at, indexOf(shifted, '_Znwm')));
     expect(k.verified).toBe(false);
-    expect(!k.verified && k.why).toMatch(/^another shape in the shifted link: \+0x41 call: \S+ against _Znwm$/);
+    expect(!k.verified && k.why).toMatch(
+      new RegExp(`^another shape in the shifted link: \\+0x${call.toString(16)} call: \\S+ against _Znwm$`),
+    );
   });
 
   it.skipIf(!real)('leaves a function kind-unverified when the two slots hold different functions', () => {
@@ -686,20 +692,24 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
 });
 
 // The perturbation cases. Without the operand-kind table (every reading offered), c2, c5, c8 and c9 build the target;
-// with it, c2, c5 and c8 are rejected and c9 is a review warning. The others: the target's number written as an
-// integer (c5L, c8L, I2, TH2), an integer of the target's written as a pointer (c2S), integers over vdbeSorterSort's
-// relative slots (V1, V2), and a function the relink does not name. Each case: our function, the instruction, the
-// original value, the value in the plain link and the value the shifted relink would have (by the operand's kind in
-// the source). A value of our link (an original address or slot, a slot or address of ours a case writes) is a
-// function of the links, found as the helpers above say; the target's numbers are literals, but c9's, which has to stay
-// past our data and is chosen from the link (pastOurData), and the offsets of I2 (stringViewCase) and of V1 and V2
-// (relativeSlotCase).
+// with it, c2 and c5 are rejected, c8 too while our slot 69 holds another function than the target's slot 69 (it holds
+// the same since the executable TU's statics, and c8 then builds), and c9 is a review warning. The others: the target's
+// number written as an integer (c5L, c8L, I2, TH2), an integer of the target's written as a pointer (c2S), integers
+// over vdbeSorterSort's relative slots (V1, V2), and a function the relink does not name. Each case: our function, the
+// instruction, the original value, the value in the plain link and the value the shifted relink would have (by the
+// operand's kind in the source). A value of our link (an original address or slot, a slot or address of ours a case
+// writes) is a function of the links, found as the helpers above say; the target's numbers are literals, but c9's,
+// which has to stay past our data and is chosen from the link (pastOurData), and the offsets of I2 (stringViewCase) and
+// of V1 and V2 (relativeSlotCase).
 type Value = number | bigint | ((l: Loaded) => number | bigint);
 interface Case {
   name: string;
   symbol: string;
   target: number;
   at?: number;
+  /** in place of `at`: the target's offset of the instruction, read as ours (ourAt): an operand ahead of it can take
+   *  another LEB length in our link */
+  targetAt?: number;
   was?: Value;
   plain?: Value;
   shifted?: Value;
@@ -732,7 +742,7 @@ const CASES: Case[] = [
     name: 'c6 wrong callee',
     symbol: NEXT_ENTRY,
     target: 1260,
-    at: 0x41,
+    targetAt: 0x42,
     plain: (l) => l.maps.ours.fnByKey.get('_Znwm')!,
     shifted: (l) => indexOf(l.shifted, '_Znwm'),
   },
@@ -871,15 +881,16 @@ function caseMaps(c: Case): { maps: SymbolMaps; kinds: FunctionKinds } {
   const l = load();
   const p = indexOf(l.plain, c.symbol);
   const s = indexOf(l.shifted, c.symbol);
-  if (c.at === undefined) {
+  const at = c.targetAt === undefined ? c.at : ourAt(l, c.symbol, c.target, c.targetAt);
+  if (at === undefined) {
     return { maps: l.maps, kinds: l.kinds.functions.get(p)! };
   }
   const v = (x: Value | undefined): number | bigint => (typeof x === 'function' ? x(l) : x!);
   if (c.was !== undefined) {
-    expect(valueAt(l.plain.module, p, c.at), c.name).toBe(v(c.was));
+    expect(valueAt(l.plain.module, p, at), c.name).toBe(v(c.was));
   }
-  const plainModule = patched(l.plain.module, p, c.at, v(c.plain));
-  const shiftedModule = patched(l.shifted.module, s, shiftedAt(p, s, c.at), v(c.shifted));
+  const plainModule = patched(l.plain.module, p, at, v(c.plain));
+  const shiftedModule = patched(l.shifted.module, s, shiftedAt(p, s, at), v(c.shifted));
   const pair = { ...l.plain, module: plainModule };
   const names = new Map(l.shifted.names);
   if (c.unnamed) {
@@ -900,8 +911,19 @@ function caseMaps(c: Case): { maps: SymbolMaps; kinds: FunctionKinds } {
   };
 }
 
+let committed: ReturnType<typeof parseMatchList>['matches'] | undefined;
+/** The committed match list, whose names the splat build reads beside the symbol file's. */
+function committedMatches(): ReturnType<typeof parseMatchList>['matches'] {
+  committed ??= parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8')).matches;
+  return committed;
+}
+
+/** The splat build of the case's one match line, over maps that name every matched function by the committed match
+ *  list, as the splat build's do: a slot of ours whose function only its match line names (one in a slot whose number
+ *  is the target's, which casts no table vote) reads as that function. */
 function build(c: Case, maps: SymbolMaps) {
-  return buildSplat(maps, PIECES, parseMatchList(`${c.target} ${c.symbol}\n`).matches, TARGET_SHA);
+  const matches = parseMatchList(`${c.target} ${c.symbol}\n`).matches;
+  return buildSplat(withMatches(maps, committedMatches()), PIECES, matches, TARGET_SHA);
 }
 
 function failure(c: Case, maps: SymbolMaps): string {
@@ -966,13 +988,20 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     expect(operandKind(c8.kinds, 0x37)).toBe('slot');
     const f69 = l.maps.target.symbols.fns.get(l.maps.ours.fns.get(l.maps.ours.elem.get(69) ?? -1)?.key ?? '');
     const theirs = f69 === undefined ? [] : (l.maps.target.slots.get(f69) ?? []);
-    // a wrong slot: 69 is none of that function's target slots, or the case would build
-    expect(theirs).not.toContain(69);
+    // 69 is a wrong slot of ours unless our slot 69 holds the function the target keeps there, the destructor itself
+    // (our table is the target's at 1 to 150 since the executable TU's statics): then the literal is our own slot
+    // of it, a source with no error, and it builds the target
+    expect(theirs.includes(69)).toBe(ourDtorSlot(l) === 69);
     // the first differing byte is either of the literal's two, by the low bits of the slots read
     expect(failure(byName('c8'), c8.maps)).toMatch(
-      theirs.length >= 1 && theirs.length <= SAME_CONTENT_LIMIT
-        ? new RegExp(`function 1260 .* DIFFERS at \\+0x3[89] target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs[0]}$`, 'm')
-        : new RegExp('function 1260 .* is UNRESOLVED: ours \\+0x37 i32\\.const 69: a table slot of ours: ', 'm'),
+      theirs.includes(69)
+        ? /^built$/
+        : theirs.length >= 1 && theirs.length <= SAME_CONTENT_LIMIT
+          ? new RegExp(
+              `function 1260 .* DIFFERS at \\+0x3[89] target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs[0]}$`,
+              'm',
+            )
+          : new RegExp('function 1260 .* is UNRESOLVED: ours \\+0x37 i32\\.const 69: a table slot of ours: ', 'm'),
     );
   });
 

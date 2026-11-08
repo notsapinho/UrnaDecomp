@@ -249,7 +249,10 @@ describe('a source_location record the target holds more than once', { timeout: 
     const ours = loadOurSide(PLAIN, MAP_DIR);
     const target = loadTargetSide(TARGET, SYMBOLS, `${URNA}/ledger`, ours.stackSize);
     const kinds = readOperandKinds(defaultKindsPath(PLAIN), new Uint8Array(readFileSync(PLAIN)));
-    const maps = symbolMaps(ours, target, kinds);
+    // the match list's names too, as the splat build reads them: 700's body passes a table slot of ours whose function
+    // only its match line names when our slot's number is the target's (an equal constant casts no table vote)
+    const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
+    const maps = withMatches(symbolMaps(ours, target, kinds), matches);
     const index = ours.fnByKey.get(START_TICK)!;
     const record = disassemble(ours.module.funcs[index - ours.module.importedFuncCount])
       .flatMap((i) => (i.opcode === 0x41 && i.imms[0]?.kind === 's32' ? [i.imms[0].value] : []))
@@ -1068,8 +1071,18 @@ describe('resolveRepointed', { timeout: 180_000 }, () => {
       const target = loadTargetSide(TARGET, SYMBOLS, `${URNA}/ledger`, ours.stackSize);
       const kinds = readOperandKinds(defaultKindsPath(PLAIN), ours.module.bytes);
       const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
-      const withKinds = withMatches(symbolMaps(ours, target, kinds), matches);
-      const without = withMatches(symbolMaps(ours, target, { ...kinds, data: new Map() }), matches);
+      // the premise, set on a copy: the symbol file names no such object, as it did not when this case was written
+      // (8750's vote names it since the executable TU's votaInit), so the words alone place it
+      const unnamed = (m: SymbolMaps): SymbolMaps => {
+        const { symbols } = m.target;
+        const data = new Map(symbols.data);
+        const dataEvidence = new Map(symbols.dataEvidence);
+        data.delete('_ZN4ASN17UTCTime7theInfoE');
+        dataEvidence.delete('_ZN4ASN17UTCTime7theInfoE');
+        return { ...m, target: { ...m.target, symbols: { ...symbols, data, dataEvidence } } };
+      };
+      const withKinds = unnamed(withMatches(symbolMaps(ours, target, kinds), matches));
+      const without = unnamed(withMatches(symbolMaps(ours, target, { ...kinds, data: new Map() }), matches));
       const o = obj(withKinds, '_ZN4ASN17UTCTime7theInfoE');
       expect(withKinds.target.symbols.data.has(o.key)).toBe(false);
       expect(objectPattern(withKinds, o).fixed.slice(4, 8)).toEqual([23, 0, 0, 0]);
