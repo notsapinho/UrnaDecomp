@@ -70,6 +70,7 @@
 #include "api/gui/iform.h"
 #include "api/gui/iformfield.h"
 #include "api/gui/iinputfield.h"
+#include "api/gui/iscreenmt.h"
 #include "api/gui/itext.h"
 #include "api/gui/ipreshow.h"
 #include "api/gui/primitives.h"

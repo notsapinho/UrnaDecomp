@@ -141,8 +141,9 @@
 #   that link). The target's PushKey (9649) is at slot 105. Since the executable TU's votaInit (unit 170) is written,
 #   the variable is in api/gui/instrucaomenu.h (unit 440's notes), which this file and that TU include, and not
 #   cinputmenufield.h: 11662 matches from that TU's copy at slot 1, std::string's constructor is slot 3, and 2688,
-#   2689, 3525, 3526, 5143, 5166, 5189, 5190, 9385, 9394 and 9518 match with it (8592 is api::CFormStack<api::IScreen>'s
-#   s_forms's exit destructor, still out); the callers+content hand line on the variable's name went, carrying
+#   2689, 3525, 3526, 5143, 5166, 5189, 5190, 9385, 9394 and 9518 match with it (8592, api::CFormStack<api::IScreen>'s
+#   s_forms's exit destructor, matches since that TU includes api/gui/iform.h: unit 170's fragment); the
+#   callers+content hand line on the variable's name went, carrying
 #   nothing once 14478 votes it too (its removal moves no row, and the splat build verifies). The four of
 #   AddItem's default argument's lambda (`__func`, vtable @1539468: 12277, 12279, 12283, 12285), std::any's copy
 #   assignment (1763), std::__throw_bad_any_cast (3861) and std::bad_any_cast::what (8110, libc++'s any.o) match with

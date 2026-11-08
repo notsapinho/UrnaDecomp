@@ -51,12 +51,11 @@
 // its initialisation calls the string's constructor out of line (fn 148, that TU's copy) and 11662 its destructor (fn
 // 149), where this tree's -O3 objects inline both; in 14478 it comes first after libc++'s streams' and libc's
 // environment's; and 1832432 lies just before that TU's own .bss (api::polySingletonsInfoPadrao's static at 1832448).
-// Measured: with the variable in this header and the executable TU including it, that TU's copy gives the target's
-// initialisation and 11662, but the TU then also instantiates CFormStack<IScreenMT>'s statics (iform.h), whose target
-// destructor 8177 is another object's -O3 copy, and 8177 leaves `match` (src/units/84-uenux2-cinputmenufield.mk has the
-// run). So the variable stays in cinputmenufield.cpp, an inline variable there (a choice), until the header that brings
-// it into the executable TU is known, and 11662 waits for that; its name and its being an inline variable of api rather
-// than a template's member are chosen.
+// Measured: with the variable in this header, every includer emits it with its exit destructor, which renumbers the
+// includers' static destructors (three menu states' objects' matched `__cxx_global_array_dtor.N` lines then named other
+// bodies), so it is in api/gui/instrucaomenu.h, which cinputmenufield.cpp and the executable TU include (the path is a
+// choice; src/units/84-uenux2-cinputmenufield.mk has the runs), and 11662 matches from that TU's copy. Its name and
+// its being an inline variable of api rather than a template's member are chosen.
 //
 // What fn 3675 and fn 1693 show of the members they call (src/units/84-uenux2-cinputmenufield.mk has the measurements):
 // AddItem (records 320, 326 and 339) takes the item's text and a TMenuCallback, the record's type name, whose default

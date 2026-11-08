@@ -1,14 +1,13 @@
 // Pending member of unit 440 (src/units/440-uenux2-votainit.mk), a trap until it is reconstructed (src/units/README.md
 // "Pending members"):
-// - vota::CTelasVota::CreateInst (target fn 7787, record ctelasvota.cpp:3435, 148,912 B with the constructor, record
-//   :3502, and about 148 one-caller bodies inlined), which votaInit (fn 7840, unit 170's TU) invokes through table slot
-//   39. It holds that call's place: votaInit's call needs a definition our link has. It is not written; it moves into
-//   src/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp with its body, and this file and its rule go with it.
-#include "app/vota/eleitor/comum/ctelasvota.h"
-
+// - vota::CarregaVotacao, target fn 7787 (148,912 B), which votaInit (fn 7840, unit 170's TU) invokes through table
+//   slot 39: the vote's data load, then CTelasVota::CreateInst (record ctelasvota.cpp:3435, its constructor :3502),
+//   CInfoMTLCD::CreateInst (cinfomtlcd.cpp:33) and CInstrucaoVotacaoAcessibilidade::CacheInstructionAudio inlined.
+//   No record names 7787 itself, so its name is chosen. It holds the place of votaInit's call, which needs a definition
+//   our link has; it is not written, and this file and its rule go when 7787 is.
 namespace vota {
 
-void CTelasVota::CreateInst()
+void CarregaVotacao()
 {
     __builtin_trap();
 }

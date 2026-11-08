@@ -14,10 +14,10 @@
 #   Its object is the same at -O2 and -O3. Refresh needs -O3: libc++'s push_back costs 225 against -O2's threshold of
 #   225 and inlines at -O3's 250, and -O3 unrolls the loop; at -O2 it stays a call. Its object is the same under
 #   both standards, once the object-local indices are normalised.
-# - matched: api::IScreenMT's destructor (8741), inline (iscreenmt.h; defined in api/gui/iform.h after CFormStack, as
-#   IScreen's is, unit 69's fragment), CWasmScreenMT's implicit D2 and D0 (8745, 8744), which hold it, and the function
-#   it calls, api::CFormStack<api::IScreenMT>::Limpa (3461), which this object emits: cwasmscreenmt.cpp includes
-#   iform.h. 8741, 8745 and 8744 are named by vtable alone and cast no votes; the scan's content pass finds 3461 (a
+# - matched: api::IScreenMT's destructor (8741), inline (defined at the end of iscreenmt.h, after its include of
+#   iform.h, a choice; unit 170's fragment says why not in iform.h, as IScreen's is), CWasmScreenMT's implicit D2 and D0
+#   (8745, 8744), which hold it, and the function it calls, api::CFormStack<api::IScreenMT>::Limpa (3461), which this
+#   object emits. 8741, 8745 and 8744 are named by vtable alone and cast no votes; the scan's content pass finds 3461 (a
 #   `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried nothing).
 # - matched: ShowClock (8757, slot 12) and the implicit D2 and D0 of its local class WasmText (8748, 8680, slots 0 and 1
 #   of that class's vtable @1530040). Evidence: the RTTI names `simulador::CWasmScreenMT::ShowClock(api::SPoint

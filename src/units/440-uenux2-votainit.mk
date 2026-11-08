@@ -3,8 +3,11 @@
 # fragment holds the trap below and the notes of the members written for votaInit in other units' files, each named
 # with its unit; their rows' matches are listed in unit 170's fragment.
 #
-# The trap (440-uenux2-votainit-pending.cpp): vota::CTelasVota::CreateInst (target fn 7787, records ctelasvota.cpp:3435
-# and the constructor's :3502, 148,912 B), which votaInit invokes through table slot 39 and which is not written; and
+# The trap (440-uenux2-votainit-pending.cpp): vota::CarregaVotacao, target fn 7787 (148,912 B), which votaInit invokes
+# through table slot 39 and which is not written. No record names 7787: it runs the vote's data load and holds
+# CTelasVota::CreateInst (record ctelasvota.cpp:3435, its constructor :3502), CInfoMTLCD::CreateInst (cinfomtlcd.cpp:33)
+# and CInstrucaoVotacaoAcessibilidade::CacheInstructionAudio inlined after it (read from 7787's body), so its name, its
+# being a free function of vota and its declaration in the executable TU are chosen; and
 # in src/units/158-uenux2-api-pending.cpp, the RHVoice text-to-speech's constructor (fn 10842, 23,822 B, slot 45). They
 # hold the place of votaInit's two calls, which need definitions our link has; each goes when its function is written.
 # Neither is a vtable slot: src/units/README.md "Pending members" traps none such ("never trapped"), and a member the
@@ -17,7 +20,7 @@
 #   ends at `unreachable`), so ITextToSpeech's constructor has two callers in our link and binaryen keeps it out of
 #   simulador::CWasmNullTextToSpeech's (fn 13877), where the target, whose 10842 inlines it, holds every store in 13877.
 #   13877 waits for 10842 (50 over 54 rows).
-# The trap compiles at ctelasvota.cpp's flags, as CreateInst will.
+# The trap compiles at ctelasvota.cpp's flags, the file 7787's stub is in (a choice: its body is a trap).
 #
 # Members written in other units' files for votaInit (each a body read from its target function; names, places and
 # linkages chosen unless said):
@@ -34,11 +37,12 @@
 #   matches now that votaInit takes its slot.
 # - unit 109, app/comum/appinfo/cappinfo.{h,cpp}: CAppInfo::CarregaGeral (11572).
 # - app/vota/log/clogvota.{h,cpp}: CLogVota::LogaInicioAplicacao (11641) and LogaVersaoAplicacao (11642).
-# - api/gui/instrucaomenu.h (new, path chosen): api::INSTRUCAO_PADRAO_MENU, moved out of cinputmenufield.cpp (unit 84)
-#   so that the executable TU emits it without api/gui/iform.h; cinputmenufield.cpp includes it.
+# - api/gui/instrucaomenu.h (new, path chosen): api::INSTRUCAO_PADRAO_MENU, moved out of cinputmenufield.cpp (unit 84),
+#   which includes it, and kept out of cinputmenufield.h, whose includers' static destructors it renumbers.
 # - api/audio/itexttospeech.h (units 82 and 237): a user-provided ITextToSpeech(), since votaInit invokes fn 13877.
-# - declarations: CTelasVota::CreateInst in ctelasvota.h (unit 110), CRHVoiceTextToSpeech's constructor taking a
-#   std::filesystem::path in crhvoicetexttospeech.h (unit 158), both trapped above.
+# - declarations: CRHVoiceTextToSpeech's constructor taking a std::filesystem::path in crhvoicetexttospeech.h (unit
+#   158), trapped above. ctelasvota.h has no CreateInst line: votaInit's callee is 7787, not CreateInst, which
+#   nothing in this tree calls.
 $(ROOT)/$(APP)/440-uenux2-votainit-pending.o: $(ROOT)/src/units/440-uenux2-votainit-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/440-uenux2-votainit.mk $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/comum/ctelasvota.cpp) -c src/units/440-uenux2-votainit-pending.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/440-uenux2-votainit-pending.o

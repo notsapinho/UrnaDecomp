@@ -10,17 +10,19 @@
 // - The file compiles at UENUX2_CXXFLAGS, not the roots' APP_CXXFLAGS: 4967 loads __vec_ and __begin_ again after its
 //   store to __end_, which -fno-strict-aliasing gives and strict aliasing does not (docs/reference/facts/levels.md V1).
 // Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. The link's
-// copies of the three are mock/app/comum/cappinfobuilder.cpp's now (unit 253), the same code at the executable TU's rule,
-// whose object links ahead of this one and of src/app/roots_coderenv.cpp (whose vector<char> twins of 520 and 4967
-// named the two match lines before), so the lines carry vector<unsigned char>'s names.
+// copies of the three are the executable TU's now (unit 170), the same code at that TU's rule and first on the link
+// line, ahead of mock/app/comum/cappinfobuilder.cpp's (unit 253) and src/app/roots_coderenv.cpp's (whose vector<char>
+// twins of 520 and 4967 named two match lines before), so the lines carry that TU's names:
+// vector<comum::teste::EMidia>'s guard and ~vector, and vector<api::IForm<api::IScreen>*>'s __destroy_vector.
 #include <memory>
 #include <vector>
 
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target that are not in our link (8592 10155 10205; 2891, unit 206's writer, 5500
-// and 7840, unit 170's, and 2793, 6004, 10256 and 10261, which votaInit brings, are): two call sites, since binaryen inlines a function called once
+// Stands in for 520's callers in the target that are not in our link (10155 10205; 2891, unit 206's writer, 5500 and
+// 7840, unit 170's, 2793, 6004, 10256 and 10261, which votaInit brings, and 8592, the executable TU's exit
+// destructor of CFormStack<IScreen>'s s_forms, are): two call sites, since binaryen inlines a function called once
 // (docs/reference/facts/tool-traps.md X1). 857, 1249, 1532, 2927 and 9770, the others, call it now: 857 and 1249
 // from mock/app/comum/cappinfobuilder.cpp's object (unit 253), 1532, 2927 and 9770 from src/app/roots_coderenv.cpp. The
 // instantiation above keeps clang from inlining ~vector here.

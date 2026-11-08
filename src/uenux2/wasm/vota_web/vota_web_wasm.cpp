@@ -20,6 +20,7 @@
 #include "api/audio/crhvoicetexttospeech.h"
 #include "api/audio/isound.h"
 #include "api/gui/capplication.h"
+#include "api/gui/iform.h"
 #include "api/gui/instrucaomenu.h"
 #include "api/hwil/ifingerprepare.h"
 #include "api/hwil/iinput.h"
@@ -63,6 +64,12 @@ extern "C" {
 void js_use_external_keyboard(void);
 int js_ler_dimensao_tela(int dimensao, int padrao);
 }
+
+namespace vota {
+// Target fn 7787, which votaInit invokes through table slot 39: the vote's data load, with CTelasVota::CreateInst,
+// CInfoMTLCD::CreateInst and CacheInstructionAudio inlined after it. No record names it: name and declaration chosen.
+void CarregaVotacao();
+} // namespace vota
 
 namespace api {
 
@@ -219,7 +226,7 @@ void AssinaArquivos()
     }
 }
 
-// (original lines 222-279: content not recovered)
+// (original lines 229-279: content not recovered)
 #line 280
 std::string Desmangle(const char* nome)
 {
@@ -289,9 +296,9 @@ void ReportaErro(const std::string& mensagem)
 
 } // namespace
 
-void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila);
-void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
-void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
+inline void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila);
 
 inline std::filesystem::path PathEstadoGeral()
 {
@@ -343,7 +350,7 @@ public:
             vota::CLogVota& log = vota::CLogVota::GetInst();
             log.LogaInicioAplicacao(geral.GetDadoCarga().GetTurno());
             log.LogaVersaoAplicacao();
-            vota::CTelasVota::CreateInst();
+            vota::CarregaVotacao();
             vota::CEstadoAudio::GetInst().GeraDadosDinamicos();
             AssinaArquivos();
             if (m_audioEleitorHabilitado) {
@@ -648,7 +655,7 @@ int main()
     return 0;
 }
 
-void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 9;
@@ -656,7 +663,7 @@ void HabilitaAudioEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
     fila.Insert(mensagem);
 }
 
-void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 1;
@@ -664,7 +671,7 @@ void LiberaEleitor(api::CPriorityMessageQueue<api::SMessage>& fila)
     fila.Insert(mensagem);
 }
 
-void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila)
+inline void SinalizaSincronismo(api::CPriorityMessageQueue<api::SMessage>& fila)
 {
     api::SMessage mensagem;
     mensagem.m_tipo = 5;
