@@ -1,8 +1,8 @@
 # Unit 378: no source of its own. It adds to unit 110's app/vota/eleitor/comum/ctelasvota.cpp (and ctelasvota.h) the
-# vote screens CTelasVota's constructor (target fn 7787, not written) builds per post, and the helpers they share; its
-# roots stand for 7787's calls of them (src/units/README.md "Landing a unit" item 2). Scores are `pnpm wasm score`
-# against the plain link (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that differ in
-# calls and data addresses alone.
+# vote screens CTelasVota's constructor (unit 443's; target fn 7787, not written, holds it) builds per post, and the
+# helpers they share; the constructor makes 7787's calls of them, so the unit has no roots (below). Scores are `pnpm
+# wasm score` against the plain link (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that
+# differ in calls and data addresses alone.
 #
 # Matched (33, the comm of docs/how-to-decompile.md step 10 against the commit this unit started from): 3064
 # CTelasVota::CriaTelaVotoCargoSemCandidato, 6626 CriaTelaVotoNuloConsulta, 6616 CriaTelaConferenciaVotoNuloConsulta,
@@ -265,10 +265,12 @@
 # the anonymous namespace, as measured above; adicionaNumeroCandidato internal, codegen.md C5; no record shows any of
 # it) and AdicionaCampoNumero's overload over a source are chosen too.
 # - 2384, 6689 and 13441 are unit 387's since (its fragment).
-# Roots: 378-uenux2-ctelasvota-criatela-roots.cpp stands for 7787 (its calls of 6639, 6681 and 2028 too). Its stand-ins
-# for 6602, 6603 and 6605 (CamposCinza), 6660 and 6671 (BasesCompletaCandidato) and 4181 (FotoSuplente), and its calls
-# of 1593, 1102 and 1190 for 7787, went with unit 441, which writes those builders and the screens that make 7787's
-# calls of the three (src/units/441-uenux2-ctelasvota-bases.mk has the measurement).
+# Roots: none. 378-uenux2-ctelasvota-criatela-roots.cpp stood for 7787's calls of these screens (and of 6639, 6681 and
+# 2028); unit 443 writes the constructor that makes them, in the link through unit 441's roots, and the file went: the
+# link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed). Its stand-ins for 6602,
+# 6603 and 6605 (CamposCinza), 6660 and 6671 (BasesCompletaCandidato) and 4181 (FotoSuplente), and its calls of 1593,
+# 1102 and 1190 for 7787, had gone with unit 441, which writes those builders and the screens that make 7787's calls of
+# the three (src/units/441-uenux2-ctelasvota-bases.mk has the measurement).
 # Stand-ins this unit made idle went, call by call: units 28 (1192's CTextFieldDoubleLine), 191 (6627's vector copy),
 # 232 (3074's GetDetalheConsulta), 309 (6601's AdicionaLocal), 88 (12587's GetNomeNeutro), 110 (6592's
 # AdicionaTelaQRCode), 92 (the CMaskedTextField blocks' builders and sinks), 102 (the CPreShowProgressBar, CMovie and
@@ -284,6 +286,3 @@
 # and sinks for CDataText over CCandidaturasDSNumero, CCandidaturasDSNome and CCargoDSNomeSexoCandidato and CDataImage
 # over CCandidaturasDSFoto (4185, 6528 and 4129 store the vptrs), and unit 89's roots' CandidaturasAtuais (2838 for
 # 12641); a link with each file's back moved no row.
-$(ROOT)/$(APP)/378-uenux2-ctelasvota-criatela-roots.o: $(ROOT)/src/units/378-uenux2-ctelasvota-criatela-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/378-uenux2-ctelasvota-criatela.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/378-uenux2-ctelasvota-criatela-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/378-uenux2-ctelasvota-criatela-roots.o
