@@ -29657,8 +29657,6 @@ _ZTSN7ecourna3api9exception10CBaseErrorINS_3app5dados3asn15EAsnMidiasErrorEXtlNS
 str.ef7942cc380c = 0x113094; // type:data size:0x70 evidence:string "N7ecourna3api9exception10CBaseErrorINS_3"…
 srcloc.03811b958110 = 0x113104; // type:data size:0x10 evidence:srcloc cconversorinformacaomidia.cpp:94:11
 _ZTVN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x113114; // type:data size:0x18 evidence:rtti
-g_MidAlloc = 0x11311c; // type:data size:0x8 evidence:content
-g_BigAlloc = 0x113124; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x11312c; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn25CConversorInformacaoMidiaE = 0x113138; // type:data size:0x34 evidence:rtti
 str.addd7f13cb6b = 0x113138; // type:data size:0x34 evidence:string "N7ecourna3app5dados3asn25CConversorInfor"…
