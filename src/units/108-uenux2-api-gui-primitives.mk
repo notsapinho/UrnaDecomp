@@ -40,7 +40,6 @@
 # these fields, matches from the executable TU's object (unit 170), first on the link line at -Oz;
 # src/app/roots_uenux2.cpp held it until that unit.
 UENUX2_SRCS += src/api/gui/primitives.cpp
-# second call sites of Union and Adjust (108-uenux2-api-gui-primitives-roots.cpp says for which callers)
-$(ROOT)/$(APP)/108-uenux2-api-gui-primitives-roots.o: $(ROOT)/src/units/108-uenux2-api-gui-primitives-roots.cpp $(ROOT)/src/units/108-uenux2-api-gui-primitives.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/108-uenux2-api-gui-primitives-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/108-uenux2-api-gui-primitives-roots.o
+# No roots: 108-uenux2-api-gui-primitives-roots.cpp stood for fn 7787's call of Union and of Adjust, which unit 443's
+# constructor makes since (CriaTelaZeresimaTardia's rectangle, inlined into unit 441's roots once each, as in 7787),
+# and the file went: the link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed).
