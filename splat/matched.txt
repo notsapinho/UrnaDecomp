@@ -13088,3 +13088,5 @@
 2210 _ZN7RHVoice8userdict8position13forward_tokenEv
 5267 _ZN7RHVoice8userdict11word_editor9save_wordEv
 8592 __cxx_global_array_dtor.10@app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
+599 _ZN4vota4impl25IInformacaoThreadOperador7GetInstEv
+10568 _ZN4vota4impl25CInformacaoThreadOperador14AgendaInspecaoEv

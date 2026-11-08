@@ -462,7 +462,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 596	ASN1_OBJECT_free	610	symbol	match	readings: address string	125	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-a_object.o
 597	BN_get_flags	609	symbol	match	-	10	byte	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 598	_ZNK7ecourna3api2io5CFile7RawReadEPvj	776	symbol	match	readings: address symbol,table slot,address string,address srcloc	2641	shape	ecourna	1	app/ecourna/api_io_cfile.cpp.o
-599	_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv	615	symbol	unresolved	ours +0x42 call 5581: _ZN4vota4impl25CInformacaoThreadOperador23SorteiaDataHoraInspecaoEv has no target function	4114	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
+599	_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv	615	symbol	match	readings: address symbol,address string,table slot,address srcloc,address same-content	4114	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 600	_ZN3api13CSynchronizer7GetInstEv	645	symbol	match	readings: address symbol,address string,address srcloc,table slot	143	none	ecourna	1	app/uenux2/src/api/util/csynchronizer.cpp.o
 601	_ZN3api9CFormPartC2ENSt3__210shared_ptrINS_5IFormINS_6IPaperEEEEE	614	symbol	match	readings: address symbol	34	addr	api	1	app/uenux2/src/api/gui/reports/cformpart.cpp.o
 602	_ZNK5comum7CCargos5IsFimEv	687	symbol	match	-	22	byte	app	1	app/uenux2/src/app/comum/dados/ccargos.cpp.o
@@ -5275,7 +5275,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5409	_ZN3api18CMTFormBuilderBase12AddTextFieldENS_11CTextSourceERKNS_6SPointENS_14ETextAlignmentE	5850	symbol	match	readings: address symbol	356	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 5410	_ZN4vota25MontaTelaEleitorPodeVotarEv	5840	symbol	match	readings: address string,address symbol	1258	none	libc++	1	app/uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp.o
 5411	_ZN3api18CTextFieldUpdateMTD2Ev	5579	symbol	match	readings: address symbol	176	addr	api	1	app/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.cpp.o
-5412	-	-	-	no-candidate	no symbol and no ledger pair	766	none	vota	0	-
+5412	_ZN4vota4impl25CInformacaoThreadOperador23SorteiaDataHoraInspecaoEv	5581	symbol	unresolved	ours +0x3 i32.const 1830669: an address of ours: _ZGVZN4vota4impl25CInformacaoThreadOperador23SorteiaDataHoraInspecaoEvE11dispositivo (.bss) has no target symbol	766	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 5413	_ZN4vota17SetEleitorSemFotoEv	5582	symbol	match	-	20	none	api	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 5414	_ZN4vota21SetIdentidadeDigitadaERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE	5584	symbol	match	-	22	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 5415	_ZN4vota22SetAudioAtivadoMesarioEb	5585	symbol	match	-	22	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
@@ -10431,7 +10431,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10565	_ZN4vota4impl25CInformacaoThreadOperador16LimpaIdentidadesEv	11529	symbol	match	-	149	addr	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10566	_ZNK4vota4impl25CInformacaoThreadOperador28IsVotacaoBloqueadaPorHorarioEv	11530	symbol	match	readings: address string,address srcloc,address symbol,table slot	179	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10567	_ZNK4vota4impl25CInformacaoThreadOperador19GetDataHoraInspecaoEv	11531	symbol	match	-	22	byte	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
-10568	_ZN4vota4impl25CInformacaoThreadOperador14AgendaInspecaoEv	11532	symbol	unresolved	ours +0x11 call 5581: _ZN4vota4impl25CInformacaoThreadOperador23SorteiaDataHoraInspecaoEv has no target function	48	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
+10568	_ZN4vota4impl25CInformacaoThreadOperador14AgendaInspecaoEv	11532	symbol	match	-	48	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10569	_ZNK4vota4impl25CInformacaoThreadOperador22GetTextoComparecimentoEv	11533	symbol	match	readings: table slot,address string	380	none	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10570	_ZN4vota4impl25CInformacaoThreadOperador14LimpaBiometriaEv	3713	symbol	match	-	9	byte	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10571	_ZN4vota4impl25CInformacaoThreadOperador19SetBiometriaEleitorEv	11534	symbol	match	-	9	byte	vota	1	app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
