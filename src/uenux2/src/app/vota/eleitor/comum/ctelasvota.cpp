@@ -1149,10 +1149,10 @@ CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoLegenda(const comum::
 api::CFormBuilder::SharedField AdicionaNumeroPartido(api::CFormBuilder& builder, const size_t tamanho,
                                                     const api::SPoint& posicao, const std::string& formato)
 {
-    const api::SharedIText texto(
-        new api::CDataTextFmt<const std::string (*)(const std::string&)>(&comum::NumeroPartidoCorrente, formato));
-    api::CFormBuilder::SharedField campo(
-        new api::CMaskedTextField<api::CFramedText>(texto, tamanho, posicao, FONTE_NUMERO));
+    const api::SharedIText texto(std::shared_ptr<api::CDataTextFmt<const std::string (*)(const std::string&)>>(
+        new api::CDataTextFmt<const std::string (*)(const std::string&)>(&comum::NumeroPartidoCorrente, formato)));
+    api::CFormBuilder::SharedField campo(std::shared_ptr<api::CMaskedTextField<api::CFramedText>>(
+        new api::CMaskedTextField<api::CFramedText>(texto, tamanho, posicao, FONTE_NUMERO)));
     builder.AddField(campo);
     return campo;
 }

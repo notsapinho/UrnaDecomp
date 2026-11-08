@@ -40,7 +40,13 @@
 # - AdicionaNumeroPartido (CriaTelaPartido's number field) and AdicionaCampoRotulado (CriaTelaEmitirMaisBU's labelled
 #   field) are free functions of vota with external linkage, chosen names: the target has a prologue of each inside
 #   the screens (16 bytes at +0x1cfde, 48 at +0x1ad2b), which a function clang keeps out of line and binaryen inlines
-#   gives. Internal, clang inlined both and the two frames went (the frame list below, measured).
+#   gives. Internal, clang inlined both and the two frames went (the frame list below, measured). AdicionaNumeroPartido
+#   holds its two objects as std::shared_ptr<X>(new X), each converted after: the target's RTTI names those control
+#   blocks, __shared_ptr_pointer<X*, shared_ptr<X>::__shared_ptr_default_delete<X, X>> for the CDataTextFmt and the
+#   CMaskedTextField<CFramedText> (@479470, @479808), and 7787 is the one builder of each (units 79's and 92's roots).
+#   A SharedIText and a SharedField over the new-expression gave blocks of two other types, in our link beside the
+#   target's (from those units' stand-ins), and data that put carquivossavd.cpp.o's .bss on the target's addresses
+#   (below).
 # - FONTE_VERSAO's definition moved above its first reader (CriaTelaReimpressaoBU), AreaTela and AdicionaTexto below
 #   theirs, unit 441's record-less screens (lines 1461 to 1522 and 1530 to 1561) to 1470 and 1533, all in blank lines,
 #   every record line kept (TMPDIR=/tmp make -C src check-srcloc). The new screens' places are the free runs between the
@@ -61,19 +67,17 @@
 #   CConversorEleicaoPE::DoDesconverte) matches too, its constant at +0xad4 the "o" tail of "em caso de falha na
 #   impressão", a literal of CriaTelaVerificaQualidadeBU, where the target holds it (it read `string tail occurs 4098
 #   times` before). In band 1 the two callbacks are in 2 inverted pairs each, the fewest any place in the object gives.
-# - Lost against the base (no landing without the user's decision, how-to step 9): 1164 (CArquivosSavd::GetInst),
-#   11657 and 11658 (its statics' exit destructors). This object's data move the .bss after it by 0x1000, which puts
-#   app/comum/carquivossavd.cpp.o's s_mutex and s_instancia (0x1c0db8, 0x1c0dd0) at the target's own addresses: step 8
-#   casts no vote for an address both layouts share, and a .bss object has no content to place it, so their two
-#   generated lines go (vote:1 by:1164; vote:6 by:1164,11658), and the rows read `unresolved` (`an address of ours ...
-#   (.bss) has no target symbol`) and `differs` (11657's census pair falls to cquerimprimirbu.cpp.o's destructor).
-#   CArquivosResultado's two, at the target's addresses too, keep their callers+content hand lines. The two lines put
-#   back on a copy of splat/symbol_addrs.txt give the three `match`: what refuses them is the names alone. A landing
-#   that moves that data off the target's addresses brings them back. 5546 (AddTextRectField) reads `no-candidate`: unit
-#   31's TextoRetangulo, the stand-in for 7787's two calls of it, passes its own {35, 0} beside
-#   CriaTelaNumeroCopiasErrado's FONTE_TEXTO_CONFIRMA_CORRIGE, so binaryen keeps the font a parameter; a link without
-#   TextoRetangulo (its function, constant and sink) gives 5546 `match`, the stand-in idle now. 10879 reads `unresolved
-#   self-voted` (ESCAPES.2's vote from 14478 rests on where our strings fall: facts/splat.md §S10 item 30), the loss
-#   the user allows.
+# - Lost against the base: 5546 (AddTextRectField) reads `no-candidate`: unit 31's TextoRetangulo, the stand-in for
+#   7787's two calls of it, passes its own {35, 0} beside CriaTelaNumeroCopiasErrado's FONTE_TEXTO_CONFIRMA_CORRIGE, so
+#   binaryen keeps the font a parameter; a link without TextoRetangulo (its function, constant and sink) gives 5546
+#   `match`, the stand-in idle now (unit 31's roots are another branch's file: no landing without it, how-to step 9).
+#   10879 reads `unresolved self-voted` (ESCAPES.2's vote from 14478 rests on where our strings fall: facts/splat.md
+#   §S10 item 30), the loss the user allows. With the helper's blocks of the other types, 1164 (CArquivosSavd::GetInst),
+#   11657 and 11658 (its statics' exit destructors) left `match` too: our data moved the .bss after this object by
+#   0x1000, which put carquivossavd.cpp.o's s_mutex and s_instancia at the target's own 0x1c0db8 and 0x1c0dd0; step 8
+#   casts no vote for an address both layouts share and a .bss object has no content to place it, so their two lines
+#   went, and the two put back on a copy of splat/symbol_addrs.txt gave the three `match`. With the target's types they
+#   sit 0x2d0 below the target's, voted, and the three match: a .bss name voted by one pair rests on our address not
+#   being the target's.
 # - Header edits: the tree's 1083 objects compiled with them; all but ctelasvota.cpp.o and unit 441's roots object are
 #   cmp-equal to the base's.
