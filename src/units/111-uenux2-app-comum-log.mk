@@ -143,9 +143,11 @@
 # but the throws' and the lines the column records hold. The definition above the Converte members gave the match, and
 # no other order was linked.
 #
-# Hand edits in splat/symbol_addrs.txt: GetInst's two names and four statics, `callers+content`, from the calls aligned
-# with fn 347 and the CLogComum members and from the table slots of the destructors that load the same addresses. None
-# reads a match. Taking out the four statics' lines leaves 348 and 948 `unresolved` and 11659 and 11639 `no-candidate`.
+# Hand edits in splat/symbol_addrs.txt: CArquivosResultado::GetInst's name (348) and the four statics,
+# `callers+content`, from the calls aligned with fn 347 and the CLogComum members and from the table slots of the
+# destructors that load the same addresses. None reads a match. CLogComum::GetInst's line (948) went once step 8 named
+# it by the calls of 5372 and 10226 (`call by:5372,10226`): removed alone, it moved no row of a scan run twice and the
+# build verified. Taking out the four statics' lines leaves 348 and 948 `unresolved` and 11659 and 11639 `no-candidate`.
 # Taking out the two GetInst lines, with 348, 948 and 2900's match lines, moves no row: the census pairs the two tied bodies
 # by position, the wrong way round in this link (348 `CLogComum::GetInst`, 948 `CArquivosResultado::GetInst`), so each
 # partner differs and the content pass takes the right body through the four statics' lines; those two names rest on

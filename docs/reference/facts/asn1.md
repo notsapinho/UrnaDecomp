@@ -218,7 +218,8 @@ alone: a name says which function sits there, and the scan still compares the by
 
 - `pair-depth0`: 3472, 3473 and 5066. From `asmlift-wasm/`, `pnpm --silent wasm fingerprint <wasm> --depth 0` prints one
   target and one ours for each fingerprint.
-- `callers+content`: 194, 446, 541, 2184, 2186, 2653 and 853 (2185 had one too, until a generated `call` line named it).
+- `callers+content`: 194, 446, 541, 2184, 2653 and 853 (2185 and 2186 had one too, until a generated `call` line named
+  each).
   For every function the symbol file names, take the target's body and our body of that symbol from `wasm-objdump -d`,
   with the operands of `call`, `global.get`, `global.set` and `call_indirect` blanked and every `i32.const` and
   `i64.const` of absolute value 1024 or more blanked, locals and branch depths kept. Keep the function when the two
@@ -256,7 +257,8 @@ line rescued no row, and it went.
 
 More of the same kind, from the same tally of aligned calls:
 
-- `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
+- `pair-depth0`: 5055, a body equal to ours the census cannot pair while a callee differs (5054 had one too, until
+  the census paired it: a generated `pair-addr` line names it).
 - `callers+content`: 5306, 1497 and 5076. 1067 and 1068 had such lines, which went when a scan and a build without
   them moved nothing (the census names both by `pair-addr`). 2247 and 2249 had such lines too: a probe object at the
   executable TU's `-Oz -fexceptions`, first on the link line, matches them, so they are that flag set's, and they match

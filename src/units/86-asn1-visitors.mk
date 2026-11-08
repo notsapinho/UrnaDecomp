@@ -74,7 +74,8 @@
 # (its hand edit went when unit 179's 11172, a caller, matched: removed alone it moved no row of a scan run twice
 # and the build verified, as the generated `call` line names it), 2182, 5034, 8976 and 8987 with unit 115's edits, 2247 from
 # src/app/roots_vector.cpp's minsize instance, whose census pair names it now, so its hand edit went, and 220 and 2706
-# from unit 229's root, whose generated lines name them now, so their hand edits went too.
+# from unit 229's root, whose generated lines name them now, so their hand edits went too. 5054's went once the census
+# paired it (`pair-addr`): removed alone, it moved no row of a scan run twice and the build verified.
 # _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static
 # constructors, builds a string at 1914448 from the literal " bad end of stream", and five visitors read it there.
 ASN1_ROOTS_EXCLUDE += _ZN4ASN17UTCTimeC1EPKc _ZN4ASN17UTCTimeC2EPKc _ZN4ASN115GeneralizedTimeC1EPKc _ZN4ASN115GeneralizedTimeC2EPKc \

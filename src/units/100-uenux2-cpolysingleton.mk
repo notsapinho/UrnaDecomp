@@ -176,7 +176,9 @@
 # 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the
 # scan refuses (reference/splat.md "No circular evidence"). Hand edits in splat/symbol_addrs.txt carry the rest, with
 # their evidence there: each has<T> whose call has one voter, from T's type name; 1654 and 2160 have two voters and need
-# no such line, and none reads a match. _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
+# no such line, and none reads a match. 5431's and 5434's went once matched callers gave each a second voter (`call
+# by:2030,9233` and `by:1822,10090`): removed alone, each moved no row of a scan run twice and the build verified.
+# _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
 # (slot 284, 11265's only one; a slot below 1024 counts two telling bytes, and placing by content takes four), until
 # step 8 named it by the votes of 316 and 433, and it went (a scan and a build without it kept every row). Since 433
 # left `match` (above) 316's votes alone name it (`vote:2 by:316`), and the splat build verifies every match that

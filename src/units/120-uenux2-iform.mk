@@ -66,11 +66,13 @@
 # GetInteractiveForm's name and its place after AddLabeledInputControl (653); what 653's paragraph below lists; SetFocus,
 # SetAtivo, ApagaCursor and every data member's and parameter's name.
 #
-# splat/symbol_addrs.txt gets nine hand lines, each `callers+content`, each shown needed by the scan without it and
+# splat/symbol_addrs.txt gets eight hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
-# counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872, 20 matches out) is named for its
-# caller; its body of ours, 36 over 186 with -fno-strict-aliasing (pnpm wasm score), matches since src/api/ builds with
-# strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). Its __assign_with_size (1872) had a tenth line
+# counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872) had a ninth while it differed
+# (20 matches out), named for its caller; its body of ours, 36 over 186 with -fno-strict-aliasing (pnpm wasm score),
+# matches since src/api/ builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md
+# F6), and the line went once step 8 named 8872 by `call`: removed alone, it moved no row of a scan run twice and the
+# build verified. Its __assign_with_size (1872) had a line too
 # while our body differed (106 over 434 rows at -std=c++20; 16 matches out): it matches at the tree's -std=c++23, and
 # the scan without the line and without the match lines of 1872 and its six callers brings all seven back, every row as
 # it was, so the line went. CPolySingleton<IScreenMT>::instance (1714; 11041 out) and <IInputKbd> (455;
