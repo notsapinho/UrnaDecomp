@@ -81,3 +81,14 @@
 #   being the target's.
 # - Header edits: the tree's 1083 objects compiled with them; all but ctelasvota.cpp.o and unit 441's roots object are
 #   cmp-equal to the base's.
+#
+# Stand-ins this unit made idle went, each in a commit of its own, with steps 7 to 9 moving no row: the roots files of
+# units 378 (TelasVotaConstrutor), 120, 108, 212, 354, 373, 387 and 90, and unit 125's HoraFormatada (779), 150's
+# TelasCargo (2386), 296's CodigosResumidos (2792), 309's Locais and TelasNeutras (4161, 2380), 79's
+# TextoFormatoConstProprio (the CDataTextFmt block) and 92's MolduraEm, CampoNumeroA and the mask block's builder and
+# vtable sink: each stood for 7787's calls of a callee that 7787 calls in CreateInst's region only (pnpm wasm fn's calls
+# from +0x1674f to +0x24132), and unit 441's roots now make as many (each of those 71 callees, counted over both
+# readouts). Unit 232's stand for 7787's calls before the region and stay. Idle too, in roots files another branch
+# changes, so not edited here: unit 31's TextoRetangulo (5546, above), BarraProgresso's call for 7787 and TelaA's and
+# TelaB's calls for 7787's adders; the comments of units 88's, 89's, 98's, 109's, 110's, 154's and 165's roots name 7787
+# beside a callee only the region calls (not read further).
