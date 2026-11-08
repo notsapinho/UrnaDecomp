@@ -45,8 +45,8 @@
 # since Create's record at line 31 leaves cwasmthread.cpp little room above it; our link's order of the objects is not
 # the target's. Chosen too: every name, wasmjs.* as the path, namespace simulador, and that the wrappers take const
 # char* for the event's name (a literal in both callers). `.data()` for `.c_str()` gives the same three functions.
-# EmitEvent's direct caller in our link is a trap (9018); unit 170's 10619, 10857 and 10384 reach it by table slot, and
-# the roots take its address for 7840 (votaInit), not written. binaryen inlines a function for having one call only when
+# EmitEvent's direct caller in our link is a trap (9018); unit 170's 7840 (votaInit), 10619, 10857 and 10384 reach it
+# by table slot (the roots that took its address for votaInit went once votaInit was written). binaryen inlines a function for having one call only when
 # the table does not hold it (the target's table does, slot 59). EscapaJson (target fn 9640, 1083 B, matched): the JSON
 # escape of a std::string through a std::ostringstream: a backslash before `\` and `"`, the letter escapes of \b, \f,
 # \n, \r and \t, `\u` and four hex digits for the other control bytes, `\u00` (literal 357653) and two hex digits for
@@ -60,9 +60,6 @@
 # locals. It matches at this directory's flags (strict aliasing).
 CWASMTHREAD_SRCS := mock/app/simulador/wasm/cwasmthread.cpp mock/app/simulador/wasm/wasmjs.cpp
 UENUX2_SRCS += $(CWASMTHREAD_SRCS)
-# nothing reconstructed builds a thread, and votaInit (7840), which reaches EmitEvent by table slot too, is not written:
-# 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps EmitEvent's address (see the file header); the vtable needs no
-# sink, since fn 10878, which stores its vptr, is in the link
-$(ROOT)/$(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o: $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o
+# No roots: nothing reconstructed builds a thread, the vtable needs no sink (fn 10878, which stores its vptr, is in the
+# link), and EmitEvent's address, which a roots file kept for votaInit (7840) until the executable TU wrote it, is
+# taken by unit 170's code (measured: a link without that file moves no row).
