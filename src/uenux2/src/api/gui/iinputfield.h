@@ -50,7 +50,7 @@
 // first on the link line to emit it, whose vota::AdicionaCampoNumerico (2383) calls it with its own parameters; in
 // api/gui/cinteractiveformbuilder.cpp's, CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901)
 // call it with the length 0 and the flags true and false; its other target callers (3675, 5913, 7787) pass others,
-// 5913 and 3675 in the link (units 59 and 120), and unit 92's roots stand for 7787 so that binaryen folds none of its
+// 5913 and 3675 in the link (units 59 and 120), 7787's by unit 443's constructor, so that binaryen folds none of its
 // parameters. 3673, IInputField<IScreenMT>'s, matches from api/gui/cmtformbuilder.cpp's object, which unit 161's list
 // compiles ahead of the others that emit it; api::CMTFormBuilder::AddInputControl (395) calls it with the length 0 and
 // the confirm flag true, and 1151 and 5410 (vota::MontaTelaEleitorPodeVotar, through AddInputControl(int)) are in the

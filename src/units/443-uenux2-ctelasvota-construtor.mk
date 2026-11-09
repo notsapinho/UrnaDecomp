@@ -88,9 +88,9 @@
 # TextoFormatoConstProprio (the CDataTextFmt block) and 92's MolduraEm, CampoNumeroA and the mask block's builder and
 # vtable sink: each stood for 7787's calls of a callee that 7787 calls in CreateInst's region only (pnpm wasm fn's calls
 # from +0x1674f to +0x24132), and unit 441's roots now make as many (each of those 71 callees, counted over both
-# readouts). Unit 232's stand for 7787's calls before the region and stay. Idle too, in roots files another branch
-# changed, and gone since: unit 31's TextoRetangulo (5546, above), TelaA, RotuloTecla, TextoMultiLinha,
-# BarraProgresso's call for 7787 and TelaB's calls of 7787's adders (its call of 2244 stays: unit 31's roots say why);
+# readouts). Unit 232's stand for 7787's calls before the region and stay. Idle too, in roots files of other units,
+# and gone since: unit 31's TextoRetangulo (5546, above), TelaA, RotuloTecla, TextoMultiLinha, BarraProgresso's call
+# for 7787 and TelaB's calls of 7787's adders (its call of 2244 went too, at a cost unit 31's roots give);
 # unit 110's TelasConstrutor and call of ~CTelasVota (6548); unit 165's FormularioVota; unit 100's calls of
 # CPolySingleton<api::IScreen>::instance (512); src/app/roots_ecourna.cpp's UsaBase64B (3703); the sinks of 11499
 # (unit 109; slot 1100, which AdicionaNumeroPartido stores) and of 5472 and 5473 (unit 125; slots 1103 and 1104); and

@@ -121,8 +121,8 @@
 #   api::CApplication::s_areaTela and false), and all are in the link since, 7787's calls through unit 443's
 #   constructor, which pass the same (the roots' RotulosA stood for them until then; RotulosB, for 12040, went with
 #   unit 387), and binaryen folds those two arguments, which leaves the target's three parameters. What fixes its form,
-#   each measured on a copy of
-#   this tree's link.cmd with the variant objects swapped in (`pnpm wasm score`), or on the object where it says so:
+#   each measured on a copy of this tree's link.cmd with the variant objects swapped in (`pnpm wasm score`), or on the
+#   object where it says so:
 #   - The key loop holds a branch on the bool, which clang unswitches (the object holds the loop twice) and binaryen,
 #     with the bool folded, cuts to one loop. Without such a branch the frame is 528 bytes, the target's 544, and the bad
 #     key's throw lies inside the loop, before the label call, where the target has it after the loop (objects); with

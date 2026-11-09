@@ -5,7 +5,7 @@
 # other two .cpp files, whose paths are chosen, each the class's in lower case beside cformbuilder.cpp; cpaperformbuilder.h
 # is a record's. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
-# Target functions, all matched:
+# Target functions, all matched but 2244 (AddLine; the roots say why it left `match`):
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
 #                      5546 (AddTextRectField, below) and 5545 (AddProgressBar, below),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField, below);

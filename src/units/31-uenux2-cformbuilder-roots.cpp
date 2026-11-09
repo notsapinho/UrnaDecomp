@@ -23,12 +23,12 @@
 //                     colours 2 and 1; the fields 5). TelaA went, and with it TelaB's calls of 3068, 1191, 426, 2245,
 //                     1265, 3058 and 2243: every target caller of those adders is in the link, 7787's calls made by
 //                     unit 443's constructor (through unit 441's roots), and the link without them moved no row.
-//                     Its call of 2244 (AddLine) stays though 2244's target callers (653, 3054, 7787, 12055 and 12065)
-//                     are all in the link: each passes the colour 3, and without this call binaryen folds it into 2244,
-//                     which the target keeps as a parameter, and 2244, 653, 3054 and 12065 leave `match` (a link
-//                     without
-//                     it). It stands for no caller the target shows, so the 11157 rule ("Finding the idle ones") would
-//                     take it out at that cost; it stays until that is decided.
+//                     Its call of 2244 (AddLine) went too: 2244's target callers (653, 3054, 7787, 12055 and 12065)
+//                     are all in the link, so it stood for no caller the target shows (the 11157 rule, "Finding the
+//                     idle ones"), though it cost four matches: each caller passes the colour 3, binaryen now folds it
+//                     into 2244, which the target keeps as a parameter, and 2244, 653, 3054 and 12065 left `match`
+//                     (and with 12065 the votes that named CImprimirBJust's two statics, so its two static array
+//                     destructors, 12069 and 12070, left too: six in all, which the user accepted)
 //                     Their calls of 3680 (AddRect: 1102, 1190 and 3064, unit 378's) and 5547 (AddImage: 12040, unit
 //                     387's, and 12055, unit 37's) went before, for the same reason
 //   RotuloTecla and TextoMultiLinha, for 7787's calls of 3678 (AddLabeledKey over the key's name) and 2782
@@ -74,7 +74,6 @@ __attribute__((noinline)) int TelaMTB(const std::string& texto, const api::SPoin
 __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte)
 {
     api::CFormBuilder form;
-    form.AddLine(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(2));
     form.AddTextField(texto, posicao, fonte, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
     form.AddStatusHeader(5);
     return posicao.y;
