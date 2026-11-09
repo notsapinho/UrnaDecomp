@@ -10,6 +10,12 @@ namespace comum::md::estadoaplicacao {
 // names follow the ASN.1 fields, and a bool for the byte at +4 is chosen from the field's type.
 class CEstadoGeralSA {
 public:
+    // The default, which target fn 10268 stores into both of the builder's SA states (+268, +284) with no call:
+    // eSAInicial, not blocked, municipality 1, zone 1, section 2. Read as inline.
+    CEstadoGeralSA()
+        : m_estadoSA(eSAInicial), m_atualizacaoBloqueada(false), m_municipio(1), m_zona(1), m_secao(2)
+    {
+    }
     CEstadoGeralSA(EEstadoSA estadoSA, bool atualizacaoBloqueada, uedword municipio, ueword zona, ueword secao);
 
     EEstadoSA GetEstadoSA() const { return m_estadoSA; }

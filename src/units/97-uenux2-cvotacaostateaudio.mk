@@ -342,8 +342,8 @@
 #   TU's data) and matches from vota_web_wasm.cpp.o, now that its target callers here keep it out of line; so does unit
 #   170's votaSetAudioEnabled (10240), whose body held it inlined in our link. 2079 (instance<ITextToSpeech>) is
 #   cinstrucaovotacaoacessibilidade.cpp's copy (its record @1533836 follows that file's) and matches from unit 150's
-#   object. 3281 matches from src/app/roots_texttospeech.cpp, whose comment says why, with unit 150's roots standing for
-#   its unwritten callers.
+#   object. 3281 matches from vota_web_wasm.cpp.o since votaInit (from src/app/roots_texttospeech.cpp before), with unit
+#   150's roots standing for its unwritten callers.
 # Measured, pnpm wasm score in the whole link before step 8 (each matched at step 9):
 # - the tick read into a local before CThreadEleitor::GetInst() in ProcessInput and in the lambda, as StartState has it:
 #   with m_tickEco as StartTick's argument 7029 scored 16 over 125 rows (1 inserted, 3 deleted), the call first;

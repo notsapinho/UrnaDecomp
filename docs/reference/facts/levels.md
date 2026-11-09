@@ -112,7 +112,8 @@ gains rows and loses none. A uenux2 object's copy of a member
 whose copy the target keeps from this TU is right source with the wrong level, so it matches only when its body is the
 same at uenux2's flags, or once code at this TU's rule that uses it links ahead of the tree: 11489 and 11518 were
 `differs` with unit 82's source as written (how-to steps 4 and 5), and match since unit 237's tree root,
-`src/app/roots_texttospeech.cpp`, builds the class at `VOTA_WEB_CXXFLAGS` as votaInit does.
+`src/app/roots_texttospeech.cpp`, built the class at `VOTA_WEB_CXXFLAGS` as votaInit does, and from the executable
+TU's object since it wrote votaInit.
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 
@@ -445,9 +446,9 @@ are operand-only calls or data. A probe can also cost rows it does not name: a c
 Ahead of the executable TU the probe takes that TU's linkonce copies of what it also instantiates (libc++'s
 `length_error`, the `__throw_*`), which reorders the link: a probe of `CPriorityMessageQueue<SMessage>::Insert` there
 moved 14 rows of other classes out of `match`, and none right after `roots_texttospeech.o`, where a tree root at that
-TU's rule sits, while both added the same six. So the place ahead of the TU says which flags give a copy, and its other
-moved rows are no cost of the copy; to count what a tree root would gain and lose, put the probe where the root goes,
-after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Companion files").
+TU's rule sat then, while both added the same six. So the place ahead of the TU says which flags give a copy, and its
+other moved rows are no cost of the copy; to count what a tree root would gain and lose, put the probe where the root
+goes, after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Companion files").
 
 ## V5. Strict aliasing by directory and file: a body that differs only by it
 

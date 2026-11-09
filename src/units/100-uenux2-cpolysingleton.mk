@@ -101,7 +101,8 @@
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
 #   the push thunks 5395, 5398 and 5407; 1091 matches from it since unit 97's callers keep it out of line, and 3281
-#   and the push body 7667 from src/app/roots_texttospeech.cpp's instances at that TU's rule (unit 237's fragment); the
+#   and the push body 7667 from the executable TU's object since its votaInit (from src/app/roots_texttospeech.cpp's
+#   instances at that TU's rule before: unit 237's fragment); the
 #   rest wait for the TU's code that instantiates them (unit 170's fragment).
 #   5417, 5425 and 5427 match since unit 170's roots give them the second call site the target gives them, and the
 #   set<T> bodies that call them are named; 640 (remove by name) and 13621 (unlock_shared_and_lock) match since the
@@ -176,7 +177,9 @@
 # 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the
 # scan refuses (reference/splat.md "No circular evidence"). Hand edits in splat/symbol_addrs.txt carry the rest, with
 # their evidence there: each has<T> whose call has one voter, from T's type name; 1654 and 2160 have two voters and need
-# no such line, and none reads a match. _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
+# no such line, and none reads a match. 5431's and 5434's went once matched callers gave each a second voter (`call
+# by:2030,9233` and `by:1822,10090`): removed alone, each moved no row of a scan run twice and the build verified.
+# _ZN3api20g_polySingletonsInfoE had one too, from the table slot its word holds
 # (slot 284, 11265's only one; a slot below 1024 counts two telling bytes, and placing by content takes four), until
 # step 8 named it by the votes of 316 and 433, and it went (a scan and a build without it kept every row). Since 433
 # left `match` (above) 316's votes alone name it (`vote:2 by:316`), and the splat build verifies every match that

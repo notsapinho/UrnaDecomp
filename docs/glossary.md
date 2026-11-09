@@ -168,8 +168,9 @@ ours, so it loses its stub when its unit lands, as does any virtual member of a 
 does; otherwise it is `f<index>` with the wasm types. A stub is a comment, not code: it puts nothing into the link
 (see **INCLUDE_ASM**). *Where:*
 `src/README.md` "Stubs", `docs/how-to-decompile.md` steps 1, 3 and 9. (2) A hand-written
-stand-in for an exported function whose body is not reconstructed: `src/app/vota_init.cpp`, for `votaInit`
-(its signature from the target's export type; its place on the link line fixes the export order). `src/app/stubs_7zip.cpp` supplies four symbols 7-Zip needs and emscripten lacks. *Where:*
+stand-in for an exported function whose body is not reconstructed: `src/app/vota_init.cpp` was one, for `votaInit`
+(its signature from the target's export type; its place on the link line fixed the export order), until the
+executable TU wrote it. `src/app/stubs_7zip.cpp` supplies four symbols 7-Zip needs and emscripten lacks. *Where:*
 `src/README.md`, `docs/reference/toolchain.md` §2 "Export order".
 
 **gap** — a run of blank lines in a TSE source that holds the code below it at its original line numbers (the lines of

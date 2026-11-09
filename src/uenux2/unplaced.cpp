@@ -164,11 +164,4 @@
 
 // f1896 · 294 B · unmatched · placement: link order · name unknown
 // ? f1896(i32, i32) { ... }
-
-// component simulador
-
-// link-order cluster 1063 · uses=4
-
-// f2548 · 778 B · unmatched · placement: link order · name unknown
-// ? f2548(i32, i32) { ... }
 // </stubs>

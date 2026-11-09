@@ -618,7 +618,7 @@ the landing re-reads it. An item's command quotes an output that moves at every 
 at.
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689 183 3679 5549 4789 6233 7884 3984 11180 6071 12862 10879", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 8327 9405 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 10888 11205 6026 10887 11204 2903 10434 10442 10476 12033 2291 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868 4929 9353 3498 962 2352 12936 12506 12776 250 13447 13499 4689 183 3679 5549 4789 6233 7884 3984 11180 6071 12862 2210 5267 3494 3495 5116 5117 5125 9292 9294 9304 9338 9380 9577", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -970,7 +970,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     takes the two out. 10879 itself matches by `ESCAPES.2`'s generated name, which 10879 and 14478 (the static
     constructors, written and no match) vote for; unit 379's fragment has the weighing of the hand line it replaced.
     14478's vote rests on where our strings fall ([../splat.md](../splat.md) §2, `ctors:N`): a landing that moves them
-    can take it, and 10879 then reads `unresolved self-voted` (how-to step 9's data-layout cases).
+    can take it, and 10879 then reads `unresolved self-voted` (how-to step 9's data-layout cases). The executable TU's
+    votaInit took it: 10879 is out since, a coincidental match the user allows a landing to lose, and it left the check
+    above (unit 379's fragment).
 
 31. **3138, OpenSSL's `provider_activate`, by `provider_core.o`'s read-only data at the target's addresses: no match on
     this tree, so not in the check's list.** 3138 loads `core_dispatch_` (`i32.const 1675920`, 0x199290). Step 8 casts
@@ -994,6 +996,26 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1227 1524 3363 4760 5152 7833 7850 8046 
     turn `match`"), and so does a match of `core_get_params` (6996, `no-candidate`, ours 24 over 96 rows), the one
     function among its 48 entries our link does not name: our object's bytes then agree with the target's, and the name
     holds wherever the data falls ([glossary](../../glossary.md) "self-voted"). Either adds it to the list again.
+
+32. **2210 and 5267, RHVoice's `userdict::position::forward_token` and `word_editor::save_word`, by census `addr`
+    pairs.** Each called a function no symbol line named (2703 and the `__tree` emplace), and both are named by `call`
+    votes since 9688 (`substring::apply`) became a census `addr` pair, aligned, and its call of 3546 (`forward_char`)
+    reached them (`ledger/callgraph.tsv`: 9688 calls 3546, 3546 calls 2210 and 5267, 2210 calls 2703), with 9672, 9678
+    and 9682 (`apply` members, `vtable`-named before) becoming `addr` pairs in the same link: 9678 and 9682 pass table
+    slot 140, which our table gives `std::logic_error`'s D2 as the target's does once the executable TU's slots 137
+    and 138 are the target's (unit 170's fragment). Why 9688's pair became unique is not traced. A landing that moves
+    those slots or those pairs can take the two out.
+
+33. **3494, 3495, 5116, 5117, 5125, 9292, 9294, 9304, 9338 and 9380, Boost.Regex's `perl_matcher` members over
+    `std::string`'s iterators and `throw_exception<std::runtime_error>`, from `api_util_cstringutils.cpp.o`, and 9577, a
+    Boost.Signals2 `slot_call_iterator_t` member from `api_compression_clzmacompress.cpp.o`.** None matched before the
+    executable TU's votaInit (`no-candidate` or `unresolved` at facaa3e6), and all eleven match with it, their
+    ecourna objects unchanged (`cmp`-equal across that landing): 5125, 9292, 9338 and 9577 by census `addr` pairs
+    (`best_kind` in `ledger/functions.tsv`; 9338 was named by `table` and 9577 by `vptr-anchor` before), 3494, 3495,
+    5116 and 5117 by `call` votes (their target callers are one another and 9292, 9294 and 9304: `awk -F'\t'
+    '$2==3494' ledger/callgraph.tsv`), 9380 by `table`, and 9294 and 9304 by their match lines alone. Why each pair or
+    vote formed with that TU's code is not traced (unit 170's fragment). A landing that moves those pairs or our table
+    can take them out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

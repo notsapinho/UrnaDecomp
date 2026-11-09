@@ -210,7 +210,10 @@ with a stand-in for 5805, which the roots no longer hold (below). The third row 
 
 The first row landed (unit 103). With 66 names it lands 172, for 8819 matches: 45 names carry rows, and 21 anchor the callers
 of 402, 590, 798, 950, 2210, 3858 and 5267, whose names would otherwise rest on the matches they enable. Removing any one of the
-21 drops nothing. 5 of the 66 have one caller (1227, 2210, 2237, 2714, 4760).
+21 drops nothing. 5 of the 66 have one caller (1227, 2210, 2237, 2714, 4760). The lines naming 2210 and 5267 went later,
+caught up once step 8 named both by call votes (unit 170's fragment). Nine more went later, each caught up by a
+generated line, removed alone with no row of a scan run twice moving and the build verified: 402, 784, 1599, 1600,
+2037, 2542, 3081, 3107 and 3546.
 
 5805 left the list here, so the count against the base prints it. It matched at the base as `RHVoice::text_token::~text_token`
 through a twin: its target callers, 7787 and 11561, are not RHVoice's, and only landing pads reached that destructor in our

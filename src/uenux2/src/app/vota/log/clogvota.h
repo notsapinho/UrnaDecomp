@@ -85,6 +85,7 @@
 #include <utility>
 
 #include "app/comum/dados/md/etipoimpedimento.h"
+#include "app/comum/eurnaturno.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/log/ieventoslog.h"
 #include "app/vota/euevotaerror.h"
@@ -389,6 +390,14 @@ public:
     void LogaEleitorSemIdadeMinima();
     void LogaMesarioCancelouEntradaDados();
     void LogaVotoComputado();
+    // votaInit's (target fn 7840) two start-up logs, target fns 11641 and 11642, which it invokes through table slots
+    // 37 and 38 on one result of GetInst: "Iniciando aplicação - {}" with the turn's name (a switch on '0' to '3', "Sem
+    // turno", "1º turno", "2º turno" and "Padrão", else "Inválido", a std::string, argument code 13), and "Versão da
+    // aplicação: {}" with the version literal (a string view of 27 characters, code 13), each through api::CLoga::loga
+    // (fn 433) on +4 with severity 1. Their names, from the messages, the turn's type, the name's helper and their
+    // place here and at the end of clogvota.cpp are chosen.
+    void LogaInicioAplicacao(comum::EUrnaTurno turno);
+    void LogaVersaoAplicacao();
 };
 
 } // namespace vota

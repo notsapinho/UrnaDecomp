@@ -600,7 +600,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   to 9 on F9 item 6's private link turned 1163 and 5868 `match` and took 2281 and 5309 out (RHVoice's `language.cpp`, the
   next object of ours that emits it, gives another body). 2281's body is one without TBAA: the function instantiated
   explicitly at `UENUX2_CXXFLAGS` loads a value again after a store (`local.get 2; i32.load`, `wasm-objdump -d`), with
-  strict aliasing it does not, and the target's does. So a tree root at `UENUX2_CXXFLAGS` holds it,
+  strict aliasing it does not, and the target's does. So a tree root at `UENUX2_CXXFLAGS` held it,
   `src/app/roots_set.cpp`, which only instantiates a set's hinted insert, and where it links matters: in
   `roots_cbasetype.cpp`, right after `roots_uenux2.o`, it gives `__tree_balance_after_insert` (152) ahead of
   `roots_rhvoice.o`'s, and 152 then differs and 447 (`RHVoice::str::less`) reads `unresolved`; last in `APP_OBJS`, after
@@ -616,8 +616,12 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   top-level files of `gravadores/` built with strict aliasing as well give the same link as this file alone, so the file
   is listed and the directory keeps the flag, which `gravadores/asn/` and `gravadores/md/` need (the table above):
   listing the file is a choice. Which TU gives the target's 2281, no row says: its TSE caller 12098 lies under
-  `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified, and its comment
-  says when it goes. The file's flag is a reading of the original build's settings like the rest of the split.
+  `src/app/vota/`, which builds with strict aliasing, so the root stood for an object not identified, until
+  `cpath.cpp`'s object (unit 190's, without strict aliasing as `app/comum/` builds) gave the same instance for
+  `CPath::GetDiretoriosSemHash`'s set: 2281 matches from it, and the root's set instance went, a link without it keeping
+  every row (1346, the hinted `__find_equal`, then matches from `ctelasvota.cpp.o`'s twin). The root keeps
+  `std::map<unsigned char, std::string>`'s hinted insert (3266). The file's flag is a reading of the original build's
+  settings like the rest of the split.
 
   One file of `validamidia/` has it: `cfabricaconteudomidiastart.cpp` (unit 179), whose
   `comum::impl::RemoveArquivosDeSistema` (5571) holds the initializer-list constructor of a `std::map` inlined

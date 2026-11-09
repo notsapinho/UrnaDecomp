@@ -91,9 +91,10 @@
 # object gives the link's std::regex members over std::string (9534, 5187, 5191 match from it): a tree
 # root at these flags, src/app/roots_regex.cpp, gave them first while 5821 was not in the link, and went with it.
 # The census pairs 9534 with this object's copy by `addr` (with that root's by `shape`, which named it not), and
-# 9518 has a name by `table`; it is `unresolved` on its callee 3526 (__parse_basic_reg_exp), which has none: 9518 is
+# 9518 has a name by `table`; it was `unresolved` on its callee 3526 (__parse_basic_reg_exp), which had none: 9518 is
 # 3526's one target caller (ledger/callgraph.tsv), so only 9518's own call would name it, and 5189, 2689 and 2688
-# below them wait the same way. No vptr anchors 9518 either: the target's const char* and __wrap_iter parsers
+# below them waited the same way. The five match since the executable TU's votaInit (unit 170's fragment: why each
+# moves is not traced). No vptr anchors 9518 either: the target's const char* and __wrap_iter parsers
 # (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with our copy matching 2062
 # (src/app/roots_cbasetype.cpp's when this was measured, app/comum/dados/cqrcodeds.cpp's object's now) each forms a
 # same-shape pair with ours (pnpm wasm fingerprint --depth 0), so the vptr anchors nothing (docs/reference/splat.md,

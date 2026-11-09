@@ -96,10 +96,11 @@
 # The 16-bit static 2000 that IsValidDate and CDate(const std::string &) add to a two-digit year is an object of
 # namespace api, named g_seculo here (a chosen name), at the head of cdate.cpp's data (1584256, before its first record at
 # 1584260). Its external linkage is the bytes': a const or file-static object nothing writes would fold into the code;
-# that it is a namespace global and not a static member is chosen. Its name is a hand edit of splat/symbol_addrs.txt
+# that it is a namespace global and not a static member is chosen. Its name was a hand edit of splat/symbol_addrs.txt
 # (callers+content): 3649, CDate's constructor by its records, and 5479 are the only target functions that read the word
 # (`grep -rlE 'i32\.const 1584256($|[^0-9])' build/out/splat/pieces/asm`), each as an i32.load16_u added to the year when
-# the string has 6 characters. Without it 5479 is `unresolved` on that operand, and 5475 is `unresolved self-voted` on 5479.
+# the string has 6 characters. Step 8 names it now by those two readers' votes (`vote:2 by:3649,5479`), and the hand
+# edit went: removed alone, it moved no row of a scan run twice and the build verified.
 # The weekday names are a table of seven pointers at 1584308, in cdate.cpp's data after its records.
 # Forms measured against another: Bissexto is `ano % 4 == 0 && (ano % 100 != 0 || ano % 400 == 0)`, where the target tests
 # %4 with a branch first (5479 at 11 over 378 rows; grouped `(%4 && %100) || %400` it has no branch, 30 over 386);

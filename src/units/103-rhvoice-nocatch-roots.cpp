@@ -7,7 +7,7 @@
 //   be a slot or an integer, and frame offsets of the same value are not slots.
 //   string::assign(const char*) (12979, elem[168]: 212). It is the only reader of __assign_external's result, so it also
 //   keeps 276's type.
-//   string::operator=(const string&) (1700, elem[30]: 212, 7840, 10619; 10619, unit 170's, is in the link).
+//   string::operator=(const string&) (1700, elem[30]: 212, 7840, 10619; 7840 and 10619, unit 170's, are in the link).
 //   string::reserve (7735, elem[465]: 5360, 9963; 5360, unit 227's, is in the link and passes it).
 // - Called directly in the target by callers not written yet, so two noinline callers stand in for them:
 //   the push_back of std::vector<std::pair<std::string, unsigned short>> (1682: 727, 855, 3577, 5298, 5318, 9869,

@@ -151,8 +151,9 @@ wasm-objdump -d -r $o | awk '/ func\[/ {f=$0} /R_WASM_TABLE_NUMBER_LEB/ {print f
 # 006371 func[147] <votaTick>:
 ```
 
-`src/app/vota_init.cpp`'s `votaInit` is the one reference to `urna_roots` (`int (*volatile urna_roots_ptr)(int) =
-urna_roots;`, called from `votaInit`), and through it to every tree root `roots.h` declares. A variant that takes
+`src/app/vota_init.cpp`'s `votaInit` was the one reference to `urna_roots` (`int (*volatile urna_roots_ptr)(int) =
+urna_roots;`, called from `votaInit`), and through it to every tree root `roots.h` declares; since the executable TU
+wrote votaInit, a sink in `src/app/roots.cpp` keeps it. A variant that takes
 `votaInit` from another object (the stand-in made weak beside a strong one, or its object left out) links without a word
 and drops all of that: wasm-ld keeps the strong definition, and `urna_roots_ptr` and what only `urna_roots` reaches go
 with the weak one. On 7011d5a0's tree such a link's census log read `functions 13540` against the plain link's 15310

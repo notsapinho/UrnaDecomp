@@ -17,8 +17,9 @@
 //   CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721, written, differs: unit 37's
 //   fragment) throws on its record's line. The spacing before GetRenderForm's brace puts the call on the record's
 //   column, a choice.
-// - api::IScreen's and api::IScreenMT's destructors are defined at the end, after CFormStack, whose Limpa (fns 5069 and
-//   3461) they call: iscreen.h and iscreenmt.h say why, units 69's and 78's fragments what shows it.
+// - api::IScreen's destructor is defined at the end, after CFormStack, whose Limpa (fn 5069) it calls; IScreenMT's
+//   (3461) at the end of iscreenmt.h, which includes this header, so a TU that includes this one alone instantiates
+//   CFormStack<IScreen>'s statics only, as the executable TU does (unit 170's fragment; units 69's and 78's say more).
 
 #include <algorithm>
 #include <memory>
@@ -32,7 +33,6 @@
 #include "api/gui/ipaper.h"
 #include "api/gui/ipreshow.h"
 #include "api/gui/iscreen.h"
-#include "api/gui/iscreenmt.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/pattern/iobservable.h"
 
@@ -323,11 +323,6 @@ void CFormStack<MEDIA>::Notifica()
 inline IScreen::~IScreen()
 {
     CFormStack<IScreen>::Limpa();
-}
-
-inline IScreenMT::~IScreenMT()
-{
-    CFormStack<IScreenMT>::Limpa();
 }
 
 } // namespace api
