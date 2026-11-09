@@ -148,6 +148,10 @@ public:
     SharedField AddFill(const SPoint& canto, const SPoint& oposto, TColor cor);
 
     SharedField AddRect(const SPoint& canto, const SPoint& oposto);
+    // the same over a rectangle, which the overload above calls: public, as vota::CTelasVota::CriaTelaZeresimaTardia
+    // (ctelasvota.cpp) calls it, its body behind a 16-byte prologue of its own in fn 7787 (+0x174a1: the CRectField
+    // of colour 2, binaryen's one caller folding the colour); it was private, a choice
+    SharedField AddRect(const SRect& rect);
 
     // a CTextFieldMultiLine over a CFixedText of texto, in the colours 2 over 1: target fn 2782. The name is chosen, and
     // so is having the colours in the body rather than as parameters every caller passes the same (not measured)
@@ -195,8 +199,6 @@ protected:
     std::vector<SharedField> m_campos;
 
 private:
-    SharedField AddRect(const SRect& rect);
-
     // The battery's icon of AddStatusHeader (fn 502) as a field with no generated name, pushed as it is. It has no
     // target function: binaryen inlined it into 502, whose push's throw paths come after the field's release, as the
     // end of a function of its own lays them out (src/units/31-uenux2-cformbuilder.mk has the evidence and the

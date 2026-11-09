@@ -182,13 +182,14 @@
 # constructor, unit 90's, binaryen inlines into it): AddTextField's (202) shape over an api::CTextRectField, the text a
 # CFixedText, centred (the 2 at +16 of its block). The font is a parameter that 7787, its one target caller, passes as
 # one constant at both calls, the SFont {35, 0} @475016: binaryen folded it, and the target's 5546 loads it at that
-# address. The roots' TextoRetangulo passes a constant of its own with those bytes twice, so the fold happens here too,
-# and the scan reads the address as one of the places of those bytes in the target (the row's readings list `address
-# same-content`), not as the stand-in's object. Its place: band 1 links its block's members (11118, 11117) between
-# AddTextField's CFixedText block's (11120, 11119) and AddBlinkingTextField's (11113, 11112), and the target's data
-# hold the block's vtable @1578336 between theirs (@1578296, @1578456), so it follows AddTextField. Band 2 puts 5546
-# after GetForm (5550), which this file has after the adders by choice (above): that pair stays inverted, as 5547's
-# with 5550 is; after GetForm, its block's two members would read inverted against AddBlinkingTextField's two.
+# address. Unit 443's constructor makes both calls with CriaTelaNumeroCopiasErrado's FONTE_TEXTO_CONFIRMA_CORRIGE, so
+# the fold happens here too (the roots' TextoRetangulo, which stood for them with a {35, 0} of its own, went: beside the
+# constructor's calls it kept the font a parameter, and 5546 read `no-candidate`). Its place: band 1 links its block's
+# members (11118, 11117) between AddTextField's CFixedText block's (11120, 11119) and AddBlinkingTextField's (11113,
+# 11112), and the target's data hold the block's vtable @1578336 between theirs (@1578296, @1578456), so it follows
+# AddTextField. Band 2 puts 5546 after GetForm (5550), which this file has after the adders by choice (above): that pair
+# stays inverted, as 5547's with 5550 is; after GetForm, its block's two members would read inverted against
+# AddBlinkingTextField's two.
 #
 # 5545, AddProgressBar: an api::CProgressBar (unit 40's constructor, which binaryen inlines into it) over RectEntre's
 # rectangle, returned as the bar (cformbuilder.h). Its font is a parameter both target callers, 7787 and 12098, pass as
@@ -372,7 +373,7 @@ CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cpaperformbuilder.
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
 # the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and
-# its TextoRetangulo and BarraProgresso pass the fonts the target folds into 5546 and 5545); 728,
+# its BarraProgresso passes the font the target folds into 5545); 728,
 # 941, 5409 and 5419 have every target caller in the link and no call there. It includes ctelasvota.h for
 # vota::FONTE_BARRA_PROGRESSO, so its rule names every uenux2 and ecourna header, computed here as a fragment must
 # ($(UENUX2_HDRS) is empty when the fragments are read)

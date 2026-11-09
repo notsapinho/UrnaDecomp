@@ -13,6 +13,8 @@ class IScreenMT;
 class IInputMT;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
+template <typename MEDIA>
+class IForm;
 } // namespace api
 
 namespace vota {
@@ -27,7 +29,8 @@ namespace vota {
 // share (fns 448 and 765): final, and out of line (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn
 // 2880) builds the 44-byte object and keeps it in a static std::unique_ptr (@1834128, destroyed at exit by fn 11990)
 // under a static std::mutex (@1834104, by fn 11989). The layout is what the constructor, inlined there, stores: the
-// base's constructor with 4; +12 a copy of vota::CTelasVota::GetInst()'s +116, the voter's form; +20 the operator's
+// base's constructor with 4; +12 a copy of vota::CTelasVota::GetInst()'s +116, the voter's form, an
+// api::IForm<api::IScreen> as that member is (its screen converts its form on return: ctelasvota.h); +20 the operator's
 // form, built in the body with api::CMTFormBuilder (GetInteractiveForm, fn 301, moved in); +28 a copy of
 // comum::CConfiguracaoEleicao's CDateTime at +556, the start of the voting, whose time it formats; +40 the id of a
 // 1000-ms tick added stopped (fn 807). Every member name, GetInst's and the statics', the destructor declared first as
@@ -48,7 +51,7 @@ private:
     static std::mutex s_mutex;
     static std::unique_ptr<CInicioVotacao> s_inst;
 
-    std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
+    std::shared_ptr<api::IForm<api::IScreen>> m_form;
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_formOperador;
     api::CDateTime m_inicio;
     uebyte m_tick;

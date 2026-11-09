@@ -10,6 +10,8 @@ class IScreen;
 class IInputKbd;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
+template <typename MEDIA>
+class IForm;
 } // namespace api
 
 namespace vota {
@@ -20,7 +22,8 @@ namespace vota {
 // (slot 2, fn 11946) ends by calling slot 9 and storing what slot 10 returns as the next state, as
 // vota::CGeraResumoZeresimaBase's does. The layout is the constructor's (fn 5965): the base's constructor gets 0, and
 // +12 a std::shared_ptr copied from vota::CTelasVota::GetInst()'s +212 (fn 407), whose slot 2 StartState calls; the
-// pointee's type is chosen, the type of vota::CTelasVota's members. The destructor is out of line, in another object
+// pointee's type is that member's, api::IForm<api::IScreen> (CTelasVota's constructor stores GetFormulario's form
+// there: ctelasvota.h). The destructor is out of line, in another object
 // than the derived classes': their destructors (fns 5961 and 5960) call fn 1720, which stores this class's vptr and
 // releases +12 (through binaryen's fn 2902). The constructor reads the member through a getter chosen for it
 // (ctelasvota.h). StartState sets the next state to this and calls slot 2 of the form and vota::GeraZeresima
@@ -41,7 +44,7 @@ protected:
     virtual comum::CAppState* GetProximoEstado() = 0;
 
 private:
-    std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
+    std::shared_ptr<api::IForm<api::IScreen>> m_form;
 };
 
 // No target index: two parts of the RDV extract's title, which fn 5971 (vota::CriaPartesExtratoRDV,

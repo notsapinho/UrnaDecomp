@@ -118,8 +118,9 @@
 #   popped from a vector {2, 0, 1}, draws a line 50 above the bottom of the area and returns the form's first
 #   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits (AddInputControl(int), 5530's code, which clang
 #   inlines). Of its 14 target callers 2376 is written (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, which passes
-#   api::CApplication::s_areaTela and false), and all but 7787 are in the link since; the roots' RotulosA passes the
-#   same for 7787 (RotulosB, for 12040, went with unit 387), and binaryen folds both to the target's three parameters. What fixes its form, each measured on a copy of
+#   api::CApplication::s_areaTela and false), and all are in the link since, 7787's calls through unit 443's
+#   constructor, which pass the same (the roots' RotulosA stood for them until then; RotulosB, for 12040, went with
+#   unit 387), and binaryen folds both to the target's three parameters. What fixes its form, each measured on a copy of
 #   this tree's link.cmd with the variant objects swapped in (`pnpm wasm score`), or on the object where it says so:
 #   - The key loop holds a branch on the bool, which clang unswitches (the object holds the loop twice) and binaryen,
 #     with the bool folded, cuts to one loop. Without such a branch the frame is 528 bytes, the target's 544, and the bad
@@ -167,10 +168,7 @@
 #   the link, and the stand-ins that stood for 11884's and 11888's calls in unit 84's roots went.
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
-# no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of
-# CPolySingleton<IScreenMT>::instance's others is reconstructed yet, nor 653's:
-# 120-uenux2-iform-roots.cpp stands for them, and says which they are
-IFORM_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/120-uenux2-iform-roots.o: $(ROOT)/src/units/120-uenux2-iform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/120-uenux2-iform.mk $(IFORM_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/120-uenux2-iform-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/120-uenux2-iform-roots.o
+# No roots: 120-uenux2-iform-roots.cpp stood for fn 7787's calls of GetInteractiveForm (554), AddInputControl (901 and
+# 5530, with 12055's key) and AddLabeledInputControl (653), which unit 443's constructor makes since, and the file went:
+# the link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed). Every other target
+# caller of those, of CFormStack<IScreen>::Remove and of CPolySingleton<IScreenMT>::instance is in the link.

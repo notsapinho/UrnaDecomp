@@ -7,8 +7,9 @@
 //     (*)(const std::string&) (3058 builds it so);
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
-//     over CTextSource (652) and std::string (*)(const std::string&) (651);
-//   std::shared_ptr<X>(new X): CDataTextFmt over const std::string (*)(const std::string&) (7787).
+//     over CTextSource (652) and std::string (*)(const std::string&) (651).
+// The one std::shared_ptr<X>(new X) of a CDataTextFmt, over const std::string (*)(const std::string&), is 7787's
+// (vota::AdicionaNumeroPartido, unit 443's, in the link through unit 441's roots): its stand-in went.
 // So this object instantiates the classes, as the sanctioned exception for std::make_shared does (src/units/README.md
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
 // are template instances of landed headers, compiled with APP_CXXFLAGS like the other stand-ins. The destructors have no
@@ -54,7 +55,6 @@ using api::SharedIText;
 using FonteTexto = std::string (*)();
 using FonteReferencia = const std::string& (*)();
 using FonteFormato = std::string (*)(const std::string&);
-using FonteFormatoConst = const std::string (*)(const std::string&);
 using FuncaoTexto = std::function<std::string()>;
 
 __attribute__((noinline)) SharedIText TextoDaFonte(const CTextSource& fonte, api::ETextAlignment alinhamento)
@@ -94,12 +94,6 @@ __attribute__((noinline)) SharedIText TextoFormatoProprio(FonteFormato fonte, co
     return SharedIText(new CDataTextFmt<FonteFormato>(fonte, formato, alinhamento));
 }
 
-__attribute__((noinline)) SharedIText TextoFormatoConstProprio(FonteFormatoConst fonte, const std::string& formato,
-                                                               api::ETextAlignment alinhamento)
-{
-    return std::shared_ptr<CDataTextFmt<FonteFormatoConst>>(new CDataTextFmt<FonteFormatoConst>(fonte, formato, alinhamento));
-}
-
 void* volatile w79_sink;
 
 struct SW79Roots {
@@ -107,7 +101,6 @@ struct SW79Roots {
     {
         w79_sink = reinterpret_cast<void*>(&TextoCompartilhado);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonteFormatado);
-        w79_sink = reinterpret_cast<void*>(&TextoFormatoConstProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFuncaoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonte);
