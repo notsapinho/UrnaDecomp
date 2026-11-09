@@ -66,7 +66,7 @@
 # GetInteractiveForm's name and its place after AddLabeledInputControl (653); what 653's paragraph below lists; SetFocus,
 # SetAtivo, ApagaCursor and every data member's and parameter's name.
 #
-# splat/symbol_addrs.txt gets eight hand lines, each `callers+content`, each shown needed by the scan without it and
+# splat/symbol_addrs.txt gets seven hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
 # counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872) had a ninth while it differed
 # (20 matches out), named for its caller; its body of ours, 36 over 186 with -fno-strict-aliasing (pnpm wasm score),

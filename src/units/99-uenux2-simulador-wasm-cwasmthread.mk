@@ -46,8 +46,9 @@
 # the target's. Chosen too: every name, wasmjs.* as the path, namespace simulador, and that the wrappers take const
 # char* for the event's name (a literal in both callers). `.data()` for `.c_str()` gives the same three functions.
 # EmitEvent's direct caller in our link is a trap (9018); unit 170's 7840 (votaInit), 10619, 10857 and 10384 reach it
-# by table slot (the roots that took its address for votaInit went once votaInit was written). binaryen inlines a function for having one call only when
-# the table does not hold it (the target's table does, slot 59). EscapaJson (target fn 9640, 1083 B, matched): the JSON
+# by table slot (the roots that took its address for votaInit went once votaInit was written).
+# binaryen inlines a function for having one call only when the table does not hold it (the target's table does, slot
+# 59). EscapaJson (target fn 9640, 1083 B, matched): the JSON
 # escape of a std::string through a std::ostringstream: a backslash before `\` and `"`, the letter escapes of \b, \f,
 # \n, \r and \t, `\u` and four hex digits for the other control bytes, `\u00` (literal 357653) and two hex digits for
 # the bytes from 0x80. Its two target callers, the executable TU's 5500 and 10857, invoke it through table slot 94 (unit
