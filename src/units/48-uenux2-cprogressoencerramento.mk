@@ -31,7 +31,8 @@
 # is dropped while nothing constructs the class, so no count over the data's order ranks it yet; the target's data put
 # the base's vtable (@1551204) right before comum::CAppState's (cappstate.cpp). The screen's font,
 # vota::FONTE_BARRA_PROGRESSO, is external, a chosen linkage (the user's decision; ctelasvota.h), and unit 31's roots'
-# BarraProgresso (7787's and 12098's stand-in) passes it, so that fn 5545 (api::CFormBuilder::AddProgressBar) folds the
+# BarraProgresso (12098's stand-in) passes it, as unit 443's constructor does in 7787's call, so that fn 5545
+# (api::CFormBuilder::AddProgressBar) folds the
 # font parameter beside the screen as in the target: with the roots' own copy of its bytes, a scratch link with one
 # object calling the screen gave our AddProgressBar seven parameters, and with this font six, the target's (unit 31's
 # fragment).

@@ -65,7 +65,8 @@
 # is the first 8 characters of ecourna::api::security::EncodeBase64 of the hash at +168 (the packages' hash,
 # cestadogeral.h), and holds EncodeBase64 inlined by binaryen with its records base64.cpp:247 and :267, EncodeBase64's
 # one caller in our link as in the target. Its target callers are 3059 (unit 110's, in our link, written and not
-# matched), 7787, not in it (src/app/roots_ecourna.cpp's UsaBase64B stands for it; UsaBase64A, for 3059, went), and
+# matched), 7787, whose call unit 443's constructor makes (src/app/roots_ecourna.cpp's UsaBase64B, which stood for it,
+# went then, as UsaBase64A, for 3059, had), and
 # 11222, in it. No vote names 3703: 3059 is named by a hand line and 11222 by vtable, and neither casts one; step 8
 # names it by a srcloc-anchor line on EncodeBase64's two records, which places the body and carries our name over, so
 # the name stays a choice (no hand line names it). In use band 3 it links after 3705 and 3704, so after

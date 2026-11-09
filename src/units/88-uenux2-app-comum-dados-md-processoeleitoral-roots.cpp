@@ -8,9 +8,10 @@
 //         link
 //   2835  GetCurrentEleicaoID         11209 (5604, unit 155's, and 13550, fragment 391's, are in the link)
 //   1267  CProcessoEleitoral::GetPleito2  7787 (2787, 5586, 11191, 1543, 11902 and 11223 are in the link)
-//   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787, and 5747, written (3715 holds it inlined), 12272 (unit
-//         110's) and 11888 (unit 104's), in the link
-//   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787, and 3715, which is written, and 12272, in the link
+//   1388  CCargo::GetDetalheCandidato 7787, one call (2268, 6660 and 6671, unit 441's, 5747, written, 3715 holding
+//         it inlined, 12272, unit 110's, and 11888, unit 104's, are in the link; the call for 6660 and 6671 went)
+//   1545  CDetalheCandidato::GetSuplente  7787, one call (2268, 6660, 6671, 3715 and 12272 are in the link; the call
+//         for 6660 and 6671 went)
 //   1547  GetNomeNeutro: no stand-in, its callers 13550 (fragment 391's), 2796, 2302, 4464, 6999 and 12587 are
 //         written
 //   2257  CEleicaoPE::GetCargos       7787 (861, 3774, 3775 and 5790, CConfiguracaoEleicao's GetCargo,
@@ -76,12 +77,12 @@ __attribute__((noinline)) int MesmoPleito(int a, int b)
 
 __attribute__((noinline)) int DistanciaDetalhes(int a, int b)
 {
-    return w1388(a) - w1388(b);
+    return w1388(a) - b;
 }
 
 __attribute__((noinline)) int DistanciaSuplentes(int detalhe, int a, int b)
 {
-    return w1545(detalhe, a) - w1545(detalhe, b) + 5;
+    return w1545(detalhe, a) - b + 5;
 }
 
 __attribute__((noinline)) int XorCargos(int a, int b)

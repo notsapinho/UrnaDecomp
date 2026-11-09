@@ -16,16 +16,9 @@ using ecourna::api::util::CStringUtils;
 
 // ecourna::api::security::EncodeBase64's one caller in the target is comum::md::estadoaplicacao::CEstadoGeral::
 // GetResumoHashVersoesPacotes (fn 3703, in unit 215's cestadogeral.cpp, its name chosen), which holds it inlined.
-// 3703's target caller not in our link: 7787 (11222, unit 287's, and 3059, unit 110's, are in the link). UsaBase64B
-// stands for it, through its label, on an object whose +168 is the hash vector, as CEstadoGeral's is, so that this TU
-// needs no uenux2 header.
-struct SComResumo {
-    char preenchimento[168];
-    std::vector<uebyte> dados;
-};
-
-extern "C" void urna_resumo_hash(void* resultado, const SComResumo& geral) __asm__(
-    "_ZNK5comum2md15estadoaplicacao12CEstadoGeral27GetResumoHashVersoesPacotesEv");
+// 3703's target callers, 11222 (unit 287's), 3059 (unit 110's) and 7787, are in the link, 7787's call made by unit
+// 443's constructor (linked through unit 441's roots): UsaBase64B, which stood for 7787, went, the link without it
+// moving no row.
 
 // CNumeroInscricaoEleitoral's constructor (fn 1241) and IIdentificadorEleitor::GetNumero, which binaryen folds into
 // api::CFixedText::GetText (fn 1139), have no call here: every target caller of each is in the link since fn 6734
@@ -76,13 +69,6 @@ __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { retur
 // went: its callers 3651 (fragment 379), 3689 and api::CProgressBar::Draw (10977) are in the link. Split's (1880) went:
 // its callers 654, 2380, 3689, 5869, 11377 and 12065 are in the link.
 __attribute__((noinline)) std::string UsaMaiusculasB(const std::string& s) { return "b" + CStringUtils::ToUpper(s); }
-__attribute__((noinline)) int UsaBase64B(const SComResumo& v)
-{
-    int resumo[3];
-    urna_resumo_hash(resumo, v);
-    return resumo[2];
-}
-
 __attribute__((noinline)) std::string UsaIdentificador(int tipo, const std::string& numero)
 {
     auto id = CriaIdentificador(tipo, numero);
@@ -95,9 +81,7 @@ __attribute__((noinline)) std::string UsaIdentificador(int tipo, const std::stri
 int urna_roots_ecourna(int a)
 {
     std::string s(static_cast<size_t>(a), '1');
-    SComResumo v{};
-    v.dados.assign(s.begin(), s.end());
-    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s) + UsaBase64B(v);
+    unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s);
     std::string out = UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     out += UsaMaiusculasB(out);

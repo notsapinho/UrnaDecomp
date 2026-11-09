@@ -9,7 +9,9 @@
 # one call of each (docs/reference/facts/workflow.md W13, "One variant object in the whole link"), neither
 # _ZN5comum16CargosPorEleicaoEv nor _ZNK5comum20CConfiguracaoEleicao14GetTodosCargosEv is in the map's names.tsv (15400
 # functions named against the plain link's 15402, at 220a19a0): binaryen inlines each into its stand-in. The calls of
-# GetTodosCargos pass GetInst()'s result, as 7787's do. With the two in the link, other stand-ins lost calls: unit 88's
+# GetTodosCargos pass GetInst()'s result, as 7787's do. 7787's second call of 5790 (+0x1c18c) is in CTelasVota's
+# constructor, which unit 443 writes (linked through unit 441's roots): the stand-in's second call of 5790 went, a
+# link without it moving no row, and its one call stands for 7787's first (+0x11aaf). With the two in the link, other stand-ins lost calls: unit 88's
 # IDsEleicoes (5791 for 5735) went, its XorCargos calls 2257 once (for 7787; the other call stood for 5790), and unit
 # 232's CargosEleicao calls 3775 once (for 7787; the other call stood for 5735); steps 6 to 10 on the link with all of
 # it moved no row but 5735 and 5790 into match. The roots compile at APP_CXXFLAGS and declare what they call through asm

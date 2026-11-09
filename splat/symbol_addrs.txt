@@ -29892,6 +29892,7 @@ srcloc.200189c8db31 = 0x113ae4; // type:data size:0x10 evidence:srcloc cconverso
 srcloc.0a3ec73fec95 = 0x113af4; // type:data size:0x10 evidence:srcloc cconversortitulorelatorio.cpp:96:19
 srcloc.3dc2e51389ea = 0x113b04; // type:data size:0x10 evidence:srcloc cconversortitulorelatorio.cpp:100:11
 _ZTVN7ecourna3app5dados3asn25CConversorTituloRelatorioE = 0x113b14; // type:data size:0x18 evidence:vote:2+rtti by:5102,9161
+g_MidAlloc = 0x113b20; // type:data size:0x8 evidence:content
 _ZTIN7ecourna3app5dados3asn25CConversorTituloRelatorioE = 0x113b2c; // type:data size:0xc evidence:rtti
 _ZTSN7ecourna3app5dados3asn25CConversorTituloRelatorioE = 0x113b38; // type:data size:0x34 evidence:rtti
 str.5cbcf9823e45 = 0x113b38; // type:data size:0x34 evidence:string "N7ecourna3app5dados3asn25CConversorTitul"…

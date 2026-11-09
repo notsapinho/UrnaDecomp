@@ -9,28 +9,24 @@
 //   constructor, fn 1501, now in the link (fragment 205's callers reach it), so it needs no sink.
 // - vota::CExecucaoVotaCooperativa's constructor (fn 7828) is in the target's table (slot 126), so its own address is
 //   taken, which also keeps the vtable it stores; no reconstructed code takes it.
-// - vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target, none reconstructed: one stand-in below.
+// - vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target, all in the link (below): no stand-in.
 // - vota::CPreShowFormVota::DesenhaDescricaoModo (fn 4620) has two direct callers in the target, the class's PreShow
 //   (fn 7707) and CPreShowProgressBar's slot 2 (fn 13550, fragment 391's), both in the link: no stand-in.
 // Declared through asm labels with the objects' signatures; no header.
-extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioInterativoERN3api23CInteractiveFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");
 
 namespace {
 
 // vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target (2291, 2376, 6569, 6592, 6595, 6599, 7787,
-// 11804, 11805, 11809, 11881, 11884, 11888, 11892, 12040, 12055), none reconstructed but 11804, 11805 and 11809 (unit
+// 11804, 11805, 11809, 11881, 11884, 11888, 11892, 12040, 12055), all in the link: 11804, 11805 and 11809 (unit
 // 217's), 2376 (vota::TelaTextoConfirmaCorrige, ctelasvota.cpp), 12055 (unit 37's, not matched),
 // 11881, 11884, 11888 and 11892 (unit 104's), 6599 (unit 110's CriaTelaMaisInformacoes, not matched), 6569 and 6595
 // (unit 110's CriaTelaVisualizacaoCandidato and CriaTelaAntesHorarioZeresima), 6592 (unit 110's
 // CriaTelaConfirmaImpressaoZeresima), 2291 (vota::CRetirarMR::GetInst, unit 156's, with ctelasvota.cpp's
 // TelaLacreTampa and TelaMRModoDemo inlined) and 12040 (unit 387's CMostraQRCodeCertificado::StartState, with
-// CTelasVota::CriaTelaQRCodeCertificado inlined): this one stands for the other, 7787, with one call; the two-call
-// stand-in for 7787 and 12040 went.
-__attribute__((noinline)) void FormularioVota(int resultado, int builder, int nome)
-{
-    w576_formulario(resultado, builder, nome);
-}
+// CTelasVota::CriaTelaQRCodeCertificado inlined), and 7787, whose twelve calls unit 443's constructor makes (linked
+// through unit 441's roots). FormularioVota, which stood for 7787 with one call, went, the link without it moving no
+// row, as the two-call stand-in for 7787 and 12040 did before it.
 
 const void* volatile w165_sink;
 
@@ -38,7 +34,6 @@ struct SW165Roots {
     SW165Roots()
     {
         w165_sink = reinterpret_cast<const void*>(&w7828_construtor);
-        w165_sink = reinterpret_cast<const void*>(&FormularioVota);
     }
 } w165_roots;
 

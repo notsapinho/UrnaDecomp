@@ -18,6 +18,10 @@
 //   three times, and the static initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop
 //   what it returns) has no stand-in: the two calls that stood for 14478 went on a link without them that moved no row
 //   (unit 168's fragment), and the instance our link keeps is unit 329's cajusteinicial.cpp.o's.
+// - vota::GetQuantidadeMaximaBUsAdicionais (fn 4582; callers 12081, unit 104's, and 12974, unit 443's
+//   TextoLimiteCopiasBU) has no stand-in: both are in the link, and w168_qtdbu, which stood for 12974, went.
+// - vota::GetQuantidadeMaximaBUsAdicionais (fn 4582; callers 12081, unit 104's, and 12974, unit 443's
+//   TextoLimiteCopiasBU) has no stand-in: both are in the link, and w168_qtdbu, which stood for 12974, went.
 // - vota::VerificaAssinaturaArquivos (fn 4625; one target caller, 7787, not written, which calls it twice):
 //   w168_arquivos stands for 7787, with the two directories 7787 passes, comum::CPath::GetPathTrab's (fn 358) of the
 //   internal and the external flash, taken as parameters.
@@ -36,13 +40,6 @@ __attribute__((noinline)) int w168_separadores(api::CPaperFormBuilder* builder)
     return 31;
 }
 
-// stands for fn 12974, not written, which calls GetQuantidadeMaximaBUsAdicionais (fn 4582) once and reads what it
-// returns; its other target caller, vota::CEmitirMaisBU::ProcessInput (fn 12081), is in the link (unit 104)
-__attribute__((noinline)) int w168_qtdbu(int base)
-{
-    return vota::GetQuantidadeMaximaBUsAdicionais() + base;
-}
-
 // stands for fn 7787, not written, which calls VerificaAssinaturaArquivos (fn 4625) twice
 __attribute__((noinline)) void w168_arquivos(const std::filesystem::path& interno, const std::filesystem::path& externo)
 {
@@ -57,7 +54,6 @@ struct SW168Roots {
     {
         w168_sink = reinterpret_cast<const void*>(&w168_treinamento);
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
-        w168_sink = reinterpret_cast<const void*>(&w168_qtdbu);
         w168_sink = reinterpret_cast<const void*>(&w168_arquivos);
     }
 } w168_roots;

@@ -113,9 +113,9 @@
 # for 7787, until unit 443); unit 92's NovaMoldura (CFramedText's constructor, for 6652); unit 121's builder and sink of
 # CDataText<comum::CRespostasDSNumero>, whose vptr 6652 stores. The link without them moved no row (steps 7 to 9: 0
 # matches added, 0 renamed, no verdict changed). The same kind of stand-in in units 89's, 154's, 88's, 102's and 110's
-# roots is idle too (13101's and 6076's calls of 5806 and 5807, 6652's of 5729, 6660's and 6671's of 1388 and 1545,
-# 6652's control block and table slot 1096): a link without them moves no row either (steps 7 to 9 on it), and they go
-# with those files' next change. The roots declare what they call through asm labels: they emit no TSE code and
+# roots was idle too (13101's and 6076's calls of 5806 and 5807, 6652's of 5729, 6660's and 6671's of 1388 and 1545,
+# 6652's control block and table slot 1096): those went when this unit landed with unit 443, each file's link alone
+# and the link with all of them moving no row. The roots declare what they call through asm labels: they emit no TSE code and
 # instantiate nothing, and the census pairs no target function with them.
 $(ROOT)/$(APP)/441-uenux2-ctelasvota-bases-roots.o: $(ROOT)/src/units/441-uenux2-ctelasvota-bases-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/441-uenux2-ctelasvota-bases.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/441-uenux2-ctelasvota-bases-roots.cpp -o $(R)

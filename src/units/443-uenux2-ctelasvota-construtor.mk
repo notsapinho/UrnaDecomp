@@ -89,6 +89,11 @@
 # vtable sink: each stood for 7787's calls of a callee that 7787 calls in CreateInst's region only (pnpm wasm fn's calls
 # from +0x1674f to +0x24132), and unit 441's roots now make as many (each of those 71 callees, counted over both
 # readouts). Unit 232's stand for 7787's calls before the region and stay. Idle too, in roots files another branch
-# changes, so not edited here: unit 31's TextoRetangulo (5546, above; gone since), BarraProgresso's call for 7787 and
-# TelaA's and TelaB's calls for 7787's adders; the comments of units 88's, 89's, 98's, 109's, 110's, 154's and 165's
-# roots name 7787 beside a callee only the region calls (not read further).
+# changed, and gone since: unit 31's TextoRetangulo (5546, above), TelaA, RotuloTecla, TextoMultiLinha,
+# BarraProgresso's call for 7787 and TelaB's calls of 7787's adders (its call of 2244 stays: unit 31's roots say why);
+# unit 110's TelasConstrutor and call of ~CTelasVota (6548); unit 165's FormularioVota; unit 100's calls of
+# CPolySingleton<api::IScreen>::instance (512); src/app/roots_ecourna.cpp's UsaBase64B (3703); the sinks of 11499
+# (unit 109; slot 1100, which AdicionaNumeroPartido stores) and of 5472 and 5473 (unit 125; slots 1103 and 1104); and
+# unit 419's second call of 5790 (7787's at +0x1c18c); and the stand-ins for this unit's two callbacks, unit 168's
+# w168_qtdbu (12974's call of 4582) and unit 220's DiferencaDatas (13012's of 5471). Each was measured in a link of its
+# own object alone and in the real link with all of them, and moved no row.

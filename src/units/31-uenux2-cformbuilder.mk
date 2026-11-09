@@ -176,7 +176,8 @@
 # target's wasm type has none), are chosen. It matches since api::ITimerScheduler::CreateTimer takes its callback by
 # reference (api/util/itimerscheduler.h): with the callback by value it was 30 over 308 rows, 24 of them operand-only,
 # the one difference the place of the 500 ms interval's store, which the target makes before it builds the
-# std::function (`pnpm wasm score` against our fn). TelaA and TelaB give it its two call sites.
+# std::function (`pnpm wasm score` against our fn). Its target callers are all in the link (7787's call made by unit
+# 443's constructor), so the roots' calls of it went.
 #
 # 5546, AddTextRectField, matches (the scan; step 8 names it by the srcloc-anchor of CTextRectField's record, whose
 # constructor, unit 90's, binaryen inlines into it): AddTextField's (202) shape over an api::CTextRectField, the text a
@@ -196,7 +197,8 @@
 # one constant, the SFont {0, 0} @475024, which binaryen folded: 5545 reads its size at that address. That constant is,
 # by unit 48's reading of 12098's frames (its fragment), the font ctelasvota.cpp's progress screen passes
 # (vota::TelaProgressoEncerramento, which 12098 holds inlined), named vota::FONTE_BARRA_PROGRESSO by choice and external
-# by a chosen linkage, the user's decision (ctelasvota.h): the roots' BarraProgresso passes it in both calls. Measured
+# by a chosen linkage, the user's decision (ctelasvota.h): unit 443's constructor passes it in 7787's call, the roots'
+# BarraProgresso in its call for 12098. Measured
 # in a link that also reaches the screen (the plain link and an object whose caller of the screen a sink keeps): our
 # AddProgressBar keeps the font as a seventh parameter while the roots pass a constant of their own with those bytes,
 # and has the target's six with this one. Eight zero bytes are found too often in the target for the scan to place them

@@ -95,7 +95,8 @@
 # comum::RespostaCorrente (fn 11479), the current answer's text, is in crespostas.cpp: it holds GetInst's code (record 28),
 # which only that TU can inline, then calls CDataMap<unsigned int, CRespostaConsulta>::GetCurrent (3125) and copies the
 # string at +4 of the answer (md/processoeleitoral/crespostaconsulta.h's GetResposta). The target reaches it only through
-# table slot 1096, which fn 6652 passes to api::CFormBuilder::AddTextField (1191): the roots take its address. In band 1
+# table slot 1096, which fn 6652 (unit 441's, in the link) passes to api::CFormBuilder::AddTextField (1191): the roots'
+# sink of its address went with that. In band 1
 # (ledger/ordinals.tsv) it follows the file's exit destructors (11481, 11480), so it is defined after the statics, here
 # after CRespostasDSNumero's call operator, a choice. Chosen: its name and GetResposta's, its being a free function,
 # crespostasds.h as its header, GetResposta's being inline in the class.
@@ -705,8 +706,9 @@
 #   1300, std::vector<std::pair<std::string, std::string>>'s copy constructor, which cqrcodeds.cpp.o (unit 299) gave the
 #   link and this object gives now, being ahead of it in the link: a row far from its run, read as another TU's copy
 #   (how-to step 3).
-# - Stand-ins: 110-uenux2-singletons-roots.cpp's TelasConstrutor stands for 7787 (6595, 3059, 4160) and
-#   TelaConfirmaZeresima stood for 6592 (3059, with the origin 2), and went when 6592 was written (unit 378). The
+# - Stand-ins: 110-uenux2-singletons-roots.cpp's TelasConstrutor stood for 7787 (6595, 3059, 4160) and went when unit
+#   443's constructor made those calls; TelaConfirmaZeresima stood for 6592 (3059, with the origin 2), and went when
+#   6592 was written (unit 378). The
 #   stand-ins of other units that only these functions' calls ended went (units 43, 79, 102, 111, 215, 280, 296 and
 #   src/app/roots_ecourna.cpp say which).
 #
