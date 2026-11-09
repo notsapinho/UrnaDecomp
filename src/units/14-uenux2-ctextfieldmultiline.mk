@@ -61,7 +61,8 @@
 #   byte-identical, so 1917 still matches, from this object now, and so do its callers 2649, 5055, 8877, 8878, 8883 and
 #   8884 (splat/scan.tsv's rows unchanged): the earlier note that this instance cost seven matches no longer holds.
 #   Draw's CFixedText likewise brings CFixedText's GetText (1139), D0 (7666) and D2 (7706) from this object, ahead of
-#   app/uenux2/src/app/vota/operador/outrasopcoes/cinputfieldmt.cpp.o, whose copies they were; all three still match.
+#   app/uenux2/src/app/vota/operador/outrasopcoes/cinputfieldmt.cpp.o, whose copies they were; all three still match,
+#   from ctelasvota.cpp.o since units 441 and 443 (its screens build a CFixedText first in link order).
 # Chosen, as no evidence gives them: every local and parameter name, the data members' names (ctextfieldmultiline.h),
 # UltimoEspaco's name, that it is a free function (it reads no class state) rather than the lambda above (its internal
 # linkage is the bytes': with external linkage GetTextLines differs, 669 lines, and `static` gives the same object as

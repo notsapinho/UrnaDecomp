@@ -19,15 +19,15 @@
 // - CSynchronizer::Sync (target fn 620) is called directly by 14 target functions (378, 491, 1487, 1488, 1836, 3333,
 //   4657, 6737, 7174, 10590, 12098, 12105, 12110 and 12134): CopyFile (378), 491, 1487, 1488, 1836, 3333, 4657,
 //   6737, 7174, 10590 and 12105 are reconstructed, and SincronizaDuas stands for the other 3 with two call sites, so
-//   binaryen keeps Sync out of line as the target does. Its constructor (fn 5729) has two callers in the target, 600
-//   and 6652 (not reconstructed): Constroi stands for 6652, so that binaryen keeps the constructor out of line beside
-//   GetInst's call. Both are declared through asm labels, the constructor with the object's int result.
+//   binaryen keeps Sync out of line as the target does. Its constructor (fn 5729, one body with
+//   comum::CRespostasDSNumero's, whose name the match list gives it) has two callers in the target, 600 and 6652
+//   (vota's adicionaBaseTelaCompletaConsulta, unit 441's), both in the link: Constroi, which stood for 6652, went.
+//   Both are declared through asm labels.
 // The stand-ins' bodies differ from each other and from every target function.
 #include "api/hwil/iinput.h"
 
 extern "C" {
 int w600_root_0() __asm__("_ZN3api13CSynchronizer7GetInstEv");
-int w5729_root_0(int, int) __asm__("_ZN3api13CSynchronizerC1Eb");
 void w620_root_0(int) __asm__("_ZNK3api13CSynchronizer4SyncEv");
 }
 
@@ -44,11 +44,6 @@ __attribute__((noinline)) int InstanciaDuasVezes()
     return w600_root_0() - w600_root_0();
 }
 
-__attribute__((noinline)) int Constroi(int objeto, int habilitado)
-{
-    return w5729_root_0(objeto + 4, habilitado != 0);
-}
-
 __attribute__((noinline)) void SincronizaDuas(int sincronizadorA, int sincronizadorB)
 {
     w620_root_0(sincronizadorA);
@@ -62,7 +57,6 @@ struct SW154Roots {
     {
         w154_sink = reinterpret_cast<void*>(&TamanhoDoNome);
         w154_sink = reinterpret_cast<void*>(&InstanciaDuasVezes);
-        w154_sink = reinterpret_cast<void*>(&Constroi);
         w154_sink = reinterpret_cast<void*>(&SincronizaDuas);
     }
 } w154_roots;

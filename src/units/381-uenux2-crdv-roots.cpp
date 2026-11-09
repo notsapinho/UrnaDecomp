@@ -2,7 +2,7 @@
 // the link holds are counted (CRdv::SalvaInterno calls GetArquivoRdvInterno, SalvaExterno GetArquivoRdvExterno, and
 // both call api::CEncryptedFile's constructor, fn 1692, whose other target callers are 6734 and 7174), and the
 // stand-in below, with a body of its own, stands for the rest, so that each function has two call sites:
-// - fn 7787 (vota::CTelasVota's constructor) calls 1551, 1701, 2826 and 5762 once each.
+// - fn 7787 (in its data load, before the CTelasVota::CreateInst it holds) calls 1551, 1701, 2826 and 5762 once each.
 // fn 6737 (vota::CEstadoAudio::GeraDadosDinamicos, unit 116), which calls GetArquivoRdvInterno (fn 1551),
 // GetArquivoRdvExterno (1701), GetArquivoBancoDadosInterno (2826) and GetArquivoBancoDadosExterno (5762) once each and
 // CRdv::SalvaInterno (5737) and SalvaExterno (5736) twice each, fn 7174 (vota::impl::CSincronismoVotoEleitor::

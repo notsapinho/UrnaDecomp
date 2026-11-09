@@ -203,7 +203,8 @@
 # cescolheopcao.cpp includes comum::CConfiguracaoEleicao's header for +485, which reaches Boost (unit 277's rule).
 #
 # Matched once a literal landed:
-# - 12621, CDataText<comum::CRespostasDSNumero>::GetText, emitted by unit 102's roots object. Its operator is in
+# - 12621, CDataText<comum::CRespostasDSNumero>::GetText, emitted by ctelasvota.cpp.o since its builder, fn 6652, is in
+#   the link (unit 441; by unit 102's roots object before). Its operator is in
 #   crespostas.cpp (unit 110's source; app/comum/dados/crespostasds.h says why it is there). clang leaves
 #   CRespostas::GetInst out of the operator: `-Rpass-missed=inline` gives cost 230 against the threshold 225 at -O2, and
 #   at -O3 it is inlined (threshold 250), as in the target. At the tree's -O3 it scored `20 over 190 rows`, all

@@ -1,8 +1,8 @@
 # Unit 378: no source of its own. It adds to unit 110's app/vota/eleitor/comum/ctelasvota.cpp (and ctelasvota.h) the
-# vote screens CTelasVota's constructor (target fn 7787, not written) builds per post, and the helpers they share; its
-# roots stand for 7787's calls of them (src/units/README.md "Landing a unit" item 2). Scores are `pnpm wasm score`
-# against the plain link (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that differ in
-# calls and data addresses alone.
+# vote screens CTelasVota's constructor (unit 443's; target fn 7787, not written, holds it) builds per post, and the
+# helpers they share; the constructor makes 7787's calls of them, so the unit has no roots (below). Scores are `pnpm
+# wasm score` against the plain link (names.tsv's index), whole link at the tree's flags; "operand-only" means rows that
+# differ in calls and data addresses alone.
 #
 # Matched (33, the comm of docs/how-to-decompile.md step 10 against the commit this unit started from): 3064
 # CTelasVota::CriaTelaVotoCargoSemCandidato, 6626 CriaTelaVotoNuloConsulta, 6616 CriaTelaConferenciaVotoNuloConsulta,
@@ -17,7 +17,7 @@
 # api::CMovie::ProximoFrame 5525 (unit 23's). Then 11 more (the same comm against the commit they started from), the
 # candidate's complete screens and what they call, below: 2028, 3060, 4129, 4185, 5535, 6528, 6639, 6681, 11501, 12641,
 # 12811. Then 3 more (the same comm against the commit they started from): 6608, 6624 and 1591, the VotoNulo screens'
-# frames (below). Written, not matched: 6627, 3076, 4184 and 6678 (below).
+# frames (below). Written, not matched: 6627, 3076 and 4184 (below); 6678 matches since unit 441 (below).
 #
 # - 3064: the record ctelasvota.cpp:1585 (column 15) gives the name, the parameters (const comum::md::CCargo &,
 #   api::TPosition) and the throw: code 9354 with MensagemErroCargo(name, post, "não é de candidato") when the post
@@ -171,8 +171,9 @@
 #   número de suplentes incompatível" when it has substitutes (QtdSuplentes, 1157); then 4185 with 639, 2028 unless the
 #   post is 25, and 4184 with false when the post has photos. That 25 is the conselheiro distrital is a reading (the gif
 #   map at line 275 pairs it with conselheiroDistrital.gif); no evidence names a constant, and the literal is written.
-#   19 over 84 rows, operand-only; at step 9 it reads `unresolved self-voted`: 4184's name rests on 6678's own call vote
-#   while 4184 differs (below). It waits for 4184's match; no hand line names 4184 (its evidence would be that vote).
+#   19 over 84 rows, operand-only; at step 9 it read `unresolved self-voted`, 4184's name resting on 6678's own call
+#   vote while 4184 differs (below), and it matches since 6660 and 6671 (unit 441's) are in the link and vote for 4184's
+#   name too (`evidence:call by:6660,6671,6678`); no hand line names 4184.
 # - 4185 AdicionaDadosCandidato (no record; target callers 6660, 6671, 6678): the post's name by 12811 through
 #   api::CFormBuilder's AddDoubleLineField (3068: (10, 60), (10, 95), the width + 237, FONTE_NOME_CARGO, background 1)
 #   when the post has photos, else AddTextField (1191: (10, 60)); the number field (adicionaNumeroCandidato); the
@@ -232,8 +233,9 @@
 #   adicionaImagem is vota's template now, out of the anonymous namespace: its instance over an external type is
 #   linkonce, which clang keeps out of line as the target has it (in the anonymous namespace clang inlined it into
 #   adicionaFotoEmoldurada, which then stayed out of line), and its instance over 6561's std::bind of a lambda stays
-#   internal and inlined (6561 still matches). The source's byte stays a parameter only with a second value: the roots'
-#   FotoSuplente stands for 4181's call. 7 over 125 rows, operand-only; matched at step 9.
+#   internal and inlined (6561 still matches). The source's byte stays a parameter only with a second value: 4181 (unit
+#   441's AdicionaFotoSuplente) passes its own parameter, as the roots' FotoSuplente did for it until then. 7 over 125
+#   rows, operand-only; matched at step 9.
 # - 6528 vota::AdicionaTextoAlinhado<comum::CCargoDSNomeSexoCandidato>: AdicionaTextoFonte's body with the alignment
 #   passed to CDataText (2 at both of 4184's calls, folded by binaryen). A template of its own, chosen: an alignment
 #   parameter on AdicionaTextoFonte made 1192's two text calls two std::make_shared instances, and 1192 left match at
@@ -251,7 +253,8 @@
 #   GetInst in the argument, 16 over 261, operand-only, held).
 # Their lines are chosen: the helpers at 495 to 587, after adicionaFotoEmoldurada and inside the file's run of internal
 # records (the anonymous namespace closed around them); 6678 at its records (816 to 840, the run 748 to 815 moved up
-# five lines for it, no record there); 6681 at 1522 and 6639 at 1603 (6626, 6616 and 3063 moved down nine lines), the
+# five lines for it, no record there); 6681 at 1522 (at 1470 since units 441 and 443, which moved it up) and 6639 at
+# 1603 (6626, 6616 and 3063 moved down nine lines), the
 # places use band 2 bounds: 6689, 6681, 6678 (deferred, after 6681), 6646 (after 3067), 6639, 6626 and 6616 run so in
 # names.tsv's ld_index, the target's order (docs/how-to-decompile.md step 3, "The order of two members"; the other
 # pairs of the new members are with template instances, counted apart). 12811 takes the place of its first mention,
@@ -263,9 +266,12 @@
 # the anonymous namespace, as measured above; adicionaNumeroCandidato internal, codegen.md C5; no record shows any of
 # it) and AdicionaCampoNumero's overload over a source are chosen too.
 # - 2384, 6689 and 13441 are unit 387's since (its fragment).
-# Roots: 378-uenux2-ctelasvota-criatela-roots.cpp stands for 7787 (its calls of 6639, 6681 and 2028 too), for 6602, 6603
-# and 6605 (3060's other callers, and 2028's calls for 6602 and 6605), for 6660 and 6671 (4185, 4184 and 2028:
-# BasesCompletaCandidato) and for 4181 (its call of 4129: FotoSuplente).
+# Roots: none. 378-uenux2-ctelasvota-criatela-roots.cpp stood for 7787's calls of these screens (and of 6639, 6681 and
+# 2028); unit 443 writes the constructor that makes them, in the link through unit 441's roots, and the file went: the
+# link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed). Its stand-ins for 6602,
+# 6603 and 6605 (CamposCinza), 6660 and 6671 (BasesCompletaCandidato) and 4181 (FotoSuplente), and its calls of 1593,
+# 1102 and 1190 for 7787, had gone with unit 441, which writes those builders and the screens that make 7787's calls of
+# the three (src/units/441-uenux2-ctelasvota-bases.mk has the measurement).
 # Stand-ins this unit made idle went, call by call: units 28 (1192's CTextFieldDoubleLine), 191 (6627's vector copy),
 # 232 (3074's GetDetalheConsulta), 309 (6601's AdicionaLocal), 88 (12587's GetNomeNeutro), 110 (6592's
 # AdicionaTelaQRCode), 92 (the CMaskedTextField blocks' builders and sinks), 102 (the CPreShowProgressBar, CMovie and
@@ -281,6 +287,3 @@
 # and sinks for CDataText over CCandidaturasDSNumero, CCandidaturasDSNome and CCargoDSNomeSexoCandidato and CDataImage
 # over CCandidaturasDSFoto (4185, 6528 and 4129 store the vptrs), and unit 89's roots' CandidaturasAtuais (2838 for
 # 12641); a link with each file's back moved no row.
-$(ROOT)/$(APP)/378-uenux2-ctelasvota-criatela-roots.o: $(ROOT)/src/units/378-uenux2-ctelasvota-criatela-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/378-uenux2-ctelasvota-criatela.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/378-uenux2-ctelasvota-criatela-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/378-uenux2-ctelasvota-criatela-roots.o

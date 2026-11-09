@@ -1,15 +1,8 @@
-// Roots of unit 121, in the shapes src/units/README.md "Companion files" sanctions: a builder the link drops, and the
-// vtable it stores kept by the static constructor below. None of the target's builders is reconstructed. Each builder
-// here is an optnone function that nothing calls, which wasm-ld drops; clang emits what it instantiates in this object,
-// and the sink keeps the one vtable the target's own builder stores (the grep for its address point lists the function):
-// - a class with no key function, built in the builder so that this object emits its vtable and the slots: the text
-//   api::CDataText<comum::CRespostasDSNumero> (vptr 1537840, stored by fn 6652). Its GetText calls the source's call
-//   operator, defined out of line in crespostas.cpp, which binaryen inlines into its one caller (fn 12621). Unit 102's
-//   roots object, ahead of this one, instantiates CDataText<CRespostasDSNumero> too, in a builder it drops, so the
-//   copies the link keeps of that class's vtable and GetText are that object's, the same code. CRespostasDSNumero's
-//   constructor is declared only: fn 6652 builds the source with a call of fn 5729, which stores its byte and returns
-//   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
-//   so the target holds one body for both and does not tell which source defines it.
+// Roots of unit 121, in the shapes src/units/README.md "Companion files" sanctions. The dropped builder and the sink
+// that kept the text api::CDataText<comum::CRespostasDSNumero> (vptr 1537840) went once its storer, fn 6652, was in
+// the link (unit 441): ctelasvota.cpp.o, 6652's object, emits that class's vtable and members now, and
+// CRespostasDSNumero's constructor, which 6652 calls, is defined in crespostas.cpp (fn 5729, one body with
+// api::CSynchronizer's).
 // No control block is left: std::string's __shared_ptr_emplace<T> (vptr 1588328, stored by fn 10465, and by 652, 1150,
 // 1901, 2734, 2747, 5397 and 10440) went, its builder and sink with it, once those functions were in the link, one
 // storer giving the reference the sink gave; the one of api::CInputMenuField (1579324) went once its builder, fn 3675
@@ -30,21 +23,10 @@
 #include <memory>
 #include <string>
 
-#include "api/gui/cdatatext.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/iinputfield.h"
-#include "app/comum/dados/crespostasds.h"
 #include "app/comum/relatorios/ccalculacv.h"
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
-
-extern "C" {
-extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRespostasDSNumeroEEE");
-}
-
-__attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
-{
-    const api::CDataText<comum::CRespostasDSNumero> texto(comum::CRespostasDSNumero{digitos});
-}
 
 namespace {
 
@@ -73,7 +55,6 @@ struct SW121Roots {
     {
         w121_sink = reinterpret_cast<const void*>(&w121_destroi_calcula);
         w121_sink = reinterpret_cast<const void*>(&w121_reinicia);
-        w121_sink = w121_vt_respostas;
     }
 } w121_roots;
 

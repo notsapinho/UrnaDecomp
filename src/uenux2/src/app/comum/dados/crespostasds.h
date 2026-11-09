@@ -15,8 +15,8 @@ namespace comum {
 // argument of std::format. So the constructor takes the byte, and 6652 holds a call of it, not its one store, which
 // reads as a constructor defined in another TU (a reading, not measured). fn 600, api::CSynchronizer::CreateInst by its
 // record, calls fn 5729 on a fresh one-byte object too, so the target holds one body for both and does not tell which
-// source defines this one. It is declared only: no function of ours needs its body. The member's and the parameter's
-// names, the parameter's type and `explicit` are chosen.
+// source defines this one. fn 6652 is written (unit 441), so the body is defined in crespostas.cpp, a choice. The
+// member's and the parameter's names, the parameter's type and `explicit` are chosen.
 //
 // The call operator is defined in crespostas.cpp: fn 12621 holds CRespostas::GetInst's code inlined, and GetInst is an
 // out-of-line function of that file (record crespostas.cpp:28, fn 2812), so the operator was compiled there. The

@@ -25,6 +25,10 @@ std::mutex CRespostas::s_mutex;
 
 CRespostas::~CRespostas() = default;
 
+CRespostasDSNumero::CRespostasDSNumero(const uebyte digitos) : m_digitos(digitos)
+{
+}
+
 std::string CRespostasDSNumero::operator()() const
 {
     return std::format("{:0{}}", CRespostas::GetInst().GetCurrent()->GetNumero(), m_digitos);

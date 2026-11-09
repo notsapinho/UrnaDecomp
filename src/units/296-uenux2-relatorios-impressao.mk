@@ -107,9 +107,9 @@
 # TrailerProporcionalPartido); CPleito::GetNome (the string at
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
-# Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 2792's caller 7787 (5591, 1541 and 3059, unit 110's,
-# are in the link), and for 2273's caller 12110 (1543, 5740, 11902 and, since
-# fragment 317, 11223 are in the link). 11261's
+# Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 2273's caller 12110 (1543, 5740, 11902 and, since
+# fragment 317, 11223 are in the link). Its stand-in for 2792's caller 7787 went once unit 443's constructor made that
+# call (CriaTelaReimpressaoBU; 5591, 1541 and 3059, unit 110's, are in the link too). 11261's
 # address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
 # api::CQRCodeGuard's constructor, went, and so did the stand-in for 5591's caller 11869 once 11869 (unit 138's) was
 # in the link with 11911.

@@ -119,7 +119,8 @@
 # evidence), then calls the form's slot 2 and stores `this` at +4, as CMaisInformacoes::StartState does. The screen
 # calls vota::AdicionaCampoNumerico (fn 2383, ctelasvota.cpp's), which matches with it; unit 110's fragment has what
 # fixes 2383's form, both places and why this file's object links after ctelasvota.cpp.o (it is compiled from unit 110's
-# list), and unit 373's roots stand in for 2383's other target callers. Measured with pnpm wasm score in the whole link
+# list), and 2383's other target callers are in the link (unit 373's roots stood for them until unit 443). Measured with
+# pnpm wasm score in the whole link
 # before step 8: 53 over 746 rows, every row a call or a data address. Chosen, as for the class's siblings: the
 # assignment's spelling and the member's name. Its trap left 104-uenux2-app-vota-estados-pending.cpp.
 # vota::CMenuFiltrarCandidatosPorNumero::ProcessInput (fn 11891, slot 7, no record), in

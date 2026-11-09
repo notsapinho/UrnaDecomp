@@ -1,8 +1,8 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 17 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). 48 come from the objects of units 31, 120, 101, 165, 91,
+# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 16 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 49 come from the objects of units 31, 120, 101, 165, 91,
 # 127, 164, 113, 163, 110, 321, 121, 280, 59, 66, 137, 139 and 277, whose builders are written, so the roots no longer
-# instantiate them, and 2 from unit 136's cgravadorhashes.cpp.o (the last of the others below). Nine of the 48 went from
+# instantiate them, and 2 from unit 136's cgravadorhashes.cpp.o (the last of the others below). Nine of the 49 went from
 # the roots at once, builder and sink, a link without them moving no row: the pointer blocks of CTextFieldPaper (5613,
 # unit 139's cgeradorbu.cpp, from which 11997 matches; 193, 604 and 12105 store its vptr too), CCutFieldPaper,
 # CNewLineFieldPaper and CQRCodeImageFieldPaper (1264, 198 and 2775, unit 31's cpaperformbuilder.cpp, from which 10994,
@@ -34,7 +34,8 @@
 # object instantiates Entregar and with it the block (11463 matches from cjustificadorservico.cpp.o, 10311 from
 # ccomparecimentomesarioservico.cpp.o), and api::CDSImageField's pointer block and BatteryIconDataSource<Horizontal>'s
 # (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which 11116, 11106 and 11105 match) and
-# api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's, which holds
+# api::CTextFieldUpdate's (502 and 3058, 3058 from ctelasvota.cpp.o since units 441 and 443, and 5936, unit 138's,
+# which holds
 # vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316 and 12314
 # match from it; the roots' builder and sink that stood for 5936 went) and api::CImageFieldUpdate's (3059,
 # vota::AdicionaTelaQRCode, the same object, from which 12541 and 12535 match; the roots' builder and sink went) and
@@ -90,9 +91,9 @@
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
 #   <CCargoDSNomeSexoCandidato> 6528: 12637, 12636. <CRespostasDSNumero> 6652: 12625, 12622.
-#   CDataImage<CCandidaturasDSFoto> 4129: 12643, 12642. All but <CRespostasDSNumero> from unit 110's
-#   ctelasvota.cpp.o since 4185, 6528 and 4129 are written (unit 378; this unit's builders and sinks went, a link
-#   with them back moving no row)
+#   CDataImage<CCandidaturasDSFoto> 4129: 12643, 12642. All from unit 110's ctelasvota.cpp.o since 4185, 6528 and
+#   4129 (unit 378) and 6652 (unit 441) are written (this unit's builders and sinks went, a link with them back moving
+#   no row; SFonte's for <CRespostasDSNumero> last, a link without it moving no row)
 # Members a block brought with it:
 # - comum::CItemMenu's D2 (2937, a merge thunk over 1727, whose line now names the fifth item's symbol, one body with
 #   it) and vota::CItemVisualizarCandidatosVota's D0 (12251), in the new citensmenuvota.cpp.

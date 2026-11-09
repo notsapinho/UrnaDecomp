@@ -40,12 +40,13 @@
 # CDataText<CCandidaturasDSNumero>::GetText), so the roots' CandidaturasAtuais, which stood for 12641, went (a link
 # with it back moved no row); so did Suplentes, which called md::CCandidatura::GetSuplente (1389) for 12641, the last
 # of its five target callers (5746, 5806, 5807, 12272, 12641) to be in the link (a link with it back moved no row);
-# the roots stand in for 5806's caller 13101.
+# 5806's other caller, 13101 (unit 441's), is in the link too, and the roots' Sexos, which stood for it, went.
 # CCandidaturasDSNome's call operator (5807) is 5806's shape with its literal, "CCandidaturasDSNome", and the string at +12 of
 # the candidate, md::CDadosCandidato::GetNomeUrna, for the ESexo: written alike, after GetCandidatoAtual and before 5806's,
 # since the band puts 5807 ahead of 5806 (ld_index 3398 against 3399 in this link). The class gets the byte 5807 reads as
 # a member, with a constructor like CCandidaturasDSSexo's (chosen). Of its target callers 12649 matches (from
-# ctelasvota.cpp.o, where 4185 builds its block) and 6076 is not written; the roots stand in for it.
+# ctelasvota.cpp.o, where 4185 builds its block) and 6076 (unit 441's) matches too: the roots' NomesUrna, which stood
+# for 6076, went.
 #
 # comum::CCandidaturas's queries, in ccandidaturas.cpp after RecuperaVersaoPacote (no record; lines and names chosen):
 # GetCandidatosPartido (2272), ExisteCandidato (2271), GetCandidatos (2840) and Busca (1273), measured operand-only

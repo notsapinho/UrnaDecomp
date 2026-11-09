@@ -220,6 +220,45 @@ enum EUeVotaError {
     // the screen and the messages: no evidence names them
     EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_CARGO_INVALIDO = 9334,
     EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_SUPLENTES_INCOMPATIVEIS = 9335,
+    // the values are the codes the other screen builders of ctelasvota.cpp's anonymous namespace throw, each with
+    // vota::MensagemErroCargo's text, when the post is not of the screen's kind: adicionaBaseTelaCompletaCandidatoCom1
+    // (target fn 6671, records ctelasvota.cpp:853, :858) and adicionaBaseTelaCompletaCandidatoCom2 (fn 6660, :890 and
+    // :895) over "não é de candidato" and "com número de suplentes incompatível", adicionaBaseTelaCompletaConsulta (fn
+    // 6652, :942) and adicionaBaseTelaVotoBrancoConsulta (fn 6641, :993) over "não é de consulta", and
+    // adicionaBaseTelaCandidatoInexistente (fn 6605, :1075), adicionaBaseTelaCandidatoInapto (fn 6603, :1101) and
+    // adicionaBaseTelaVotoLegenda (fn 6602, :1126) over "não é de proporcional"; the names are chosen from the screens
+    // and the messages: no evidence names them
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_CARGO_INVALIDO = 9336,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_SUPLENTES_INCOMPATIVEIS = 9337,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_CARGO_INVALIDO = 9338,
+    EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_SUPLENTES_INCOMPATIVEIS = 9339,
+    EUE_VOTA_TELA_COMPLETA_CONSULTA_CARGO_INVALIDO = 9340,
+    EUE_VOTA_TELA_VOTO_BRANCO_CONSULTA_CARGO_INVALIDO = 9342,
+    EUE_VOTA_TELA_CANDIDATO_INEXISTENTE_CARGO_INVALIDO = 9345,
+    EUE_VOTA_TELA_CANDIDATO_INAPTO_CARGO_INVALIDO = 9346,
+    EUE_VOTA_TELA_VOTO_LEGENDA_CARGO_INVALIDO = 9347,
+    // the value is the code the text of a candidate who does not run (target fn 13101, record ctelasvota.cpp:294,
+    // reached by table slot 1099 from fn 6603) throws when comum::CCandidaturas' cursor is at the end; the name is
+    // chosen from its message, "Nao foi posicionado no candidato corretamente": no evidence names it
+    EUE_VOTA_CANDIDATO_NAO_POSICIONADO = 9333,
+    // the values are the codes vota::CTelasVota's recorded screens of the constructor throw, each with
+    // vota::MensagemErroCargo's text, when the post is not of the screen's kind: CriaTelaInputVazioProporcional
+    // (records ctelasvota.cpp:1392 and :1397) over "não é de candidato" and "número de dígitos inválido" (fewer than
+    // two digits), CriaTelaInputVazioMajoritarioCom0, Com1 and Com2 (:1413, :1428, :1444) over "não é de candidato",
+    // CriaTelaInputVazioConsulta (:1460) over "não é de consulta" and CriaTelaPartido (:1741) over "não é de
+    // proporcional", all held inlined in target fn 7787; the names are chosen from the screens and the messages: no
+    // evidence names them
+    EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_CARGO_INVALIDO = 9348,
+    EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_DIGITOS_INVALIDOS = 9349,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM0_CARGO_INVALIDO = 9350,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM1_CARGO_INVALIDO = 9351,
+    EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM2_CARGO_INVALIDO = 9352,
+    EUE_VOTA_TELA_INPUT_VAZIO_CONSULTA_CARGO_INVALIDO = 9353,
+    EUE_VOTA_TELA_PARTIDO_CARGO_INVALIDO = 9355,
+    // the value is the code vota::CTelasVota's constructor (record ctelasvota.cpp:3502, inlined into target fn 7787)
+    // throws with "Tipo de cargo nao identificado" for a post of no known kind; the name is chosen from the message and
+    // the class (EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO, 9310, is another thrower's code)
+    EUE_VOTA_TELAS_TIPO_CARGO_NAO_IDENTIFICADO = 9357,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

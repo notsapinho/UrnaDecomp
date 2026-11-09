@@ -88,10 +88,12 @@
 # beside the .cpp files the records name.
 #
 # The roots stand in for the GetInst callers not in the link (fns 12098 and CGeraBU::StartState 12110; 7160, unit 329's,
-# is), for api::CDateTime::operator- (5471), whose other target caller, fn 13012, is not written, for 12110's calls of
+# is), for 12110's calls of
 # ImprimeQuantidade (2248, two of its five) and GetDadosQRCodeCertificado (5634, with true) and its table slots of
 # 11259, 11260 and 11974; the stand-in for those calls (ChamaGeraBU) is address-taken, never called. The one for fn
-# 12039's call of 5634 (ChamaCertificado) went: unit 387 wrote 12039. The stand-ins for 3054's callers (fns 11804, 11809) and 5936's
+# 12039's call of 5634 (ChamaCertificado) went: unit 387 wrote 12039. So did the one for api::CDateTime::operator-
+# (5471) for fn 13012 (DiferencaDatas): unit 443 wrote 13012. The stand-ins for 3054's callers (fns 11804, 11809) and
+# 5936's
 # (11809, 11812), and the call of CGeraBU's GetInst for fn 7481, went: those callers are in the link. Their comments
 # name each. The roots object compiles at app/vota/'s flags with Boost's headers (it instantiates
 # cdatasourcesrelatorio.h's members, whose kept copies are TSE code; it compiled at APP_CXXFLAGS while its stand-ins

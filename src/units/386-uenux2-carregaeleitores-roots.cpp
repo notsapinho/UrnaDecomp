@@ -11,7 +11,8 @@ namespace {
 
 const void* volatile w386_sink;
 
-// Stands for fn 7787 (vota::CTelasVota's constructor), not in the link: its call of 6734, on CEstadoAudio::GetInst()'s
+// Stands for fn 7787 (its data load, before CTelasVota::CreateInst), not in the link: its call of 6734, on
+// CEstadoAudio::GetInst()'s
 // result, and its call of 5763, std::pair<const md::CEleitorIdentidade, CEleitorDetalhe>'s move constructor, into a
 // map node's value.
 __attribute__((noinline)) void TelasVota(int no, int registro)

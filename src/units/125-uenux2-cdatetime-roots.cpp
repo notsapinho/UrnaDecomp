@@ -3,9 +3,11 @@
 // yet (ledger/callgraph.tsv and the element section, read at the commit this unit starts from):
 // - the constructors from a string, CDate's (target fn 3649) and CDateTime's (fn 5475), each fill one slot of the table
 //   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`): their addresses are taken. 3649's direct callers 2765 and 5475
-//   and 5475's direct caller 2764 are this unit's. So are FormatCurrentDate's and FormatCurrentTime's (fns 5472, 5473):
-//   5343 (unit 165's, matched) and 7787 (not reconstructed) pass their slots 1103 and 1104 to
-//   api::CMTFormBuilderBase::AddTextField (fn 651) and to fn 3058, and their one direct caller, 11216, is unit 123's.
+//   and 5475's direct caller 2764 are this unit's. FormatCurrentDate's and FormatCurrentTime's (fns 5472, 5473) need
+//   no sink: the two target functions that pass their slots 1103 and 1104, 5343 (unit 165's, to
+//   api::CMTFormBuilderBase::AddTextField, fn 651) and 7787 (to fn 3058, in the constructor unit 443 writes, linked
+//   through unit 441's roots), are in the link, and the link without the two sinks moved no row; their one direct
+//   caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and a stand-in for 12110), CDate() (fn
 //   1382: its eight target callers, 1000, 1543, 5586, 5626, 5782, 7160, 11902 and 14478, are in the link, no
@@ -19,7 +21,8 @@
 //   2764: its only caller 7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: its
 //   nine target callers, 759, 11198 through comum::md::CHorarioVerao::Contem, 1543 and 11902 among them, are in the
 //   link, no stand-in), CDateTime's (fn 759, 15 target callers: two stand-ins), CTime::Format (fn 779, 13 target
-//   callers: 5473, and a stand-in for 7787) and CDate's operator- (fn 3648, callers 654, 11861, 11862: 654,
+//   callers: 5473 and 7787's two calls, which unit 443's constructor makes, no stand-in; HoraFormatada stood for
+//   7787's until then) and CDate's operator- (fn 3648, callers 654, 11861, 11862: 654,
 //   CTradutorFrase::Traduz, and 11861 and 11862, CPreZeresima's GetEstadoSemTeste and GetTela (unit 138), are in the
 //   link, no stand-in).
 // - the rest have two callers in the link already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
@@ -39,9 +42,6 @@ void w479_agora(void*) __asm__("_ZN3api9CDateTime3NowEv");
 int* w5475_texto(void*, const void*) __asm__("_ZN3api9CDateTimeC1ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w2764_timestamp(void*, const void*) __asm__("_ZN3api9CDateTime20ConvertFromTimestampERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w759_compara(const void*, const void*) __asm__("_ZNK3api9CDateTimessERKS0_");
-void w779_format(void*, const void*, const void*) __asm__("_ZNK3api5CTime6FormatERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w5472_data(void*, const void*) __asm__("_ZN3api9CDateTime17FormatCurrentDateERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w5473_hora(void*, const void*) __asm__("_ZN3api9CDateTime17FormatCurrentTimeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 }
 
 namespace {
@@ -78,11 +78,6 @@ __attribute__((noinline)) bool DataHoraPosterior(const void* dataHora, const voi
     return static_cast<signed char>(w759_compara(outra, dataHora)) < 0;
 }
 
-__attribute__((noinline)) void HoraFormatada(void* texto, const void* hora, const void* formato)
-{
-    w779_format(texto, hora, formato);
-}
-
 void* volatile w125_sink;
 
 struct SW125Roots {
@@ -90,15 +85,12 @@ struct SW125Roots {
     {
         w125_sink = reinterpret_cast<void*>(&w3649_data);
         w125_sink = reinterpret_cast<void*>(&w5475_texto);
-        w125_sink = reinterpret_cast<void*>(&w5472_data);
-        w125_sink = reinterpret_cast<void*>(&w5473_hora);
         w125_sink = reinterpret_cast<void*>(&DataFormatada);
         w125_sink = reinterpret_cast<void*>(&DataHoraAgora);
         w125_sink = reinterpret_cast<void*>(&DuasDataHorasAgora);
         w125_sink = reinterpret_cast<void*>(&DoisTimestamps);
         w125_sink = reinterpret_cast<void*>(&DataHoraAnterior);
         w125_sink = reinterpret_cast<void*>(&DataHoraPosterior);
-        w125_sink = reinterpret_cast<void*>(&HoraFormatada);
     }
 } w125_roots;
 

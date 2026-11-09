@@ -14,9 +14,11 @@
 // w100_todos has no call for api::IInputMT (383) or comum::IControladorRegistraMesarios (356): every target caller of the
 // two is in the link (10590 was 383's last, and 5382, 6008 and 10316 were 356's), and a link without their calls moves
 // no row (the fragment). Nor for api::IPower (instance 862, has 4867) or ecourna::api::security::IRng (2030, 5431):
-// every target caller of the four is in the link. Where only one half still waits, it makes that half's calls alone:
-// instance's (w100_instancia) for api::IScreen, api::IUrna, api::IResource and comum::IInterfaceSavd, whose has<T>
-// (3387, 4871, 4872, 5434) have their target callers in the link; has<T>'s (w100_tem) for comum::CCalculaCV,
+// every target caller of the four is in the link. Nor for api::IScreen (instance 512, has 3387): the last target
+// caller of 512 not in the link, 7787, has its two calls made by unit 443's constructor (linked through unit 441's
+// roots), and the link without w100_instancia<api::IScreen> moved no row. Where only one half still waits, it makes
+// that half's calls alone: instance's (w100_instancia) for api::IUrna, api::IResource and comum::IInterfaceSavd, whose
+// has<T> (4871, 4872, 5434) have their target callers in the link; has<T>'s (w100_tem) for comum::CCalculaCV,
 // api::IAjusteDataHora and the two IGenericFactory, whose instance (1282, 3204, 4356, 3164) have theirs, and for
 // api::CEscritorLog, whose has<T> (3391) stands for 14478 (__wasm_call_ctors, the static initializer of a TU not
 // written; its other callers, 8302 and 11157, are in the link). Its instance (11157) has no call here: its one
@@ -104,7 +106,7 @@ inline int w100_usa_uma()
 
 __attribute__((noinline)) int w100_todos()
 {
-    return w100_instancia<api::IScreen>() + w100_usa<api::IBeep>() + w100_instancia<api::IUrna>() +
+    return w100_usa<api::IBeep>() + w100_instancia<api::IUrna>() +
         w100_instancia<api::IResource>() + w100_tem<comum::CCalculaCV>() + w100_usa_uma<api::IPaperRelatorios>() +
         w100_usa<comum::IEventosLog>() + w100_tem<api::IAjusteDataHora>() + w100_tem<api::CEscritorLog>() +
         w100_usa<comum::IInterfaceInit>() + w100_tem<api::IGenericFactory<api::ISemaphore>>() +

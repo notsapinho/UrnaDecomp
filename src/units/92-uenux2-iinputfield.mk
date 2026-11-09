@@ -12,7 +12,8 @@
 #   4917 enumerator of EUeGuiError), FillCell 5536, DrawChar 5537, Rect 3677, Move 3676 and DrawFrame 2779, and its
 #   constructor 1385, whose record (cframedtext.cpp 28:24) is the default argument of CPolySingleton<IScreen>::instance():
 #   the local `IScreen& monitor` gives that column, and its name, the constructor's other lines and the vertical gap
-#   written in place (Espaco's form over size / 10) are chosen. The roots give 1385 two callers for its eight in the target.
+#   written in place (Espaco's form over size / 10) are chosen. Its eight target callers are in the link, 7787's two
+#   through unit 443's constructor, so the roots no longer give it one.
 #   From the roots' control blocks: __shared_ptr_emplace<T>'s D2 and D0 for CInputFieldControl<IScreen> (11072, 11071),
 #   <IScreenMT> (11018, 11017), CMaskedTextField<CFramedText> (12618, 12613) and <CGrayedFramedText> (12735, 12727);
 #   __shared_ptr_pointer's __get_deleter for CInputField<CFramedText> (12350), CMaskedTextField<CFramedText> (12340),
@@ -24,6 +25,7 @@
 #   IInputField<IScreen>'s constructor, whose copy there stores the __func vtable; and 11019 and 11020 to 11023 from
 #   api/gui/cmtformbuilder.cpp's, whose AddInputControl (fn 395) builds that block and whose copy of
 #   IInputField<IScreenMT>'s constructor (fn 3673) stores the __func vtable (src/units/31-uenux2-cformbuilder.mk).
+#   12340 comes from ctelasvota.cpp's object too since unit 443, whose AdicionaNumeroPartido builds that block.
 #   The two CMaskedTextField blocks' members (12618, 12613, 12735, 12727) and CMaskedTextField's D2s, D0s, Draws,
 #   GetTypeName, Rect and Move (12604, 12719, 12595, 12713, 12593, 12708, 6507, 6505, 6504) come from ctelasvota.cpp's
 #   object now, whose vota::AdicionaCampoNumero<MASK> (fns 6624's inlined copy and 3060, unit 378) builds both blocks;
@@ -101,8 +103,9 @@
 #   the same 32 as at bbf27ac1's roots (224 of 256 equal); the link keeps none of the 32 from this object.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
-# The control-block roots are builders the link drops, with the block's vtable kept in the sink: the shape of unit 83's
-# roots file. They reach no member that has no body in the link.
+# The control-block roots that were here (a builder the link drops, the block's vtable kept in a sink: the shape of unit
+# 83's roots file) went with unit 443, and so did the stand-ins for 1385 and 2024: the link without them moved no row
+# (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed).
 IINPUTFIELD_SRCS := src/api/gui/cframedtext.cpp
 UENUX2_SRCS += $(IINPUTFIELD_SRCS)
 # $(UENUX2_HDRS) is still empty when the fragments are read, so the companion rules name the directories they read.

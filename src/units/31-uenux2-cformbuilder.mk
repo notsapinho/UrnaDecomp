@@ -12,7 +12,8 @@
 #                      3678 and 2243 (AddLabeledKey, over a key's name and over a key) and 2782 (AddTextFieldMultiLine), below;
 #                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
 #                      a template of cformbuilder.h, which says why; the scan's content pass found it, and 502's
-#                      call names it since 502 matches); 502 (AddStatusHeader, below), with AddDSImageField (no index:
+#                      call names it since 502 matches; it links from ctelasvota.cpp.o since units 441 and 443); 502
+#                      (AddStatusHeader, below), with AddDSImageField (no index:
 #                      binaryen inlines it into 502) and the members of its lambda's CDataText: 11107 (GetText), 11109
 #                      and 11108 (the control block's D2 and D0)
 #   CMTFormBuilderBase 180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728
@@ -176,26 +177,29 @@
 # target's wasm type has none), are chosen. It matches since api::ITimerScheduler::CreateTimer takes its callback by
 # reference (api/util/itimerscheduler.h): with the callback by value it was 30 over 308 rows, 24 of them operand-only,
 # the one difference the place of the 500 ms interval's store, which the target makes before it builds the
-# std::function (`pnpm wasm score` against our fn). TelaA and TelaB give it its two call sites.
+# std::function (`pnpm wasm score` against our fn). Its target callers are all in the link (7787's call made by unit
+# 443's constructor), so the roots' calls of it went.
 #
 # 5546, AddTextRectField, matches (the scan; step 8 names it by the srcloc-anchor of CTextRectField's record, whose
 # constructor, unit 90's, binaryen inlines into it): AddTextField's (202) shape over an api::CTextRectField, the text a
 # CFixedText, centred (the 2 at +16 of its block). The font is a parameter that 7787, its one target caller, passes as
 # one constant at both calls, the SFont {35, 0} @475016: binaryen folded it, and the target's 5546 loads it at that
-# address. The roots' TextoRetangulo passes a constant of its own with those bytes twice, so the fold happens here too,
-# and the scan reads the address as one of the places of those bytes in the target (the row's readings list `address
-# same-content`), not as the stand-in's object. Its place: band 1 links its block's members (11118, 11117) between
-# AddTextField's CFixedText block's (11120, 11119) and AddBlinkingTextField's (11113, 11112), and the target's data
-# hold the block's vtable @1578336 between theirs (@1578296, @1578456), so it follows AddTextField. Band 2 puts 5546
-# after GetForm (5550), which this file has after the adders by choice (above): that pair stays inverted, as 5547's
-# with 5550 is; after GetForm, its block's two members would read inverted against AddBlinkingTextField's two.
+# address. Unit 443's constructor makes both calls with CriaTelaNumeroCopiasErrado's FONTE_TEXTO_CONFIRMA_CORRIGE, so
+# the fold happens here too (the roots' TextoRetangulo, which stood for them with a {35, 0} of its own, went: beside the
+# constructor's calls it kept the font a parameter, and 5546 read `no-candidate`). Its place: band 1 links its block's
+# members (11118, 11117) between AddTextField's CFixedText block's (11120, 11119) and AddBlinkingTextField's (11113,
+# 11112), and the target's data hold the block's vtable @1578336 between theirs (@1578296, @1578456), so it follows
+# AddTextField. Band 2 puts 5546 after GetForm (5550), which this file has after the adders by choice (above): that pair
+# stays inverted, as 5547's with 5550 is; after GetForm, its block's two members would read inverted against
+# AddBlinkingTextField's two.
 #
 # 5545, AddProgressBar: an api::CProgressBar (unit 40's constructor, which binaryen inlines into it) over RectEntre's
 # rectangle, returned as the bar (cformbuilder.h). Its font is a parameter both target callers, 7787 and 12098, pass as
 # one constant, the SFont {0, 0} @475024, which binaryen folded: 5545 reads its size at that address. That constant is,
 # by unit 48's reading of 12098's frames (its fragment), the font ctelasvota.cpp's progress screen passes
 # (vota::TelaProgressoEncerramento, which 12098 holds inlined), named vota::FONTE_BARRA_PROGRESSO by choice and external
-# by a chosen linkage, the user's decision (ctelasvota.h): the roots' BarraProgresso passes it in both calls. Measured
+# by a chosen linkage, the user's decision (ctelasvota.h): unit 443's constructor passes it in 7787's call, the roots'
+# BarraProgresso in its call for 12098. Measured
 # in a link that also reaches the screen (the plain link and an object whose caller of the screen a sink keeps): our
 # AddProgressBar keeps the font as a seventh parameter while the roots pass a constant of their own with those bytes,
 # and has the target's six with this one. Eight zero bytes are found too often in the target for the scan to place them
@@ -253,8 +257,9 @@
 #   cmtformbuilder.cpp.o. Each of the 38 involves 12301-12323, the class members of CDataText<std::function> and of
 #   CDataTextFmt of a function, which can be another object's copies, a reading, and band 2's two pairs against 6404
 #   stay inverted with them (counted while 6404 linked from this object). Counted again with AddDSImageField, over the
-#   34 matched rows of band 1 that linked from cformbuilder.cpp.o then (names.tsv's object; 12317, 12323 and 12784 link
-#   from cmtformbuilder.cpp.o since unit 161's list compiles it first) in that object's function list: 127 of 561, each
+#   34 matched rows of band 1 that linked from cformbuilder.cpp.o then (names.tsv's object; 12317, 12323 and 12784
+#   linked from cmtformbuilder.cpp.o since unit 161's list compiles it first, and 12317, 12323, 12328 and 12335 link
+#   from ctelasvota.cpp.o since units 441 and 443) in that object's function list: 127 of 561, each
 #   with one of GetForm's blocks (11127, 11137, 11138), which the getters after the adders put there by choice, or one
 #   of 12317 to 12335; at aa31cc5a it was 129 (that object's function list), 9 of them 11116's against 11105 to 11113
 #   (502 its first mention then), which read in order now, where 11116, above GetForm, reads inverted against GetForm's
@@ -372,7 +377,7 @@ CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cpaperformbuilder.
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # 31-uenux2-cformbuilder-roots.cpp gives each member whose target callers are not all in the link the calls it has in
 # the target, and says which they stand for (502, AddStatusHeader, here, calls 3058 and 202, and 2243 calls 3678, and
-# its TextoRetangulo and BarraProgresso pass the fonts the target folds into 5546 and 5545); 728,
+# its BarraProgresso passes the font the target folds into 5545); 728,
 # 941, 5409 and 5419 have every target caller in the link and no call there. It includes ctelasvota.h for
 # vota::FONTE_BARRA_PROGRESSO, so its rule names every uenux2 and ecourna header, computed here as a fragment must
 # ($(UENUX2_HDRS) is empty when the fragments are read)
