@@ -134,7 +134,8 @@
 # Added since: fn 5471, CDateTime::operator-(const CDateTime &), ConvertToLocalTime of this one minus the other's,
 # which clang inlines twice over one struct tm (the target fills its frame's tm from each in turn and calls timegm after each,
 # fn 2961). Its callers are two text callbacks, vota::testeteclado::CEsperaRetestar's (fn 11826, unit 138) and fn
-# 13012, not written, for which unit 220's roots stand in. 10 over 113 rows, operand-only, before step 8, which named
+# 13012 (unit 443's TextoAlertaDesligamento), both in the link (unit 220's roots stood for 13012 until then). 10 over
+# 113 rows, operand-only, before step 8, which named
 # it by pair-addr; matched at step 9. Its place, after FormatCurrentDate and operator+ (line 133, in the blank run
 # before :203), follows the band (cdatetime.h); the name, const and time_t are chosen.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

@@ -1,6 +1,6 @@
 // Roots: keep the members of comum::CAppInfo, CFotos and CPartidos in the skeleton link the way the target keeps them. Their
-// users are not reconstructed yet. Fns 185, 291, 261, 1942 and 11499 hold table slots (33, 35, 50, 1567 and 1100, in
-// the target's elem segment), so each has its own address taken: that is the reference the target has, and a table
+// users are not reconstructed yet. Fns 185, 291, 261 and 1942 hold table slots (33, 35, 50 and 1567, in the target's
+// elem segment), so each has its own address taken: that is the reference the target has, and a table
 // entry keeps a body out of line whatever its callers. It also keeps a parameter, which is why fn 261 has one although
 // all 86 of its direct calls pass 51. The others have direct callers and no slot (ledger/callgraph.tsv), so a noinline
 // stand-in gives each two call sites, counting the reconstructed ones, and binaryen keeps its body out of line. Each
@@ -18,8 +18,6 @@ void w3788(int, int, int) __asm__("_ZNK5comum8CAppInfo15GetCodigosCargaENS_10EUr
 int w2841(int, int) __asm__("_ZNK5comum8CAppInfo7TemVotaENS_10EUrnaTurnoE");
 int w819() __asm__("_ZN5comum9CPartidos7GetInstEv");
 int w2819() __asm__("_ZN5comum6CFotos7GetInstEv");
-void w11499(void*, const void*)
-    __asm__("_ZN5comum21NumeroPartidoCorrenteERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 }
 
 namespace {
@@ -58,6 +56,9 @@ __attribute__((noinline)) int Fotos() { return 1 - 9 * w2819(); }
 // 12641 went: 12641 is in the link (unit 378), as the one for its two calls of fn 3755 did.
 // The stand-in for SalvaVotaInterno's and SalvaVotaExterno's (fns 3790, 3789) caller 7174 went: it is linked (unit
 // 241), with 491 and 10590 (units 205 and 283).
+// The sink of comum::NumeroPartidoCorrente's address (fn 11499, table slot 1100) went: 7787 stores the slot in a
+// CDataTextFmt in vota::AdicionaNumeroPartido, which unit 443 writes (linked through unit 441's roots), and the link
+// without the sink moved no row (12110's i32.const 1100 is the size it passes to CGeradorBUQRCode::Gera, 5604).
 
 struct SCAppInfoRoots {
     SCAppInfoRoots()
@@ -71,9 +72,6 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&Votos);
         cappinfo_sink = reinterpret_cast<const void*>(&Partidos);
         cappinfo_sink = reinterpret_cast<const void*>(&Fotos);
-        // comum::NumeroPartidoCorrente (11499, elem[1100]: 7787, which stores the slot in a CDataTextFmt; 12110's
-        // i32.const 1100 is the size it passes to CGeradorBUQRCode::Gera, 5604, not the slot).
-        cappinfo_sink = reinterpret_cast<const void*>(&w11499);
     }
 } cappinfo_roots;
 

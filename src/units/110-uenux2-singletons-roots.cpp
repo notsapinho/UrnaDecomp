@@ -5,7 +5,9 @@
 //                       1073, 1926, 2812 and 2817 went: every target caller of each is in the link with the call, and
 //                       the link without those calls moved no row)
 //   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 7787 for 5671, 5730, 5734,
-//                       5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
+//                       5773, 5792 and ~CCargos 5805, and each goes when that caller lands (its call of ~CTelasVota
+//                       6548 went: 7787 calls it only in CreateInst, which unit 443 writes, linked through unit 441's
+//                       roots, and the link without it moved no row);
 //                       ~CProcessoEleitoral 2830: 7787 (2787 and 5598 are in the link);
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
@@ -20,8 +22,6 @@
 //                       them moved no row
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fn 7787 (6734, fragment 386's, is in the link)
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fn 12110 (652, 2881 and 11242 are in the link)
-//   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
-//                       its address is taken
 //   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fn 7787 (6734 is in the link)
 //   MontaListas         comum::MontaCaminhos 1936: fn 7787 (6734 and 5772, GetEleitoresEstaticos, are in the link)
 //   LeEstaticos         CEleitores::GetEleitoresEstaticos 5772: fn 7787 (6734 is in the link)
@@ -33,7 +33,8 @@
 // LocalizaEleitores, for CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264), went: its
 // last target caller not in the link, fn 3616 (unit 319's), is. HabilitaEleitores, for
 // CEleitores::MarcaEleitorFoiHabilitado (fn 2825), went too: its one target caller, fn 10425 (unit 142's), is in the
-// link.
+// link. The sink of comum::RespostaCorrente's address (fn 11479, which the target reaches only by table slot 1096) went
+// once fn 6652 (unit 441's), which passes that slot, was in the link.
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -59,11 +60,9 @@ int d5734(int) __asm__("_ZN5comum8CRdvVotaD1Ev");
 int d5773(int) __asm__("_ZN5comum10CEleitoresD1Ev");
 int d5792(int) __asm__("_ZN5comum20CConfiguracaoEleicaoD1Ev");
 int d5805(int) __asm__("_ZN5comum7CCargosD1Ev");
-int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
 
 void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
 void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
-void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
 void w5772(int, int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresEstaticosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
@@ -85,7 +84,6 @@ __attribute__((noinline)) void DestroiTodos(int p)
     d5734(p + 12);
     d5773(p + 16);
     d5792(p + 20);
-    d6548(p + 24);
     d2830(p + 28);
     d2267(p + 32);
     d267(p + 36);
@@ -153,7 +151,6 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w407);
         singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
-        singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
         singletons_sink = reinterpret_cast<const void*>(&MontaListas);
         singletons_sink = reinterpret_cast<const void*>(&LeEstaticos);
@@ -164,42 +161,7 @@ struct SSingletonsRoots {
 
 } // namespace
 
-// The screen of vota::CVerificaHorarioZeresima and what it builds, in ctelasvota.cpp:
-// CTelasVota::CriaTelaAntesHorarioZeresima (fn 6595) has two direct callers in the target, 11869 (unit 138's, in the
-// link) and 7787; AdicionaTelaQRCode (fn 3059) has three, 6592, 6595 (in the link) and 7787; AdicionaCabecalhoLocal (fn
-// 4160) has two, 3059 (in the link) and 7787. The stand-in for 6592 (TelaConfirmaZeresima) went: 6592 is in the link
-// (src/units/378-uenux2-ctelasvota-criatela.mk).
-//   TelasConstrutor     stands for fn 7787 (CTelasVota's constructor): one call of each of the three; it goes when
-//                       7787 lands
-// binaryen inlines a function with one call site, and folds a parameter every caller passes as the same constant, so
-// the origins differ: 6592 passes 2, 6595 and the stand-in 0. The functions are declared through asm labels with the
-// objects' signatures (the screen returns its std::shared_ptr through the result's address); the bodies differ from
-// each other and from every target function.
-extern "C" {
-void w6595(void*) __asm__("_ZN4vota10CTelasVota28CriaTelaAntesHorarioZeresimaEv");
-void w3059(void*, const void*, const void*, const void*, int) __asm__(
-    "_ZN4vota18AdicionaTelaQRCodeERN3api12CFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEE"
-    "ESB_SB_N5comum9CQRCodeDS7EOrigemE");
-void w4160(void*) __asm__("_ZN4vota22AdicionaCabecalhoLocalERN3api12CFormBuilderE");
-}
-
-namespace {
-
-__attribute__((noinline)) int TelasConstrutor(char* tela, char* builder, const char* textos)
-{
-    w6595(tela);
-    w3059(builder, textos, textos + 12, textos + 24, 0);
-    w4160(builder + 12);
-    return tela[3] + builder[5];
-}
-
-const void* volatile zeresima_sink;
-
-struct SZeresimaRoots {
-    SZeresimaRoots()
-    {
-        zeresima_sink = reinterpret_cast<const void*>(&TelasConstrutor);
-    }
-} zeresima_roots;
-
-} // namespace
+// The screen of vota::CVerificaHorarioZeresima and what it builds, in ctelasvota.cpp: CriaTelaAntesHorarioZeresima
+// (fn 6595), AdicionaTelaQRCode (fn 3059) and AdicionaCabecalhoLocal (fn 4160) need no stand-in. Their target callers,
+// 11869 (unit 138's), 6592, 6595, 3059 and 7787, are in the link, 7787's calls made by unit 443's constructor (linked
+// through unit 441's roots): TelasConstrutor, which stood for 7787, went, the link without it moving no row.

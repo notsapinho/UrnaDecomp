@@ -1,7 +1,8 @@
 # uenux2 api::CSynchronizer in src/uenux2/src/api/util/csynchronizer.cpp and api::KeyName(char) in
 # src/uenux2/src/api/hwil/iinput.h, the files their std::source_location records name:
 #   600   CSynchronizer::GetInst, holding CreateInst inlined   record at csynchronizer.cpp line 37, col 15 (7030)
-#   5729  CSynchronizer's constructor, out of line; 10867, the destructor of its static instance
+#   5729  CSynchronizer's constructor, out of line (one body with comum::CRespostasDSNumero's, whose name its match
+#         line takes: unit 441's fragment); 10867, the destructor of its static instance
 #   744   KeyName, an inline function of the header             record at iinput.h line 61, col 19 (5169)
 #   620   CSynchronizer::Sync, no record; GetOpenFlag, no target index (inlined into CSystem::CopyFile, unit 32)
 # with the header api/util/csynchronizer.h, the 7030 enumerator of api/util/eueutilerror.h and the 5169 enumerator of

@@ -6,15 +6,16 @@
 // - SBloco<U, T>::Constroi takes the T* it never gets and returns the std::shared_ptr<U>, for a
 //   __shared_ptr_pointer<T*, ...>. It uses no constructor of T, so a head of T is enough. U is the first template
 //   argument of the block's __shared_ptr_default_delete in the RTTI name.
-// - the w102_ functions and SFonte hold the std::make_shared<T> of a __shared_ptr_emplace<T>. They need T's constructor
+// - the w102_ functions hold the std::make_shared<T> of a __shared_ptr_emplace<T>. They need T's constructor
 //   declared, not defined, and the block does not depend on its parameters: each is what the class's header declares.
 // clang emits the block in this object with the builder. The target reaches its members only through its vtable, whose
 // address the builder stores, so the sink below is the reference the target has. A block whose vptr a function of the
-// link stores needs neither: its builder and sink went (the fragment lists them).
+// link stores needs neither: its builder and sink went (the fragment lists them; the last, SFonte's
+// CDataText<comum::CRespostasDSNumero>, when its builder 6652, unit 441's, came into the link).
 //
 // Every block's kind was checked against the target's own vptr store: emplace where the builder calls make_shared,
 // pointer where it allocates the T and the block apart. No stand-in stays in the link
-// (`/usr/bin/grep -cE 'w102_|6SBloco|6SFonte' build/out/wasm-map/vota_web/names.tsv` prints 0).
+// (`/usr/bin/grep -cE 'w102_|6SBloco' build/out/wasm-map/vota_web/names.tsv` prints 0).
 //
 // The fragment's name sorts between 10- and 11-, ahead of most units, so this object is the first definition of what it
 // and a later companion both instantiate: comum::IResultado's D2 (fn 12090) came from here, not from unit 60's pending
@@ -51,7 +52,6 @@
 extern "C" {
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cdatatext_crespostasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum18CRespostasDSNumeroEEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN4vota22CProgressoEncerramentoENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
@@ -124,14 +124,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::Logger> w102_logger()
 {
     return std::make_shared<api::Logger>();
 }
-template <typename TCampo, typename TFonte>
-struct SFonte {
-    __attribute__((optnone, noinline)) static std::shared_ptr<TCampo> Constroi(const TFonte& fonte)
-    {
-        return std::make_shared<TCampo>(fonte);
-    }
-};
-template struct SFonte<api::CDataText<comum::CRespostasDSNumero>, comum::CRespostasDSNumero>;
 
 namespace {
 
@@ -142,7 +134,6 @@ struct SW102Roots {
     {
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;
-        w102_sink = w102_vt_cdatatext_crespostasdsnumero;
         w102_sink = w102_vt_cprogressoencerramento;
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;

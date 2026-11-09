@@ -1,11 +1,8 @@
 // Roots: keep the unit's members in the skeleton link the way the target reaches them. Compiled with APP_CXXFLAGS, like the
 // other stand-ins, and it emits none of them: each stand-in calls members its unit's objects define.
 //
-// The adders: the target calls each directly from the screens that build a form. Each pair of stand-ins stands for
-// those not in the link (TelaA's and TelaB's lists still name 1255, comum::TelaRegistroMesarios, unit 247, 2376,
-// vota::TelaTextoConfirmaCorrige, ctelasvota.cpp, 2291, vota::CRetirarMR::GetInst, unit 156, 12055,
-// CMostraQRCodeBU::StartState, unit 37, and 12065, CImprimirBUOutrasObrigatorias::StartState, unit 104, which are),
-// and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
+// The adders: the target calls each directly from the screens that build a form. The stand-ins stand for those not in
+// the link, and each builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
 // vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's
 // callers vary varies here, or binaryen would fold it. A call goes when every target caller of its adder is in the
 // link (src/units/README.md "Companion files"):
@@ -21,28 +18,22 @@
 //                     (AddTextField over a CTextSource and over a std::function, with no text), 941 (AddBuzz) and 728
 //                     (AddClock) went: every target caller of the four is in the link (5409's 1150 and 2734, 5419's
 //                     1905, 941's 13 and 728's 16), and the link without those calls moved no row (steps 6 to 10)
-//   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 2244, 2245 and 426
-//                     (their calls of 3680, AddRect, went: its three target callers, 1102, 1190 and 3064, unit 378's,
-//                     are in the link, and the link without those calls moved no row; their calls of 5547, AddImage,
-//                     went: its two target callers, 12040, unit 387's, and 12055, unit 37's, are in the link with the
-//                     call, and the link without those calls moved no row),
-//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265 (3064,
-//                     1190, 6608, 6624 and 6646, unit 378's, are in the link, and 3064 for the adders above); 1255,
-//                     2291, 2376, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040, 12055, 12065 and
-//                     12098, the callers of 502 (AddStatusHeader), whose fields vary (2380, 3059 and 6599, unit 110's,
-//                     11812, unit 217's, 11881, 11884, 11888 and 11892, unit 104's, and 12040, unit 387's, are in the
-//                     link); TelaB for
-//                     7787, the
-//                     caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
-//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243
-//                     (AddLabeledKey over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the
-//                     alignments 0 and 2 (6569, unit 110's, and 12055 are in the link); 6569 is in the link for the
-//                     other adders too
-//   RotuloTecla       7787, the other caller of 3678 (AddLabeledKey over the key's name) beside 2243 and 653 (in the link,
-//                     unit 120, which holds AddKeyLabel's code inlined): its third call site. It leaves the colours at
-//                     their defaults
-//   TextoMultiLinha   7787, the caller of 2782 (AddTextFieldMultiLine) not in the link (1588, unit 110's, 3074, unit
-//                     378's, and 12040, unit 387's, are): one call; the one for 12040 went
+//   TelaB             12098, the last target caller not in the link of 202 (AddTextField over a text, with colours) and
+//                     of 502 (AddStatusHeader): one call of each, passing what 12098 passes (the alignment 2 and the
+//                     colours 2 and 1; the fields 5). TelaA went, and with it TelaB's calls of 3068, 1191, 426, 2245,
+//                     1265, 3058 and 2243: every target caller of those adders is in the link, 7787's calls made by
+//                     unit 443's constructor (through unit 441's roots), and the link without them moved no row.
+//                     Its call of 2244 (AddLine) went too: 2244's target callers (653, 3054, 7787, 12055 and 12065)
+//                     are all in the link, so it stood for no caller the target shows (the 11157 rule, "Finding the
+//                     idle ones"), though it cost four matches: each caller passes the colour 3, binaryen now folds it
+//                     into 2244, which the target keeps as a parameter, and 2244, 653, 3054 and 12065 left `match`
+//                     (and with 12065 the votes that named CImprimirBJust's two statics, so its two static array
+//                     destructors, 12069 and 12070, left too: six in all, which the user accepted)
+//                     Their calls of 3680 (AddRect: 1102, 1190 and 3064, unit 378's) and 5547 (AddImage: 12040, unit
+//                     387's, and 12055, unit 37's) went before, for the same reason
+//   RotuloTecla and TextoMultiLinha, for 7787's calls of 3678 (AddLabeledKey over the key's name) and 2782
+//                     (AddTextFieldMultiLine), went: unit 443's constructor makes them, and the link without the two
+//                     moved no row
 //   RelatorioA        the caller of 193, 604, 198 and 1264 not in the link, 12110, one call of each, and 12110 for
 //                     2775, two (5591, unit 296's, 5579, 5580 and 11946, fragment 325's, 2248, unit 220's, and 12105,
 //                     fragment 372's, which call them too, are in the link: the calls that stood for 12105 went). Its
@@ -80,52 +71,12 @@ __attribute__((noinline)) int TelaMTB(const std::string& texto, const api::SPoin
     return vezes + 1;
 }
 
-__attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte,
-                                    api::ETextAlignment alinhamento, api::TColor corTexto, api::TColor corFundo,
-                                    std::string (*origem)())
+__attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte)
 {
     api::CFormBuilder form;
-    form.AddDoubleLineField(origem, posicao, posicao, posicao.x, fonte, corFundo);
-    form.AddTextField(origem, posicao, fonte, alinhamento);
-    api::CFormBuilder::SharedField campo = form.AddTextField(texto, posicao, fonte, alinhamento, corTexto, corFundo);
-    form.AddField(campo);
-    form.AddLine(posicao, posicao, corTexto);
-    form.AddFill(posicao, posicao, corTexto);
-    form.AddBlinkingTextField(texto, posicao, fonte, alinhamento);
-    form.AddStatusHeader(static_cast<api::CFormBuilder::StatusHeaderFields>(posicao.y));
-    form.AddLabeledKey('B', texto, alinhamento);
-    return posicao.x;
-}
-
-__attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint& posicao, const api::SFont& fonte,
-                                    const api::CFormBuilder::SharedField& campo, std::string (*origem)())
-{
-    api::CFormBuilder form;
-    form.AddField(campo);
-    form.AddTextField(origem, posicao, fonte, api::ALINHAMENTO_CENTRO);
-    form.AddDoubleLineField(origem, posicao, api::SPoint{posicao.y, posicao.x}, posicao.y, fonte, static_cast<api::TColor>(1));
-    form.AddFill(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(1));
-    form.AddLine(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(2));
-    form.AddBlinkingTextField(texto, api::SPoint{posicao.y, posicao.x}, fonte, api::ALINHAMENTO_DIREITA);
     form.AddTextField(texto, posicao, fonte, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-    form.AddTextFieldUpdate(&api::CDateTime::FormatCurrentDate, api::SPoint{posicao.y, posicao.x},
-                            std::chrono::milliseconds(1000), fonte, texto, api::ALINHAMENTO_CENTRO);
     form.AddStatusHeader(5);
-    form.AddLabeledKey('D', texto, api::ALINHAMENTO_CENTRO);
     return posicao.y;
-}
-
-__attribute__((noinline)) int RotuloTecla(api::CFormBuilder& form, const std::string& nome, const std::string& rotulo,
-                                          api::ETextAlignment alinhamento)
-{
-    form.AddLabeledKey(nome, rotulo, alinhamento);
-    return static_cast<int>(alinhamento) + 1;
-}
-
-__attribute__((noinline)) int TextoMultiLinha(api::CFormBuilder& form, const std::string& texto, const api::SRect& rect,
-                                              const api::SFont& fonte, api::ETextAlignment alinhamento)
-{
-    return form.AddTextFieldMultiLine(texto, rect, fonte, alinhamento).use_count();
 }
 
 __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std::string& texto, std::string (*fonte)(), size_t linhas,
@@ -144,28 +95,19 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 // The adders over a font every target caller passes, which binaryen's dead-argument elimination folded into the
 // target's bodies: 5546 (AddTextRectField) loads the SFont {35, 0} at @475016, and 5545 (AddProgressBar) the size of
 // the SFont {0, 0} at @475024, both among the fonts of vota/eleitor/comum/ctelasvota.cpp's data (unit 110's fragment).
-// Each stand-in passes one font in each of its calls, so the fold happens here too, and varies what the target's
-// callers vary. TextoRetangulo's is a constant of this file with that value, no target object: 5546 matches through
-// the target's places of its font's bytes. BarraProgresso's is vota::FONTE_BARRA_PROGRESSO, the object ctelasvota.cpp's
-// progress screen passes, external by a chosen linkage (the user's decision; ctelasvota.h), so that the fold still
-// happens beside the screen's call (src/units/31-uenux2-cformbuilder.mk).
-//   TextoRetangulo    7787's two calls of 5546, its only caller (other texts and rectangles)
-//   BarraProgresso    7787's call of 5545 (the limit 4, an empty text) and 12098's (30, "%p"), its only two callers
-const api::SFont FONTE_TEXTO_RETANGULO{35, 0};
-
-__attribute__((noinline)) int TextoRetangulo(api::CFormBuilder& form, const std::string& texto, const api::SRect& rect)
-{
-    form.AddTextRectField(texto, rect, FONTE_TEXTO_RETANGULO);
-    return form.AddTextRectField(std::string(), api::SRect{rect.top, rect.left, rect.bottom, rect.right}, FONTE_TEXTO_RETANGULO)
-        .use_count();
-}
-
+// The stand-in passes one font in each of its calls, so the fold happens here too, and varies what the target's callers
+// vary. BarraProgresso's is vota::FONTE_BARRA_PROGRESSO, the object ctelasvota.cpp's progress screen passes, external
+// by a chosen linkage (the user's decision; ctelasvota.h), so that the fold still happens beside the screen's call
+// (src/units/31-uenux2-cformbuilder.mk). TextoRetangulo, which stood for 7787's two calls of 5546 with a {35, 0} of its
+// own, went: unit 443's constructor makes those calls (CriaTelaNumeroCopiasErrado's FONTE_TEXTO_CONFIRMA_CORRIGE),
+// and beside them its second constant kept the font a parameter.
+//   BarraProgresso    12098's call of 5545 (30, "%p"), its other target caller beside 7787, whose call (the limit 4,
+//                     an empty text) unit 443's constructor makes: the stand-in's call for 7787 went, the link without
+//                     it moving no row
 __attribute__((noinline)) int BarraProgresso(api::CFormBuilder& form, const std::string& texto, const api::SPoint& canto,
                                              const api::SPoint& oposto, uedword limite)
 {
-    const auto barra = form.AddProgressBar(limite, canto, oposto, vota::FONTE_BARRA_PROGRESSO, std::string());
-    return barra.use_count() +
-           form.AddProgressBar(limite + 26, oposto, canto, vota::FONTE_BARRA_PROGRESSO, texto).use_count();
+    return form.AddProgressBar(limite + 26, oposto, canto, vota::FONTE_BARRA_PROGRESSO, texto).use_count();
 }
 
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
@@ -208,15 +150,11 @@ struct SW5544Roots {
     {
         w5544_sink = reinterpret_cast<void*>(&TelaMTA);
         w5544_sink = reinterpret_cast<void*>(&TelaMTB);
-        w5544_sink = reinterpret_cast<void*>(&TelaA);
         w5544_sink = reinterpret_cast<void*>(&TelaB);
-        w5544_sink = reinterpret_cast<void*>(&RotuloTecla);
-        w5544_sink = reinterpret_cast<void*>(&TextoMultiLinha);
         w5544_sink = reinterpret_cast<void*>(&RelatorioA);
         w5544_sink = reinterpret_cast<void*>(&FormMTA);
         w5544_sink = reinterpret_cast<void*>(&FormMTB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
-        w5544_sink = reinterpret_cast<void*>(&TextoRetangulo);
         w5544_sink = reinterpret_cast<void*>(&BarraProgresso);
     }
 } w5544_roots;

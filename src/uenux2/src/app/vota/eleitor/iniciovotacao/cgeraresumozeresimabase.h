@@ -9,6 +9,8 @@ class IScreen;
 class IInputKbd;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
+template <typename MEDIA>
+class IForm;
 } // namespace api
 
 namespace vota {
@@ -20,7 +22,8 @@ namespace vota {
 // next state, so slot 10 returns the state that follows; its overriders return vota::CImprimindoZeresima::GetInst() (fn
 // 11939) and vota::CReimprimindoZeresima::GetInst() (fn 11845). The layout is the constructor's (fn 11945): the base's
 // constructor gets 0, and +12 a std::shared_ptr copied from vota::CTelasVota::GetInst()'s +220 (fn 407), whose slot 2
-// StartState calls first; the pointee's type is chosen, the type of vota::CTelasVota's members. The destructor is out
+// StartState calls first; the pointee's type is that member's, api::IForm<api::IScreen> (CTelasVota's constructor
+// stores GetFormulario's form there: ctelasvota.h). The destructor is out
 // of line, in another object than the derived classes': their destructors (fns 5964 and 5963) call fn 1952, which
 // stores this class's vptr and releases +12 (through binaryen's fn 2902). The constructor reads the member through a
 // getter chosen for it (ctelasvota.h). StartState (fn 11943) sets the next state to this, calls the form's slot 2 and
@@ -41,7 +44,7 @@ protected:
     virtual comum::CAppState* GetProximoEstado() = 0;
 
 private:
-    std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
+    std::shared_ptr<api::IForm<api::IScreen>> m_form;
 };
 
 } // namespace vota

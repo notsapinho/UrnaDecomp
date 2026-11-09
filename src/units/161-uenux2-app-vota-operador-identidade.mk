@@ -226,7 +226,8 @@
 #   directories. The file stays unit 31's (that fragment keeps its notes). Eleven matched rows take their copy from
 #   cmtformbuilder.cpp.o now (splat/scan.tsv's object column against ea98137f's): 11020 to 11023, 11038, 1400 and 3673
 #   from cescolheopcao.cpp.o, 12317, 12323 and 12784 from cformbuilder.cpp.o, and 203 from ccedula.cpp.o, whose match
-#   line step 9 renamed to api::CMTFormBuilder's constructor, the same body.
+#   line step 9 renamed to api::CMTFormBuilder's constructor, the same body (12317 and 12323 link from ctelasvota.cpp.o
+#   since units 441 and 443).
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
 # its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the

@@ -12,7 +12,8 @@
 # - With this unit's literal in the link, three written bodies of other units match too: comum's FormataNumero (fn
 #   1161, unit 131), CDataText<comum::CRespostasDSNumero>::GetText (12621, the row unit 121's fragment describes) and
 #   CDataText<comum::CCandidaturasDSNumero>::GetText (12742, unit 180's operator inlined), the first GetText emitted by
-#   unit 102's roots object and the second by unit 110's ctelasvota.cpp.o (4185, unit 378's, builds it), whose format
+#   unit 102's roots object then (by ctelasvota.cpp.o since unit 441's 6652) and the second by unit 110's
+#   ctelasvota.cpp.o (4185, unit 378's, builds it), whose format
 #   strings end in "{:0{}}", which the target holds as the tail of 11973's "  {}{}{:0{}}" (@1042). The bodies are
 #   those units'.
 #

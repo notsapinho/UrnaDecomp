@@ -56,7 +56,7 @@ bool IsValidDateTime(const std::string& dataHora);
 // - operator== (inline in 12061) compares the date's four words, then the time's word: defaulted is a choice.
 // - operator-(const CDateTime &) (fn 5471) is the difference in seconds between two date-times: ConvertToLocalTime
 //   (fn 1381) of this one minus that of the other, both inlined by clang over one struct tm, an i64 result. Its
-//   callers are two text callbacks, vota::testeteclado::CEsperaRetestar's (fn 11826) and fn 13012, not written.
+//   callers are two text callbacks, vota::testeteclado::CEsperaRetestar's (fn 11826) and ctelasvota.cpp's (13012).
 //   It is out of line in cdatetime.cpp: use band 2 of ledger/ordinals.tsv places it after fn 5472
 //   (FormatCurrentDate), in cluster 765 (docs/reference/facts/reading.md R9). That it is an operator, const, and
 //   returns time_t are chosen; its line is a choice.

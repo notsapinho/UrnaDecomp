@@ -16,10 +16,7 @@
 # The stand-ins whose every target caller this brings into the link went: unit 59's roots file (the vtable sink for the
 # constructor 6599 holds, and AdicionaItem's caller, 6599) and, in unit 102's roots, the five item blocks and the five
 # item vtables (stored by the menu's constructor). The stand-ins that also stand for callers still not written stay
-# (units 31, 89, 98, 111, 120 and 165 name 6599 or 12244 among their callers).
-# 354-uenux2-cmaisinformacoes-roots.cpp: 6599's other target caller, 7787, is not written, and a function with one call
-# in the link is inlined by binaryen into it (docs/reference/facts/tool-traps.md X1), so its stand-in gives 6599 a
-# second call site. Compiled as app code; it declares what it calls through an __asm__ label and includes no header.
-$(ROOT)/$(APP)/354-uenux2-cmaisinformacoes-roots.o: $(ROOT)/src/units/354-uenux2-cmaisinformacoes-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/354-uenux2-cmaisinformacoes.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/354-uenux2-cmaisinformacoes-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/354-uenux2-cmaisinformacoes-roots.o
+# (units 31, 89, 98, 111 and 165 name 6599 or 12244 among their callers).
+# No roots: 354-uenux2-cmaisinformacoes-roots.cpp stood for 6599's other target caller, 7787, so that binaryen kept
+# 6599 out of line (docs/reference/facts/tool-traps.md X1); unit 443's constructor makes that call since, and the file
+# went: the link without it moved no row (steps 7 to 9: 0 matches added, 0 renamed, no verdict changed).

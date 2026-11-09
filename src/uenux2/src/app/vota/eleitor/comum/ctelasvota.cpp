@@ -38,6 +38,7 @@
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/ccargos.h"
@@ -46,6 +47,7 @@
 #include "app/comum/dados/clocal.h"
 #include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/cqrcodeds.h"
+#include "app/comum/dados/crespostasds.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
@@ -53,6 +55,7 @@
 #include "app/comum/informacao/cinformacaoeleicao.h"
 #include "app/comum/relatorios/auxiliaresrelatorio.h"
 #include "app/vota/comum/cpreshowformvota.h"
+#include "app/vota/comum/votadefs.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/comum/cinformacaoeleitor.h"
 #include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
@@ -63,7 +66,7 @@
 
 namespace vota {
 
-// (original lines 66-247: content not recovered)
+// (original lines 69-247: content not recovered)
 #line 248
 std::vector<uebyte> ImagemAudioHabilitado()
 {
@@ -105,15 +108,20 @@ void AdicionaGifCargo(const comum::md::CCargo& cargo, api::CFormBuilder& builder
     }
 }
 
-// (original lines 288-290: content not recovered)
-#line 291
-// <stubs>
-// f13101 · 217 B · unmatched · name unknown
-// void f13101(i32) { ... }
-// </stubs>
+namespace {
 
-// (original lines 296-299: content not recovered)
-#line 300
+std::string DS_CandidatoNaoConcorre()
+{
+    const comum::CCandidaturas& candidaturas = comum::CCandidaturas::GetInst();
+    if (candidaturas.IsFim()) {
+        throw CUeVotaError(EUE_VOTA_CANDIDATO_NAO_POSICIONADO, "Nao foi posicionado no candidato corretamente");
+    }
+    if (comum::CCandidaturasDSSexo(0)() == comum::md::CSexo::SEXO_FEMININO) {
+        return "CANDIDATA NÃO CONCORRE";
+    }
+    return "CANDIDATO NÃO CONCORRE";
+}
+} // namespace
 const std::string& NumeroDigitado()
 {
     return g_numeroDigitado;
@@ -129,9 +137,10 @@ const api::SFont FONTE_TEXTO_CONFIRMA_CORRIGE{35, 0};
 const api::SFont FONTE_NOME_CARGO{30, 1};
 const api::SFont FONTE_AGUARDE{25, 0};
 
-CFormInterativoTelaVota GetFormularioProgresso(api::CInteractiveFormBuilder& builder, const std::string& nome)
+CFormInterativoTelaVota GetFormularioProgresso(api::CInteractiveFormBuilder& builder, const std::string& nome,
+                                               const bool limpaTeclado = true)
 {
-    return builder.GetInteractiveForm(std::make_shared<CPreShowProgressBar>(), nome, true);
+    return builder.GetInteractiveForm(std::make_shared<CPreShowProgressBar>(), nome, limpaTeclado);
 }
 
 void AdicionaLinhaRodape(api::CFormBuilder& builder, const api::TPosition largura)
@@ -239,7 +248,6 @@ api::TPosition AdicionaPergunta(api::CFormBuilder& builder, const comum::md::CCa
     return area.bottom + 23;
 }
 
-
 namespace {
 
 std::map<std::pair<std::string, bool>, std::shared_ptr<api::CMovie>> s_gifs;
@@ -281,8 +289,7 @@ void AdicionaGif(const comum::md::CVoto::ETipo tipo, api::CFormBuilder& builder,
     builder.AddMovie(api::SPoint(640, 480), filme);
 }
 
-// (original lines 467-469: content not recovered)
-#line 470
+
 template <typename SRCFT>
 api::CFormBuilder::SharedField adicionaImagem(api::CFormBuilder& builder, SRCFT fonte, const api::SPoint& posicao)
 {
@@ -402,7 +409,37 @@ void AdicionaFotoCandidato(api::CFormBuilder& builder, const bool comNomeCargo)
     }
 }
 
-// (original lines 589-747: content not recovered)
+api::SRect AdicionaFotoSuplente(api::CFormBuilder& builder, std::string (*nome)(), const api::TPosition x,
+                                const uebyte suplente)
+{
+    const api::SRect area = adicionaFotoEmoldurada(builder, x, 287, 111, 155, comum::CCandidaturasDSFoto(suplente));
+    const api::TPosition largura = area.right - area.left + 1;
+    if (largura <= 1) {
+        builder.AddTextField(nome, api::SPoint(x + 55, 443), api::SFont{13, 0}, api::ALINHAMENTO_CENTRO);
+    } else {
+        builder.AddTextField(nome, api::SPoint(area.left + largura / 2, area.bottom + 1), api::SFont{13, 0},
+                             api::ALINHAMENTO_CENTRO);
+    }
+    return area;
+}
+
+namespace {
+
+std::string NomeCargoSuplente(const uebyte suplente)
+{
+    return comum::CCargoDSNomeSexoCandidato(suplente, true)();
+}
+
+void AdicionaLinhaSuplente(api::CFormBuilder& builder, std::string (*fonte)(), const api::TPosition y,
+                           const api::TPosition largura)
+{
+    builder.AddDoubleLineField(fonte, api::SPoint(10, y), api::SPoint(10, y + 20), largura,
+                               FONTE_INSTRUCAO_TESTE_TECLADO, static_cast<api::TColor>(0));
+}
+
+} // namespace
+
+// (original lines 619-747: content not recovered)
 #line 748
 api::CFormBuilder::SharedField AdicionaImagemAudioHabilitado(api::CFormBuilder& builder, const api::SPoint& posicao)
 {
@@ -498,21 +535,108 @@ void adicionaBaseTelaCompletaCandidatoCom0(api::CFormBuilder& builder, const std
 
 } // namespace
 
-// (original lines 842-849: content not recovered)
-#line 850
-// <stubs>
-// f6671 · 363 B · unmatched · name unknown
-// void f6671(i32, i32, i32, i32) { ... }
-// </stubs>
+namespace {
 
-// (original lines 855-886: content not recovered)
-#line 887
-// <stubs>
-// f6660 · 514 B · unmatched · name unknown
-// void f6660(i32, i32, i32, i32) { ... }
-// </stubs>
+// (original lines 844-848: content not recovered)
+#line 849
+void adicionaBaseTelaCompletaCandidatoCom1(api::CFormBuilder& builder, const std::string& tela,
+                                           const comum::md::CCargo& cargo, api::TPosition& largura)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de candidato"));
+    }
 
-// (original lines 892-957: content not recovered)
+    if (cargo.QtdSuplentes() != 1) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM1_SUPLENTES_INCOMPATIVEIS,
+                           MensagemErroCargo(tela, cargo, "com número de suplentes incompatível"));
+    }
+
+    largura = cargo.GetDetalheCandidato().GetSuplente(1).TemFoto() ? 520 : 639;
+    AdicionaDadosCandidato(builder, cargo, cargo.TemFoto() ? 470 : 639);
+    AdicionaSiglaPartido(builder);
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(1);
+            return NomeCargoSuplente(1) + ": " + nome();
+        },
+        320, largura);
+    if (cargo.TemFoto()) {
+        AdicionaFotoCandidato(builder, true);
+    }
+    if (cargo.GetDetalheCandidato().GetSuplente(1).TemFoto()) {
+        AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(1); }, 639, 1);
+    }
+}
+
+// (original lines 880-885: content not recovered)
+#line 886
+void adicionaBaseTelaCompletaCandidatoCom2(api::CFormBuilder& builder, const std::string& tela,
+                                           const comum::md::CCargo& cargo, api::TPosition& largura)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de candidato"));
+    }
+
+    if (cargo.QtdSuplentes() < 2) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM2_SUPLENTES_INCOMPATIVEIS,
+                           MensagemErroCargo(tela, cargo, "com número de suplentes incompatível"));
+    }
+
+    const bool temFoto = cargo.TemFoto();
+    const bool temFotoSuplente1 = cargo.GetDetalheCandidato().GetSuplente(1).TemFoto();
+    const bool temFotoSuplente2 = cargo.GetDetalheCandidato().GetSuplente(2).TemFoto();
+    AdicionaDadosCandidato(builder, cargo, temFoto ? 470 : 639);
+    AdicionaSiglaPartido(builder);
+    const api::TPosition maxX = temFotoSuplente1 ? 403 : 639;
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(1);
+            return NomeCargoSuplente(1) + ": " + nome();
+        },
+        310, maxX);
+    AdicionaLinhaSuplente(
+        builder,
+        []() {
+            const comum::CCandidaturasDSNome nome(2);
+            return NomeCargoSuplente(2) + ": " + nome();
+        },
+        355, maxX);
+    if (cargo.TemFoto()) {
+        AdicionaFotoCandidato(builder, true);
+    }
+    api::TPosition direita = 639;
+    if (temFotoSuplente2) {
+        direita = AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(2); }, direita, 2).left - 5;
+    }
+    if (temFotoSuplente1) {
+        direita = AdicionaFotoSuplente(builder, []() { return NomeCargoSuplente(1); }, direita, 1).left;
+    }
+    largura = direita - 5;
+}
+
+// (original lines 932-937: content not recovered)
+#line 938
+void adicionaBaseTelaCompletaConsulta(api::CFormBuilder& builder, const std::string& tela,
+                                      const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsConsulta()) {
+        throw CUeVotaError(EUE_VOTA_TELA_COMPLETA_CONSULTA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de consulta"));
+    }
+    const api::TPosition y = AdicionaPergunta(builder, cargo);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaCampoNumero<api::CFramedText>(builder, comum::CRespostasDSNumero(digitos), digitos,
+                                          api::SPoint(100 - 40 * digitos, y));
+    builder.AddTextField(&comum::RespostaCorrente, api::SPoint(100, y + 3), FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+}
+
+} // namespace
+
+// (original lines 954-957: content not recovered)
 #line 958
 namespace {
 
@@ -529,23 +653,27 @@ void adicionaBaseTelaVotoBrancoCandidato(api::CFormBuilder& builder, const std::
 
 } // namespace
 
-// (original lines 973-989: content not recovered)
-#line 990
-// <stubs>
-// f6641 · 272 B · unmatched · name unknown
-// void f6641(i32, i32, i32) { ... }
-// </stubs>
-
-// (original lines 995-996: content not recovered)
-#line 997
+// (original lines 973-986: content not recovered)
+#line 987
 namespace {
+
+void adicionaBaseTelaVotoBrancoConsulta(api::CFormBuilder& builder, const std::string& tela,
+                                        const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsConsulta()) {
+        throw CUeVotaError(EUE_VOTA_TELA_VOTO_BRANCO_CONSULTA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de consulta"));
+    }
+    const api::TPosition y = AdicionaPergunta(builder, cargo);
+    AdicionaTextoPiscante(builder, "VOTO EM BRANCO", FONTE_NUMERO, 320, y);
+}
 
 void AdicionaTextoVotoNulo(api::CFormBuilder& builder, const api::TPosition x)
 {
     AdicionaTextoPiscante(builder, "VOTO NULO", FONTE_NUMERO, x, 345);
 }
 
-// (original lines 1004-1009: content not recovered)
+// (original lines 1005-1009: content not recovered)
 #line 1010
 void adicionaBaseTelaVotoNuloConsulta(api::CFormBuilder& builder, const std::string& tela, const comum::md::CCargo& cargo,
                                       const std::string& texto)
@@ -592,29 +720,55 @@ void AdicionaCampoDigitos(api::CFormBuilder& builder, const uebyte digitos, cons
 }
 
 } // namespace
+namespace {
 
-// (original lines 1070-1071: content not recovered)
-#line 1072
-// <stubs>
-// f6605 · 557 B · unmatched · name unknown
-// void f6605(i32, i32, i32) { ... }
-// </stubs>
+void adicionaBaseTelaCandidatoInexistente(api::CFormBuilder& builder, const std::string& tela,
+                                          const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_CANDIDATO_INEXISTENTE_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    builder.AddTextField("CANDIDATO INEXISTENTE", api::SPoint(10, 190), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaSiglaPartido(builder);
+    AdicionaTextoPiscante(builder, "VOTO DE LEGENDA", FONTE_NUMERO, 195, 345);
+}
 
-// (original lines 1077-1097: content not recovered)
-#line 1098
-// <stubs>
-// f6603 · 436 B · unmatched · name unknown
-// void f6603(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 1086-1096: content not recovered)
+#line 1097
+void adicionaBaseTelaCandidatoInapto(api::CFormBuilder& builder, const std::string& tela,
+                                     const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_CANDIDATO_INAPTO_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    builder.AddTextField(&DS_CandidatoNaoConcorre, api::SPoint(10, 190), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA);
+    AdicionaTextoVotoNulo(builder, 320);
+}
 
-// (original lines 1103-1122: content not recovered)
+// (original lines 1110-1122: content not recovered)
 #line 1123
-// <stubs>
-// f6602 · 374 B · unmatched · name unknown
-// void f6602(i32, i32, i32) { ... }
-// </stubs>
+void adicionaBaseTelaVotoLegenda(api::CFormBuilder& builder, const std::string& tela, const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_VOTO_LEGENDA_CARGO_INVALIDO,
+                           MensagemErroCargo(tela, cargo, "não é de proporcional"));
+    }
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCampoNumero<api::CGrayedFramedText>(builder, cargo.GetNumeroDigitos(), api::SPoint(10, 115));
+    AdicionaSiglaPartido(builder);
+    AdicionaTextoPiscante(builder, "VOTO DE LEGENDA", FONTE_NUMERO, 195, 345);
+}
 
-// (original lines 1128-1289: content not recovered)
+} // namespace
+
+// (original lines 1137-1289: content not recovered)
 #line 1290
 namespace {
 
@@ -663,21 +817,159 @@ const auto GetKeyboardLayout()
 
 } // namespace
 
-// (original lines 1337-1388: content not recovered)
-#line 1389
-// <stubs>
-// f7787 · 148912 B · unmatched · name unknown
-// void f7787() { ... }
-// </stubs>
+// (original lines 1337-1377: content not recovered)
+#line 1378
+namespace {
 
-// (original lines 1394-1521: content not recovered)
-#line 1522
+const char TEXTO_CANDIDATO_REPETIDO[] = "CANDIDATO REPETIDO";
+const char TEXTO_NUMERO_REPETIDO[] = "NÚMERO REPETIDO";
+
+} // namespace
+
+// (original lines 1385-1388: content not recovered)
+#line 1389
+CFormInterativoTelaVota CTelasVota::CriaTelaInputVazioProporcional(const comum::md::CCargo& cargo)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaInputVazioProporcional", cargo, "não é de candidato"));
+    }
+
+    if (cargo.GetNumeroDigitos() < 2) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_PROPORCIONAL_DIGITOS_INVALIDOS,
+                           MensagemErroCargo("CriaTelaInputVazioProporcional", cargo, "número de dígitos inválido"));
+    }
+
+    api::CInteractiveFormBuilder builder;
+    AdicionaGifCargo(cargo, builder);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCamposInputVazio(builder, 10, 115, 2, digitos - 2);
+    return GetFormularioProgresso(builder, "telaInputVazioProporcional");
+}
+
+
+CFormInterativoTelaVota CTelasVota::CriaTelaInputVazioMajoritarioCom0(const comum::md::CCargo& cargo)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM0_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaInputVazioMajoritarioCom0", cargo, "não é de candidato"));
+    }
+    api::CInteractiveFormBuilder builder;
+    AdicionaGifCargo(cargo, builder);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCamposInputVazio(builder, 10, 115, digitos, 0);
+    return GetFormularioProgresso(builder, "telaInputVazioMajoritarioCom0");
+}
+
+
+CFormInterativoTelaVota CTelasVota::CriaTelaInputVazioMajoritarioCom1(const comum::md::CCargo& cargo)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM1_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaInputVazioMajoritarioCom1", cargo, "não é de candidato"));
+    }
+    api::CInteractiveFormBuilder builder;
+    AdicionaGifCargo(cargo, builder);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCamposInputVazio(builder, 10, 115, digitos, 0);
+    return GetFormularioProgresso(builder, "telaInputVazioMajoritarioCom1");
+}
+
+// (original lines 1439-1440: content not recovered)
+#line 1441
+CFormInterativoTelaVota CTelasVota::CriaTelaInputVazioMajoritarioCom2(const comum::md::CCargo& cargo)
+{
+    if (!cargo.HasDetalheCandidato()) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_MAJORITARIO_COM2_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaInputVazioMajoritarioCom2", cargo, "não é de candidato"));
+    }
+    api::CInteractiveFormBuilder builder;
+    AdicionaGifCargo(cargo, builder);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    AdicionaCamposInputVazio(builder, 10, 115, digitos, 0);
+    return GetFormularioProgresso(builder, "telaInputVazioMajoritarioCom2");
+}
+
+// (original lines 1455-1456: content not recovered)
+#line 1457
+CFormInterativoTelaVota CTelasVota::CriaTelaInputVazioConsulta(const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsConsulta()) {
+        throw CUeVotaError(EUE_VOTA_TELA_INPUT_VAZIO_CONSULTA_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaInputVazioConsulta", cargo, "não é de consulta"));
+    }
+    api::CInteractiveFormBuilder builder;
+    const api::TPosition y = AdicionaPergunta(builder, cargo);
+    const uebyte digitos = cargo.GetNumeroDigitos();
+    AdicionaCamposInputVazio(builder, 100 - 40 * digitos, y, digitos, 0);
+    return GetFormularioProgresso(builder, "telaInputVazioConsulta");
+}
+
 CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom0(const comum::md::CCargo& cargo)
 {
     api::CInteractiveFormBuilder builder;
     adicionaBaseTelaCompletaCandidatoCom0(builder, "CriaTelaConferenciaCandidatoCom0", cargo);
     AdicionaRodapeConfira(builder, 639);
     return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom0");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaCandidatoCom1(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom1(builder, "CriaTelaCompletaCandidatoCom1", cargo, largura);
+    AdicionaInstrucaoConfirmarVoto(builder, largura);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaCandidatoCom1");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom1(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom1(builder, "CriaTelaConferenciaCandidatoCom1", cargo, largura);
+    AdicionaRodapeConfira(builder, largura);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom1");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaCandidatoCom2(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom2(builder, "CriaTelaCompletaCandidatoCom2", cargo, largura);
+    AdicionaInstrucaoConfirmarVoto(builder, largura);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaCandidatoCom2");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoCom2(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    api::TPosition largura;
+    adicionaBaseTelaCompletaCandidatoCom2(builder, "CriaTelaConferenciaCandidatoCom2", cargo, largura);
+    AdicionaRodapeConfira(builder, largura);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoCom2");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCompletaConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaConsulta(builder, "CriaTelaCompletaConsulta", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCompletaConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCompletaConsulta(builder, "CriaTelaConferenciaConsulta", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaConsulta");
 }
 
 CFormInterativoTelaVota CTelasVota::CriaTelaVotoNuloCandidato(const comum::md::CCargo& cargo, const std::string& confirma,
@@ -713,7 +1005,7 @@ CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoNuloCandidato(const c
     return GetFormularioProgresso(builder, "telaConferenciaVotoNuloCandidato");
 }
 
-// (original lines 1563-1569: content not recovered)
+// (original lines 1566-1569: content not recovered)
 #line 1570
 CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoBrancoCandidato(const comum::md::CCargo& cargo)
 {
@@ -780,7 +1072,577 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVotoBrancoCandidato(const comum::md:
     return GetFormularioProgresso(builder, "telaVotoBrancoCandidato");
 }
 
-// (original lines 1641-2949: content not recovered)
+CFormInterativoTelaVota CTelasVota::CriaTelaVotoBrancoConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaVotoBrancoConsulta(builder, "CriaTelaVotoBrancoConsulta", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaVotoBrancoConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoBrancoConsulta(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaVotoBrancoConsulta(builder, "CriaTelaConferenciaVotoBrancoConsulta", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaVotoBrancoConsulta");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCandidatoInexistente(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, false);
+    adicionaBaseTelaCandidatoInexistente(builder, "CriaTelaCandidatoInexistente", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 389);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCandidatoInexistente");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoInexistente(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, true);
+    adicionaBaseTelaCandidatoInexistente(builder, "CriaTelaConferenciaCandidatoInexistente", cargo);
+    AdicionaRodapeConfira(builder, 389);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoInexistente");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaCandidatoInapto(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCandidatoInapto(builder, "CriaTelaCandidatoInapto", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 639);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaCandidatoInapto");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaCandidatoInapto(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    adicionaBaseTelaCandidatoInapto(builder, "CriaTelaConferenciaCandidatoInapto", cargo);
+    AdicionaRodapeConfira(builder, 639);
+    return GetFormularioProgresso(builder, "telaConferenciaCandidatoInapto");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaVotoLegenda(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, false);
+    adicionaBaseTelaVotoLegenda(builder, "CriaTelaVotoLegenda", cargo);
+    AdicionaInstrucaoConfirmarVoto(builder, 389);
+    builder.AddInputControl();
+    return GetFormularioProgresso(builder, "telaVotoLegenda", false);
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaConferenciaVotoLegenda(const comum::md::CCargo& cargo)
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaGif(comum::md::CVoto::LEGENDA, builder, true);
+    adicionaBaseTelaVotoLegenda(builder, "CriaTelaConferenciaVotoLegenda", cargo);
+    AdicionaRodapeConfira(builder, 389);
+    return GetFormularioProgresso(builder, "telaConferenciaVotoLegenda", false);
+}
+
+// (original lines 1713-1715: content not recovered)
+#line 1716
+api::CFormBuilder::SharedField AdicionaNumeroPartido(api::CFormBuilder& builder, const size_t tamanho,
+                                                    const api::SPoint& posicao, const std::string& formato)
+{
+    const api::SharedIText texto(std::shared_ptr<api::CDataTextFmt<const std::string (*)(const std::string&)>>(
+        new api::CDataTextFmt<const std::string (*)(const std::string&)>(&comum::NumeroPartidoCorrente, formato)));
+    api::CFormBuilder::SharedField campo(std::shared_ptr<api::CMaskedTextField<api::CFramedText>>(
+        new api::CMaskedTextField<api::CFramedText>(texto, tamanho, posicao, FONTE_NUMERO)));
+    builder.AddField(campo);
+    return campo;
+}
+
+// (original lines 1727-1737: content not recovered)
+#line 1738
+CFormInterativoTelaVota CTelasVota::CriaTelaPartido(const comum::md::CCargo& cargo)
+{
+    if (!cargo.IsProporcional()) {
+        throw CUeVotaError(EUE_VOTA_TELA_PARTIDO_CARGO_INVALIDO,
+                           MensagemErroCargo("CriaTelaPartido", cargo, "não é de proporcional"));
+    }
+    api::CInteractiveFormBuilder builder;
+    AdicionaNomeCargo(cargo, builder, 10, 60);
+    const api::CFormBuilder::SharedField partido = AdicionaNumeroPartido(builder, 2, api::SPoint(10, 115), "{}");
+    const uebyte digitos = cargo.GetNumeroDigitos() - 2;
+    AdicionaCampoNumerico(builder, digitos, false, true, true, false, true, api::SPoint(partido->Rect().right + 5, 115),
+                          FONTE_NUMERO, api::ALINHAMENTO_ESQUERDA);
+    AdicionaSiglaPartido(builder);
+    builder.AddBlinkingTextField("(voto de legenda)", api::SPoint(639, 430), api::SFont{20, 0},
+                                 api::ALINHAMENTO_DIREITA);
+    AdicionaInstrucaoTeclas(builder, "PROSSEGUIR", 639);
+    return GetFormularioProgresso(builder, "telaPartido", false);
+}
+
+CTelasCargo CTelasVota::CriaTelasCargoProporcional(const comum::md::CCargo& cargo)
+{
+    CTelasCargo::TMapa telas;
+    telas[ETelaVotacao::TELA_INICIAL] = CriaTelaInputVazioProporcional(cargo);
+    telas[ETelaVotacao::TELA_COMPLETA] = CriaTelaCompletaCandidatoCom0(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NOMINAL] = CriaTelaConferenciaCandidatoCom0(cargo);
+    telas[ETelaVotacao::TELA_VOTO_BRANCO] = CriaTelaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_BRANCO] = CriaTelaConferenciaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_VOTO_PROPORCIONAL_NULO_INCOMPLETO] =
+        CriaTelaVotoNuloCandidato(cargo, "PROSSEGUIR", "NÚMERO ERRADO", cargo.GetNumeroDigitos() - 2, 10, 115, 190);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NULO] =
+        CriaTelaConferenciaVotoNuloCandidato(cargo, "NÚMERO ERRADO", 10, 115, 190);
+    telas[ETelaVotacao::TELA_VOTO_NULO] =
+        CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, "NÚMERO ERRADO", 0, 10, 115, 190);
+    telas[ETelaVotacao::TELA_PARTIDO] = CriaTelaPartido(cargo);
+    telas[ETelaVotacao::TELA_VOTO_LEGENDA_INCOMPLETO] = CriaTelaVotoLegenda(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_LEGENDA] = CriaTelaConferenciaVotoLegenda(cargo);
+    telas[ETelaVotacao::TELA_CANDIDATO_INEXISTENTE] = CriaTelaCandidatoInexistente(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_INEXISTENTE] = CriaTelaConferenciaCandidatoInexistente(cargo);
+    telas[ETelaVotacao::TELA_CANDIDATO_INAPTO] = CriaTelaCandidatoInapto(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_INAPTO] = CriaTelaConferenciaCandidatoInapto(cargo);
+    telas[ETelaVotacao::TELA_CARGO_SEM_CANDIDATO] = CriaTelaVotoCargoSemCandidato(cargo, 639);
+    return CTelasCargo(cargo.GetID(), telas);
+}
+
+CTelasCargo CTelasVota::CriaTelasCargoMajoritarioCom0(const comum::md::CCargo& cargo)
+{
+    CTelasCargo::TMapa telas;
+    telas[ETelaVotacao::TELA_INICIAL] = CriaTelaInputVazioMajoritarioCom0(cargo);
+    telas[ETelaVotacao::TELA_COMPLETA] = CriaTelaCompletaCandidatoCom0(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NOMINAL] = CriaTelaConferenciaCandidatoCom0(cargo);
+    telas[ETelaVotacao::TELA_VOTO_BRANCO] = CriaTelaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_BRANCO] = CriaTelaConferenciaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_VOTO_NULO] =
+        CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, "NÚMERO ERRADO", 0, 10, 115, 190);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NULO] =
+        CriaTelaConferenciaVotoNuloCandidato(cargo, "NÚMERO ERRADO", 10, 115, 190);
+    telas[ETelaVotacao::TELA_CARGO_SEM_CANDIDATO] = CriaTelaVotoCargoSemCandidato(cargo, 639);
+    if (cargo.GetQtdeEscolhas() > 1 && !cargo.PodeRepetir()) {
+        telas[ETelaVotacao::TELA_CANDIDATO_REPETIDO] =
+            CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, TEXTO_CANDIDATO_REPETIDO, 0, 10, 115, 190);
+        telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_REPETIDO] =
+            CriaTelaConferenciaVotoNuloCandidato(cargo, TEXTO_CANDIDATO_REPETIDO, 10, 115, 190);
+    }
+    return CTelasCargo(cargo.GetID(), telas);
+}
+
+CTelasCargo CTelasVota::CriaTelasCargoMajoritarioCom1(const comum::md::CCargo& cargo)
+{
+    CTelasCargo::TMapa telas;
+    telas[ETelaVotacao::TELA_INICIAL] = CriaTelaInputVazioMajoritarioCom1(cargo);
+    telas[ETelaVotacao::TELA_COMPLETA] = CriaTelaCompletaCandidatoCom1(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NOMINAL] = CriaTelaConferenciaCandidatoCom1(cargo);
+    telas[ETelaVotacao::TELA_VOTO_BRANCO] = CriaTelaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_BRANCO] = CriaTelaConferenciaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_VOTO_NULO] =
+        CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, "NÚMERO ERRADO", 0, 10, 115, 190);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NULO] =
+        CriaTelaConferenciaVotoNuloCandidato(cargo, "NÚMERO ERRADO", 10, 115, 190);
+    telas[ETelaVotacao::TELA_CARGO_SEM_CANDIDATO] = CriaTelaVotoCargoSemCandidato(cargo, 639);
+    if (cargo.GetQtdeEscolhas() > 1 && !cargo.PodeRepetir()) {
+        telas[ETelaVotacao::TELA_CANDIDATO_REPETIDO] =
+            CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, TEXTO_CANDIDATO_REPETIDO, 0, 10, 115, 190);
+        telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_REPETIDO] =
+            CriaTelaConferenciaVotoNuloCandidato(cargo, TEXTO_CANDIDATO_REPETIDO, 10, 115, 190);
+    }
+    return CTelasCargo(cargo.GetID(), telas);
+}
+
+CTelasCargo CTelasVota::CriaTelasCargoMajoritarioCom2(const comum::md::CCargo& cargo)
+{
+    CTelasCargo::TMapa telas;
+    telas[ETelaVotacao::TELA_INICIAL] = CriaTelaInputVazioMajoritarioCom2(cargo);
+    telas[ETelaVotacao::TELA_COMPLETA] = CriaTelaCompletaCandidatoCom2(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NOMINAL] = CriaTelaConferenciaCandidatoCom2(cargo);
+    telas[ETelaVotacao::TELA_VOTO_BRANCO] = CriaTelaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_BRANCO] = CriaTelaConferenciaVotoBrancoCandidato(cargo);
+    telas[ETelaVotacao::TELA_VOTO_NULO] =
+        CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, "NÚMERO ERRADO", 0, 10, 115, 190);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NULO] =
+        CriaTelaConferenciaVotoNuloCandidato(cargo, "NÚMERO ERRADO", 10, 115, 190);
+    telas[ETelaVotacao::TELA_CARGO_SEM_CANDIDATO] = CriaTelaVotoCargoSemCandidato(cargo, 639);
+    if (cargo.GetQtdeEscolhas() > 1 && !cargo.PodeRepetir()) {
+        telas[ETelaVotacao::TELA_CANDIDATO_REPETIDO] =
+            CriaTelaVotoNuloCandidato(cargo, TEXTO_CONFIRMAR_VOTO, TEXTO_CANDIDATO_REPETIDO, 0, 10, 115, 190);
+        telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_REPETIDO] =
+            CriaTelaConferenciaVotoNuloCandidato(cargo, TEXTO_CANDIDATO_REPETIDO, 10, 115, 190);
+    }
+    return CTelasCargo(cargo.GetID(), telas);
+}
+
+CTelasCargo CTelasVota::CriaTelasCargoConsulta(const comum::md::CCargo& cargo)
+{
+    CTelasCargo::TMapa telas;
+    telas[ETelaVotacao::TELA_INICIAL] = CriaTelaInputVazioConsulta(cargo);
+    telas[ETelaVotacao::TELA_COMPLETA] = CriaTelaCompletaConsulta(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NOMINAL] = CriaTelaConferenciaConsulta(cargo);
+    telas[ETelaVotacao::TELA_VOTO_BRANCO] = CriaTelaVotoBrancoConsulta(cargo);
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_BRANCO] = CriaTelaConferenciaVotoBrancoConsulta(cargo);
+    telas[ETelaVotacao::TELA_VOTO_NULO] = CriaTelaVotoNuloConsulta(cargo, "NÚMERO ERRADO");
+    telas[ETelaVotacao::TELA_CONFERENCIA_VOTO_NULO] = CriaTelaConferenciaVotoNuloConsulta(cargo, "NÚMERO ERRADO");
+    if (cargo.GetQtdeEscolhas() > 1 && !cargo.PodeRepetir()) {
+        telas[ETelaVotacao::TELA_CANDIDATO_REPETIDO] = CriaTelaVotoNuloConsulta(cargo, TEXTO_NUMERO_REPETIDO);
+        telas[ETelaVotacao::TELA_CONFERENCIA_CANDIDATO_REPETIDO] =
+            CriaTelaConferenciaVotoNuloConsulta(cargo, TEXTO_NUMERO_REPETIDO);
+    }
+    return CTelasCargo(cargo.GetID(), telas);
+}
+
+// (original lines 1866-2328: content not recovered)
+#line 2329
+CFormInterativoTelaVota CTelasVota::CriaTelaFimDosTrabalhos()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField(comum::CConfiguracaoEleicao::GetInst().GetNome(), api::SPoint(320, 60), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(comum::CConfiguracaoEleicao::GetInst().GetPleito().GetNome(), api::SPoint(320, 110),
+                         FONTE_TITULO, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1));
+    builder.AddTextField("FIM DOS TRABALHOS", api::SPoint(320, 200), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("A JUSTIÇA ELEITORAL AGRADECE", api::SPoint(320, 310), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("AOS MESÁRIOS.", api::SPoint(320, 345), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("DESLIGUE A URNA NA CHAVE", api::SPoint(320, 390), FONTE_INSTRUCAO_TESTE_TECLADO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("E PREPARE-A PARA TRANSPORTE.", api::SPoint(320, 415), FONTE_INSTRUCAO_TESTE_TECLADO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaLocal(builder);
+    return GetFormularioInterativo(builder, "telaFimDosTrabalhos");
+}
+
+namespace {
+
+std::string TextoAlertaDesligamento(const std::string& formato)
+{
+    const time_t segundos = std::max<time_t>(g_dataHoraDesligamento - api::CDateTime::Now(), 0);
+    return std::vformat(formato, std::make_format_args(segundos));
+}
+
+} // namespace
+
+CFormInterativoTelaVota CTelasVota::CriaTelaExibeAlertaDesligamento()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("ATENÇÃO", api::SPoint(320, 100), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("URNA OPERANDO NA BATERIA INTERNA", api::SPoint(320, 160), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Caso a urna não seja ligada à tomada", api::SPoint(320, 290), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextFieldUpdate(&TextoAlertaDesligamento, api::SPoint(320, 335), std::chrono::milliseconds(1000),
+                               FONTE_TITULO, "ela será desligada em {} segundos.", api::ALINHAMENTO_CENTRO);
+    return GetFormularioInterativo(builder, "telaExibeAlertaDesligamento");
+}
+
+
+CFormInterativoTelaVota CTelasVota::CriaTelaZeresimaTardia()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_ICONE_BATERIA);
+    auto& monitor = api::CPolySingleton<api::IScreen>::instance();
+    builder.AddTextFieldMultiLine(
+        "O horário de emissão da zerésima passou. Verifique se o relógio da urna está certo.",
+        api::SRect(80, 100, monitor.GetWidth() - 80, monitor.GetHeight() - 200), FONTE_TEXTO_CONFIRMA_CORRIGE,
+        api::ALINHAMENTO_CENTRO);
+    const api::SRect data = builder
+                                .AddTextFieldUpdate(&api::CDateTime::FormatCurrentDate, api::SPoint(320, 250),
+                                                    std::chrono::milliseconds(2000), api::SFont{37, 0}, "DD/MM/YYYY",
+                                                    api::ALINHAMENTO_CENTRO)
+                                ->Rect();
+    const api::SRect hora = builder
+                                .AddTextFieldUpdate(&api::CDateTime::FormatCurrentTime, api::SPoint(320, data.bottom),
+                                                    std::chrono::milliseconds(500), api::SFont{37, 1}, "hh:mm:ss",
+                                                    api::ALINHAMENTO_CENTRO)
+                                ->Rect();
+    builder.AddRect(data.Union(hora).Adjust(-20, -3, 20, 3));
+    builder.AddLabeledInputControl({{'C', "Relógio está certo"}, {'D', "Relógio está errado"}},
+                                   api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaZeresimaTardia");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaInformacaoZeresimaTardia()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("O relógio da urna está errado.", api::SPoint(320, 140), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Após desligar a urna, entre em contato", api::SPoint(320, 185), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("com a equipe de suporte para", api::SPoint(320, 230), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("obter mais instruções.", api::SPoint(320, 275), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Desligar a urna"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaInformacaoZeresimaTardia");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaEleicaoPassou()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("A data da eleição já passou.", api::SPoint(320, 140), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("A urna eletrônica está inoperante.", api::SPoint(320, 190), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Desligue a urna.", api::SPoint(320, 240), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaEleicaoPassou");
+}
+
+namespace {
+
+const api::SFont FONTE_VERSAO{15, 0};
+
+} // namespace
+
+CFormInterativoTelaVota CTelasVota::CriaTelaReimpressaoBU()
+{
+    api::CInteractiveFormBuilder builder;
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    const comum::md::estadoaplicacao::CEstadoGeral& geral = appInfo.GetGeral();
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    AdicionaCabecalhoLocal(builder);
+    builder.AddTextField("RESUMO DA CORRESPONDÊNCIA: " + comum::FormataCodigoCargaResumido(geral.GetCorrespondencia()),
+                         api::SPoint(320, 200), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("REIMPRESSÃO", api::SPoint(320, 260), FONTE_TEXTO_CONFIRMA_CORRIGE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("DO BOLETIM DE URNA", api::SPoint(320, 310), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(std::format("Versão: {}", api::CApplication::s_versao), api::SPoint(25, 400), FONTE_VERSAO,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(std::format("Dados: {}", comum::CAppInfo::GetInst().GetGeral().GetResumoHashVersoesPacotes()),
+                         api::SPoint(620, 400), FONTE_VERSAO, api::ALINHAMENTO_DIREITA, static_cast<api::TColor>(2),
+                         static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Reimprimir"}, {'D', "Cancelar"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaReimpressaoBU");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaVerificaQualidadeBU()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Verifique se o boletim de urna", api::SPoint(320, 100), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("foi impresso completamente", api::SPoint(320, 150), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("e de forma legível", api::SPoint(320, 200), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Siga as instruções do manual", api::SPoint(320, 300), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("em caso de falha na impressão", api::SPoint(320, 330), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Continuar"}, {'D', "Reimprimir"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaVerificaQualidadeBU");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaLimiteCopiasBUAtingido()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Limite de cópias adicionais do", api::SPoint(320, 160), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Boletim de Urna foi atingido", api::SPoint(320, 220), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLabeledInputControl({{'C', "Prosseguir"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaLimiteCopiasBUAtingido");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaAguardandoHorarioVotacao()
+{
+    const api::CDateTime horario = comum::CConfiguracaoEleicao::GetInst().GetDataHoraInicioVotacao();
+    const std::string hora = horario.GetHora().Format("h");
+    const std::string minuto = horario.GetHora().Format("mm");
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    AdicionaCabecalhoLocal(builder);
+    if (minuto == "00") {
+        builder.AddTextField("A votação será iniciada a partir de " + hora + "h", api::SPoint(320, 260), FONTE_TITULO,
+                             api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    } else {
+        builder.AddTextField("A votação será iniciada a partir de " + hora + "h" + minuto + "min",
+                             api::SPoint(320, 260), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                             static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    }
+    builder.AddTextField("Por favor, aguarde.", api::SPoint(320, 320), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormularioInterativo(builder, "telaAguardandoHorarioVotacao");
+}
+
+namespace {
+
+const api::SFont FONTE_TECLA_ACESSIBILIDADE{25, 1};
+
+} // namespace
+
+CFormInterativoTelaVota CTelasVota::CriaTelaInstrucoesAcessibilidade()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Urna pronta para receber o seu voto", api::SPoint(320, 70), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Use o teclado numérico", api::SPoint(320, 150), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("para digitar o seu voto", api::SPoint(320, 190), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField(TextoAudioAtivado, api::SPoint(10, 280), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA);
+    AdicionaImagemAudioHabilitado(builder, api::SPoint(CInfoEleitorAudioHabilitado::LarguraMaxima() + 20, 280));
+    builder.AddFill(api::SPoint(0, 320), api::SPoint(639, 323), static_cast<api::TColor>(2));
+    builder.AddTextField("Aperte a tecla:", api::SPoint(10, 330), FONTE_AGUARDE, api::ALINHAMENTO_ESQUERDA,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const auto confirma = builder.AddTextField("CONFIRMA", api::SPoint(50, 365), FONTE_TECLA_ACESSIBILIDADE,
+                                               api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(13),
+                                               static_cast<api::TColor>(1));
+    builder.AddTextField("para iniciar o seu voto", api::SPoint(confirma->Rect().right + 9, 365), FONTE_AGUARDE,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const auto tecla4 = builder.AddTextField("4", api::SPoint(50, 400), FONTE_TECLA_ACESSIBILIDADE,
+                                             api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                                             static_cast<api::TColor>(1));
+    builder.AddTextField("para fala mais lenta", api::SPoint(tecla4->Rect().right + 9, 400), FONTE_AGUARDE,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const auto tecla3 = builder.AddTextField("3", api::SPoint(340, 400), FONTE_TECLA_ACESSIBILIDADE,
+                                             api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                                             static_cast<api::TColor>(1));
+    builder.AddTextField("para aumentar o volume", api::SPoint(tecla3->Rect().right + 9, 400), FONTE_AGUARDE,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const auto tecla6 = builder.AddTextField("6", api::SPoint(50, 435), FONTE_TECLA_ACESSIBILIDADE,
+                                             api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                                             static_cast<api::TColor>(1));
+    builder.AddTextField("para fala mais rápida", api::SPoint(tecla6->Rect().right + 9, 435), FONTE_AGUARDE,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    const auto tecla9 = builder.AddTextField("9", api::SPoint(340, 435), FONTE_TECLA_ACESSIBILIDADE,
+                                             api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2),
+                                             static_cast<api::TColor>(1));
+    builder.AddTextField("para diminuir o volume", api::SPoint(tecla9->Rect().right + 9, 435), FONTE_AGUARDE,
+                         api::ALINHAMENTO_ESQUERDA, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddInputControl(6);
+    return GetFormularioInterativo(builder, "telaInstrucoesAcessibilidade");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaReinicioVotacaoCodigo()
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaTelaQRCode(builder, "REINÍCIO DA VOTAÇÃO", "", "", comum::CQRCodeDS::eOrigemTela);
+    builder.AddLabeledInputControl({{'C', "Continuar"}, {'B', "Mais informações"}}, api::CApplication::s_areaTela,
+                                   false);
+    return GetFormularioInterativo(builder, "telaReinicioVotacaoCodigo");
+}
+
+namespace {
+
+std::string TextoLimiteCopiasBU()
+{
+    return "O número máximo permitido é " + std::to_string(GetQuantidadeMaximaBUsAdicionais());
+}
+
+} // namespace
+
+std::shared_ptr<api::IInputField<api::IScreen>> AdicionaCampoRotulado(api::CFormBuilder& builder,
+    const std::string& rotulo, const api::SPoint& posicao, const std::shared_ptr<api::IInputValidation>& validacao,
+    const api::SFont& fonte)
+{
+    const api::SFont fonteCampo = fonte.size > 0 ? fonte : FONTE_TITULO;
+    const std::shared_ptr<api::CTextField> texto =
+        std::make_shared<api::CTextField>(posicao, std::make_shared<api::CFixedText>(rotulo), FONTE_TITULO,
+                                          static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(texto);
+    std::shared_ptr<api::IInputField<api::IScreen>> campo(new api::CInputField<api::CFramedText>(
+        validacao, 2, true, false, true, false, false, posicao, fonteCampo, api::ALINHAMENTO_ESQUERDA));
+    builder.AddField(campo);
+    const api::SRect areaTexto = texto->Rect();
+    const api::SRect areaCampo = campo->Rect();
+    const api::TPosition larguraTexto = areaTexto.right - areaTexto.left + 1 + FONTE_TITULO.size / 2;
+    const api::TPosition largura = larguraTexto + areaCampo.right - areaCampo.left + 1;
+    const api::TPosition x = posicao.x - largura / 2;
+    texto->Move(api::SPoint(x, posicao.y));
+    campo->Move(api::SPoint(x + larguraTexto, posicao.y));
+    return campo;
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaEmitirMaisBU()
+{
+    api::CInteractiveFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Emitir mais cópias do boletim de urna", api::SPoint(320, 160), FONTE_TITULO,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    AdicionaCampoRotulado(builder, "Número de cópias desejadas:", api::SPoint(320, 210),
+                          std::shared_ptr<api::IInputValidation>(new api::CNumberValidation()), FONTE_BARRA_PROGRESSO);
+    builder.AddTextField(&TextoLimiteCopiasBU, api::SPoint(320, 260), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO);
+    builder.AddLabeledInputControl({{'C', "Imprimir"}, {'D', "Finalizar"}}, api::CApplication::s_areaTela, false);
+    return GetFormularioInterativo(builder, "telaEmitirMaisBU");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaNumeroCopiasErrado()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddFill(api::SPoint(0, 150), api::SPoint(640, 260), static_cast<api::TColor>(20));
+    builder.AddTextRectField("Número de cópias", api::SRect(0, 160, 640, 195), FONTE_TEXTO_CONFIRMA_CORRIGE);
+    builder.AddTextRectField("acima do limite permitido", api::SRect(0, 210, 640, 245), FONTE_TEXTO_CONFIRMA_CORRIGE);
+    return GetFormulario(builder, "telaNumeroCopiasErrado");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaGerandoZeresima()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Gerando a zerésima", api::SPoint(320, 150), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Por favor, aguarde...", api::SPoint(320, 300), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaGerandoZeresima");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaGerandoResumoZeresima()
+{
+    api::CFormBuilder builder;
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Gerando o resumo da zerésima", api::SPoint(320, 150), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Por favor, aguarde...", api::SPoint(320, 300), FONTE_TEXTO_CONFIRMA_CORRIGE,
+                         api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaGerandoResumoZeresima");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaQuerImprimirZeresima()
+{
+    return TelaTextoConfirmaCorrige("Quer imprimir a zerésima?", "Imprimir", "Não imprimir");
+}
+
+CFormInterativoTelaVota CTelasVota::CriaTelaQuerImprimirBU()
+{
+    return TelaTextoConfirmaCorrige("Quer imprimir o boletim de urna?", "Imprimir", "Não imprimir");
+}
+
+namespace {
+
+api::SRect AreaTela()
+{
+    return api::CApplication::s_areaTela;
+}
+
+} // namespace
+
+CFormInterativoTelaVota CTelasVota::CriaTelaQuerReimprimirZeresima()
+{
+    api::CInteractiveFormBuilder builder;
+    AdicionaTelaQRCode(builder, "IMPRESSÃO DA ZERÉSIMA", "[1] para imprimir a zerésima e seu resumo",
+                       "[2] para imprimir somente o resumo da zerésima", static_cast<comum::CQRCodeDS::EOrigem>(2));
+    AdicionaCampoNumerico(builder, 1, false, true, false, true, true, api::SPoint(25, 370),
+                          FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_ESQUERDA);
+    builder.AddLabeledKey("1  ou  2", "Imprimir", api::ALINHAMENTO_DIREITA);
+    builder.AddLabeledKey('B', "Mais informações", api::ALINHAMENTO_ESQUERDA);
+    builder.AddLabeledKey('D', "Não imprimir", api::ALINHAMENTO_CENTRO);
+    const api::SRect area = AreaTela();
+    builder.AddLine(api::SPoint(area.left, area.bottom - 50), api::SPoint(area.right + 1, area.bottom - 50),
+                    static_cast<api::TColor>(3));
+    return GetFormularioInterativo(builder, "telaQuerReimprimirZeresima");
+}
+
+// (original lines 2682-2949: content not recovered)
 #line 2950
 std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaFim(const std::string& texto,
                                                                     const api::TFontSize tamanhoFim,
@@ -798,15 +1660,8 @@ std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::CriaTelaFim(const std::str
     return GetFormulario(builder, "telaFim");
 }
 
-// (original lines 2966-2999: content not recovered)
-#line 3000
-namespace {
-
-
-const api::SFont FONTE_VERSAO{15, 0};
-
-} // namespace
-
+// (original lines 2966-3006: content not recovered)
+#line 3007
 CFormInterativoTelaVota CTelasVota::CriaTelaMaisInformacoes()
 {
     api::CInteractiveFormBuilder builder;
@@ -1162,14 +2017,67 @@ CFormInterativoTelaVota CTelasVota::CriaTelaVisualizacaoCandidato(const comum::m
 // (original lines 3421-3433: content not recovered)
 #line 3434
 SINGLETON_IMPL_GET_INST(CTelasVota, s_mutex, s_instancia)
+CREATE_INST(CTelasVota, s_mutex, s_instancia)
 
 std::unique_ptr<CTelasVota> CTelasVota::s_instancia;
 std::mutex CTelasVota::s_mutex;
 
 const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
 
-// (original lines 3441-3472: content not recovered)
-#line 3473
+// (original lines 3442-3460: content not recovered)
+#line 3461
+CTelasVota::CTelasVota()
+    : m_tela2(CriaTelaAntesHorarioZeresima())
+    , m_tela3(CriaTelaMaisInformacoes())
+    , m_tela4(CriaTelaFimDosTrabalhos())
+    , m_tela5(CriaTelaExibeAlertaDesligamento())
+    , m_tela6(CriaTelaConfirmaImpressaoZeresima("Emissão da zerésima"))
+    , m_tela7(CriaTelaZeresimaTardia())
+    , m_tela8(CriaTelaInformacaoZeresimaTardia())
+    , m_tela9(CriaTelaEleicaoPassou())
+    , m_tela10(CriaTelaConfirmaImpressaoZeresima("Reemissão da zerésima"))
+    , m_tela11(CriaTelaReimpressaoBU())
+    , m_tela12(CriaTelaVerificaQualidadeBU())
+    , m_tela13(CriaTelaLimiteCopiasBUAtingido())
+    , m_tela14(CriaTelaAguardandoHorarioVotacao())
+    , m_tela15(CriaTelaInstrucoesAcessibilidade())
+    , m_tela16(TelaNeutra("INÍCIO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1))
+    , m_tela17(TelaNeutra("REINÍCIO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1))
+    , m_tela18(CriaTelaReinicioVotacaoCodigo())
+    , m_tela19(CriaTelaFim("VOTOU", 200, 40))
+    , m_tela20(CriaTelaFim("NÃO VOTOU", 200, 40))
+    , m_tela24(CriaTelaEmitirMaisBU())
+    , m_tela25(CriaTelaNumeroCopiasErrado())
+    , m_tela26(CriaTelaGerandoZeresima())
+    , m_tela27(CriaTelaGerandoResumoZeresima())
+    , m_tela28(CriaTelaQuerImprimirZeresima())
+    , m_tela29(CriaTelaQuerImprimirBU())
+    , m_tela30(CriaTelaQuerReimprimirZeresima())
+{
+    const std::vector<comum::md::CCargo> cargos = comum::CConfiguracaoEleicao::GetInst().GetTodosCargos();
+    for (const comum::md::CCargo& cargo : cargos) {
+        if (cargo.IsProporcional()) {
+            m_mapaTelas.insert(std::make_pair(cargo.GetID(), CriaTelasCargoProporcional(cargo)));
+        } else if (cargo.IsMajoritario() && cargo.QtdSuplentes() == 0) {
+            m_mapaTelas.insert(std::make_pair(cargo.GetID(), CriaTelasCargoMajoritarioCom0(cargo)));
+        } else if (cargo.IsMajoritario() && cargo.QtdSuplentes() == 1) {
+            m_mapaTelas.insert(std::make_pair(cargo.GetID(), CriaTelasCargoMajoritarioCom1(cargo)));
+        } else if (cargo.IsMajoritario() && cargo.QtdSuplentes() == 2) {
+            m_mapaTelas.insert(std::make_pair(cargo.GetID(), CriaTelasCargoMajoritarioCom2(cargo)));
+        } else if (cargo.IsConsulta()) {
+            m_mapaTelas.insert(std::make_pair(cargo.GetID(), CriaTelasCargoConsulta(cargo)));
+        } else {
+            throw CUeVotaError(EUE_VOTA_TELAS_TIPO_CARGO_NAO_IDENTIFICADO, "Tipo de cargo nao identificado");
+        }
+    }
+    api::CFormBuilder builder;
+    m_barraSincronismo =
+        builder.AddProgressBar(4, api::SPoint(70, 225), api::SPoint(570, 255), FONTE_BARRA_PROGRESSO, "");
+    builder.AddTextField("Gravando", api::SPoint(320, 270), api::SFont{25, 1}, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    m_tela21 = GetFormulario(builder, "telaProgressoRegistroVoto");
+}
+
 std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaContinuaVotacao()
 {
     return TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1);
@@ -1177,45 +2085,12 @@ std::shared_ptr<api::IForm<api::IScreen>> CTelasVota::GetTelaContinuaVotacao()
 
 CTelasVota::~CTelasVota() = default;
 
-namespace {
-
-// (original lines 3482-3484: content not recovered)
-#line 3485
-api::SRect AreaTela()
-{
-    return api::CApplication::s_areaTela;
-}
-
-} // namespace
-
-api::CFormBuilder::SharedField AdicionaTextoMultiLinha(api::CFormBuilder& builder, std::function<std::string()> fonte,
-                                                      const api::SRect& rect, const api::SFont& font,
-                                                      api::ETextAlignment alinhamento)
-{
-    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
-    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextFieldMultiLine>(
-        rect, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-    builder.AddField(campo);
-    return campo;
-}
-
-api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::function<std::string()> fonte,
-                                            const api::SPoint& posicao, const api::SFont& font,
-                                            api::ETextAlignment alinhamento)
-{
-    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
-    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
-        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-    builder.AddField(campo);
-    return campo;
-}
-
 void CTelasVota::IncrementaBarraSincronismo()
 {
     m_barraSincronismo->Incrementa();
 }
 
-// (original lines 3519-3529: content not recovered)
+// (original lines 3525-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {
@@ -1265,6 +2140,35 @@ CFormInterativoTelaVota TelaTextoConfirmaCorrige(const std::string& texto, const
     builder.AddInputControl();
     builder.AddLabeledInputControl(teclas, api::CApplication::s_areaTela, false);
     return GetFormularioInterativo(builder, "telaTextoConfirmaCorrige");
+}
+
+api::CFormBuilder::SharedField AdicionaTextoMultiLinha(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                                      const api::SRect& rect, const api::SFont& font,
+                                                      api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextFieldMultiLine>(
+        rect, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+api::CFormBuilder::SharedField AdicionaTexto(api::CFormBuilder& builder, std::function<std::string()> fonte,
+                                            const api::SPoint& posicao, const api::SFont& font,
+                                            api::ETextAlignment alinhamento)
+{
+    const auto texto = std::make_shared<api::CDataText<std::function<std::string()>>>(fonte, alinhamento);
+    api::CFormBuilder::SharedField campo = std::make_shared<api::CTextField>(
+        posicao, texto, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddField(campo);
+    return campo;
+}
+
+// (original lines 3606-3615: content not recovered)
+#line 3616
+api::TPosition CInfoEleitorAudioHabilitado::LarguraMaxima()
+{
+    return api::CPolySingleton<api::IScreen>::instance().GetTextWidth("Áudio ativado", FONTE_AGUARDE);
 }
 
 CFormInterativoTelaVota CTelasVota::CriaTelaQRCodeBU(std::function<std::string()> ajuda,
