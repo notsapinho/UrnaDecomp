@@ -108,6 +108,7 @@
 # no verdict changed). Stand-ins this unit made idle went, call by call: units 29 (CampoImagemA, for 6689), 31
 # (TextoMultiLinha's call for 12040), 79 (ImagemDaFonte for 6689, ImagemQRCodeCompartilhada for 12040), 120 (RotulosB,
 # for 12040), 158 (ImagemFixaEm, for 13441), 165 (FormulariosVota: 576's callers in the link but 7787, for which
-# FormularioVota stayed until unit 443's constructor made 7787's calls), 220 (ChamaCertificado, for 12039) and 373 (the call for 2384), each a call whose target callers
+# FormularioVota stayed until unit 443's constructor made 7787's calls), 220 (ChamaCertificado, for 12039) and 373 (the
+# call for 2384), each a call whose target callers
 # are all in the link now; unit 156's -pending.cpp went with its trap. In the same link no row left match: how-to step
 # 9's join against 8f35addb prints this unit's six rows and 5634's (no-candidate to differs, named now).

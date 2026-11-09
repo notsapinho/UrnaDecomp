@@ -12,7 +12,8 @@
 #                      3678 and 2243 (AddLabeledKey, over a key's name and over a key) and 2782 (AddTextFieldMultiLine), below;
 #                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
 #                      a template of cformbuilder.h, which says why; the scan's content pass found it, and 502's
-#                      call names it since 502 matches); 502 (AddStatusHeader, below), with AddDSImageField (no index:
+#                      call names it since 502 matches; it links from ctelasvota.cpp.o since units 441 and 443); 502
+#                      (AddStatusHeader, below), with AddDSImageField (no index:
 #                      binaryen inlines it into 502) and the members of its lambda's CDataText: 11107 (GetText), 11109
 #                      and 11108 (the control block's D2 and D0)
 #   CMTFormBuilderBase 180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728
@@ -256,8 +257,9 @@
 #   cmtformbuilder.cpp.o. Each of the 38 involves 12301-12323, the class members of CDataText<std::function> and of
 #   CDataTextFmt of a function, which can be another object's copies, a reading, and band 2's two pairs against 6404
 #   stay inverted with them (counted while 6404 linked from this object). Counted again with AddDSImageField, over the
-#   34 matched rows of band 1 that linked from cformbuilder.cpp.o then (names.tsv's object; 12317, 12323 and 12784 link
-#   from cmtformbuilder.cpp.o since unit 161's list compiles it first) in that object's function list: 127 of 561, each
+#   34 matched rows of band 1 that linked from cformbuilder.cpp.o then (names.tsv's object; 12317, 12323 and 12784
+#   linked from cmtformbuilder.cpp.o since unit 161's list compiles it first, and 12317, 12323, 12328 and 12335 link
+#   from ctelasvota.cpp.o since units 441 and 443) in that object's function list: 127 of 561, each
 #   with one of GetForm's blocks (11127, 11137, 11138), which the getters after the adders put there by choice, or one
 #   of 12317 to 12335; at aa31cc5a it was 129 (that object's function list), 9 of them 11116's against 11105 to 11113
 #   (502 its first mention then), which read in order now, where 11116, above GetForm, reads inverted against GetForm's

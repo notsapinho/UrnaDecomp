@@ -21,14 +21,14 @@
 // bits the body tests.
 //
 // The two AddTextFieldUpdate templates: fn 3058 is the first's instance over std::string (*)(const std::string &),
-// called by 502 and 7787 (vota::CTelasVota's constructor); the second's instance over 502's lambda is inlined into
-// 502. That 3058 is linkonce, an inline or template definition, is evidence of two kinds. Its vtables (CDataTextFmt
-// over that pointer, @1539160, and the control blocks of it and of CTextFieldUpdate, @1539120 and @1539196) lie among
-// the data of app/vota/eleitor/comum/ctelasvota.cpp, not of cformbuilder.cpp: the kept copy is the first object's to
-// emit them. And 502 tests the format string's long flag before freeing it after its call of 3058, where 502 with
-// 3058 a plain member of cformbuilder.cpp frees it with no test (measured in the link); that clang drops the test
-// because it infers the callee's attributes, and infers none for a linkonce one, is a reading. Templates rather than
-// plain inline members, the names and the parameters' order beyond the wasm's are chosen.
+// called by 502 and 7787 (which holds vota::CTelasVota's constructor); the second's instance over 502's lambda is
+// inlined into 502. That 3058 is linkonce, an inline or template definition, is evidence of two kinds. Its vtables
+// (CDataTextFmt over that pointer, @1539160, and the control blocks of it and of CTextFieldUpdate, @1539120 and
+// @1539196) lie among the data of app/vota/eleitor/comum/ctelasvota.cpp, not of cformbuilder.cpp: the kept copy is the
+// first object's to emit them. And 502 tests the format string's long flag before freeing it after its call of 3058,
+// where 502 with 3058 a plain member of cformbuilder.cpp frees it with no test (measured in the link); that clang drops
+// the test because it infers the callee's attributes, and infers none for a linkonce one, is a reading. Templates
+// rather than plain inline members, the names and the parameters' order beyond the wasm's are chosen.
 
 #include <chrono>
 #include <memory>

@@ -23,7 +23,8 @@
 #   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301, from unit 110's ctelasvota.cpp.o
 #                                                since its builder (CTelasVota::CriaTelaQRCodeBU's adders, for 12055) is
 #                                                written; the roots' stand-in for 12055 went
-#   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
+#   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317 (from ctelasvota.cpp.o since units 441 and 443);
+#                                                GetText 6404, shared with the next
 #   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404, from ctelasvota.cpp.o
 #                                                since its builder, 2028 (unit 378), is written; the roots' stand-in
 #                                                went, and 6404's line names this class's GetText
@@ -41,7 +42,12 @@
 #                                                roots' stand-ins for 6689 and 12040 went with unit 387; 12575 12570
 #                                                (CDataTextFmt<const string (*)(const string&)>'s) link from it
 #                                                since 2028 is written
-#   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
+#   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546 (12345, CDataTextFmt<const
+#                                                string (*)(const string&)>'s, from ctelasvota.cpp.o, where unit 443's
+#                                                AdicionaNumeroPartido builds it; 12335 12328 above link from it too)
+#                                                (12345, CDataTextFmt<const
+#                                                string (*)(const string&)>'s, from ctelasvota.cpp.o, where unit 443's
+#                                                AdicionaNumeroPartido builds it; 12335 12328 above link from it too)
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times
 # 3661 reads as libc++'s fill insert of a std::vector<unsigned char> (it grows the buffer, fills with the byte the last
 # parameter points to, and throws the vector's length error, fn 158), with the value GetData passes, 255. It matches from

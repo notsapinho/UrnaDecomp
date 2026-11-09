@@ -25,7 +25,8 @@
 //                     unit 443's constructor (through unit 441's roots), and the link without them moved no row.
 //                     Its call of 2244 (AddLine) stays though 2244's target callers (653, 3054, 7787, 12055 and 12065)
 //                     are all in the link: each passes the colour 3, and without this call binaryen folds it into 2244,
-//                     which the target keeps as a parameter, and 2244, 653, 3054 and 12065 leave `match` (a link without
+//                     which the target keeps as a parameter, and 2244, 653, 3054 and 12065 leave `match` (a link
+//                     without
 //                     it). It stands for no caller the target shows, so the 11157 rule ("Finding the idle ones") would
 //                     take it out at that cost; it stays until that is decided.
 //                     Their calls of 3680 (AddRect: 1102, 1190 and 3064, unit 378's) and 5547 (AddImage: 12040, unit

@@ -34,7 +34,8 @@
 # object instantiates Entregar and with it the block (11463 matches from cjustificadorservico.cpp.o, 10311 from
 # ccomparecimentomesarioservico.cpp.o), and api::CDSImageField's pointer block and BatteryIconDataSource<Horizontal>'s
 # (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which 11116, 11106 and 11105 match) and
-# api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's, which holds
+# api::CTextFieldUpdate's (502 and 3058, 3058 from ctelasvota.cpp.o since units 441 and 443, and 5936, unit 138's,
+# which holds
 # vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316 and 12314
 # match from it; the roots' builder and sink that stood for 5936 went) and api::CImageFieldUpdate's (3059,
 # vota::AdicionaTelaQRCode, the same object, from which 12541 and 12535 match; the roots' builder and sink went) and

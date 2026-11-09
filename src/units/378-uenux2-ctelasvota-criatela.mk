@@ -253,7 +253,8 @@
 #   GetInst in the argument, 16 over 261, operand-only, held).
 # Their lines are chosen: the helpers at 495 to 587, after adicionaFotoEmoldurada and inside the file's run of internal
 # records (the anonymous namespace closed around them); 6678 at its records (816 to 840, the run 748 to 815 moved up
-# five lines for it, no record there); 6681 at 1522 and 6639 at 1603 (6626, 6616 and 3063 moved down nine lines), the
+# five lines for it, no record there); 6681 at 1522 (at 1470 since units 441 and 443, which moved it up) and 6639 at
+# 1603 (6626, 6616 and 3063 moved down nine lines), the
 # places use band 2 bounds: 6689, 6681, 6678 (deferred, after 6681), 6646 (after 3067), 6639, 6626 and 6616 run so in
 # names.tsv's ld_index, the target's order (docs/how-to-decompile.md step 3, "The order of two members"; the other
 # pairs of the new members are with template instances, counted apart). 12811 takes the place of its first mention,

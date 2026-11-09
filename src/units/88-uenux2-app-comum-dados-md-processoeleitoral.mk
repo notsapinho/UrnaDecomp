@@ -248,16 +248,16 @@
 #   callers 12098 and 12110 (5604, unit 155's written Gera, is in the link).
 # - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
 #   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
-#   times, of them 4185, 6569, 6678 (unit 378's), 1588 and 12272 written (those with records, 6660, 6671, 6678, 7787 and
-#   12272, are app/vota/eleitor/comum/ctelasvota.cpp's).
+#   times, all written but 7787 (6660 and 6671 by unit 441, whose calls of the two unit 443's constructor makes; those
+#   with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).
 #   Each reads the candidate detail's engaged flag at +84 and a field of the detail itself, the photo flag at +20 or the
 #   substitutes' vector at +72 (52-byte elements), not through GetDetalheCandidato, which those screens call elsewhere
 #   (fn 1388). That a caller's TU would inline a body this small is a reading, not compiled, so their TU is another
 #   one: ccargo.cpp, their being members, their names, the spelling uebyte of QtdSuplentes' result (its 8-bit unsigned
 #   width is the target's: 1157's `i32.const 255; i32.and` at +0x1f), CDetalheCandidato's two accessors (TemFoto,
 #   GetSuplentes) and their lines after operator<=> are chosen; other forms are not measured. Both scored 0 rows over 9
-#   and over 19 (byte-exact) before step 8 and matched at step 9. Their stand-ins are
-#   src/units/212-uenux2-app-vota-callers-roots.cpp's.
+#   and over 19 (byte-exact) before step 8 and matched at step 9. Their stand-ins were
+#   src/units/212-uenux2-app-vota-callers-roots.cpp's, gone since their callers are in the link (units 441 and 443).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
   src/app/comum/dados/cconfiguracaoeleicao.cpp \

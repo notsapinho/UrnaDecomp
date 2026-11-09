@@ -37,7 +37,7 @@ private:
 const std::string SiglaPartidoCorrente(const std::string& formato);
 
 // The number of the current party in the format it is given: target fn 11499, reached by table slot 1100 only, which
-// vota::CTelasVota's constructor (fn 7787, not written) stores in an api::CDataTextFmt<const std::string (*)(const
+// vota::CTelasVota's constructor (unit 443's, in fn 7787) stores in an api::CDataTextFmt<const std::string (*)(const
 // std::string &)> with the format "{}" (vptr 1538280, the one 2028 stores with 11501's slot 1089): that RTTI gives its
 // type, SiglaPartidoCorrente's. Its body holds GetInst's code, as 11501's does, and band 1 puts it after 11501 in this
 // object (its lower index is later in the link), so it is defined after SiglaPartidoCorrente. std::vformat formats an

@@ -222,7 +222,7 @@ enum EUeVotaError {
     EUE_VOTA_TELA_COMPLETA_CANDIDATO_COM0_SUPLENTES_INCOMPATIVEIS = 9335,
     // the values are the codes the other screen builders of ctelasvota.cpp's anonymous namespace throw, each with
     // vota::MensagemErroCargo's text, when the post is not of the screen's kind: adicionaBaseTelaCompletaCandidatoCom1
-    // (target fn 6671, records ctelasvota.cpp:853 and :858) and adicionaBaseTelaCompletaCandidatoCom2 (fn 6660, :890 and
+    // (target fn 6671, records ctelasvota.cpp:853, :858) and adicionaBaseTelaCompletaCandidatoCom2 (fn 6660, :890 and
     // :895) over "não é de candidato" and "com número de suplentes incompatível", adicionaBaseTelaCompletaConsulta (fn
     // 6652, :942) and adicionaBaseTelaVotoBrancoConsulta (fn 6641, :993) over "não é de consulta", and
     // adicionaBaseTelaCandidatoInexistente (fn 6605, :1075), adicionaBaseTelaCandidatoInapto (fn 6603, :1101) and

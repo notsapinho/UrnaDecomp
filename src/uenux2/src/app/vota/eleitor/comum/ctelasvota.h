@@ -78,7 +78,7 @@ public:
     // throw (pattern code 1304) of a member the target holds inlined in fn 7787 behind a 16-byte prologue of its own:
     // under GetInst's mutex (@1833372, the unlock fn 150), `new` of 252 bytes, this class's constructor, and the old
     // pointer's destructor (fn 6548) and free, which std::unique_ptr::reset gives. The record's column, 45 on the line
-    // after GetInst's, is a macro's closing `)` (src/units/443-uenux2-ctelasvota-construtor.mk).
+    // after GetInst's, reads as a macro's closing `)`, a reading (src/units/443-uenux2-ctelasvota-construtor.mk).
     static void CreateInst();
 
     CFormInterativoTelaVota GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const;
@@ -245,17 +245,17 @@ public:
     // over vota::CPreShowProgressBar (std::make_shared, the block's vptr @1536976 that every one stores). Evidence for
     // the names: the record ctelasvota.cpp:1585 (fn 3064, its signature and its throw) and, for the others, the name
     // each passes as the screen's to vota::MensagemErroCargo's builders ("CriaTelaVotoNuloConsulta", ...) and the
-    // form's name ("telaVotoNuloConsulta", ...); that they are static members of CTelasVota is a reading, as for the
-    // recorded CriaTela* statics (records :1392 to :2382). CriaTelaConfirmaImpressaoZeresima (fn 6592) and CriaTelaFim
-    // (fn 6601) are named after their forms ("telaConfirmaImpressaoZeresima", "telaFim"), a choice. Parameters: 3064's
-    // are the record's (its api::TPosition unused, the target's wasm type drops it); the others' are their wasm types'
-    // (7787 passes a std::string to 6616, 6626, 6592 and 6601), and 6601's two font sizes are parameters 7787 passes as
-    // constants, which the target's code shows folded. So are 1591's and 1767's three positions, which they pass on to
-    // adicionaBaseTelaVotoNuloCandidato (fn 6608): its two points are stored as separate 16-bit halves, which values
-    // that were no constants when clang compiled it give, and 7787 passes 10, 115 and 190 at every call; which values
-    // are parameters, and how many, is chosen (6608's own three are its record's, ctelasvota.cpp:1049). The
-    // parameters' names are chosen. Written and matched: 1767, 3063, 3064, 3067, 6592, 6601, 6616 and 6626; written
-    // and differing: 1591 (frame offsets). CriaTelaCompletaCandidatoCom0 (fn 6639) and
+    // form's name ("telaVotoNuloConsulta", ...); their being static members of CTelasVota is chosen (a free function of
+    // vota is the same code), beside the recorded statics (:1392 to :2382). CriaTelaConfirmaImpressaoZeresima (fn 6592)
+    // and CriaTelaFim (fn 6601) are named after their forms ("telaConfirmaImpressaoZeresima", "telaFim"), a choice.
+    // Parameters: 3064's are the record's (its api::TPosition unused, the target's wasm type drops it); the others' are
+    // their wasm types' (7787 passes a std::string to 6616, 6626, 6592 and 6601), and 6601's two font sizes are
+    // parameters 7787 passes as constants, which the target's code shows folded. So are 1591's and 1767's three
+    // positions, which they pass on to adicionaBaseTelaVotoNuloCandidato (fn 6608): its two points are stored as
+    // separate 16-bit halves, which values that were no constants when clang compiled it give, and 7787 passes 10, 115
+    // and 190 at every call; which values are parameters, and how many, is chosen (6608's own three are its record's,
+    // ctelasvota.cpp:1049). The parameters' names are chosen. Written and matched: 1767, 3063, 3064, 3067, 6592, 6601,
+    // 6616 and 6626; written and differing: 1591 (frame offsets). CriaTelaCompletaCandidatoCom0 (fn 6639) and
     // CriaTelaConferenciaCandidatoCom0 (fn 6681) are written and match too, over adicionaBaseTelaCompletaCandidatoCom0
     // (6678, matched) and its callees (src/units/378-uenux2-ctelasvota-criatela.mk).
     static CFormInterativoTelaVota CriaTelaVotoCargoSemCandidato(const comum::md::CCargo& cargo, api::TPosition largura);
@@ -280,12 +280,12 @@ public:
     // (target fns 6602, 6603, 6605, 6641, 6652, 6660 and 6671, two screens each). Evidence: fn 7787 holds each behind a
     // stack-pointer prologue of its own (one caller each, inlined by binaryen, so out of line in the object), with the
     // name it passes the builder as the screen's ("CriaTelaVotoLegenda", ...) and the form's name ("telaVotoLegenda",
-    // ...), the builder, then AdicionaInstrucaoTeclas (fn 1102) over "CONFIRMAR este voto" and AddInputControl (fn 901),
-    // or AdicionaRodapeConfira (fn 1190), at the width it shows (389, 639, or the Com1 and Com2 builders' result), and
-    // GetInteractiveForm (fn 554) over a CPreShowProgressBar, its flag 0 for the two vote-by-party screens and 1 for the
-    // others; the vote-by-party and nonexistent-candidate screens add the party vote's gif first (AdicionaGif, fn 1593,
-    // over 1, false or true). That they are static members of CTelasVota is a reading, as for the recorded CriaTela*
-    // statics; the names are the strings', and the parameters' names are chosen.
+    // ...), the builder, then AdicionaInstrucaoTeclas (fn 1102) over "CONFIRMAR este voto" and AddInputControl (fn
+    // 901), or AdicionaRodapeConfira (fn 1190), at the width it shows (389, 639, or the Com1 and Com2 builders'
+    // result), and GetInteractiveForm (fn 554) over a CPreShowProgressBar, its flag 0 for the two vote-by-party screens
+    // and 1 for the others; the vote-by-party and nonexistent-candidate screens add the party vote's gif first
+    // (AdicionaGif, fn 1593, over 1, false or true). Their being static members of CTelasVota is chosen (an external
+    // free function of vota is the same code); the names are the strings', the parameters' names chosen.
     static CFormInterativoTelaVota CriaTelaVotoLegenda(const comum::md::CCargo& cargo);
     static CFormInterativoTelaVota CriaTelaConferenciaVotoLegenda(const comum::md::CCargo& cargo);
     static CFormInterativoTelaVota CriaTelaCandidatoInexistente(const comum::md::CCargo& cargo);
@@ -305,12 +305,12 @@ private:
     // The constructor: record ctelasvota.cpp:3502, its throw "Tipo de cargo nao identificado" (code 9357), which fn
     // 7787 holds inlined in CreateInst behind a 96-byte prologue (+0x1676d). Evidence, its code: the members'
     // initializers in declaration order, each form built straight into its member (+12, +172, +180 and +188 left null),
-    // then, for each post of comum::CConfiguracaoEleicao::GetTodosCargos (fn 5790; the vector outlives the loop, a
-    // named local), the post's screens by its kind (proportional, majoritarian with 0, 1 or 2 substitutes, consult; any
-    // other kind throws), inserted into m_mapaTelas under the post's id through a std::pair (the key looked up before
-    // the node is built: insert of a pair, not emplace of the two values), and last the vote-recording screen
-    // ("Gravando" over a progress bar of 4) into +172 and its bar into +180, both assigned. Private is chosen
-    // (CreateInst is its caller).
+    // then, for each post of comum::CConfiguracaoEleicao::GetTodosCargos (fn 5790; the vector a named local, chosen: a
+    // range-for over the temporary also keeps it through the loop), the post's screens by its kind (proportional,
+    // majoritarian with 0, 1 or 2 substitutes, consult; any other kind throws), inserted into m_mapaTelas under the
+    // post's id through a std::pair (the key looked up before the node is built: insert of a pair, not emplace of the
+    // two values), and last the vote-recording screen ("Gravando" over a progress bar of 4) into +172 and its bar into
+    // +180, both assigned. Private is chosen (CreateInst is its caller).
     CTelasVota();
 
     // The constructor's screens, each behind a stack-pointer prologue of its own in fn 7787 (one caller each, inlined

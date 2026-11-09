@@ -342,8 +342,8 @@
 # after CTelasVota::GetInst() (the header says which); their names are chosen. Chosen too: GetTelaCargo's parameter
 # names, its local, the find form, and its place above the record (lines 3530 to 3538; the constructor's record :3502
 # stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 6660, 6671 and the rest of
-# its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn 7787,
-# which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written. 6678
+# its anonymous namespace) are internal, and their only target callers are each other and the constructor, which fn
+# 7787 holds: they waited for the screens that call them, written with them by units 441 and 443. 6678
 # and 4184 are written (unit 378): 6678's callers 6639 and 6681 are, and 4184 is external, a choice.
 # Not so 6624 (adicionaBaseTelaVotoNuloConsulta), of that namespace too: its target callers are 6626 and 6616,
 # CTelasVota statics, and it is written with them (src/units/378-uenux2-ctelasvota-criatela.mk).
@@ -383,12 +383,14 @@
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
 # code 9347 with it over "não é de proporcional"). Its 22 call sites are this file's (fns 3064, 6602, 6603, 6605, 6608,
-# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), 3064 and 6624 written (unit 378). No record gives its name or its
+# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), all in the link (units 378, 441 and 443, 7787's through the
+# constructor). No record gives its name or its
 # linkage. The file's recorded helpers (DS_CandidatoNaoConcorre, adicionaFotoEmoldurada, the adicionaBaseTela* builders,
 # GetKeyboardLayout) are in an anonymous namespace, where clang emits no function nothing in the TU calls (a reading),
 # so in that form it would leave the link until a caller here is written; it is written as a function of vota, its
 # callers' namespace (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that
-# lets src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names,
+# let src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites until its callers 6660 and 6671 were in
+# the link (unit 441). Chosen: its name, its parameters' names,
 # its namespace and linkage, and its lines (796 to 799, above line 822, the first record of a caller). Those lines lie
 # inside the file's run of internal records (lines 294 to 1301, all vota::(anonymous namespace)::), between :487 and
 # :822: written external there, the original would close and reopen the anonymous namespace around it, so the place goes
@@ -572,11 +574,10 @@
 #     @475016 and {20, 1} @475032, followed it as the target holds them while their first readers' bodies were
 #     TelaTextoConfirmaCorrige's and CriaTelaQRCodeBU's, after AdicionaLocal's; AdicionaTelaQRCode (3059) reads {35, 0}
 #     first now (the order is in CriaTelaVisualizacaoCandidato's paragraph above).
-# - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 is CTelasVota's constructor
+# - The file: @475008's other readers are 3059, 6599, 7787, 12040 and 12055, and 7787 holds CTelasVota's constructor
 #   (record :3502); that the font is a file constant shared with them is a reading, as for FONTE_TITULO. 4161's callers
-#   are 2380, 6601 and 7787, and unit 309's roots stand in for 7787, not written (6601 is in the link: unit 378's
-#   fragment); 2380's are 6557, 6587, 7787 and
-#   11797, and they stand in for 7787 (6557 and 11797 are in the link now).
+#   are 2380, 6601 and 7787; 2380's are 6557, 6587, 7787 and 11797: all in the link, 7787's calls made by unit 443's
+#   constructor (unit 309's roots stood for them until then).
 # ctelasvota.cpp also holds the screens of vota::CMostraTelaContinuaVotacao, CInspecionaUrna and CUrnaInspecionada
 # (ctelasvota.h describes each) and of the keyboard test's failure states (unit 217's):
 # - CTelasVota::GetTelaContinuaVotacao (6557), TelaNeutra("CONTINUAÇÃO DA VOTAÇÃO&IDENTIFIQUE O ELEITOR", 40, 1):
@@ -658,7 +659,8 @@
 #   CMenuBase's constructor ahead of it, the same score; the comum constructors ahead of the menu's, 351 over 2145.
 #   11897 matches all the same: the symbol file names 6599 by its vptr stores (evidence:vptr-anchor), and 6599 stays
 #   written for it (how-to step 5).
-# - 6599's other target caller is 7787 (not written): unit 354's roots stand in for it.
+# - 6599's other target caller is 7787, whose call unit 443's constructor makes (unit 354's roots stood for it until
+#   then).
 # ctelasvota.cpp also holds the screen vota::CVerificaHorarioZeresima::ProcessInput (fn 11869, unit 138's) shows on
 # CONFIRMA, vota::CTelasVota::CriaTelaAntesHorarioZeresima (fn 6595), with what it builds: AdicionaTelaQRCode (3059),
 # the body of the screens with the urn's QR code, AdicionaCabecalhoLocal (4160), the location's header, and the labels'
@@ -768,10 +770,12 @@
 # - Chosen: the names (AdicionaCampoNumerico after cescolheopcao.cpp's overload for api::CMTFormBuilder), the helper's
 #   being file-static and its parameters' order, the parameters' names and types (size_t and the bools, as CInputField's
 #   constructor takes them), 2383's being a free function of vota and its external linkage (its other callers read as
-#   this file's: 7787 as CTelasVota's constructor, 1591 and 2384 by the font @474880 of this file's run of constants;
+#   this file's: 7787 as holding CTelasVota's constructor, 1591 and 2384 by the font @474880 of this file's run of
+#   constants;
 #   11892's screen calls it, and the roots give it its other call sites; a file-static function with one call is
-#   inlined), its declaration in this file only, and the lines. Unit 373's roots stand in for 7787 (1591 and 2384,
-#   units 378's and 387's, are in the link).
+#   inlined), its declaration in this file only, and the lines. Its target callers 1591 and 2384 (units 378's and
+#   387's) and 7787 (two calls, which unit 443's constructor makes) are in the link; unit 373's roots stood for 7787
+#   until then.
 # - cmenufiltrarcandidatospornumero.cpp follows cmenumaisinformacoesvota.cpp in this list, as
 #   cmenuvisualizarcandidatos.cpp does: with it in unit 104's list, 11892 scored 86 over 752 rows (6 inserted, 7
 #   deleted: ours computes the address of StartState's result at its one use, where the target keeps it on the stack

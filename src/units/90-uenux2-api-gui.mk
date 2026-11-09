@@ -4,8 +4,9 @@
 #   CRectField      the constructor 5501, Draw 10960, GetTypeName 10959
 #   CTextRectField  Draw 10906, GetTypeName 10902, the implicit destructors 10904 and 10903, thunks into binaryen's 6022
 #                   and 6021, which form with CTextFieldDoubleLine's (10928, 10927: unit 28's, matched since this unit)
-#   the control blocks: 11118, 11117, 11124, 11123, 11126, 11125, 11120, 11119 from cformbuilder.cpp.o (the first two
-#                   since 5546, AddTextRectField, unit 31's, builds the block there; the roots' builder went)
+#   the control blocks: 11118, 11117, 11124, 11123, 11126, 11125 from cformbuilder.cpp.o (the first two since 5546,
+#                   AddTextRectField, unit 31's, builds the block there; the roots' builder went), 11120, 11119 from
+#                   ctelasvota.cpp.o since units 441 and 443
 #   Move 2783, one body in all three and CTextFieldMultiLine, over SRect::Move (unit 108), which the first of the
 #   four in link order names; CTextRectField::Rect 10905, at its record's line, with no alignment: the point is the
 #   rectangle's corner, read after the text is measured

@@ -24,14 +24,16 @@
 # - CConversorDetalheCandidato::DoDesconverte (11375, 78 over 1218) and the move of a std::vector<md::CCargo>'s
 #   elements, std::__uninitialized_allocator_relocate (3816, 2 over 243), from cconversoreleicaope.cpp.o then; the copy
 #   the link keeps is unit 200's cgravadorbu.cpp.o's since that unit wrote 3818 (FiltraCargos), its other caller.
-# Written, `unresolved`: CConversorEleicaoPE::DoDesconverte (11371, 84 over 1509), on the address of "impressão" at
+# Written, `unresolved` until unit 443: CConversorEleicaoPE::DoDesconverte (11371, 84 over 1509), on the address of
+# "impressão" at
 # +0xad3 (`an address of ours: string tail occurs 4098 times`): the target's is the tail of "em caso de falha na
-# impressão" (123919, ledger/strings.tsv), which only fn 7787 (not written) loads. With a scratch object that keeps that
+# impressão" (123919, ledger/strings.tsv), which only fn 7787 loads, in CriaTelaVerificaQualidadeBU. With a scratch
+# object that keeps that
 # literal (a static constructor's store into a volatile sink, linked after this unit's roots in a copy of link.cmd; its
 # bytes are in that wasm), `pnpm wasm splat-remap … --against 11371` prints `target 11371: IDENTICAL`; on the plain link
 # `UNRESOLVED (1)` on that operand (docs/how-to-decompile.md step 5, "A written body that does not match yet"). It waits
-# for that literal, a prediction. "aquisição", the other tail, is "Já foi marcado o fim da aquisição"'s, which
-# cestadogeralvota.cpp holds.
+# for that literal, a prediction that held: 11371 matches since unit 443 wrote that screen, which holds it. "aquisição",
+# the other tail, is "Já foi marcado o fim da aquisição"'s, which cestadogeralvota.cpp holds.
 #
 # Evidence and choices, CQRCodeDS (cqrcodeds.h has the class's):
 # - Where. No record names a function of the class. In use band 2 (ledger/ordinals.tsv) 5783 to 5780 link after

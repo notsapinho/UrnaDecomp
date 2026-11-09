@@ -1643,8 +1643,9 @@ proves nothing. A hand edit is allowed when no generated route reaches a name an
 callee whose callers in the link are all named by `vtable` (those cast no votes) and whose other callers are not written
 (3613's line: its one target caller besides itself, 10409, is named by `vtable`), a callee with one caller that can
 land (one whose match does not rest on the line: the callee's own body or another voter gives it, so a line whose only
-evidence is that caller's call is the self-vote §3 refuses, and 6678 waits written for 4184's match), a slot function
-whose generated `vtable` line a caller's lone `call` vote displaced (a `vtable-slot` line, splat.md §2), a merge body's
+evidence is that caller's call is the self-vote §3 refuses: 6678 waited written for 4184's match until 6660 and
+6671 voted for 4184's name too), a slot function whose generated `vtable` line a caller's lone `call` vote displaced
+(a `vtable-slot` line, splat.md §2), a merge body's
 own callee, a `.bss` object, a `.data` or read-only object too small for its bytes to place, or a
 small pointer that no vote reaches, led by the target functions other than the match that read or write it, its static
 destructor among them, a thunk into a shared body too; a data object the match alone touches has no such

@@ -1,4 +1,5 @@
-# uenux2 comum: the package-name and pleito helpers vota::CTelasVota's constructor (target fn 7787) calls, written into
+# uenux2 comum: the package-name and pleito helpers target fn 7787 calls in its data load (before the
+# CTelasVota::CreateInst it holds), written into
 # three landed units' files. This fragment holds their notes and their callers' stand-ins and builds its roots file only
 # (src/units/README.md "Landing a unit"); paths relative to src/uenux2/src/app/comum.
 # - comum::NomesArquivosEleicao (target fn 3744) in unit 279's nomearquivo/cnomearquivoeleitores.cpp, after
